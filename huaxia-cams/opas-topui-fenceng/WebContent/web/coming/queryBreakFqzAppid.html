@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>跳反欺诈</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+$(function(){
+	
+	loadBreakFqz();
+});
+
+//加载页面
+function loadBreakFqz(){
+	$cf.ajax({
+		url : '/opas-naps/queryBreakFqz.json',
+		data : {
+		},
+		onSuccess : function(response) {
+			var breaker = response.RSP_BODY.breaker;
+			if(breaker=='1'){
+				$("#breaker").val("开启");
+				$("#breakerbt").val("关闭");
+			}else{
+				$("#breaker").val("关闭");
+				$("#breakerbt").val("开启");
+			}
+		}
+	});
+}
+
+//关闭或者开启
+function onOpenAndClose(obj){
+	var turn = $('#'+obj).val();
+	if(turn=='开启') {
+		turn = '1';
+	} else {
+		turn = '0';
+	}
+	var inputChannel = obj;
+	$cf.ajax({
+		url : '/opas-naps/updateBreakFqz.json', 
+		data : {
+			turn:turn,
+		},onSuccess : function(data) {
+			var msg = data.RSP_BODY.msg;
+			alert(msg);
+			//window.location.reload;
+			loadBreakFqz();
+		}
+	}); 
+}
+</script>
+<body>
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">跳反欺诈开关管理</legend>
+	<form id="inputChannelForm">
+		<table id="inputChannelTable" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td>当前启用状态:</td>
+				<td><input id="breaker" name="breaker" readonly="readonly" type="text" style="width:400px"></input></td>
+				<td><input id="breakerbt" name="breakerbt" type="button" onclick="onOpenAndClose('breakerbt')" class="alsp" style="width:100px;"/></td>
+	  		</tr>
+	  		
+		</table>
+	</form>	
+</fieldset>	
+</body>
+</html>

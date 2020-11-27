@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="YdjCustomersIncome">
+
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="IncomeResultMap" type="com.huaxia.opas.domain.sysparm.CustomersIncome">
+		<result column="UUID" property="uuId" jdbcType="VARCHAR" />
+		<result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+		<result column="CUSTOMERS_DETAIL" property="customersDetail" jdbcType="VARCHAR" />
+		<result column="JOB_LEVEL" property="jobLevel" jdbcType="VARCHAR" />
+		<result column="INCOME" property="income" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryIncome" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome"
+		resultMap="IncomeResultMap">
+		select
+		UUID,
+		CITY_CODE,
+		CUSTOMERS_DETAIL,
+		JOB_LEVEL,
+		INCOME,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		STATUS,
+		OPERATOR,
+		LST_UPD_USER,
+		REMARK
+		from
+		OPAS_YDJ_CUSTOMERS_INCOME
+		<where>1 = 1
+			<if test="cityCode != null and cityCode !='' ">
+				AND CITY_CODE = #{cityCode,jdbcType=VARCHAR}
+			</if>
+			<if test="customersDetail != null and customersDetail !='' ">
+				AND CUSTOMERS_DETAIL = #{customersDetail,jdbcType=VARCHAR}
+			</if>
+			<if test="jobLevel != null and jobLevel !='' ">
+				AND JOB_LEVEL = #{jobLevel,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status,jdbcType=CHAR}
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+	<!-- 统计数量 -->
+	<select id="queryIncomeCount" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_YDJ_CUSTOMERS_INCOME
+		<where>1 = 1
+			<if test="cityCode != null and cityCode !='' ">
+				AND CITY_CODE = #{cityCode,jdbcType=VARCHAR}
+			</if>
+			<if test="customersDetail != null and customersDetail !='' ">
+				AND CUSTOMERS_DETAIL = #{customersDetail,jdbcType=VARCHAR}
+			</if>
+			<if test="jobLevel != null and jobLevel !='' ">
+				AND JOB_LEVEL = #{jobLevel,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteCustomersIncome" parameterType="java.util.List">
+		delete from
+		OPAS_YDJ_CUSTOMERS_INCOME
+		where UUID in
+		<foreach collection="list" open= "(" close=")" item="uuId" separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 查询数据是否已存在 -->
+	<select id="checkIsExist" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome"
+		resultMap="IncomeResultMap">
+		select city_code,customers_detail,job_level
+		from opas_ydj_customers_income
+		where city_code = #{cityCode} and customers_detail = #{customersDetail} and job_level = #{jobLevel}
+	</select>
+	<!-- 添加  启用-->
+	<insert id="insertCustomersIncomeStart" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome">
+		insert into
+		OPAS_YDJ_CUSTOMERS_INCOME
+		(UUID,
+		CITY_CODE,
+		CUSTOMERS_DETAIL,
+		JOB_LEVEL,
+		INCOME,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		STATUS,
+		OPERATOR,
+		LST_UPD_USER,
+		REMARK)
+		values
+		(#{uuId,jdbcType=VARCHAR},
+		#{cityCode,jdbcType=VARCHAR},
+		#{customersDetail,jdbcType=VARCHAR},
+		#{jobLevel,jdbcType=VARCHAR},
+		#{income,jdbcType=VARCHAR},
+		SYSDATE,
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		#{status,jdbcType=CHAR},
+		#{operator,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 添加 停用 -->
+	<insert id="insertCustomersIncomeEnd" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome">
+		insert into
+		OPAS_YDJ_CUSTOMERS_INCOME
+		(UUID,
+		CITY_CODE,
+		CUSTOMERS_DETAIL,
+		JOB_LEVEL,
+		INCOME,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		STATUS,
+		OPERATOR,
+		LST_UPD_USER,
+		REMARK)
+		values
+		(#{uuId,jdbcType=VARCHAR},
+		#{cityCode,jdbcType=VARCHAR},
+		#{customersDetail,jdbcType=VARCHAR},
+		#{jobLevel,jdbcType=VARCHAR},
+		#{income,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		SYSDATE,
+		#{status,jdbcType=CHAR},
+		#{operator,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateCustomersIncomeAndStatus" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome">
+		update OPAS_YDJ_CUSTOMERS_INCOME
+		<set>
+			<if test="cityCode != null">
+				CITY_CODE = #{cityCode,jdbcType=VARCHAR},</if>
+			<if test="customersDetail != null">
+				CUSTOMERS_DETAIL
+				= #{customersDetail,jdbcType=VARCHAR},</if>
+			<if test="jobLevel != null">
+				JOB_Level = #{jobLevel,jdbcType=VARCHAR},</if>
+			<if test="income != null">
+				INCOME = #{income,jdbcType=VARCHAR},</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},</if>
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},</if>
+				LST_UPD_DATE = SYSDATE
+		</set>
+		where UUID = #{uuId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 上传 -->
+	<insert id="insertCustomersIncomeUpload" parameterType="java.util.List">
+		insert into OPAS_YDJ_CUSTOMERS_INCOME (
+		UUID,
+		CITY_CODE,
+		CUSTOMERS_DETAIL,
+		JOB_LEVEL,
+		INCOME,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		OPERATOR,
+		LST_UPD_USER
+		)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.uuId,jdbcType=VARCHAR},
+			#{item.cityCode,jdbcType=CHAR},
+			#{item.customersDetail,jdbcType=CHAR},
+			#{item.jobLevel,jdbcType=CHAR},
+			#{item.income,jdbcType=VARCHAR},
+			1,
+			SYSDATE,
+			SYSDATE,
+			NULL,
+			SYSDATE,
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+	
+	<!-- 批量启用 -->
+	<update id="setCustomersIncomeStatusOK" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome">
+		update OPAS_YDJ_CUSTOMERS_INCOME
+		<set>
+			STATUS = '1',
+			START_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+		</set>
+		where UUID in 
+		<foreach collection="ids" open= "(" close=")" item="uuId" separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<!-- 批量禁用 -->
+	<update id="setCustomersIncomeStatusNO" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome">
+		update OPAS_YDJ_CUSTOMERS_INCOME
+		<set>
+			STATUS = '0',
+			STOP_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+		</set>
+		where UUID in 
+		<foreach collection="ids" open= "(" close=")" item="uuId" separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 查询status -->
+	<select id="queryCustomersIncomeStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select status from opas_ydj_customers_income where uuid=#{autoId,jdbcType=VARCHAR}
+	</select>
+	<!-- 修改  状态不变 -->
+	<update id="updateCustomersIncomeWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.CustomersIncome" >
+		update opas_ydj_customers_income
+		<set>
+			city_code = #{cityCode,jdbcType=VARCHAR},
+			customers_detail = #{customersDetail,jdbcType=VARCHAR},
+			job_level = #{jobLevel,jdbcType=VARCHAR},
+			income = #{income,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where uuid = #{uuid,jdbcType=VARCHAR}
+	</update>
+</mapper>

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.searchdiv {
+	font-size: 10px;
+}
+</style>
+<script type="text/javascript">
+function winOpen(winName) {
+	$('input[name=currNoAdd]').prop('checked',false);
+	winObj = $("#" + winName + "");
+	winObj.window({
+		closed : false
+	});
+}
+</script>
+</head>
+<body>
+	<div style=" width: 100%;height:650px; ">
+		<table id="tblCardProduct" title="卡产品信息列表"
+			class="easyui-datagrid" style="width: 98%;height:650px;"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/queryCardProduct.json',loadMsg:'数据加载中.....',checkOnSelect:true,method:'post',toolbar:'#positionCodeCondion'">
+			<thead frozen="true">
+				<tr>
+					<th field="autoId" width="5%" align="center" checkbox="true">ID</th>
+					<th field="productCode" width="8%" align="center">产品编号</th>
+					<th field="productName" width="15%" align="center">产品名称</th>
+					<th field="productFace" width="10%" align="center">产品版面</th>
+					<th field="acctType1" width="10%" align="center"
+						formatter="formatAcctType1">账户类型1</th>
+					<th field="acctType2" width="10%" align="center"
+						formatter="formatAcctType2">账户类型2</th>
+				</tr>
+			</thead>
+			<thead>
+				<tr>
+					<th field="staffCard" width="8%" align="center"
+						data-options="formatter:formatStaffCard">是否员工卡</th>
+					<th field="cardType" width="8%" align="center"
+						formatter="formatCardType">卡类别</th>
+					<th field="lineLow" width="8%" align="center">额度下限</th>
+					<th field="lineHight" width="8%" align="center">额度上限</th>
+					<th field="doubleCurr" width="8%" align="center"
+						data-options="formatter:formatYesNo1">是否双币卡</th>
+					<th field="currNo" width="8%" align="center"
+						data-options="formatter:formatCurrNo">币种</th>
+					<th field="integerLine" width="8%" align="center">取整额度</th>
+					<th field="flag" width="8%" align="center"
+						data-options="formatter:formatYesNo2">是否降级</th>
+					<th field="signedCard" width="8%" align="center"
+						data-options="formatter:formatYesNo3">是否套卡</th>
+					<th field="rateExpireLine" width="10%" align="center">利率代码失效时长</th>
+					<th field="yearFeeDerateType" width="15%" align="center"
+						formatter="formatYearFeeDerateType">年费减免方式</th>
+					<th field="status" width="8%" align="center"
+						data-options="formatter:formatStatus">当前状态</th>
+					<th field="startDate" width="12%" align="center"
+						data-options="formatter:myformatDate">启用时间</th>
+					<th field="stopDate" width="12%" align="center"
+						data-options="formatter:myformatDate">停用时间</th>
+					<th field="crtUser" width="8%" align="center">创建人</th>
+					<th field="crtDate" width="12%" align="center"
+						data-options="formatter:myformatDate">创建时间</th>
+					<th field="lstUpdUser" width="8%" align="center">最后操作人</th>
+					<th field="lstUpdDate" width="12%" align="center"
+						data-options="formatter:myformatDate">最后修改时间</th>
+					<th field="operate" width="8%" align="center"
+						data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="positionCodeCondion" style="padding: 2px 5px;">
+			<form id="seachPositionCodeForm">
+				<div style="padding: 10px">
+				产品编号: <input class="easyui-textbox" style="width: 110px"
+					name="productCode" id="productCode"
+					data-options="validType:'maxLength[4]'">&nbsp;
+				卡类别: 
+				<select class="easyui-combobox" name="cardType" id="cardType" style="width: 100px" dict_type="ZDKLB" 
+					data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+				</select>&nbsp;
+				当前状态: 
+				<select id="status" name="status" class="easyui-combobox">
+					<option value="">--请选择--</option>
+					<option value="1">启用</option>
+					<option value="0">停用</option>
+				</select>
+				</div>
+				<div style="padding: 10px">
+					排序条件 
+					<select id="dateType" class="easyui-combobox" name="dateType"
+						style="width: 80px;">
+						<option value="0">--请选择--</option>
+						<option value="1">启用时间</option>
+						<option value="2">停用时间</option>
+						<option value="3">修改时间</option>
+					</select> &nbsp; 
+					排序方式 
+					<select id="order" class="easyui-combobox"
+						name="order" style="width: 80px;">
+						<option value="0">--请选择--</option>
+						<option value="1">升序</option>
+						<option value="2">降序</option>
+					</select>
+				</div>
+				<div align="center">
+					<a href="javascript:winOpen('winAdd');"
+						class="easyui-linkbutton" iconCls="icon-add">新增</a>
+					&nbsp;&nbsp;&nbsp;
+					<a href="javascript:common.searchTbl('seachPositionCodeForm','tblCardProduct');"
+						class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 修改页面 -->
+	<div id="winEdit" class="easyui-window" title="卡产品信息修改"
+		style="width: 450px; height: 650px" top="10px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm" method="post">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input class="easyui-validatebox" id="autoId"
+						name="autoId" style="display: none"></input></td>
+				</tr>
+				<tr>
+					<td align="right">产品编号:</td>
+					<td><input class="easyui-textbox" id="productCode"
+						name="productCode"  disabled="disabled" style="background:#CCCCCC"/></input>
+						</td>
+				</tr>
+				<tr>
+					<td align="right">产品名称:</td>
+					<td><input class="easyui-textbox" id="productName" name="productName"
+						data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">产品版面:</td>
+					<td><input class="easyui-textbox" id="productFace1" name="productFace"
+						data-options="required:true" readonly="readonly"></input></td>
+					<td><a href="javascript:void(0)"
+						class="easyui-linkbutton" onclick="selectCode()">选择编号</a></td>
+				</tr>
+				<tr>
+					<td align="right">账户类型1:</td>
+					<td>
+					<select class="easyui-combobox" name="acctType1" id="acctType11" validType="selectValueRequired['#acctType1']" style="width: 130px" dict_type="ZDZHLX1" 
+					data-options="required:true,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">账户类型2:</td>
+					<td>
+					<select class="easyui-combobox" name="acctType2" id="acctType22" validType="selectValueRequired['#acctType22']" style="width: 130px" dict_type="ZDZHLX2" 
+					data-options="required:true,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">是否员工卡:</td>
+					<td>
+					<select class="easyui-combobox" name="staffCard" id="staffCard">
+							<option value="0">是</option>
+							<option value="1">否</option>
+							<option value="2">均可</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">卡类别:</td>
+					<td>
+					<select class="easyui-combobox" name="cardType" id="cardType" validType="selectValueRequired['#cardType']" style="width: 100px" dict_type="ZDKLB" 
+					data-options="required:true,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">额度下限:</td>
+					<td><input class="easyui-numberbox" id="lineLow" name="lineLow"
+						data-options="required:true,validType:'maxLength[8]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">额度上限:</td>
+					<td><input class="easyui-numberbox" id="lineHight" name="lineHight"
+						data-options="required:true,validType:'maxLength[8]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">是否双币卡:</td>
+					<td>
+					<select class="easyui-combobox" name="doubleCurr" style="width: 40px" id="doubleCurr">
+							<option value="1">是</option>
+							<option value="2">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">币种:</td>
+					<td><input type="hidden" name="currNo" id="currNoInput" /> 
+					<input type="checkbox" name="currNoUp" value="1"
+						onclick="currNoClick(this)" />&nbspRMB&nbsp 
+					<input type="checkbox" name="currNoUp" value="2"
+						onclick="currNoClick(this)" />&nbspUSD&nbsp 
+				</tr>
+				<tr>
+					<td align="right">取整额度:</td>
+					<td><input class="easyui-numberbox" id="integerLine" name="integerLine"
+						data-options="required:true,validType:'maxLength[8]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">是否降级:</td>
+					<td>
+					<select class="easyui-combobox" name="flag" style="width: 40px" id="flag">
+							<option value="1">是</option>
+							<option value="2">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">是否套卡:</td>
+					<td>
+					<select class="easyui-combobox" name="signedCard" style="width: 40px" id="signedCard">
+							<option value="1">是</option>
+							<option value="2">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">利率代码失效时长:</td>
+					<td><input class="easyui-numberbox" id="rateExpireLine" name="rateExpireLine"
+						data-options="validType:'maxLength[2]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">年费减免方式:</td>
+					<td><input class="easyui-textbox" id="yearFeeDerateType1" name="yearFeeDerateType"
+						data-options="required:true" readonly="readonly"></input></td>
+					<td><a href="javascript:void(0)"
+						class="easyui-linkbutton" onclick="selectCode1()">选择方式</a></td>
+				</tr>
+				<tr>
+					<td align="right">启用状态:</td>
+					<td><select id="status" class="easyui-combobox" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winEdit')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		</div>
+	</div>
+
+	<!-- 新增页面 -->
+	<div id="winAdd" class="easyui-window" title="卡产品信息添加"
+		style="width: 420px; height: 650px" top="10px"
+		data-options="iconCls:'icon-save',modal:true,closed:true,onClose:function(){location.reload(true)} ">
+		<form id="addForm"  method="post">
+			<table cellpadding="5"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input class="easyui-validatebox" id="autoId"
+						name="autoId" style="display: none"></input></td>
+				</tr>
+				<tr>
+					<td align="right">产品编号:</td>
+					<td><input class="easyui-textbox" id="productCode" name="productCode"
+						data-options="required:true,validType:'maxLength[4]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">产品名称:</td>
+					<td><input class="easyui-textbox" id="productName" name="productName"
+						data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">产品版面:</td>
+					<td><input class="easyui-textbox" id="productFace2" name="productFace"
+						data-options="required:true" readonly="readonly"></input></td>
+					<td><a href="javascript:void(0)"
+						class="easyui-linkbutton" onclick="selectCodeAdd()">选择编号</a></td>
+				</tr>
+				<tr>
+					<td align="right">账户类型1:</td>
+					<td>
+					<select class="easyui-combobox" name="acctType1" id="acctType1" validType="selectValueRequired['#acctType1']" style="width: 130px" dict_type="ZDZHLX1" 
+					data-options="required:true,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">账户类型2:</td>
+					<td>
+					<select class="easyui-combobox" name="acctType2" id="acctType2" validType="selectValueRequired['#acctType2']" style="width: 130px" dict_type="ZDZHLX2" 
+					data-options="required:true,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">是否员工卡:</td>
+					<td>
+					<select class="easyui-combobox" name="staffCard" id="staffCard">
+							<option value="0">是</option>
+							<option value="1">否</option>
+							<option value="2">均可</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">卡类别:</td>
+					<td>
+					<select class="easyui-combobox" name="cardType" id="cardType" validType="selectValueRequired['#cardType']" style="width: 100px" dict_type="ZDKLB" 
+					data-options="required:true,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">额度下限:</td>
+					<td><input class="easyui-numberbox" id="lineLow" name="lineLow"
+						data-options="required:true,validType:'maxLength[8]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">额度上限:</td>
+					<td><input class="easyui-numberbox" id="lineHight" name="lineHight"
+						data-options="required:true,validType:'maxLength[8]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">是否双币卡:</td>
+					<td>
+					<select class="easyui-combobox" name="doubleCurr" style="width: 40px" id="doubleCurr">
+							<option value="1">是</option>
+							<option value="2">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">币种:</td>
+					<td>
+					<input type="hidden" name="currNo" id ="currNoInputAdd" />
+					<input type = "checkbox" name = "currNoAdd" value = "1" onclick="currNoClickAdd(this)"/> RMB&nbsp
+					<input type = "checkbox" name = "currNoAdd" value = "2" onclick="currNoClickAdd(this)"/> USD
+					</td>
+				</tr>
+				<tr>
+					<td align="right">取整额度:</td>
+					<td><input class="easyui-numberbox" id="integerLine" name="integerLine"
+						data-options="required:true,validType:'maxLength[8]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">是否降级:</td>
+					<td>
+					<select class="easyui-combobox" name="flag" style="width: 40px" id="flag">
+							<option value="1">是</option>
+							<option value="2">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">是否套卡:</td>
+					<td>
+					<select class="easyui-combobox" name="signedCard" style="width: 40px" id="signedCard">
+							<option value="1">是</option>
+							<option value="2">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">利率代码失效时长:</td>
+					<td><input class="easyui-numberbox" id="rateExpireLine" name="rateExpireLine"
+						data-options="validType:'maxLength[2]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">年费减免方式:</td>
+					<td><input class="easyui-textbox" id="yearFeeDerateType2" name="yearFeeDerateType"
+						data-options="required:true" readonly="readonly"></input></td>
+					<td><a href="javascript:void(0)"
+						class="easyui-linkbutton" onclick="selectCodeAdd1()">选择方式</a></td>
+				</tr>
+				<tr>
+					<td align="right">启用状态:</td>
+					<td>
+					<select class="easyui-combobox" name="status" id="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+					</td>
+				</tr> 
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onSave()">保存</a>
+		</div>
+	</div>
+	
+	<!-- 产品版面选择页面 -->
+	<div id="winSelect" class="easyui-window"  title="产品版面列表"
+		style="width: 480px; height: 600px" top="10px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="selectForm" method="post">
+			<table id="tblCardFace" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:500,pageList:[500],fitColumns:true,url:'/opas-naps/queryCardFace1.json',loadMsg:'数据加载中.....',checkOnSelect:true,method:'post',toolbar:'#positionCodeCondion1'">
+				<thead frozen="true">
+				<tr>
+					<th field="autoId" width="5%" align="center" checkbox="true"></th>
+					<th field="cardFaceCode" width="25%" align="center">卡版面编号</th>
+					<th field="cardFaceDesc" width="35%" align="center">卡版面描述</th>
+				</tr>
+				</thead>
+			</table>
+		</form>
+		<div id="positionCodeCondion1" style="padding: 2px 5px;">
+			<form id="seachPositionCodeForm1">
+				卡版面编号: <input class="easyui-textbox" style="width: 120px"
+					name="cardFaceCode" id="cardFaceCode" data-options="validType:'maxLength[64]'">
+				卡版面描述: <input class="easyui-textbox" style="width: 150px"
+					name="cardFaceDesc" id="cardFaceDesc" data-options="validType:'maxLength[64]'">
+				<div style="text-align: center; padding: 5px">
+					<a href="javascript:common.searchTbl('seachPositionCodeForm1','tblCardFace');"
+						class="easyui-linkbutton" iconCls="icon-search" >查询 </a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="enterCode()">确定</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winSelect')">取消</a> 
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<!-- 年费减免方式选择页面 -->
+	<div id="winSelect1" class="easyui-window"  title="年费减免方式列表"
+		style="width: 480px; height: 600px" top="10px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="selectForm1" method="post">
+			<table id="tblYearFeeDerate" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:500,pageList:[500],fitColumns:true,url:'/opas-naps/queryYearFeeDerate1.json',loadMsg:'数据加载中.....',checkOnSelect:true,method:'post',toolbar:'#positionCodeCondion2'">
+				<thead frozen="true">
+				<tr>
+					<th field="autoId" width="5%" align="center" checkbox="true"></th>
+					<th field="yearFeeDerateCode" width="25%" align="center">年费编号</th>
+					<th field="yearFeeDerateDesc" width="55%" align="center">年费描述</th>
+				</tr>
+				</thead>
+			</table>
+		</form>
+		<div id="positionCodeCondion2" style="padding: 2px 5px;">
+			<form id="seachPositionCodeForm2">
+				年费编号: <input class="easyui-textbox" style="width: 120px"
+					name="yearFeeDerateCode" id="yearFeeDerateCode" data-options="validType:'maxLength[64]'">
+				年费描述: <input class="easyui-textbox" style="width: 150px"
+					name="yearFeeDerateDesc" id="yearFeeDerateDesc" data-options="validType:'maxLength[64]'">
+				<div style="text-align: center; padding: 5px">
+					<a href="javascript:common.searchTbl('seachPositionCodeForm2','tblYearFeeDerate');"
+						class="easyui-linkbutton" iconCls="icon-search" >查询 </a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="enterCode1()">确定</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winSelect1')">取消</a> 
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+	$cf.loadAllDict();//加载业务字典
+	
+		var tblCardProduct = $("#tblCardProduct");
+		var tblCardFace = $("#tblCardFace");
+		var tblYearFeeDerate = $("#tblYearFeeDerate");
+		var selectWindow = $("#winSelect");
+		var selectWindow1 = $("#winSelect1");
+		var editWindow = $("#winEdit");
+		var addWindow = $("#winAdd");
+		var selectForm = $("#selectForm");
+		var selectForm1 = $("#selectForm1");
+		var editForm = $("#editForm");
+		var addForm = $("#addForm");
+		function formatOper(val, row, index) {
+			return "<a href=javascript:editCardProduct(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:deleteCardProduct();>删除</a>";
+		}
+
+		//日期格式转换
+		function myformatDate(value) {
+			var str = getTaskTime(value);
+			if (str.indexOf('1970') >= 0) {
+				return '';
+			} else {
+				return str;
+			}
+		}
+
+		//币种修改时选择后取得值
+		function currNoClick() {
+			var str = "";
+			$('input[name=currNoUp]:checked').each(function() {
+				str = str + $(this).val();
+				str = str + ",";
+			})
+			str = str.substring(0, str.length - 1);
+			$('#currNoInput').val(str);
+		}
+		//币种添加时选择后取得值
+		function currNoClickAdd() {
+			var str = "";
+			$('input[name=currNoAdd]:checked').each(function() {
+				str = str + $(this).val();
+				str = str + ",";
+			})
+			str = str.substring(0, str.length - 1);
+			$('#currNoInputAdd').val(str);
+		}
+		
+		//工具方法：格式化CST类型时间
+
+		function getTaskTime(strDate) {
+			if (null == strDate || "" == strDate) {
+				return "";
+			}
+			var dateStr = strDate.trim().split(" ");
+			var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+					+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+			var date = new Date(Date.parse(strGMT));
+			var y = date.getFullYear();
+			var m = date.getMonth() + 1;
+			m = m < 10 ? ('0' + m) : m;
+			var d = date.getDate();
+			d = d < 10 ? ('0' + d) : d;
+			var h = date.getHours();
+			h = h < 10 ? ('0' + h) : h;
+			var minute = date.getMinutes();
+			minute = minute < 10 ? ('0' + minute) : minute;
+			var second = date.getSeconds();
+			second = second < 10 ? ('0' + second) : second;
+
+			return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+					+ second;
+		};
+		//打开产品版面列表(新增)
+		function selectCodeAdd() {
+			selectWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false
+			});
+			//打开列表之前清空勾选重新赋值
+			tblCardFace.datagrid("uncheckAll");
+		}
+		//打开产品版面列表(修改)
+		function selectCode() {
+			var value = tblCardProduct.datagrid("getSelected");
+			selectWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false
+			});
+			var dataRows = tblCardFace.datagrid('getRows');//刷新到卡产品版面的每一行对象
+			var dataLen = dataRows.length;
+			//打开列表之前清空勾选重新赋值
+			tblCardFace.datagrid("uncheckAll");
+			var productFace = value.productFace;//获取该条卡产品的产品版面
+			var arr = productFace.split(",");
+			for(var i = 0;i < dataLen; i++){
+				var datarow = dataRows[i];
+				for(var j = 0;j < arr.length;j++){
+					if(arr[j] == datarow.cardFaceCode){
+						tblCardFace.datagrid("checkRow",i);
+					}
+				}
+			}
+		}
+		//打开产品版面列表(新增)
+		function selectCodeAdd1() {
+			selectWindow1.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false
+			});
+			//打开列表之前清空勾选重新赋值
+			tblYearFeeDerate.datagrid("uncheckAll");
+		}
+		//打开年费代码列表
+		function selectCode1() {
+			var value = tblCardProduct.datagrid("getSelected");
+			selectWindow1.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false
+			});
+			var dataRows = tblYearFeeDerate.datagrid('getRows');//刷新到卡产品版面的每一行对象
+			var dataLen = dataRows.length;
+			//打开列表之前清空勾选重新赋值
+			tblYearFeeDerate.datagrid("uncheckAll");
+			var yearFeeDerateType = value.yearFeeDerateType;//获取该条卡产品的年费减免方式
+			var arr = yearFeeDerateType.split(",");
+			for(var i = 0;i < dataLen; i++){
+				var datarow = dataRows[i];
+				for(var j = 0;j < arr.length;j++){
+					if(arr[j] == datarow.yearFeeDerateCode){
+						tblYearFeeDerate.datagrid("checkRow",i);
+					}
+				}
+			}
+		}
+		
+		//产品版面列表确认选择
+		function enterCode() {
+	        var orgObj = tblCardFace.datagrid("getSelections");
+			var targetStr='';
+			for (i = 0; i < orgObj.length; i++){
+				targetStr = targetStr+','+orgObj[i].cardFaceCode;
+			} 
+			targetStr = targetStr.substring(1, targetStr.length);
+			if (orgObj.length == 0) {
+				$.messager.alert("操作提示", "请勾选卡版面信息!");
+				return;
+			}
+
+			$("#productFace1").textbox('setValue',targetStr);
+			$("#productFace2").textbox('setValue',targetStr); 
+			onConcle("winSelect");
+		}
+
+		//年费代码列表确认选择
+		function enterCode1() {
+	        var orgObj = tblYearFeeDerate.datagrid("getSelections");
+
+			var targetStr='';
+			for (i = 0; i < orgObj.length; i++){
+				targetStr = targetStr+','+orgObj[i].yearFeeDerateCode;
+			} 
+			targetStr = targetStr.substring(1, targetStr.length);
+			if (orgObj.length == 0) {
+				$.messager.alert("操作提示", "请勾选年费信息!");
+				return;
+			}
+
+			$("#yearFeeDerateType1").textbox('setValue',targetStr);
+			$("#yearFeeDerateType2").textbox('setValue',targetStr); 
+			onConcle("winSelect1");
+		}
+		
+		function formatYesNo1(val, row, index) {
+			if (val == "1") {
+				return "是";
+			} else if (val == "2") {
+				return "否";
+			}
+		}
+		function formatYesNo2(val, row, index) {
+			if (val == "1") {
+				return "是";
+			} else if (val == "2") {
+				return "否";
+			}
+		}
+		function formatYesNo3(val, row, index) {
+			if (val == "1") {
+				return "是";
+			} else if (val == "2") {
+				return "否";
+			}
+		}
+
+		function formatStaffCard(val, row, index) {
+			if (val == "0") {
+				return "是";
+			} else if (val == "1") {
+				return "否";
+			} else if (val == "2") {
+				return "均可";
+			}
+		}
+		
+		function formatCurrNo(val, row, index) {
+			var ret="";
+			if(val.indexOf("1")>=0){
+				ret=ret+"RMB,"
+			}if(val.indexOf("2")>=0){
+				ret=ret+"USD,"
+			}
+			if(ret.length>0){
+				ret=ret.substring(0,ret.length-1);
+			}
+			return ret;
+		}
+		
+		function formatStatus(val, row, index) {
+			if (val == "0") {
+				return "停用";
+			} else if (val == "1") {
+				return "启用";
+			}
+		}
+
+		function formatAcctType1(val, row, index) {
+			return $cf.getDictDetailName("ZDZHLX1", val);
+		}
+		function formatAcctType2(val, row, index) {
+			return $cf.getDictDetailName("ZDZHLX2", val);
+		}
+		function formatCardType(val, row, index) {
+			return $cf.getDictDetailName("ZDKLB", val);
+		}
+		function formatYearFeeDerateType(val, row, index) {
+			return $cf.getDictDetailName("ZDHXNFDM", val);
+		}
+		function editCardProduct(){
+			var cardProductObj = tblCardProduct.datagrid("getSelected");
+			editWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+				onBeforeOpen : setData(cardProductObj)
+			});
+		}
+
+		//调用删除方法
+		function deleteCardProduct() {
+			var cardProductObj = tblCardProduct.datagrid("getSelected");
+			$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/removeCardProduct.json",
+						data : cardProductObj,
+						onSuccess : function(cardProductObj) {
+							top.$cf.showMsg("删除成功！");
+							tblCardProduct.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+
+		function setData(data) {
+			editForm.form("load", data);
+			currNo1 = data.currNo;
+			var arr = currNo1.split(",");
+			$('input[name=currNoUp]').prop("checked", false); 
+			$('input[name=cardFaceCode]').prop("checked", false); 
+
+			for (var i = 0; i < arr.length; i++) {
+				$('input[name=currNoUp]').each(function() {
+					 if ($(this).val() === arr[i]) {
+						$("input:checkbox[value='"+arr[i]+"']").prop("checked", true);
+					}
+				})
+			}
+			$("#id").attr("readonly", "readonly");
+			$("#id").attr("disabled", "disabled");
+			
+		}
+
+		//关闭窗体
+		function onConcle(obj) {
+			var winObj = $("#" + obj);
+			winObj.window("close");
+			/* location.reload(true);  */
+		}
+
+		//调用修改方法
+		function onUpdate() {
+			var cardProductData = isRequired('editForm');
+			
+			if (cardProductData.productName == null
+					|| cardProductData.productName.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请输入产品名称!");
+				return;
+			}
+			var len = getByteLen(cardProductData.productName);
+			if (len > 32) {
+				$.messager.alert("操作提示", "修改失败,产品名称长度超过32位!");
+				return;
+			}
+			
+			if (cardProductData.productFace1 == null
+					|| cardProductData.productFace1.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请输入产品版面!");
+				return;
+			}
+			var len = getByteLen(cardProductData.productFace1);
+			if (len > 500) {
+				$.messager.alert("操作提示", "修改失败,产品版面长度超过500位!");
+				return;
+			}
+			
+			if (cardProductData.yearFeeDerateType1 == null
+					|| cardProductData.yearFeeDerateType1.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请选择年费减免方式!");
+				return;
+			}
+			var len = getByteLen(cardProductData.yearFeeDerateType1);
+			if (len > 500) {
+				$.messager.alert("操作提示", "修改失败,年费减免方式长度超过500位!");
+				return;
+			}
+			
+			if (cardProductData.currNoInput == null
+					|| cardProductData.currNoInput.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请选择币种!");
+				return;
+			}
+			
+			var len = getByteLen(cardProductData.lineLow);
+			if (len > 8) {
+				$.messager.alert("操作提示", "修改失败,额度下限长度超过8位!");
+				return;
+			}
+			
+
+			var len = getByteLen(cardProductData.lineHight);
+			if (len > 8) {
+				$.messager.alert("操作提示", "修改失败,额度上限长度超过8位!");
+				return;
+			}
+			
+			if(parseInt(cardProductData.lineLow) > parseInt(cardProductData.lineHight)){
+				$.messager.alert("操作提示", "修改失败,额度下限不可大于额度上限!");
+				return;
+			}
+			
+			if (cardProductData.integerLine == null
+					|| cardProductData.integerLine.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请输入取整额度!");
+				return;
+			}
+			var len = getByteLen(cardProductData.integerLine);
+			if (len > 8) {
+				$.messager.alert("操作提示", "修改失败,取整额度长度超过8位!");
+				return;
+			}
+			
+			var len = getByteLen(cardProductData.rateExpireLine);
+			if (len > 2) {
+				$.messager.alert("操作提示", "修改失败,利率代码失效时长长度超过2位!");
+				return;
+			}
+			var jsondata = getFormData(editForm.serializeArray());
+			$cf.ajax({
+				url : "/opas-naps/updateCardProduct.json",
+				data : jsondata,
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						top.$cf.showMsg("修改已成功！");
+						onConcle("winEdit");
+						tblCardProduct.datagrid("reload");
+					} else if (data.RSP_BODY.isFailed) {
+						$.messager.alert("操作提示", "该产品编号已存在，请重新输入！");
+						return;
+					} else {
+						$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg,"error");
+						return;
+					}
+				}
+			});
+			window.location.reload();
+		}
+
+		function getFormData(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value;
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+		}
+
+		//调用新增方法
+		function onSave() {
+			var cardProductData = isRequired('addForm');
+			
+			if (cardProductData.productCode == null
+					|| cardProductData.productCode.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入产品编号!");
+				return;
+			}
+			var len = getByteLen(cardProductData.productCode);
+			if (len > 4) {
+				$.messager.alert("操作提示", "添加失败,产品编号长度超过4位!");
+				return;
+			}
+			
+			if (cardProductData.productName == null
+					|| cardProductData.productName.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入产品名称!");
+				return;
+			}
+			var len = getByteLen(cardProductData.productName);
+			if (len > 32) {
+				$.messager.alert("操作提示", "添加失败,产品名称长度超过32位!");
+				return;
+			}
+			
+			if (cardProductData.productFace2 == null
+					|| cardProductData.productFace2.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入产品版面!");
+				return;
+			}
+			var len = getByteLen(cardProductData.productFace2);
+			if (len > 500) {
+				$.messager.alert("操作提示", "添加失败,产品版面长度超过500位!");
+				return;
+			}
+			
+			if (cardProductData.yearFeeDerateType2 == null
+					|| cardProductData.yearFeeDerateType2.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请选择年费减免方式!");
+				return;
+			}
+			var len = getByteLen(cardProductData.yearFeeDerateType2);
+			if (len > 500) {
+				$.messager.alert("操作提示", "添加失败,年费减免方式长度超过500位!");
+				return;
+			}
+			
+			if (cardProductData.currNoInputAdd == null
+					|| cardProductData.currNoInputAdd.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请选择币种!");
+				return;
+			}
+			
+			if (parseInt(cardProductData.lineLow) < 0){
+				$.messager.alert("操作提示", "添加失败,额度下限不可为负数!");
+				return;
+			}
+			var len = getByteLen(cardProductData.lineLow);
+			if (len > 8) {
+				$.messager.alert("操作提示", "添加失败,额度下限长度超过8位!");
+				return;
+			}
+
+			if (parseInt(cardProductData.lineHight) < 0){
+				$.messager.alert("操作提示", "添加失败,额度上限不可为负数!");
+				return;
+			}
+			var len = getByteLen(cardProductData.lineHight);
+			if (len > 8) {
+				$.messager.alert("操作提示", "添加失败,额度上限长度超过8位!");
+				return;
+			}
+			
+
+			if(parseInt(cardProductData.lineLow) > parseInt(cardProductData.lineHight)){
+				$.messager.alert("操作提示", "添加失败,额度下限不可大于额度上限!");
+				return;
+			}
+			
+			if (cardProductData.integerLine == null
+					|| cardProductData.integerLine.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入取整额度!");
+				return;
+			}
+			var len = getByteLen(cardProductData.integerLine);
+			if (len > 8) {
+				$.messager.alert("操作提示", "添加失败,取整额度长度超过8位!");
+				return;
+			}
+			
+			if (cardProductData.rateExpireLine == null
+					|| cardProductData.rateExpireLine.trim() == "") {
+				cardProductData.rateExpireLine = null;
+			}
+			var len = getByteLen(cardProductData.rateExpireLine);
+			if (len > 2) {
+				$.messager.alert("操作提示", "添加失败,利率代码失效时长长度超过2位!");
+				return;
+			}
+			
+			var jsondata = getFormData(addForm.serializeArray());
+
+			$cf.ajax({
+					url : "/opas-naps/saveCardProduct.json",
+					data : jsondata,
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							top.$cf.showMsg("添加已成功！");
+							onConcle("winAdd");
+							tblCardProduct.datagrid("reload");
+						} else if (data.RSP_BODY.isFailed) {
+							$.messager.alert("操作提示", "该产品编号已存在，请重新输入！");
+							return;
+						} else {
+							$.messager.alert("操作提示", "添加失败:" + data.exMsg,"error");
+							return;
+						}
+					}
+
+				});
+		}
+
+		$(function (){
+			$('#acctType1').combobox({
+				onChange: function() {
+					var type1 = $('#acctType1').combobox('getValue');
+					if (type1 == '1') {
+						$('#acctType2').combobox('setValue', '').combobox('disable');
+					} else if (type1 == '2') {
+						$('#acctType2').combobox('enable');
+						
+					}
+				}
+				
+			});
+		})
+		$(function (){
+			$('#acctType11').combobox({
+				onChange: function() {
+					var type1 = $('#acctType11').combobox('getValue');
+					if (type1 == '1') {
+						$('#acctType22').combobox('setValue', '').combobox('disable');
+					} else if (type1 == '2') {
+						$('#acctType22').combobox('enable');
+						
+					}
+				}
+				
+			});
+		})
+	</script>
+</html>

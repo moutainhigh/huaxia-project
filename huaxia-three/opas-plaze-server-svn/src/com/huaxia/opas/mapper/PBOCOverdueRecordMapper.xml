@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCOverdueRecordMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_LAST5YEAR_OVERDUE (
+			APP_ID,MSG_TYPE,MONTH,LAST_MONTHS_STR,AMT,
+			CRT_TIME,CRT_USER,FA_REC_SEQ
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.overdueType},
+			#{item.month},
+			#{item.lastMonths},
+			#{item.amount},
+			SYSDATE,
+			'SYSTEM',
+			#{item.uuid}
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

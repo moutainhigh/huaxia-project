@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.util.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.cache.js"></script>
+<style type="text/css">
+ .tl {width:60px;font-size: 12px } 
+ .tll {width:87px;font-size: 12px }
+ .ts {width:120px;font-size: 12px }
+ .tts {width:125px;height:20px  }
+ .tss {width:195px;font-size: 12px }
+ .tls {width:97px;font-size: 12px }
+ .yztb {width:50px;font-size: 12px }
+ .dhtb {width:150px;font-size: 12px }
+ .ddtb {width:68px;font-size: 6px }
+ .style2{font-size:13px;border:1px; width:auto; }
+ .bk {border:1px solid #3399CC; }
+ .bodyPanel {background-color:#E6E6FA;color:#003476;}
+html, body {
+	font: normal 12px Arial;
+}
+ table {
+	border-collapse: collapse;
+}
+*{margin:0px;padding:0px;}
+tr.jiYaoColor td{
+	background-color:pink;
+}
+ select {
+	width: 135px;
+	height: 20px;
+	border:1px solid #A4D3EE;
+}
+table.tableTdColor td{
+border: 1px solid #c0c0c0;
+}
+fieldset{
+border:1px solid #A4D3EE;
+}
+</style>
+</head>
+	<body>
+		<!-- 快速定位区 结束 -->
+		<div data-options="region:'center'" style="padding:10px;" class="bodyPanel">
+		<form  id="custZJInfoForm">
+		<div>
+		<fieldset>
+			<legend><span id="A">客户基本信息</span></legend>
+				<table id="bizInpApplC1"  style="text-align:right;width: 100%">
+				    <tr>
+						<!-- <td class="tl" align="left">申请流水号：</td><td class="ts" align="left"><input name="appId" id="appId"    readonly="readonly"/></td> -->
+						<td class="tl" align="left">主卡姓名：</td><td class="ts" align="left"><input name="c1Cname" id="c1Cname"   readonly="readonly"/></td>
+						<td class="tl" align="left">拼音/英文姓名：</td><td class="ts" align="left"><input name="c1Ename" id="c1Ename" class="" onkeyup="widthCheck(this,30);"/></td>
+						<td class="tl" align="left">性别：</td><td class="ts" align="left"><input name="policeGender" id="policeGender"    readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">证件号码：</td><td class="ts" align="left"><input name="c1Idnbr" id="c1Idnbr"   readonly="readonly"/></td>
+						<td class="tl" align="left">生日：</td><td class="ts" align="left"><input name="c1Birth" id="c1Birth"  class="easyui-datebox" data-options="onSelect:onChangeDate,onHidePanel:changeDateToZXTC,editable:false"/></td>
+						<td class="tl" align="left">籍贯：</td><td class="ts" align="left"><input name="policeJgssxhomeProvCity" id="policeJgssxhomeProvCity"   readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">申请人手机：</td><td class="ts" align="left"><input name="c1Mobile" id="c1Mobile"  onkeyup="widthCheck(this,11);" type="text" style="width: 135px;"/></td>
+						<td class="tl" align="left">宅电区号：</td><td class="ts" align="left"><input name="c1Hmare" id="c1Hmare" onkeyup="widthCheck(this,4);" type="text" style="width: 135px;"/></td>
+						<td class="tl" align="left">宅电：</td><td class="ts" align="left"><input name="c1Hmtel" id="c1Hmtel" onkeyup="widthCheck(this,17);" type="text" style="width: 135px;"/></td>
+					</tr>
+					<tr>
+						<!--  maxlength="15"    oninput="autoWidth(this);"  onkeydown="autoWidth(this)" onkeyup="checkLength(this);"-->
+						<td class="ts" align="left" colspan="6">住宅地址：<input name="c1Hmadd1" id="c1Hmadd1" type="text" class="style2" onkeyup="widthCheck(this,30);" oninput="autoWidth(this)" onmousemove="this.className='bk'" onmouseout="this.className='style2'"/>
+						<input name="c1Hmadd2" id="c1Hmadd2" type="text" class="style2"  onkeyup="widthCheck(this,30);" oninput="autoWidth(this)"/>
+						<input name="c1Hmadd3" id="c1Hmadd3" type="text" class="style2"  onkeyup="widthCheck(this,30);" oninput="autoWidth(this)" onmousemove="this.className='bk'" onmouseout="this.className='style2'"/>
+						<input name="c1Hmadd4" id="c1Hmadd4" type="text" class="style2"  onkeyup="widthCheck(this,30);" oninput="autoWidth(this)" onmousemove="this.className='bk'" onmouseout="this.className='style2'"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位名称：<input name="autoId" id="autoId" type="hidden"/>
+					    <input name="c1c2Flag" id="c1c2Flag" type="hidden"/></td><td  colspan="6" class="ts" align="left"><input style="width:96%" name="c1Coname" id="c1Coname" onkeyup="widthCheck(this,30);"type="text"/></td>
+					</tr>
+					<tr>
+						<td class="ts" align="left" colspan="6">单位地址：<input name="c1Coadd1" id="c1Coadd1" type="text" class="style2"  onkeypress="demo(this)" onkeyup="widthCheck(this,30);" oninput="autoWidth(this)" onmousemove="this.className='bk'" onmouseout="this.className='style2'"/>
+						<input name="c1Coadd2" id="c1Coadd2" type="text" class="style2" onkeyup="widthCheck(this,30);" oninput="autoWidth(this)"/>
+						<input name="c1Coadd3" id="c1Coadd3" type="text" class="style2" onkeyup="widthCheck(this,30);" oninput="autoWidth(this)" onmousemove="this.className='bk'" onmouseout="this.className='style2'"/>
+						<input name="c1Coadd4" id="c1Coadd4" type="text" class="style2" onkeyup="widthCheck(this,30);" oninput="autoWidth(this)" onmousemove="this.className='bk'" onmouseout="this.className='style2'"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位电话（区号必填）：</td><td class="tll" align="left"><input name="c1Cotel" id="c1Cotel" onkeyup="widthCheck(this,17);" type="text" style="width: 135px;"/></td>
+						<td class="tl" align="left">分机：</td><td class="tll" align="left"><input name="c1Coext" id="c1Coext" onkeyup="widthCheck(this,6);" type="text" style="width: 135px;"/></td>
+						</tr>
+					<tr>
+						<td class="tl" align="left">部门名称：</td><td class="ts" align="left"><input name="c1Codept" id="c1Codept" onkeyup="widthCheck(this,20);" type="text" style="width: 135px;" /></td>
+						<td class="tl" align="left">职务：</td><td class="ts" align="left"><select id="c1Title" name="c1Title" onchange="onChangeCombox(this);"></select></td>
+						</tr>
+					
+					<tr>
+						<td class="tl" align="left">现职年限：</td><td class="ts" align="left"><input name="c1Coyr" id="c1Coyr" onkeyup="widthCheck(this,2);" onblur="checkValue(this)" type="text" style="width: 135px;"/></td>
+						<td class="tl" align="left">税前收入（万）：</td><td class="ts" align="left"><input name="c1Earn" id="c1Earn" onkeyup="widthCheck(this,5);" onblur="checkValue(this)" type="text" style="width: 135px;"/></td>
+                        <td class="tl" align="left">生肖：</td><td class="ts" align="left"><input id="shenxiao"   readonly="readonly"/> 
+                     </tr>
+                     <tr>
+						<td class="tl" align="left">婚姻状况：</td><td class="ts" align="left"><select id="c1Marst" name="c1Marst" onchange="onChangeCombox(this);"></select></td>
+						<td class="tl" align="left">教育程度：</td><td class="ts" align="left"><select id="c1Educls" name="c1Educls" onchange="onChangeCombox(this);"></select></td>
+						<td class="tl" align="left">账单地址：</td><td class="ts" align="left"><select style="width:89%;" name="c4Cycadd1" id="c4Cycadd1" onchange="onChangeCombox(this);">
+                        <option value="">请选择</option>
+                        <option value="B">单址</option>
+                        <option value="H">宅址</option>
+                       </select>
+                        </td>
+						</tr>
+				</table>
+		</fieldset>
+		</div>
+		<fieldset>
+			<legend><span id="B">联系人信息</span></legend>
+				<table  style="width:100%;text-align:center;">
+					<tr>
+						<td style="font-size: 12px">联系人信息</td>
+						<td style="font-size: 12px">姓名</td>
+						<td style="font-size: 12px">关系</td>
+						<td style="font-size: 12px">区号</td>
+						<td style="font-size: 12px">座机</td>
+						<td style="font-size: 12px">手机</td>
+					</tr>
+					<tr>
+						<td style="font-size: 12px">第一联系人</td>
+						<td><input name="c1Rename" id="c1Rename"  class=" tls" onkeyup="widthCheck(this,30);"/></td>
+						<td><select id="c1Reship" name="c1Reship" style="width:140px" onchange="onChangeCombox(this);"></select></td>
+						<td><input name="c1Retelar" id="c1Retelar"  class=" tls" onkeyup="widthCheck(this,4);"/></td>
+						<td><input name="c1Retel" id="c1Retel"  class=" tls" onkeyup="widthCheck(this,17);"/></td>
+						<td><input name="c1Remobil" id="c1Remobil"  class=" tls" onkeyup="widthCheck(this,12);"/></td>
+					</tr>
+					<tr>
+						<td style="font-size: 12px">其他联系人</td>
+						<td><input name="c1Xname1" id="c1Xname1"  class=" tls" onkeyup="widthCheck(this,30);"/></td>
+						<td><select id="c1Xship1" name="c1Xship1" style="width:140px" onchange="onChangeCombox(this);"></select></td>
+						<td><input name="c1Xtelar1" id="c1Xtelar1"  class=" tls" onkeyup="widthCheck(this,4);"/></td>
+						<td><input name="c1Xtel1" id="c1Xtel1"  class=" tls" onkeyup="widthCheck(this,17);"/></td>
+						<td><input name="c1Xmobil1" id="c1Xmobil1"  class=" tls" onkeyup="widthCheck(this,12);"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</form>	
+		<form  id="custProcInfoForm">	
+		<div>
+		<fieldset>
+			<legend><span id="C">人行摘要信息</span></legend>
+				<table  style="width:100%;">
+					<tr>
+						<td class="tl" align="left"><label>手机号码&nbsp;&nbsp;<input style="width:27%" name="cellPhone" id="cellPhone"  readonly="readonly"/>
+						单位电话<input style="width:23%" name="cCompPhone" id="cCompPhone"  readonly="readonly"/>
+						住宅电话<input style="width:23%" name="resiTel" id="resiTel"  readonly="readonly"/></label></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">住址地址&nbsp;&nbsp;<input style="width:90%"  name="residentAddr" id="residentAddr"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称1<input style="width:90%" name="company" id="company"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位地址1<input style="width:90%" name="compAddr" id="compAddr"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称2<input style="width:90%" name="company2" id="company2"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位地址2<input style="width:90%" name="compAddr2" id="compAddr2"  readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		</form>
+		<form  id="custBankInfoForm">	
+		<fieldset>
+			<legend><span id="C">二代人行摘要信息</span></legend>
+				<table style="width:100%;text-align:right;">
+				   <tr>
+						<td class="tl" align="left"><label>手机号码1&nbsp;&nbsp;<input style="width:27%" name="PHONE_NUM1" id="PHONE_NUM1"  readonly="readonly"/>
+						手机号码2<input style="width:23%" name="PHONE_NUM2" id="PHONE_NUM2"  readonly="readonly"/>
+						住宅电话&nbsp;<input style="width:21%" name="HOME_PHONE" id="HOME_PHONE"  readonly="readonly"/></label></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位名称1&nbsp;&nbsp;<input style="width:89%"  name="COMPANY1" id="COMPANY1"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位电话1<input style="width:90%" name="UNIT_PHONE1" id="UNIT_PHONE1"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位地址1<input style="width:90%" name="COMP_ADDR1" id="COMP_ADDR1"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称2<input style="width:90%" name="COMPANY2" id="COMPANY2"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位电话2<input style="width:90%" name="UNIT_PHONE2" id="UNIT_PHONE2"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位地址2<input style="width:90%" name="COMP_ADDR2" id="COMP_ADDR2"  readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</form>
+		
+		<form  id="yanzhenForm">
+		<fieldset>
+			<legend><span id="D">验证信息</span></legend>
+				<table style="width:100%;text-align:center;">
+					<tr>
+						<td style="width: 60px;font-size: 12px">验证信息</td>
+						<td style="font-size: 12px">征信电话核查白名单</td>
+						<td style="font-size: 12px">CRM</td>
+						<td style="font-size: 12px">审查</td>
+						<td style="font-size: 12px">人行</td>
+						<td style="font-size: 12px;width: 100px">查询</td>
+					</tr>
+					<tr>
+						<td style="width: 60px;font-size: 12px">手机号码</td>
+						<td><input name="" id="" class="yztb" value="否"  type="button" /></td>
+						<td><input name="crm_MOBILEPHONE" id="crm_MOBILEPHONE" class="yztb"  type="button" /></td>
+						<td><input name="rev_MOBILE_PHONE" id="rev_MOBILE_PHONE" class="yztb" value="否"  type="button" /></td>
+					   <td style="width: 120px;font-size: 12px"><input name="pbocMobileFlag" id="pbocMobileFlag1" type="checkbox" value="1"  onclick="fun('yes','#pbocMobileFlag')"/><input id="pbocMobileFlagColor" value="一致" style="border:none;width:30px"/>&nbsp;
+							<input name="pbocMobileFlag" id="pbocMobileFlag0" type="checkbox" value="0" onclick="fun('no','#pbocMobileFlag')"/>不一致
+						</td>
+						<td><input name="" id="" class="yztb" value="审查库"  type="button" /></td> <!-- ydj审查库暂时无效5.4（业务要求）  onclick="onReviewWin()" -->
+					</tr>
+					<tr>
+						<td style="width: 60px;font-size: 12px">单位电话</td>
+						<td><input name="credit_COMPANY_TEL" id="credit_COMPANY_TEL" class="yztb"  type="button" onclick="isOpenWin('credit_COMPANY_TEL')"/></td>
+						<td><input name="crm_BUSPHONE" id="crm_BUSPHONE" class="yztb"  type="button" /></td>
+						<td><input name="rev_COMP_TEL" id="rev_COMP_TEL" class="yztb"  type="button" value="否"/></td>
+						<td style="width: 120px;font-size: 12px"><input name="pbocBusphoneFlag" id="pbocBusphoneFlag1" type="checkbox" value="1"  onclick="fun('yes','#pbocBusphoneFlag')"/><input id="pbocBusphoneFlagColor" value="一致" style="border:none;width:30px"/>&nbsp;
+							<input name="pbocBusphoneFlag" id="pbocBusphoneFlag0" type="checkbox" value="0" onclick="fun('no','#pbocBusphoneFlag')"/>不一致
+						</td>
+						<td><input name="" id="" class="yztb" value="问题库"  type="button" onclick="openQuestion('questionWin')"/></td>
+					</tr>
+					<tr>
+						<td style="width: 60px;font-size: 12px">住宅电话</td>
+						<td><input name="" id="" class="yztb" value="否" type="button" /></td>
+						<td><input name="crm_PHONE" id="crm_PHONE" class="yztb" type="button" /></td>
+						<td><input name="" id="" class="yztb" value="否" type="button" /></td>
+						<td style="width: 120px;font-size: 12px"><input name="pbocPhoneFlag" id="pbocPhoneFlag1" type="checkbox" value="1"   onclick="fun('yes','#pbocPhoneFlag')"/><input id="pbocPhoneFlagColor" value="一致" style="border:none;width:30px"/>&nbsp;
+							<input name="pbocPhoneFlag" id="pbocPhoneFlag0" type="checkbox" value="0" style="width:10%;text-align:center;" onclick="fun('no','#pbocPhoneFlag')"/>不一致
+						</td>
+						<td><input  style="width: 100px;font-size: 12px" value="征信白名单查询" type="button" onclick="showZxWhiteListWin('zhenXinWhiteOrderWin')"/></td>
+					</tr>
+					<tr>
+						<td style="width: 60px;font-size: 12px">单位名称</td>
+						<td><input name="credit_COMPANY_NAME" id="credit_COMPANY_NAME" class="yztb"  type="button"  onclick="isOpenWin('credit_COMPANY_NAME')"/></td>
+						<td><input name="crm_COMPANY" id="crm_COMPANY" class="yztb" type="button" /></td>
+						<td><input name="rev_COMP_NAME" id="rev_COMP_NAME" class="yztb" value="否" type="button" /></td>
+						<td style="width: 120px;font-size: 12px"><input name="pbocCompanyFlag" id="pbocCompanyFlag1" type="checkbox" value="1"  onclick="fun('yes','#pbocCompanyFlag')"/><input id="pbocCompanyFlagColor" value="一致" style="border:none;width:30px"/>&nbsp;
+							<input name="pbocCompanyFlag" id="pbocCompanyFlag0" type="checkbox" value="0" onclick="fun('no','#pbocCompanyFlag')"/>不一致
+						</td>
+						<td><input class="" style="width: 100px;font-size: 12px" value="征信白名单添加" type="button"  onclick="openZhenXinKuAddWin('zhenXinKuAddWin')"/></td>
+					</tr>
+					<tr>
+						<td style="width: 60px;font-size: 12px">单位地址</td>
+						<td><input name="" id="" class="yztb" value="否"  type="button" /></td>
+						<td><input name="crm_BUSADDR" id="crm_BUSADDR" class="yztb"  type="button" /></td>
+						<td><input name="rev_COMP_ADDR" id="rev_COMP_ADDR" class="yztb" value="否" type="button" /></td>
+						<td style="width: 120px;font-size: 12px"><input name="pbocBusaddrFlag" id="pbocBusaddrFlag1" type="checkbox" value="1"   onclick="fun('yes','#pbocBusaddrFlag')"/><input id="pbocBusaddrFlagColor" value="一致" style="border:none;width:30px"/>&nbsp;
+							<input name="pbocBusaddrFlag" id="pbocBusaddrFlag0" type="checkbox" value="0" onclick="fun('no','#pbocBusaddrFlag')"/>不一致
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 60px;font-size: 12px">账单地址</td>
+						<td><input name="" id="" class="yztb" value="否" type="button" /></td>
+						<td><input name="crm_HOMEADDR" id="crm_HOMEADDR" class="yztb" type="button" /></td>
+						<td><input name="rev_RESIDENT_ADDR" id="rev_RESIDENT_ADDR" class="yztb" value="否"  type="button" /></td>
+						<td style="width: 120px;font-size: 12px"><input name="pbocHomeaddrFlag" id="pbocHomeaddrFlag1" type="checkbox" value="1"  onclick="fun('yes','#pbocHomeaddrFlag')"/><input id="pbocHomeaddrFlagColor" value="一致" style="border:none;width:30px"/>&nbsp;
+							<input name="pbocHomeaddrFlag" id="pbocHomeaddrFlag0" type="checkbox" value="0"  onclick="fun('no','#pbocHomeaddrFlag')"/>不一致
+						</td>
+						<td><!-- <a href="javascript:void(0)" class="" style="width: 100px;font-size: 12px" onclick="dianHe()" >保存至电核</a> --></td>
+					</tr>
+				</table>
+		</fieldset>
+		
+		
+		
+		<!-- <fieldset>
+			<legend><span id="E">核实信息</span></legend>
+				<table   data-options="singleSelect:true,pagination:true,fitColumns:true">
+					<tr>
+						<td style="font-size: 12px;width: 150px">款项用途是否合规：</td>
+						<td style="font-size: 12px;width: 80px"><input name="verifyinfoFlag" id="yes_verifyinfoFlag" type="checkbox" value="1" onclick="fun1('yes')"/>是&nbsp;&nbsp;&nbsp;
+						<input name="verifyinfoFlag" id="no_verifyinfoFlag" type="checkbox" value="0" onclick="fun1('no')"/>否</td>
+					</tr>
+				</table>
+		</fieldset> -->
+		</form>
+		<fieldset>
+			<legend><span id="F">调查纪要</span></legend>
+				<table  style="width:100%;" id="F_diaocha" 	data-options="fitColumns:true">
+					<tr>
+						<td align="left">电话来源：
+							<select id="F_telSource" name="telSource"></select>
+						</td>
+						<td  align="left">电话类型：
+							<select id="F_telType" name="telType"></select>
+						</td>
+					</tr>
+					<tr>
+						<td align="left"  colspan="2">请输入电话号码：<input name="telNo" id="F_telNo"   style="width:180px"/>
+						<input name="" id="" class="yztb" value="拨号"  type="button" /></td>
+					</tr>
+					<tr>
+						<td  align="left">照会对象：
+							<select id="F_noteObject" name="noteObject"></select>
+						</td>
+						<td  align="left">电核结论：
+							<select id="F_telcheckReuslt" name="telcheckReuslt"></select>
+						</td>
+					</tr>
+					<tr><td align="left"  colspan="2">备注：
+						<textarea name="memo" id="F_memo" style="height: 80px;width: 500px"></textarea></td>
+					</tr>
+				</table>
+					<input type="button" onclick="onSubmitJiYao('insert')" value="纪要提交"/>&nbsp;
+		</fieldset>
+		<fieldset>
+		<legend><span id="G">纪要信息</span></legend>
+		<div id="datalist"  style="width:100%;"></div>
+			<!-- <table class="easyui-datagrid" id="datalist"  style="width:100%;table-layout:fixed;" data-options="rownumbers:true,singleSelect:true,fitColumns:true,nowrap:false,rowStyler:function(index,row){
+					if(row.colorFlag=='1'){
+						return 'background-color:Pink;';
+					}
+			}">
+			<thead>
+					<tr>
+						<th width="5%" field="autoId" checkbox="true">操作</th>
+						<th width="60%" data-options="field:'bigMemo'" formatter="formatMesAutoRow">详情</th>
+						<th width="15%" data-options="field:'crtDate'" align="center" formatter="formatDate">创建/修改日期</th>
+						<th width="15%" field="operate" width="10%" align="center" data-options="formatter:formatOper">操作</th>
+					</tr>
+			</thead>
+			</table> -->
+		</fieldset>
+		<fieldset>
+			<legend><span id="E">过件码</span></legend>
+				<table   style="width:100%;align:left;" id="GG_passCode" data-options="fitColumns:true">
+					<tr>
+						<td class="dhtb" align="left">过件码：
+							<select  id="G_passCode" name="passCode" ></select>
+						</td>
+					</tr>
+				</table>
+				<!-- <select id="G_passCode" name="passCode" class="easyui-combobox">
+								<option value="">请选择过件码</option>
+								<option value="1">400A</option>
+								<option value="2">900</option>
+								<option value="3">100</option>
+							</select> -->
+				<input type="button"  onclick="onBizInpApplC1()" value="保存"/>
+				<!-- 补充证明文件区 -->
+			<div id="tbl_area"></div>
+		</fieldset>	
+		</div>
+	
+	<!-- 征信电话核查白名单 查询按钮-->
+	<div id="zhenXinWhiteOrderWin" class="easyui-window" title="征信电话核查白名单"
+		style="width: 100%; height: 440px;top: 300px"
+		data-options="iconCls:'icon-save',collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true">
+		<div id="tb_zhenXinWhiteOrderWin">
+		</div>
+			<!-- <table id="tb_zhenXinWhiteOrderWin" class="easyui-datagrid"
+				style="width: 100%; height: 380px" iconCls="icon-save"
+				data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,url:'/opas-naps/creditTelCheckSelect.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#dictCondion'">
+				<thead>
+					<tr>
+						<th field="appId" width="20%">申请件编号</th>
+						<th field="createDate" width="20%">生成日期</th>
+						<th field="companyName" width="20%">单位名称</th>
+						<th field="companyTel" width="20%">单位电话</th>
+						<th field="currStatus" width="20%" formatter="formatCode">当前状态</th>
+					</tr>
+				</thead> 
+			</table>-->
+			<div id="dictCondion" style="padding: 10px; text-align: center;">
+					<form id="seachDictForm">
+						单位名称: <input  style="width: 110px"
+							name="companyName" id="Z_companyName"> 
+						单位电话: <input  style="width: 110px" name="companyTel"
+							id="Z_companyTel"> 
+						<input onclick="common.searchTbl('seachDictForm','tb_zhenXinWhiteOrderWin');" type="button" value="查询"/>
+						<input type="button" value="保存至电核"	onclick="saveDianHe()"/>
+					</form>
+				</div>
+		
+	</div>
+	<!-- 征信电话核查白名单 “是”查询 -->
+	<div id="yes_zhenXinWhiteOrderWin" class="easyui-window" title="征信电话核查白名单"
+		style="width: 100%; height: 400px;top: 300px"
+		data-options="iconCls:'icon-save',collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true">
+		<div id="tb_yes_zhenXinWhiteOrderWin" style="width: 100%; height: 310px" ></div>
+			<!-- <table id="tb_yes_zhenXinWhiteOrderWin" class="easyui-datagrid"
+				style="width: 100%; height: 310px" iconCls="icon-save"data-options="remoteSort:false,rownumbers:true,singleSelect:true,pagination:true,pageSize:15,pageList:[15,20,50],fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+				<thead frozen="false">
+					<tr>
+						<th field="appId" width="19%">申请件编号</th>
+						<th field="createDate" width="10%">生成日期</th>
+						<th field="companyName" width="47%">单位名称</th>
+						<th field="companyTel" width="14%">单位电话</th>
+						<th field="currStatus" width="8%" formatter="formatCode">当前状态</th>
+					</tr>
+				</thead>
+			</table> -->
+			<div id="dictCondion" style="padding: 10px; text-align: center;">
+						<input type="button" value="保存至电核"	onclick="yes_saveDianHe()"/>
+				</div>
+	</div> 
+	<!-- 征信库添加 -->
+	<div id="zhenXinKuAddWin" class="easyui-window" title="征信库添加"
+		style="width: 100%; height: 400px;top: 300px"
+		data-options="iconCls:'icon-save',collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true">
+		<form id="editForm">
+			<table id="tb_zhenXinKuAddWin" style="border-collapse: separate;width: 675px; border-spacing: 10px;" iconCls='icon-save'>
+				<tr>
+					<td align="left">来源</td>
+					<td><input  id="Y_appId" name="appId"/></td>
+				</tr>
+				<tr>
+					<td align="left">单位名称</td>
+					<td><input style="width:98%;"  id="Y_companyName" name="companyName"/></td>
+				</tr>
+				<tr>
+					<td align="left">单位电话</td>
+					<td><input  id="Y_companyTel" name="companyTel"/></td>
+				</tr>
+				<tr>
+					<td align="left">电话来源</td>
+					<td><input style="width:98%;"  id="zxk_telSource" name="zxk_telSource"/></td>
+				</tr>
+				<tr>
+					<td align="left">生成日期</td>
+					<td><input class="easyui-datebox" id="Y_createDate" name="createDate" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td align="left">备注</td>
+					<td><input style="width:98%;"  id="Y_memo" name="memo"/></td>
+				</tr>
+				<tr>
+					<td align="left">操作员工号</td>
+					<td><input  id="Y_operator" name="operator"/></td>
+				</tr>
+			</table>
+				<div style="text-align: center; padding: 5px">
+					<input type="button" onclick="onZhenXinKuAddWin()" value="保存"/>&nbsp;
+					<input type="button" onclick="onConcle('zhenXinKuAddWin')" value="取消"/>
+				</div>
+		</form>
+	</div>
+	<!-- 问题库-->
+	<div id="questionWin" class="easyui-window" title="问题库"
+		style="width: 100%; height: 400px;top: 300px"
+		data-options="iconCls:'icon-save',collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="tb_questionWin" 	style="width:100%;">
+			</table>
+			自定义问题：<input  style="width: 110px" id="zidingyi1"/><br>
+			自定义答案：<input  style="width: 110px" id="zidingyi2"/><br>
+			电核结果：<label><input type="radio" name="result" value="一致">一致</label>
+			<label><input type="radio" name="result" value="不一致">不一致</label>
+			<div style="text-align: center; padding: 5px">
+			<input type="button"	onclick="onQusetionWinRefresh()"value="刷新"/>&nbsp;
+				<input type="button" onclick="onConcle('questionWin')" value="取消"/>&nbsp;
+			<input type="button" onclick="saveToDianHe('questionWin')" value="保存至电核"/>		
+			</div>
+		</div>
+	</div>
+	<!-- 纪要修改 -->
+	<div id="winEdit" class="easyui-window" title="纪要修改" style="width: 100%; height: 400px;top: 500px"
+		data-options="iconCls:'icon-save',collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true">
+		<form id="editFormJY">
+			<table>
+				<tr>
+					<td>申请件编号:</td>
+					<td><input  id="appId"
+						type="text" name="appId"  readonly="readonly"></input>
+						<input type="hidden" name="talId" id="talId"/>
+					</td>
+				</tr>
+				<tr>
+					<td>纪要内容:</td>
+					<td>
+						<textarea  name="bigMemo" style="width:350px; height: 200px;" id="bigMemo"></textarea>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<input type="button" value="保存" onclick="onUpdate()"/>&nbsp;<input type="button" onclick="onConcle('winEdit')" value="取消"/>
+		</div>
+	</div>
+<script type="text/javascript">
+$cf.loadAllDict();//加载数据字典
+var appId;
+function GetQueryString(name){
+	 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	 var r = window.location.search.substr(1).match(reg);
+	 if(r!=null) return unescape(r[2]);
+	 return null;
+}
+var ydjFlag='1';
+var matchingCardFlagZx='0';//落入 纪要调查时使用 
+if(parent.matchingCardFlag){
+	matchingCardFlagZx=parent.matchingCardFlag;
+}
+if(parent.ydjFlag){
+	ydjFlag=parent.ydjFlag;
+}
+var userId = parent.userCode;//'user';
+var dic01 = new Array("0:否","1:是");//ss
+var objParam;
+var pbocResultOld;
+var yanzhenMessage="";//人行，征信，公安 是  保存用
+var credit_COMPANY_NAME;
+var credit_COMPANY_TEL;
+var isSaveSuccess=true;//全局变量 父页面判断子页面是否保存成功的依据 
+var waringMessage="";//保存失败时父页面要用的 提示的信息 
+var bigSaveButtonFlag=false;//判断是否是  进行父页面大保存操作的依据 
+var isCanCommit = false;//判断是否是  进行父页面是否可提交 	
+var yanzhen = "";
+var resultInfo = "";
+//初始化
+$(function(){
+	var url = location.href;
+	appIdParam = url.split("=")[1];
+	appId = appIdParam.split("&")[0];
+	var custZJInfoForm=$("#custZJInfoForm");
+	var custProcInfoForm = $("#custProcInfoForm");
+	var custBankInfoForm = $("#custBankInfoForm");
+	var yanzhenForm = $("#yanzhenForm");
+	$("#Y_appId").val(appId);
+	$("#Y_operator").val(userId);
+	$cf.ajax({
+		data : {
+			"appId" : appId
+		},
+		url : "/opas-naps/findZxCreditInvestigationYdjByAppId.json",
+		async:false,
+		onSuccess : function(res) {
+			var jsoncustInfo = res.RSP_BODY.appl;
+			var custProcInfo = res.RSP_BODY.pboc;//人行摘要信息
+			var custBankInfo = res.RSP_BODY.bank;//二代人行摘要信息
+			var queryed_cert_type = "01";
+			if(custBankInfo != null){
+				queryed_cert_type = custBankInfo["QUERYED_CERT_TYPE"];
+			}
+			if(queryed_cert_type == "10"){
+				$('#custProcInfoForm').hide();
+			}else{
+				$('#custBankInfoForm').hide();
+			}
+			resultInfo = res.RSP_BODY.result;//征信电核结果信息
+			var policData   =  res.RSP_BODY.policeData;//公安的信息 
+			$("#policeJgssxhomeProvCity").val(policData.policeJgssxhomeProvCity);//籍贯 
+			yanzhen = res.RSP_BODY.yanzhenResMap;
+			var yanzhenMesShowMap = res.RSP_BODY.yanzhenMesShowMap;//验证信息 “是” 的 展示 
+			objParam = jsoncustInfo;//为全局变量赋值（此处不用，为保存做准备）
+			var jsoncustInfojson = eval('(' +jsoncustInfo+ ')');
+			if(policData.policeGender){
+				$("#policeGender").val(policData.policeGender);//性别 
+			}else{
+				var personSex=jsoncustInfojson.c1Gender;
+				if(personSex=="M"){
+					$("#policeGender").val("男性");//性别 
+				}
+				if(personSex=="F"){
+					$("#policeGender").val("女性");//性别 
+				}
+			}
+			custZJInfoForm.form("load", jsoncustInfojson);
+			custProcInfoForm.form("load",custProcInfo);//人行摘要信息 
+			custBankInfoForm.form("load",custBankInfo);
+			yanzhenForm.form("load", yanzhen);
+			//单位地址
+			var lcoadd1 = jsoncustInfojson.c1Coadd1;
+			if (typeof(lcoadd1)!="undefined"){
+				var idl1 =document.getElementById("c1Coadd1");
+				idl1.style.width=lcoadd1.length*13+'px';
+			}
+			
+			var lcoadd2 = jsoncustInfojson.c1Coadd2;
+			if (typeof(lcoadd2)!="undefined"){
+				var idl2 =document.getElementById("c1Coadd2");
+				idl2.style.width=lcoadd2.length*13+'px';
+			}
+			var lcoadd3 = jsoncustInfojson.c1Coadd3;
+			if (typeof(lcoadd3)!="undefined"){
+				var idl3 =document.getElementById("c1Coadd3");
+				idl3.style.width=lcoadd3.length*13+'px';
+			}
+			var lcoadd4 = jsoncustInfojson.c1Coadd4;
+			if (typeof(lcoadd4)!="undefined"){
+				var idl4 =document.getElementById("c1Coadd4");
+				idl4.style.width=lcoadd4.length*13+'px';
+			} else {
+				var idl4 =document.getElementById("c1Coadd4");
+				idl4.style.width=10+'px';
+			}
+			//住宅地址
+			var lc1Hmadd1 = jsoncustInfojson.c1Hmadd1;
+			if (typeof(lc1Hmadd1)!="undefined"){
+				var idc1Hmadd1 =document.getElementById("c1Hmadd1");
+				var hmadd = lc1Hmadd1.trim();
+				idc1Hmadd1.style.width=hmadd.length*13+'px';
+			}
+			var lc1Hmadd2 = jsoncustInfojson.c1Hmadd2;
+			if (typeof(lc1Hmadd2)!="undefined"){
+				var idc1Hmadd2 =document.getElementById("c1Hmadd2");
+				var hmadd2 = lc1Hmadd2.trim();
+				idc1Hmadd2.style.width=hmadd2.length*13+'px';
+			}
+			var lc1Hmadd3 = jsoncustInfojson.c1Hmadd3;
+			if (typeof(lc1Hmadd3)!="undefined"){
+				var idc1Hmadd3 =document.getElementById("c1Hmadd3");
+				idc1Hmadd3.style.width=lc1Hmadd3.length*13+'px';
+			}
+			var lc1Hmadd4 = jsoncustInfojson.c1Hmadd4;
+			if (typeof(lc1Hmadd4)!="undefined"){
+				var idc1Hmadd4 =document.getElementById("c1Hmadd4");
+				idc1Hmadd4.style.width=lc1Hmadd4.length*13+'px';
+			} else {
+				var idc1Hmadd4 =document.getElementById("c1Hmadd4");
+				idc1Hmadd4.style.width=10+'px';
+			}
+			//根据生日计算出生肖
+			if(jsoncustInfojson!=null&&jsoncustInfojson.c1Birth!=null&&jsoncustInfojson.c1Birth!=undefined&&jsoncustInfojson.c1Birth!=""){
+				var c1BirthStr=jsoncustInfojson.c1Birth+"";
+				var myZodiac=getShengXiaoByDate(c1BirthStr);
+				$("#shenxiao").val(myZodiac);
+			}
+		 	for(var proper in yanzhen){//验证信息 赋值 
+			if(yanzhen[proper]=="是"){
+				$("#"+proper).attr("style","background:red;");
+			}if(yanzhen[proper]=="否"){
+			//	$("#"+proper).attr("style","background:green;"); 
+			}
+			if(yanzhen[proper]=="1"){
+				$("#"+proper+"Color").attr("style","background:red;border:none;width:30px");
+			}
+			} 
+		 	$("#yanzhenForm input").attr("readOnly","true");//使验证表单的 所有input标签 变为 只读模式 
+		 	//$("#checkMessageShowIs").append("formatter:formatOper2");
+		 	//合规情况反显resultInfo
+		 	//过件码反显
+		 	/* if (resultInfo != null){
+				$("input[name='verifyinfoFlag'][value="+resultInfo.verifyinfoFlag+"]").attr("checked","checked");
+			} */
+		 	//易达金 不以 checkbox 的形式显示 
+		 	for(var proper in yanzhenMesShowMap){
+		 		//var div=document.createElement("div");
+		 		//div.appendChild(document.createTextNode(""+yanzhenMesShowMap[proper]));
+		 		yanzhenMessage = yanzhenMesShowMap[proper]+"；"+yanzhenMessage;
+		 	//	div.style="font-size: 12px;width: 310px";
+		 		//$("#checkMessageShowIs").append(div);
+		 		
+		 	} 
+			//为变量赋值，人行比对结果
+			pbocResultOld = yanzhen.pboc_CELL_PHONE+","+yanzhen.pboc_RESI_TEL+","+yanzhen.pboc_C_COMP_PHONE
+						+","+yanzhen.pboc_COMPANY+","+yanzhen.pboc_COMP_ADDR+","+yanzhen.pboc_RESIDENT_ADDR+",";
+			//白名单比对结果
+			credit_COMPANY_NAME=yanzhen.credit_COMPANY_NAME;
+			credit_COMPANY_TEL= yanzhen.credit_COMPANY_TEL;
+			
+		}
+	});
+	//加载纪要信息
+	loadJiYaoMessage(appId);
+	//加载电话来源 下拉框 
+	loadFourSystemCreditZjCombobox('/opas-naps/findPhoneSourceTypeComboboxData.json');
+	if (resultInfo != null){
+		if(resultInfo.blockCode){
+			$("#G_passCode").val(resultInfo.blockCode);
+		}
+	}
+	
+});
+//加载 本页面 从数据库查出数据显示的 下拉框 
+function loadFourSystemCreditZjCombobox(comboboxUrl){
+	var matchingCardFlag ='';
+	var ydjFlag2=ydjFlag;
+	if(ydjFlag2=='1'){
+		if(parent.matchingCardFlag){
+			matchingCardFlag=parent.matchingCardFlag;
+		}
+		if(matchingCardFlag=='1'){//bzk
+			ydjFlag2='2';
+		}
+	}
+	//acctType 根ydjFlag是相反的
+	if (ydjFlag2=='1'){
+		ydjFlag2='2';
+	}else {
+		ydjFlag2='1';
+	}
+	$cf.ajax({
+		 url:comboboxUrl, 
+		 data:{"acctType":ydjFlag2},
+		 async:false,
+		 onSuccess : function(response) {
+			var resultList = response.RSP_BODY.listMap;
+			var  listPhoneSource=resultList.listPhoneSource;
+			var  listPhoneType=resultList.listPhoneType;
+			var  listPhoneNoteObject=resultList.listPhoneNoteObject;
+			var  listPhoneCheckResult=resultList.listPhoneCheckResult;
+			var  listPassCodeResult=resultList.listPassCodeResult;
+			//纪要下拉框
+			//电话类型 
+			fnPolicyList(listPhoneSource, "F_telSource");
+			//照会对象
+			fnPolicyList(listPhoneType, "F_telType");
+			//照会对象
+			fnPolicyList(listPhoneNoteObject, "F_noteObject");
+			//电核结论 
+			fnPolicyList(listPhoneCheckResult, "F_telcheckReuslt");
+			//过件码
+			fnPolicyList(listPassCodeResult, "G_passCode");
+		}
+	});
+}
+
+/* //给某一个combobox下拉框赋值 
+function loadOneSystemCreditZjCombobox(comboboxId,resultList){
+	$('#'+comboboxId).combobox({
+		data:resultList,
+	    valueField:'dictDetailCode',
+	    textField:'dictDetailName',
+	    width:220,
+	    onLoadSuccess:function(){
+	    	var val=$(this).combobox("getData");
+	    	$(this).combobox("select",val[0]["dictDetailCode"]);
+	    }
+	});
+} */
+//展示窗口
+function showWin(obj) {
+	var winObj = $("#" + obj);
+	winObj.window({
+		closed : false
+	});
+}
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window({
+		closed : true
+	});
+}
+//问题库颜色
+/* $("#tb_questionWin").datagrid({
+	
+});  */
+//人行转码
+function valueBoxChange(param,id0,id1){
+	if(param=='0'){
+		$(id0).prop("checked",true);
+		$(id1).prop("checked",false);
+	}else{
+		$(id0).prop("checked",false);
+		$(id1).prop("checked",true);
+	}
+}
+//转码，高亮
+function valueChange(oldVal,arr,gl){
+	var len = arr.length;
+	var obj = '';
+	if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+		for(var i=0;i<len;i++){
+			var temp=arr[i].split(":");
+			if(oldVal==temp[0]){
+				obj = temp[1];
+			}
+		}
+	}
+	if(oldVal!=null&&oldVal=='1'){
+		$(gl).attr("style","background-color:pink;color:red");
+	}
+	return obj;
+}
+//页面保存
+function onBizInpApplC1(){
+	isSaveSuccess=true;
+	waringMessage="";
+	isCanCommit = false;
+	if(parent.bigSaveButtonFlag){
+		bigSaveButtonFlag=parent.bigSaveButtonFlag;
+	}else{
+		bigSaveButtonFlag=false;
+	}
+	
+	
+	var containSpecial = RegExp(/[\?\？\？\？\×\*\*\X\x\ｘ\Ｘ]+/);
+	//单位地址跟住宅地址不能超过15位
+	var Hmadd1 = ($("#c1Hmadd1").val()).length;
+	var Hmadd2 = ($("#c1Hmadd2").val()).length;
+	var Hmadd3 = ($("#c1Hmadd3").val()).length;
+	var Hmadd4 = ($("#c1Hmadd4").val()).length;
+	var Coadd1 = ($("#c1Coadd1").val()).length;
+	var Coadd2 = ($("#c1Coadd2").val()).length;
+	var Coadd3 = ($("#c1Coadd3").val()).length;
+	var Coadd4 = ($("#c1Coadd4").val()).length;
+	var c1Hmadd1 = $("#c1Hmadd1").val();
+	var c1Hmadd2 = $("#c1Hmadd2").val();
+	var c1Hmadd3 = $("#c1Hmadd3").val();
+	var c1Hmadd4 = $("#c1Hmadd4").val();
+	var c1Coadd1 = $("#c1Coadd1").val();
+	var c1Coadd2 = $("#c1Coadd2").val();
+	var c1Coadd3 = $("#c1Coadd3").val();
+	var c1Coadd4 = $("#c1Coadd4").val();
+	//身份证号码
+	var c1Idnbr = $("#c1Idnbr").val();
+	//取省份证前四位
+	var idcard = c1Idnbr.substr(0,4);
+	if (idcard == "3522"||idcard=="3509") {
+		waringMessage += "申请人户籍或工作或居住地址为宁德地区的客户。 ;";
+		isSaveSuccess = false;
+	}
+	//住在地址工作地址匹配到宁德可强制通过
+	var pattern = /宁德/;
+	var ningde = pattern.test(c1Hmadd1);
+	var ningde1 = pattern.test(c1Coadd1);
+	if (ningde == true|| ningde1== true) {
+		waringMessage += "申请人户籍或工作或居住地址为宁德地区的客户。 ;";
+		isSaveSuccess = false;
+	}
+	
+	//手机号码c1Mobile
+	var sc1Mobile = $("#c1Mobile").val();
+	if (containSpecial.test(sc1Mobile)){
+		waringMessage += "申请人手机号码	存在非法字符!  ;";
+		isSaveSuccess = false;
+		if (!bigSaveButtonFlag) {
+			alert("申请人手机号码 存在非法字符!");
+		}
+	}
+	if(containSpecial.test(c1Hmadd1)||containSpecial.test(c1Hmadd2)||containSpecial.test(c1Hmadd3)||containSpecial.test(c1Hmadd4)){
+		waringMessage += "申请人住宅地址	存在非法字符!  ;";
+		isSaveSuccess = false;
+		if (!bigSaveButtonFlag) {
+			alert("申请人住宅地址 存在非法字符!");
+		}
+	}
+	var sc1Coname = $("#c1Coname").val();
+	//单位名称 
+	if (containSpecial.test(sc1Coname)){
+		waringMessage += "申请人单位名称  	存在非法字符!  ;";
+		isSaveSuccess = false;
+		if (!bigSaveButtonFlag) {
+			alert("申请人单位名称 存在非法字符!");
+		}
+	}
+	if(containSpecial.test(c1Coadd4)||containSpecial.test(c1Coadd3)||containSpecial.test(c1Coadd2)||containSpecial.test(c1Coadd1)){
+		waringMessage += "申请人单位地址  	存在非法字符!  ;";
+		isSaveSuccess = false;
+		if (!bigSaveButtonFlag) {
+			alert("申请人单位地址 存在非法字符!  ");
+		}
+	}
+	var sc1Cotel = $("#c1Cotel").val();
+	//单位电话c1Cotel
+	if (containSpecial.test(sc1Cotel)){
+		waringMessage += "申请人单位电话  	存在非法字符!  ;";
+		isSaveSuccess = false;
+		if (!bigSaveButtonFlag) {
+			alert("申请人单位电话 存在非法字符!");
+		}
+	}
+	/* if (Hmadd1>15||Hmadd2>15||Hmadd3>15||Hmadd4>15){
+		waringMessage+="住宅地址 只能保存15个汉字       ;";
+		isSaveSuccess=false;
+		if(!bigSaveButtonFlag){
+		alert("住宅地址  只能保存15个汉字");
+		}
+		//return false;
+	}
+	if (Coadd1>15||Coadd2>15||Coadd3>15||Coadd4>15){
+		waringMessage+="单位地址  单位只能保存15个汉字         ;";
+		isSaveSuccess=false;
+		if(!bigSaveButtonFlag){
+		alert("单位地址  只能保存15个汉字");
+		}
+	//	return false;
+	} */
+	//第一联系人 姓名c1Rename
+	var c1Rename = $("#c1Rename").val();
+	if (containSpecial.test(c1Rename)){
+		waringMessage += "第一联系人 姓名	存在非法字符!  ;";
+		isSaveSuccess = false;
+		if (!bigSaveButtonFlag) {
+			alert("第一联系人 姓名 存在非法字符!");
+		}
+	}
+	//其他联系人 姓名c1Xname1
+	var c1Xname1 = $("#c1Xname1").val();
+	if (containSpecial.test(c1Xname1)){
+		waringMessage += "其他联系人 姓名	存在非法字符!  ;";
+		isSaveSuccess = false;
+		if (!bigSaveButtonFlag) {
+			alert("其他联系人 姓名 存在非法字符!");
+		}
+	}
+	var c1c2Flag = $("#c1c2Flag").val();
+	//var c1Reship = $("#c1Reship").find("option:selected").value;
+	var c1Reship = $("#c1Reship").val();
+	if (c1c2Flag =='1'||c1c2Flag=='3'){
+		if(c1Reship==""){
+			waringMessage+="请选择第一联系人-关系。  ;";
+			isSaveSuccess=false;
+			if(!bigSaveButtonFlag){
+			$.messager.alert('征信调查提示',"请选择第一联系人-关系。     ;",'warning');
+			}
+			//return null;
+		}
+	}
+	
+	var gjm=$("#G_passCode").val();
+	if(gjm==''){
+		waringMessage+='过件码下拉框内请选择值。  ;';
+		isSaveSuccess=false;
+		if(!bigSaveButtonFlag){
+		$.messager.alert('征信调查提示', '过件码下拉框内请选择值。     ;', 'warning');
+		}
+		return null;
+	}
+	var mobileFlag = $("input:checkbox[name='pbocMobileFlag']:checked").val();
+	var busphoneFlag = $("input:checkbox[name='pbocBusphoneFlag']:checked").val();
+	var phoneFlag = $("input:checkbox[name='pbocPhoneFlag']:checked").val();
+	var companyFlag = $("input:checkbox[name='pbocCompanyFlag']:checked").val();
+	var busaddrFlag = $("input:checkbox[name='pbocBusaddrFlag']:checked").val();
+	var homeaddrFlag = $("input:checkbox[name='pbocHomeaddrFlag']:checked").val();
+	var verifyFlag = "";//$("input:checkbox[name='verifyinfoFlag']:checked").val();
+	//核实信息可为空
+	/* if (typeof(verifyFlag)=="undefined"){
+		verifyFlag="";
+	} */
+	if(sc1Cotel!=null&&sc1Cotel!=undefined&&sc1Cotel!=""){
+		$cf.ajax({
+			url : "/opas-naps/queryTelePhoneCode.json",
+			data :{"c1Cotel":sc1Cotel,
+				   "ydjFlag":ydjFlag	
+			},
+			async:false,
+			onSuccess : function(dataRes) {
+				if(dataRes.RSP_BODY.success){
+				}else{
+				//	var msg = dataRes.RSP_BODY.msg;
+					waringMessage+="无网点。 ";//dataRes.RSP_BODY.msg; 
+					isSaveSuccess=false;
+					if(!bigSaveButtonFlag){
+						$.messager.alert('征信保存提示', "无网点。 ",'warning');//alert(msg);
+					}
+				}
+			}
+		});
+	}else{
+		waringMessage+="无网点。 ";//dataRes.RSP_BODY.msg; 
+		isSaveSuccess=false;
+		if(!bigSaveButtonFlag){
+			$.messager.alert('征信保存提示', "无网点。 ",'warning');
+		}
+	}
+	//var yanzhenForm = $("#yanzhenForm");
+	var custZJInfoFormData = $("#custZJInfoForm").serializeArray();
+	var obj =new Object();
+	obj.name="appId";
+	obj.value=appId;
+	custZJInfoFormData.push(obj);
+	var objBlockCode =new Object();
+	objBlockCode.name="blockCode";
+	objBlockCode.value=gjm;
+	custZJInfoFormData.push(objBlockCode);
+	var objYdjFlag =new Object();
+	objYdjFlag.name="ydjFlag1";
+	objYdjFlag.value='1'; //1 易达金  2标准卡 
+	custZJInfoFormData.push(objYdjFlag);
+	var objCreUser = new Object();//userId
+	objCreUser.name="crtUser1";
+	objCreUser.value=userId;//当前登录人
+	custZJInfoFormData.push(objCreUser);
+	var objPbocMobileFlag = new Object();//
+	objPbocMobileFlag.name="pbocMobileFlag";
+	objPbocMobileFlag.value=mobileFlag; //人行手机号码
+	custZJInfoFormData.push(objPbocMobileFlag);
+	var objPbocBusphoneFlag = new Object();// 
+	objPbocBusphoneFlag.name="pbocBusphoneFlag";
+	objPbocBusphoneFlag.value=busphoneFlag;//单位电话
+	custZJInfoFormData.push(objPbocBusphoneFlag);
+	var objPbocPhoneFlag = new Object();//
+	objPbocPhoneFlag.name="pbocPhoneFlag";
+	objPbocPhoneFlag.value=phoneFlag;//住宅电话
+	custZJInfoFormData.push(objPbocPhoneFlag);
+	var objPbocCompanyFlag = new Object();//
+	objPbocCompanyFlag.name="pbocCompanyFlag";
+	objPbocCompanyFlag.value=companyFlag;//单位名称
+	custZJInfoFormData.push(objPbocCompanyFlag);
+	var objPbocBusaddrFlag = new Object();//
+	objPbocBusaddrFlag.name="pbocBusaddrFlag";
+	objPbocBusaddrFlag.value=busaddrFlag;//单位地址
+	custZJInfoFormData.push(objPbocBusaddrFlag);
+	var objPbocHomeaddrFlag = new Object();//
+	objPbocHomeaddrFlag.name="pbocHomeaddrFlag";
+	objPbocHomeaddrFlag.value=homeaddrFlag;//账单地址
+	custZJInfoFormData.push(objPbocHomeaddrFlag);
+	var objVerifyinfoFlag = new Object();//
+	objVerifyinfoFlag.name="verifyinfoFlag";
+	objVerifyinfoFlag.value=verifyFlag;//核实信息 是否
+	custZJInfoFormData.push(objVerifyinfoFlag);
+	var jsondata = getFormData(custZJInfoFormData);
+	$cf.ajax({
+		url : "/opas-naps/saveOrUpdateTelcheckResult.json",
+		data : jsondata,
+		async:false,
+		onSuccess : function(dataRes) {
+			if(dataRes.RSP_BODY.success){
+				isCanCommit = true;
+			}else{
+				isSaveSuccess=false;//保存失败
+				waringMessage+="数据异常，保存失败。";
+			}
+			var msg = dataRes.RSP_BODY.msg;
+			if(!bigSaveButtonFlag){
+				$.messager.alert('征信保存提示', msg,'warning');//alert(msg);
+			}
+		}
+	});
+}
+//转换数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+//征信库"是"查询
+function isOpenWin(obj){
+	var UUID = "UUID_"+obj;
+	var autoId="";
+	
+	if(UUID=="UUID_credit_COMPANY_TEL"&&(credit_COMPANY_TEL=='1'||credit_COMPANY_TEL=='是')){
+		for(var proper in yanzhen){//验证信息 赋值 
+			if(proper==UUID){
+				autoId=yanzhen[proper];
+				break;
+			}
+		}
+	}else if(UUID=="UUID_credit_COMPANY_NAME"&&(credit_COMPANY_NAME=='1'||credit_COMPANY_NAME=='是')){
+		for(var proper in yanzhen){//验证信息 赋值 
+			if(proper==UUID){
+				autoId=yanzhen[proper];
+				break;
+			}
+		}
+	}else{
+		return ;
+	}
+	if(autoId==""||autoId==null||autoId==undefined){
+		$.messager.alert('提示',"匹配数据，存在问题请联系管理员。",'warning');
+		return ;
+	}
+/* 	$("#tb_yes_zhenXinWhiteOrderWin").datagrid('options').url="/opas-naps/queryYDJCreditTelCheck.json";
+	var dataAutoId ={"autoId" : autoId};
+	$("#tb_yes_zhenXinWhiteOrderWin").datagrid("reload", dataAutoId); */
+	//加载 是 征信白名单
+	loadYesZxWhiteListWin(autoId);
+	showWin('yes_zhenXinWhiteOrderWin');
+}
+//征信库添加页面事件
+function openZhenXinKuAddWin(obj){
+	$("#Y_appId").val(appId);
+	$("#Y_operator").val(userId);
+	var date=new Date();
+	var currDay=date.getDate();
+	var currMonth=date.getMonth()+1;
+	var currDate=date.getFullYear()+'-'+currMonth+'-'+currDay;
+	$("#Y_createDate").datebox('setValue',currDate);
+	$("#Y_companyName").val($("#c1Coname").val());
+	showWin(obj);
+}
+//征信库添加页面后台逻辑
+function onZhenXinKuAddWin(){
+	var zhenXinKuData = {
+		"appId":appId,
+		"companyName":$("#Y_companyName").val(),
+		"companyTel":$("#Y_companyTel").val(),
+		"telSource":$("#zxk_telSource").val(),
+		"createDate":$("#Y_createDate").datebox('getValue'),
+		"memo":$("#Y_memo").val(),
+		"operator":userId
+	};
+	$cf.ajax({
+		url : "/opas-naps/creditTelCheckSave.json",
+		data : {
+			"zhenXinKuData" : zhenXinKuData
+		},
+		onSuccess : function(dataRes) {
+			onConcle('zhenXinKuAddWin');
+			var msg = dataRes.RSP_BODY.msg;
+			$.messager.alert('提示',msg,'warning');
+		}
+	});
+}
+function fun1(obj){
+	if(obj=='yes'){
+		$("#no_verifyinfoFlag").prop("checked",false);
+	}else{
+		$("#yes_verifyinfoFlag").prop("checked",false);
+	}
+}
+
+
+function formatOper(val, row, index) {    
+	return "<a href=javascript:editNote();>修改</a>&nbsp;<a href=javascript:deleteNote();>删除</a>&nbsp;<a href=javascript:changeColor();>变色</a>";
+}
+function formatOper2(val, row, index) {    
+	return "<input type='radio' name='radio"+index+"'  value='一致'/>一致&nbsp;<input type='radio' name='radio"+index+"' value='不一致'/>不一致&nbsp;";
+}
+function fun(obj,param){
+	var va_yes = param+"1";
+	var va_no = param+"0";
+	if(obj=='yes'){
+		$(va_yes).prop("checked",true);
+		$(va_no).prop("checked",false);
+	}else{
+		$(va_yes).prop("checked",false);
+		$(va_no).prop("checked",true);
+	}
+}
+
+
+
+
+//修改、拼接  大备注       objJsonStr:json串 实体映射,flag:0删除 ，1插入更新     (需要插入一条电核结论,该方法只进行保存操作 )
+function saveMemo(appId,objJsonStr,telcheckR,flag){
+	$cf.ajax({
+		url :'/opas-naps/saveTelcheckAddNoteCommitMsg.json',  //saveNotes.json
+		data : {
+			telcheckResult:telcheckR,
+    		appId: appId,
+    		bigMemo:objJsonStr,
+    		flagStr:flag,
+    		typeFlag:'6',
+    		crtUser:userId,
+    		ydjFlag:ydjFlag,
+    		matchingCardFlag:matchingCardFlagZx
+		},onSuccess : function(data) {
+			loadJiYaoMessage(appId);
+		}
+	});
+}
+
+//修改、拼接  大备注       objJsonStr:json串 实体映射,flag:0删除 ，1插入 2更新    此处待修改成可批量发送，
+function updateMemo(talId,appId,objJsonStr,flag){
+	$cf.ajax({
+		url :'/opas-naps/saveOrUpdateTelcheckAddNoteMsg.json',  // saveOrUpdateNotes.json
+		data : {
+			talId:talId,
+    		appId: appId,
+    		bigMemo:objJsonStr,
+    		flagStr:flag,
+    		typeFlag:'6',
+    		crtUser:userId,
+    		ydjFlag:ydjFlag,
+    		matchingCardFlag:matchingCardFlagZx
+		},onSuccess : function(data) {
+			loadJiYaoMessage(appId);
+		}
+	});
+}
+//问题库保存到电核
+function saveToDianHe(str){
+	//选中行
+	//var row=$("#tb_questionWin").datagrid("getSelections");
+	var row=$("#tb_questionWin").datagrid("getChecked");
+	for(var i=0;i<row.length;i++){
+		//alert($('input:radio:checked').val())
+		var items = $('input:radio:checked');
+		var str="问题描述："+row[i].questionDesc+"；问题答案："+row[i].fromTableNo+","+"电核结果："+items[i].value;
+		updateMemo(null,appId,str,'1');
+	}
+	if($("#zidingyi1").val()!=''){
+		var s = "自定义问题："+$("#zidingyi1").val()+";自定义答案："+$("#zidingyi2").val()+","+"电核结果："+$("input[name='result']:checked").val();
+		updateMemo(null,appId,s,'1');
+	}
+	$("#zidingyi1").val('');
+	$("#zidingyi2").val('');
+	$("input[name='result']:checked").attr('checked',false);
+	onConcle('questionWin');
+}
+
+//三方数据保存至电核
+function dianHe(){
+	var str = yanzhenMessage;
+	if (str == ""){
+	} else {
+		updateMemo(null,appId,str,'1');
+	}
+}
+//征信白名单查询==保存至电核
+function yes_saveDianHe(){
+	//选中行
+	var row=$("#tb_yes_zhenXinWhiteOrderWin").datagrid("getSelections");
+	//var row=$("#tb_questionWin").datagrid("getChecked");
+	for(var i=0;i<row.length;i++){
+		
+		var appid1 = ((row[i].appId==null)?"":("申请件："+ row[i].appId+"；"));
+		var createDate1 = ((row[i].createDate==null)?"":("生成日期："+ row[i].createDate+"；"));
+		var companyName1 = ((row[i].companyName==null)?"":("单位名称："+ row[i].companyName+"；"));
+		var companyTel1 = ((row[i].companyTel==null)?"":("单位电话："+ row[i].companyTel+"；"));
+		var status1 = ((row[i].currStatus==null)?"":("当前状态："+ formatCode(row[i].currStatus)+"；"));
+		var str =appid1+createDate1+companyName1+companyTel1+status1;
+		updateMemo(null,appId,str,'1');
+	}
+	onConcle('yes_zhenXinWhiteOrderWin');
+}
+
+//征信白名单查询==保存至电核
+function saveDianHe(){
+	//选中行
+	var row=$("#tb_zhenXinWhiteOrderWin").datagrid("getSelections");
+	//var row=$("#tb_questionWin").datagrid("getChecked");
+	for(var i=0;i<row.length;i++){
+		
+		var appid1 = ((row[i].appId==null)?"":("申请件："+ row[i].appId+"；"));
+		var createDate1 = ((row[i].createDate==null)?"":("生成日期："+ row[i].createDate+"；"));
+		var companyName1 = ((row[i].companyName==null)?"":("单位名称："+ row[i].companyName+"；"));
+		var companyTel1 = ((row[i].companyTel==null)?"":("单位电话："+ row[i].companyTel+"；"));
+		var status1 = ((row[i].currStatus==null)?"":("当前状态："+ formatCode(row[i].currStatus)+"；"));
+		var str =appid1+createDate1+companyName1+companyTel1+status1;
+		updateMemo(null,appId,str,'1');
+	}
+	onConcle('zhenXinWhiteOrderWin');
+}
+//字段格式转换
+function formatCode(value) {
+	if(value=='0'){
+		return "停用";
+	}else{
+		return "启用";
+	}
+}
+
+
+function setData(data) {
+	 $("#editFormJY").form("load", data);
+	$("#id").attr("readonly", "readonly");
+	$("#id").attr("disabled", "disabled");
+}
+//既要信息内容长时换行显示
+function formatAutoRow(value){
+	var array = value.split("&&&");
+	var length=array.length;
+	var currentData="";
+	if(length>=2){
+		for (var int = 0; int < length; int++) {
+			if(int==0){
+				currentData+=array[int];
+			}else{
+				currentData+="<br>"+ array[int];
+			}
+		}
+		return currentData;
+	}else{
+		return value;
+	}
+}
+//纪要信息换行
+function formatMesAutoRow(value){
+	var array = value.split("&&&");
+	var length=array.length;
+	var currentData="";
+	var str="";
+	if(length>=2){
+		for (var int = 0; int < length; int++) {
+			if(int==0){
+				currentData+=array[int];
+			}else{
+				currentData+="<br>"+ array[int];
+			}
+		}
+		str=currentData;
+	}else{
+		str=value;
+	}
+	str=str.replace(/电话来源：/,"<font color='green' size='2' >电话来源：</font>");
+	str=str.replace(/电话类型：/,"<font color='green' size='2' >电话类型：</font>");
+	str=str.replace(/电话号码：/,"<font color='green' size='2' >电话号码：</font>");
+	str=str.replace(/照会对象：/,"<font color='green' size='2' >照会对象：</font>");
+	str=str.replace(/电核结论：/,"<font color='green' size='2' >电核结论：</font>");
+	str=str.replace(/备注：/,"<font color='green' size='2' >备注：</font>");
+	str=str.replace(/电话来源:/,"<font color='green' size='2' >电话来源：</font>");
+	str=str.replace(/电话类型:/,"<font color='green' size='2' >电话类型：</font>");
+	str=str.replace(/电话号码:/,"<font color='green' size='2' >电话号码：</font>");
+	str=str.replace(/照会对象:/,"<font color='green' size='2' >照会对象：</font>");
+	str=str.replace(/电核结论:/,"<font color='green' size='2' >电核结论：</font>");
+	str=str.replace(/备注:/,"<font color='green' size='2' >备注:</font>");
+	str=str.replace(/申请件：/,"<font color='green' size='2' >申请件：</font>");
+	str=str.replace(/单位名称：/,"<font color='green' size='2' >单位名称：</font>");
+	str=str.replace(/单位电话：/,"<font color='green' size='2' >单位电话：</font>");
+	str=str.replace(/单位地址：/,"<font color='green' size='2' >单位地址：</font>");
+	str=str.replace(/法人：/,"<font color='green' size='2' >法人：</font>");
+	str=str.replace(/注册资金：/,"<font color='green' size='2' >注册资金：</font>");
+	str=str.replace(/注册地址：/,"<font color='green' size='2' >注册地址：</font>");
+	str=str.replace(/经营状态：/,"<font color='green' size='2' >经营状态：</font>");
+	str=str.replace(/股东信息：/,"<font color='green' size='2' >股东信息：</font>");
+	str=str.replace(/经营异常信息：/,"<font color='green' size='2' >经营异常信息：</font>");
+	str=str.replace(/操作员：/,"<font color='green' size='2' >操作员：</font>");
+	str=str.replace(/生成日期：/,"<font color='green' size='2' >生成日期：</font>");
+	str=str.replace(/当前状态：/,"<font color='green' size='2' >当前状态：</font>");
+	str=str.replace(/问题描述：/,"<font color='green' size='2' >问题描述：</font>");
+	str=str.replace(/问题答案：/,"<font color='green' size='2' >问题答案：</font>");
+	str=str.replace(/电核结果：/,"<font color='green' size='2' >电核结果：</font>");
+	str=str.replace(/自定义问题：/,"<font color='green' size='2' >自定义问题：</font>");
+	str=str.replace(/自定义答案：/,"<font color='green' size='2' >自定义答案：</font>");
+	str=str.replace(/补件材料:/,"<font color='green' size='2' >补件材料:</font>");
+	str=str.replace(/操作人：/,"<font color='green' size='2' >操作人：</font>");
+	str=str.replace(/操作时间:/,"<font color='green' size='2' >操作时间:</font>");
+	str=str.replace(/补件结果：/,"<font color='green' size='2' >补件结果：</font>");
+	str=str.replace(/操作日期：/,"<font color='green' size='2' >操作日期：</font>");
+	str=str.replace(/集体电核--操作者：/,"<font color='green' size='2' >集体电核--操作者：</font>");
+	return str;
+}
+//纪要修改
+function onUpdate(){
+	var roleData = $('#editFormJY').serializeArray();
+//	var param = "autoId:"+roleData.autoId+",appId:"+roleData.appId+",bigMemo:"+roleData.bigMemo;
+	updateMemo(roleData[1].value,roleData[0].value,roleData[2].value,'2');
+//	updateMemo(roleData.talId,roleData.appId,roleData.bigMemo,'2');
+	onConcle('winEdit');
+}
+
+function onReviewWin(){
+	var content = '<iframe src="../common/info_compare_zxInvestigation.html"  style="border:3px;width:660px;height:700px;top:300px"></iframe>';
+	var boarddiv='<div id="detailWin"></div>';
+	$(document.body).append(boarddiv);
+	var win = $("#detailWin").dialog({
+		content:content,
+		title:'详情展示'
+	});
+}
+// 纪要提交 
+function onSubmitJiYao(obj){
+	var telSource = ($("#F_telSource").find("option:selected").text()=="请选择")?"":("电话来源："+ $("#F_telSource").find("option:selected").text()+"；");
+	var telType = ($("#F_telType").find("option:selected").text()=="请选择")?"":("电话类型："+ $("#F_telType").find("option:selected").text()+"；");
+	var noteObject = ($("#F_noteObject").find("option:selected").text()=="请选择")?"":("照会对象："+ $("#F_noteObject").find("option:selected").text()+"；");
+	var telcheckReuslt = ($("#F_telcheckReuslt").find("option:selected").text()=="请选择")?"":("电核结论："+ $("#F_telcheckReuslt").find("option:selected").text()+"；");
+	var telNo = ($("#F_telNo").val()=="")?"":("电话号码："+$("#F_telNo").val()+"；");
+	var memo = ($("#F_memo").val()=="")?"":("备注："+$("#F_memo").val());
+	var params = telSource+telType+telNo+noteObject+telcheckReuslt+"&&&";//电话来源、电话类型、输入电话号码、照会对象、电核结论
+	var param = memo;
+	
+	//电核结论需要保存
+	var telcheckR = $("#F_telcheckReuslt").val();
+	if (param==""&&params=="&&&"){
+	} else if(params=="&&&"&&param!=""){
+		saveMemo(appId,param,telcheckR,'1');
+	} else {
+		saveMemo(appId,params+param,telcheckR,'1');
+	}	
+	$("#F_telSource").val('');
+	$("#F_telType").val('');
+	$("#F_noteObject").val('');
+	$("#F_telcheckReuslt").val('');
+	$("#F_telNo").val('');
+	$("#F_memo").val('');
+}
+//input框限制15个中文汉字
+function checkLength(which) {
+	var maxChars = 15; 
+	if (which.value.length > maxChars) {
+		alert("最多输入15个汉字！！！");
+	}
+}
+//失去焦点 - 赋 默认值
+function checkValue(obj) {
+	var a = obj.value;
+	if (a == "") {
+		obj.value = "";
+	}
+}
+function widthCheck(str, maxlength) {
+	var w = 0;
+	var tempCount = 0;
+	for (var i = 0; i < str.value.length; i++) {
+		var c = str.value.charCodeAt(i);
+		if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+			w++;
+		} else {
+			w += 2;
+		}
+		if (w > maxlength) {
+			str.value = str.value.substr(0, i);
+			break;
+		}
+	}
+	if(parent.leftIframe3 != undefined){
+		if(parent.leftIframe3.changeVal1 != undefined){
+			parent.leftIframe3.changeVal1(str.name,str.value);
+		}
+	}
+
+}
+//input框根据输入文字自适应
+function autoWidth(which){
+	var currObjLength=which.value.length;
+	if(currObjLength>0&&currObjLength<=30){
+		which.style.width=which.value.length*12+'px';
+	}else if (currObjLength>30){
+		which.style.width= '200px';
+	}else{
+		which.style.width= 20+'px';
+	}
+}
+	
+//问题库
+function openQuestion(obj){
+	var winObj = $("#" + obj);
+	var tbCommonWin = "tb_"+obj;
+	var c1Idnbr= $("#c1Idnbr").val();
+	var matchingCardFlag ='';
+	var ydjFlag2=ydjFlag;
+	if(ydjFlag2=='1'){
+		if(parent.matchingCardFlag){
+			matchingCardFlag=parent.matchingCardFlag;
+		}
+		if(matchingCardFlag=='1'){//bzk
+			ydjFlag2='2';
+		}
+	}
+	loadQuestionStore(c1Idnbr,appId,ydjFlag2);
+	//var s={"c1Idnbr":c1Idnbr,"appId":appId,"ydjFlag":ydjFlag2};
+	
+	//$("#tb_questionWin").datagrid("reload", s);
+/* 	$cf.ajax({
+		url : "/opas-naps/queryQuestion.json",
+		data : {
+			"c1Idnbr":c1Idnbr,
+			"appId" : appId,
+			"status" : ydjFlag2
+		},
+		onSuccess : function(dataRes) {
+			var dataMap = {
+				"rows" : dataRes.RSP_BODY.rows,
+				"total" : dataRes.RSP_BODY.total
+			};
+			$("#"+tbCommonWin).datagrid("loadData", dataMap);
+			$("#"+tbCommonWin).datagrid('getRows');
+		}
+	});  */
+	winObj.window({
+		closed : false
+	});
+}
+//问题库刷新 
+function onQusetionWinRefresh(){
+	 var matchingCardFlag ='';
+		var ydjFlag2=ydjFlag;
+		if(ydjFlag2=='1'){
+			if(parent.matchingCardFlag){
+				matchingCardFlag=parent.matchingCardFlag;
+			}
+			if(matchingCardFlag=='1'){//bzk
+				ydjFlag2='2';
+			}
+		}
+		var c1Idnbr= $("#c1Idnbr").val();
+		var s={"c1Idnbr":c1Idnbr,"appId":appId,"ydjFlag":ydjFlag2};
+		$("#tb_questionWin").datagrid("reload", s);
+}
+
+/**
+ * 根据日期 获取生肖 
+ */
+function  getShengXiaoByDate(c1BirthStr){
+	var ss=(c1BirthStr.split('-'));
+	//var yearStr=c1BirthStr.substring(0,4)+"blue";//blue 是转或成数字时使用的 
+	//var yearReal=parseInt(yearStr);
+	var yy = parseInt(ss[0]+"blue");
+	var mm = parseInt(ss[1]+"blue");
+	var dd =parseInt(ss[2]+"blue");
+	var year =  parseInt(ss[0],10);
+	var month = parseInt(ss[1],10);
+	var day = parseInt(ss[2],10);
+	var zodiac = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+	var myPos = (year - 1900)%12;
+	var myZodiac = zodiac[myPos];
+	var Y = year%100;
+	var D = 0.2422;
+	var C ;
+	var _year = Math.floor(year/100)+1;
+	switch(_year){
+	case 20:
+		C = 4.6295;
+		break;
+	case 21:
+		C = 3.87;
+		break;
+	case 22:
+		C = 4.15;
+		break;
+	default:
+		C = 3.87;
+	}
+	var L = (Y-1)/4;
+	var springDay = 0;
+	var springDay= Math.floor(Y*D+C)-Math.floor((Y-1)/4);
+	
+	switch(month){
+	case 1:
+		var _myPos = myPos-1;
+		if(_myPos<0){
+			_myPos = 11;
+		}
+		myZodiac = zodiac[_myPos];
+		break;
+	case 2:
+		if(day<springDay){
+			var _myPos = myPos-1;
+			if(_myPos<0){
+				_myPos = 11;
+			}
+			myZodiac = zodiac[_myPos];
+		}
+		break;
+	}
+	
+	return myZodiac;
+}
+/*根据出生日期算出年龄*/  
+function jsGetAge(strBirthday){
+    var returnAge;  
+    //var strBirthdayArr=strBirthday.split("-");  
+    //var birthYear = strBirthdayArr[0];  
+    //var birthMonth = strBirthdayArr[1];  
+    //var birthDay = strBirthdayArr[2];  //strBirthday.substr(0,5);
+    var birthYear  = strBirthday.substring(6,10);
+    var birthMonth = strBirthday.substring(10,12);
+    var birthDay = strBirthday.substring(12,14);
+    
+    d = new Date();  
+    var nowYear = d.getFullYear();  
+    var nowMonth = d.getMonth() + 1;  
+    var nowDay = d.getDate();  
+      
+    if(nowYear == birthYear){  
+        returnAge = 0;//同年 则为0岁  
+    }  
+    else{  
+        var ageDiff = nowYear - birthYear ; //年之差  
+        if(ageDiff > 0){  
+            if(nowMonth == birthMonth) {  
+            	//生日当天算合规
+                var dayDiff = nowDay - birthDay;//日之差  
+                if(dayDiff < 0) {  
+                    returnAge = ageDiff - 1;  
+                } else {  
+                    returnAge = ageDiff ;  
+                }  
+            } else {  
+                var monthDiff = nowMonth - birthMonth;//月之差  
+                if(monthDiff < 0) {  
+                    returnAge = ageDiff - 1;  
+                } else {  
+                    returnAge = ageDiff ;  
+                }  
+            }  
+        } else {  
+            returnAge = -1;//返回-1 表示出生日期输入错误 晚于今天  
+        }  
+    }  
+    return returnAge;//返回周岁年龄  
+}  
+
+/*根据出生日期算出年龄 年龄大于的时候调用这个方法*/  
+function jsGetAge1(strBirthday){
+    var returnAge;  
+   /*  var strBirthdayArr=strBirthday.split("-");  
+    var birthYear = strBirthdayArr[0];  
+    var birthMonth = strBirthdayArr[1];  
+    var birthDay = strBirthdayArr[2];   */
+    var birthYear  = strBirthday.substring(6,10);
+    var birthMonth = strBirthday.substring(10,12);
+    var birthDay = strBirthday.substring(12,14);
+      
+    d = new Date();  
+    var nowYear = d.getFullYear();  
+    var nowMonth = d.getMonth() + 1;  
+    var nowDay = d.getDate();  
+
+    if(nowYear == birthYear){  
+        returnAge = 0;//同年 则为0岁  
+    }  
+    else{  
+        var ageDiff = nowYear - birthYear ; //年之差  
+        if(ageDiff > 0){  
+            if(nowMonth == birthMonth) {  
+            	//生日当天算合规  -1
+                var dayDiff = nowDay - birthDay -1;//日之差  
+                if(dayDiff < 0) {  
+                    returnAge = ageDiff - 1;  
+                } else {  
+                    returnAge = ageDiff ;  
+                }  
+            } else {  
+                var monthDiff = nowMonth - birthMonth;//月之差  
+                if(monthDiff < 0) {  
+                    returnAge = ageDiff - 1;  
+                } else {  
+                    returnAge = ageDiff ;  
+                }  
+            }  
+        } else {  
+            returnAge = -1;//返回-1 表示出生日期输入错误 晚于今天  
+        }  
+    }  
+    return returnAge;//返回周岁年龄  
+}  
+
+function changeVal1(name,str){
+	$("#"+name).val(str);
+	$("#"+name).textbox('setValue', str);
+}
+
+function changeVal2(name,date){
+	$("#"+name).datebox('setValue', date);
+}
+function changeVal4(name,date){
+	$("#"+name).datebox('setValue', date);
+}
+function changeVal3(name,value){
+	$("#"+name).val(value);
+}
+function valEnhance(o){
+	$('#tbl_area').html(o);
+	$('#tbl_area').css('display', 'block');
+}
+function onChangeDate(date){
+	var name = this.id;
+	if(parent.leftIframe3 != undefined){	
+		if(parent.leftIframe3.changeVal2 != undefined){
+			parent.leftIframe3.changeVal2(name,date);
+		}
+	}
+}
+function onChangeCombox(data){
+	var d = $(data);
+	var name = d.attr("name");
+	var value = d.val();
+	if(parent.leftIframe3 != undefined){	
+		var aa = parent.leftIframe3;
+		if(aa.weishenme != undefined){
+			parent.leftIframe3.weishenme(name,value);
+		}
+	}
+}
+function changeDateToZXTC(){
+	var name = this.id;
+	var v = $('#'+name).datebox('getValue');
+	if(parent.leftIframe3 != undefined){	
+		if(parent.leftIframe3.changeVal4 != undefined){
+			parent.leftIframe3.changeVal4(name,v);
+		}
+	}
+}
+/**
+ * 展示征信白名单窗口 
+ */
+function showZxWhiteListWin(obj){
+	load_tb_zhenXinWhiteOrderWin();
+	showWin(obj);
+}
+/**
+ * 加载征信库白名单datagrid 框
+ */
+function load_tb_zhenXinWhiteOrderWin(){
+	$('#tb_zhenXinWhiteOrderWin').datagrid({
+		url:"/opas-naps/creditTelCheckSelect.json",
+		resizable:false,rownumbers:true,singleSelect:false,nowrap:false,pagination:true,
+		fit:true,fitColumns:true,pageSize:10,pageList:[10,20,50],
+		loadMsg:'数据加载中.....',method:'post',
+		toolbar:'#dictCondion',
+		columns:[[{
+			title:'申请件编号',
+			field:'appId',
+			halign:'center',
+			width:'125px'
+		},{
+			title:'生成日期',
+			field:'createDate',
+			halign:'center',
+			width:'65px'
+		},{
+			title:'单位名称',
+			field:'companyName',
+			halign:'center',
+			width:'260px'
+		},{
+			title:'单位电话',
+			field:'companyTel',
+			halign:'center',
+			width:'100px'
+		},{
+			title:'当前状态',
+			field:'currStatus',
+			formatter: formatCode,
+			halign:'center',
+			width:'60px'
+		}
+		]]
+	});
+}
+/**
+ *加载 是 征信白名单的弹框 
+ */
+function loadYesZxWhiteListWin(autoId){
+	$('#tb_yes_zhenXinWhiteOrderWin').datagrid({
+		url:"/opas-naps/queryYDJCreditTelCheck.json",
+		rownumbers:true,singleSelect:true,iconCls:'icon-save',pagination:true,nowrap:false,pageSize:15,pageList:[15,20,50],fitColumns:true,loadMsg:'数据加载中.....',method:'post',
+		queryParams: {
+			autoId : autoId
+    	},
+		columns:[[{
+			title:'申请件编号',
+			field:'appId',
+			halign:'center',
+			width:'125px'
+		},{
+			title:'生成日期',
+			field:'createDate',
+			halign:'center',
+			width:'65px'
+		},{
+			title:'单位名称',
+			field:'companyName',
+			halign:'center',
+			width:'260px'
+		},{
+			title:'单位电话',
+			field:'companyTel',
+			halign:'center',
+			width:'100px'
+		},{
+			title:'当前状态',
+			field:'currStatus',
+			formatter: formatCode,
+			halign:'center',
+			width:'60px'
+		}
+		]]
+	});
+	
+}
+/**
+ * 加载纪要信息
+ */
+function loadJiYaoMessage(appId){
+	$('#datalist').html(''); 
+	 $cf.ajax({
+			url : '/opas-naps/notesMemoQuery.json',
+			data : {"appId":appId},
+			onSuccess : function(response) {
+				var data=response.RSP_BODY.rows;	
+				if(data){
+					var table=document.createElement("table");
+					$(table).addClass("tableTdColor");
+					table.style='width:100%;';
+					var tr1=table.insertRow();
+					var td1=tr1.insertCell();
+					createDivInTd(td1,"序号",'30px',"1");
+					var td2=tr1.insertCell();
+					createDivInTd(td2,"详情",'400px',"1");
+					var td3=tr1.insertCell();
+					createDivInTd(td3,"创建/修改日期",'150px',"1");
+					var td4=tr1.insertCell();
+					td4.colSpan="3";
+					createDivInTd(td4,"操作",'90px',"1");
+					for(var i=0;i<data.length;i++){
+						var tr2=table.insertRow();
+						if(data[i]["colorFlag"]=="1"){
+							$(tr2).addClass('jiYaoColor');
+						}
+						var td5=tr2.insertCell();
+						createDivInTd(td5,i+1,'30px',"1");
+						var td6=tr2.insertCell();
+						createDivInTd(td6,formatMesAutoRow(data[i]["bigMemo"]),'400px',"0");
+						var td7=tr2.insertCell();
+						createDivInTd(td7,formatDate(data[i]["crtDate"]),'150px',"0");
+						
+						var td8=tr2.insertCell();
+						createButtonInTd(td8,"修改",'30px',data[i]["talId"],'update',data[i]["bigMemo"]);
+						var td9=tr2.insertCell();
+						createButtonInTd(td9,"删除",'30px',data[i]["talId"],'delete',null);
+						var td10=tr2.insertCell();
+						createButtonInTd(td10,"变色",'30px',data[i]["talId"],'changeColor',data[i]["bigMemo"]);
+						
+					}
+					$('#datalist').html(table); 
+				}
+			}
+	});
+}
+/**
+ * 加载问题库 
+ */
+function loadQuestionStore(c1Idnbr,appId,ydjFlag2){
+	//加载问题库datagrid 
+	$('#tb_questionWin').datagrid({
+		url:"/opas-naps/queryQuestion.json",
+		rowStyler:function(index,row){//使 点击某列时,行颜色不变 
+			var rowInfo = $("#tb_questionWin").datagrid("getSelections")
+			if (rowInfo){
+				return 'background-color:white;color:black;fount-weight:bold;';
+			}
+		},
+		border:false,
+		animate:true,
+		fitColumns:true,
+		singleSelect:false,
+		checkOnSelect:false,
+		selectOnCheck:true,
+		rownumbers:true,
+		pageSize:3,
+		queryParams: {
+			c1Idnbr:c1Idnbr,appId:appId,ydjFlag:ydjFlag2
+    	},
+		columns:[[{
+			title:'复选框 ',
+			field:'no',			 
+			checkbox:true,
+			halign:'center',
+			width:'3%'
+		},{
+			title:'问题内容',
+			field:'questionDesc',
+			halign:'center'
+		},{
+			title:'答案',
+			field:'fromTableNo',
+			formatter: formatAutoRow,
+			halign:'center'
+		},{
+			title:'回答情况',
+			field:'dianHeResult',
+			halign:'center',
+			formatter : formatOper2
+		}
+		]],onUncheck:function(rowIndex,rowData){
+			$("input:radio[name='radio"+rowIndex+"']:checked").attr('checked',false);
+		//	$('input:radio:checked').attr('checked',false);
+		}
+	});
+}
+/*在指定td标签 创建Div标签 并赋值 */
+function createDivInTd(td,value,width,fontType){
+	td.style.width=width;
+	var div=document.createElement("div");
+	div.style.class="word-wrap:break-word;overflow:hidden;"
+	if(value){
+		var textNode=document.createElement('p');
+		textNode.innerHTML=value;
+		div.appendChild(textNode);
+	}else{
+		//div.appendChild(document.createTextNode(""+typeValue));
+	}
+	/* input.style.width=width;
+	input.style.fontSize='12px';
+	input.style.textAlign='center'; */
+	if(fontType=="1"){
+		div.style.fontWeight='bold';
+	}
+	if(fontType=="0"){
+		//div.style.color='blue';
+	}
+	div.readOnly='readOnly';
+	td.appendChild(div);
+}
+/*在指定td标签 创建button标签 并赋值 */
+function createButtonInTd(td,value,width,talId,actFlag,bigMemo){
+	td.style.width=width;
+	var input=document.createElement("input");
+	input.type="button";
+	if(value){
+		input.value=value;
+	}
+	if('update'==actFlag){
+		input.onclick=function(){updateJiYaoMessage(this,talId,appId,bigMemo);};
+	}
+   if('delete'==actFlag){
+	   input.onclick=function(){deleteJiYaoMessage(this,talId,appId);};
+	}
+   if('changeColor'==actFlag){
+	   input.onclick=function(){changeColorJiYaoMessage(this,talId,appId);};
+	}
+	input.readOnly='readOnly';
+	td.appendChild(input);
+}
+/**
+ * 删除当前的纪要信息 
+ */
+function deleteJiYaoMessage(obj,talId,appId){
+  	if(talId!=null||talId!=undefined||talId!=''){
+  		$.messager.confirm({
+  			width:400,
+  			height:200,
+  			title:"提示",
+  			msg:"<font color='red' size='2.5' >请确认，要删除吗?</font>",fn:function(r){
+  			if(r){
+  				$(obj).parent().parent().remove();
+  				updateMemo(talId,appId,null,'0');
+  					return;
+  			}else{
+  				return;
+  			}
+  		}
+  		});
+	}else{
+		$.messager.alert('提示',"删除失败，请刷新重试或与管理员联系。",'warning');
+	} 
+}
+/**
+ * 修改当前的纪要信息 
+ */
+function updateJiYaoMessage(obj,talId,appId,bigMemo){
+	var roleObj = {"talId":talId,"appId":appId,"bigMemo":bigMemo};
+	var winObj = $("#winEdit");
+	winObj.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(roleObj)
+	});
+}
+/**
+ * 变色当前的纪要信息 
+ */
+function changeColorJiYaoMessage(obj,talId,appId){
+	if($(obj).parent().parent()[0].className=="jiYaoColor"){//有颜色 
+		$(obj).parent().parent().removeClass('jiYaoColor');
+		updateMemoChangeColor(talId,appId,'0');
+	}else{//没颜色 
+		$(obj).parent().parent().addClass('jiYaoColor');
+		updateMemoChangeColor(talId,appId,'1');
+	}
+}
+//纪要信息变色==如果 colorFlag等于 1 变色, 0 不变色
+function updateMemoChangeColor(talId,appId,colorFlag) {
+	$cf.ajax({
+		url : "/opas-naps/updateMemoChangeColor.json",
+		data : {
+			talId:talId,
+    		appId: appId,
+    		colorFlag:colorFlag,
+    		crtUser:userId
+		},onSuccess : function(data) {
+			
+		}
+	});
+}
+
+
+/** 功能：纪要信息下拉框 */
+function fnPolicyList(dataList,obj){
+	var jsonDataStr = {"json":[]};
+	if(dataList.length>0){
+		for(var i=0;i<dataList.length;i++){
+			var code = dataList[i].dictDetailCode;
+			var name = dataList[i].dictDetailName;
+			$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+		}
+	}
+	$u.push(jsonDataStr, '{"selected":true,"ignore":false,"key":""}');
+	$('#'+obj).fnLoadComponent($u.stringify(jsonDataStr));
+}
+
+//页面下拉框
+$cf.loadAllDictOnly('GANGWEIZHIWU,ZDJYCDID,ZDSQRHYZK,ZXQSRELATIONSHIP,ALLOT_ZX_BZK_CREDIT,');
+var json = $cf.getDictJSON('GANGWEIZHIWU');
+var json1 = $cf.getDictJSON('ZDJYCDID');
+var json2 = $cf.getDictJSON('ZDSQRHYZK');
+var json3 = $cf.getDictJSON('ZXQSRELATIONSHIP');
+var dict = {"json" : {}};
+var dict1 = {"json" : {}};
+var dict2 = {"json" : {}};
+var dict3 = {"json" : {}};
+var code = '';
+$u.push(dict, '{"selected":true,"ignore":false,"key":"' + code + '"}');
+$u.push(dict1, '{"selected":true,"ignore":false,"key":"' + code + '"}');
+$u.push(dict2, '{"selected":true,"ignore":false,"key":"' + code + '"}');
+$u.push(dict3, '{"selected":true,"ignore":false,"key":"' + code + '"}');
+$u.push(dict.json, json);
+$u.push(dict1.json, json1);
+$u.push(dict2.json, json2);
+$u.push(dict3.json, json3);
+$('#c1Title').fnLoadComponent($u.stringify(dict));
+$('#c1Educls').fnLoadComponent($u.stringify(dict1));
+$('#c1Marst').fnLoadComponent($u.stringify(dict2));
+$('#c1Reship').fnLoadComponent($u.stringify(dict3));
+$('#c1Xship1').fnLoadComponent($u.stringify(dict3));
+</script>
+</body>
+</html>

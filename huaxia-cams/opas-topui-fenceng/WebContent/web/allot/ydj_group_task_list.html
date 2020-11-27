@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>组长任务列表</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../topui/easyui/default/easyuiExt.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<script src="../../js/author/allot.js" type="text/javascript"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style>
+</head>
+<body>
+<div id="divResizeH" style="overflow:scroll;">
+	<h1>组长任务列表</h1>
+	<fieldset>
+		<legend>筛选条件</legend>
+		<div class="area-tips">
+			待分配：<em class="countAppId"></em>件 / 快速审批件数量：<em class="quickAppId"></em>件
+			/ 查询结果：<strong id="info_query">0</strong>件 
+		</div>
+		<div align="center">
+			<form id="seachForm" method="post" accept-charset="UTF-8">
+				<table>
+					<tr>
+						<td>流水号字母：</td>
+						<td><select class="easyui-combobox" id="serialNum" name="serialNum"
+							dict_type="ALLOT_SERIALNUM" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>展业地区：</td>
+						<td><select class="easyui-combobox" name="appRegion" dict_type="ALLOT_APPREGION"
+							editable="false"  id="appRegion" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>渠道：</td>
+						<td><select class="easyui-combobox" name="appChannel" id="appChannel"
+							dict_type="ALLOT_APPCHANNEL" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr>
+					<tr>
+						<td>录入商：</td>
+						<td><select class="easyui-combobox" name="appInput"  id="appInput" 
+							dict_type="ALLOT_APPINPUT" editable="false" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select></td>
+						<td>卡产品类型：</td>
+						<td><select class="easyui-combobox" data-options="valueField:'cardCode',textField:'prodName'"
+									style="width: 150px" name="appProd" id="appProd" multiple="true">
+							</select></td>
+						<td>时间：</td>
+						<td>
+						<select class="easyui-combobox" name="shareTime"
+							dict_type="ALLOT_SHARETIME" editable="false" id="shareTime"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<span>
+							<input class="easyui-datebox" name="appTimeStart"  id="appTimeStart" style="width: 150px;"/>
+							<input class="easyui-datebox" name="appTimeEnd"  id="appTimeEnd" style="width: 150px;"/>
+							<input class="easyui-datebox" name="crtTimeStart"  id="crtTimeStart" style="width: 150px;"/>
+							<input class="easyui-datebox" name="crtTimeEnd"  id="crtTimeEnd" style="width: 150px;"/>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>异常进件渠道：</td>
+						<td><select class="easyui-combobox" name="nosafePromoter" dict_type="ALLOT_NO_SAFE"
+							editable="false" id="nosafePromoter"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+						<td>单位名称：</td>
+						<td><input class="easyui-textbox" name="c1CoName" id="c1CoName"
+							style="width: 150px;"></td>
+						<td>邮寄地址：</td>
+						<td>
+						<select class="easyui-combobox" name="c4CyCadd1"
+							dict_type="ALLOT_CARDTO1" editable="false" id="c4CyCadd1"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr>
+					<tr>
+						<td>团办号：</td>
+						<td><input class="easyui-textbox" name="c4ApBatch"  id="c4ApBatch"
+							 style="width: 96px;" />
+							<a href="javascript:fnBatch();" 
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+						<td>项目号（专案代码）：</td><!-- added by jpc -->
+						<td><input class="easyui-textbox" name="c5JcType"  id="c5JcType"
+							 style="width: 96px;" />
+							<a href="javascript:fnJCType();" 
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+					</tr>
+					<tr>
+						<td>推广机构号：</td>
+						<td><input class="easyui-textbox" name="c5AbCode"  id="c5AbCode"
+							 style="width: 96px;" />
+							<a href="javascript:fnAbCode();"
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+						<td>推广人员代码：</td>
+						<td><input class="easyui-textbox" name="c4AbUser" id="c4AbUser"
+							 style="width: 96px;" />
+							<a href="javascript:fnAbUser();"
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+					</tr>
+					<tr>
+						<td>中征信1000评分：</td>
+						<td><input class="easyui-textbox" name="minNumberRead" id="minNumberRead"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" id="maxNumberRead" name="maxNumberRead"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>申请件状态：</td>
+						<td><select class="easyui-combobox" name="appStatus" dict_type="ALLOT_CURRSTATUS"
+							editable="false" id="appStatus"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>标识：</td>
+						<td><select class="easyui-combobox" id="identify" name="identify" dict_type="ALLOT_IDENTIFY"
+							editable="false"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_1"  name="isHaveCardCust" dict_type="ALLOT_ISHAVECARD"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_2"  name="quickCardFlag" dict_type="ALLOT_C4RUSHFLG"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_3"  name="pubPolice" dict_type="YDJ_ALLOT_PUBPOLICE"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width:  150px;">
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td>征信策略结果描述：</td>
+						<td>
+							<select class="easyui-combobox" name="creditDecisionLayer" dict_type="ALLOT_YDJ_CREDIT_DESCRIPTION"
+							editable="false" id="creditDecisionLayer"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select>
+						</td>
+						<td>征信策略结果：</td>
+						<td>
+						<select class="easyui-combobox" name="creditDecisionResult" dict_type="ALLOT_YDJ_CREDIT"
+							editable="false"  id="creditDecisionResult"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select>
+						</td>
+						<td>系统决策建议额度：</td>
+						<td><input class="easyui-textbox" name="minProposedLmt"  id="minProposedLmt"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" name="maxProposedLmt"   id="maxProposedLmt"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+					</tr>
+					<tr>
+						<td>分配顺序：</td>
+						<td>
+							<select class="easyui-combobox" name="allotType" dict_type="ALLOT_ALLOTTYPE"
+							editable="false" id="allotType"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+							</select>
+						</td>
+						<td>申请件流水号：</td>
+						<td>
+							<input class="easyui-textbox" name="appId" id="appIdStr"
+							style="width: 150px;">
+						</td>
+						<td>腾讯天御分：</td>
+						<td><input class="easyui-textbox" name="minRiskScore" id="minRiskScore"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox"  id="maxRiskScore" name="maxRiskScore"
+							 style="width: 73px;"  data-options="validType:['number','maxLength[12]']" >
+						</td>
+					</tr>
+					<tr>
+						<td>手机实名认证结果：</td>
+						<td><select class="easyui-combobox" name="phoneCertification" 
+							 id="phoneCertification" style="width: 150px;" 
+							 dict_type="ALLOT_PHONE_NEW" editable="false" multiple="true"
+							 data-options="valueField:'dictDetailCode',textField:'dictDetailName'" >
+							 </select></td>
+						<td>反欺诈决策结果：</td>
+						<td><select class="easyui-combobox" id="fqzValue" name="fqzValue"
+							dict_type="ALLOT_FQZ" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>天御风险码：</td>
+						<td><select class="easyui-combobox" name="riskCode" dict_type="ALLOT_RISKCODE"
+							editable="false"  id="riskCode" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr> 
+					 <tr>
+					 	<td>天御风险码等级：</td>
+						<td><select class="easyui-combobox" name="riskLevel" id="riskLevel"
+							dict_type="ALLOT_RISKLEVEL" editable="false"  multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>征信评分：</td>
+						<td><input class="easyui-textbox" name="triggerType1" id="triggerType1"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" id="triggerType2" name="triggerType2"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>标签：</td>
+						<td>
+						    <input type="checkbox" name="batchLabel" id="batchLabel" value="1" />批量&nbsp;&nbsp; 
+							<input type="checkbox" name="pbocRstFinDesp" id="pbocRstFinDesp" value="1" />人行不良&nbsp;&nbsp;
+							<input type="checkbox" name="appStatus2" id="appStatus2" value="24" />挂起 &nbsp;&nbsp; 
+							<input type="checkbox" name="secondDecisionLH" id="secondDecisionLH" value="1" />次策略捞回
+						</td>
+					</tr> 
+					<tr>
+						<td>开始时间：</td>
+						<td>
+							<input class="easyui-datetimebox" id="fenTime1"
+							 name="fenTime1" style="width: 150px;color:red;" 
+							data-options="showSeconds:false"/>
+						</td>
+						<td>结束时间：</td>
+						<td>
+							<input class="easyui-datetimebox" id="fenTime2"
+							 name="fenTime2" style="width: 150px;color:red;" 
+							data-options="showSeconds:false"/>
+						</td>
+					</tr>
+					<tr>
+						<td>推荐来源：</td>
+						<td><select class="easyui-combobox" name="rcdSrc" id="rcdSrc"
+							dict_type="RCDSRC" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+						<td>平台类型：</td>
+						<td><select class="easyui-combobox" name="platType" id="platType"
+							dict_type="PLATTYPE" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+						<td>合作类型：</td>
+						<td><select class="easyui-combobox" name="coprType" id="coprType"
+							dict_type="COPRTYPE" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+					</tr>
+					<tr>
+						<td>平台风险层级：</td>
+						<td><select class="easyui-combobox" name="platRiskLvl" id="platRiskLvl"
+							dict_type="PLATRISKLVL" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+						<td>人像比对结果</td>
+						<td>
+							<select class="easyui-combobox" dict_type="ALLOT_RXBD"
+							editable="false" id="policeRxbd"  name="policeRxbd" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+							</select>
+						</td>
+						<td>在网时长：</td>
+						<td><select class="easyui-combobox" name="onlineTime" id="onlineTime"
+							dict_type="ALLOT_ONLINE" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+					</tr>
+					<tr>
+						<td>组别：</td>
+						<td>
+							<select class="easyui-combobox" data-options="valueField:'orgNo',textField:'orgName'"
+								style="width: 150px;" id="groupYdj" name="groupYdj" >
+							</select>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div class="area-function">
+				 <a href="javascript:fnBatchSubmit();" class="easyui-linkbutton" style="width: 80px;">批量提交</a>&nbsp;
+				<a href="javascript:fnHangUpRemark();" class="easyui-linkbutton">挂起</a>&nbsp;
+				<a	href="javascript:fnRelease();" class="easyui-linkbutton">释放</a>&nbsp;
+				<a href="javascript:fnShowWinRemark();" class="easyui-linkbutton"
+				style="width: 80px;">全流程备注</a>&nbsp; 
+				<a href="javascript:checkAndSearchTab('seachForm','tblPost');"  class="easyui-linkbutton" 
+				 style="margin-left: 20px;">查询 </a>&nbsp;
+				 <a	href="javascript:buttonClean()" class="easyui-linkbutton">重置</a>
+		</div> 
+	</fieldset>
+	<div id="winBatch" class="easyui-window" 
+		style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="batchForm" method="post">
+					<table id="tblBatch" title="团办号代码列表" class="easyui-datagrid" style="width: 98%"
+			       data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,url:'',queryParams:{ydjFlag:'1'},loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+							<tr>
+							    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+							 	<th field="appCity" width="20%" align="center" data-options="formatter:formatAppCity">城市</th>
+								<th field="c4ApBatch" width="20%" align="center">团办号代码</th>
+								<th field="num" width="20%" align="center">申请件数量</th>
+							</tr>
+					</thead>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winBatch')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveBatch()">保存</a>
+		        </div>
+	</div>
+	<!-- added by jpc  -->
+	<div id="winType" class="easyui-window" style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="typeForm" method="post">
+			<table id="tblType" title="项目号代码列表" class="easyui-datagrid" style="width: 98%"
+	       data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[20, 50,100,200],fitColumns:true,url:'',queryParams:{ydjFlag:'2'},loadMsg:'数据加载中.....',method:'post'">
+			<thead>
+				<tr>
+				    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+				    <th field="appCity" width="20%" align="center" data-options="formatter:formatAppCity" >城市</th>
+					<th field="c5JcType" width="20%" align="center">项目号代码</th>
+					<th field="num" width="20%" align="center">申请件数量</th>
+				</tr>
+			</thead>
+			</table>
+		</form>
+		<div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winType')">取消</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveType()">保存</a>
+        </div>
+	</div>
+	<div id="winAbCode" class="easyui-window" title="推广机构号查询"
+		style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="abCodeForm" method="post">
+					<table id="tblAbCode" title="推广机构号代码列表" class="easyui-datagrid" style="width: 98%"
+			       data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,url:'',queryParams:{ydjFlag:'1'},loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+							<tr>
+							    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+							    <th field="appCity2" width="20%" align="center" data-options="formatter:formatAppCity">城市</th>
+								<th field="c5AbCode" width="20%" align="center">推广机构号代码</th>
+								<th field="num2" width="20%" align="center">申请件数量</th>
+							</tr>
+						</thead>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAbCode')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveAbCode()">保存</a>
+		        </div>
+	</div>
+	<div id="winAbUser" class="easyui-window" title="推广人员号查询"
+		style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="abUserForm" method="post">
+					<table id="tblAbUser" title="推广人员号代码列表" class="easyui-datagrid" style="width: 98%"
+			       data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,url:'',queryParams:{ydjFlag:'1'},loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+							<tr>
+							    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+							    <th field="appCity3" width="20%" align="center" data-options="formatter:formatAppCity">城市</th>
+								<th field="c4AbUser" width="20%" align="center">推广人员代码</th>
+								<th field="num3" width="20%" align="center">申请件数量</th>
+							</tr>
+						</thead>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAbUser')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveAbUser()">保存</a>
+		        </div>
+	</div>
+	<div style="height:380px;margin-top:10px;">
+		<table id="tblPost" class="easyui-datagrid" style="height:380px;" 
+			data-options="rownumbers:true,singleSelect:false,checkOnSelect:false,selectOnCheck:false,pagination:true,pageSize:20,pageList:[20, 50,200,500],url:'',loadMsg:'数据加载中.....',method:'post',toolbar:'#seachCondion'">
+			<thead>
+				<tr>
+					<th field="id"  align="center" checkbox="true" >编号</th>
+					<th field="appId"  align="center"  width="150px"   data-options="formatter:formatappid" >申请件编号</th>
+					<th field="matchingCardFlag" align="center" >套卡标识</th>
+					<th field="c1Cname" align="center" >用户姓名</th>
+					<th field="c1CoName" align="center" >单位中文名称</th>
+					<th field="appProd"  align="center" width="80px"  >卡产品类型</th>
+					<th field="currStatus" align="center" width="80px" data-options="formatter:formatCurrStatus">分配状态</th>
+					<th field="delStatus"  align="center" width="120px"  data-options="formatter:formatDelStatus">人工处理状态</th>
+					<th field="currNode"  align="center" width="65px" data-options="formatter:formatCurrNode">节点状态</th>
+			
+					<th field="crtTeamDate"  align="center" width="150px" data-options="formatter:formatDate">进入该环节日期</th>
+					<th field="crtTime"  align="center" width="150px"   data-options="formatter:formatDate">进件日期</th>
+					<th field="lastGroup"  align="center" >当前组</th>
+					<th field="groupDate" align="center" width="150px" data-options="formatter:formatDate">分组日期</th>
+					<th field="currUserName" width="80px"  align="center" >组员姓名</th>
+					<th field="userDate"  align="center" width="150px" data-options="formatter:formatDate" >进入操作员日期</th>
+				</tr>
+			</thead>
+	</table>
+	</div>
+	<div id="remarkContent" class="easyui-window" title="全局备注"
+		style="text-align: center; width: 600px; height: 300px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="remarkForm" method="post" accept-charset="UTF-8">
+			<table cellpadding="5"
+				style="border-collapse: separate; border-spacing: 10px; margin: auto;">
+				<tr>
+					<td>备注内容：</td>
+					<td><textarea id="remarkInfo" name="remarkInfo" class="easyui-validatebox"
+							data-options="multiline:true,validType:'length[1,500]'"
+							style="width: 350px; height: 200px;" ></textarea>
+							</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('remarkContent')">取消</a>&nbsp; <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="remark()">提交</a>
+		</div>
+	</div>
+	<div id="remarkContent2" class="easyui-window" title="挂起备注"
+		style="text-align: center; width: 600px; height: 300px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="remarkForm2" method="post" accept-charset="UTF-8">
+			<table cellpadding="5"
+				style="border-collapse: separate; border-spacing: 10px; margin: auto;">
+				<tr>
+					<td>备注内容：</td>
+					<td><textarea id="remarkInfo2" name="remarkInfo" maxlength="100"
+							style="width: 350px; height: 200px;" ></textarea>
+					</td>
+					<td><em>最多100个汉字</em></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('remarkContent2')">取消</a>&nbsp; <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="fnHandUp()">提交</a>
+		</div>
+	</div>
+	<div id="creditBatch" class="easyui-window" title="征信批量"
+		style="text-align: center; width: 500px; height: 300px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="creditBatchForm" method="post" accept-charset="UTF-8">
+			<table cellpadding="5"
+				style="border-collapse: separate; border-spacing: 10px; margin: auto;">
+			
+				 <tr>
+				    <td align="right">过件码:</td>
+					<td>
+						<select  id="blockCode" name="blockCode"  style="width: 300px;"	 onblur="fnCreditValid()" >
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>备注：</td>
+					<td><textarea id="creditRefuseReason" name="creditRefuseReason" class="easyui-validatebox"
+							data-options="multiline:true,validType:'length[1,200]'"
+							style="width: 400px; height: 200px;" ></textarea>
+							</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('creditBatch')">取消</a>&nbsp; <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="creditBatch()">提交</a>
+		</div>
+	</div> 
+	<input type="hidden" id="batchFlag" name="batchFlag">
+	<input type="hidden" id="batchFlag2" name="batchFlag2">
+	</div>
+	<script type="text/javascript">
+	$cf.loadAllDict(); // 加载数据字典
+	var ydjFlag='1';//易达金标识  1易达金 2标准卡 
+	var tblPost = $("#tblPost");
+	var seachForm = $("#seachForm");
+	var remarkWindow = $("#remarkContent");
+	var remarkForm = $("#remarkForm");
+	var remarkWindow2 = $("#remarkContent2");
+	var remarkForm2 = $("#remarkForm2");
+	var creditWindow = $("#creditBatch");
+	var creditForm = $("#creditBatchForm");
+	var tblBatch = $("#tblBatch");
+	var batchWindow = $("#winBatch");
+	var batchForm = $("#batchForm");
+	var tblType = $("#tblType");// added by jpc
+	var typeWindow = $("#winType");// added by jpc
+	var typeForm = $("#typeForm");// added by jpc
+	var tblAbCode = $("#tblAbCode");
+	var abCodeWindow = $("#winAbCode");
+	var abCodeForm = $("#abCodeForm");
+	var tblAbUser = $("#tblAbUser");
+	var abUserWindow = $("#winAbUser");
+	var abUserForm = $("#abUserForm");
+	var appProd='';
+	var zxQueue='0';
+	var node="02";
+	var secondNode="3";
+	var userCode=$cf.getStore("userRelInfo","index").userInfo.userCode;
+	var userName=$cf.getStore("userRelInfo","index").userInfo.userName;
+	function init(){
+		// 初始化
+		fnInitIdentify();
+		fnInitTime();
+		fnLoadAppProd();
+		$("#tblPost").datagrid('hideColumn','matchingCardFlag');
+	}
+	$(function() {
+		initDivHeight("divResizeH");//div高度
+		fnGetCount();
+		init();
+		var opts = tblPost.datagrid("options");
+		var jsondata = getFormMulData(seachForm.serializeArray());
+		opts.url = "/opas-allot-server/shareAppByConditions.json";
+		var s={
+				"userCode":userCode,
+				"jsondata":jsondata,
+				"node":node,
+				"secondNode":secondNode,
+				"ydjFlag":'1'
+				};
+		tblPost.datagrid("reload", s); 
+		tblPost.datagrid("unselectAll");
+		$("#serialNum").combobox({
+			 onSelect: function(rec){
+		            var allval = $(this).combobox("getData");
+		            var allth = allval.length;
+		                if (rec.serialNum != -1){
+		                    $(this).combobox("unselect", -1);
+		                }else{
+		                    for (var i=0;i<allth;i++) {
+		                        if (allval[i].serialNum != 0) {
+		                            $(this).combobox("unselect", allval[i].serialNum);
+		                        }
+		                    }
+		                }
+		            }
+       
+           });
+		// [事件] select 联动
+		$('#identify').combobox({
+			onChange : function(n, o) {
+				switch (n) {
+				case '1':
+					$("#child_2+.combo").hide();
+					$("#child_3+.combo").hide();
+					$("#child_1+.combo").show();
+					break;
+				case '2':
+					$("#child_1+.combo").hide();
+					$("#child_3+.combo").hide();
+					$("#child_2+.combo").show();
+					break;
+				case '3':
+					$("#child_1+.combo").hide();
+					$("#child_2+.combo").hide();
+					$("#child_3+.combo").show();
+					break;
+				default:
+					fnInitIdentify();
+				}
+				
+			}
+		});
+		$('#shareTime').combobox({
+			onChange : function(n, o) {
+				switch (n) {
+				case '1':
+					$("#crtTimeStart+.combo").hide();
+					$("#crtTimeEnd+.combo").hide();
+					$("#appTimeStart+.combo").show();
+					$("#appTimeEnd+.combo").show();
+					break;
+				case '2':
+					$("#appTimeStart+.combo").hide();
+					$("#appTimeEnd+.combo").hide();
+					$("#crtTimeStart+.combo").show();
+					$("#crtTimeEnd+.combo").show();
+					break;
+				default:
+					fnInitTime();
+				}
+				
+			}
+		});
+	
+	});
+	
+	//申请件编号
+	function formatappid(val, currentRow, index) {
+		var path = "";
+		var appId = currentRow.appId;
+		var ydjFlag= '1';
+		var appProd='';//重置全局变量  申请卡片产品
+		appProd=currentRow.appProd;
+		var matchingCardFlag=currentRow.matchingCardFlag;
+		if(node==02){
+			if(matchingCardFlag=='1'){//易达金  套的标准卡 
+				path="../credit/credit_control_zxBzk_readOnly.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&appProd="+appProd+"&meuoFlag=1";
+			}else{
+				path="../credit/credit_control_zxYdj_readOnly.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&appProd="+appProd+"&meuoFlag=1";
+			}
+			return "<a href="+path+" target=_blank>"+val+"</a>";
+		}else if(node==03){
+			if(ydjFlag=="1"&&appProd!="0085"&&matchingCardFlag!="1"){/* 1为易达金 2标准卡 */
+				path = "../audit/ydj_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=1";
+			}else if(ydjFlag=="1"&&appProd=="0085"&&matchingCardFlag!="1"){/* 商品易达金 */
+				path = "../audit/ydj_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=3";
+			}else if(ydjFlag=="1"&&matchingCardFlag=="1"){/* 易达金的副卡--标准卡 */
+				path = "../audit/ydjFk_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=1";
+			}else if(ydjFlag=="2"){
+				path = "../audit/bzk_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=1";
+			}else{
+				alert("易达金标示出错，请检测。即ydjFlag="+ydjFlag);
+			}
+			return "<a href="+path+" target=_blank>"+val+"</a>";
+		}
+	} 
+	 function fnInitIdentify() {
+		$("#child_1 +.combo").hide();
+		$("#child_2 +.combo").hide();
+		$("#child_3 +.combo").hide();
+	}
+	function fnInitTime(){
+		$("#appTimeStart+.combo").hide();
+		$("#appTimeEnd+.combo").hide();
+		$("#crtTimeStart+.combo").hide();
+		$("#crtTimeEnd+.combo").hide();
+	}
+	function fnGetCount(){
+		$cf.ajax({
+			url : "/opas-allot-server/countGroupApply.json",
+			data:{'node':node,
+				'secondNode':secondNode,
+				'ydjFlag':'1',
+				'userCode':userCode
+				},
+			onSuccess : function(respObj) {
+				var count = respObj.RSP_BODY.total;
+				var count2 = respObj.RSP_BODY.total2;
+				$(".countAppId").text(count);
+				$(".quickAppId").text(count2);
+			}
+		});
+	}
+	//批量提交
+	function fnBatchSubmit() {
+		//检测批量提交开关方法-wenyh
+		var switchStatus = null;
+		$cf.ajax({
+			url : "/opas-allot-server/checkBatchSwitch.json",
+			data:{'node':node,
+				'ydjFlag':'1'
+				},
+			async:false,//默认true，异步；同步的前提是有顺序执行要求
+			onSuccess : function(datamsg) {
+				switchStatus = datamsg.RSP_BODY.switchStatus;
+			}
+		});
+		if('0'== switchStatus){
+			$.messager.alert("操作提示","批量功能未开启，暂时不可批量提交 ","error");
+			return;
+		}
+		
+		var orgObj = tblPost.datagrid("getChecked");
+		console.info(orgObj);
+		if (orgObj == null||orgObj.length==0) {
+			  $.messager.alert("操作提示","请选择要批量提交的申请件！ ","error");
+			  return;
+		}
+		var list=new Array();
+		for(var i=0;i<orgObj.length;i++){
+			if(orgObj[i].currStatus=='1'){
+				list.push(orgObj[i].appId);
+			}else if(orgObj[i].currStatus=='2'){
+				$.messager.alert("操作提示", "该件为挂起状态,不能批量提交 ");
+				return;
+			}else if(orgObj[i].currStatus=='3'){
+				$.messager.alert("操作提示", "该件为已分配状态,不能批量提交  ");
+				return;
+			}else if(orgObj[i].currStatus=='4'){
+				$.messager.alert("操作提示", "该件为已分配挂起 状态,不能批量提交  ");
+				return;
+			}
+		}
+		if(node==02){
+				$("#blockCode").empty();
+				 $cf.ajax({
+					 url : "/opas-naps/queryAllPhoneChk.json",
+					 data:{
+						 "acctType":"2",
+						 "status":"1"
+					 },
+					onSuccess : function(respObj){
+							var phones=eval(respObj.RSP_BODY.phoneList);
+							$("#blockCode").append("<option value=''>--请选择--</option>");
+							for(var i=0;i<phones.length;i++){
+								var phone=phones[i];
+								$("#blockCode").append(
+										"<option value='"+phone.phoneChkPassCode+"'>" +phone.phoneChkPassCode+"-"+ phone.phoneChkPassName + "</option>");
+							}
+						}
+				});	
+			creditWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+			});
+		}
+	}
+	//征信批量  标过件码
+	function creditBatch() {
+			//排除重复点击情况
+			var  batchFlag=$("#batchFlag").val();
+			if(batchFlag=='1'){//批量提交中 再次点击不生效
+				return;
+			}else{//未处于批量提交中
+				$("#batchFlag").val("1");
+			}
+			if (fnCreditValid()) {
+				var orgObj = tblPost.datagrid("getChecked");
+				if (orgObj == null||orgObj.length==0) {
+					  $.messager.alert("操作提示","请勾选申请件！","error");
+					  $("#batchFlag").val("0");
+					  return;
+				}
+				var jsondata = getFormData(creditForm.serializeArray());
+				var list=new Array();
+				for(var i=0;i<orgObj.length;i++){
+					if(orgObj[i].currStatus=='1'){
+						list.push(orgObj[i].appId);
+					}
+				}
+				$cf.ajax({
+					url : "/opas-allot-server/batchFico.json",
+					data:{
+						'jsondata':jsondata,	
+						'userCode':userCode,
+						'userName':userName,
+						'node':node,
+						'ydjFlag':'1',
+						'list':list
+						},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							$.messager.alert("操作提示", "征信批量成功 !", "info", function() {
+								//先重置弹框内容
+								$('#creditBatchForm').form('reset');
+								creditWindow.window('close');
+								tblPost.datagrid("reload");
+								tblPost.datagrid("unselectAll");
+								 $("#batchFlag").val("0");
+							});
+						} else {
+							$.messager.alert("操作提示", "系统繁忙,请稍后重新提交 !", "error");
+							$('#creditBatchForm').form('reset');
+							creditWindow.window('close');
+							tblPost.datagrid("unselectAll");
+							 $("#batchFlag").val("0");
+							return;
+						}
+					}
+				});
+			}
+		}
+		
+		// [功能] 校验  备注  
+		function fnValid() {
+			var remarkInfo = $('#remarkInfo').val().trim();
+			if (remarkInfo == '') {
+				required('remarkInfo'); // 控件校验
+				return false;
+			}
+			return true;
+		}
+		//征信过件码 校验   备注可为空  过件码不能为空   
+		function fnCreditValid() {
+			var blockCode = $('#blockCode').val().trim();
+			if (blockCode == '') {
+				$.messager.alert("操作提示","征信过件码不能为空  ","error");
+				 $("#batchFlag").val("0");
+				return false;
+			}
+			return true;
+		}
+		function fnShowWinRemark() {
+			var orgObj = tblPost.datagrid("getChecked");
+			if (orgObj == null||orgObj.length==0) {
+				  $.messager.alert("操作提示","请勾选申请件！","error");
+				  return;
+				}
+			remarkWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+				onBeforeOpen : setData(orgObj)
+			});
+		}
+		// [按钮]备注保存
+		function remark() {
+			if (fnValid()) {
+				var jsondata = getFormData(remarkForm.serializeArray());
+				var orgObj = tblPost.datagrid("getChecked");
+				var list=new Array();
+				for(var i=0;i<orgObj.length;i++){
+					list.push(orgObj[i].appId);
+				}
+				var remarkInfo=$("#remarkInfo").val();
+				$cf.ajax({
+					url : "/opas-allot-server/remark.json",
+					data : {'jsondata':jsondata,
+							'userCode':userCode,
+							'node':node,
+							'secondNode':secondNode,
+							'list':list,
+							'ydjFlag':'1',
+							'remarkInfo':remarkInfo
+						},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							$.messager.alert("操作提示", "备注成功 !", "info", function() {
+								remarkWindow.window('close');
+								tblPost.datagrid("reload");
+								tblPost.datagrid("unselectAll");
+								
+							});
+						} else {
+							$.messager.alert("操作提示", "备注异常" + data.RSP_BODY.exMsg, "error");
+							remarkWindow.window('close');
+							tblPost.datagrid("reload");
+							tblPost.datagrid("unselectAll");
+							return;
+						}
+					}
+				});
+			}
+		}
+		// [按钮] 重置
+		function reset() {
+			$('#remarkForm')[0].reset();
+		}
+		//挂起
+		function fnHandUp(){
+			var orgObj = tblPost.datagrid("getChecked");
+			if (orgObj == null||orgObj.length==0) {
+				  $.messager.alert("操作提示","请勾选申请件！","error");
+				  return;
+				}
+			var list=new Array();
+			for(var i=0;i<orgObj.length;i++){
+				if(orgObj[i].currStatus!='2'&& orgObj[i].currStatus!='4'&& orgObj[i].currStatus!='5'){
+					list.push(orgObj[i].appId);
+				}else if(orgObj[i].currStatus=='2'||orgObj[i].currStatus=='4'||orgObj[i].currStatus=='5'){
+					$.messager.alert("操作提示", "挂起异常,原因:存在已挂起件,请重新选择  ");
+					return;
+				}
+			}
+			//挂起备注  新审批二期
+			var remarkInfo=$("#remarkInfo2").val();
+			if(remarkInfo==null||remarkInfo==''){
+				$.messager.alert("操作提示", "挂起备注为空,请填写备注信息 ");
+				return;
+			}
+		   $cf.ajax({
+		     	url:"/opas-allot-server/handUp.json",
+		     	data:{'list':list,
+		     		'remarkInfo':remarkInfo,
+		     		'node':node,
+		     		'ydjFlag':'1',
+		     		'userCode':userCode,
+		     		'secondNode':secondNode
+		     		},
+		     	onSuccess : function(data) {
+		     		if (data.RSP_BODY.isSuccess) {
+						$.messager.alert("操作提示", "挂件成功 !", "info", function() {
+							remarkWindow2.window('close');//新审批二期
+							tblPost.datagrid("reload");
+							tblPost.datagrid("unselectAll");
+						});
+					} else {
+						$.messager.alert("操作提示", "挂件异常,原因:  " + data.RSP_BODY.exMsg, "error");
+						remarkWindow2.window('close');//新审批二期
+						tblPost.datagrid("unselectAll");
+						return;
+					}
+				}
+		   	 });
+		}
+		//释放
+		function fnRelease(){
+			var orgObj = tblPost.datagrid("getChecked");
+			if (orgObj == null||orgObj.length==0) {
+				  $.messager.alert("操作提示","请勾选申请件！ ","error");
+				  return;
+				}
+			var list=new Array();
+			for(var i=0;i<orgObj.length;i++){
+				if(orgObj[i].currStatus!='0'&& orgObj[i].currStatus!='1' && orgObj[i].currStatus!='3'){
+					list.push(orgObj[i].appId);
+				}else{
+					$.messager.alert("操作提示", "解挂异常,原因:存在已解挂件,请重新选择  ");
+					return;
+				}
+			}
+			    $cf.ajax({
+			     	url:"/opas-allot-server/release.json",
+			     	data:{
+			     		'list':list,
+			     		'orgObj':orgObj,
+			     		'node':node,
+			     		'ydjFlag':'1',
+			     		'userCode':userCode,
+			     		'secondNode':secondNode
+			     		},
+			     	onSuccess : function(data) {
+			     		if (data.RSP_BODY.isSuccess) {
+							$.messager.alert("操作提示", "释放成功 !", "info", function() {
+								tblPost.datagrid("reload");
+								tblPost.datagrid("unselectAll");
+							});
+						} else {
+							$.messager.alert("操作提示", "释放异常,原因: " + data.RSP_BODY.exMsg, "error");
+							tblPost.datagrid("unselectAll");
+							return;
+						}
+					}
+			   	 });
+		}
+		function setData(data) {
+			remarkForm.form("load", data);
+			$("#id").attr("readonly", "readonly");
+			$("#id").attr("disabled", "disabled");
+		}
+		function fnQuery() {
+			var seachForm = $("#seachForm");
+			var jsondata = getFormMulData(seachForm.serializeArray());
+			$cf.ajax({
+				url : "/opas-allot-server/queryAppByConditions.json",
+				data : {'jsondata':jsondata,
+					'node':node,
+					'secondNode':secondNode,
+					'ydjFlag':'1',
+					'userCode':userCode},
+				onSuccess : function(respObj) {
+					var count = respObj.RSP_BODY.total;
+					$('#info_query').text(count);
+					fnGetCount();
+				}
+			});
+		}
+		function checkAndSearchTab(formName, tblName) {
+			var opts = tblPost.datagrid("options");
+			var shareTimeValue=$("#shareTime").combobox("getValues");
+			var appTimeStart = $('#appTimeStart').datebox('getValue');
+			var appTimeEnd = $('#appTimeEnd').datebox('getValue');
+			var crtTimeStart = $('#crtTimeStart').datebox('getValue');
+			var crtTimeEnd = $('#crtTimeEnd').datebox('getValue');
+			if(shareTimeValue == "1"){
+				if(appTimeStart == "" || appTimeEnd == ""){//没有选择起止时间
+					showWaringBox('请选择起止时间.');
+					return null;
+				}
+				var appTimeDay = GetDateDiff(appTimeStart,appTimeEnd);
+				if (appTimeDay > 6){
+					alert("条形码日期区间不能超过7天");
+					return;
+				}
+			}else if(shareTimeValue == "2"){
+				if(crtTimeStart == "" || crtTimeEnd == ""){//没有选择起止时间
+					showWaringBox('请选择起止时间.');
+					return null;
+				}
+				var crtTimeDay = GetDateDiff(crtTimeStart,crtTimeEnd);
+				if (crtTimeDay > 6){
+					alert("进件日期区间不能超过7天");
+					return;
+				}
+			}
+			var jsondata = getFormMulData(seachForm.serializeArray());
+			opts.url = "/opas-allot-server/shareAppByConditions.json";
+			var s={
+					"node":node,
+					"userCode":userCode,
+					"jsondata":jsondata,
+					"ydjFlag":"1",
+					"secondNode":secondNode
+					};
+			tblPost.datagrid("reload", s); 
+			tblPost.datagrid("clearChecked");
+			fnQuery();
+		}
+	</script>
+</body>
+</html>

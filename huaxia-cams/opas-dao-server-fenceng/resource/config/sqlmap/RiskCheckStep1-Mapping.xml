@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="riskcheck_step1">
+
+	<resultMap id="identityRiskResultMap" type="java.util.Map">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="PROMOTER_NO" property="promoterNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="Query_OPAS_IDENTITY_RISKLIST" resultMap="identityRiskResultMap"
+		parameterType="java.lang.String">
+		select AUTO_ID,CERTIFI_NO from OPAS_IDENTITY_RISKLIST
+		where CERTIFI_NO = #{Id,jdbcType=VARCHAR} and CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate and  rownum = 1
+	</select>
+
+	<select id="Query_OPAS_PROMOTER_RISKLIST" resultMap="identityRiskResultMap"
+		parameterType="java.lang.String">
+		select AUTO_ID,CERTIFI_NO from OPAS_PROMOTER_RISKLIST
+		where CERTIFI_NO = #{Id,jdbcType=VARCHAR} and CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate and  rownum = 1
+	</select>
+
+	<select id="Query_OPAS_SAMEINDUSTRY_RISKLIST" resultMap="identityRiskResultMap"
+		parameterType="java.lang.String">
+		select AUTO_ID,CERTIFI_NO from
+		OPAS_SAMEINDUSTRY_RISKLIST
+		where CERTIFI_NO = #{Id,jdbcType=VARCHAR} and CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate and  rownum = 1
+	</select>
+
+	<resultMap id="keyfiledMarchinfoResultMap" type="java.util.Map">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="MARCH_RESULT" property="marchResult" javaType="String"
+			jdbcType="VARBINARY" />
+	</resultMap>
+
+	<select id="Query_checkResult" resultMap="keyfiledMarchinfoResultMap"
+		parameterType="java.lang.String">
+		select AUTO_ID,MARCH_RESULT,APP_ID from
+		OPAS_KEYFILED_MARCHINFO
+		where APP_ID = '${_parameter}'
+	</select>
+
+	<insert id="save_checkResult" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		insert into OPAS_KEYFILED_MARCHINFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="autoId != null">
+        AUTO_ID,
+      </if>
+      <if test="appId != null">
+        APP_ID,
+      </if>
+      <if test="crtDate != null">
+        CRT_DATE,
+      </if>
+      <if test="marchResult != null">
+        MARCH_RESULT,
+      </if>
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+      <if test="aml != null">
+        AML,
+      </if>
+      <if test="is_life_cust != null">
+        is_life_cust,
+      </if>
+    </trim>
+	 <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="autoId != null">
+        #{autoId},
+      </if>
+      <if test="appId != null">
+        #{appId},
+      </if>
+      <if test="crtDate != null">
+        #{crtDate},
+      </if>
+      <if test="marchResult != null">
+        #{marchResult},
+      </if>
+      <if test="crtUser != null">
+        #{crtUser},
+      </if>
+      <if test="aml != null">
+        #{aml},
+      </if>
+       <if test="is_life_cust != null">
+         #{is_life_cust},
+      </if>
+     </trim>
+		<!-- insert into
+		OPAS_KEYFILED_MARCHINFO
+		(AUTO_ID,APP_ID,CRT_DATE,CRT_USER,MARCH_RESULT)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{appId,jdbcType=VARCHAR},
+		#{crtDate,jdbcType=VARCHAR},
+		#{crtUser,jdbcType=VARCHAR},
+		#{marchResult,jdbcType=VARCHAR}
+		) -->
+	</insert>
+	<update id="update_checkResult" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		update OPAS_KEYFILED_MARCHINFO
+		<set>
+			<if test="marchResult != null" >
+        		MARCH_RESULT = #{marchResult,jdbcType=VARCHAR},
+      		</if>
+			<if test="crtDate != null" >
+				CRT_DATE = #{crtDate},
+      		</if>
+      		<if test="aml != null" >
+				aml = #{aml},
+      		</if>
+      		<if test="is_life_cust != null" >
+				is_life_cust = #{is_life_cust},
+      		</if>
+      		<if test="crtUser != null">
+       			CRT_USER = #{crtUser},
+     		</if>
+		</set>
+		where APP_ID = '${appId}'
+	</update>
+
+	<resultMap id="addrRiskListResultMap" type="com.huaxia.opas.domain.riskcheck.AddrRiskList">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_ADDR" property="companyAddr" jdbcType="VARCHAR" />
+		<result column="LIVING_ADDR" property="livingAddr" jdbcType="VARCHAR" />
+		<result column="BORN_ADDR" property="bornAddr" jdbcType="VARCHAR" />
+		<result column="BILL_ADDR" property="billAddr" jdbcType="VARCHAR" />
+		<result column="OTHER_ADDR" property="otherAddr" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="Query_OPAS_ADDR_RISKLIST" resultMap="addrRiskListResultMap" parameterType="java.util.List">
+		<!-- select
+		AUTO_ID,COMPANY_ADDR,LIVING_ADDR,BORN_ADDR,BILL_ADDR,OTHER_ADDR
+		from
+		OPAS_ADDR_RISKLIST where 1=1 and  INVALID_TIME &gt;= sysdate
+		<foreach item="item" index="index" collection="list"
+			open="and" separator="or" close="">
+			 contains(COMPANY_ADDR,#{item})>0
+		</foreach>
+		<foreach item="item" index="index" collection="list"
+			open="and" separator="or" close="">
+			 contains(LIVING_ADDR,#{item})>0
+		</foreach> -->
+		select
+			AUTO_ID,COMPANY_ADDR,LIVING_ADDR,BORN_ADDR,BILL_ADDR,OTHER_ADDR
+		from
+			OPAS_ADDR_RISKLIST where INVALID_TIME &gt;= sysdate and CURR_STATUS = '1'
+		<foreach item="item" index="index" collection="list"
+			open="and (" separator="or" close=")">
+			 COMPANY_ADDR = #{item}
+		</foreach>
+		<foreach item="item" index="index" collection="list"
+			open="or (" separator="or" close=")">
+			 LIVING_ADDR = #{item}
+		</foreach>
+	</select>
+
+	<resultMap id="companyRiskResultMap" type="com.huaxia.opas.domain.riskcheck.CompanyRisk">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="Query_OPAS_COMPANY_RISKLIST" resultMap="companyRiskResultMap"
+		parameterType="java.util.List">
+		<!-- select AUTO_ID,COMPANY_NAME from OPAS_COMPANY_RISKLIST where 1=1 and CURR_STATUS = '1'  and INVALID_TIME &gt;= sysdate
+		<foreach item="item" index="index" collection="list"
+			open="and" separator="or" close="">
+			 contains(COMPANY_NAME,#{item})>0
+		</foreach> -->
+		
+		select AUTO_ID,COMPANY_NAME from OPAS_COMPANY_RISKLIST where CURR_STATUS = '1'  and INVALID_TIME &gt;= sysdate
+		<foreach item="item" index="index" collection="list"
+			open="and" separator="or" close="">
+			 COMPANY_NAME = #{item}
+		</foreach>
+	</select>
+
+	<resultMap id="telRiskListResultMap" type="com.huaxia.opas.domain.riskcheck.TelRiskList">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="MOBILE_ID" property="mobileId" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+		<result column="LIVING_TEL" property="livingTel" jdbcType="VARCHAR" />
+		<result column="OTHER_TEL" property="otherTel" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="Query_OPAS_TEL_RISKLIST" resultMap="telRiskListResultMap">
+		select
+		AUTO_ID,MOBILE_ID,COMPANY_TEL,LIVING_TEL,OTHER_TEL from
+		OPAS_TEL_RISKLIST  where CURR_STATUS = '1'  and INVALID_TIME &gt;= sysdate
+	</select>
+
+	<select id="Query_OPAS_STR_APPLY_MOBILE_ID_RISKLIST" resultMap="telRiskListResultMap"
+		 parameterType="java.util.List">
+		select AUTO_ID,MOBILE_ID from OPAS_TEL_RISKLIST where CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate and  MOBILE_ID in
+		<foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="Query_OPAS_LIST_CON_TEL_ID_RISKLIST" resultMap="telRiskListResultMap"
+		parameterType="java.util.List">
+		select AUTO_ID,COMPANY_TEL,LIVING_TEL from OPAS_TEL_RISKLIST where CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate and  COMPANY_TEL in
+		<foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		or LIVING_TEL in 
+		<foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="Query_OPAS_LIST_APPLY_OTHER_TEL_RISKLIST" resultMap="telRiskListResultMap"
+		parameterType="java.util.List">
+		select AUTO_ID,OTHER_TEL from OPAS_TEL_RISKLIST where CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate and  OTHER_TEL in
+		<foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="QUERY_OPAS_PROMOTER_RISKLIST_C4ABUSER" resultMap="identityRiskResultMap"
+		parameterType="java.lang.String">
+		select AUTO_ID,PROMOTER_NO from OPAS_PROMOTER_RISKLIST
+		where PROMOTER_NO = #{c4Abuser,jdbcType=VARCHAR} and CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate and rownum = 1
+	</select>
+	<!-- 反洗钱  -->
+	<select id="FOREIGN_INDEX_AML" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select card_type from aml_t5e_es_middle where 
+		full_name = #{c1Cname,jdbcType=VARCHAR}  and  card_no = #{c1Idnbr,jdbcType=VARCHAR}
+	</select>
+	<!--  华夏人寿 -->
+	<select id="IS_LIFE_CUST" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		SELECT A.PARENT_CARDID
+  			 FROM opas_biz_life_whitelist A
+ 		 WHERE A.PARENT_CARDID = #{idnbr,jdbcType=VARCHAR}
+	</select>
+	<update id="update_opas_biz_life_appln_life_cust" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		update opas_biz_life_appln
+		<set>
+			<if test="is_life_cust != null" >
+        		IS_LIFE_CUST = #{is_life_cust,jdbcType=VARCHAR},
+      		</if>
+		</set>
+		where APP_ID like '${appId}%'
+	</update>
+	<!-- 内部交叉检查失败插入失败表-->
+	 <insert id="insertFailedApply" parameterType="java.util.Map">
+    insert into opas_topbpm_failed (APP_ID, PROCESS_ID, NODE_ID ,STEP,C1C2_FLAG)
+    values 
+    (#{appId,jdbcType=VARCHAR}, #{processId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR},#{step,jdbcType=VARCHAR}, #{c1c2Flag,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="selectUnTopbpm" resultType="java.util.Map">
+         select PROCESS_ID,NODE_ID,FLAG,STEP,C1C2_FLAG,APP_ID from opas_topbpm_failed where flag = '0' 
+		and rownum &lt; 51 order by step desc
+	</select>
+	  <select id="selectUnTopbpmTwo" resultType="java.util.Map">
+         select PROCESS_ID,NODE_ID,FLAG,STEP,C1C2_FLAG,APP_ID from opas_topbpm_failed where flag = '1' 
+	</select>
+	<update id="updateFlagByProcessIdAndStep" parameterType="java.util.Map">
+		update opas_topbpm_failed set flag = '1'
+		where PROCESS_ID = #{processId,jdbcType=VARCHAR}
+		and step = #{step,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateFlagByProcessIdAndStepTopbpm" parameterType="java.util.Map">
+		update opas_topbpm_failed set flag = '2'
+		where PROCESS_ID = #{processId,jdbcType=VARCHAR}
+		and step = #{step,jdbcType=VARCHAR}
+	</update>
+	<!-- 客户风险等级 -->
+	<select id="Query_RiskLevel" parameterType="java.lang.String" resultType="java.lang.String">
+		select RISK_LEVEL from AML_CUST_RISK_LEVEL
+		where CERT_NO = #{idnbr,jdbcType=VARCHAR}
+	</select>
+	<!-- 低风险名单 -->
+	<select id="Query_OPAS_LOW_RISK_LIST" parameterType="java.util.Map" resultType="java.lang.String">
+		select LIST_TYPE from OPAS_LOW_RISK_LIST
+		where CUS_NAME = #{c4Recname,jdbcType=VARCHAR}
+		and MOBILE = #{c4Recemp,jdbcType=VARCHAR} and STATUS = '1'
+	</select>
+</mapper>

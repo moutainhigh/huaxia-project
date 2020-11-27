@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.numread.mapper.BatchFileMapper">
+	<insert id="saveNumReadBatchFile" parameterType="NumReadBatchFile">
+		INSERT INTO PBOC_SZJD_BATCH_FILE(
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			BATCH_NO,
+			BATCH_FILE_ID,
+			BATCH_FILE_NAME,
+			BATCH_FILE_RECORD_SIZE,
+			QUERY_STATUS
+		)
+		VALUES(
+			SYS_GUID(),
+			SYSDATE,
+			#{crtUser},
+			#{batchNo},
+			#{batchFileId},
+			#{batchFileName},
+			#{batchFileRecordSize},
+			#{queryStatus}
+		)
+	</insert>
+	
+	<resultMap id="result_file" type="NumReadBatchFile">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_ID" property="batchFileId" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_NAME" property="batchFileName" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_RECORD_SIZE" property="batchFileRecordSize" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STATUS0" property="status0" />
+		<result column="status3" property="status3"  />
+	</resultMap>
+
+	<!-- 批次文件查询 -->
+	<select id="selectFileDetail" parameterType="string" resultMap="result_file">
+		SELECT T.BATCH_FILE_ID,T.BATCH_FILE_NAME,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		T.BATCH_FILE_RECORD_SIZE,S.STAFF_ID,
+		T.CRT_USER,T.QUERY_STATUS,B.STATUS0,C.STATUS3
+		FROM PBOC_SZJD_BATCH_FILE T
+		LEFT JOIN SYS_USER S ON T.CRT_USER=S.USER_ACCT
+		left join ( select FILE_ID,count(*) STATUS0 from pboc_szjd_batch_request  where status=0 group by FILE_ID)b on b.FILE_ID=T.BATCH_FILE_ID
+   		left join ( select FILE_ID,count(*) STATUS3 from pboc_szjd_batch_request  where status=3 group by FILE_ID)c on c.FILE_ID=T.BATCH_FILE_ID
+		WHERE T.BATCH_NO=#{batchId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,61 @@
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+<script language="javascript">
+
+function Init()
+{
+	var ret = ocx.IMGCInitial("","11","");
+	if(ret!=0)
+	{
+			alert("Initial Control Error!");
+			return ;
+	}
+	ret = ocx.IMGCDownload("http://WIN-OCC5N8OSC54:9080/icmrm/ICMResourceManager?order=retrieve&libname=icmnlsdb&token=A4E6.JJF.b_6_oRLq5qSDP1I%3b&objname=+&item-id=A1001001A15E07B00814G31664&version=1&collection=CBR.CLLCT001&content-length=111449&content-range=bytes+0-111448%2f111449&update-date=2015-05-07+02%3a08%3a14.648543&org-filename=A:/FTPDIR/pad/06200911P00271000011.JPG&log-id=?");
+	if(ret!=0)
+	{
+			alert("Download Images Error!");
+			return ;
+	}
+}
+
+function showimg()
+{
+	var ret = ocx.IMGCInitial("","11","");
+	if(ret!=0)
+	{
+			alert("Initial Control Error!");
+			return ;
+	}
+	var ret1 = ocx.IMGCGetURLByMulti("aps||||1|aps|aps001|");
+	if(ret1!="")
+	{
+			alert("["+ret1+"]");
+			ocx.IMGCDownload(ret1);
+	}	
+}
+
+function showimg1()
+{
+	var ret = ocx.IMGCInitial("","11","");
+	if(ret!=0)
+	{
+			alert("Initial Control Error!");
+			return ;
+	}
+	ocx.IMGCDownloadByCode("aps|\150507A611P07891||孙小丽|1|aps|aps001|");
+}
+
+</script>
+</HEAD>
+<BODY>
+<form name="Form1" onload="javascript:init1();">
+	<input type="button" name="sub" value="HTTP调阅" onClick="Init()">
+	<input type="button" name="sub" value="旧接口调阅" onClick="showimg()">
+	<input type="button" name="sub" value="新接口调阅" onClick="showimg1()">
+<p> </p>
+</form>
+<OBJECT ID="ocx" style="LEFT: 0px; WIDTH: 100%; TOP: 0px; HEIGHT: 100%" CLASSID="clsid:997E83A8-2A26-4F86-AF9A-10CC467195FE" codebase="LcImage4Hx.cab">
+</OBJECT>
+</BODY>
+</HTML>

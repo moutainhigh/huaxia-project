@@ -1,0 +1,22 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>不能继续流转的条形码列表</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.util.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div id="appIdList" style="width: 95%;height: 500px;overflow: scroll;"></div>
+<script type="text/javascript">
+	var list0 = $.fnGetAppId("list0");
+	var appIdDivData = list0.split(',');
+	var appIdDiv = "<table border='1'><thead>申请条形码</thead>";
+	for(var i=0;i<appIdDivData.length;i++){
+		appIdDiv += "<tbody><tr><td>"+appIdDivData[i]+"</del></tr></tbody>";
+	}
+	appIdDiv += "</table>";
+	document.getElementById("appIdList").innerHTML = appIdDiv;
+</script>
+</body>
+

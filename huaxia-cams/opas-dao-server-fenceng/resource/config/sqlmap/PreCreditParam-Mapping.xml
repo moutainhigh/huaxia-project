@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="PreCreditParam" >
+
+	<resultMap id="PreCreditParamResultMap" type="com.huaxia.opas.domain.sysparm.PreCreditParam">
+		<result column="AUTO_ID" property="autoID" jdbcType="VARCHAR" />
+		<result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+		<result column="IMPORT_DATE" property="importDate" jdbcType="TIMESTAMP" />
+		<result column="CUST_ID" property="custID" jdbcType="VARCHAR" />
+		<result column="PRE_SELLIMIT" property="preSellLimit" jdbcType="FLOAT" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+		<result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+		<result column="CERTIFI_ID" property="certifiID" jdbcType="VARCHAR" />
+		<result column="PHONE_NUM" property="phoneNum" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE" property="acctType" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="BEGIN_DATE" property="beginDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP"/>
+		<result column="OPERAT_CONTENT" property="operatContent" jdbcType="VARCHAR"/>
+		<result column="OPERAT_DO" property="operatDo" jdbcType="VARCHAR"/>
+	</resultMap>
+  
+<!-- 	  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.sysparm.BatchfileInfo" > -->
+<!-- 	    <result column="ID" property="id" jdbcType="VARCHAR" /> -->
+<!-- 	    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" /> -->
+<!-- 	    <result column="INPUT_TIME" property="inputTime" jdbcType="TIMESTAMP" /> -->
+<!-- 	    <result column="INPUT_COUNTS" property="inputCounts" jdbcType="DECIMAL" /> -->
+<!-- 	    <result column="FILE_TYPE" property="fileType" jdbcType="CHAR" /> -->
+<!-- 	    <result column="OPERAT_CODE" property="operatCode" jdbcType="VARCHAR" /> -->
+<!-- 	    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" /> -->
+<!-- 	    <result column="REMARK" property="remark" jdbcType="VARCHAR" /> -->
+<!-- 	    <result column="FILE_STATUS" property="fileStatus" jdbcType="CHAR" /> -->
+<!-- 	  </resultMap> -->
+  
+  <select id="queryPreCreditParamCount" parameterType="com.huaxia.opas.domain.sysparm.PreCreditParam" resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_PRECREDIT
+		<where>		   
+			<if test="custID != null and custID !='' ">
+				AND CUST_ID LIKE '%${custID}%'
+			</if>
+			<if test="custName != null and custName !='' ">
+				AND CUST_NAME LIKE '%${custName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+			 <if test="certifiID != null and certifiID !='' ">
+				AND CERTIFI_ID LIKE '%${certifiID}%'
+			</if> 
+		</where>
+		
+	</select>
+
+	<select id="queryPreCreditParamList" parameterType="com.huaxia.opas.domain.sysparm.PreCreditParam" resultMap="PreCreditParamResultMap">
+		select AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE
+		 from OPAS_PARAM_PRECREDIT
+		<where>		   
+			<if test="custID != null and custID !='' ">
+				AND CUST_ID LIKE '%${custID}%'
+			</if>
+			<if test="custName != null and custName !='' ">
+				AND CUST_NAME LIKE '%${custName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		    <if test="certifiID != null and certifiID !='' ">
+				AND CERTIFI_ID LIKE '%${certifiID}%'
+			</if> 
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+	<select id="queryPreCreditParamListByIdno" parameterType="java.lang.String" resultMap="PreCreditParamResultMap">
+		select b.AUTO_ID,b.BATCH_NO,b.IMPORT_DATE,b.CUST_ID,b.PRE_SELLIMIT,b.START_DATE,b.END_DATE,
+				b.CUST_NAME,b.CERTIFI_ID,PHONE_NUM,b.ACCT_TYPE,b.STATUS,b.BEGIN_DATE,b.STOP_DATE,
+				b.CRT_DATE,b.CRT_USER,b.LST_UPD_USER,b.LST_UPD_DATE
+		 from opas_biz_inp_appl_c1 a,
+	     OPAS_PARAM_PRECREDIT b
+	     where ((a.c1_idnbr = b.Certifi_Id)or(b.certifi_id is null and b.phone_num = a.c1_mobile))
+	     and a.app_id = #{appId}
+	     and b.STATUS = '1'
+		ORDER BY b.CRT_DATE
+	</select>
+	<select id="queryPreCreditParamListByIdnoCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1)
+		 from opas_biz_inp_appl_c1 a,
+	     OPAS_PARAM_PRECREDIT b
+	     where a.c1_idnbr = b.Certifi_Id
+	     and a.app_id = #{appId}
+	     and b.STATUS = '1'
+	</select>
+	
+	<insert id="insertPreCreditParamStart" parameterType="com.huaxia.opas.domain.sysparm.PreCreditParam">
+		insert into
+		OPAS_PARAM_PRECREDIT
+		(AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoID,jdbcType=VARCHAR},
+		#{batchNo,jdbcType=VARCHAR},
+		#{importDate,jdbcType=TIMESTAMP},
+		#{custID,jdbcType=VARCHAR},
+		#{preSellLimit,jdbcType=FLOAT},
+		#{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP},
+		#{custName,jdbcType=VARCHAR},
+		#{certifiID,jdbcType=VARCHAR},
+		#{phoneNum,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+	
+	<insert id="insertPreCreditParamEnd" parameterType="com.huaxia.opas.domain.sysparm.PreCreditParam">
+		insert into
+		OPAS_PARAM_PRECREDIT
+		(AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoID,jdbcType=VARCHAR},
+		#{batchNo,jdbcType=VARCHAR},
+		#{importDate,jdbcType=TIMESTAMP},
+		#{custID,jdbcType=VARCHAR},
+		#{preSellLimit,jdbcType=FLOAT},
+		#{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP},
+		#{custName,jdbcType=VARCHAR},
+		#{certifiID,jdbcType=VARCHAR},
+		#{phoneNum,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		NULL,
+		SYSDATE,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+	<select id="queryPreCreditParamStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_PARAM_PRECREDIT where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updatePreCreditParamWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.PreCreditParam">
+		update OPAS_PARAM_PRECREDIT
+		<set>
+			CUST_ID = #{custID,jdbcType=VARCHAR},
+			PRE_SELLIMIT = #{preSellLimit,jdbcType=FLOAT},
+			START_DATE = #{startDate,jdbcType=TIMESTAMP},
+			END_DATE = #{endDate,jdbcType=TIMESTAMP},
+			CUST_NAME = #{custName,jdbcType=VARCHAR},
+			CERTIFI_ID = #{certifiID,jdbcType=VARCHAR},
+			PHONE_NUM = #{phoneNum,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updatePreCreditParam" parameterType="com.huaxia.opas.domain.sysparm.PreCreditParam">
+		update OPAS_PARAM_PRECREDIT
+		<set>
+			CUST_ID = #{custID,jdbcType=VARCHAR},
+			PRE_SELLIMIT = #{preSellLimit,jdbcType=FLOAT},
+			START_DATE = #{startDate,jdbcType=TIMESTAMP},
+			END_DATE = #{endDate,jdbcType=TIMESTAMP},
+			CUST_NAME = #{custName,jdbcType=VARCHAR},
+			CERTIFI_ID = #{certifiID,jdbcType=VARCHAR},
+			PHONE_NUM = #{phoneNum,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=VARCHAR},
+			<if test="status == '1'.toString() ">BEGIN_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deletePreCreditParam" parameterType="java.lang.String">
+		delete from
+		OPAS_PARAM_PRECREDIT
+		where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="batchStartPreCreditParam" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_PARAM_PRECREDIT
+			<set>
+				STATUS = #{item.status,jdbcType=VARCHAR},
+				BEGIN_DATE = SYSDATE,
+				LST_UPD_USER = #{item.lstUpdUser,jdbcType=VARCHAR},
+				LST_UPD_DATE = SYSDATE
+			</set>
+			where AUTO_ID = #{item.autoID,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<update id="batchStopPreCreditParam" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_PARAM_PRECREDIT
+			<set>
+				STATUS = #{item.status,jdbcType=VARCHAR},
+				BEGIN_DATE = SYSDATE,
+				LST_UPD_USER = #{item.lstUpdUser,jdbcType=VARCHAR},
+				LST_UPD_DATE = SYSDATE
+			</set>
+			where AUTO_ID = #{item.autoID,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<delete id="batchDeletePreCreditParam" parameterType="java.util.ArrayList">
+		delete from
+		OPAS_PARAM_PRECREDIT where AUTO_ID in
+		<foreach collection="list" item="autoId"  open="(" separator="," close=")">
+		#{autoId}
+		</foreach>
+	</delete>
+	
+	<insert id="insertPreCreditParamImportFile" parameterType="java.util.ArrayList">
+			insert into OPAS_PARAM_PRECREDIT
+			(AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+			<foreach collection="list" item="preCreditParam" index="index"  separator="union all" >
+				(select
+				#{preCreditParam.autoID,jdbcType=VARCHAR},
+				#{preCreditParam.batchNo,jdbcType=VARCHAR},
+				#{preCreditParam.importDate,jdbcType=TIMESTAMP},
+				#{preCreditParam.custID,jdbcType=VARCHAR},
+				#{preCreditParam.preSellLimit,jdbcType=FLOAT},
+				#{preCreditParam.startDate,jdbcType=TIMESTAMP},
+				#{preCreditParam.endDate,jdbcType=TIMESTAMP},
+				#{preCreditParam.custName,jdbcType=VARCHAR},
+				#{preCreditParam.certifiID,jdbcType=VARCHAR},
+				#{preCreditParam.phoneNum,jdbcType=VARCHAR},
+				#{preCreditParam.acctType,jdbcType=CHAR},
+				#{preCreditParam.status,jdbcType=CHAR},
+				#{preCreditParam.beginDate,jdbcType=TIMESTAMP},
+				#{preCreditParam.stopDate,jdbcType=TIMESTAMP},
+				#{preCreditParam.crtDate,jdbcType=TIMESTAMP},
+				#{preCreditParam.crtUser,jdbcType=VARCHAR},
+				#{preCreditParam.lstUpdUser,jdbcType=VARCHAR},
+				#{preCreditParam.lstUpdDate,jdbcType=TIMESTAMP}
+				from dual)
+		</foreach>
+	</insert>
+	
+	<select id="queryPreCreditParamHistoryCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) 
+		from OPAS_PRE_CREDIT_PARAM_HIS
+		where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+		ORDER BY LST_UPD_DATE DESC
+	</select>
+	
+	<select id="queryPreCreditParamHistoryList" parameterType="java.lang.String" resultMap="PreCreditParamResultMap">
+		select OPERATION_ID,AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE
+		 from  OPAS_PRE_CREDIT_PARAM_HIS
+		 where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+		 ORDER BY LST_UPD_DATE DESC
+	</select>
+	
+	<insert id="insertPreCreditParamHisOfBatch" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index"   open="begin" separator=";" close=";end;">
+		insert into
+		OPAS_PRE_CREDIT_PARAM_HIS
+		(OPERATION_ID,AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{item.operationID,jdbcType=VARCHAR},
+		#{item.autoID,jdbcType=VARCHAR},
+		#{item.batchNo,jdbcType=VARCHAR},
+		#{item.importDate,jdbcType=TIMESTAMP},
+		#{item.custID,jdbcType=VARCHAR},
+		#{item.preSellLimit,jdbcType=FLOAT},
+		#{item.startDate,jdbcType=TIMESTAMP},
+		#{item.endDate,jdbcType=TIMESTAMP},
+		#{item.custName,jdbcType=VARCHAR},
+		#{item.certifiID,jdbcType=VARCHAR},
+		#{item.phoneNum,jdbcType=VARCHAR},
+		#{item.acctType,jdbcType=VARCHAR},
+		#{item.status,jdbcType=VARCHAR},
+		#{item.beginDate,jdbcType=TIMESTAMP},
+		#{item.stopDate,jdbcType=TIMESTAMP},
+		#{item.crtDate,jdbcType=TIMESTAMP},
+		#{item.crtUser,jdbcType=VARCHAR},
+		#{item.lstUpdUser,jdbcType=VARCHAR},
+		#{item.lstUpdDate,jdbcType=TIMESTAMP}
+		)
+		</foreach>
+	</insert>
+	
+	<insert id="insertPreCreditParamHis" parameterType="com.huaxia.opas.domain.sysparm.PreCreditParam">
+		insert into
+		OPAS_PRE_CREDIT_PARAM_HIS
+		(OPERATION_ID,AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{operationID,jdbcType=VARCHAR},
+		#{autoID,jdbcType=VARCHAR},
+		#{batchNo,jdbcType=VARCHAR},
+		#{importDate,jdbcType=TIMESTAMP},
+		#{custID,jdbcType=VARCHAR},
+		#{preSellLimit,jdbcType=FLOAT},
+		#{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP},
+		#{custName,jdbcType=VARCHAR},
+		#{certifiID,jdbcType=VARCHAR},
+		#{phoneNum,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{beginDate,jdbcType=TIMESTAMP},
+		#{stopDate,jdbcType=TIMESTAMP},
+		#{crtDate,jdbcType=TIMESTAMP},
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		#{lstUpdDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<insert id="insertPreCreditParamHisOfImport" parameterType="java.util.ArrayList">
+			insert into OPAS_PRE_CREDIT_PARAM_HIS
+			(AUTO_ID,OPERAT_CONTENT,OPERAT_DO,LST_UPD_USER,LST_UPD_DATE)
+			<foreach collection="list" item="preCreditParam" index="index"  separator="union all" >
+				(select
+				#{preCreditParam.autoID,jdbcType=VARCHAR},
+				#{preCreditParam.operatContent,jdbcType=VARCHAR},
+				#{preCreditParam.operatDo,jdbcType=VARCHAR},
+				#{preCreditParam.lstUpdUser,jdbcType=VARCHAR},
+				SYSDATE
+				from dual)
+		</foreach>
+	</insert>
+	
+	<insert id="insertCredit" parameterType ="com.huaxia.opas.domain.sysparm.BatchfileInfo">
+		insert into OPAS_CREDIT_BATCHUPLOAD_INFO (ID, FILE_NAME, INPUT_TIME, 
+	      INPUT_COUNTS, FILE_TYPE, OPERAT_CODE, 
+	      OPERATOR, REMARK
+	      )
+	    values (#{id,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, 
+	      #{inputCounts,jdbcType=DECIMAL}, #{fileType,jdbcType=CHAR}, #{operatCode,jdbcType=VARCHAR}, 
+	      #{operator,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+     	 )
+	</insert>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="PreCreditParamResultMap">
+		select AUTO_ID,BATCH_NO,IMPORT_DATE,CUST_ID,PRE_SELLIMIT,START_DATE,END_DATE,
+				CUST_NAME,CERTIFI_ID,PHONE_NUM,ACCT_TYPE,STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE
+		 from OPAS_PARAM_PRECREDIT 
+		 where  AUTO_ID=#{autoID}
+	</select>
+
+</mapper>

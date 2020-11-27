@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>反欺诈审批控制页面</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css"
+	type="text/css"></link>
+<script type="text/javascript">
+	var appId = "";
+	var param;
+	var autoId;
+	var ydjFlag;
+	/***********页面初始化***********/
+	$(function() {
+		var url = location.href;
+		appIdParam = url.split("=")[1];
+		appId = appIdParam.split("&")[0];
+		$("#applyId").val(appId);
+		autoId = url.split("=")[2].split("&")[0];
+		$("#autoId").val(autoId);
+		ydjFlag = url.split("=")[4].split("&")[0].split("?")[0];
+		var iframe1 = $("#iframe1").prop("src");
+		$("#iframe1").prop("src", iframe1 + "?appId=" + appId);
+		var iframe5 = $("#iframe5").prop("src");
+		$("#iframe5").prop("src", iframe5 + "?appId=" + appId);
+		window.setTimeout(jTime, 3000);
+	})
+	/*********** 计时器定时触发 ***********/
+	function jTime() {
+		for (var i = 2; i <= 4; i++) {
+			addIframe(i);
+		}
+	}
+	function openWin() {
+		window
+				.open(
+						'../credit/creditSubmitNewspaper.html',
+						"newWindow",
+						'height=150,width=300,toolbar=0,menubar=0,scrollbars=0,resizable=0,location=0,status=0,top=400,left=400');
+	}
+	var submitType = "";
+
+	function addIframe(obj) {
+		var divId = $("#div" + obj);
+		if ($("#iframe" + obj).prop("name") == "iframe" + obj) {
+			return false;
+		}
+		if (obj == 2) {//第三方征信
+			if(ydjFlag==2){
+				divId.append('<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%"'+
+					'src="../common/thirdparty_summary_zxspbzk_view.html?appId='+appId+'"></iframe>'); 
+			}
+			if(ydjFlag==1){
+				divId.append('<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%"'+
+					'src="../common/thirdparty_summary_ydj_view.html?appId='+appId+'"></iframe>'); 
+			}
+		} else if (obj == 3) {//申请表信息
+			divId
+					.append('<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%"'
+							+ 'src="../common/apply_info_view.html?appId='
+							+ appId + '"></iframe>');
+		} else if (obj == 4) {//征信调查查看
+			divId
+					.append('<iframe name="iframe4" id="iframe4" style="border: 0; width: 100%; height: 100%"'
+							+ 'src="../credit/credit_check_detailed.html?appId='
+							+ appId + '"></iframe>');
+		}
+	}
+	/*********** ID有效期 ***********/
+	function getCertifinoVailud() {
+		var certifinoVailud = document.getElementById("iframe1").contentWindow.document
+				.getElementById("certifinoVailud").value;
+		return certifinoVailud;
+	}
+	/*********** userId ***********/
+	function getUserId() {
+		return userId;
+	}
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if (str.indexOf('1970') >= 0) {
+			return '';
+		} else {
+			return str;
+		}
+	}
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+	};
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : true
+		});
+	}
+	/* 关闭窗口 */
+	function window_close() {
+		window.opener = null;
+		window.open('', '_self');
+		window.close();
+		window.top.close();
+	}
+	function showViewCreditControl() {
+		window.open("../win/image/sign.HTML?appId=" + appId + "&userId="
+				+ userId, "_blank");
+	}
+</script>
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div
+		data-options="region:'west',title:'左区域',split:true,noheader:true,border:false"
+		style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div title="系统决策" style="overflow: hidden" id="div1">
+				<iframe name="iframe1" id="iframe1"
+					style="border: 0; width: 100%; height: 100%"
+					src="../common/bzk_system_decision_view.html"></iframe>
+			</div>
+			<div title="征信信息" style="overflow: hidden" id="div2"></div>
+			<div title="申请表信息" style="overflow: hidden" id="div3"></div>
+			<div title="征信调查" style="overflow: hidden" id="div4"></div>
+		</div>
+	</div>
+	<div
+		data-options="region:'east',title:'右区域',split:false,noheader:true,border:false"
+		style="padding: 5px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="false"
+			style="height: 100%; width: 100%;">
+			<div title="欺诈调查" style="overflow: hidden">
+				<iframe name="iframe5" id="iframe5"
+					style="border: 0; width: 100%; height: 100%"
+					src="credit_cheat_Investigation_edit.html"></iframe>
+			</div>
+		</div>
+	</div>
+	<div>
+		<input type="hidden" id="applyId" name="applyId" value=""> <input
+			type="hidden" id="examineType" name="examineType" value="examine">
+		<input type="hidden" id="autoId" name="autoId" value="">
+	</div>
+
+</body>
+</html>

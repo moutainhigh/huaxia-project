@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SalaryCompute">
+
+	<resultMap id="result_SalaryCompute" type="com.huaxia.opas.domain.collect.SalaryCompute">
+		<result column="INSIDE_APP_NO" jdbcType="CHAR" property="insideAppNo" />
+		<result column="APP_ID" jdbcType="CHAR" property="appId" />
+		<result column="STORAGE" jdbcType="VARCHAR" property="storage" />
+		<result column="COUNTER" jdbcType="VARCHAR" property="counter" />
+		<result column="CRT_DATE" jdbcType="DATE" property="createDate" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="createUser" />
+		<result column="LST_UPD_DATE" jdbcType="DATE" property="lastUpdateDate" />
+		<result column="LST_UPD_USER" jdbcType="VARCHAR" property="lastUpdateUser" />
+	</resultMap>
+
+	<insert id="insertSalaryCompute" parameterType="com.huaxia.opas.domain.collect.SalaryCompute">
+		INSERT INTO OPAS_YDJ_SALARY_COMPUTE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="insideAppNo != null">INSIDE_APP_NO,</if>            
+			<if test="appId != null">APP_ID,</if>
+			<if test="storage != null">STORAGE,</if>
+			<if test="counter != null">COUNTER,</if>
+			CRT_DATE,
+			<if test="createUser != null">CRT_USER,</if>
+			LST_UPD_DATE,
+			<if test="lastUpdateUser != null">LST_UPD_USER,</if>
+		</trim>
+		<trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
+			<if test="insideAppNo != null">#{insideAppNo,jdbcType=CHAR},</if>
+			<if test="appId != null">#{appId,jdbcType=CHAR},</if>
+			<if test="storage != null">#{storage,jdbcType=VARCHAR},</if>
+			<if test="counter != null">#{counter,jdbcType=VARCHAR},</if>
+			SYSDATE,
+			<if test="createUser != null">#{createUser,jdbcType=VARCHAR},</if>
+			SYSDATE,
+			<if test="lastUpdateUser != null">#{lastUpdateUser,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSalaryCompute" parameterType="com.huaxia.opas.domain.collect.SalaryCompute">
+		UPDATE OPAS_YDJ_SALARY_COMPUTE
+		<trim prefix="SET" suffixOverrides=",">
+			STORAGE=#{storage,jdbcType=VARCHAR},
+			COUNTER=#{counter,jdbcType=VARCHAR},
+			LST_UPD_DATE=SYSDATE,
+			<if test="lastUpdateUser != null">LST_UPD_USER=#{lastUpdateUser,jdbcType=VARCHAR},</if>
+		</trim>
+		WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</update>
+	
+	<delete id="deleteSalaryCompute" parameterType="java.lang.String">
+		DELETE FROM OPAS_YDJ_SALARY_COMPUTE
+		WHERE 1 = 1
+		<if test="insideAppNo != null and insideAppNo !='' ">
+			AND INSIDE_APP_NO = #{insideAppNo,jdbcType=CHAR}
+		</if>
+		<if test="appId != null and appId !='' ">
+			AND APP_ID = #{appId,jdbcType=CHAR}
+		</if>
+	</delete>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_SalaryCompute">
+		SELECT INSIDE_APP_NO,APP_ID,STORAGE,COUNTER,CRT_DATE,CRT_USER,LST_UPD_DATE,LST_UPD_USER
+		  FROM OPAS_YDJ_SALARY_COMPUTE
+		 WHERE inside_app_no = #{insideAppNo,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectByAppId" parameterType="java.lang.String" resultMap="result_SalaryCompute">
+		SELECT INSIDE_APP_NO,APP_ID,STORAGE,COUNTER,CRT_DATE,CRT_USER,LST_UPD_DATE,LST_UPD_USER
+		  FROM OPAS_YDJ_SALARY_COMPUTE
+		 WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+
+</mapper>

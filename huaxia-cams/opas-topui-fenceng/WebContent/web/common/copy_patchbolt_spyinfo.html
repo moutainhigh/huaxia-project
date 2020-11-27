@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<link type="text/css" rel="stylesheet" href="../../css/common/layout.css" />
+<link rel="stylesheet" href="../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+<style type="text/css">
+	fieldset{margin:10px;padding:10px;border:1px solid #000000;}
+	legend,label{font-weight:bold;}
+	div{margin:5px 0;padding:10px;}
+	p{line-height:12px;}
+	body{background-color: #fff;}
+</style>
+</head>
+<body>
+	<form id=patchform>
+		<fieldset>
+			<legend>企业信息</legend>
+			<lable>企业性质：</lable>
+			<select class="easyui-combobox" id="enterpriseProprrty" name="enterpriseProprrty" onChange="entchange()">
+				<option value="0">请选择</option>
+				<option value="1">非私营企业</option>
+				<option value="2">私营企业</option>
+		  </select>
+		  <select id="privateEntprseClientType" name="privateEntprseClientType">
+		  		<option value="0">请选择</option>
+				<option value="1">私营企业主</option>
+				<option value="2">私营企业雇员</option>
+		  </select>
+			  	<div id="yyzz">
+					<label>是否提供营业执照：</label>
+					<input type="radio" name="licenseOffered"  value="1">是</input>
+					<input type="radio" name="licenseOffered"  value="2">否</input>
+				</div>
+				<div id="clsj">
+					<label>成立时间：</label>
+					<p><input type="radio" name="foundTime" value="1">1年（不含）以下</input></p>
+					<p><input type="radio" name="foundTime"  value="2">1年（含）到3年（不含）</input></p>
+					<p><input type="radio" name="foundTime"  value="3">3年（含）到5年（不含）</input></p>
+					<p><input type="radio" name="foundTime"  value="4">5年（含）以上</input></p>
+				</div>
+				
+				<div id="zczj">
+					<label>注册资金（人民币）：</label>
+					<p><input type="radio" name="registeredCapital"  value="1">50（不含）万以下</input></p>
+					<p><input type="radio" name="registeredCapital"  value="2">50（含）万到100（不含）万</input></p>
+					<p><input type="radio" name="registeredCapital"  value="3">100（含）万到300（不含）万元</input></p>
+					<p><input type="radio" name="registeredCapital"  value="4">300（含）万到500（不含）万元</input></p>
+					<p><input type="radio" name="registeredCapital"  value="5">500（含）万到1000（不含）万元</input></p>
+					<p><input type="radio" name="registeredCapital"  value="6">1000（含）万以上</input></p>
+				</div>
+				
+				<div>
+					<label>私营企业客户进入材料：</label>
+					<input type="radio" name="privateEntprseClientPaper"  value="1" disabled="true">有</input>
+					<input type="radio" name="privateEntprseClientPaper"  value="2" disabled="true">无</input>
+				</div>
+				<div style="border:1px solid #464646;">
+					<input type="hidden" id="privateEntprseCpaperType" name="privateEntprseCpaperType"/>
+					<input type="hidden" id="educationBackgroundCheck" name="educationBackgroundCheck"/>
+					<input type="checkbox"  name="pect" value="1" onclick="ClickAdd()">社保</input>
+					<input type="checkbox"  name="pect" value="2" onclick="ClickAdd()">公积金</input>
+					<input type="checkbox"  name="pect" value="3" onclick="ClickAdd()">当地城镇户籍</input>
+					<input type="checkbox"  name="pect" value="4" onclick="ClickAdd()">申请地房产</input>
+					<input type="checkbox"  name="pect" value="5" onclick="ClickAdd()">学历:</input>
+					&nbsp;
+					<span id="Edu01" hidden="true">学历达到要求</span>
+					<span id="Edu02" hidden="true">无法验证</span>
+					<span id="Edu03" hidden="true">未达到要求</span>
+				</div>
+				<div>
+					<label>商品金额：</label>
+					<input type="text" name="productPrice"  id="productPrice" class="easyui-numberbox" precision="2"></input>
+					<input type="hidden" name="appId"  id="appId"></input>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+	<script>
+	var patchform=$("#patchform");
+	var url = location.href;
+	var appId = url.split("=")[1];
+	var roleObj={"appId":appId};
+	$(function() {
+		
+		$cf.ajax({
+			url : "/opas-naps/query_patchboltSpyInfo.json",
+			data : roleObj,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsonpatchboltSpyInfo = ret.RSP_BODY.jsonpatchboltSpyInfo;
+				var patchboltSpyInfojson = eval('(' +jsonpatchboltSpyInfo+ ')');
+				patchform.form("load", patchboltSpyInfojson);
+				
+				for(var item in patchboltSpyInfojson){
+					var jvalue=patchboltSpyInfojson[item];
+					$(":radio[name='"+item+"'][value='"+jvalue+"']").attr("checked", true);
+				}
+
+				var patchboltSpyInfo = ret.RSP_BODY.patchboltSpyInfo;
+				var eduProvRst=ret.RSP_BODY.eduProvRst;
+				$('#educationBackgroundCheck').val(eduProvRst);
+				if(eduProvRst==="01"){
+					$('#Edu01').show();
+					$('input[name=pect][value="5"]').prop("checked", true);
+					$('input[name=pect][value="5"]').attr("disabled","true");
+				}else if(eduProvRst==="02"){
+					$('#Edu02').show();
+				}else if(eduProvRst==="03"){
+					$('#Edu03').show();
+				}else{
+					
+				}
+				ClickAdd();
+				
+				var privateEntprseCpaperType = patchboltSpyInfo.privateEntprseCpaperType;
+				var arr = privateEntprseCpaperType.split(",");				
+				$('input[name=pect]').prop("checked", false); 
+
+				for (var i = 0; i < arr.length; i++) {
+					$('input[name=pect]').each(function() {
+						 if ($(this).val() === arr[i]) {
+							$("input:checkbox[value='"+arr[i]+"']").prop("checked", true);
+						}
+					})
+				}
+			}
+		});
+		ClickAdd();
+		$('#enterpriseProprrty').combobox({
+			onChange:function(n,o){
+				if(n==="1"){
+					$('input[name=licenseOffered]').attr("disabled","true");
+					$('input[name=foundTime]').attr("disabled","true");
+					$('input[name=registeredCapital]').attr("disabled","true");
+					$('#privateEntprseClientType').combobox('disable');
+				}
+				else{
+					$('input[name=licenseOffered]').removeAttr("disabled");
+					$('input[name=foundTime]').removeAttr("disabled");
+					$('input[name=registeredCapital]').removeAttr("disabled");
+					$('#privateEntprseClientType').combobox('enable');
+				}				
+			}
+		})
+		$('#privateEntprseClientType').combobox({
+			onChange:function(n,o){
+				if(n==="2"){
+					$('input[name=licenseOffered]').attr("disabled","true");
+					$('input[name=foundTime]').attr("disabled","true");
+					$('input[name=registeredCapital]').attr("disabled","true");
+				}
+				else{
+					$('input[name=licenseOffered]').removeAttr("disabled");
+					$('input[name=foundTime]').removeAttr("disabled");
+					$('input[name=registeredCapital]').removeAttr("disabled");
+				}				
+			}
+		})
+		$('input[name=licenseOffered]').click(function(){
+			if($(this).val()==="2"){
+				$('input[name=foundTime]').attr("disabled","true");
+				$('input[name=registeredCapital]').attr("disabled","true");
+			}else{
+				$('input[name=foundTime]').removeAttr("disabled");
+				$('input[name=registeredCapital]').removeAttr("disabled");
+			}
+		})
+		$('input[name=licenseOffered]').click(function(){
+			if($(this).val()==="2"){
+				$('input[name=foundTime]').attr("disabled","true");
+				$('input[name=registeredCapital]').attr("disabled","true");
+			}else{
+				$('input[name=foundTime]').removeAttr("disabled");
+				$('input[name=registeredCapital]').removeAttr("disabled");
+			}
+		})
+	})
+	
+	function onSave() {
+		$("#appId").val(appId);
+		var jsondata = getFormData(patchform.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/add_patchboltSpyInfo.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblRole.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	function ClickAdd() {
+		var str = "";
+		$('input[name=pect]:checked').each(function() {
+			str = str + $(this).val();
+			str = str + ",";
+		})
+		str = str.substring(0, str.length - 1);
+		$('#privateEntprseCpaperType').val(str);
+		
+		if(str.length===0){
+			$('input[name=privateEntprseClientPaper][value="2"]').prop("checked", true);
+			$('input[name=privateEntprseClientPaper][value="1"]').prop("checked", false);
+		}else{
+			$('input[name=privateEntprseClientPaper][value="1"]').prop("checked", true);
+			$('input[name=privateEntprseClientPaper][value="2"]').prop("checked", false);
+		}
+	}
+	
+	</script>
+</body>
+</html>

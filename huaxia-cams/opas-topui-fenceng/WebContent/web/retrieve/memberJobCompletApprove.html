@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div id="nemberJobCompletApp"  title="审批  组员工作完成量统计"  class="area-search" style="padding: 10px;">
+		<table>
+			<tr>
+				<td>
+					开始日期:<input class="easyui-datebox" style="width: 110px" name="startTime" id="startTimeApp" />&nbsp;&nbsp;&nbsp;&nbsp;结束日期:<input class="easyui-datebox" style="width: 110px" name="endTime" id="endTimeApp" />&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:querymemberJobCompletCountApp();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</td>
+			</tr>
+			<tr>
+			</tr>
+		</table>
+		<div class="area-tips">
+			<h3>&nbsp;&nbsp;<em class="member" id="member" style="color: red;"></em>&nbsp;&nbsp;名组员共完成&nbsp;&nbsp;<em class="completTotal" id="completTotal" style="color: red;"></em>&nbsp;&nbsp;件</h3>
+		</div>
+		<div   class="area-search" style="padding: 10px;">
+		<table id="nemberJobCompletTabApp" title="审批    组员工作情况统计"  class="easyui-datagrid" style="width: 98%" data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:50,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,selectOnCheck:false,method:'post',toolbar:'#positionCodeCondion'">
+		
+			<thead>
+				<tr>
+					<th field="staffName" width="10%" align="center">员工姓名</th>				
+					<th field="finishedStatus" width="10%" align="center">件数</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+	</div>
+	
+</body>
+<script type="text/javascript">
+	var d = new Date();
+	var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+	$('#startTimeApp').val(str);
+	$('#endTimeApp').val(str);
+	
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	//审批
+	$(function(){
+		
+		querymemberJobCompletCountApp();
+		
+		$("#endTimeApp").datebox('calendar').calendar({
+			validator:function(date){
+				if(date > new Date()){
+					return false;
+				}else{
+					return true;
+				}
+			}
+		});
+		$("#startTimeApp").datebox('calendar').calendar({
+			validator:function(date){
+				if(date > new Date()){
+					return false;
+				}else{
+					return true;
+				}
+			}
+		});
+	});
+	function querymemberJobCompletCountApp(){
+		
+		var startTime = $('#startTimeApp').datebox("getValues");
+		var endTime = $('#endTimeApp').datebox("getValues");
+		var groupId = GetQueryString("groupId");
+		var userCode = "";
+		if (typeof(groupId)=="undefined"||groupId==""||groupId==null){
+			userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;	
+		}
+		$('#nemberJobCompletTabApp').datagrid({    
+		    url:'/opas-naps/memberJobCompletCount.json',
+	    	queryParams: {
+	    		"userId" : userCode,
+				"orgId" : groupId,
+				"currNode" : "03",
+				"startTime":startTime,
+				"endTime":endTime
+	    	},
+	    	onLoadSuccess:function(data){
+	    		$("#member").text(data.member);
+	    		$("#completTotal").text(data.completTotal);
+	    		//$("#completTotal").text(data.RSP_BODY.completTotal);
+			}
+		});
+		/* $cf.ajax({
+		url : "/opas-naps/memberJobCompletCountApprove.json",
+		data : {
+			"userId" : userCode,
+			"orgId" : groupId
+		},
+		onSuccess : function(data) {
+			debugger;
+			if(data.RSP_BODY.fig == "true"){
+				var dataMap = {
+					"rows" : data.RSP_BODY.rows,
+					"total" : data.RSP_BODY.total
+				};
+				$("#nemberJobCompletTabApp").datagrid("loadData", dataMap);
+				$("#nemberJobCompletTabApp").datagrid('getRows');
+				$("#member").text(data.RSP_BODY.member);
+				$("#completTotal").text(data.RSP_BODY.completTotal);
+			}
+			else{
+				$("#member").text("0");
+				$("#completTotal").text("0");
+			}
+		}
+	}); */
+		
+		/* var endTime = $('#endTimeApp').datebox("getValues");
+		var startTime = $('#startTimeApp').datebox("getValues");
+		var d = new Date();
+		if((d.getMonth()+1) <= 9){
+			if(d.getDate() <= 9){
+				var strDate = d.getFullYear()+"-0"+(d.getMonth()+1)+"-0"+d.getDate();
+			}else{
+				var strDate = d.getFullYear()+"-0"+(d.getMonth()+1)+"-"+d.getDate();
+			}
+		}else{
+			var strDate = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+		}
+		$cf.ajax({
+			url : "/opas-naps/memberJobCompletCountApprove.json",
+			data : {
+				"startTime" : startTime,
+				"endTime" : endTime
+			},
+			onSuccess : function(data) {
+				debugger;
+				if(data.RSP_BODY.fig == "true"){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#nemberJobCompletTabApp").datagrid("loadData", dataMap);
+					$("#nemberJobCompletTabApp").datagrid('getRows');
+					$("#member").text(data.RSP_BODY.member);
+					$("#completTotal").text(data.RSP_BODY.completTotal);
+				}
+				else{
+					$("#member").text("0");
+					$("#completTotal").text("0");
+				}
+			}
+		});    */
+		/* if(strDate > startTime){
+			$cf.ajax({
+				url : "/opas-naps/memberJobCompletCountApprove.json",
+				data : {
+					"startTime" : startTime,
+					"endTime" : endTime
+				},
+			onSuccess : function(data) {
+				var member = data.RSP_BODY.member;
+				var completTotal = data.RSP_BODY.completTotal;
+				if(data.RSP_BODY.fig == "true"){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#nemberJobCompletTabApp").datagrid("loadData", dataMap);
+					$("#nemberJobCompletTabApp").datagrid('getRows');
+				}
+			}
+		});   
+		}else if(strDate == startTime){
+			$cf.ajax({
+				url : "/opas-naps/queryYesterdayCompleteApprove.json",
+				data : {
+					"startTime" : startTime,
+					"endTime" : endTime
+				},
+			onSuccess : function(data) {
+				var member = data.RSP_BODY.member;
+				var completTotal = data.RSP_BODY.completTotal;
+				if(data.RSP_BODY.fig == "true"){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#nemberJobCompletTabApp").datagrid("loadData", dataMap);
+					$("#nemberJobCompletTabApp").datagrid('getRows');
+				}
+			}
+		});    
+			
+		}*/
+	}
+</script>
+</html>

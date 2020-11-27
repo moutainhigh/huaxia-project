@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankNoCreditTransactionDao">
+   <!-- 保存  后付费业务欠费信息汇总信息单元数据 PC03data-->
+   <insert id="insertPostPayArreagageAum" parameterType="com.huaxia.opas.domain.pboc.pno.PC03data" >
+    INSERT INTO  PBOC_POST_PAY_ARRGE_SUM (UUID, APP_ID, HFF_SERV_TYPE_COUNT, 
+      CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC030S01,jdbcType=VARCHAR}, 
+      SYSDATE)
+   </insert>
+   <!-- 保存后付费业务欠信息汇总信息 PC030H -->
+   <insert id="insertPostPayArreagageAumDel" parameterType="com.huaxia.opas.domain.pboc.pno.PC030H" >
+    INSERT INTO  PBOC_POST_PAY_ARRGE_SUM_DEL (UUID, APP_ID, HFF_SERV_TYPE, 
+      ARREARAGE_COUNT, ARREARAGE_MONEY, CRT_TIME
+      )
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC030D01,jdbcType=VARCHAR}, 
+      #{PC030S02,jdbcType=VARCHAR}, #{PC030J01,jdbcType=VARCHAR}, SYSDATE
+      )
+   </insert>
+  
+</mapper>

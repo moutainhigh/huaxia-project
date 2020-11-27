@@ -1,0 +1,58 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+	<body>
+			<table id="tblSeach" class="easyui-datagrid" style="width: 99%;height:470px"
+			data-options="remoteSort:false,rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[20, 50, 200],fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#seachCondion'">
+			<thead>
+				<tr>
+					<th field="fieldName" width="18%" align="left" >字段名称</th>
+					<th field="fieldOldValue" width="17%" align="left" >原字段值</th>
+					<th field="fieldNewValue" width="18%"  align="left"  >新字段值</th>
+					<th field="isKeyField" width="15%"  align="left"  data-options="formatter:myformatkeyword">是否关键字段</th>
+					<th field="crtUser" width="15%"  align="left"  >创建用户</th>
+					<th field="crtDate" width="15%"  align="left"  data-options="formatter:myformatDate">创建日期</th>
+				</tr>
+			</thead>
+		</table>
+		<script>
+		var tblObj=$("#tblSeach");
+		function myformatkeyword(value){
+			if(value==0){
+				return "否";
+			}else{
+				return "是";
+			}
+		}
+		
+		function myformatDate(value) {
+			var date = new Date(value);
+			date.setHours(date.getHours()-14);
+			var year = date.getFullYear().toString();
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			var hour = date.getHours();
+			var minute = date.getMinutes();
+			var second = date.getSeconds();
+
+			if (year == '1970') {
+				return '';
+			} else{
+				return year + '-' + (month < 10 ? ('0' + month) : month) + '-' + (day < 10 ? ('0' + day) : day) + ' ' + (hour < 10 ? ('0' + hour) : hour) + ':' + (minute < 10 ? ('0' + minute) : minute) + ':' + (second < 10 ? ('0' + second) : second);
+			}
+		}
+		$(function() {
+			var url = location.href;
+			var appId = url.split("=")[1];
+			var opts = tblObj.datagrid("options");
+			opts.url = "/opas-naps/applyDealView.json";
+			var s={"appId":appId};
+			tblObj.datagrid("reload", s);
+		})
+		</script>
+		
+	</body>
+

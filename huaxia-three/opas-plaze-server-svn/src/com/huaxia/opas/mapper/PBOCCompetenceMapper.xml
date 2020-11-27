@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCCompetenceMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_PUBLIC_COMPETENCE (
+			APP_ID,COMPETENCY_NAME,RANK,AWARD_DATE,EXP_DATE,REVOKE_DATE,AWARD_ORG,ORG_PLACE,
+			CRT_TIME,CRT_USER
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.competencyName},
+			#{item.grade},
+			#{item.awardDate},
+			#{item.endDate},
+			#{item.revokeDate},
+			#{item.organname},
+			#{item.area},
+			SYSDATE,
+			'SYSTEM'
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

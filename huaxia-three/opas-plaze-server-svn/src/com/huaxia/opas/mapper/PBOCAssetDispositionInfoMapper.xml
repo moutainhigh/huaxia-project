@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCAssetDispositionInfoMapper">
+
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_ASSETDISPOSITION 
+		(APP_ID, ASSETS_MANAGE_COMP, DEBT_RECE_DATE, 
+         RECE_DEBT_AMT, LATEST_PAYMENT_DATE, BALANCE, 
+         CRT_USER, LST_UPD_TIME, LST_UPD_USER, 
+         BATCH_DATE,CRT_TIME)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+	   #{item.appId,jdbcType=CHAR},#{item.organname,jdbcType=VARCHAR}, #{item.receiveTime,jdbcType=VARCHAR}, 
+        #{item.money,jdbcType=VARCHAR},#{item.latestRepayDate,jdbcType=VARCHAR}, #{item.balance,jdbcType=VARCHAR}, 
+        'SYSTEM',SYSDATE,'SYSTEM', 
+        SYSDATE,SYSDATE
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

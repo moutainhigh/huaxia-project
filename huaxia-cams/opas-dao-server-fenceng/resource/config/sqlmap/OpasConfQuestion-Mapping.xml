@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="OpasConfQuestion" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.thirdparty.OpasConfQuestion" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="QUESTION_NO" property="questionNo" jdbcType="VARCHAR" />
+    <result column="QUESTION_LEVEL" property="questionLevel" jdbcType="VARCHAR" />
+    <result column="QUESTION_DESC" property="questionDesc" jdbcType="VARCHAR" />
+    <result column="FROM_TABLE_NO" property="fromTableNo" jdbcType="VARCHAR" />
+    <result column="FROM_FIELD_NO" property="fromFieldNo" jdbcType="VARCHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    <result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+    <result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+     AUTO_ID, QUESTION_NO, QUESTION_LEVEL, QUESTION_DESC, FROM_TABLE_NO, FROM_FIELD_NO, 
+    CRT_DATE, CRT_USER, LST_UPD_TIME, LST_UPD_USER
+    from OPAS_CONF_QUESTION
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+   <select id="queryConfQuestionCount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	count(1)
+    from OPAS_CONF_QUESTION
+  </select>
+   <select id="queryConfQuestionCountLevel" resultType="java.lang.String" parameterType="java.util.List" >
+   select to_char(LISTAGG(t.question_no,',')within group(order by t.question_no))
+ 	from OPAS_CONF_QUESTION t
+    where t.question_level in 
+  	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+  		#{item}
+  	</foreach>
+  </select>
+  
+   <select id="queryQuestionCountLevel" resultType="java.lang.String" parameterType="java.util.Map" >
+    select to_char(LISTAGG(t.question_no,',')within group(order by t.question_no))
+ 	from OPAS_CONF_QUESTION t
+  	where  t.question_level in 
+  	<foreach item="item" index="index" collection="questionLevel" open="(" separator="," close=")">
+  		#{item}
+  	</foreach>
+  	and t.USER_FlAG = #{userFlag,jdbcType=VARCHAR}  and status='1'
+  	<if test="existCardFlag !=null and existCardFlag !=''">
+        and issue_flag = #{existCardFlag,jdbcType=CHAR}
+      </if>
+  </select>
+   <select id="queryConfQuestion" resultMap="BaseResultMap" parameterType="java.util.List" >
+    select 
+     a.AUTO_ID, a.QUESTION_NO, a.QUESTION_LEVEL,a.QUESTION_DESC
+    from OPAS_CONF_QUESTION a 
+    where QUESTION_NO in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+	  		#{item}
+	  	</foreach>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_CONF_QUESTION
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.thirdparty.OpasConfQuestion" >
+    insert into OPAS_CONF_QUESTION (AUTO_ID, QUESTION_NO, QUESTION_LEVEL, 
+      QUESTION_DESC, FROM_TABLE_NO, FROM_FIELD_NO, 
+      CRT_DATE, CRT_USER, LST_UPD_TIME, 
+      LST_UPD_USER)
+    values (#{autoId,jdbcType=VARCHAR}, #{questionNo,jdbcType=VARCHAR}, #{questionLevel,jdbcType=VARCHAR}, 
+      #{questionDesc,jdbcType=VARCHAR}, #{fromTableNo,jdbcType=VARCHAR}, #{fromFieldNo,jdbcType=VARCHAR}, 
+      #{crtDate,jdbcType=TIMESTAMP}, #{crtUser,jdbcType=VARCHAR}, #{lstUpdTime,jdbcType=TIMESTAMP}, 
+      #{lstUpdUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.thirdparty.OpasConfQuestion" >
+    insert into OPAS_CONF_QUESTION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="questionNo != null" >
+        QUESTION_NO,
+      </if>
+      <if test="questionLevel != null" >
+        QUESTION_LEVEL,
+      </if>
+      <if test="questionDesc != null" >
+        QUESTION_DESC,
+      </if>
+      <if test="fromTableNo != null" >
+        FROM_TABLE_NO,
+      </if>
+      <if test="fromFieldNo != null" >
+        FROM_FIELD_NO,
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE,
+      </if>
+      <if test="crtUser != null" >
+        CRT_USER,
+      </if>
+      <if test="lstUpdTime != null" >
+        LST_UPD_TIME,
+      </if>
+      <if test="lstUpdUser != null" >
+        LST_UPD_USER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="questionNo != null" >
+        #{questionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="questionLevel != null" >
+        #{questionLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="questionDesc != null" >
+        #{questionDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fromTableNo != null" >
+        #{fromTableNo,jdbcType=VARCHAR},
+      </if>
+      <if test="fromFieldNo != null" >
+        #{fromFieldNo,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null" >
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null" >
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lstUpdTime != null" >
+        #{lstUpdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lstUpdUser != null" >
+        #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.thirdparty.OpasConfQuestion" >
+    update OPAS_CONF_QUESTION
+    <set >
+      <if test="questionNo != null" >
+        QUESTION_NO = #{questionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="questionLevel != null" >
+        QUESTION_LEVEL = #{questionLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="questionDesc != null" >
+        QUESTION_DESC = #{questionDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fromTableNo != null" >
+        FROM_TABLE_NO = #{fromTableNo,jdbcType=VARCHAR},
+      </if>
+      <if test="fromFieldNo != null" >
+        FROM_FIELD_NO = #{fromFieldNo,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null" >
+        CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lstUpdTime != null" >
+        LST_UPD_TIME = #{lstUpdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lstUpdUser != null" >
+        LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.thirdparty.OpasConfQuestion" >
+    update OPAS_CONF_QUESTION
+    set QUESTION_NO = #{questionNo,jdbcType=VARCHAR},
+      QUESTION_LEVEL = #{questionLevel,jdbcType=VARCHAR},
+      QUESTION_DESC = #{questionDesc,jdbcType=VARCHAR},
+      FROM_TABLE_NO = #{fromTableNo,jdbcType=VARCHAR},
+      FROM_FIELD_NO = #{fromFieldNo,jdbcType=VARCHAR},
+      CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      LST_UPD_TIME = #{lstUpdTime,jdbcType=TIMESTAMP},
+      LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+</mapper>

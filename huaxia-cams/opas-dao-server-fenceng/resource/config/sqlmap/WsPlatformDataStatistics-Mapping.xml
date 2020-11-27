@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WsPlatformDataStatistics">
+	
+	<resultMap id="wsPlatformDataStatisticsResultMap" type="com.huaxia.opas.domain.report.WsPlatformDataStatistics" >
+    	
+		<result column="appcnt" property="appcnt" jdbcType="VARCHAR" />
+		<result column="crtdate" property="crtDate" jdbcType="VARCHAR" />
+    </resultMap>
+	<!-- 根据查询条件从进件情况统计表等表中获取所需数据 -->
+    <select id="selectWsPlatformDataStatistics" parameterType="java.util.Map" resultMap="wsPlatformDataStatisticsResultMap">
+		SELECT MAX(c1.crt_time) AS crtdate,
+	           COUNT(c1.app_id) AS appcnt
+		    FROM OPAS_BIZ_INP_APPL_C1 c1 ,ccard_app_ditch_info d 
+		      WHERE c1.app_id = d.app_id 
+		          AND c1.crt_time &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+		          AND c1.crt_time &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		          AND c1.allot_status = '0'
+		          AND c1.input_channel = 'B'
+		          AND d.ditch = 'E'
+		      <if test="business != null and business !='' ">
+		          AND d.company_id = #{business}
+		      </if>
+		      <if test="module != null and module !='' ">
+		          AND d.module_id = #{module}
+		      </if>
+		      GROUP BY to_char(c1.crt_time,'yyyymmdd')
+		      ORDER BY to_char(c1.crt_time,'yyyymmdd')
+    </select>
+  
+    <resultMap id="businessNumberMap" type="java.util.Map">
+		<result column="business_number" property="businessNumber" jdbcType="VARCHAR" />
+		<result column="business_name" property="businessName" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 获取公司编码 -->
+	<select id="queryBusinessNumber" resultMap="businessNumberMap">
+		 select distinct t.business_number, t.business_name
+		  from opas_net_cooperative t
+		 where t.business_logo = 'E'
+		 group by t.business_number, t.business_name
+		 order by t.business_number
+	</select>
+	
+	<resultMap id="moduleNumberMap" type="java.util.Map">
+		<result column="module_number" property="moduleNumber" jdbcType="VARCHAR" />
+		<result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 获取模块编码 -->
+	<select id="queryModuleNumber" resultMap="moduleNumberMap" parameterType="java.lang.String">
+		select distinct t.module_number, t.module_name
+		  from opas_net_cooperative t
+		 where t.business_logo = 'E' and t.business_number = #{businessNumber}
+		 group by t.module_number,t.module_name
+		 order by t.module_number
+	</select>
+</mapper>

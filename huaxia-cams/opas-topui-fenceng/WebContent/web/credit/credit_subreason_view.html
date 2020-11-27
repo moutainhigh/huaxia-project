@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>提报原因码显示页面</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<div>
+			<fieldset style="margin-top:10px;border:0px">
+				<div id="reasonInfoForm">
+				
+				
+				</div> 
+			</fieldset>  
+	</div>
+
+ 
+<script type="text/javascript">
+var appId="";
+$(function(){
+	var url=location.search;
+	var theRequest=new Object();
+	debugger;
+	if(url.indexOf("?")!=-1){
+		var str=url.substr(1);
+		var strs=str.split("&");
+		for(var i=0;i<strs.length;i++){
+			theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+		}
+	}
+	appId = theRequest.appId;//获取流程号
+	/* var parent = window.parent;
+	var applyId = parent.applyId; */
+	if(appId!=""){
+		Load(appId);
+	}
+});
+
+
+
+
+
+/*****************************
+ *@describe:自动加载提报原因
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+function Load(appId) {
+	$cf.ajax({
+		url : '/opas-naps/selectMention_antiFraud.json',
+		data : {
+			'appId':appId
+		},
+		onSuccess : function(response) {
+			if (response.RSP_BODY.success) {
+				var result = response.RSP_BODY.creditReason;
+				$("#reasonInfoForm").html(result);
+			}
+		}
+	});
+}
+</script>
+
+</body>
+</html>

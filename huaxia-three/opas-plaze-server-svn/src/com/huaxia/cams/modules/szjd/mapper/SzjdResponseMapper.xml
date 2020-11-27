@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.cams.modules.szjd.mapper.SzjdResponseMapper">
+	
+	<insert id="insertSzjdResponse" parameterType="com.huaxia.cams.modules.szjd.domain.SzjdResponse">
+		insert into bank_szjd_data(
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			RESULT_CODE,
+			RESULT_DESC,
+			ORIGINATE_ORG_CODE,
+			ORIGINATE_USER_CODE,
+			USER_NAME,
+			ID_TYPE,
+			ID_NUM,
+			QUERY_REASON,
+			SERVICE_CODE,
+			PRODUCT_DATE,
+			RESULT_TYPE,
+			SCORE,
+			FACTOR_NUM,
+			FACTOR1,
+			FACTOR2,
+			FACTOR3,
+			FACTOR4,
+			FACTOR5,
+			POSITION,
+			SCORE_DATE,
+			APP_ID	
+		) values (
+			sys_guid(),
+			sysdate,
+			#{crtUser, jdbcType = VARCHAR},
+			#{resultCode, jdbcType = VARCHAR},
+			#{resultDesc, jdbcType = VARCHAR},
+			#{originateOrgCode, jdbcType = VARCHAR},
+			#{originateUserCode, jdbcType = VARCHAR},
+			#{name, jdbcType = VARCHAR},
+			#{idType, jdbcType = VARCHAR},
+			#{idNum, jdbcType = VARCHAR},
+			#{queryReason, jdbcType = VARCHAR},
+			#{serviceCode, jdbcType = VARCHAR},
+			#{productDate, jdbcType = VARCHAR},
+			#{resultType, jdbcType = VARCHAR},
+			#{score, jdbcType = VARCHAR},
+			#{factorNum, jdbcType = VARCHAR},
+			#{factor1, jdbcType = VARCHAR},
+			#{factor2, jdbcType = VARCHAR},
+			#{factor3, jdbcType = VARCHAR},
+			#{factor4, jdbcType = VARCHAR},
+			#{factor5, jdbcType = VARCHAR},
+			#{position, jdbcType = VARCHAR},
+			#{scoreDate, jdbcType = VARCHAR},
+			#{appId, jdbcType = CHAR}
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="OpaInnerDataCheckMapper">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.decision.OpaInnerDataCheck">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="REPEAT_CHECK" property="repeatCheck" jdbcType="CHAR" />
+		<result column="GRAYLIST" property="graylist" jdbcType="CHAR" />
+		<result column="CERTIFINO_VAILUD" property="certifinoVailud"
+			jdbcType="CHAR" />
+		<result column="RELATEDCHECK_TEL" property="relatedcheckTel"
+			jdbcType="CHAR" />
+		<result column="RELATEDCHECK_HOMEADDR" property="relatedcheckHomeaddr"
+			jdbcType="CHAR" />
+		<result column="RELATEDCHECK_COMPANYADDR" property="relatedcheckCompanyaddr"
+			jdbcType="CHAR" />
+		<result column="RELATEDCHECK_NEARLY_TELNO" property="relatedcheckNearlyTelno"
+			jdbcType="CHAR" />
+		<result column="RISKCHANNEL_CHECK" property="riskchannelCheck"
+			jdbcType="CHAR" />
+		<result column="NOSAFE_PROMOTER" property="nosafePromoter"
+			jdbcType="CHAR" />
+		<result column="APPLYINFO_BUSCHECK" property="applyinfoBuscheck"
+			jdbcType="CHAR" />
+		<result column="ISHAVE_INRISK_INFO" property="ishaveInriskInfo"
+			jdbcType="CHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectByAppId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, REPEAT_CHECK, GRAYLIST, CERTIFINO_VAILUD, RELATEDCHECK_TEL,
+		RELATEDCHECK_HOMEADDR,
+		RELATEDCHECK_COMPANYADDR, RELATEDCHECK_NEARLY_TELNO, RISKCHANNEL_CHECK, NOSAFE_PROMOTER,
+		APPLYINFO_BUSCHECK, ISHAVE_INRISK_INFO, CRT_DATE, CRT_USER
+		from OPAS_INNERDATA_CHECK
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+</mapper>

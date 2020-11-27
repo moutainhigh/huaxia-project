@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<!-- 增加滚轮设置 -->
+	<div
+		style="margin: 2px; width: 100%; height: 600px; overflow-y: scroll;">
+		<table id="tblConfRosterLibrary" title="行员名单库" class="easyui-datagrid"
+			style="width: 98%; height: 100%"
+			data-options="selectOnCheck:false,checkOnSelect:false,pageSize:20,pageList:[15,20,50],rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,
+			url:'/opas-naps/queryRosterLibraryList.json',loadMsg:'数据加载中.....',
+			method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<th field="rosterID" width="15%" align="center" checkbox="true">Id</th>
+					<th field="rosterName" width="10%" align="left">姓名</th>
+					<th field="rosterLdnumber" width="15%" align="left">身份证件号码</th>
+					<th field="rosterUnits" width="10%" align="center">业务单位</th>
+					<th field="rosterLevel" width="10%" align="left">行员级别</th>
+					<th field="crtDate" width="10%" align="center"
+						formatter="myformatDate" sortable="true">创建日期</th>
+					<th field="crtUser" width="5%" align="left">创建人</th>
+					<th field="lstUpdDate" width="10%" align="left"
+						formatter="myformatDate" sortable="true">最后修改日期</th>
+					<th field="lstUpdUser" width="6%" align="left">最后操作员</th>
+					<th field="operate" width="12%" align="center"
+						data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<!-- 查询部分 -->
+		<div id="positionCodeCondion" style="padding: 10px; text-align: laft;">
+			<form id="seachPositionCodeForm">
+				姓名: <input class="easyui-textbox" style="width: 120px"
+					name="rosterName" id="rosterName"> 
+				身份证件号码: <input class="easyui-textbox" style="width: 120px"
+					name="rosterLdnumber" id="rosterLdnumber"> 
+				业务单位: <input class="easyui-textbox" style="width: 120px"
+					name="rosterUnits" id="rosterUnits"> 
+				行员级别: <input class="easyui-textbox" style="width: 80px"
+					id="rosterLevel" name="rosterLevel">
+				<!-- 创建时间: <input class="easyui-datebox" style="width: 120px"
+					name="crtDate1" id="crtDate">  -->
+					<a href="javascript:common.searchTbl('seachPositionCodeForm','tblConfRosterLibrary');"
+					class="easyui-linkbutton" iconCls="icon-search">查询 </a> <a
+					href="javascript:myOpenWin('winAdd');" class="easyui-linkbutton"
+					iconCls="icon-add">新增</a> <a href="javascript:delRosterLibrary();"
+					class="easyui-linkbutton" iconCls="icon-remove">批量删除</a>
+					<a href="javascript:delAll();"
+					class="easyui-linkbutton" iconCls="icon-remove">全部删除</a>				
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post"
+				ACTION="/opas-naps/common/ConfRosterLibraryUploadServlet.json"
+				target="tartIframe">
+				<div style="margin: 10px 0 0 0px; width: 100%;">
+					<label for="impFileNamelb"><font size="2">选择导入文件:</font></label> <input
+						id="fb" name="file1" class="easyui-filebox"
+						data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'"
+						style="width: 400px"> <input type="hidden" id="userCode"
+						class="easyui-textbox" name="userCode"> <input
+						type="hidden" id="userName" class="easyui-textbox" name="userName">
+					<span class="textbox"
+						style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;"
+						onclick="importExcel()"> <span
+						class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span> <span
+						class="filebox-label" style="left: 25px;"><font size="2">导入数据</font></span></span>
+						<span>&nbsp;&nbsp;<font color="blue" size="2">批量导入格式：行员姓名  身份证号  业务单位  行员级别</font></span>
+				</div>
+			</form>
+			<iframe frameborder="0" height="0" width="0" name="tartIframe"
+				id="tartIframe"></iframe>
+		</div>
+	</div>
+
+	<!-- 修改窗口 -->
+	<div id="winEdit" class="easyui-window" title="行员信息修改"
+		style="width: 350px; height: 450px" top="45px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>行员姓名:</td>
+					<td><input 
+						id="rosterName" type="text" name="rosterName"
+						data-options="required:true,validType:'length[1,512]'"></input>
+					<input type="hidden" name="rosterID"/>
+					</td>
+				</tr>
+				<tr>
+					<td>身份证号码:</td>
+					<td><input 
+						id="rosterLdnumber" type="text" name="rosterLdnumber"
+						data-options="required:true,validType:'length[1,18]'"></input></td>
+				</tr>
+				<tr>
+					<td>业务单位:</td>
+					<td><input 
+						id="rosterUnits" type="text" name="rosterUnits"
+						data-options="required:true,validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>行员级别:</td>
+					<td><input type="text" data-options="required:true,validType:'length[1,32]'"
+						id="rosterLevel" name="rosterLevel"></input></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+
+	<!-- 添加窗口 -->
+	<div id="winAdd" class="easyui-window" title="行员名单库添加"
+		style="width: 350px; height: 450px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm" method="post">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>行员姓名:</td>
+					<td><input 
+						id="rosterName" type="text" name="rosterName"
+						data-options="required:true,validType:'length[1,512]'"></input>
+					<input type="hidden" name="autoId"/>
+					</td>
+				</tr>
+				<tr>
+					<td>身份证号码:</td>
+					<td><input 
+						id="rosterLdnumber" type="text" name="rosterLdnumber"
+						data-options="required:true,validType:'length[1,18]'"></input></td>
+				</tr>
+				<tr>
+					<td>业务单位:</td>
+					<td><input 
+						id="rosterUnits" type="text" name="rosterUnits"
+						data-options="required:true,validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>行员级别:</td>
+					<td><input type="text" data-options="required:true,validType:'length[1,32]'"
+						id="rosterLevel" name="rosterLevel"></input></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		</div>
+	</div>
+
+</body>
+<script>
+	//$.parser.parse();
+	var tblConfRosterLibrary = $("#tblConfRosterLibrary");
+	//修改
+	var editWindow = $("#winEdit");
+	//新增
+	var addWindow = $("#winAdd");
+	//创建时间
+	var editForm = $("#editForm");
+	//添加表单
+	var addForm = $("#addForm");
+	//查看页面
+	var showWindow = $("#winShow");
+	var showForm = $("#showForm");
+	
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editConfRosterLibrary();>修改</a>&nbsp;<a href=javascript:delRosterLibrary();>删除</a>";
+	}
+
+	//选中行临时存储变量
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+ 	 tblConfRosterLibrary.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})	 
+
+	//修改页面展示数据
+	function editConfRosterLibrary() {
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+	}
+
+	//删除的方法
+	function delRosterLibrary() {
+		var orgObj = tblConfRosterLibrary.datagrid("getChecked");
+		//var roleObj = tblConfRosterLibrary.datagrid("getSelected");
+		if (orgObj.length <= 0) {
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;
+		}
+		var ids = new Array();
+		for (var i = 0; i < orgObj.length; i++) {
+			ids.push(orgObj[i].rosterID);
+		}
+		//ids.push(roleObj[i].rosterID);
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/deleteConfRosterLibrary.json",
+							data : {"ids":ids},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("名单删除成功！");
+									tblConfRosterLibrary.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "名单删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+	
+	//全部删除
+	function delAll() {
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/deleteAll.json",
+							data : {},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("名单删除成功！");
+									tblConfRosterLibrary.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "名单删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+		showForm.form("load", data);
+		
+	}
+	
+	//修改日期格式
+	function myformatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+			}
+		}
+	
+	//工具方法：格式化CST类型时间
+
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		return y + "-" + m + "-" + d ;
+	};
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	//修改的方法
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		var cue = "修改"
+		if (checkData(jsondata, cue)) {
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/updateConfRosterLibrary.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblConfRosterLibrary.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.RSP_BODY.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	//获取表单数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//清空当前窗口的函数
+	myOpenWin = function(winName) {
+		winObj = $("#" + winName + "");
+		winObj.form('clear');
+		$('#currStatus1').combobox('select','1');
+		winObj.window({
+			closed : false
+		});
+	}
+	
+	//新增的方法
+	function onSave() {
+		var jsondata = getFormData(addForm.serializeArray());
+		var cue = "添加"
+		if (checkData(jsondata, cue)) {
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/saveConfRosterLibrary.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblConfRosterLibrary.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.RSP_BODY.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+	function fefresh(insideAppNo) {
+		var par = $easyT.getWinParams();
+		par.url = "/opas-topui/html/workFlow/comQuestionInfo.html?insideAppNo="
+				+ insideAppNo + " ";
+		par.width = 1000;
+		par.height = 700;
+		par.target = this;
+		par.title = "征信问题";
+		par.top = 120;
+		//最高层弹窗
+		top.$easyT.openWin(par);
+	}
+
+	//校验的方法
+	function checkData(jsondata, cue) {
+		if (jsondata.rosterName.trim().length > 512) {
+			$.messager.alert("操作提示", cue + "失败:行员姓名不能大于512位!", "error");
+			return true;
+		}
+		if (jsondata.rosterLdnumber.trim().length > 18) {
+			$.messager.alert("操作提示", cue + "失败:身份证号不能大于18位!", "error");
+			return true;
+		}
+		if (jsondata.rosterUnits.trim().length > 512) {
+			$.messager.alert("操作提示", cue + "失败:业务部门不能大于512位!", "error");
+			return true;
+		}
+	}
+
+	<!-- 批量导入EXCEL文件相关js -->
+	var trigger = true;
+	$('#fb').filebox({    
+	buttonText: '选择文件', 
+	buttonAlign: 'right',
+	buttonIcon:'icon-search',
+	onChange: function (newValue, oldValue) {
+			excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+			if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+				alert("请上传excel格式的文件");
+				$('#fb').filebox('setValue','');
+				return;
+			}
+			if (trigger) {
+				$.messager.confirm({
+					width : 1000,
+					height : 200,
+					title : '请确认文件格式',
+					msg : "请确认导入的表格格式为：<br><br><br>行员姓名  身份证号  业务单位  行员级别",
+					fn : function(r) {
+						if (!r) {
+							trigger = false;
+							$('#fb').filebox("reset");
+							$('#fb').filebox('setValue','');
+						}
+					}
+				})
+			}
+		}
+	})
+
+	function resetValue(){
+	$('#fb').filebox('setValue','');
+	}
+
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+				$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+				importSave();
+		}
+	}
+	
+	
+	//上传保存数据
+	function importSave() {
+		$('#formFile').submit();
+ 		$.messager.progress(); 
+	}
+	
+	 var tartIframe = document.getElementById("tartIframe");
+	tartIframe.src = "/opas-naps/common/ConfRosterLibraryUploadServlet.json";
+	if(tartIframe.attachEvent){
+		tartIframe.attachEvent("onload",function(){
+			responPage();
+		});
+	}else{
+		tartIframe.onload = function(){
+			responPage();			
+		}
+	} 
+	
+	function responPage(){
+ 		 $.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+			tblConfRosterLibrary.datagrid("reload");
+			top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+		}
+		if(value[0] == "false"){
+			$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+		} 
+		if(value[0] == "error"){
+			$.messager.alert("操作提示",value[1], "error");
+		} 
+	}	
+	 
+	
+	//查看历史操作
+	openWinTbll = function(winName, tblName, tarTblName, tarUrl, tarParam) {
+		var tblObj = $("#" + tblName + "");
+		var tblDict = $("#" + tarTblName + "");
+		winObj = $("#" + winName + "");
+		var id = value.autoId;
+		var paramObj = document.getElementsByName(tarParam);
+		for (var i = 0; i < paramObj.length; i++) {
+			paramObj[i].value = id;
+		}
+		winObj.window({
+			closed : false
+		});
+		var quryParam = {};
+		quryParam[tarParam] = id;
+		tblDict.datagrid({
+			url : tarUrl,
+			queryParams : quryParam
+		});
+		tblConfRosterLibrary.datagrid("clearSelections"); 
+		$("input[name='autoId']").attr("checked",false);
+	}
+	
+	//查看
+	function ShowConfRosterLibrary() {
+		showWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+		var cTime = gridDateFormat2(value.crtDate);
+		$('#crtDate3').textbox('setValue',cTime);
+		var lTime = gridDateFormat2(value.lstUpdDate);
+		$('#lstUpdDate3').textbox('setValue',lTime);
+	}
+</script>

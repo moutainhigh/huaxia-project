@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblMenu" title="菜单信息列表" class="easyui-treegrid"
+		style="width: 100%; height: 660px;"
+		data-options="rownumbers:true,animate:true,url:'/opas-naps/menu_list.json',singleSelect:true,checkOnSelect:false,selectOnCheck:false,method:'post',loadMsg:'数据加载中.....',idField:'menuId',treeField:'menuName',toolbar:'#toolbar'">
+		<thead>
+			<tr>
+				<th field="menuId" width="5%" align="center" checkbox="true">菜单编号</th>
+				<th field="menuName" width="15%">菜单名称</th>
+				<th field="menuUrl" width="40%">菜单URL</th>
+				<th field="menuLevel" width="5%" align="center">菜单层级</th>
+				<!-- <th field="status" width="5%" align="center">菜单状态</th> -->
+				<th field="operate" width="10%" align="center"
+					data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="toolbar">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-add" plain="true" onclick="addMenu()">添加菜单</a>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="菜单修改"
+		style="width: 600px; height: 250px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<form id="editForm" class="easyui-form" method="post"
+					data-options="novalidate:true">
+					<table cellpadding="10"
+						style="border-collapse: separate; border-spacing: 10px;">
+						<tr>
+							<td>菜单名称:</td>
+							<td><input class="easyui-validatebox" id="menuName"
+								type="text" name="menuName" data-options="required:true"></input>
+								<input type="hidden" name="menuId" id="menuId" /> <input
+								type="hidden" name="menuParentId" id="menuParentId"></input>
+							<!-- <td>菜单状态:</td>
+							<td><input class="easyui-validatebox" id="status"
+								type="text" name="status" data-options="required:true"></input></td> -->
+							<td>菜单层级:</td>
+							<td><select class="easyui-combobox" name="menuLevel" id="menuLevel" style="width: 140px" 
+								dict_type="CDCJ" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+							</select></td>
+						</tr>
+						<tr>
+							<td>菜单URL:</td>
+							<td><input class="easyui-validatebox" id="menuUrl"
+								type="text" name="menuUrl" data-options="required:true" style="width:220px;"></input></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right"><a href="javascript:void(0)"
+								class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a></td>
+							<td colspan="2" align="left"><a href="javascript:void(0)"
+								class="easyui-linkbutton" onclick="onUpdate()">更新</a></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="菜单添加"
+		style="width: 600px; height: 250px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<form id="addForm" class="easyui-form" method="post"
+					data-options="novalidate:true">
+					<table cellpadding="10"
+						style="border-collapse: separate; border-spacing: 10px;">
+						<tr>
+							<td>菜单名称:</td>
+							<td><input class="easyui-validatebox" id="menuName"
+								type="text" name="menuName" data-options="required:true"></input>
+								<input type="hidden" name="menuParentId" id="parentId"></input>
+							<!-- <td>菜单状态:</td>
+							<td><input class="easyui-validatebox" id="status"
+								type="text" name="status" data-options="required:true"></input></td> -->
+							<td>菜单层级:</td>
+							<td><select class="easyui-combobox" name="menuLevel" id="menuLevel"  style="width: 140px" 
+								dict_type="CDCJ" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+							</select></td>
+						</tr>
+						<tr>
+							<td>菜单URL:</td>
+							<td><input class="easyui-validatebox" id="menuUrl"
+								type="text" name="menuUrl" data-options="required:true" style="width:220px;"></input></td>
+						</tr>
+					</table>
+				</form>
+				<div style="text-align: center; padding: 5px">
+					<a href="javascript:void(0)" class="easyui-linkbutton"
+						onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+						class="easyui-linkbutton" onclick="onSave()">保存</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	$cf.loadAllDict();//加载业务字典
+	var tblMenu = $("#tblMenu");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+
+	//操作
+	function formatOper(val, row, index) {
+		return "<a href='javascript:editMenu();'>编辑</a>&nbsp;<a href='javascript:deleteMenu();''>删除</a>";
+	}
+
+	//添加菜单
+	function addMenu() {
+		var parentId = "";//父级id
+		var level = 0;//层级
+		var menuObjs = tblMenu.treegrid("getChecked");
+		if (menuObjs.length > 1) {
+			alert("只能指定一个父级菜单!");
+			return;
+		}
+		if (menuObjs.length == 1) {
+			parentId = menuObjs[0].menuId;
+			level = Number(menuObjs[0].menuLevel) + 1;
+			if (level >= 3) {
+				$.messager.alert("操作提示!", "当前菜单只扶持到三级.");
+				return;
+			}
+		}
+		$("#parentId").val(parentId);
+		document.getElementById("addForm").menuLevel.value = level;
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	//编辑菜单
+	function editMenu() {
+		var menuObj = tblMenu.treegrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(menuObj)
+		});
+	}
+
+	//删除菜单
+	function deleteMenu() {
+		var menuObj = tblMenu.treegrid("getSelected");
+		var menuId = getMenuId(menuObj, "");
+		menuId = menuId.substring(0, menuId.length - 1);
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/menu_remove.json",
+					data : {
+						"menuids" : menuId
+					},
+					onSuccess : function(data) {
+
+						top.$cf.showMsg("删除成功！");
+
+						tblMenu.treegrid("reload");
+					}
+				});
+			}
+		});
+	}
+
+	//递归获取菜单及其子菜单id
+	function getMenuId(menuObj, menuid) {
+		menuid = menuid + menuObj.menuId + ",";
+		if (menuObj.children) {
+			for (var i = 0; i < menuObj.children.length; i++) {
+				if (menuObj.children[i].children) {
+					return getMenuId(menuObj.children[i], menuid);
+				} else {
+					menuid = menuid + menuObj.children[i].menuId + ",";
+				}
+			}
+		}
+		return menuid;
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	//更新菜单
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/menu_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+
+				top.$cf.showMsg("更新成功！");
+
+				onConcle("winEdit");
+				editForm.form("clear");
+				tblMenu.treegrid("reload");
+			}
+		});
+	}
+
+	//封装表单数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//保存菜单
+	function onSave() {
+		var jsondata = getFormData(addForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/menu_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+
+				top.$cf.showMsg("保存成功！");
+
+				onConcle("winAdd");
+				addForm.form("clear");
+				tblMenu.treegrid("unselectAll");
+				tblMenu.treegrid("reload");
+			}
+		});
+	}
+
+	function expandAll() {
+		tblMenu.treegrid("collapseAll");
+	}
+</script>
+</html>

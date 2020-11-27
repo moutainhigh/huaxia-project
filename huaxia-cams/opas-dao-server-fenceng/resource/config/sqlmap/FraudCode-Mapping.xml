@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--欺诈结果原因码数据库处理-->
+<!--@author liudi-->
+<mapper namespace="FraudCode">
+
+	<resultMap id="FraudCodeResultMap" type="com.huaxia.opas.domain.sysparm.FraudCode">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="FRAUD_CODE" property="fraudCode" jdbcType="VARCHAR" />
+		<result column="FRAUD_NAME" property="fraudName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+
+	</resultMap>
+<!-- 添加状态为Start -->
+	<insert id="insertFraudCode1" parameterType="com.huaxia.opas.domain.sysparm.FraudCode">
+		insert into
+		OPAS_FRAUD_REASONCODE
+		(AUTO_ID,FRAUD_CODE,FRAUD_NAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{fraudCode,jdbcType=VARCHAR},
+		#{fraudName,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 添加状态为End -->
+	<insert id="insertFraudCode2" parameterType="com.huaxia.opas.domain.sysparm.FraudCode">
+		insert into
+		OPAS_FRAUD_REASONCODE
+		(AUTO_ID,FRAUD_CODE,FRAUD_NAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{fraudCode,jdbcType=VARCHAR},
+		#{fraudName,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteFraudCodeById" parameterType="java.lang.String">
+		delete from
+		OPAS_FRAUD_REASONCODE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectFraudCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_FRAUD_REASONCODE where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateFraudCodeWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.FraudCode">
+		update OPAS_FRAUD_REASONCODE
+		<set>
+			FRAUD_NAME = #{fraudName,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 修改 -->
+	<update id="updateFraudCode" parameterType="com.huaxia.opas.domain.sysparm.FraudCode">
+		update OPAS_FRAUD_REASONCODE
+		<set>
+			FRAUD_NAME = #{fraudName,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 查询 -->
+	<select id="queryFraudCode" parameterType="com.huaxia.opas.domain.sysparm.FraudCode"
+		resultMap="FraudCodeResultMap">
+		select
+		AUTO_ID,FRAUD_CODE,FRAUD_NAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_FRAUD_REASONCODE
+		<where>
+			<if test="fraudCode != null and fraudCode !='' ">
+				AND FRAUD_CODE LIKE '%${fraudCode}%'
+			</if>
+			<if test="fraudName != null and fraudName !='' ">
+				AND FRAUD_NAME LIKE '%${fraudName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+	
+<!-- 点击查询后，触发查询和排序功能 -->
+	<select id="queryFraudCode2" parameterType="java.util.Map"
+		resultMap="FraudCodeResultMap">
+		select
+		AUTO_ID,FRAUD_CODE,FRAUD_NAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_FRAUD_REASONCODE
+		<where>
+			<if test="fraudCode != null and fraudCode !='' ">
+				AND FRAUD_CODE LIKE '%${fraudCode}%'
+			</if>
+			<if test="fraudName != null and fraudName !='' ">
+				AND FRAUD_NAME LIKE '%${fraudName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+	</select>
+	
+<!-- 查询是否重复 -->
+	<select id="queryFraudCode3" parameterType="com.huaxia.opas.domain.sysparm.FraudCode"
+		resultMap="FraudCodeResultMap">
+		select
+		FRAUD_CODE
+		from OPAS_FRAUD_REASONCODE
+		<where>
+			<if test="fraudCode != null and fraudCode !='' ">
+				AND FRAUD_CODE = #{fraudCode}
+			</if>
+		</where>
+	</select>
+
+<!-- 件数查询 -->
+	<select id="queryFraudCodeCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_FRAUD_REASONCODE
+		<where>
+			<if test="fraudCode != null and fraudCode !='' ">
+				AND FRAUD_CODE LIKE '%${fraudCode}%'
+			</if>
+			<if test="fraudName != null and fraudName !='' ">
+				AND FRAUD_NAME LIKE '%${fraudName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+
+
+</mapper>

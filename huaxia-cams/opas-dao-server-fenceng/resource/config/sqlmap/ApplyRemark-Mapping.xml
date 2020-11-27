@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ApplyRemark">
+
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.apply.ApplyRemark">
+		<id column="REMARK_ID" property="remarkId" jdbcType="CHAR" />
+		<result column="REMARK_INFO" property="remarkInfo" jdbcType="VARCHAR" />
+		<result column="REMARK_USER" property="remarkUser" jdbcType="VARCHAR" />
+		<result column="REMARK_TIME" property="remarkTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BaseResultMap_Retrieve" type="com.huaxia.opas.domain.apply.ApplyRemark">
+		<id column="REMARK_ID" property="remarkId" jdbcType="CHAR" />
+		<result column="REMARK_INFO" property="remarkInfo" jdbcType="VARCHAR" />
+		<result column="REMARK_USER" property="remarkUser" jdbcType="VARCHAR" />
+		<result column="REMARK_TIME" property="remarkTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="remarkDate" property="remarkDate" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select REMARK_ID, REMARK_INFO, REMARK_USER, REMARK_TIME, APP_ID, CURR_NODE
+		from OPAS_ALLOT_APPLY_REMARK
+		where REMARK_ID =
+		#{remarkId,jdbcType=CHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		OPAS_ALLOT_APPLY_REMARK
+		where REMARK_ID = #{remarkId,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.apply.ApplyRemark">
+		insert into
+		OPAS_ALLOT_APPLY_REMARK (REMARK_ID,
+		REMARK_INFO, REMARK_USER,
+		REMARK_TIME, APP_ID,CURR_NODE)
+		values (#{remarkId,jdbcType=CHAR},
+		#{remarkInfo,jdbcType=VARCHAR},
+		#{remarkUser,jdbcType=VARCHAR},
+		#{remarkTime,jdbcType=TIMESTAMP},
+		#{appId,jdbcType=VARCHAR},#{currNode,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.apply.ApplyRemark">
+		insert into OPAS_ALLOT_APPLY_REMARK
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="remarkId != null">
+				REMARK_ID,
+			</if>
+			<if test="remarkInfo != null">
+				REMARK_INFO,
+			</if>
+			<if test="remarkUser != null">
+				REMARK_USER,
+			</if>
+			<if test="remarkTime != null">
+				REMARK_TIME,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="remarkId != null">
+				#{remarkId,jdbcType=CHAR},
+			</if>
+			<if test="remarkInfo != null">
+				#{remarkInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="remarkUser != null">
+				#{remarkUser,jdbcType=VARCHAR},
+			</if>
+			<if test="remarkTime != null">
+				#{remarkTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.apply.ApplyRemark">
+		update OPAS_ALLOT_APPLY_REMARK
+		<set>
+			<if test="remarkInfo != null">
+				REMARK_INFO = #{remarkInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="remarkUser != null">
+				REMARK_USER = #{remarkUser,jdbcType=VARCHAR},
+			</if>
+			<if test="remarkTime != null">
+				REMARK_TIME = #{remarkTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="appId != null">
+				APP_ID = #{appId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where REMARK_ID = #{remarkId,jdbcType=CHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.apply.ApplyRemark">
+		update
+		OPAS_ALLOT_APPLY_REMARK
+		set REMARK_INFO =
+		#{remarkInfo,jdbcType=VARCHAR},
+		REMARK_USER =
+		#{remarkUser,jdbcType=VARCHAR},
+		REMARK_TIME =
+		#{remarkTime,jdbcType=TIMESTAMP},
+		APP_ID = #{appId,jdbcType=VARCHAR}
+		where REMARK_ID = #{remarkId,jdbcType=CHAR}
+	</update>
+
+	<select id="queryCount" parameterType="com.huaxia.opas.domain.apply.ApplyRemark"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_ALLOT_APPLY_REMARK
+		<where>
+			<if test="remarkInfo != null and remarkInfo !='' ">
+				AND REMARK_INFO LIKE #{remarkInfo}#
+			</if>
+			<if test="remarkUser != null and remarkUser !='' ">
+				AND REMARK_USER LIKE #{remarkUser}#
+			</if>
+			<if test="appId != null and appId !='' ">
+				AND APP_ID = #{appId}
+			</if>
+		</where>
+	</select>
+	<select id="queryCountWithYs" parameterType="com.huaxia.opas.domain.apply.ApplyRemark"
+		resultType="java.lang.Integer">
+		select sum(remarkNum) from (
+		select count(1) as remarkNum from OPAS_ALLOT_APPLY_REMARK
+		<where>
+			<if test="remarkInfo != null and remarkInfo !='' ">
+				AND REMARK_INFO LIKE #{remarkInfo}#
+			</if>
+			<if test="remarkUser != null and remarkUser !='' ">
+				AND REMARK_USER LIKE #{remarkUser}#
+			</if>
+			<if test="appId != null and appId !='' ">
+				AND APP_ID = #{appId}
+			</if>
+		</where>
+		union all
+              select count(1)  as remarkNum  from YS_RESULT_INFO y where 
+               y.APPROVE_CODE is not null           
+              AND y.APPROVE_RESULT='2' and  y.APP_ID= #{appId}  
+         )
+	</select>
+	<select id="queryList" parameterType="com.huaxia.opas.domain.apply.ApplyRemark"
+		resultMap="BaseResultMap">
+		select REMARK_ID, REMARK_INFO,b.user_name as REMARK_USER, REMARK_TIME, APP_ID, CURR_NODE
+		from OPAS_ALLOT_APPLY_REMARK a left join opas_ap_user b
+   			 on a.remark_user = b.user_code
+		<where>
+			<if test="remarkInfo != null and remarkInfo !='' ">
+				AND a.REMARK_INFO LIKE #{remarkInfo}#
+			</if>
+			<if test="remarkUser != null and remarkUser !='' ">
+				AND a.REMARK_USER LIKE #{remarkUser}#
+			</if>
+			<if test="appId != null and appId !='' ">
+				AND a.APP_ID = #{appId}
+			</if>
+		</where>
+		order by REMARK_TIME desc
+	</select>
+	<select id="queryListWithYs" parameterType="com.huaxia.opas.domain.apply.ApplyRemark"
+		resultMap="BaseResultMap">
+		select * from (
+		select REMARK_ID, REMARK_INFO,b.user_name as REMARK_USER, REMARK_TIME, APP_ID, CURR_NODE
+		from OPAS_ALLOT_APPLY_REMARK a left join opas_ap_user b
+   			 on a.remark_user = b.user_code
+		<where>
+			<if test="remarkInfo != null and remarkInfo !='' ">
+				AND a.REMARK_INFO LIKE #{remarkInfo}#
+			</if>
+			<if test="remarkUser != null and remarkUser !='' ">
+				AND a.REMARK_USER LIKE #{remarkUser}#
+			</if>
+			<if test="appId != null and appId !='' ">
+				AND a.APP_ID = #{appId}
+			</if>
+		</where>
+    	union all
+          select y.AUTO_ID as REMARK_ID,
+                 '预审拒绝码为' || y.APPROVE_CODE as REMARK_INFO,
+                 b.user_name as REMARK_USER,
+                 y.CRT_TIME as REMARK_TIME,
+                 y.app_id,
+                 '06'
+            from YS_RESULT_INFO y
+            left join ys_ap_user b on y.CRT_USER = b.user_code
+           where y.APP_ID = #{appId}
+             and y.APPROVE_CODE is not null
+             AND y.APPROVE_RESULT = '2')
+		order by REMARK_TIME desc
+	</select>
+	<!-- zlb -->
+	<select id="checkRemarkInfo" parameterType="java.lang.String" resultMap="BaseResultMap_Retrieve">
+		select k.REMARK_INFO,r.user_name as REMARK_USER,to_char(k.REMARK_TIME,'yyyy-mm-dd') as remarkDate,k.APP_ID,k.CURR_NODE
+		from OPAS_ALLOT_APPLY_REMARK k left join opas_ap_user r on k.remark_user = r.user_code
+		where k.APP_ID = #{appId}  order by REMARK_TIME desc
+	</select>
+	
+	<!-- wdb -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into OPAS_ALLOT_APPLY_REMARK 
+		(REMARK_ID,
+		REMARK_INFO, REMARK_USER,
+		REMARK_TIME, APP_ID,CURR_NODE)
+	  	<foreach collection="list" item="item" index="index" separator="union all" > 
+	      	(select 
+	      	    (select sys_guid() from dual), 
+	      	    #{item.remarkInfo,jdbcType=VARCHAR},
+		        #{item.remarkUser,jdbcType=VARCHAR},
+		        #{item.remarkTime,jdbcType=TIMESTAMP},
+				#{item.appId,jdbcType=VARCHAR},
+				#{item.currNode,jdbcType=VARCHAR}
+			from dual
+			)
+	    </foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="MarktQRCode">
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="QRCodeResultMap" type="com.huaxia.opas.domain.sysparm.MarktQRCode">
+		<result column="UUID" property="uuId" jdbcType="VARCHAR" />
+		<result column="COOPMARCHANT_CODE" property="coopmarchant_code" jdbcType="VARCHAR" />
+		<result column="COOPMARCHANT_NAME" property="coopmarchant_name" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="operator" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryQRCode" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode"
+		resultMap="QRCodeResultMap">
+		select
+		UUID,
+		COOPMARCHANT_CODE,
+		COOPMARCHANT_NAME,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER
+		from
+		OPAS_MKQRCODE_LIST
+		<where>
+			1 = 1
+			<if test="coopmarchant_code != null and coopmarchant_code !='' ">
+				AND COOPMARCHANT_CODE LIKE '%${coopmarchant_code}%'
+			</if>
+			<if test="coopmarchant_name != null and coopmarchant_name !='' ">
+				AND COOPMARCHANT_NAME LIKE '%${coopmarchant_name}%'
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+	<!-- 统计数量 -->
+	<select id="queryQRCodeCount" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_MKQRCODE_LIST
+		<where>
+			1 = 1
+			<if test="coopmarchant_code != null and coopmarchant_code !='' ">
+				AND COOPMARCHANT_CODE LIKE '%${coopmarchant_code}%'
+			</if>
+			<if test="coopmarchant_name != null and coopmarchant_name !='' ">
+				AND COOPMARCHANT_NAME LIKE '%${coopmarchant_name}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteQRCode" parameterType="java.util.List">
+		delete from
+		OPAS_MKQRCODE_LIST
+		where UUID in
+		<foreach collection="list" open="(" close=")" item="uuId"
+			separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 查询数据是否已存在 -->
+	<select id="checkIsExistQR" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode"
+		resultMap="QRCodeResultMap">
+		select * from
+		OPAS_MKQRCODE_LIST
+		where COOPMARCHANT_CODE = #{coopmarchant_code} and
+		COOPMARCHANT_NAME = #{coopmarchant_name}  and 
+        STATUS = #{status}
+	</select>
+	<!-- 添加 启用 -->
+	<insert id="insertQRCodeStart" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode">
+		insert into
+		OPAS_MKQRCODE_LIST
+		(UUID,
+		COOPMARCHANT_CODE,
+		COOPMARCHANT_NAME,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER)
+		values	
+		(#{uuId,jdbcType=VARCHAR},
+		#{coopmarchant_code,jdbcType=VARCHAR},
+		#{coopmarchant_name,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		#{operator,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 添加 停用 -->
+	<insert id="insertQRCodeEnd" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode">
+		insert into
+		OPAS_MKQRCODE_LIST
+		(UUID,
+		COOPMARCHANT_CODE,
+		COOPMARCHANT_NAME,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER)
+		values	
+		(#{uuId,jdbcType=VARCHAR},
+		#{coopmarchant_code,jdbcType=VARCHAR},
+		#{coopmarchant_name,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		SYSDATE,
+		#{operator,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateQRCodeAndStatus" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode">
+		update OPAS_MKQRCODE_LIST
+		<set>
+			<if test="coopmarchant_code != null">
+				COOPMARCHANT_CODE = #{coopmarchant_code,jdbcType=VARCHAR},</if>
+				COOPMARCHANT_NAME=#{coopmarchant_name,jdbcType=VARCHAR},
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},</if>
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			    LST_UPD_DATE = SYSDATE
+		</set>
+		where UUID = #{uuId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 上传 -->
+	<insert id="insertQRCodeUpload" parameterType="java.util.List">
+		insert into OPAS_MKQRCODE_LIST (
+		UUID,
+		COOPMARCHANT_CODE,
+		COOPMARCHANT_NAME,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.uuId,jdbcType=VARCHAR},
+			#{item.coopmarchant_code,jdbcType=VARCHAR},
+			#{item.coopmarchant_name,jdbcType=VARCHAR},
+			1,
+			SYSDATE,
+			SYSDATE,
+			NULL,
+			SYSDATE,
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+
+	<!-- 批量启用 -->
+	<update id="setQRCodeStatusOK" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode">
+		update OPAS_MKQRCODE_LIST
+		<set>
+			STATUS = '1',
+			START_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+		</set>
+		where UUID in
+		<foreach collection="ids" open="(" close=")" item="uuId"
+			separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<!-- 批量禁用 -->
+	<update id="setQRCodeStatusNO" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode">
+		update OPAS_MKQRCODE_LIST
+		<set>
+			STATUS = '0',
+			STOP_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		</set>
+		where UUID in
+		<foreach collection="ids" open="(" close=")" item="uuId"
+			separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 查询status -->
+	<select id="queryQRCodeStatus" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select status from OPAS_MKQRCODE_LIST where
+		UUID=#{uuId,jdbcType=VARCHAR}
+	</select>
+	<!-- 修改 状态不变 -->
+	<update id="updateQRCodeWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.MarktQRCode">
+		update OPAS_MKQRCODE_LIST
+		<set>
+			<if test="coopmarchant_code != null">
+				COOPMARCHANT_CODE = #{coopmarchant_code,jdbcType=VARCHAR},</if>
+				COOPMARCHANT_NAME=#{coopmarchant_name,jdbcType=VARCHAR},
+			<if test="lstUpdUser != null">
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			    LST_UPD_DATE = SYSDATE
+		</set>
+		where UUID = #{uuId,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

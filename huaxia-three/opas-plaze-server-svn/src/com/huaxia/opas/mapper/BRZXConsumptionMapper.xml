@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.BRZXConsumptionMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.BRZXConsumption">
+		INSERT INTO OPAS_BIZ_CONSUMPTION_DATA (
+			CONS_CONT, CONS_TIME_RECENT, 
+			CONS_TOT_M3_NUM, CONS_TOT_M3_PAY, CONS_TOT_M3_P_CATENUM, CONS_TOT_M3_V_CATENUM, CONS_TOT_M3_VISITS, 
+			CONS_TOT_M12_NUM, CONS_TOT_M12_PAY, CONS_TOT_M12_P_CATENUM, CONS_TOT_M12_V_CATENUM, CONS_TOT_M12_VISITS, 
+			CONS_MAX_M3_NUM, CONS_MAX_M3_PAY, CONS_MAX_M3_PAYCATE, 
+			CONS_MAX_M12_NUM, CONS_MAX_M12_PAY, CONS_MAX_M12_PAYCATE, 
+			CONS_M3_RYBH_NUM, CONS_M3_RYBH_PAY, CONS_M3_JYDQ_NUM, CONS_M3_JYDQ_PAY, CONS_M3_MYYP_NUM, CONS_M3_MYYP_PAY, 
+			CONS_M12_RYBH_NUM, CONS_M12_RYBH_PAY, CONS_M12_JYDQ_NUM, CONS_M12_JYDQ_PAY, CONS_M12_MYYP_NUM, CONS_M12_MYYP_PAY,
+			APP_ID, IDENTITYCARD, CELL, NAME, SWIFT_NUMBER, 
+			CRT_TIME, CRT_USER
+		) VALUES (
+			#{consCont, jdbcType = VARCHAR},
+			#{consTimeRecent, jdbcType = VARCHAR},
+			
+			#{consTotM3Num, jdbcType = VARCHAR},
+			#{consTotM3Pay, jdbcType = VARCHAR},
+			#{consTotM3PCatenum, jdbcType = VARCHAR},
+			#{consTotM3VCatenum, jdbcType = VARCHAR},
+			#{consTotM3Visits, jdbcType = VARCHAR},
+			
+			#{consTotM12Num, jdbcType = VARCHAR},
+			#{consTotM12Pay, jdbcType = VARCHAR},
+			#{consTotM12PCatenum, jdbcType = VARCHAR},
+			#{consTotM12VCatenum, jdbcType = VARCHAR},
+			#{consTotM12Visits, jdbcType = VARCHAR},
+			
+			#{consMaxM3Num, jdbcType = VARCHAR},
+			#{consMaxM3Pay, jdbcType = VARCHAR},
+			#{consMaxM3Paycate, jdbcType = VARCHAR},
+			
+			#{consMaxM12Num, jdbcType = VARCHAR},
+			#{consMaxM12Pay, jdbcType = VARCHAR},
+			#{consMaxM12Paycate, jdbcType = VARCHAR},
+			
+			#{consM3RYBHNum, jdbcType = VARCHAR},
+			#{consM3RYBHPay, jdbcType = VARCHAR},
+			#{consM3JYDQNum, jdbcType = VARCHAR},
+			#{consM3JYDQPay, jdbcType = VARCHAR},
+			#{consM3MYYPNum, jdbcType = VARCHAR},
+			#{consM3MYYPPay, jdbcType = VARCHAR},
+			
+			#{consM12RYBHNum, jdbcType = VARCHAR},
+			#{consM12RYBHPay, jdbcType = VARCHAR},
+			#{consM12JYDQNum, jdbcType = VARCHAR},
+			#{consM12JYDQPay, jdbcType = VARCHAR},
+			#{consM12MYYPNum, jdbcType = VARCHAR},
+			#{consM12MYYPPay, jdbcType = VARCHAR},
+			
+			#{appId, jdbcType = VARCHAR},
+			#{identityCard, jdbcType = VARCHAR},
+			#{cell, jdbcType = VARCHAR},
+			#{name, jdbcType = VARCHAR},
+			#{swiftNumber, jdbcType = VARCHAR},
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+
+</mapper>

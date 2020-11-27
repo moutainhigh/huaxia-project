@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.searchdiv {
+	font-size: 10px;
+}
+</style>
+</head>
+<body style="font-size: 12px;">
+	<div style="width: 99%; font-size: 12px;">
+		<form id="seachForm">
+			<div
+				style=" width: 100%; height: 30%;">
+				<fieldset class="textbox combo"
+					style="left: 30px; width: 90%; height: 70px; padding: 0px 30px 0px 20px;">
+
+					<legend align="left">
+						<font size="2">查询选项</font>
+					</legend>
+					<div style="padding: 10px">
+						流水号: <input  type="text" style="border: 1px solid rgb(149, 184, 231);height: 18px; width: 150px"
+							name="lsh" id="lsh"> 客户姓名: <input class="easyui-textbox"
+							style="width: 120px" name="khxm" id="khxm"> 证件号码: <input
+							class="easyui-textbox" style="width: 150px" name="zjhm" id="zjhm">
+
+						单位名称: <input class="easyui-textbox" style="width: 150px"
+							name="dwmc" id="dwmc">
+							<input type="hidden" style="width: 120px"	name="currNode" id="currNode" value="02">
+					</div>
+				</fieldset>
+				<fieldset class="textbox combo"
+					style="left: 30px; width: 90%; height: 70px; padding: 0px 30px 0px 20px;">
+
+					<legend align="left">
+						<font size="2">排序选项</font>
+					</legend>
+					<div style="padding: 10px">
+						<input type="checkbox" name="orderOption" value="GROUP_DATE" onclick="choseThisCheckBox($(this));"/>分组天数
+						<input type="checkbox" name="orderOption" value="APP_ID" onclick="choseThisCheckBox($(this));"/>流水号
+						<input type="checkbox" name="orderOption" value="PATCH_STATUS" onclick="choseThisCheckBox($(this));"/>补件完成
+						<input type="checkbox" name="orderOption" value="C1_CONAME" onclick="choseThisCheckBox($(this));"/>单位名称
+					</div>
+				</fieldset>
+				<div align="center" style="padding: 0px 20px 0px 0px">
+					
+					<a href="javascript:checkAndSearchTab('seachForm','tblSeach');"
+						class="easyui-linkbutton" iconCls="icon-search">搜索</a>	&nbsp;
+				<a href="javascript:updateZxApplyYdjHangUpCancle();"	class="easyui-linkbutton">解挂</a>
+				</div>
+			</div>
+		</form>
+			<table id="tblSeach" ></table>
+			<div id="winCheckingSelect" class="easyui-window" title="质检情况记录" style="width: 500px; height: 430px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+	   	<form id="checkingFormSelect">
+	   		<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+	   			<tr>
+	   				<td align="right">流水号：</td>
+	   				<td><input class="easyui-textbox" name="appId" id="appId" type="text" editable="false"></input></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">检查情况</td>
+	   				<td><select class="easyui-combobox" name="checkCondition" editable="false" style="width:150px" readonly="true">
+							<option value="">---请选择---</option>
+							<option value="1">已查-系统</option>
+							<option value="2">已查-专项</option>
+							<option value="3">已查-自查</option>
+							<option value="4">已查-核销</option>
+					</select></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">质检结果</td>
+	   				<td><select class="easyui-combobox" id="checkResult" name="checkResult" editable="false" style="width:150px" readonly="true">
+							<option value="">---请选择---</option>
+							<option value="0">正常</option>
+							<option value="1">问题-申请资料类</option>
+							<option value="2">问题-流程类</option>
+							<option value="3">问题-核实话术类</option>
+							<option value="4">问题-注记类</option>
+							<option value="5">问题-信息采集类</option>
+							<option value="6">问题-审批评估类</option>
+							<option value="7">问题-工单投诉类</option>
+							<option value="8">问题-其他类</option>
+					</select></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">检查人</td>
+	   				<td><input class="easyui-textbox" id="crtUser" type="text" name="crtUser" editable="false">
+	   				<input class="easyui-textbox" id="crtUser1" type="text"  editable="false"></input></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">备注</td>
+	   				<td><input class="easyui-textbox" id="memo" type="text" name="memo" editable="false" style="width: 210px; height:80px"  multiline="true"></input></td>
+	   				<td>(不超过200字)</td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">创建日期</td>
+	   				<td><input class="easyui-datetimebox" id="crtDate"  name="crtDate" editable="false" readonly="true"></input></td>
+	   			</tr>
+	   		</table>
+	   	</form>
+	</div>
+
+
+	<div id="winCheckingBreak" class="easyui-window" title="质检情况记录" style="width: 500px; height: 430px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+	   	<form id="checkingFormBreak">
+	   		<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+	   			<tr>
+	   				<td align="right">流水号：</td>
+	   				<td><input class="easyui-textbox" name="appId" id="appId" type="text" editable="false"></input></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">检查情况</td>
+	   				<td><select class="easyui-combobox" name="checkCondition"  style="width:150px">
+							<option value="">---请选择---</option>
+							<option value="1">已查-系统</option>
+							<option value="2">已查-专项</option>
+							<option value="3">已查-自查</option>
+							<option value="4">已查-核销</option>
+					</select></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">质检结果</td>
+	   				<td><select class="easyui-combobox" id="checkResult" name="checkResult" style="width:150px">
+							<option value="">---请选择---</option>
+							<option value="0">正常</option>
+							<option value="1">问题-申请资料类</option>
+							<option value="2">问题-流程类</option>
+							<option value="3">问题-核实话术类</option>
+							<option value="4">问题-注记类</option>
+							<option value="5">问题-信息采集类</option>
+							<option value="6">问题-审批评估类</option>
+							<option value="7">问题-工单投诉类</option>
+							<option value="8">问题-其他类</option>
+					</select></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">检查人</td>
+	   				<td><input class="easyui-textbox" id="crtUser2" type="text" name="crtUser"></input>
+	   				<input class="easyui-textbox" id="crtUser3" type="text" ></input></td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">备注</td>
+	   				<td><input class="easyui-textbox" id="memo" type="text" name="memo" style="width: 220px; height:100px"  multiline="true"></input></td>
+	   				<td>(不超过200字)</td>
+	   			</tr>
+	   			<tr>
+	   				<td align="right">创建日期</td>
+	   				<td><input class="easyui-datetimebox" id="crtDate1"  name="crtDate" ></input></td>
+	   			</tr>
+	   		</table>
+	   	</form>
+	   	<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"  style="text-align: center; display: inline-block; width: 93px; height: 30px"
+				onclick="onBreak()">释放</a>&nbsp;&nbsp;&nbsp; 
+		</div>
+	</div>
+	</div>
+	<div id="dd"></div>
+	<div id="ddd"></div>
+</body>
+<script type="text/javascript">
+	var ydjFlag='1';//易达金标识  1易达金 2标准卡 
+	var tblObj=$("#tblSeach");
+	var currStatus='4';//作为征信挂起队列的  数据的判断依据  原本用delStatus 现在 挂起用这个 作为判断依据 
+	var currNode=$("#currNode").val();
+	//var appProd='';//申请卡片产品  易达金 征信页面 辨别 增强信息采集 页面 加载哪个的 依据 (credit_control_zxYdj.html)
+	var zxQueue='4';//当前是征信的哪个队列  0未完成 1已完成 。。。（用于子window页面的 tab页 及按钮控制）(credit_control_zxYdj.html或(credit_control_zxBzk.html))
+	//var matchingCardFlag='';//套卡 标识 
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+	$(function (){
+		$("#crtUser").next().hide();
+		$("#crtUser2").next().hide();
+		var s={"currStatus":currStatus,"currNode":currNode,"ydjFlag":ydjFlag};
+		$("#tblSeach").datagrid({
+			url:"/opas-naps/findBizInpApplZxListHangUp.json",
+			border:false,
+			//animate:true,
+			singleSelect:false,
+			frozenColumns:[[{
+				title:'操作 ',
+				field:'ck',			 
+				checkbox:true,
+				align:'center',
+				width:'50px',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'流水号',
+				field:'appId',
+				width:"150px",
+				align:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				},formatter:function(value,currentRow,index){
+					var path = "";
+					var appId = currentRow.appId;
+					var ydjFlag= currentRow.ydjFlag;
+					var appProd=currentRow.appProd;
+					var matchingCardFlag=currentRow.matchingCardFlag;
+					if(matchingCardFlag=='1'){//易达金  套的标准卡 
+						path="credit_control_zxBzk.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&appProd="+appProd+"&meuoFlag=1";
+					}else{
+						path="credit_control_zxYdj.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&appProd="+appProd+"&meuoFlag=1";
+					}
+					return  "<a href='javascript:openControlPage(\""+path+"\",\""+appId+"\")' >"+appId+"</a>";
+  					}
+				},{
+				title:'客户姓名',
+				field:'c1Cname',
+				width:"80px",
+				align:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			}]],
+			nowrap:false,
+			//pagePosition:'bottom',
+			rownumbers:true,pagination:true,pageSize:20,pageList:[15,20,50],loadMsg:'数据加载中.....',
+			queryParams:s,
+			columns:[[{
+				title:'证件号码',
+				field:'c1Idnbr',
+				width:"160px",
+				align:'center'
+			},{
+				title:'单位名称',
+				field:'c1Coname',
+				width:"200px",
+				align:'center'
+			},{
+				title:'分组天数',
+				field:'groDate',
+				width:"60px",
+				align:'center',
+				styler:function(value,row,index){
+					if(value>=3){
+						return 'color:red';
+					}
+				}
+			},{
+				title:'进入队列<br>天数',
+				field:'queDate',
+				width:"60px",
+				align:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			}
+			,{
+				title:'快速审批标识',
+				field:'quickCardFlag',
+				width:"90px",
+				align:'center',
+				formatter: function(value,row,index){
+					if(value=="1"||value=="2"){
+						return "<font color='red'>是</font>";
+					}else{
+						return "";
+					}
+			    }
+			}
+			,{
+				title:'电核情况',
+				field:'telcheckResult',
+				width:"70px",
+				align:'center',
+				formatter: function(value,row,index){
+					if(value=="97Y"){
+						return "侧核与正核正常";
+					}else if(value=="98Y"){
+						return "正核正常";
+					}else if(value=="99Y"){
+						return "侧核正常 ";
+					}else{
+						return "";
+					}
+			    }
+			}
+			,{
+				title:'集体电核',
+				field:'teamTelcheckStatus',
+				width:"70px",
+				align:'center',
+				formatter: function(value,row,index){
+					if(value=="2"){
+						return "完成";
+					}else{
+						return "";
+					}
+			    }
+			},{
+				title:'提示',
+				field:'patchStatus',
+				width:"95px",
+				align:'center',
+				formatter: function(value,row,index){
+					var str = '';
+					if(row.patchStatusR==null||row.patchStatusR==''||row.patchStatusR=='0'){//人行没有 
+						str+='R';
+					}if((row.patchStatusP==null||row.patchStatusP==''||row.patchStatusP=='0')&&
+						(row.patchStatusPP==null||row.patchStatusPP==''||row.patchStatusPP=='0')){//公安没有 
+						str+=' P';//公安且可信任身份证没有
+					}if(row.isHavecardCust!=null&&row.isHavecardCust!=''&&row.isHavecardCust!='0'){//有过卡 
+						str+=' C';
+					}
+					if(row.completedFlagYdj=='1'||row.completedFlagBzk=='1'){
+						str+=' 补件完成';
+					}else if(row.completedFlagYdj=='2'||row.completedFlagBzk=='2'){
+						str+=' 补件未达';
+					}else if(row.completedFlagYdj=='3'||row.completedFlagBzk=='3'){
+						str+=' 无法补件';
+					}
+					return  str;
+			    }
+			},{
+				title:'备注',
+				field:'remark',
+				width:"80px",
+				align:'center',
+				formatter: function(value,row,index){
+					var appId=row.appId;
+					var stopFlag="";
+					if(row.stopFlag){
+					  stopFlag=row.stopFlag;
+					}
+						if(value==0){
+						if(stopFlag=='0'||stopFlag==""){//既没有全流程备注，也没有质检
+							return "";	
+						}
+						if(stopFlag=='1'){//没有全流程备注，但质检状态为提交
+							return "<a href='javascript:selectQualityRecord(\""+appId+"\")'; >质检</a>";
+						}
+						if(stopFlag=='2'){
+							return "<a href='javascript:breakQualityStatus(\""+appId+"\")'; >中断</a>";
+						}
+					}else{
+						if(stopFlag=='0'||stopFlag==""){//有全流程备注，没有质检
+							return "<a href='javascript:opWind(\""+appId+"\")' >查看</a>";	
+						}
+						if(stopFlag=='1'){//有全流程备注，但质检状态为提交
+							return "<a href='javascript:opWind(\""+appId+"\")' >查看</a>&nbsp;<a href='javascript:selectQualityRecord(\""+appId+"\")'; >质检</a>";
+						}
+						if(stopFlag=='2'){
+							return "<a href='javascript:opWind(\""+appId+"\")' >查看</a>&nbsp;<a href='javascript:breakQualityStatus(\""+appId+"\")'; >中断</a>";
+						}	 
+					} 
+				}
+			},{
+				title:'最后操作员',
+				field:'lastOptUser',
+				width:"90px",
+				align:'center'
+			},{
+				title:'最后操作时间',
+				field:'lastOptTime',
+				width:"150px",
+				align:'center',
+				formatter: function (val,row,index){
+					/* var date=new Date(val);
+					var currDay=date.getDate();
+					var currMonth=date.getMonth()+1;
+					var currHour=date.getHours();
+					var currMinute=date.getMinutes();
+					var currSecond=date.getSeconds();
+					var currDate=date.getFullYear()+'-'+currMonth+'-'+currDay+' '+currHour+':'+currMinute+':'+currSecond;
+					return currDate; */
+					return val;
+				}
+			}
+			]],onClickCell: function(index,field,value){
+				/* if(field=='remark'&&value!=""){
+					var appId=tblObj.datagrid("getRows")[index].appId;
+					opWind(appId);
+					} */
+				}
+		});
+		initTableHeight('#tblSeach','1');//页面大小初始化
+	});
+	//checkbox 选中当前 取消其他 的 方法 
+	function choseThisCheckBox(obj){
+		if(obj.is(":checked")){
+			$("input[name=orderOption]:checkbox").prop('checked',false);
+			obj.prop('checked',true);
+		}
+	}
+	//输入框 小写变大写 
+	function becomeUpperCase(obj){
+		//var currTextBox=document.getElementById("lsh");
+		obj.value=obj.value.toUpperCase();
+	}
+	//解挂 按钮 
+	function updateZxApplyYdjHangUpCancle(){
+		$.messager.confirm('请确认','是否将您所选择的申请件解挂?',function(r){
+			if(r){
+				var res =[];
+				var json={};
+				var rowsDatagrid=$("#tblSeach").datagrid("getSelections");
+				var rowNum=rowsDatagrid.length;
+				if(rowNum==0){
+					$.messager.alert("征信解挂提示","请选择您要解挂的申请件。","warning");
+					return null;
+				}
+				for(var i=0;i<rowNum;i++){
+					if(!json[rowsDatagrid[i].appId.substring(0,15)]){
+						res.push(rowsDatagrid[i].appId.substring(0,15));
+						json[rowsDatagrid[i].appId.substring(0,15)]=1;
+					}	
+				}
+				var listAppId=new Array();
+			//	var rowsDatagrid=$("#tblSeach").datagrid("getSelections");
+				var rowNumOne=res.length;
+				for(var i=0;i<rowNumOne;i++){
+						var obj=new Object();
+						obj.appId=res[i];//截取前15位  为去重操作 
+						listAppId.push(obj);
+				}
+				var zxYdjHangUpData ={"listAppId":listAppId};
+				$cf.ajax({
+						url : "/opas-naps/updateZxApplyYdjHangUpCancle.json",
+						data : zxYdjHangUpData,
+						onSuccess : function(data) {
+						if(data.RSP_BODY.success){
+							var s={"currStatus":currStatus,"currNode":currNode,"ydjFlag":ydjFlag};
+							tblObj.datagrid("reload", s);
+						}else{
+							$.messager.alert("征信解挂提示",data.RSP_BODY.msg,"warning");
+							}
+						}
+				}); 
+				
+			}
+		});
+	}
+	
+	function opWind(appId) {
+		//var appId = $("#tblSeach").datagrid("getSelected").appId;
+		var opts = $.extend({
+			title : '查看备注',
+			showType : 'show',
+			showSpeed : 400,
+			top : 100,
+			modal : false,
+			onOpen : function() {
+				$.messager.progress('close');
+			},
+			onClose : function() {
+				processInsNo = "";
+				$(this).dialog('destroy');
+				$(this).appendTo($("body"));
+			}
+		}, {});
+		opts.content = '<iframe id="" src="../common/comment.html?appId='+appId+'" allowTransparency="true" scrolling="auto" width="560px" height="500px" frameBorder="0" name=""></iframe>';
+		$('#dd').dialog(opts);
+		var src = $('div>iframe').attr("src");
+		$('#dd').dialog('refresh');
+	}
+	
+	function opAddWind() {
+		var sel = $("#tblSeach").datagrid("getSelected");
+		if(sel==null){
+			alert("请选择!");
+		}else{
+			var opts = $.extend({
+				title : '添加备注',
+				showType : 'show',
+				showSpeed : 400,
+				top : 100,
+				modal : false,
+				onOpen : function() {
+					$.messager.progress('close');
+				},
+				onClose : function() {
+					processInsNo = "";
+					$(this).dialog('destroy');
+					$(this).appendTo($("body"));
+				}
+			}, {});
+			opts.content = '<iframe id="" src="../common/add_comment.html?sel='+sel.appId+'" allowTransparency="true" width="260px" height="200px" frameBorder="0" name=""></iframe>';
+			$('#ddd').dialog(opts);
+			var src = $('div>iframe').attr("src");
+			$('#ddd').dialog('refresh');
+		}
+	}
+	
+	//关闭页面
+	function close() {
+		$("#dd").window('close');
+		$("#ddd").window('close');
+	}
+	function closeAddComment() {
+		$("#ddd").window('close');
+	}
+	function checkAndSearchTab(formName, tblName) {
+		//本方法自己拼装json串传给后台，注意前台多选框取值以及下拉框取值写法以及后台接收的写法
+		var lsh=$("#lsh").val().toUpperCase();
+		var khxm=$("#khxm").val();
+		var zjhm=$("#zjhm").val();
+		var dwmc=$("#dwmc").val();
+		var checkStr="";
+		$("input[name='orderOption']:checked").each(function () {
+			var checkValue = $(this).val(); //获取选中的标签值
+			//这一句是难点，注意看上面定义的元素的属性，以及easyui下拉框取值的写法
+			//checkStr += checkValue +",";
+			checkStr += checkValue;
+		});
+		var tblObj = $("#" + tblName + "");
+		var formObj = $("#" + formName + "");
+		var data = formObj.serializeArray();
+		var jsonData = common.formToJson(data);
+		var s ={"lsh":lsh,"khxm":khxm,"zjhm":zjhm,"dwmc":dwmc,"currStatus":currStatus,"currNode":currNode,"ydjFlag":ydjFlag,"checkStr":checkStr};
+		tblObj.datagrid("reload", s);
+		
+	}
+	
+function reload(){
+	var s={"currStatus":currStatus,"currNode":currNode,"ydjFlag":ydjFlag};
+	tblObj.datagrid("reload", s);
+}
+function setDataSelect(data) {
+	 $("#checkingFormSelect").form("load", data); 
+	 $("#crtDate").datetimebox('setValue',formatDate1(data.crtDate));
+}
+
+function setDataBreak(data) {
+	 $("#checkingFormBreak").form("load", data);
+	 $("#crtDate1").datetimebox('setValue',formatDate1(data.crtDate));
+}
+//日期格式转换
+function formatDate1(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+};  
+//点击质检查看质检结果
+function selectQualityRecord(appId){
+	$cf.ajax({
+		url:"/opas-naps/select_QualityChecking.json",
+		data:{'appId':appId},
+		onSuccess:function(data){
+			if(data.RSP_BODY.isSuccess){
+				$("#winCheckingSelect").window({
+					closed : false,
+					collapsible : false,
+					minimizable : false,
+					onBeforeOpen : setDataSelect(data.RSP_BODY.qualityChecking)
+				});
+				$("#crtUser1").textbox('setValue',data.RSP_BODY.userName);
+			}else{
+				$.messager.alert("操作提示", "操作异常，原因:后台运行异常" + data.exMsg, "error");
+			}
+		}
+	});
+}
+
+//点击中断查看质检结果
+function breakQualityStatus(appId){
+	$cf.ajax({
+		url:"/opas-naps/select_QualityChecking.json",
+		data:{'appId':appId},
+		onSuccess:function(data){
+			if(data.RSP_BODY.isSuccess){
+				$("#winCheckingBreak").window({
+					closed : false,
+					collapsible : false,
+					minimizable : false,
+					onBeforeOpen : setDataBreak(data.RSP_BODY.qualityChecking)
+				});
+				$("#crtUser3").textbox('setValue',data.RSP_BODY.userName);
+			}else{
+				$.messager.alert("操作提示", "操作异常，原因:后台运行异常" + data.exMsg, "error");
+			}
+		}
+	});
+}
+//执行释放操作申请件可向下流转
+function onBreak(){
+	var jsondata = common.formToJson($("#checkingFormBreak").serializeArray());
+	$cf.ajax({
+		url:"/opas-naps/qualityChecking_release.json",//采用质检纪录的保存方法（可以更新质检状态）
+		data:jsondata,
+		onSuccess:function(data){
+			if(data.RSP_BODY.isSuccess){
+				top.$cf.showMsg("操作成功!");
+				$("#winCheckingBreak").window("close");
+				$("#tblSeach").datagrid("reload");
+			}else{
+				$.messager.alert("操作提示", "操作异常，原因:后台运行异常" + data.exMsg, "error");
+			}
+		}
+	})
+}
+/**打开控制页面*/
+function openControlPage(path,appId){
+	window.open(path,appId,"toolbar=no,location=no,left=0,resizable=no,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-10));
+}
+</script>
+</html>

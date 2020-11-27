@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>华夏新审批系统平台</title>
+<link rel="stylesheet" type="text/css" href="css/index/index.css"></link>
+<link rel="stylesheet" type="text/css" href="css/tanchu_style.css"></link>
+<script type="text/javascript" src="js/common/win.js"></script>
+<script type="text/javascript" src="topui/topui.js"></script>
+<script type="text/javascript" src="js/login/login.js"></script>
+<script type="text/javascript" src="js/common/jqCommon.js"></script>
+<script type="text/javascript" src="js/login/md5.js"></script>
+<script type="text/javascript">
+	//2.如果调用弹出窗口须定义windata全局变量
+	//windata值为JSON格式数据
+	var windata = [ {
+		"img" : "影像1",
+		"url" : "../../images/0_1.jpg"
+	}, {
+		"img" : "影像2",
+		"url" : "../../images/0_3.jpg"
+	} ];
+	function winShow() {
+		var url = 'web/win/image.html';
+		ishow(url);
+	}
+</script>
+</head>
+<body class="easyui-layout" id="mylayout">
+	<div
+		data-options="region:'north',title:'North Title',split:true,noheader:true,border:false,"
+		style="width: 100%; height: 65px;">
+		<div id="header">
+			<div id="user_info">
+				<span><label id="usercode" ></label></span>
+				<ul>
+					<!--  
+					<li><a href="javascript:winShow();">影像信息</a></li>
+					<li><a>|</a></li>
+					-->
+					<li><a href=javascript:updatePassword();>修改密码 </a></li>
+				</ul>
+				<button class="btn-exit" title="注销" onClick="fnExit();"></button>
+			</div>
+			<div id="login_role"></div>
+		</div>
+	</div>
+
+	<div data-options="region:'west',title:'&nbsp;',split:true,"
+		style="width: 240px; height: 100%;">
+		<div class="left_menu" style="top: 28px;"></div>
+		<div id="threeMenu" class="list34_box">
+			<div id="threeList" class="list_3"></div>
+		</div>
+	</div>
+	<div
+		data-options="region:'center',title:'右区域',split:true,noheader:true,border:false"
+		style="width: 88%; height: 100%;">
+		<div id="box_right"
+			style="top: 0px; left: 0px; width: 100%; height: 100%;">
+			<div class="easyui-tabs" id="contents" style="width: 100%;"></div>
+		</div>
+		<div id="tabsMenu" data-options="onClick:menuHandler"
+			class="easyui-menu" style="width: 100px;">
+			<div id="0">关闭</div>
+			<div id="1">关闭其他</div>
+			<div id="2">关闭所有</div>
+		</div>
+	</div>
+	<div id="winEdit" class="easyui-window" title="密码修改"
+		style="width: 400px; height: 300px" top="60px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<br> <br>
+			<table>
+			    <tr>
+					<td align="right" width="30%">原密码:</td>
+					<td align="center" width="60%"><input id="oldPassword"
+						name="oldPassword" type="password"
+						class="easyui-validatebox textbox"></td>
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="right" width="30%">新密码:</td>
+					<td align="center" width="60%"><input id="newPassword"
+						name="newPassword" type="password"
+						class="easyui-validatebox textbox"></td>
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="right">确认密码:</td>
+					<td align="center"><input id="reuserPassword"
+						name="reuserPassword" type="password"
+						class="easyui-validatebox textbox"
+						validType="equals['#editForm input[name=newPassword]']" /></td>
+				</tr>
+				<tr>
+					<td align="center" colspan="2">&nbsp;<br> <input
+						type="button" style="cursor: pointer;" onclick="onUpdate();"
+						border="0" class="button_login" value="保&nbsp;&nbsp;存">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" style="cursor: pointer;"
+						onclick="onConcle('winEdit','editForm');" border="0"
+						class="button_login" value="取&nbsp;&nbsp;消">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div id="divBack" class="bg"></div>
+	<div id="divContent" class="box">
+		<table border="1">
+			<tr>
+				<td class="topleft "></td>
+				<td class="topmidle "><span id="tu"></span><span class="titles">选择登录角色</span></td>
+				<td class="topright"></td>
+			</tr>
+			<tr>
+				<td class="midleleft"></td>
+				<td class="midle">
+					<div
+						style="width: 807px; height: 463px; background-color: #F5FBFE; position: relative;">
+						<br /> <br /> <br /> <br /> <input type="hidden" id="userId"></input>
+						<!-- <div class="xuanze">
+							请选择登录机构： <select id="orgId" name="orgId"></select>
+						</div> -->
+						<div class="xuanze">
+							请选择登录角色： <select id="roleId" name="roleId"></select>
+						</div>
+						<div class="sure">
+							<button onClick="loadUserData();">
+								<strong>确&nbsp;&nbsp;&nbsp;定</strong>
+							</button>
+						</div>
+					</div>
+				</td>
+				<td class="midleright"></td>
+			</tr>
+			<tr>
+				<td class="bottomleft"></td>
+				<td class="bottommidle"></td>
+				<td class="bottomright"></td>
+			</tr>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+	var tabObj = $("#contents");
+	var relationInfo = {
+		"loginInfo" : {
+			"token" : "",
+			"tokenDate" : ""
+		},
+		"roleInfo" : "",
+		"orgInfo" : ""
+	};
+	var params = this.window.location.search;
+	var uuid = params.substr(6, this.params.length + 1);
+	var mainCenter = $("#mainCenter");
+	var centerTab = $("#centerTab");
+	var menuTree = $("#menuTree");
+	var userCode;//用户代码
+	$(function() {
+		//加载用户数据
+		$cf.ajax({
+			url : "/opas-naps/userRoleOrg.json",
+			data : {
+				"uuid" : uuid
+			},
+			onSuccess : function(node) {
+				var dataObj = node.RSP_BODY;
+				if (dataObj.exceptionMsg) {
+					hidediv();
+					alert(dataObj.exceptionMsg);
+					return;
+				} else if (dataObj.roleInfo) {
+					fillData(dataObj);
+				} else {
+					showdiv();
+					setRoleOrgData(dataObj.userRoles);
+					$("#userId").val(dataObj.userId);
+				}
+			}
+		});
+	});
+	//导航菜单
+	function loadMenuTree(menus) {
+		var items = "<ul id=\"nav_dot\">";
+		for (var i = 0; i < menus.length; i++) {
+			var data = menus[i];
+			var childs = data.children;
+			var item = buildlines(data, childs);
+			items = items + item;
+		}
+		items = items + "</ul>";
+		$(".left_menu")[0].innerHTML = items;
+		menuStyle(12);
+		addIndCont();
+	}
+	//导航列表 
+	function buildlines(data, childs) {
+		var a = "";
+		var begli = "<li>";
+		var endli = "</li>";
+		var begh4 = "<h4 class=\"M1\">";
+		//var span = "<span></span>" + data.text + "<b class=\"shou_qi\"></b>";
+		var span = "<span></span>"+data.text+"<b class=\"shou_qi\"></b>";
+		var endh4 = "</h4>";
+		var begdiv = "<div class=\"list-item none\">";
+		var enddiv = "</div>";
+		if (childs) {
+			for (var j = 0; j < childs.length; j++) {
+				var obj = childs[j];
+				a += "<a id='" + obj.id + "' name='" + obj.text
+						+ "' href=\"javascript:addTab('" + obj.text + "','"
+						+ obj.url + "','" + obj.id + "')\">" + obj.text
+						+ "<span class = \"menu_unsel  abc\"></span></a>";
+			}
+		}
+		return begli + begh4 + span + endh4 + begdiv + a + enddiv + endli;
+	}
+	//添加tab页
+	function addTab(text, url, id) {
+		//var tab = tabObj.tabs("getTab", text);
+		//var index = tabObj.tabs("getTabIndex", tab);
+		var tab=getTabbyId(id);
+		if (tab) {
+			//var index = tabObj.tabs("getTabIndex", tab);
+			//tabObj.tabs("select", index);
+			//tab.panel('open').panel('refresh',url);
+			tab.panel('open');
+			refreshTab(tab);
+
+		} else {
+			//var tmp = new Date().getMilliseconds();
+			/* if(id){
+				text = text + "<span id='sp' style='display:none;'>" + tmp + "</span>";
+			} */
+			tabObj
+					.tabs(
+							'add',
+							{
+								id : id,
+								title : text,
+								selected : true,
+								closable : true,
+								content : '<iframe name="'
+										+ text
+										+ '" src="'
+										+ url
+										+ '" width="100%" height="900px" frameborder="0" scrolling="auto"></iframe>'
+							});
+		}
+	};
+	//tabs 右键菜单
+	tabObj.tabs({
+		border : false,
+		onContextMenu : function(e, title, index) {
+			e.preventDefault();
+			$("#tabsMenu").menu('show', {
+				left : e.pageX,
+				top : e.pageY
+			}).data("tabIndex", index);
+		},
+		onSelect : function(title, index) {
+			var homeName = "首页";
+			var menuId = tabObj.tabs("getTab", index)[0].id;
+			var selTbl = $("a[id='" + menuId + "']");
+			$("#nav_dot").find("a").removeClass("selecteds");
+			selTbl.addClass("selecteds");
+			$(".menu_sel").removeClass("menu_sel");
+			$(selTbl.children()[0]).addClass("menu_sel");
+			var h4 = selTbl.parent().parent().find("H4");
+			tabCase(h4);
+			setTimeout(function() {
+				var num = $cf.getStore("num", "index");
+				if (title != "首页") {
+					window.frames[homeName].clearInterval(num);
+				} else {
+					window.frames[title].loadData();
+					window.frames[title].setTime();
+				}
+			}, 1800);
+		},
+		onAdd : function() {
+		}
+	});
+	//tab与菜单联动
+	function tabCase(obj) {
+		var $div = obj.siblings(".list-item");
+		if ($div.is(":hidden")) {
+			$("#nav_dot li").find(".list-item").slideUp(600);
+			$("#nav_dot li").removeClass("selected");
+			obj.parent().addClass("selected");
+			$div.slideDown(600);
+		}
+	}
+	//菜单click事件 
+	function menuHandler(item) {
+		var tabs = tabObj.tabs("tabs");
+		var data = $.extend([], tabs);
+		var index = $("#tabsMenu").data("tabIndex");
+		if (item.id == 0 && index != 0) {
+			tabObj.tabs("close", index);
+		} else if (item.id == 1) {
+			for (var i = data.length; i >= 0; i--) {
+				if (i == index) {
+					continue;
+				}
+				if (i != 0) {
+					tabObj.tabs("close", i);
+				}
+			}
+			tabObj.tabs("select", 1);
+		} else if (item.id == 2) {
+			for (var i = data.length; i >= 0; i--) {
+				if (i != 0) {
+					tabObj.tabs("close", i);
+				}
+			}
+		} else if (item.id == 3) {
+			//		var currTab = tabObj.tabs("getSelected");//获取当前选中的tab
+			//		var url  =$(currTab.panel('options').content).attr('src'); //该tab iframe的src属性
+			//		tabObj.tabs('update',{
+			//			tab:currTab,
+			//			options:{
+			//				href: url
+			//			}
+			//		});
+		}
+	}
+	//给角色与机构选项赋值
+	function setRoleOrgData(roles, orgs) {
+		$("#roleId").append("<option value=''>请选择</option>");
+		for (var i = 0; i < roles.length; i++) {
+			var role = roles[i];
+			$("#roleId").append(
+					"<option value='"+role.roleId+"'>" + role.roleName
+							+ "</option>");
+		}
+
+		/* for (var j = 0; j < orgs.length; j++) {
+			var org = orgs[j];
+			$("#orgId").append(
+					"<option value='"+org.orgId+"'>" + org.orgName
+							+ "</option>");
+		} */
+	}
+	//缓存用户相关信息
+	function cacheUserRelation() {
+		$cf.setStore("userRelInfo", relationInfo, "index");
+	}
+
+	//选择角色与机构后加载相关数据
+	function loadUserData() {
+		var roleId = $("#roleId").find("option:selected").val();
+		var userId = $("#userId").val();
+		//var orgId = $("#orgId").find("option:selected").val()
+		/* var userId = $("#userId").val();
+		if (roleId == null || roleId == "") {
+			alert("请选择登录角色!");
+			return;
+		}
+		 */
+		var paramData = {
+			"roleId" : roleId,
+			"loginId" : userId
+		};
+
+		$cf.ajax({
+			url : "/opas-naps/userRelationInfo.json",
+			data : paramData,
+			onSuccess : function(node) {
+				var dataObj = node.RSP_BODY;
+				if (dataObj.exceptionMsg) {
+					alert(dataObj.exceptionMsg);
+					return;
+				} else if (dataObj.roleInfo) {
+					fillData(dataObj);
+				} else {
+					fillData(dataObj);
+				}
+			}
+		});
+	}
+	//填充数据
+	function fillData(dataObj) {
+		hidediv();
+		loadMenuTree(dataObj.menuInfo);
+		relationInfo.menuInfo = dataObj.menuInfo;
+		relationInfo.userInfo = dataObj.userInfo;
+		relationInfo.roleInfo = dataObj.roleInfo;
+		//relationInfo.orgInfo = dataObj.orgInfo;
+		relationInfo.loginInfo.token = dataObj.token;
+		relationInfo.loginInfo.tokenDate = new Date();
+		cacheUserRelation();
+		if (dataObj.roleInfo !== null && dataObj.roleInfo !== undefined
+				&& dataObj.roleInfo !== "") {
+			setUserCode(dataObj.userInfo.userCode, dataObj.roleInfo.roleName);
+		} else {
+			setUserCode(dataObj.userInfo.userCode, "全角色登入");
+		}
+	}
+
+	//显示遮罩层
+	function showdiv() {
+		document.getElementById("divBack").style.display = "block";
+		document.getElementById("divContent").style.display = "block";
+	}
+	//隐藏遮罩层
+	function hidediv() {
+		document.getElementById("divBack").style.display = 'none';
+		document.getElementById("divContent").style.display = 'none';
+	}
+
+	// 注销
+	function fnExit() {
+		var userId = "";
+		if($cf.getStore("userRelInfo", "index")!==null){
+			userId=$cf.getStore("userRelInfo", "index").userInfo.userId;
+		}
+		$cf.ajax({
+			url : "/opas-naps/logout.json",
+			data : {
+				"userIds" : userId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.backcode == "1") {
+					$cf.delStore("userRelInfo", "index")
+					window.location.href = "login.html";
+				}else{
+					window.location.href = "login.html";
+				}
+			}
+		});
+	}
+
+	//修改密码
+	function updatePassword() {
+		$("#winEdit").window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+		});
+	}
+
+	function onConcle(obj, editForm) {
+		var winObj = $("#" + obj);
+		var fromObj = $("#" + editForm);
+		fromObj.form("clear");
+		winObj.window("close");
+	}
+
+	function onUpdate() {
+		var oldPassword = $("#oldPassword").val();
+		var newPassword = $("#newPassword").val();
+		var reuserPassword = $("#reuserPassword").val();
+		var userPassword = "";
+		if (newPassword==null||newPassword == "") {
+			$.messager.alert("操作提示", "密码不能为空，请重新输入!", "warning");
+			return;
+		}
+		//进行 密码强度的控制 
+		 var passwordRequire = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#%^&*? ]).*$/;
+		var judge=passwordRequire.test(newPassword);
+		if(judge){
+			if (newPassword != reuserPassword) {
+				$.messager.alert("操作提示", "密码不一致，请重新输入!", "warning");
+				return;
+			}
+			if (newPassword != null && newPassword != "") {
+				userPassword = newPassword;
+			}
+			oldPassword=hex_md5(oldPassword);  
+			userPassword=hex_md5(userPassword);
+			$cf.ajax({
+				url : "/opas-naps/updatePassword.json",
+				data : {"oldPassword":oldPassword,"userPassword":userPassword},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						top.$cf.showMsg("密码修改成功!");
+						onConcle('winEdit', 'editForm');
+					} else {
+						$.messager.alert("操作提示", "修改失败，原因:" + data.RSP_BODY.exMsg, "warning");
+						onConcle('winEdit', 'editForm');
+						return;
+					}
+				}
+			});
+		}else{
+			$.messager.alert("提示", "新密码，最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符[!@#%^&*? ]", "warning");
+			return;
+		}
+	}
+	// -- 首页菜单事件及样式设置 --
+	// 菜单排版
+	function menuStyle(id) {
+		var $obj = $("#nav_dot");
+		$obj.find("h4").hover(function() {
+			$(this).addClass("hover");
+			$("#threeMenu").css({
+				'left' : '242px',
+				'top' : top + 'px',
+				'display' : 'none',
+				'border-top' : '1px solid #95b8e7'
+			});
+		}, function() {
+			$(this).removeClass("hover");
+		});
+		$obj.find("h4").click(function() {
+			var $div = $(this).siblings(".list-item");
+			if ($(this).parent().hasClass("selected")) {
+				$div.slideUp(600);
+				$(this).parent().removeClass("selected");
+			}
+			if ($div.is(":hidden")) {
+				$("#nav_dot li").find(".list-item").slideUp(600);//滑动隐藏
+				$("#nav_dot li").removeClass("selected");
+				$(this).parent().addClass("selected");
+				$div.slideDown(600);//滑动展开
+
+			}
+		});
+		//菜单锁定
+		$obj.find("a").click(function() {
+			$obj.find("a").each(function(m, n) {
+				n.className = "";
+			});
+			$(".menu_sel").removeClass("menu_sel");
+			$($(this).children()[0]).addClass("menu_sel");
+			if ($(this).hasClass("selecteds")) {
+				$(this).removeClass("selecteds");
+			} else {
+				$(this).addClass("selecteds");
+			}
+		});
+		//二级菜单悬浮事件
+		$obj.find("a").hover(function() {
+			var menuName = this.name;
+			var menus = $cf.getStore("userRelInfo", "index").menuInfo;
+			var obj = filterMenu(menus, menuName);
+			var menulist = loadThreeMenu(obj, menuName);
+			$("#threeList")[0].innerHTML = menulist;
+			if (menulist) {
+				var top = $(this).offset().top;
+				$("#threeMenu").css({
+					'left' : '242px',
+					'top' : top + 'px',
+					'display' : 'block',
+					'border-top' : '1px solid #95b8e7'
+				});
+			}
+		});
+	}
+	//过虑菜单对象
+	function filterMenu(menus, menuName) {
+		var istrue = false;
+		for (var i = 0; i < menus.length; i++) {
+			menuObj = menus[i];
+			if (menuObj.children) {
+				for (var j = 0; j < menuObj.children.length; j++) {
+					var menu = menuObj.children[j];
+					if (menu.text == menuName) {
+						istrue = true;
+						break;
+					}
+				}
+			}
+			if (istrue) {
+				break;
+			}
+		}
+		return menus[i];
+	}
+	//显示三级菜单
+	function loadThreeMenu(obj, menuName) {
+		var menulist = "";
+		var menuObj;
+		if (obj.children) {
+			for (var i = 0; i < obj.children.length; i++) {
+				menuObj = obj.children[i];
+				if (menuObj.text == menuName && menuObj.children) {
+					for (var j = 0; j < menuObj.children.length; j++) {
+						var menu = menuObj.children[j];
+						var url = menu.url;
+						if (!url) {
+							url = "javascript:void(0);"
+						}
+						menulist += "<a href='"+url+"' class=\"three-a\" style=\"border-top:1px solid #95b8e7;\">"
+								+ menu.text + "</a>";
+					}
+				}
+			}
+		}
+		return menulist;
+	}
+	//显示用户名
+	function setUserCode(usercode, rolename) {
+		$("#usercode").text(usercode);
+		$("#login_role").text(rolename);
+		userCode = usercode;//用户代码赋值
+
+	}
+
+	// -- 首页统计信息区域 --
+	// 添加首页公共内容
+	function addIndCont() {
+		tabObj
+				.tabs(
+						'add',
+						{
+							title : "首页",
+							selected : true,
+							closable : false,
+							content : '<iframe name="首页" src="./indexContent.html" width="100%" height="680px" frameborder="0" scrolling="auto"></iframe>'
+						});
+	}
+	//关闭tabs
+	function closeTab(tabName) {
+		var obj = getTabProperty();
+		tabObj.tabs('close', obj.title);
+	}
+	//获取当前选中的tab页面相关属性
+	function getTabProperty() {
+		return tabObj.tabs("getSelected").panel("options");
+	}
+	function getTabbyId(id){
+		var tabs = tabObj.tabs("tabs");
+		var data = $.extend([], tabs);
+		for(var i =0;i<data.length;i++){
+			var tab = data[i];
+			if(tab.panel("options").id==id){
+				return tab;
+			}
+		}
+		return null
+	}
+	function refreshTab(currentTab){
+		var url = $(currentTab.panel('options')).attr('href');
+		tabObj.tabs('update',{
+			tab:currentTab,
+			options:{
+				href:url
+			}
+		});
+	}
+</script>
+</html>

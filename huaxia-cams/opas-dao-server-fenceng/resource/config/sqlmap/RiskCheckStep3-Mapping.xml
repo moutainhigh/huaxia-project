@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="riskcheck_step3">
+	
+  <!-- 手机号码CELL_PHONE	人行    单位电话C_COMP_PHONE	人行-->
+  <resultMap id="cellphonepbocRiskResultMap" type="com.huaxia.opas.domain.thirdparty.PbocInfo" >
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+ 	<result column="phone_num" property="phoneNum" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="Query_OPAS_PBOC_PERSONAL_INFO" resultMap="cellphonepbocRiskResultMap" parameterType="java.util.Map" >
+    select APP_ID,phone_num from PBOC_PHONE_NUMBER_DETAIL
+    where app_id = #{appId,jdbcType=VARCHAR} order by updated_date desc
+  </select>
+  
+	 <!--    单位名称	人行人行个人职业信息表-->
+	 <!--    单位地址	人行人行个人职业信息表-->
+  <resultMap id="addresspbocRiskResultMap" type="com.huaxia.opas.domain.thirdparty.ProfessionInfo" >
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+ 	<result column="COMP_ADDR" property="compAddr" jdbcType="VARCHAR" />
+ 	<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+ 	<result column="unit_phone" property="unitPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="Query_OPAS_PBOC_PROFESSION_INFO" resultMap="addresspbocRiskResultMap" parameterType="java.lang.String">
+    select COMPANY,COMP_ADDR,unit_phone,APP_ID from 
+    OPAS_PBOC_PROFESSION_INFO where app_id = #{appId,jdbcType=VARCHAR}
+    order by info_upd_time desc
+  </select>
+  
+    <!--住址地址	人行-->
+    <!--帐单地址	人行--><!--备注：账单地址就是住宅地址和单位地址其中之一，所以账单地址不在进行风险检查-->
+  <resultMap id="addresspbocresidentRiskResultMap" type="com.huaxia.opas.domain.thirdparty.ResidenceInfo" >
+    <result column="RESIDENT_ADDR" property="residentAddr" jdbcType="VARCHAR" />
+     <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_PBOC_RESIDENCE_INFO" resultMap="addresspbocresidentRiskResultMap" >
+    select RESIDENT_ADDR,APP_ID from OPAS_PBOC_RESIDENCE_INFO where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- ==========================crm============================ -->
+ <!-- 手机号码  MOBILEPHONE crm    单位电话 BUSPHONE	crm-->
+  <resultMap id="cellphonecrmRiskResultMap" type="com.huaxia.opas.domain.riskcheck.IfsCustInfo" >
+    <result column="MOBILEPHONE" property="mobilephone" jdbcType="VARCHAR" />
+ 	<result column="BUSPHONE" property="busphone" jdbcType="VARCHAR" />
+ 	 <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+ 	<result column="BUSADDR" property="busaddr" jdbcType="VARCHAR" />
+ 	<result column="HOMEADDR" property="homeaddr" jdbcType="VARCHAR" />
+ 	<result column="app_id" property="appId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="Query_SP_APS_IFS_CUST_INFO_PHONE" resultMap="cellphonecrmRiskResultMap" parameterType="java.util.Map" >
+    select app_id,MOBILEPHONE,BUSPHONE,COMPANY,BUSADDR,HOMEADDR from SP_APS_IFS_CUST_INFO
+    where app_id =#{appId,jdbcType=VARCHAR}  
+  </select>
+  
+	 <!--    单位名称	crm-->
+	 <!--    单位地址	crm-->
+	 <!--    住宅地址	crm-->
+  <resultMap id="addresscrmRiskResultMap" type="com.huaxia.opas.domain.riskcheck.IfsCustInfo" >
+    <result column="CUSTID" property="custid" jdbcType="VARCHAR" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+ 	<result column="BUSADDR" property="busaddr" jdbcType="VARCHAR" />
+ 	<result column="HOMEADDR" property="homeaddr" jdbcType="VARCHAR" />
+ 	<result column="INSIDE_APP_NO" property="insideAppNo" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="Query_SP_APS_IFS_CUST_INFO_ADDR" resultMap="addresscrmRiskResultMap" parameterType="java.lang.String">
+   	select CUSTID,COMPANY,BUSADDR,HOMEADDR,INSIDE_APP_NO from SP_APS_IFS_CUST_INFO where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  <resultMap id="billingRiskResultMap" type="com.huaxia.opas.domain.riskcheck.Union3014Risk">
+  	<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+  	<result column="ADD_1" property="add1" jdbcType="VARCHAR" />
+    <result column="ADD_2" property="add2" jdbcType="VARCHAR" />
+    <result column="ADD_3" property="add3" jdbcType="VARCHAR" />
+    <result column="ADD_4" property="add4" jdbcType="VARCHAR" />
+    <result column="ADD_5" property="add5" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="INTERFACE_3014_Billing_Address" resultMap="billingRiskResultMap" parameterType="java.lang.String">
+   	select t.app_id, t.add_1, t.add_2, t.add_3, t.add_4, t.add_5
+  from OPAS_INTERFACE_3014 t
+  	 where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="INTERFACE_3002_mobilePhone" resultType="java.lang.String" parameterType="java.lang.String">
+   	select MOBILEPHONE from OPAS_INTERFACE_3002 where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="Query_OPAS_TELCHECK_ADDNOTE_BY_APPID" resultType="java.lang.Integer" parameterType="java.lang.String">
+   	select count(*) from OPAS_TELCHECK_ADDNOTE where crt_user = 'SYSTEM' and app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  <resultMap id="TelcheckAddnoteMap" type="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="TEL_SOURCE" property="telSource" jdbcType="VARCHAR" />
+    <result column="TEL_TYPE" property="telType" jdbcType="VARCHAR" />
+    <result column="TEL_NO" property="telNo" jdbcType="VARCHAR" />
+    <result column="NOTE_OBJECT" property="noteObject" jdbcType="VARCHAR" />
+    <result column="TELCHECK_REUSLT" property="telcheckReuslt" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    
+     <!-- 注记信息变色标识 -->
+     <result column="COLOR_FLAG" property="colorFlag" jdbcType="CHAR" />
+     <!-- 集体电核标识 -->
+     <result column="TEAM_TELCHECK_STATUS" property="teamTelCheckStatus" jdbcType="CHAR" />
+     <result column="BIG_MEMO" property="bigMemo" jdbcType="CLOB" />
+     
+     <result column="higeMemo" property="higeMemo" jdbcType="VARCHAR" />
+     <!-- 补件标识 -->
+      <result column="TYPE_FLAG" property="typeFlag" jdbcType="CHAR" />
+      
+      <!-- 集体电核共用 uuid -->
+      <result column="TAL_ID" property="talId" jdbcType="VARCHAR" />
+      <result column="tabId" property="tabId" jdbcType="VARCHAR" />
+      <result column="WIN_ID" property="winId" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_TelcheckAddnote_BY_APPID" resultMap="TelcheckAddnoteMap" parameterType="java.lang.String">
+   	select  AUTO_ID,APP_ID,BIG_MEMO from OPAS_TELCHECK_ADDNOTE where crt_user = 'SYSTEM' and app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="insert_OPAS_TELCHECK_ADDNOTE" parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote">
+   	insert into OPAS_TELCHECK_ADDNOTE (AUTO_ID, APP_ID, BIG_MEMO,CRT_DATE, CRT_USER,TYPE_FLAG,TAL_ID)
+    values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{bigMemo,jdbcType=VARCHAR},
+      CURRENT_TIMESTAMP, #{crtUser,jdbcType=VARCHAR}, #{typeFlag,jdbcType=CLOB},#{talId,jdbcType=VARCHAR}
+      )
+  </select>
+  
+   <update id="Update_OPAS_TELCHECK_ADDNOTE"  parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote">
+   		update  OPAS_TELCHECK_ADDNOTE set BIG_MEMO =  #{bigMemo,jdbcType=CLOB}  where crt_user = 'SYSTEM' 
+   		and AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+
+  <resultMap id="ylzRepResultMap" type="java.util.Map">
+  	<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+  	<result column="insured_status" property="insuredStatus" jdbcType="VARCHAR" />
+    <result column="latest_payment_date" property="latestPaymentDate" jdbcType="VARCHAR" />
+    <result column="IS_ON_JOB" property="isOnJob" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="pyPcrCrsResultMap" type="java.util.Map">
+  	<result column="info_date" property="infoDate" jdbcType="VARCHAR" />
+  	<result column="current_status" property="currentStatus" jdbcType="VARCHAR" />
+    <result column="last_unit_name" property="unitName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="pbocPublicAccfundResultMap" type="java.util.Map">
+  	<result column="pay_comp" property="payComp" jdbcType="VARCHAR" />
+  	<result column="PAY_YM" property="payYm" jdbcType="VARCHAR" />
+    <result column="PAY_STATUS" property="payStatus" jdbcType="VARCHAR" />
+    <result column="is_on_job" property="isOnJob" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="gjjxxResultMap" type="java.util.Map">
+  	<result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+  	<result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="pay_ym" property="payYm" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--易联众信息查询-->
+  <select id="Query_YLZ_REP_DATA" parameterType="java.lang.String" resultMap="ylzRepResultMap">
+ 		select a.company_name,a.insured_status,a.is_on_job,a.latest_payment_date from YLZ_REP_DATA a
+ 		where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  
+   <!--鹏元信息查询-->
+  <select id="Query_PY_PCR_CRS_CRT_SISZ2_BI" parameterType="java.lang.String" resultMap="pyPcrCrsResultMap">
+		select a.current_status,a.last_unit_name,a.info_date from PY_PCR_CRS_CRT_SISZ2_BI a
+ 		where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="Query_Py_InfoDate" resultType="java.lang.Float" parameterType="java.util.Map">
+	  select months_between((select to_date(#{dateNum}, 'YYYYMMDD')
+	          from dual),
+	       (select to_date(#{infoDate}, 'YYYYMMDD') from dual))
+	  from dual 
+  </select>
+  
+  <!-- 人行信息查询 -->
+  <select id="Query_Pboc_InfoDate" resultType="java.lang.Float" parameterType="java.util.Map">
+	   select months_between((select to_date(#{dateNum}, 'yyyymm') from dual),
+            (select to_date(#{payYm}, 'yyyymm') from dual))     
+  	   from dual
+  </select>
+  
+  <select id="Query_OPAS_PBOC_PUBLIC_ACCFUND_INFO" resultMap="pbocPublicAccfundResultMap" parameterType="java.util.Map">
+	  select  pay_comp, PAY_YM, PAY_STATUS  from (
+	   	 SELECT pay_comp,PAY_YM, PAY_STATUS FROM OPAS_PBOC_PUBLIC_ACCFUND
+	 		WHERE APP_ID = #{appId,jdbcType=VARCHAR}
+			ORDER BY  INFO_UPD_TIME desc,JOIN_SOCL_INSU_DT desc,PAY_YM desc
+	    )   where rownum =1
+  </select>
+  <!-- 杭州公积金 Query_Gjjxx_Info --> 
+  <select id="Query_Gjjxx_Info" parameterType="java.lang.String" resultMap="gjjxxResultMap">
+ 		select dept_name,status,pay_ym from HZ_GJJXX
+ 		where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  <!-- 厦门公积金 -->
+  <select id="Query_XM_GJJ_JCXX" parameterType="java.lang.String" resultType="java.lang.String">
+ 		select dwmc from XM_GJJ_JCXX
+ 		where app_id = #{appId,jdbcType=VARCHAR} and grzhzt='01'  and  rownum =1  order by crt_time desc
+  </select>
+  
+   <select id="Query_Xm_Gjj_InfoDate" resultType="java.lang.Float" parameterType="java.util.Map">
+	select months_between((select to_date(#{dateNum}, 'YYYYMMDD') from dual),
+		(select to_date ((select  zjjjrq  from (
+	   	select zjjjrq from xm_gjj_jcxx where app_id = #{appId,jdbcType=VARCHAR}
+		order by crt_time desc
+	    )   where rownum =1),
+                   'YYYYMMDD')from dual))
+	from dual
+  </select>
+
+  <!-- 宁波公积金 -->
+  <select id="Query_NB_BASE" parameterType="java.lang.String" resultType="java.lang.String">
+ 		select cbdw from NB_BASE
+ 		where app_id = #{appId,jdbcType=VARCHAR} and (YLZT='参保缴费' or YBZT='参保缴费')  and  rownum =1  order by crt_time desc
+  </select>  
+	
+  <select id="Query_NB_BASE_InfoDate" resultType="java.lang.Float" parameterType="java.util.Map">
+	select months_between((select to_date(#{dateNum}, 'YYYYMM') from dual),
+		(select to_date ((select  ZHYCJJSJ  from (
+	   	select ZHYCJJSJ from NB_BASE where app_id = #{appId,jdbcType=VARCHAR}
+		order by crt_time desc
+	    )   where rownum =1),
+                   'YYYYMM')from dual))
+	from dual
+  </select>
+    
+	<select id="Query_WZ_GR_GJJZLDate" resultType="java.lang.Float" parameterType="java.util.Map">
+		select months_between((select to_date(#{dateNum}, 'YYYYMM') from dual),
+			(select to_date ((select  SSNY  from (
+		   	select SSNY from wz_gr_gjjzl where app_id = #{appId,jdbcType=VARCHAR}
+			order by crt_time desc
+		    )   where rownum =1),
+		                  'YYYYMM')from dual))
+		from dual
+	</select>
+  
+	<select id="Query_WZ_GR_GJJZL" resultType="java.lang.String" parameterType="java.lang.String">
+	    select dwmc from wz_gr_gjjzl where APP_ID = #{appId} and zt='正常' and rownum =1  order by crt_time desc
+	</select>
+	
+	<select id="Query_YC_INFO" resultType="java.lang.String" parameterType="java.lang.String">
+	    select STDCMPNM from YC_INFO where APP_ID = #{appId} and STDCMPJCZT='11' and rownum =1  order by crt_time desc
+	</select>
+	
+	<select id="Query_YC_INFODate" resultType="java.lang.Float" parameterType="java.util.Map">
+		select months_between((select to_date(#{dateNum}, 'YYYYMMDD') from dual),
+			(select to_date ((select  stdgjjendt  from (
+		   	select stdgjjendt from YC_INFO where app_id = #{appId,jdbcType=VARCHAR}
+			order by crt_time desc
+		    )   where rownum =1),
+		                  'YYYYMMDD')from dual))
+		from dual
+	</select>
+
+</mapper>

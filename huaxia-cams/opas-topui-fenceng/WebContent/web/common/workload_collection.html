@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>工作量统计</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<!-- <style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style> -->
+
+</head>
+<body style="padding: 10px;">
+	<h1>工作量查询</h1>
+	<fieldset style="margin-top: 10px;">
+		<div id="workcount" name="workcount">
+			<table>
+				<tr>
+					<td>您当日工作量为:</td>
+					<!-- <td><input type="text" class="easyui-textbox" id="dayworkload"></input></td> -->
+					<td><input class="easyui-validatebox textbox" id="dayworkload"
+						type="text" name="dayworkload" value="" style="height: 20px">&nbsp;件
+					</td>
+				</tr>
+			</table>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>查询当月工作量</legend>
+		<div class="area-tips">
+			<!-- 待分配：<em>3500</em>件 / 快速发卡：<em>2400</em>件 / 查询结果：<strong
+				id="info_query">0</strong>件 -->
+		</div>
+		<div class="area-search">
+			<form id="searchForm" name="searchForm" method="post"
+				accept-charset="UTF-8">
+				<table id="tblSearch" name="tblSearch">
+					<tr>
+						<td>起始时间：</td>
+						<td><input class="easyui-datebox" name="startTime"
+							id="startTime" style="width: 150px;" onChange="queryDate();" /></td>
+						<td>结束时间：</td>
+						<td><input class="easyui-datebox" name="endTime" id="endTime"
+							style="width: 150px;"  /></td>
+						<td><div class="area-function">
+								<a href="javascript:queryMonth();" class="easyui-linkbutton"
+									style="margin-left: 20px;">查询</a>
+							</div></td>
+					</tr>
+
+				</table>
+			</form>
+		</div>
+	</fieldset>
+
+	<fieldset style="margin-top: 10px;">
+		<div id="workcount" name="workcount">
+			<table>
+				<tr>
+					<td>您该段时间的工作量为:</td>
+					<td><input id="monthWorkload" name="monthWorkload" type="text"
+						class="easyui-validatebox textbox"  style="height: 20px">&nbsp;件</td>
+				</tr>
+			</table>
+		</div>
+	</fieldset>
+	<script type="text/javascript">
+	
+	var searchForm = $("#searchForm");
+	var d = new Date();
+	var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+	$('#startTime').val(str);
+	$('#endTime').val(str);
+	$(function() {
+	//查询当日工作量
+		$cf.ajax({
+			url : "/opas-naps/subReport_day_workload.json",
+			data : {
+				"submitType" : "2"
+			},
+			onSuccess : function(response) {
+				var data = response.RSP_BODY.total;
+				var InfoCollectjson = eval('(' +data+ ')');
+				$("#dayworkload").val(InfoCollectjson);
+			}
+		});
+		//根据点击起始日期锁定结束日期
+		/* $('#startTime').datebox({
+			onChange:function(n,o){
+				//$('#endTime').datebox('setValue');
+				$cf.ajax({
+					url : "/opas-naps/subReport_queryDate.json",
+					data : {
+						"startTime":n
+					},
+					onSuccess : function(response) {
+						var data = response.RSP_BODY.data.end;
+						var time = formatDate(data);
+						$('#endTime').datebox('setValue',"");
+						$('#endTime').datebox('setValue',time);
+					}
+				});				
+			}
+		}); */
+		
+	});
+	
+	//查询整月工作量
+	function queryMonth() {
+		var searchData = isRequired('searchForm');
+		var startTime = searchData.startTime;
+		var jsondata = getFormData(searchForm.serializeArray());
+		if(jsondata.startTime == null || jsondata.startTime == ""){
+			$.messager.alert("操作提示", "请指定要查询的起始日期", "error");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/subReport_month_workload.json",
+			data : {"json":jsondata,"submitType":"2"},
+			onSuccess : function(response) {
+				var data = response.RSP_BODY.total;
+				var InfoCollectjson = eval('(' +data+ ')');
+				$("#monthWorkload").val(InfoCollectjson);
+			}
+		});
+	}
+	
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	}; 
+	
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;width: 100%; overflow-y:scroll;">
+	<table id="tblCompanyRisk" title="单位类风险名单列表" class="easyui-datagrid"
+	style="width: 98%;height:100%"
+		data-options="rownumbers:true,singleSelect:false,checkOnSelect:false,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/companyRisk_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">Id</th>
+				<th field="companyName" width="25%">单位名称</th>
+				<th field="createTime" width="15%" align="center" formatter="gridDateFormat2">添加时间</th>
+				<th field="invalidTime" width="15%" align="center" formatter="gridDateFormat2">失效时间</th>
+				<th field="operator" width="10%" align="center">维护人</th>
+				<th field="currStatus" width="10%" align="center" formatter="formatStatus">状态</th>
+				<!-- <th field="memo" width="10%" align="center" >备注</th> -->
+				<th field="operate" width="10%" align="center" data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+			style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			单位名称: <input class="easyui-textbox" style="width: 110px" name="companyName" id="companyName"> 
+			添加时间: <input class="easyui-datebox" style="width: 110px" name="createTime" id="createTime">
+			<a  href="javascript:common.searchTbl('seachPositionCodeForm','tblCompanyRisk');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a  href="javascript:common.openWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add" onclick="aaa()">新增 </a>&nbsp;
+			<a	href="javascript:updateStatus('start');" class="easyui-linkbutton" iconCls="icon-ok">批量启用</a>&nbsp;
+			<a	href="javascript:updateStatus('stop');" class="easyui-linkbutton" iconCls="icon-remove">批量停用</a>&nbsp;
+			<a	href="javascript:deleteOrg();" class="easyui-linkbutton" iconCls="icon-no">删除</a>
+		</form>
+		<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/CompanyRiskUpladServlet.json" target="tartIframe">  
+		<div style="margin: 10px 0 0 30px;width:80%;">
+	        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+			<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+			<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+			<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+			<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+			<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+			<span class="filebox-label" style="left: 10px;"><font size="2">导入数据</font></span></span>
+		</div>
+		<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+		</form>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="单位类风险名单修改"
+		style="width: 300px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">单位名称:</td>
+					<td><input class="easyui-validatebox textbox" id="companyName"
+						type="text" name="companyName" data-options="required:true,validType:['length[0,25]']" maxlength="25"></input> 
+						<input type="hidden" name="autoId" id="autoId" /></td>
+				</tr>
+				<tr>
+					<td align="right">欺诈类型:</td>
+					<td><select class="easyui-combobox" name="fraudType" required="true" validType="selectValueRequired['#fraudType']" style="width: 165px" dict_type="ZDQZLX" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'"  style="width: 165px" >
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">信息来源:</td>
+					<td>
+						<select class="easyui-combobox" name="infoChannel" required="true" validType="selectValueRequired['#infoChannel']" style="width: 165px" dict_type="ZDXXLY" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'"  style="width: 165px" >
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" >添加日期:</td>
+					<td>
+						<input class="easyui-textbox" id="showCreateTime" name="createTime" editable="fasle"></input>
+					</td>
+				</tr>	
+				<tr>
+					<td align="right">失效日期:</td>
+					<td><input class="easyui-datebox" id="invalidTime" name="invalidTime" required="true"></input></td>
+				</tr>
+				<tr>
+					<td align="right">状态:</td>
+					<td><select class="easyui-combobox" name="currStatus" id="currStatus" required="true" >
+							<option value = "1" selected="selected">启用</option>
+							<option value = "0" >停用</option>
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">备注信息:</td>
+					<td><textarea class="easyui-validatebox" row="10" id="memo" style="height: 100px;width: 200px"
+								type="text" name="memo" ></textarea>
+								</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+	
+	<div id="winShow" class="easyui-window" title="单位类风险名单查看"
+		style="width: 300px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="showForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">单位名称:</td>
+					<td><input class="easyui-validatebox textbox" id="companyName"
+						type="text" name="companyName" readonly="true" editable="false"></input> 
+						<input type="hidden" name="autoId" id="autoId" /></td>
+				</tr>
+				<tr>
+					<td align="right">欺诈类型:</td>
+					<td><select class="easyui-combobox" name="fraudType"  readonly="true" editable="false" validType="selectValueRequired['#fraudType']" style="width: 165px" dict_type="ZDQZLX" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'"  style="width: 165px" >
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">信息来源:</td>
+					<td>
+						<select class="easyui-combobox" name="infoChannel"  readonly="true" editable="false" validType="selectValueRequired['#infoChannel']" style="width: 165px" dict_type="ZDXXLY" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'"  style="width: 165px" >
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" >添加日期:</td>
+					<td>
+						<input class="easyui-datebox" id="showCreateTime2" name="createTime" editable="fasle"  readonly="true"></input>
+					</td>
+				</tr>	
+				<tr>
+					<td align="right">失效日期:</td>
+					<td><input class="easyui-datebox" id="invalidTime2" name="invalidTime"  readonly="true" editable="false"></input></td>
+				</tr>
+				<tr>
+					<td align="right">状态:</td>
+					<td><select class="easyui-combobox" name="currStatus" id="currStatus"  readonly="true" editable="false">
+							<option value = "1" selected="selected">启用</option>
+							<option value = "0" >停用</option>
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">备注信息:</td>
+					<td><textarea class="easyui-validatebox" row="10" id="memo" style="height: 100px;width: 200px"
+								type="text" name="memo"  readonly="true" editable="false"></textarea>
+								</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: right; padding: 5px; margin-right: 30px">
+				<a href="javascript:void(0)"  onClick="openWinTbll('winAddrHistory','tblCompanyRisk','tblCompanyHistory','/opas-naps/companyRistHislist.json','autoId')">查看历史修改记录</a>
+		</div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="单位类风险名单添加"
+		style="width: 300px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true,onClose:function(){location.reload(true)}">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">单位名称:</td>
+					<td><input class="easyui-validatebox textbox" id="companyName"
+						type="text" name="companyName" data-options="required:true,validType:['length[0,25]']" maxlength="25"></input> 
+						<input type="hidden" name="autoId" id="autoId" /></td>
+				</tr>
+				<tr>
+					<td align="right">欺诈类型:</td>
+					<td><select class="easyui-combobox" name="fraudType" required="true" validType="selectValueRequired['#fraudType']" style="width: 165px" dict_type="ZDQZLX" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'"  style="width: 165px" >
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">信息来源:</td>
+					<td>
+						<select class="easyui-combobox" name="infoChannel" required="true" validType="selectValueRequired['#infoChannel']" style="width: 165px" dict_type="ZDXXLY" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'"  style="width: 165px" >
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">失效日期:</td>
+					<td><input class="easyui-datebox" id="invalidTime1"  name="invalidTime" ></input></td>
+				</tr>
+				<tr>
+					<td align="right">状态:</td>
+					<td><select class="easyui-combobox" name="currStatus" id="currStatus" required="true" >
+							<option value = "1" selected="selected">启用</option>
+							<option value = "0" >停用</option>
+					    </select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">备注:</td>
+					<td><textarea class="easyui-validatebox" row="10" id="memo" style="height: 100px;width: 200px"
+								type="text" name="memo" ></textarea></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+		</div>
+	</div>
+	<!-- 查看历史修改名单记录 -->
+	<div id="winAddrHistory" class="easyui-window" title="操作历史记录" style="width: 1200px; height: 600px;"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<table id="tblCompanyHistory" class="easyui-datagrid"
+					data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+				<thead>
+					<tr>
+						<th field="autoId" width="10%" align="center" checkbox="true">Id</th>
+						<th field="companyName" width="10%">单位名称</th>
+						<th field="createTime" width="15%" align="center" formatter="gridDateFormat2">添加时间</th>
+						<th field="invalidTime" width="15%" align="center" formatter="gridDateFormat2">失效时间</th>
+						<th field="operator" width="10%" align="center">维护人</th>
+						<th field="currStatus" width="10%" align="center" formatter="formatStatus">状态</th>
+					</tr>
+		 		</thead>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+<script>
+	$cf.loadAllDict();//加载业务字典
+	var tblCompanyRisk = $("#tblCompanyRisk");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	var showForm = $("#showForm");
+	var relWindow = $("#roleRelationMenu");
+	var menuTree = $("#menuTree");
+	var selectWindow = $("#winShow");
+	$(function (){
+		initTableHeight("#tblCompanyRisk",'2');
+	})
+	function formatOper(val, row, index) {
+		return "<a href=javascript:selectRisk();>查看</a>&nbsp;<a href=javascript:editCompanyRist();>修改</a>";
+	}
+	//消息来源
+	function formatInfoChannel(val, row, index) {
+		return $cf.getDictDetailName("ZDXXLY", val);
+	}
+	//欺诈类型
+	function formatFraudType(val, row, index) {
+		return $cf.getDictDetailName("ZDQZLX", val);
+	}
+	//启用状态
+	function formatStatus(val, row, index) {
+		if (val == "1") {
+			return "启用";
+		} else if (val == "0") {
+			return "停用";
+		}
+	}
+	
+	//选中行临时存储变量
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+	 tblCompanyRisk.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})
+	
+	function addRole() {
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	function editCompanyRist() {
+		var roleObj = tblCompanyRisk.datagrid("getChecked");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+		var cTime = gridDateFormat2(value.createTime);
+ 		var iTime = gridDateFormatYMD(value.invalidTime);
+		$('#showCreateTime').textbox('setValue',cTime);
+		$('#showCreateTime').textbox({disabled:true});
+		$('#invalidTime').datebox('setValue',iTime);
+	}
+
+	function deleteOrg() {
+		var roleObj = tblCompanyRisk.datagrid("getChecked");
+		if(roleObj.length == 0){
+ 			$.messager.alert("操作提示", "请选择操作数据", "error");
+ 			return;
+ 		}
+		var ids = new Array();
+		for(var i=0; i<roleObj.length; i++){
+			ids.push(roleObj[i].autoId);
+		}
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/removeCompanyRisk_list.json",
+					data : {"ids":ids},
+					onSuccess : function(roleObj) {
+
+						top.$cf.showMsg("删除成功！");
+
+						onConcle("save");
+						tblCompanyRisk.datagrid("reload");
+					}
+				});
+			}
+		});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		showForm.form("load", data);
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+		location.reload(true);
+	}
+
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		var cue = "修改"
+			if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/updateCompanyRisk_list.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblCompanyRisk.datagrid("reload");
+					});
+				} else if(data.RSP_BODY.isComName) {
+					$.messager.alert("操作提示", "单位名称已存在!");
+					return;
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		var jsondata = getFormData(addForm.serializeArray());
+		var cue = "添加"
+			if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/addCompanyRisk_list.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblCompanyRisk.datagrid("reload");
+					});
+				} else if(data.RSP_BODY.isComName) {
+					$.messager.alert("操作提示", "单位名称已存在!");
+					return;
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+		//location.reload(true);
+	}
+
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	//查看
+	function selectRisk(){
+		var roleObj = tblCompanyRisk.datagrid("getChecked");
+ 		selectWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+		var cTime = gridDateFormatYMD(value.createTime);
+ 		var iTime = gridDateFormatYMD(value.invalidTime);
+		$('#showCreateTime2').textbox('setValue',cTime);
+		$('#invalidTime2').datebox('setValue',iTime);
+	}
+	
+	function updateStatus(obj) {
+		var orgObj = tblCompanyRisk.datagrid("getChecked");
+		if(orgObj.length == 0){
+ 			$.messager.alert("操作提示", "请选择操作数据", "error");
+ 			return;
+ 		}
+		var ids = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+				$cf.ajax({
+					url : "/opas-naps/companyRisk_updateStatus.json",
+					data : {"ids":ids,"obj":obj},
+					onSuccess : function(orgObj) {
+						top.$cf.showMsg("操作成功！");
+						onConcle("save");
+						tblCompanyRisk.datagrid("reload");
+					}
+				});
+	}
+	
+	/* 查看历史修改记录 */
+	openWinTbll = function(winName, tblName, tarTblName, tarUrl, tarParam) {
+		var tblObj = $("#" + tblName + "");
+		var tblDict = $("#" + tarTblName + "");
+		winObj = $("#" + winName + "");
+		var id = value.autoId;
+		var paramObj = document.getElementsByName(tarParam);
+		for (var i = 0; i < paramObj.length; i++) {
+			paramObj[i].value = id;
+		}
+		winObj.window({
+			closed : false
+		});
+		var quryParam = {};
+		quryParam[tarParam] = id;
+		tblDict.datagrid({
+			url : tarUrl,
+			queryParams : quryParam
+		});
+		
+	}
+	var urlPath = "/opas-naps/do_fileupload.json";
+ 	//批量上传文件
+	$('#fb').filebox({    
+	    buttonText: '选择文件', 
+	    buttonAlign: 'right',
+	    buttonIcon:'icon-search',
+	    onChange: function (newValue, oldValue) {
+	    	excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+	    	if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+				alert("请上传excel格式的文件");
+				$('#fb').filebox('setValue','');
+				return;
+			}
+	    }
+	})
+	
+	function resetValue(){
+		$('#fb').filebox('setValue','');
+	}
+	function aaa(){
+		var str = "2999-12-31";
+		$('#invalidTime1').datebox('setValue',str);
+	}
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+			$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+			importSave(fileValue);
+		}
+	
+	}
+	
+	//保存数据
+	function importSave() {
+		$('#formFile').submit();
+	}
+	
+	//数据校验
+	 function checkData(jsondata , cue){
+		if (jsondata.companyName == null || jsondata.companyName.trim().length <=0 ) {
+			$.messager.alert("操作提示", cue+"失败:单位名称不能为空!", "error");
+			return true;
+		}else if(jsondata.companyName.trim().length>25){
+			$.messager.alert("操作提示", cue+"失败:单位名称长度不能超过25个字符!", "error");
+			return true;
+		}
+		if(jsondata.memo.trim().length>250){
+			$.messager.alert("操作提示", cue+"失败:备注长度不能超过250个字符!", "error");
+			return true;
+		}
+	}
+	
+	 var tartIframe = document.getElementById("tartIframe");
+		tartIframe.src = "/opas-naps/CompanyRiskUpladServlet.json";
+		if(tartIframe.attachEvent){
+			tartIframe.attachEvent("onload",function(){
+				responPage();
+			});
+		}else{
+			tartIframe.onload = function(){
+				responPage();			
+			}
+		}
+		
+	function responPage(){
+ 		$.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+			tblCompanyRisk.datagrid("reload");
+			top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+			onConcle('winFile');
+		}
+		if(value[0] == "false"){
+			$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+		}
+		
+	}	
+</script>

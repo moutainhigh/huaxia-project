@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding:10px;scroll:auto;">
+	<div style="height:690px;overflow-y:auto;">
+	<table id="tblInfo" title="存量客户查询页面" class="easyui-datagrid"
+		style="width: 98%;height:100%"
+		data-options="rownumbers:true,singleSelect:true,url:'',pagination:true,fitColumns:true,pageSize:20,
+		pageList:[15,20,50],loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion',onLoadSuccess:function(data){
+			if(data.msg!=null&&data.msg!='')
+				{alert(data.msg)};
+		}">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">选择</th>
+				<th field="appId"  width="15%"  align="center" data-options="formatter:formatOper">流水号</th>
+				<th field="name" width="20%"  align="center">客户姓名</th>
+				<th field="certNo"  width="45%" align="center">证件号码</th>
+				<th field="nodeDesc"  width="10%" align="center">当前状态</th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: left" >
+		<form id="seachPositionCodeForm">
+			<table >
+				<tr >
+					<td width="30%">申请流水号:</td>
+					<td><input class="easyui-validatebox"  type="text" 
+							name="appId" id="appId"></td>
+					<td width="30%">客户姓名:</td>
+					<td><input type="text" class="easyui-textbox"
+						id="name" name="name" /></td>
+				</tr>
+				<tr>
+					<td width="30%">证件号码:</td>
+					<td><input type="text" class="easyui-textbox"
+						id="certNo" name="certNo" /></td>
+					<td width="30%">手机号:</td>
+					<td colspan="3"><input type="text" class="easyui-textbox"id="mobile"  name="mobile"/></td>
+				</tr>
+				<tr>
+					<td><a href="javascript:void(0);" class="easyui-linkbutton" id="btnCurrQuery">查询 </a>
+				    </td>  
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+		var tblInfo = $("#tblInfo");
+		var appId = "";
+		$(function(){
+			
+			// 当前查询
+			$('#btnCurrQuery').click(function() {
+				//表单序列化
+				var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+				var jsondata =overTrim(jsonFrom);
+				//判断是否输入查询条件
+				var flag=true;
+				for(var i=0;i<jsonFrom.length;i++){
+					if(jsonFrom[i].value!=null&&jsonFrom[i].value.trim()!=''){
+						flag=false;
+					}
+				}
+				if(flag){
+					alert("请至少输入一项要查询条件！");
+					return;
+				}    
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length<4){
+					alert("请至少输入4位流水号");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Cname!=null&&jsondata.c1Cname!=""&&jsondata.c1Cname.length<2){
+					alert("客户姓名，至少输入两个汉字");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Idnbr!=null&&jsondata.c1Idnbr!=""&&jsondata.c1Idnbr.length<6){
+					alert("请至少输入6位证件号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Mobile!=null&&jsondata.c1Mobile!=""&&jsondata.c1Mobile.length<3){
+					alert("请至少输入3位手机号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length>16){
+					alert("流水号长度超过16位");
+					return;
+				}
+				//动态加载url
+				$("#tblInfo").datagrid('options').url='/opas-naps/queryStockCustomerInfoList.json';
+				$("#tblInfo").datagrid('load', jsondata);
+			});
+			
+			
+		});
+		
+		//存量客户详情查看
+		function formatOper(val, row, index) {
+			
+			var appId = val+"";
+			return "<a href=javascript:getInfo();>"+appId+"</a>";
+		}
+		
+		//关闭窗体
+		function onConcle(obj) {
+			var winObj = $("#" + obj);
+			winObj.window("close");
+		}
+		function getFormData(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value;
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+		}
+		
+		function showWindow(obj) {
+			var winObj = $("#" + obj);
+			winObj.window({
+				closed : false
+			});
+		}
+		function showWindow1(obj) {
+			var winObj = $("#" + obj);
+			winObj.window({
+				closed : false
+			});
+		}
+		
+		function getInfo() {
+			var infoObj = tblInfo.datagrid("getSelected");
+			var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+			appId = infoObj["appId"]; //动态传参数 appId 
+			window.open("stock_customer_detail.html?appId="+appId+"&userCode="+userCode,
+							"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-67));
+		}
+		 function overTrim(dataObject) {
+				var jsonObject = '{';
+				var k = 0;
+				$.each(dataObject, function() {
+					k++;
+					var objName = this.name;
+					var objValue = this.value.trim();
+					jsonObject += '"' + objName + '":';
+					jsonObject += '"' + objValue + '"';
+					if (k < dataObject.length) {
+						jsonObject += ",";
+					}
+				});
+				jsonObject += '}';
+				return eval("(" + jsonObject + ")");
+		}
+</script>

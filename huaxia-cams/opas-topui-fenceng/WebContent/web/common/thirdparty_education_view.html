@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>学历信息核查详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<script type="text/javascript">
+function GetQueryString(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null)
+		return unescape(r[2]);
+	return null;
+}
+var appId = GetQueryString("appId");
+	$(function(){
+		
+	
+		var educationDetailForm=$("#educationDetailForm");
+
+		$cf.ajax({
+			data : {
+				"appId" : appId
+			},
+			url : "/opas-naps/education_detail_query.json",
+			onSuccess : function(res) {
+				var jsoneducationDetail = res.RSP_BODY.applyEducationDetail;
+			//	var educationDetailjson = eval('(' +jsoneducationDetail+ ')');
+				educationDetailForm.form("load", jsoneducationDetail);
+			}
+		});
+		//设置有值的输入框只读
+		$("input[type='text']").each(function(){
+			var val=$(this).val();
+			if(val!==null&&val!==undefined&&val!==""){
+				$(this).attr("readonly","readonly");
+			}
+		});
+		var imageSrc="/opas-naps/EducationPhotoPathServlet.json?appId="+appId;//appId为依据查 图片的路径  
+		//var imageSrc="./"+appId+".jpg";
+		$("#educationImageSrc").attr("src",imageSrc);//给img标签附上 src属性   */
+	});
+</script>
+<body style="padding:10px;">
+<fieldset>		
+	<legend>学历信息核查详细结果</legend>
+	<form id="educationDetailForm" style="width:90%">
+	<div>
+		<fieldset>
+			<legend><span id="C" style="font-weight: bold">学历</span></legend>
+		<table class="formtable" style="width:90%">
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;报告编号：<input name="no" id="no" type="text" style="border:none;text-align:left;width:200px;"/></td>
+				<td>查询时间：<input name="crtTime" id="crtTime" class="easyui-datebox"  readonly="readonly"/></td>
+				<td>查询人：<input name="crtUser" id="crtUser" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span id="C" style="font-weight: bold">一、被核查人信息</span></legend>
+		<table class="formtable" style="width:90%">
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;姓名：</td>
+				<td><input name="username" id="username" type="text" style="border:none;text-align:left;"/></td>
+				<td>身份证号：</td>
+				<td colspan="5"><input name="identitycard" id="identitycard" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span id="C" style="font-weight: bold">二、学历核查信息</span></legend>
+		<table class="formtable" style="width:95%">
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;查询结果：</td>
+				<td><input name="searchStatus" id="searchStatus" type="text"style="border:none;text-align:left;" /></td>
+				<td>性别：</td>
+				<td><input name="sex2" id="sex2" type="text" style="border:none;text-align:left;"/></td>
+				<td rowspan="7"><img  id="educationImageSrc" alt="photo" width="120"height="180"></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;姓名：</td>
+				<td><input name="username" id="username" type="text" style="border:none;text-align:left;"/></td>
+				<td>出生日期：</td>
+				<td colspan="2"><input name="birthday2" id="birthday2" type="text" style="border:none;text-align:left;"/>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;原始身份证号：</td>
+				<td><input name="identitycard" id="identitycard" type="text" style="border:none;text-align:left;"/></td>
+				<td>身份证原始发证地：</td>
+				<td colspan="2"><input name="idcorict2" id="idcorict2" type="text" style="border:none;text-align:left;"/>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;毕业院校：</td>
+				<td><input name="graduate" id="graduate" type="text" style="border:none;text-align:left;"/></td>
+				<td>专业：</td>
+				<td colspan="2"><input name="specialityname" id="specialityname" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;学历：</td>
+				<td><input name="educationdegree" id="educationdegree" type="text" style="border:none;text-align:left;"/></td>
+				<td>学历类型：</td>
+				<td colspan="3"><input name="studystyle" id="studystyle" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;入学年份：</td>
+				<td><input name="enroldate" id="enroldate" type="text" style="border:none;text-align:left;"/></td>
+				<td>毕业时间：</td>
+				<td colspan="3"><input name="graduatetime" id="graduatetime" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;学习形式：</td>
+				<td><input name="dstudystyle" id="dstudystyle" type="text" style="border:none;text-align:left;"/></td>
+				<td>毕业结论：</td>
+				<td colspan="3"><input name="studyresult" id="studyresult" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span id="C" style="font-weight: bold">三、毕业院校情况</span></legend>
+		<table class="formtable" style="width:80%">
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;学校曾用名：</td>
+				<td colspan="3"><input name="hisname" id="hisname" type="text" style="border:none;text-align:left;"/></td>
+				<td>学校所在城市：</td>
+				<td colspan="3"><input name="schoolcity" id="schoolcity" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;学校性质：</td>
+				<td colspan="3"><input name="schooltrade" id="schooltrade" type="text" style="border:none;text-align:left;"/></td>
+				<td>学校类别：</td>
+				<td colspan="3"><input name="schoolcategory" id="schoolcategory" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="width:150px">&nbsp;&nbsp;&nbsp;&nbsp;学校所属主管单位：</td>
+				<td colspan="3"><input name="organization" id="organization" type="text" style="border:none;text-align:left;"/></td>
+				<td>办学形式：</td>
+				<td colspan="3"><input name="educationapproach" id="educationapproach" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;办学层次：</td>
+				<td colspan="3"><input name="level" id="level" type="text" style="border:none;text-align:left;"/></td>
+				<td>学校创建年限：</td>
+				<td colspan="3"><input name="createyear" id="createyear" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;创建日期：</td>
+				<td colspan="3"><input name="createdate" id="createdate" type="text" style="border:none;text-align:left;"/></td>
+				<td>学校院士人数：</td>
+				<td colspan="3"><input name="academiciannum" id="academiciannum" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="width:150px">&nbsp;&nbsp;&nbsp;&nbsp;博士后流动站数目：</td>
+				<td colspan="3"><input name="bshldznum" id="bshldznum" type="text" style="border:none;text-align:left;"/></td>
+				<td>博士点数目：</td>
+				<td colspan="3"><input name="bsdnum" id="bsdnum" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;硕士点数目：</td>
+				<td colspan="3"><input name="ssdnum" id="ssdnum" type="text" style="border:none;text-align:left;"/></td>
+				<td style="width:150px">国家重点学科数目：</td>
+				<td colspan="3"><input name="zdxknum" id="zdxknum" type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	</form>
+</fieldset>	
+</body>
+</html>

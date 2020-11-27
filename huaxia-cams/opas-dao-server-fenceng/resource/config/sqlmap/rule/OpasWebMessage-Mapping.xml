@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasWebMessage">
+	
+	<resultMap id="UniAddrMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	   <result column="COLLECT_TIMES" jdbcType="VARCHAR" property="collectTimes" />
+	   <result column="EVENT_NAME" jdbcType="VARCHAR" property="eventName" />
+	   <result column="START_TIME" jdbcType="VARCHAR" property="startTime" />
+	   <result column="DURATION" jdbcType="VARCHAR" property="duration" />
+	</resultMap>
+	  
+	<select id="queryWebCustomerBehaviorInfoByAppId" parameterType="java.lang.String" resultMap="UniAddrMap">
+  	 SELECT T.APP_ID,T.COLLECT_TIMES,T.EVENT_NAME,T.START_TIME,T.DURATION FROM CCARD_CUST_BEHAVIOR T 
+  	  <where>
+  	 		 T.APP_ID = #{appId,jdbcType=VARCHAR} AND T.ENENT_TYPE = '自定义事件' 
+	  </where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--电话号码参数数据库处理-->
+<!--@author liudi-->
+<mapper namespace="TelNo">
+
+	<resultMap id="TelNoResultMap" type="com.huaxia.opas.domain.sysparm.TelNo">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PHONE_TYPE" property="telTypeCode" jdbcType="CHAR" />
+		<result column="PHONE_DESC" property="telNoDesc" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE" property="acctType" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加状态为Start -->
+	<insert id="insertTelNo1" parameterType="com.huaxia.opas.domain.sysparm.TelNo">
+		insert into
+		OPAS_PARAM_PHONE
+		(AUTO_ID,PHONE_TYPE,PHONE_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{telTypeCode,jdbcType=CHAR},
+		#{telNoDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 添加状态为End -->
+	<insert id="insertTelNo2" parameterType="com.huaxia.opas.domain.sysparm.TelNo">
+		insert into
+		OPAS_PARAM_PHONE
+		(AUTO_ID,PHONE_TYPE,PHONE_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{telTypeCode,jdbcType=CHAR},
+		#{telNoDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteTelNoById" parameterType="java.lang.String">
+		delete from
+		OPAS_PARAM_PHONE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryTelNoStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_PARAM_PHONE where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateTelNoWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.TelNo">
+		update OPAS_PARAM_PHONE
+		<set>
+			PHONE_DESC = #{telNoDesc,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 修改 -->
+	<update id="updateTelNo" parameterType="com.huaxia.opas.domain.sysparm.TelNo">
+		update OPAS_PARAM_PHONE
+		<set>
+			PHONE_DESC = #{telNoDesc,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 件数查询 -->
+	<select id="queryTelNoCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_PHONE
+		<where>
+			<if test="telTypeCode != null and telTypeCode !='' ">
+				AND PHONE_TYPE LIKE '%${telTypeCode}%'
+			</if>
+			<if test="telNoDesc != null and telNoDesc !='' ">
+				AND PHONE_DESC LIKE '%${telNoDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+<!-- 查询 -->
+	<select id="queryTelNo1" parameterType="com.huaxia.opas.domain.sysparm.TelNo"
+		resultMap="TelNoResultMap">
+		select
+		AUTO_ID,PHONE_TYPE,PHONE_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_PHONE
+		<where>
+			<if test="telTypeCode != null and telTypeCode !='' ">
+				AND PHONE_TYPE LIKE '%${telTypeCode}%'
+			</if>
+			<if test="telNoDesc != null and telNoDesc !='' ">
+				AND PHONE_DESC LIKE '%${telNoDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+<!-- 点击查询后，触发查询和排序功能 -->
+	<select id="queryTelNo2" parameterType="java.util.Map"
+		resultMap="TelNoResultMap">
+		select
+		AUTO_ID,PHONE_TYPE,PHONE_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_PHONE
+		<where>
+			<if test="telTypeCode != null and telTypeCode !='' ">
+				AND PHONE_TYPE LIKE '%${telTypeCode}%'
+			</if>
+			<if test="telNoDesc != null and telNoDesc !='' ">
+				AND PHONE_DESC LIKE '%${telNoDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CRT_DATE
+		</if>
+	</select>
+<!-- 查询是否重复 -->
+	<select id="queryTelNo3" parameterType="com.huaxia.opas.domain.sysparm.TelNo"
+		resultMap="TelNoResultMap">
+		select
+		PHONE_TYPE
+		from OPAS_PARAM_PHONE
+		<where>
+			<if test="telTypeCode != null and telTypeCode !='' ">
+				AND PHONE_TYPE LIKE '%${telTypeCode}%'
+			</if>
+		</where>
+	</select>
+
+</mapper>

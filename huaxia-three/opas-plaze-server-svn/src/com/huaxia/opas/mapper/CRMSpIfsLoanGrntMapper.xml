@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsLoanGrntMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsLoanGrnt">
+		INSERT INTO SP_APS_IFS_LOAN_GRNT (
+			APP_ID,CUSTID,CUSTCODE,GRNT_RELATION,GRNT_CLASS,GRNT_NO,GRNT_AMT,GRNT_BDATE,GRNT_EDATE,LOAN_STATUS,
+			RISK_LEVEL,EMPCODE,OWNERID,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{grntRelation, jdbcType = VARCHAR},
+			#{grntClass, jdbcType = VARCHAR},
+			#{grntNo, jdbcType = VARCHAR},
+			#{grntAmt, jdbcType = NUMERIC},
+			#{grntBDate, jdbcType = VARCHAR},
+			#{grntEDate, jdbcType = VARCHAR},
+			#{loanStatus, jdbcType = VARCHAR},
+			#{riskLevel, jdbcType = VARCHAR},
+			#{empCode, jdbcType = VARCHAR},
+			#{ownerId, jdbcType = VARCHAR},
+			#{dDate, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_LOAN_GRNT (
+			APP_ID,CUSTID,CUSTCODE,GRNT_RELATION,GRNT_CLASS,GRNT_NO,GRNT_AMT,GRNT_BDATE,GRNT_EDATE,LOAN_STATUS,
+			RISK_LEVEL,EMPCODE,OWNERID,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.grntRelation, jdbcType = VARCHAR},
+			#{item.grntClass, jdbcType = VARCHAR},
+			#{item.grntNo, jdbcType = VARCHAR},
+			#{item.grntAmt, jdbcType = NUMERIC},
+			TO_DATE(#{item.grntBDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.grntEDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.loanStatus, jdbcType = VARCHAR},
+			#{item.riskLevel, jdbcType = VARCHAR},
+			#{item.empCode, jdbcType = VARCHAR},
+			#{item.ownerId, jdbcType = VARCHAR},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

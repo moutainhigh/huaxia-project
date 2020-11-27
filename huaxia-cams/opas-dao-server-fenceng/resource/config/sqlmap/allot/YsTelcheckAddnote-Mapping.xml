@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="YsTelcheckAddnote" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.allot.YsTelcheckAddnote" >
+  	<!-- 预审注记信息表 -->
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="TEL_SOURCE" property="telSource" jdbcType="VARCHAR" />
+    <result column="TEL_TYPE" property="telType" jdbcType="VARCHAR" />
+    <result column="TEL_NO" property="telNo" jdbcType="VARCHAR" />
+    <result column="NOTE_OBJECT" property="noteObject" jdbcType="VARCHAR" />
+    <result column="TELCHECK_RESULT" property="telcheckResult" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    <result column="TEAM_TELCHECK_STATUS" property="teamTelcheckStatus" jdbcType="CHAR" />
+    <result column="PASS_CODE" property="passCode" jdbcType="VARCHAR" />
+    <result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+    <result column="TYPE_FLAG" property="typeFlag" jdbcType="CHAR" />
+    <result column="TAL_ID" property="talId" jdbcType="VARCHAR" />
+    <result column="COLOR_FLAG" property="colorFlag" jdbcType="CHAR" />
+    <result column="sortFlag" property="sortFlag" jdbcType="VARCHAR" />
+    <result column="BIG_MEMO" property="bigMemo" jdbcType="CLOB" />
+    <!-- 预审资料审查表 -->
+    <result column="PASS_RESULT" property="passResult" jdbcType="VARCHAR" />
+    <result column="APPROVE_RESULT" property="approveResult" jdbcType="VARCHAR" />
+    <result column="APPROVE_CODE" property="approveCode" jdbcType="VARCHAR" />
+    <result column="INDUSTRY_CUSTOMER" property="industryCustomer" jdbcType="CHAR" />
+    <result column="COMPANY_CUSTOMER" property="companyCustomer" jdbcType="CHAR" />
+    <result column="EDUCATION_CUSTOMER" property="educationCustomer" jdbcType="CHAR" />
+    <result column="HOUSE_LOAN_CUSTOMER" property="houseLoanCustomer" jdbcType="CHAR" />
+    <result column="CAR_LOAN_CUSTOMER" property="carLoanCustomer" jdbcType="CHAR" />
+    <result column="CARD_CUSTOMER" property="cardCustomer" jdbcType="CHAR" />
+    <result column="EXIST_CUSTOMER" property="existCustomer" jdbcType="CHAR" />
+    <result column="PROV_SEC_CUSTOMER" property="provSecCustomer" jdbcType="CHAR" />
+    <result column="REGISTRY_CUSTOMER" property="registryCustomer" jdbcType="CHAR" />
+    <result column="FIXED_ASSETS_CUSTOMER" property="fixedAssetsCustomer" jdbcType="CHAR" />
+    <result column="CURR_ASSETS_CUSTOMER" property="currAssetsCustomer" jdbcType="CHAR" />
+    <result column="INCOME_CUSTOMER" property="incomeCustomer" jdbcType="CHAR" />
+    <result column="OTHER_CUSTOMER" property="otherCustomer" jdbcType="CHAR" />
+    <result column="ID_CERTIFY" property="idCertify" jdbcType="CHAR" />
+    <result column="WORK_CERTIFY" property="workCertify" jdbcType="CHAR" />
+    <result column="COMPANY_CERTIFY" property="companyCertify" jdbcType="CHAR" />
+    <result column="EDUCATION_CERTIFY" property="educationCertify" jdbcType="CHAR" />
+    <result column="HOUSE_LOAN_CERTIFY" property="houseLoanCertify" jdbcType="CHAR" />
+    <result column="CAR_LOAN_CERTIFY" property="carLoanCertify" jdbcType="CHAR" />
+    <result column="CARD_CERTIFY" property="cardCertify" jdbcType="CHAR" />
+    <result column="EXIST_CERTIFY" property="existCertify" jdbcType="CHAR" />
+    <result column="PROV_CERTIFY" property="provCertify" jdbcType="CHAR" />
+    <result column="SEC_CERTIFY" property="secCertify" jdbcType="CHAR" />
+    <result column="HOUSE_CERTIFY" property="houseCertify" jdbcType="CHAR" />
+    <result column="CAR_CERTIFY" property="carCertify" jdbcType="CHAR" />
+    <result column="CURR_ASSETS_CERTIFY" property="currAssetsCertify" jdbcType="CHAR" />
+    <result column="INCOME_CERTIFY" property="incomeCertify" jdbcType="CHAR" />
+    <result column="OTHER_CERTIFY" property="otherCertify" jdbcType="CHAR" />
+    <!-- 预审申请修改 -->
+    <result column="ysModifyLog" property="ysModifyLog"   jdbcType="NUMERIC" />
+  </resultMap>
+  <resultMap id="YsPatchboltMap" type="com.huaxia.opas.domain.allot.YsPatchboltInfo" >
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="PATCH_CODE" property="patchCode" jdbcType="VARCHAR" />
+    <result column="ID_CERTIFY" property="idCertify" jdbcType="CHAR" />
+    <result column="WORK_CERTIFY" property="workCertify" jdbcType="CHAR" />
+    <result column="COMPANY_CERTIFY" property="companyCertify" jdbcType="CHAR" />
+    <result column="EDUCATION_CERTIFY" property="educationCertify" jdbcType="CHAR" />
+    <result column="HOUSE_LOAN_CERTIFY" property="houseLoanCertify" jdbcType="CHAR" />
+    <result column="IS_HAVESIGN" property="isHavesign" jdbcType="CHAR" />
+    <result column="CARD_CERTIFY" property="cardCertify" jdbcType="CHAR" />
+    <result column="EXIST_CERTIFY" property="existCertify" jdbcType="CHAR" />
+    <result column="PROV_CERTIFY" property="provCertify" jdbcType="CHAR" />
+    <result column="NON_ADDFILES" property="nonAddfiles" jdbcType="CHAR" />
+    <result column="HOUSE_CERTIFY" property="houseCertify" jdbcType="CHAR" />
+    <result column="CAR_CERTIFY" property="carCertify" jdbcType="CHAR" />
+    <result column="CURR_ASSETS_CERTIFY" property="currAssetsCertify" jdbcType="CHAR" />
+    <result column="INCOME_CERTIFY" property="incomeCertify" jdbcType="CHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="APPLYER" property="applyer" jdbcType="VARCHAR" />
+    <result column="PROMOTER" property="promoter" jdbcType="VARCHAR" />
+    <result column="RISK" property="risk" jdbcType="VARCHAR" />
+    <result column="DUE_DATE" property="dueDate" jdbcType="TIMESTAMP" />
+    <result column="OPT_TELNO" property="optTelno" jdbcType="VARCHAR" />
+    <result column="MESSAGE_FLAG" property="messageFlag" jdbcType="CHAR" />
+    <result column="SEND_FLAG" property="sendFlag" jdbcType="CHAR" />
+    <result column="COMPLETED_FLAG" property="completedFlag" jdbcType="CHAR" />
+    <result column="OTHER_CERTIFY" property="otherCertify" jdbcType="CHAR" />
+    <result column="IND_TAX_RESIDENTS_CERTIFY" property="indTaxResidentsCertify" jdbcType="CHAR" />
+    <result column="CAR_LOAN_CERTIFY" property="carLoanCertify" jdbcType="CHAR" />
+    <result column="SEC_CERTIFY" property="secCertify" jdbcType="CHAR" />
+    <result column="ENOLMENT_CERTIFY" property="enolmentCertify" jdbcType="CHAR" />
+    <result column="GUARANTEE_LETTER" property="guaranteeLetter" jdbcType="CHAR" />
+  </resultMap>
+   <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select sum(addnoteNum) from (
+		select count(1) as addnoteNum from YS_TELCHECK_ADDNOTE app where app.APP_ID=#{appId} 
+		union all
+		select count(1) as addnoteNum  from YS_RESULT_INFO ys where ys.APPROVE_RESULT is not null
+		and ys.APP_ID=#{appId} )
+	</select>
+  <select id="selectByExample" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select app.AUTO_ID,app.BIG_MEMO,app.CRT_DATE,'1' as sortFlag from YS_TELCHECK_ADDNOTE app
+		where app.APP_ID=#{appId}  order by CRT_DATE desc
+	</select>
+	<select id="selectYsResultInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+	  select  PASS_RESULT, APPROVE_RESULT, APPROVE_CODE, INDUSTRY_CUSTOMER,   
+     	COMPANY_CUSTOMER, EDUCATION_CUSTOMER, HOUSE_LOAN_CUSTOMER, 
+      CAR_LOAN_CUSTOMER, CARD_CUSTOMER, EXIST_CUSTOMER, 
+      PROV_SEC_CUSTOMER, REGISTRY_CUSTOMER, FIXED_ASSETS_CUSTOMER, 
+      CURR_ASSETS_CUSTOMER, INCOME_CUSTOMER, OTHER_CUSTOMER, 
+      ID_CERTIFY, WORK_CERTIFY, COMPANY_CERTIFY, 
+      EDUCATION_CERTIFY, HOUSE_LOAN_CERTIFY, CAR_LOAN_CERTIFY, 
+      CARD_CERTIFY, EXIST_CERTIFY, PROV_CERTIFY, 
+      SEC_CERTIFY, HOUSE_CERTIFY, CAR_CERTIFY, 
+      CURR_ASSETS_CERTIFY, INCOME_CERTIFY, OTHER_CERTIFY,
+      (select count(1) from YS_APPLY_MODIFY_LOG a where  a.apply_flag='1' and a.APP_ID=#{appId}) as ysModifyLog,
+      '2' as sortFlag,CRT_TIME as CRT_DATE,AUTO_ID
+       from YS_RESULT_INFO  where APP_ID=#{appId} 
+       <if test="approveStr !=null and approveStr !='' ">
+       		AND APPROVE_RESULT is not null
+       </if>
+	</select>
+    <select id="selectYsPatchbolt" parameterType="java.util.Map" resultMap="YsPatchboltMap">
+	  select  AUTO_ID, APP_ID, PATCH_CODE, 
+      ID_CERTIFY, WORK_CERTIFY, COMPANY_CERTIFY, 
+      EDUCATION_CERTIFY, HOUSE_LOAN_CERTIFY, IS_HAVESIGN, 
+      CARD_CERTIFY, EXIST_CERTIFY, PROV_CERTIFY, 
+      NON_ADDFILES, HOUSE_CERTIFY, CAR_CERTIFY, 
+      CURR_ASSETS_CERTIFY, INCOME_CERTIFY, CRT_DATE, 
+      CRT_USER, MEMO, APPLYER, 
+      PROMOTER, RISK, DUE_DATE, 
+      OPT_TELNO, MESSAGE_FLAG, SEND_FLAG, 
+       OTHER_CERTIFY, IND_TAX_RESIDENTS_CERTIFY, 
+      CAR_LOAN_CERTIFY, SEC_CERTIFY, ENOLMENT_CERTIFY, 
+      GUARANTEE_LETTER,
+      (select PATCH_STATUS from ys_file_patchbolt where APP_ID = #{appId,jdbcType=VARCHAR}) as COMPLETED_FLAG
+	    from YS_PATCHBOLT_INFO  where  APP_ID = #{appId,jdbcType=VARCHAR}
+  	</select>
+</mapper>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="YLZ">
+  <resultMap id="YLZInfoMap" type="java.util.Map" >
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="IS_ON_JOB" property="isOnJob" jdbcType="VARCHAR" />
+    <result column="INSURED_STATUS" property="insuredStatus" jdbcType="VARCHAR" />
+    <result column="REPAYMENT_ABILITY" property="repaymentAbility" jdbcType="VARCHAR" />
+    <result column="BEGIN_PAYMENT_DATE" property="beginPaymentDate" jdbcType="VARCHAR" />
+    <result column="LATEST_PAYMENT_DATE" property="latestPaymentDate" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="HzGjjxxInfoMap" type="java.util.Map" >
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="pay_ym" property="payYm" jdbcType="VARCHAR" />
+    <result column="pay_base" property="payBase" jdbcType="VARCHAR" />
+    <result column="xm" property="xm" jdbcType="VARCHAR" />
+    <result column="businesstype" property="businesstype" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectAllYLZInfo" parameterType="java.lang.String" resultMap="YLZInfoMap">
+		SELECT COMPANY_NAME, IS_ON_JOB, INSURED_STATUS,REPAYMENT_ABILITY,
+		BEGIN_PAYMENT_DATE, LATEST_PAYMENT_DATE
+		FROM YLZ_REP_DATA  WHERE APP_ID = #{appId}
+  </select>
+  <select id="selectCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+  		SELECT count(1) from YLZ_REP_DATA WHERE APP_ID = #{appId}
+  </select>
+  
+  <select id="queryHzGjjxxInfo" parameterType="java.lang.String" resultMap="HzGjjxxInfoMap">
+		select x.dept_name, x.status, x.pay_ym, x.pay_base, o.businesstype
+		    from hz_gjjxx x
+		    left join hz_marry_info o on x.app_id = o.app_id WHERE x.APP_ID = #{appId}
+  </select>
+  
+  <resultMap id="XmPersonalInfoMap" type="java.util.Map" >
+    <result column="dwmc" property="dwmc" jdbcType="VARCHAR" />
+    <result column="grzhzt" property="grzhzt" jdbcType="VARCHAR" />
+    <result column="cjrq" property="cjrq" jdbcType="VARCHAR" />
+    <result column="yjce" property="yjce" jdbcType="VARCHAR" />
+    <result column="grjcbl" property="grjcbl" jdbcType="VARCHAR" />
+    <result column="dwjcbl" property="dwjcbl" jdbcType="VARCHAR" />
+    <result column="jzrq" property="jzrq" jdbcType="VARCHAR" />
+    <result column="zjjjrq" property="zjjjrq" jdbcType="VARCHAR" />
+    <result column="ljjcch" property="ljjcch" jdbcType="VARCHAR" />
+    <result column="ljzdcs" property="ljzdcs" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="queryXMPersonal" parameterType="java.lang.String" resultMap="XmPersonalInfoMap">
+		SELECT dwmc, grzhzt, cjrq,yjce,jzrq,
+		grjcbl, dwjcbl,zjjjrq,ljjcch,ljzdcs
+		FROM xm_gjj_jcxx  WHERE APP_ID = #{appId} and  rownum =1  order by crt_time desc
+  </select>
+  
+  <resultMap id="XmGjjInfoMap" type="java.util.Map" >
+    <result column="xxjyjg" property="xxjyjg" jdbcType="VARCHAR" />
+    <result column="jcfsd" property="jcfsd" jdbcType="VARCHAR" />
+    <result column="sjfsjgdm" property="sjfsjgdm" jdbcType="VARCHAR" />
+    <result column="xingming" property="xingming" jdbcType="VARCHAR" />
+    <result column="xingbie" property="xingbie" jdbcType="VARCHAR" />
+    <result column="grdjh" property="grdjh" jdbcType="VARCHAR" />
+    <result column="grzh" property="grzh" jdbcType="VARCHAR" />
+    <result column="zjlx" property="zjlx" jdbcType="VARCHAR" />
+    <result column="zjhm" property="zjhm" jdbcType="VARCHAR" />
+    <result column="snypjgz" property="snypjgz" jdbcType="VARCHAR" />
+    <result column="zzdh" property="zzdh" jdbcType="VARCHAR" />
+    <result column="sjhm" property="sjhm" jdbcType="VARCHAR" />
+    <result column="jtdz" property="jtdz" jdbcType="VARCHAR" />
+    <result column="dwmc" property="dwmc" jdbcType="VARCHAR" />
+    <result column="dwkhrq" property="dwkhrq" jdbcType="VARCHAR" />
+    <result column="zzjgdm" property="zzjgdm" jdbcType="VARCHAR" />
+    <result column="dwxz" property="dwxz" jdbcType="VARCHAR" />
+    <result column="dwdz" property="dwdz" jdbcType="VARCHAR" />
+    <result column="dwzhzt" property="dwzhzt" jdbcType="VARCHAR" />
+    <result column="dwjczjly" property="dwjczjly" jdbcType="VARCHAR" />
+    <result column="dwfrdbxm" property="dwfrdbxm" jdbcType="VARCHAR" />
+    <result column="dwlxfs" property="dwlxfs" jdbcType="VARCHAR" />
+    <result column="styhdm" property="styhdm" jdbcType="VARCHAR" />
+    <result column="dwzh" property="dwzh" jdbcType="VARCHAR" />
+    <result column="dwfxr" property="dwfxr" jdbcType="VARCHAR" />
+    <result column="sfsqgjjhj" property="sfsqgjjhj" jdbcType="VARCHAR" />
+    <result column="sqhjsj" property="sqhjsj" jdbcType="VARCHAR" />
+    <result column="sqhjyy" property="sqhjyy" jdbcType="VARCHAR" />
+    <result column="khrq" property="khrq" jdbcType="VARCHAR" />
+    <result column="cjrq" property="cjrq" jdbcType="VARCHAR" />
+    <result column="jzrq" property="jzrq" jdbcType="VARCHAR" />
+    <result column="dwyjce" property="dwyjce" jdbcType="VARCHAR" />
+    <result column="yjce" property="yjce" jdbcType="VARCHAR" />
+    <result column="grjcbl" property="grjcbl" jdbcType="VARCHAR" />
+    <result column="dwjcbl" property="dwjcbl" jdbcType="VARCHAR" />
+    <result column="grzhzt" property="grzhzt" jdbcType="VARCHAR" />
+    <result column="zjjjrq" property="zjjjrq" jdbcType="VARCHAR" />
+    <result column="dqnd" property="dqnd" jdbcType="VARCHAR" />
+    <result column="ljjcch" property="ljjcch" jdbcType="VARCHAR" />
+    <result column="ljzdcs" property="ljzdcs" jdbcType="VARCHAR" />
+    <result column="dqye" property="dqye" jdbcType="VARCHAR" />
+    <result column="cje1" property="cje1" jdbcType="VARCHAR" />
+    <result column="tqyy" property="tqyy" jdbcType="VARCHAR" />
+    <result column="tqsj" property="tqsj" jdbcType="VARCHAR" />
+    <result column="tqfs" property="tqfs" jdbcType="VARCHAR" />
+    <result column="hdtqze" property="hdtqze" jdbcType="VARCHAR" />
+    <result column="tqje" property="tqje" jdbcType="VARCHAR" />
+    <result column="ljtqje" property="ljtqje" jdbcType="VARCHAR" />
+    <result column="gttqrxm" property="gttqrxm" jdbcType="VARCHAR" />
+    <result column="gttqrsfzhm" property="gttqrsfzhm" jdbcType="VARCHAR" />
+    <result column="gttqrsfjlgjj" property="gttqrsfjlgjj" jdbcType="VARCHAR" />
+    <result column="gjjdkzh" property="gjjdkzh" jdbcType="VARCHAR" />
+    <result column="htdkje" property="htdkje" jdbcType="VARCHAR" />
+    <result column="dkqs" property="dkqs" jdbcType="VARCHAR" />
+    <result column="dkhkfs" property="dkhkfs" jdbcType="VARCHAR" />
+    <result column="dkyhke" property="dkyhke" jdbcType="VARCHAR" />
+    <result column="dkffrq" property="dkffrq" jdbcType="VARCHAR" />
+    <result column="dkdqrq" property="dkdqrq" jdbcType="VARCHAR" />
+    <result column="dkjqrq" property="dkjqrq" jdbcType="VARCHAR" />
+    <result column="dkye" property="dkye" jdbcType="VARCHAR" />
+    <result column="gtjkrxm" property="gtjkrxm" jdbcType="VARCHAR" />
+    <result column="gtjkrzjhm" property="gtjkrzjhm" jdbcType="VARCHAR" />
+    <result column="gtjkrfsjlgjj" property="gtjkrfsjlgjj" jdbcType="VARCHAR" />
+    <result column="lxdz" property="lxdz" jdbcType="VARCHAR" />
+    <result column="dkzt" property="dkzt" jdbcType="VARCHAR" />
+    <result column="dqhkzt" property="dqhkzt" jdbcType="VARCHAR" />
+    <result column="dkfsyqch" property="dkfsyqch" jdbcType="VARCHAR" />
+    <result column="zdlxyqch" property="zdlxyqch" jdbcType="VARCHAR" />
+    <result column="dwmc1" property="dwmc1" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="queryXmGjjInfo" parameterType="java.lang.String" resultMap="XmGjjInfoMap">
+		SELECT l.app_id,xxjyjg,jcfsd,sjfsjgdm,xingming,xingbie,grdjh,l.grzh,
+			zjlx,zjhm,snypjgz,zzdh,sjhm,jtdz,l.dwmc,dwkhrq,zzjgdm,dwxz,dwdz,dwzhzt,dwjczjly
+			dwfrdbxm,dwlxfs,styhdm,dwzh,dwfxr,sfsqgjjhj,sqhjsj,sqhjyy,
+			x.khrq,x.cjrq,x.jzrq,x.dwmc as dwmc1,x.dwyjce,x.yjce,
+			x.grjcbl,x.dwjcbl,x.grzhzt,x.zjjjrq,x.dqnd,x.ljjcch,x.ljzdcs,x.dqye,x.cje1,
+			t.tqyy,t.tqsj,t.tqfs,t.hdtqze,t.tqje,t.ljtqje,t.gttqrxm,t.gttqrsfzhm,t.gttqrsfjlgjj,
+			g.gjjdkzh,g.htdkje,g.dkqs,g.dkhkfs,g.dkyhke,g.dkffrq,g.dkdqrq,g.dkjqrq,g.dkye,g.gtjkrxm,
+			g.gtjkrzjhm,g.gtjkrfsjlgjj,g.lxdz,g.dkzt,g.dqhkzt,g.dkfsyqch,g.zdlxyqch
+		FROM xm_personal_info l left join xm_gjj_jcxx x on l.app_id=x.app_id
+		left join xm_gjj_tqxx t on t.app_id = l.app_Id
+		left join xm_gjj_dkxx g on g.app_id = l.app_Id
+		WHERE l.APP_ID = #{appId}  and rownum = 1 order by x.crt_time desc
+  </select>
+  
+  
+	<resultMap id="WzgjjInfoMap" type="java.util.Map" >
+		<result column="dwmc" property="dwmc" jdbcType="VARCHAR" />
+	    <result column="ZT" property="zt" jdbcType="VARCHAR" />
+	    <result column="KHRQ" property="khrq" jdbcType="VARCHAR" />
+	    <result column="SSNY" property="ssny" jdbcType="VARCHAR" />
+	    <result column="GZE" property="gze" jdbcType="VARCHAR" />
+	    <result column="YJCE" property="yjce" jdbcType="VARCHAR" />
+	    <result column="GRJCBL" property="grjcbl" jdbcType="VARCHAR" />
+	    <result column="GRYHJJE" property="gryhjje" jdbcType="VARCHAR" />
+	    <result column="DWJCBL" property="dwjcbl" jdbcType="VARCHAR" />
+	    <result column="DWYHJJE" property="dwyhjje" jdbcType="VARCHAR" />
+	</resultMap>
+  
+	<select id="queryWzgjjInfo" parameterType="java.lang.String" resultMap="WzgjjInfoMap">
+		SELECT DWMC, ZT, KHRQ,SSNY,GZE,GRJCBL,
+		YJCE, YJCE,GRYHJJE,DWJCBL,DWYHJJE
+		FROM wz_gr_gjjzl  WHERE APP_ID = #{appId} and  rownum =1  order by crt_time desc
+	</select>
+	
+	<resultMap id="YcInfoMap" type="java.util.Map" >
+		<result column="STDCMPNM" property="stdcmpnm" jdbcType="VARCHAR" />
+	    <result column="STDGJJSTDT" property="stdgjjstdt" jdbcType="VARCHAR" />
+	    <result column="STDGJJLTDT" property="stdgjjltdt" jdbcType="VARCHAR" />
+	    <result column="STDGJJGRAM" property="stdgjjgram" jdbcType="VARCHAR" />
+	    <result column="STDGJJGRSC" property="stdgjjgrsc" jdbcType="VARCHAR" />
+	    <result column="STDGJJDWSC" property="stdgjjdwsc" jdbcType="VARCHAR" />
+	    <result column="STDCMPYJSC" property="stdcmpyjsc" jdbcType="VARCHAR" />
+	    <result column="STDGJJENDT" property="stdgjjendt" jdbcType="VARCHAR" />
+	    <result column="STDCMPJCZT" property="stdcmpjczt" jdbcType="VARCHAR" />
+	    <result column="STDGJJDWAM" property="stdgjjdwam" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryYcInfo" parameterType="java.lang.String" resultMap="YcInfoMap">
+		SELECT STDCMPNM, STDGJJSTDT, STDGJJLTDT,STDGJJGRAM,STDGJJGRSC,STDGJJDWSC,
+		STDCMPYJSC, STDGJJENDT,STDCMPJCZT,STDGJJDWAM
+		FROM yc_info  WHERE APP_ID = #{appId} and  rownum =1  order by crt_time desc
+	</select>
+	
+</mapper>

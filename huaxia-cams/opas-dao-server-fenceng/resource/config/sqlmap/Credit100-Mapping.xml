@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Credit100">
+
+	<resultMap id="resultSummaryInfo" type="java.util.Map">
+		<result column="SL_ID_ABNORMAL" property="idAbnormal" jdbcType="VARCHAR" />
+		<result column="SL_ID_BANK_LOST" property="idBankLost" jdbcType="VARCHAR" />
+		<result column="SL_ID_NBANK_P2P_BAD" property="idNbankP2pBad" jdbcType="VARCHAR" />
+		<result column="SL_ID_NBANK_P2P_LOST" property="idNbankP2pLost" jdbcType="VARCHAR" />
+		<result column="SL_ID_NBANK_P2P_REFUSE" property="idNbankP2pRefuse" jdbcType="VARCHAR" />
+		<result column="SL_ID_COURT_BAD" property="idCourtBad" jdbcType="VARCHAR" />
+		<result column="SL_ID_P2P_BAD" property="idP2pBad" jdbcType="VARCHAR" />
+		<result column="SL_CELL_ABNORMAL" property="cellAbnormal" jdbcType="VARCHAR" />
+		<result column="SL_CELL_BANK_LOST" property="cellBankLost" jdbcType="VARCHAR" />
+		<result column="SL_CELL_NBANK_P2P_BAD" property="cellNbankP2pBad" jdbcType="VARCHAR" />
+		<result column="SL_CELL_P2P_BAD" property="cellP2pBad" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="resultDetailInfo" type="java.util.Map">
+		<result column="INSIDE_APP_NO" property="insideAppNo" jdbcType="VARCHAR" />
+		<result column="SWIFT_NUMBER" property="swiftNumber" jdbcType="VARCHAR" />
+	    <result column="LOCATION_BIZ_ADDR1" property="locationBizAddr1" jdbcType="VARCHAR" />
+	    <result column="LOCATION_BIZ_ADDR2" property="locationBizAddr2" jdbcType="VARCHAR" />
+	    <result column="LOCATION_BIZ_ADDR3" property="locationBizAddr3" jdbcType="VARCHAR" />
+	    <result column="LOCATION_BIZ_ADDR4" property="locationBizAddr4" jdbcType="VARCHAR" />
+	    <result column="LOCATION_BIZ_ADDR5" property="locationBizAddr5" jdbcType="VARCHAR" />
+	    <result column="LOCATION_HOME_ADDR1" property="locationHomeAddr1" jdbcType="VARCHAR" />
+	    <result column="LOCATION_HOME_ADDR2" property="locationHomeAddr2" jdbcType="VARCHAR" />
+	    <result column="LOCATION_HOME_ADDR3" property="locationHomeAddr3" jdbcType="VARCHAR" />
+	    <result column="LOCATION_HOME_ADDR4" property="locationHomeAddr4" jdbcType="VARCHAR" />
+	    <result column="LOCATION_HOME_ADDR5" property="locationHomeAddr5" jdbcType="VARCHAR" />
+	    <result column="LOCATION_PER_ADDR1" property="locationPerAddr1" jdbcType="VARCHAR" />
+	    <result column="LOCATION_PER_ADDR2" property="locationPerAddr2" jdbcType="VARCHAR" />
+	    <result column="LOCATION_PER_ADDR3" property="locationPerAddr3" jdbcType="VARCHAR" />
+	    <result column="LOCATION_PER_ADDR4" property="locationPerAddr4" jdbcType="VARCHAR" />
+	    <result column="LOCATION_PER_ADDR5" property="locationPerAddr5" jdbcType="VARCHAR" />
+	    <result column="LOCATION_APPLY_ADDR1" property="locationApplyAddr1" jdbcType="VARCHAR" />
+	    <result column="LOCATION_APPLY_ADDR2" property="locationApplyAddr2" jdbcType="VARCHAR" />
+	    <result column="LOCATION_APPLY_ADDR3" property="locationApplyAddr3" jdbcType="VARCHAR" />
+	    <result column="LOCATION_APPLY_ADDR4" property="locationApplyAddr4" jdbcType="VARCHAR" />
+	    <result column="LOCATION_APPLY_ADDR5" property="locationApplyAddr5" jdbcType="VARCHAR" />
+	    <result column="LOCATION_OTH_ADDR1" property="locationOthAddr1" jdbcType="VARCHAR" />
+	    <result column="LOCATION_OTH_ADDR2" property="locationOthAddr2" jdbcType="VARCHAR" />
+	    <result column="LOCATION_OTH_ADDR3" property="locationOthAddr3" jdbcType="VARCHAR" />
+	    <result column="LOCATION_OTH_ADDR4" property="locationOthAddr4" jdbcType="VARCHAR" />
+	    <result column="LOCATION_OTH_ADDR5" property="locationOthAddr5" jdbcType="VARCHAR" />
+	     <result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+	    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+	    <result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+	    <result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	    <result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	    <result column="BATCH_DATE" property="batchDate" jdbcType="TIMESTAMP" />
+	    <result column="REC_STATUS" property="recStatus" jdbcType="VARCHAR" />
+	    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	    <result column="IDENTITYCARD" property="identitycard" jdbcType="CHAR" />
+	    <result column="CELL" property="cell" jdbcType="CHAR" />
+	    <result column="NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_ABNORMAL" property="slCellAbnormal" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_PHONE_OVERDUE" property="slCellPhoneOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_BANK_BAD" property="slCellBankBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_BANK_OVERDUE" property="slCellBankOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_BANK_FRAUD" property="slCellBankFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_BANK_LOST" property="slCellBankLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_BANK_REFUSE" property="slCellBankRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_P2P_BAD" property="slCellP2pBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_P2P_OVERDUE" property="slCellP2pOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_P2P_FRAUD" property="slCellP2pFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_P2P_LOST" property="slCellP2pLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_P2P_REFUSE" property="slCellP2pRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_P2P_BAD" property="slCellNbankP2pBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_P2P_OVERDUE" property="slCellNbankP2pOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_P2P_FRAUD" property="slCellNbankP2pFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_P2P_LOST" property="slCellNbankP2pLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_P2P_REFUSE" property="slCellNbankP2pRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_MC_BAD" property="slCellNbankMcBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_MC_OVERDUE" property="slCellNbankMcOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_MC_FRAUD" property="slCellNbankMcFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_MC_LOST" property="slCellNbankMcLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_MC_REFUSE" property="slCellNbankMcRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CA_BAD" property="slCellNbankCaBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CA_OVERDUE" property="slCellNbankCaOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CA_FRAUD" property="slCellNbankCaFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CA_LOST" property="slCellNbankCaLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CA_REFUSE" property="slCellNbankCaRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_COM_BAD" property="slCellNbankComBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_COM_OVERDUE" property="slCellNbankComOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_COM_FRAUD" property="slCellNbankComFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_COM_LOST" property="slCellNbankComLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_COM_REFUSE" property="slCellNbankComRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CF_BAD" property="slCellNbankCfBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CF_OVERDUE" property="slCellNbankCfOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CF_FRAUD" property="slCellNbankCfFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CF_LOST" property="slCellNbankCfLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_CF_REFUSE" property="slCellNbankCfRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_OTHER_BAD" property="slCellNbankOtherBad" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_OTHER_OVERDUE" property="slCellNbankOtherOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_OTHER_FRAUD" property="slCellNbankOtherFraud" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_OTHER_LOST" property="slCellNbankOtherLost" jdbcType="VARCHAR" />
+	    <result column="SL_CELL_NBANK_OTHER_REFUSE" property="slCellNbankOtherRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_ABNORMAL" property="slIdAbnormal" jdbcType="VARCHAR" />
+	    <result column="SL_ID_PHONE_OVERDUE" property="slIdPhoneOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_COURT_BAD" property="slIdCourtBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_COURT_EXECUTED" property="slIdCourtExecuted" jdbcType="VARCHAR" />
+	    <result column="SL_ID_BANK_BAD" property="slIdBankBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_BANK_OVERDUE" property="slIdBankOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_BANK_FRAUD" property="slIdBankFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_BANK_LOST" property="slIdBankLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_BANK_REFUSE" property="slIdBankRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_P2P_BAD" property="slIdP2pBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_P2P_OVERDUE" property="slIdP2pOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_P2P_FRAUD" property="slIdP2pFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_P2P_LOST" property="slIdP2pLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_P2P_REFUSE" property="slIdP2pRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_P2P_BAD" property="slIdNbankP2pBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_P2P_OVERDUE" property="slIdNbankP2pOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_P2P_FRAUD" property="slIdNbankP2pFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_P2P_LOST" property="slIdNbankP2pLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_P2P_REFUSE" property="slIdNbankP2pRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_MC_BAD" property="slIdNbankMcBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_MC_OVERDUE" property="slIdNbankMcOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_MC_FRAUD" property="slIdNbankMcFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_MC_LOST" property="slIdNbankMcLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_MC_REFUSE" property="slIdNbankMcRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CA_BAD" property="slIdNbankCaBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CA_OVERDUE" property="slIdNbankCaOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CA_FRAUD" property="slIdNbankCaFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CA_LOST" property="slIdNbankCaLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CA_REFUSE" property="slIdNbankCaRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_COM_BAD" property="slIdNbankComBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_COM_OVERDUE" property="slIdNbankComOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_COM_FRAUD" property="slIdNbankComFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_COM_LOST" property="slIdNbankComLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_COM_REFUSE" property="slIdNbankComRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CF_BAD" property="slIdNbankCfBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CF_OVERDUE" property="slIdNbankCfOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CF_FRAUD" property="slIdNbankCfFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CF_LOST" property="slIdNbankCfLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_CF_REFUSE" property="slIdNbankCfRefuse" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_OTHER_BAD" property="slIdNbankOtherBad" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_OTHER_OVERDUE" property="slIdNbankOtherOverdue" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_OTHER_FRAUD" property="slIdNbankOtherFraud" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_OTHER_LOST" property="slIdNbankOtherLost" jdbcType="VARCHAR" />
+	    <result column="SL_ID_NBANK_OTHER_REFUSE" property="slIdNbankOtherRefuse" jdbcType="VARCHAR" />
+	    <result column="LM_ABNORMAL" property="lmAbnormal" jdbcType="VARCHAR" />
+	    <result column="LM_PHONE_OVERDUE" property="lmPhoneOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_BANK_BAD" property="lmBankBad" jdbcType="VARCHAR" />
+	    <result column="LM_BANK_OVERDUE" property="lmBankOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_BANK_FRAUD" property="lmBankFraud" jdbcType="VARCHAR" />
+	    <result column="LM_BANK_LOST" property="lmBankLost" jdbcType="VARCHAR" />
+	    <result column="LM_BANK_REFUSE" property="lmBankRefuse" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_P2P_BAD" property="lmNbankP2pBad" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_P2P_OVERDUE" property="lmNbankP2pOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_P2P_FRAUD" property="lmNbankP2pFraud" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_P2P_LOST" property="lmNbankP2pLost" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_P2P_REFUSE" property="lmNbankP2pRefuse" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_MC_BAD" property="lmNbankMcBad" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_MC_OVERDUE" property="lmNbankMcOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_MC_FRAUD" property="lmNbankMcFraud" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_MC_LOST" property="lmNbankMcLost" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_MC_REFUSE" property="lmNbankMcRefuse" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CA_BAD" property="lmNbankCaBad" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CA_OVERDUE" property="lmNbankCaOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CA_FRAUD" property="lmNbankCaFraud" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CA_LOST" property="lmNbankCaLost" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CA_REFUSE" property="lmNbankCaRefuse" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_COM_BAD" property="lmNbankComBad" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_COM_OVERDUE" property="lmNbankComOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_COM_FRAUD" property="lmNbankComFraud" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_COM_LOST" property="lmNbankComLost" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_COM_REFUSE" property="lmNbankComRefuse" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CF_BAD" property="lmNbankCfBad" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CF_OVERDUE" property="lmNbankCfOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CF_FRAUD" property="lmNbankCfFraud" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CF_LOST" property="lmNbankCfLost" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_CF_REFUSE" property="lmNbankCfRefuse" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_OTHER_BAD" property="lmNbankOtherBad" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_OTHER_OVERDUE" property="lmNbankOtherOverdue" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_OTHER_FRAUD" property="lmNbankOtherFraud" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_OTHER_LOST" property="lmNbankOtherLost" jdbcType="VARCHAR" />
+	    <result column="LM_NBANK_OTHER_REFUSE" property="lmNbankOtherRefuse" jdbcType="VARCHAR" />
+	    <result column="BRCREDITPOINT" property="brcreditpoint" jdbcType="VARCHAR" />
+	     <result column="CONS_CONT" property="consCont" jdbcType="VARCHAR" />
+	    <result column="CONS_TIME_RECENT" property="consTimeRecent" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M3_NUM" property="consTotM3Num" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M3_PAY" property="consTotM3Pay" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M3_P_CATENUM" property="consTotM3PCatenum" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M3_V_CATENUM" property="consTotM3VCatenum" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M3_VISITS" property="consTotM3Visits" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M12_NUM" property="consTotM12Num" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M12_PAY" property="consTotM12Pay" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M12_P_CATENUM" property="consTotM12PCatenum" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M12_V_CATENUM" property="consTotM12VCatenum" jdbcType="VARCHAR" />
+	    <result column="CONS_TOT_M12_VISITS" property="consTotM12Visits" jdbcType="VARCHAR" />
+	    <result column="CONS_MAX_M3_NUM" property="consMaxM3Num" jdbcType="VARCHAR" />
+	    <result column="CONS_MAX_M3_PAY" property="consMaxM3Pay" jdbcType="VARCHAR" />
+	    <result column="CONS_MAX_M3_PAYCATE" property="consMaxM3Paycate" jdbcType="VARCHAR" />
+	    <result column="CONS_MAX_M12_NUM" property="consMaxM12Num" jdbcType="VARCHAR" />
+	    <result column="CONS_MAX_M12_PAY" property="consMaxM12Pay" jdbcType="VARCHAR" />
+	    <result column="CONS_MAX_M12_PAYCATE" property="consMaxM12Paycate" jdbcType="VARCHAR" />
+	    <result column="CONS_M3_RYBH_NUM" property="consM3RybhNum" jdbcType="VARCHAR" />
+	    <result column="CONS_M3_RYBH_PAY" property="consM3RybhPay" jdbcType="VARCHAR" />
+	    <result column="CONS_M3_JYDQ_NUM" property="consM3JydqNum" jdbcType="VARCHAR" />
+	    <result column="CONS_M3_JYDQ_PAY" property="consM3JydqPay" jdbcType="VARCHAR" />
+	    <result column="CONS_M3_MYYP_NUM" property="consM3MyypNum" jdbcType="VARCHAR" />
+	    <result column="CONS_M3_MYYP_PAY" property="consM3MyypPay" jdbcType="VARCHAR" />
+	    <result column="CONS_M12_RYBH_NUM" property="consM12RybhNum" jdbcType="VARCHAR" />
+	    <result column="CONS_M12_RYBH_PAY" property="consM12RybhPay" jdbcType="VARCHAR" />
+	    <result column="CONS_M12_JYDQ_NUM" property="consM12JydqNum" jdbcType="VARCHAR" />
+	    <result column="CONS_M12_JYDQ_PAY" property="consM12JydqPay" jdbcType="VARCHAR" />
+	    <result column="CONS_M12_MYYP_NUM" property="consM12MyypNum" jdbcType="VARCHAR" />
+	    <result column="CONS_M12_MYYP_PAY" property="consM12MyypPay" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="resultAppId" type="java.util.Map">
+		<result column="APP_ID1" property="appId1" jdbcType="VARCHAR" />
+	    <result column="APP_ID2" property="appId2" jdbcType="VARCHAR" />
+	    <result column="APP_ID3" property="appId3" jdbcType="VARCHAR" />
+	    <result column="APP_ID4" property="appId4" jdbcType="VARCHAR" />
+	    <result column="APP_ID5" property="appId5" jdbcType="VARCHAR" />
+	</resultMap>
+	
+
+	<select id="querySummaryInfo" parameterType="java.lang.String"
+		resultMap="resultDetailInfo">
+		<!-- SELECT t1.app_id,
+		       t1.sl_id_abnormal,
+		       t1.sl_id_bank_lost,
+		       t1.sl_id_nbank_p2p_bad,
+		       t1.sl_id_nbank_p2p_lost,
+		       t1.sl_id_nbank_p2p_refuse,
+		       t1.sl_id_court_bad,
+		       t1.sl_id_p2p_bad
+		  FROM opas_biz_speciallist_id_data t1
+				 WHERE t1.app_id = #{appId,jdbcType=VARCHAR} -->
+		select t2.APP_ID,       t2.SL_ID_ABNORMAL,       t2.SL_ID_PHONE_OVERDUE,       t2.SL_ID_COURT_BAD,
+       t2.SL_ID_COURT_EXECUTED,       t2.SL_ID_BANK_BAD,       t2.SL_ID_BANK_OVERDUE,       t2.SL_ID_BANK_FRAUD,
+       t2.SL_ID_BANK_LOST,       t2.SL_ID_BANK_REFUSE,       t2.SL_ID_P2P_BAD,       t2.SL_ID_P2P_OVERDUE,
+       t2.SL_ID_P2P_FRAUD,       t2.SL_ID_P2P_LOST,       t2.SL_ID_P2P_REFUSE,       t2.SL_ID_NBANK_P2P_BAD,
+       t2.SL_ID_NBANK_P2P_OVERDUE,       t2.SL_ID_NBANK_P2P_FRAUD,       t2.SL_ID_NBANK_P2P_LOST,       t2.SL_ID_NBANK_P2P_REFUSE,
+       t2.SL_ID_NBANK_MC_BAD,       t2.SL_ID_NBANK_MC_OVERDUE,       t2.SL_ID_NBANK_MC_FRAUD,       t2.SL_ID_NBANK_MC_LOST,
+       t2.SL_ID_NBANK_MC_REFUSE,       t2.SL_ID_NBANK_CA_BAD,       t2.SL_ID_NBANK_CA_OVERDUE,       t2.SL_ID_NBANK_CA_FRAUD,
+       t2.SL_ID_NBANK_CA_LOST,       t2.SL_ID_NBANK_CA_REFUSE,       t2.SL_ID_NBANK_COM_BAD,       t2.SL_ID_NBANK_COM_OVERDUE,
+       t2.SL_ID_NBANK_COM_FRAUD,       t2.SL_ID_NBANK_COM_LOST,       t2.SL_ID_NBANK_COM_REFUSE,       t2.SL_ID_NBANK_CF_BAD,
+       t2.SL_ID_NBANK_CF_OVERDUE,       t2.SL_ID_NBANK_CF_FRAUD,       t2.SL_ID_NBANK_CF_LOST,       t2.SL_ID_NBANK_CF_REFUSE,
+       t2.SL_ID_NBANK_OTHER_BAD,       t2.SL_ID_NBANK_OTHER_OVERDUE,       t2.SL_ID_NBANK_OTHER_FRAUD,       t2.SL_ID_NBANK_OTHER_LOST,
+       t2.SL_ID_NBANK_OTHER_REFUSE
+  from OPAS_BIZ_SPECIALLIST_ID_DATA t2
+ where t2.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	<select id="queryDetailInfo" parameterType="java.lang.String"
+		resultMap="resultDetailInfo">
+		 select t1.SWIFT_NUMBER, t1.BRCREDITPOINT, t1.REC_STATUS, t1.APP_ID
+   from OPAS_BIZ_SPECIALLIST_SCORE t1
+		  where t1.app_id = #{appId,jdbcType=VARCHAR}
+		<!--  select 
+		 		t1.SWIFT_NUMBER,
+		 		t1.BRCREDITPOINT,
+		        t1.REC_STATUS,
+		        t1.APP_ID,
+		        t2.SL_ID_ABNORMAL,
+		        t2.SL_ID_PHONE_OVERDUE,
+		        t2.SL_ID_COURT_BAD,
+		        t2.SL_ID_COURT_EXECUTED,
+		        t2.SL_ID_BANK_BAD,
+		        t2.SL_ID_BANK_OVERDUE,
+		        t2.SL_ID_BANK_FRAUD,
+		        t2.SL_ID_BANK_LOST,
+		        t2.SL_ID_BANK_REFUSE,
+		        t2.SL_ID_P2P_BAD,
+		        t2.SL_ID_P2P_OVERDUE,
+		        t2.SL_ID_P2P_FRAUD,
+		        t2.SL_ID_P2P_LOST,
+		        t2.SL_ID_P2P_REFUSE,
+		        t2.SL_ID_NBANK_P2P_BAD,
+		        t2.SL_ID_NBANK_P2P_OVERDUE,
+		        t2.SL_ID_NBANK_P2P_FRAUD,
+		        t2.SL_ID_NBANK_P2P_LOST,
+		        t2.SL_ID_NBANK_P2P_REFUSE,
+		        t2.SL_ID_NBANK_MC_BAD,
+		        t2.SL_ID_NBANK_MC_OVERDUE,
+		        t2.SL_ID_NBANK_MC_FRAUD,
+		        t2.SL_ID_NBANK_MC_LOST,
+		        t2.SL_ID_NBANK_MC_REFUSE,
+		        t2.SL_ID_NBANK_CA_BAD,
+		        t2.SL_ID_NBANK_CA_OVERDUE,
+		        t2.SL_ID_NBANK_CA_FRAUD,
+		        t2.SL_ID_NBANK_CA_LOST,
+		        t2.SL_ID_NBANK_CA_REFUSE,
+		        t2.SL_ID_NBANK_COM_BAD,
+		        t2.SL_ID_NBANK_COM_OVERDUE,
+		        t2.SL_ID_NBANK_COM_FRAUD,
+		        t2.SL_ID_NBANK_COM_LOST,
+		        t2.SL_ID_NBANK_COM_REFUSE,
+		        t2.SL_ID_NBANK_CF_BAD,
+		        t2.SL_ID_NBANK_CF_OVERDUE,
+		        t2.SL_ID_NBANK_CF_FRAUD,
+		        t2.SL_ID_NBANK_CF_LOST,
+		        t2.SL_ID_NBANK_CF_REFUSE,
+		        t2.SL_ID_NBANK_OTHER_BAD,
+		        t2.SL_ID_NBANK_OTHER_OVERDUE,
+		        t2.SL_ID_NBANK_OTHER_FRAUD,
+		        t2.SL_ID_NBANK_OTHER_LOST,
+		        t2.SL_ID_NBANK_OTHER_REFUSE,
+		        t3.SL_CELL_ABNORMAL,
+		        t3.SL_CELL_PHONE_OVERDUE,
+		        t3.SL_CELL_BANK_BAD,
+		        t3.SL_CELL_BANK_OVERDUE,
+		        t3.SL_CELL_BANK_FRAUD,
+		        t3.SL_CELL_BANK_LOST,
+		        t3.SL_CELL_BANK_REFUSE,
+		        t3.SL_CELL_P2P_BAD,
+		        t3.SL_CELL_P2P_OVERDUE,
+		        t3.SL_CELL_P2P_FRAUD,
+		        t3.SL_CELL_P2P_LOST,
+		        t3.SL_CELL_P2P_REFUSE,
+		        t3.SL_CELL_NBANK_P2P_BAD,
+		        t3.SL_CELL_NBANK_P2P_OVERDUE,
+		        t3.SL_CELL_NBANK_P2P_FRAUD,
+		        t3.SL_CELL_NBANK_P2P_LOST,
+		        t3.SL_CELL_NBANK_P2P_REFUSE,
+		        t3.SL_CELL_NBANK_MC_BAD,
+		        t3.SL_CELL_NBANK_MC_OVERDUE,
+		        t3.SL_CELL_NBANK_MC_FRAUD,
+		        t3.SL_CELL_NBANK_MC_LOST,
+		        t3.SL_CELL_NBANK_MC_REFUSE,
+		        t3.SL_CELL_NBANK_CA_BAD,
+		        t3.SL_CELL_NBANK_CA_OVERDUE,
+		        t3.SL_CELL_NBANK_CA_FRAUD,
+		        t3.SL_CELL_NBANK_CA_LOST,
+		        t3.SL_CELL_NBANK_CA_REFUSE,
+		        t3.SL_CELL_NBANK_COM_BAD,
+		        t3.SL_CELL_NBANK_COM_OVERDUE,
+		        t3.SL_CELL_NBANK_COM_FRAUD,
+		        t3.SL_CELL_NBANK_COM_LOST,
+		        t3.SL_CELL_NBANK_COM_REFUSE,
+		        t3.SL_CELL_NBANK_CF_BAD,
+		        t3.SL_CELL_NBANK_CF_OVERDUE,
+		        t3.SL_CELL_NBANK_CF_FRAUD,
+		        t3.SL_CELL_NBANK_CF_LOST,
+		        t3.SL_CELL_NBANK_CF_REFUSE,
+		        t3.SL_CELL_NBANK_OTHER_BAD,
+		        t3.SL_CELL_NBANK_OTHER_OVERDUE,
+		        t3.SL_CELL_NBANK_OTHER_FRAUD,
+		        t3.SL_CELL_NBANK_OTHER_LOST,
+		        t3.SL_CELL_NBANK_OTHER_REFUSE,
+		        t4.INSIDE_APP_NO,
+		        t4.LOCATION_BIZ_ADDR1,
+		        t4.LOCATION_BIZ_ADDR2,
+		        t4.LOCATION_BIZ_ADDR3,
+		        t4.LOCATION_BIZ_ADDR4,
+		        t4.LOCATION_BIZ_ADDR5,
+		        t4.LOCATION_HOME_ADDR1,
+		        t4.LOCATION_HOME_ADDR2,
+		        t4.LOCATION_HOME_ADDR3,
+		        t4.LOCATION_HOME_ADDR4,
+		        t4.LOCATION_HOME_ADDR5,
+		        t4.LOCATION_PER_ADDR1,
+		        t4.LOCATION_PER_ADDR2,
+		        t4.LOCATION_PER_ADDR3,
+		        t4.LOCATION_PER_ADDR4,
+		        t4.LOCATION_PER_ADDR5,
+		        t4.LOCATION_APPLY_ADDR1,
+		        t4.LOCATION_APPLY_ADDR2,
+		        t4.LOCATION_APPLY_ADDR3,
+		        t4.LOCATION_APPLY_ADDR4,
+		        t4.LOCATION_APPLY_ADDR5,
+		        t4.LOCATION_OTH_ADDR1,
+		        t4.LOCATION_OTH_ADDR2,
+		        t4.LOCATION_OTH_ADDR3,
+		        t4.LOCATION_OTH_ADDR4,
+		        t4.LOCATION_OTH_ADDR5,
+		        t4.CRT_TIME,
+		        t4.CRT_DATE,
+		        t4.CRT_USER,
+		        t4.LST_UPD_TIME,
+		        t4.LST_UPD_DATE,
+		        t4.LST_UPD_USER,
+		        t4.BATCH_DATE,
+		        t4.IDENTITYCARD,
+		        t4.CELL,
+		        t4.NAME,
+		        t5.CONS_CONT,
+		        t5.CONS_TIME_RECENT,
+		        t5.CONS_TOT_M3_NUM,
+		        t5.CONS_TOT_M3_PAY,
+		        t5.CONS_TOT_M3_P_CATENUM,
+		        t5.CONS_TOT_M3_V_CATENUM,
+		        t5.CONS_TOT_M3_VISITS,
+		        t5.CONS_TOT_M12_NUM,
+		        t5.CONS_TOT_M12_PAY,
+		        t5.CONS_TOT_M12_P_CATENUM,
+		        t5.CONS_TOT_M12_V_CATENUM,
+		        t5.CONS_TOT_M12_VISITS,
+		        t5.CONS_MAX_M3_NUM,
+		        t5.CONS_MAX_M3_PAY,
+		        t5.CONS_MAX_M3_PAYCATE,
+		        t5.CONS_MAX_M12_NUM,
+		        t5.CONS_MAX_M12_PAY,
+		        t5.CONS_MAX_M12_PAYCATE,
+		        t5.CONS_M3_RYBH_NUM,
+		        t5.CONS_M3_RYBH_PAY,
+		        t5.CONS_M3_JYDQ_NUM,
+		        t5.CONS_M3_JYDQ_PAY,
+		        t5.CONS_M3_MYYP_NUM,
+		        t5.CONS_M3_MYYP_PAY,
+		        t5.CONS_M12_RYBH_NUM,
+		        t5.CONS_M12_RYBH_PAY,
+		        t5.CONS_M12_JYDQ_NUM,
+		        t5.CONS_M12_JYDQ_PAY,
+		        t5.CONS_M12_MYYP_NUM,
+		        t5.CONS_M12_MYYP_PAY
+		   from OPAS_BIZ_SPECIALLIST_SCORE t1
+		   left join OPAS_BIZ_SPECIALLIST_ID_DATA t2 on t1.app_id = t2.app_id
+		   left join OPAS_BIZ_SPECIALLIST_CELL_DATA t3 on t1.app_id = t3.app_id
+		   left join OPAS_BIZ_LOCATION_DATA t4 on t1.app_id = t4.app_id
+		   left join OPAS_BIZ_CONSUMPTION_DATA t5 on t1.app_id = t5.app_id
+		  where t1.app_id = #{appId,jdbcType=VARCHAR} -->
+	</select>
+
+ 	<select id="queryDetailAppId" parameterType="java.lang.String"
+		resultMap="resultAppId">
+		select 
+        t1.app_id as app_id1,
+        t2.app_id as app_id2,
+        t3.app_id as app_id3，
+        t4.app_id as app_id3，
+        t5.app_id as app_id3
+      from OPAS_BIZ_SPECIALLIST_SCORE t1
+      left join OPAS_BIZ_SPECIALLIST_ID_DATA t2 on t1.app_id = t2.app_id
+      left join OPAS_BIZ_SPECIALLIST_CELL_DATA t3 on t1.app_id = t3.app_id
+      left join OPAS_BIZ_LOCATION_DATA t4 on t1.app_id = t4.app_id
+      left join OPAS_BIZ_CONSUMPTION_DATA t5 on t1.app_id = t5.app_id
+       where t1.app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="Query_biz_speciallist_cell_data" parameterType="java.lang.String"
+		resultMap="resultDetailInfo">
+		<!-- SELECT t2.app_id,
+		       t2.SL_CELL_BANK_FRAUD,
+		       t2.sl_cell_bank_lost,
+		       t2.sl_cell_nbank_p2p_bad,
+		       t2.sl_cell_p2p_bad
+		  FROM opas_biz_speciallist_cell_data t2
+				 WHERE t2.app_id = #{appId,jdbcType=VARCHAR} -->
+		select t3.app_id,       t3.SL_CELL_ABNORMAL,       t3.SL_CELL_PHONE_OVERDUE,       t3.SL_CELL_BANK_BAD,
+       t3.SL_CELL_BANK_OVERDUE,       t3.SL_CELL_BANK_FRAUD,       t3.SL_CELL_BANK_LOST,       t3.SL_CELL_BANK_REFUSE,
+       t3.SL_CELL_P2P_BAD,       t3.SL_CELL_P2P_OVERDUE,       t3.SL_CELL_P2P_FRAUD,       t3.SL_CELL_P2P_LOST,
+       t3.SL_CELL_P2P_REFUSE,       t3.SL_CELL_NBANK_P2P_BAD,       t3.SL_CELL_NBANK_P2P_OVERDUE,
+       t3.SL_CELL_NBANK_P2P_FRAUD,       t3.SL_CELL_NBANK_P2P_LOST,       t3.SL_CELL_NBANK_P2P_REFUSE,
+       t3.SL_CELL_NBANK_MC_BAD,       t3.SL_CELL_NBANK_MC_OVERDUE,       t3.SL_CELL_NBANK_MC_FRAUD,
+       t3.SL_CELL_NBANK_MC_LOST,       t3.SL_CELL_NBANK_MC_REFUSE,       t3.SL_CELL_NBANK_CA_BAD,
+       t3.SL_CELL_NBANK_CA_OVERDUE,       t3.SL_CELL_NBANK_CA_FRAUD,       t3.SL_CELL_NBANK_CA_LOST,
+       t3.SL_CELL_NBANK_CA_REFUSE,       t3.SL_CELL_NBANK_COM_BAD,       t3.SL_CELL_NBANK_COM_OVERDUE,
+       t3.SL_CELL_NBANK_COM_FRAUD,       t3.SL_CELL_NBANK_COM_LOST,       t3.SL_CELL_NBANK_COM_REFUSE,
+       t3.SL_CELL_NBANK_CF_BAD,       t3.SL_CELL_NBANK_CF_OVERDUE,       t3.SL_CELL_NBANK_CF_FRAUD,
+       t3.SL_CELL_NBANK_CF_LOST,       t3.SL_CELL_NBANK_CF_REFUSE,       t3.SL_CELL_NBANK_OTHER_BAD,
+       t3.SL_CELL_NBANK_OTHER_OVERDUE,       t3.SL_CELL_NBANK_OTHER_FRAUD,       t3.SL_CELL_NBANK_OTHER_LOST,
+       t3.SL_CELL_NBANK_OTHER_REFUSE
+  from OPAS_BIZ_SPECIALLIST_CELL_DATA t3
+ where t3.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="Query_OPAS_BIZ_SPECIALLIST_LM_DATA" parameterType="java.lang.String"
+		resultMap="resultDetailInfo">
+		select t4.app_id,
+       t4.INSIDE_APP_NO,       t4.LOCATION_BIZ_ADDR1,       t4.LOCATION_BIZ_ADDR2,       t4.LOCATION_BIZ_ADDR3,
+       t4.LOCATION_BIZ_ADDR4,       t4.LOCATION_BIZ_ADDR5,       t4.LOCATION_HOME_ADDR1,       t4.LOCATION_HOME_ADDR2,
+       t4.LOCATION_HOME_ADDR3,       t4.LOCATION_HOME_ADDR4,       t4.LOCATION_HOME_ADDR5,       t4.LOCATION_PER_ADDR1,
+       t4.LOCATION_PER_ADDR2,       t4.LOCATION_PER_ADDR3,       t4.LOCATION_PER_ADDR4,       t4.LOCATION_PER_ADDR5,
+       t4.LOCATION_APPLY_ADDR1,       t4.LOCATION_APPLY_ADDR2,       t4.LOCATION_APPLY_ADDR3,
+       t4.LOCATION_APPLY_ADDR4,       t4.LOCATION_APPLY_ADDR5,       t4.LOCATION_OTH_ADDR1,
+       t4.LOCATION_OTH_ADDR2,       t4.LOCATION_OTH_ADDR3,       t4.LOCATION_OTH_ADDR4,
+       t4.LOCATION_OTH_ADDR5,       t4.CRT_TIME,       t4.CRT_DATE,       t4.CRT_USER,       t4.LST_UPD_TIME,
+       t4.LST_UPD_DATE,       t4.LST_UPD_USER,       t4.BATCH_DATE,       t4.IDENTITYCARD,       t4.CELL,
+       t4.NAME
+  from OPAS_BIZ_LOCATION_DATA t4
+ where t4.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="Query_OPAS_BIZ_CONSUMPTION_DATA" parameterType="java.lang.String"
+		resultMap="resultDetailInfo">
+		select t5.app_id,       t5.CONS_CONT,       t5.CONS_TIME_RECENT,       t5.CONS_TOT_M3_NUM,       t5.CONS_TOT_M3_PAY,
+       t5.CONS_TOT_M3_P_CATENUM,       t5.CONS_TOT_M3_V_CATENUM,       t5.CONS_TOT_M3_VISITS,       t5.CONS_TOT_M12_NUM,
+       t5.CONS_TOT_M12_PAY,       t5.CONS_TOT_M12_P_CATENUM,       t5.CONS_TOT_M12_V_CATENUM,
+       t5.CONS_TOT_M12_VISITS,       t5.CONS_MAX_M3_NUM,       t5.CONS_MAX_M3_PAY,       t5.CONS_MAX_M3_PAYCATE,
+       t5.CONS_MAX_M12_NUM,       t5.CONS_MAX_M12_PAY,       t5.CONS_MAX_M12_PAYCATE,       t5.CONS_M3_RYBH_NUM,
+       t5.CONS_M3_RYBH_PAY,       t5.CONS_M3_JYDQ_NUM,       t5.CONS_M3_JYDQ_PAY,       t5.CONS_M3_MYYP_NUM,
+       t5.CONS_M3_MYYP_PAY,       t5.CONS_M12_RYBH_NUM,       t5.CONS_M12_RYBH_PAY,       t5.CONS_M12_JYDQ_NUM,
+       t5.CONS_M12_JYDQ_PAY,       t5.CONS_M12_MYYP_NUM,       t5.CONS_M12_MYYP_PAY
+         from OPAS_BIZ_CONSUMPTION_DATA t5
+ where t5.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="Query_task_request_info" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select t.req_credit100 from task_request_info t
+ 			where t.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	<select id="Query_bairong_query_result" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+	 <!-- SELECT (
+	        SELECT COUNT(1)
+              FROM OPAS_BIZ_SPECIALLIST_ID_DATA
+             WHERE APP_ID = #{APP_ID, jdbcType=CHAR}) + (
+            SELECT COUNT(1)
+              FROM OPAS_BIZ_SPECIALLIST_CELL_DATA
+             WHERE APP_ID = #{APP_ID, jdbcType=CHAR}) + (
+            SELECT COUNT(1)
+              FROM OPAS_BIZ_LOCATION_DATA
+             WHERE APP_ID = #{APP_ID, jdbcType=CHAR}) + (
+            SELECT COUNT(1)
+              FROM OPAS_BIZ_SPECIALLIST_SCORE
+             WHERE APP_ID = #{APP_ID, jdbcType=CHAR}) + (
+            SELECT COUNT(1)
+              FROM OPAS_BIZ_CONSUMPTION_DATA
+             WHERE APP_ID = #{APP_ID, jdbcType=CHAR}
+        ) + (
+            SELECT COUNT(1)
+              FROM opas_biz_speciallist_gid_data
+             WHERE APP_ID = #{APP_ID, jdbcType=CHAR}
+        ) + (
+            SELECT COUNT(1)
+              FROM opas_biz_speciallist_lm_data
+             WHERE APP_ID = #{APP_ID, jdbcType=CHAR}
+        ) FROM DUAL --> 
+        select count(*) from TASK_REQUEST_INFO where APP_ID = #{APP_ID, jdbcType=CHAR} and REQ_CREDIT100 ='1'
+
+
+	</select>
+</mapper>

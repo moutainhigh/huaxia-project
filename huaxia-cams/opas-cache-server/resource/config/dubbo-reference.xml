@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 服务消费者 -->
+	<dubbo:reference id="apDictDetailService" interface="com.huaxia.opas.service.dict.ApDictDetailService" />
+	<dubbo:reference id="addressListService" interface="com.huaxia.opas.service.address.QueryAddressListService" />
+	<!-- 风险检查Dao层服务 -->
+	<dubbo:reference id="riskcheckdaoService" interface="com.huaxia.opas.service.riskcheck.RiskCheckService" />
+	<dubbo:reference id="riskMachCheckService" interface="com.huaxia.opas.cache.service.riskcheck.RiskMachCheckService" />
+	<!--规则消费者  -->
+	<import resource = "classpath*:/config/dubbo-reference-rule.xml"/>
+</beans>

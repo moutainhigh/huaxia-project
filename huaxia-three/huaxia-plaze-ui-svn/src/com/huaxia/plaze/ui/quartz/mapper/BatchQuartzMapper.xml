@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.quartz.mapper.BatchQuartzMapper">
+
+
+	<resultMap id="result_quartz" type="com.huaxia.plaze.ui.quartz.domain.BatchQuartz">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+		<result column="RUN_TIME" property="runTime" jdbcType="VARCHAR" />
+		<result column="TURN" property="turn" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="UPD_TIME" property="updTime" jdbcType="VARCHAR" />
+		<result column="JOB_JC" property="jobJc" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryTotalCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PBOC_BATCH_QUARTZ
+		<where>
+        	<if test="jobName != null">
+        		AND JOB_NAME LIKE '%${jobName}%'
+        	</if>
+        	<if test="turn != null">
+        		AND TURN = #{turn,jdbcType=CHAR}
+        	</if>
+        </where>
+	</select>
+	
+	<select id="queryListByPage" parameterType="java.util.Map" resultMap="result_quartz">
+		SELECT UUID,JOB_NAME,RUN_TIME,TURN,TO_CHAR(CRT_TIME,'yyyy-MM-dd HH24:mi:ss') CRT_TIME,TO_CHAR(UPD_TIME,'yyyy-MM-dd HH24:mi:ss') UPD_TIME,JOB_JC
+		  FROM (SELECT ROWNUM RN, T.*
+		          FROM (SELECT *
+		                  FROM PBOC_BATCH_QUARTZ 
+		                 <where>
+					  	   	 <if test="jobName != null">
+					  	   	 	AND JOB_NAME LIKE '%${jobName}%'
+					  	   	 </if>
+					  	   	 <if test="turn != null">
+					  	   	 	AND TURN = #{turn,jdbcType=CHAR}
+					  	   	 </if>
+					  	  </where>
+		                 ORDER BY CRT_TIME DESC) T
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+	<insert id="saveQuartz" parameterType="com.huaxia.plaze.ui.quartz.domain.BatchQuartz">
+		INSERT INTO PBOC_BATCH_QUARTZ (
+			UUID,CRT_TIME,UPD_TIME,JOB_NAME,RUN_TIME,TURN,JOB_JC
+		) VALUES (
+			SYS_GUID(),
+			SYSDATE,
+			SYSDATE,
+			#{jobName,jdbcType=VARCHAR},
+			#{runTime,jdbcType=VARCHAR},
+			#{turn,jdbcType=CHAR},
+			#{jobJc,jdbcType=VARCHAR}
+		)
+	</insert>
+	<delete id="deleteQuartzById" parameterType="java.lang.String" >
+		DELETE FROM PBOC_BATCH_QUARTZ WHERE UUID = #{id}
+	</delete>	
+
+	<update id="updateQuartz" parameterType="com.huaxia.plaze.ui.quartz.domain.BatchQuartz">
+		 UPDATE PBOC_BATCH_QUARTZ
+			 SET RUN_TIME = #{runTime},
+			 	TURN = #{turn},
+			 	UPD_TIME = SYSDATE
+			 WHERE UUID=#{uuid}
+	</update>
+	
+	<select id="selectQuartzById" parameterType="java.lang.String" resultMap="result_quartz">
+		SELECT * FROM PBOC_BATCH_QUARTZ WHERE UUID = #{id}
+	</select>
+	
+	
+	
+</mapper>

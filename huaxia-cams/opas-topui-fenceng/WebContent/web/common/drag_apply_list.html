@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.searchdiv {
+	font-size: 10px;
+}
+</style>
+</head>
+<body style="font-size: 12px;scroll:auto;" id="body">
+	<div style="font-size: 12px;height:650px;overflow-y:auto;overflow-x:auto;">
+		<form id="seachForm">
+			<div
+				style="border: 1px solid rgb(149, 184, 231); border-image: none; height: 30%; margin: 0px 0px 0px 10px">
+				<fieldset class="textbox combo"
+					style="left: 30px; margin: 5px 0 10px; height: 110px; padding: 0px 30px 10px 20px;">
+
+					<legend align="left">
+						<font size="2">查询选项</font>
+					</legend>
+					<div style="padding: 10px" align="left">
+						申请流水号: <input class="easyui-textbox" style="width: 120px"
+							name="appId" id="appId"> 客户姓名: <input
+							class="easyui-textbox" style="width: 120px" name="custName"
+							id="custName"> 证件号码: <input class="easyui-textbox"
+							style="width: 150px" name="credNo" id="credNo"> 补件码: <input
+							class="easyui-textbox" style="width: 120px" name="patchCode"
+							id="patchCode">
+					</div>
+					<div style="padding: 10px 0px 10px 10px;float:left;width: 250px" align="left">
+						附属卡申请人姓名: <input class="easyui-textbox" style="width: 120px"
+							name="c2Cname" id="c2Cname"> 附属卡申请人证件号码: <input
+							class="easyui-textbox" style="width: 150px" name="c2Idnbr"
+							id="c2Idnbr">
+					</div>
+					<div  align="left" style="padding: 10px 80px 10px 0px; float:right;" align="center"><a href="javascript:checkAndSearchTab('seachForm','tblSeach');"
+						class="easyui-linkbutton" iconCls="icon-search">搜索</a></div>
+				</fieldset>
+			</div>
+			<!-- <div>
+				<div align="center" style="padding: 0px 20px 10px 0px; float:;">
+					<a href="javascript:checkAndSearchTab('seachForm','tblSeach');"
+						class="easyui-linkbutton" iconCls="icon-search">搜索</a> <a
+						href="javascript:doDrag();" class="easyui-linkbutton"
+						iconCls="icon-reload">捞件</a>
+				</div> height: 200px
+			</div> -->
+		</form>
+		<div align="left" style="margin: 0px 0px 0px 10px;">
+					<div align="left" style="padding: 10px 0px 10px 80px; float:;width: 100px"><a
+						href="javascript:doDrag();" class="easyui-linkbutton" id="laojian"
+						iconCls="icon-reload">捞件</a></div>
+					<div  align="left" style="padding: 10px 0px 10px 10px; float:right;"><a> </a></div>
+					 
+		</div>
+		<div style="margin: 0px 0px 0px 10px;">
+			<table id="tblSeach" class="easyui-datagrid" style="width: 100%"
+				data-options="remoteSort:false,rownumbers:true,singleSelect:false,pagination:true,pageSize:20,lrownumbers:true,fitColumns:true,
+				pageList:[15,20,50],pageNumber:0,loadMsg:'数据加载中.....',method:'post',toolbar:'#seachCondion'">
+				<thead>
+					<tr>
+						<th field="ck" checkbox="true">操作</th>
+						<th field="appId" width="12%" align="left"
+							data-options="formatter:formatappid">流水号</th>
+						<th field="custName" width="10%" align="left" sortable="true">客户姓名</th>
+						<th field="credNo" width="10%" align="left" sortable="true">证件号码</th>
+						<th field="c2Cname" width="10%" align="left" sortable="true">附卡客户姓名</th>
+						<th field="c2Idnbr" width="10%" align="left" sortable="true">附卡申请人证件号</th>
+						<th field="patchCode" width="10%" align="left" sortable="true">补件码</th>
+						<th field="ydjFlag" width="10%" align="left" sortable="true"
+							data-options="formatter:formatydjFlag">申请卡种</th>
+						<th field="status" width="10%" align="left" sortable="true"
+							data-options="formatter:formatC4RushFlg">当前状态</th>
+						<th field="remarkId" width="10%" align="left" sortable="true"
+							data-options="formatter:formatremark">备注</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div id="dd"></div>
+	<div id="ddd"></div>
+</body>
+<script type="text/javascript">
+	var tblObj = $("#tblSeach");
+	function formatremark(val, row, index) {
+		var appId = row.appId;
+		if (val == null) {
+			return "";
+		} else {
+			return "<a href=javascript:opWind('comment.html','"+appId+"');>查看</a>";
+		}
+	}
+
+	function formatappid(val, row, index) {
+		var appId = row.appId;
+		return "<a href=javascript:ViewPage('drag_apply_info.html','"+appId+"');>" + appId
+				+ "</a>";
+	}
+	function formatC4RushFlg(val, row, index) {
+		/* if (val == 0) {
+			return "归档待分配";
+		} else if (val == 1) {
+			return "归档已分配";
+		} else {
+			return "正常发卡";
+		} */
+		return "已归档";
+	}
+	function formatydjFlag(val, row, index) {
+		if (val == 2) {
+			return "标准卡";
+		} else if (val == 1) {
+			return "易达金";
+		} else {
+			return "";
+		}
+	}
+	function ViewPage(url,appId) {
+		 //var appId = $("#tblSeach").datagrid("getSelected").appId;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+		//parent.addTab('审查详情','html/examine/examine_detail.html','56e85d5402d647b39c319730605dc5a8');
+		window.open(url + "?appid=" + appId + "=" + userCode );
+
+	};
+	function opWind(url,appId) {
+		//var appId = $("#tblSeach").datagrid("getSelected").appId;
+		/* 	 var opts = $.extend({
+				title : '查看备注',
+				showType : 'show',
+				showSpeed : 400,
+				top : 100,
+				modal : false,
+				onOpen : function() {
+					$.messager.progress('close');
+				},
+				onClose : function() {
+					processInsNo = "";
+					$(this).dialog('destroy');
+					$(this).appendTo($("body"));
+				}
+			}, {}); */
+		//opts.content = '<iframe id="" src="../common/comment.html?appId='+appId+'" allowTransparency="true" scrolling="auto" width="560px" height="500px" frameBorder="0" name=""></iframe>';
+		//$('#dd').dialog(opts);
+		//var src = $('div>iframe').attr("src");
+		//$('#dd').dialog('refresh'); 
+		window
+				.open(
+						url + "?appId=" + appId,
+						"_blank",
+						"channelmode=yes,width=400,height=400,scrollbars=yes,resizable=yes,top=200,left=400",
+						false);
+	}
+
+	function checkAndSearchTab(formName, tblName) {
+		//本方法自己拼装json串传给后台，注意前台多选框取值以及下拉框取值写法以及后台接收的写法
+		var appId = $("#appId").val();
+		var custName = $("#custName").val();
+		var credNo = $("#credNo").val();
+		var patchCode = $("#patchCode").val();
+		var c2Idnbr = $("#c2Idnbr").val();
+		var c2Cname = $("#c2Cname").val();
+		var tblObj = $("#" + tblName + "");
+		var formObj = $("#" + formName + "");
+		var data = formObj.serializeArray();
+		var jsonData = common.formToJson(data);
+		var s = {
+			"appId" : appId,
+			"custName" : custName,
+			"credNo" : credNo,
+			"patchCode" : patchCode,
+			"c2Idnbr" : c2Idnbr,
+			"c2Cname" : c2Cname
+		};
+		var opts = $("#tblSeach").datagrid("options");
+		opts.url = "/opas-naps/bizInpAppl_drag_list.json";
+		//重新加载datagrid
+		tblObj.datagrid("reload", s);
+
+	}
+	function doDrag(){
+		var listAppId=new Array();
+		var rowsDatagrid=$("#tblSeach").datagrid("getSelections");
+		var rowNum=rowsDatagrid.length;
+		$("#laojian").attr("href", "#");
+		if(rowNum==0){
+			$.messager.alert("提示","请选择您要操作的申请件!","warning");
+			return ;
+		}
+		for(var i=0;i<rowNum;i++){
+			var obj=new Object();
+			obj.appId=rowsDatagrid[i].appId;
+			listAppId.push(obj);
+		}
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+	$cf.ajax({
+			url : '/opas-naps/dragApply_operation.json',
+			data : {'userCode':userCode,"listAppId":listAppId},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+
+					top.$cf.showMsg("操作成功!");
+					alert("操作成功!");
+					//window.close();
+					window.location.reload();
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					return;
+				}
+			}
+		}); 
+	}
+/* 	 $(function() {
+		checkAndSearchTab('seachForm', 'tblSeach');
+	}); */
+	 window.onresize = function(){
+		setTimeout(domresize,300);
+	}
+	function domresize(){
+		$("#tblSeach").datagrid('resize',{
+			height:$("#body").height()-$("#seachForm").height()-50
+		});
+	}
+</script>
+</html>

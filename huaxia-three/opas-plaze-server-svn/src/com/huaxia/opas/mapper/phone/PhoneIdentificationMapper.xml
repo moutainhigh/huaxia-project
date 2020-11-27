@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.phone.PhoneIdentificationMapper">
+
+	<select id="getCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM TRD_HAR_LD00001 WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+	
+	<insert id="insert" parameterType="com.huaxia.opas.domain.phone.PhoneIdentification">
+		INSERT INTO TRD_HAR_LD00001 (
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			APP_ID,
+			SUCCESS,
+			RESPONSE_CODE,
+			RESPONSE_DESC,
+			RESULT_CODE,
+			RESULT_DESC
+		) VALUES (
+			sys_guid(),
+			sysdate,
+			#{CRT_USER, jdbcType = VARCHAR},
+			#{APP_ID, jdbcType = CHAR},
+			#{SUCCESS, jdbcType = VARCHAR},
+			#{RESPONSE_CODE, jdbcType = VARCHAR},
+			#{RESPONSE_DESC, jdbcType = VARCHAR},
+			#{RESULT_CODE, jdbcType = VARCHAR},
+			#{RESULT_DESC, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+</mapper>

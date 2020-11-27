@@ -1,0 +1,215 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../../topui/topui.js"></script>
+<script type="text/javascript" src="../../../js/author/common.js"></script>
+<script type="text/javascript" src="../../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../../css/common/style.css" type="text/css"></link>
+<link rel="stylesheet" href="../../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../../css/normalize.css" type="text/css"></link>
+</head>
+	<body style="width:100%;">
+	<div id="showForm"></div>
+	<script>
+	
+	var showForm=$('#showForm');
+	var url = location.href;
+	var ydjFlag = parent.ydjFlag;//window.parent.opener.ydjFlag;
+	var appId = url.split("=")[1];
+	$(function(){
+		//console.log(window.parent.opener.ydjFlag);
+		//alert(ydjFlag);
+		//var appId = GetQueryString("appId");
+		//var appId = '11111';
+		$cf.ajax({
+			url : '/opas-naps/submit_reply_query.json',
+			data : {
+				'appId' : appId,
+				'ydjFlag' : ydjFlag
+			},
+			onSuccess : function(response) {
+				//debugger;
+				var resultMap = response.RSP_BODY.resultMap;
+				var o = eval('(' +resultMap+ ')');
+				var result = '';
+				if(resultMap.trim()=="{}"){
+					result+="<h1>无相关提报信息!</h1>";
+					showForm.html(result);
+				}
+				result+="<h3>提报回复查看</h3>";
+				if(o.submitFraudList!=undefined){
+					result+="<fieldset>";
+					result+="<legend><span id='f'>反欺诈</span></legend>";
+					for(var i = 0;i<o.submitFraudList.length;i++){
+						result+="<h9>"+(i+1)+"</h9>";
+						result+="<table>";
+						result += "<tr>";
+						if(o.submitFraudList[i].crtDate==undefined){
+							o.submitFraudList[i].crtDate="";
+						}
+						if(o.submitFraudList[i].crtUser==undefined){
+							o.submitFraudList[i].crtUser="";
+						}
+						if(o.submitFraudList[i].delStatus==undefined){
+							o.submitFraudList[i].delStatus="";
+						}
+						if(o.submitFraudList[i].investMemo==undefined){
+							o.submitFraudList[i].investMemo="";
+						}		//;border-color:blue																							
+						result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox'  style='font-size:10px' name='crtDate' type='text' readonly='true' value='"+o.submitFraudList[i].crtDate+"'></input></td>";
+						result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='crtUser' style='font-size:10px' type='text' readonly='true' value='"+o.submitFraudList[i].crtUser+"'></input></td>";
+						result += "</tr><tr>";
+						result += "<td style='font-size:10px'>结论:</td><td><input class='easyui-textbox' name='delStatus' style='font-size:10px' type='text' readonly='true' value='"+o.submitFraudList[i].delStatus+"'></input></td>";
+						result += "<td style='font-size:10px'>备注:</td><td><input class='easyui-textbox' name='investMemo' style='font-size:10px' type='text' readonly='true' value='"+o.submitFraudList[i].investMemo+"'></input></td></tr>"
+						result+="</table>";
+						result+="</fieldset>";
+					}
+				}
+				if(o.submitAuthoList!=undefined){
+					result+="<fieldset>";
+					result+="<legend><span id='f'>授权</span></legend>";
+					for(var i = 0;i<o.submitAuthoList.length;i++){
+						result+="<h9>"+(i+1)+"</h9>";
+						result+="<table>";
+						result += "<tr>";
+						if(o.submitAuthoList[i].crtDateAu==undefined){
+							o.submitAuthoList[i].crtDateAu="";
+						}
+						if(o.submitAuthoList[i].crtUserAu==undefined){
+							o.submitAuthoList[i].crtUserAu="";
+						}
+						if(o.submitAuthoList[i].delStatusAu==undefined){
+							o.submitAuthoList[i].delStatusAu="";
+						}
+						if(o.submitAuthoList[i].memoAu==undefined){
+							o.submitAuthoList[i].memoAu="";
+						}
+						result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox' name='crtDateAu' style='font-size:10px' type='text' readonly='true' value='"+o.submitAuthoList[i].crtDateAu+"'></input></td>";
+						result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='crtUserAu' style='font-size:10px' type='text' readonly='true' value='"+o.submitAuthoList[i].crtUserAu+"'></input></td>";
+						result += "</tr><tr>";
+						result += "<td style='font-size:10px'>结论:</td><td><input class='easyui-textbox' name='delStatusAu' style='font-size:10px' type='text' readonly='true' value='"+o.submitAuthoList[i].delStatusAu+"'></input></td>";
+						result += "<td style='font-size:10px'>备注:</td><td><input class='easyui-textbox' name='memoAu' style='font-size:10px' type='text' readonly='true' value='"+o.submitAuthoList[i].memoAu+"'></input></td></tr>"
+						result+="</table>";
+						result+="</fieldset>";
+					}
+				}
+				if(o.submitAccountList!=undefined){
+					result+="<fieldset>";
+					result+="<legend><span id='f'>账户</span></legend>";
+					for(var i = 0;i<o.submitAccountList.length;i++){
+						result+="<h9>"+(i+1)+"</h9>";
+						result+="<table>";
+						result += "<tr>";
+						if(o.submitAccountList[i].crtDateAc==undefined){
+							o.submitAccountList[i].crtDateAc="";
+						}
+						if(o.submitAccountList[i].crtUserAc==undefined){
+							o.submitAccountList[i].crtUserAc="";
+						}
+						if(o.submitAccountList[i].delStatusAc==undefined){
+							o.submitAccountList[i].delStatusAc="";
+						}
+						if(o.submitAccountList[i].memoAc==undefined){
+							o.submitAccountList[i].memoAc="";
+						}
+						result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox' name='crtDateAc' style='font-size:10px' type='text' readonly='true' value='"+o.submitAccountList[i].crtDateAc+"'></input></td>";
+						result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='crtUserAc' style='font-size:10px' type='text' readonly='true' value='"+o.submitAccountList[i].crtUserAc+"'></input></td>";
+						result += "</tr><tr>";
+						result += "<td style='font-size:10px'>结论:</td><td><input class='easyui-textbox' name='delStatusAc' style='font-size:10px' type='text' readonly='true' value='"+o.submitAccountList[i].delStatusAc+"'></input></td>";
+						result += "<td style='font-size:10px'>备注:</td><td><input class='easyui-textbox' name='memoAc' style='font-size:10px' type='text' readonly='true' value='"+o.submitAccountList[i].memoAc+"'></input></td></tr>"
+						result+="</table>";
+						result+="</fieldset>";
+					}
+				}
+				if(o.submitAMLList!=undefined){//反洗钱 add by wenyh
+					result+="<fieldset>";
+					result+="<legend><span id='f'>反洗钱</span></legend>";
+					for(var i = 0;i<o.submitAMLList.length;i++){
+						result+="<h9>"+(i+1)+"</h9>";
+						result+="<table>";
+						result += "<tr>";
+						if(o.submitAMLList[i].crtDateAML==undefined){
+							o.submitAMLList[i].crtDateAML="";
+						}
+						if(o.submitAMLList[i].crtUserAML==undefined){
+							o.submitAMLList[i].crtUserAML="";
+						}
+						if(o.submitAMLList[i].delStatusAML==undefined){
+							o.submitAMLList[i].delStatusAML="";
+						}
+						if(o.submitAMLList[i].memoAML==undefined){
+							o.submitAMLList[i].memoAML="";
+						}
+						result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox' name='crtDateAML' style='font-size:10px;width:250px' type='text' readonly='true' value='"+o.submitAMLList[i].crtDateAML+"'></input></td>";
+						result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='crtUserAML' style='font-size:10px;width:250px' type='text' readonly='true' value='"+o.submitAMLList[i].crtUserAML+"'></input></td>";
+						result += "</tr><tr>";
+						result += "<td style='font-size:10px'>结论:</td><td><textarea name='delStatusAML' style='font-size:10px;width:250px;height:60px;resize:none'   readonly='true'>"+o.submitAMLList[i].delStatusAML+"</textarea></td>";
+						/* result += "</tr><tr>"; */
+						result += "<td style='font-size:10px'>备注:</td><td><input class='easyui-textbox' name='memoAML' style='font-size:10px;width:250px' type='text' readonly='true' value='"+o.submitAMLList[i].memoAML+"'></input></td></tr>"
+						result+="</table>";
+					}
+					result+="</fieldset>";
+				}
+				if(o.submitUrgeList!=undefined){
+					result+="<fieldset>";
+					result+="<legend><span id='f'>催收</span></legend>";
+					for(var i = 0;i<o.submitUrgeList.length;i++){
+						result+="<h9>"+(i+1)+"</h9>";
+						result+="<table>";
+						result += "<tr>";
+						if(o.submitUrgeList[i].crtDateU==undefined){
+							o.submitUrgeList[i].crtDateU="";
+						}
+						if(o.submitUrgeList[i].crtUserU==undefined){
+							o.submitUrgeList[i].crtUserU="";
+						}
+						if(o.submitUrgeList[i].delStatusU==undefined){
+							o.submitUrgeList[i].delStatusU="";
+						}
+						if(o.submitUrgeList[i].memoU==undefined){
+							o.submitUrgeList[i].memoU="";
+						}
+						result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox' name='crtDateU' style='font-size:10px' type='text' readonly='true' value='"+o.submitUrgeList[i].crtDateU+"'></input></td>";
+						result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='crtUserU' style='font-size:10px' type='text' readonly='true' value='"+o.submitUrgeList[i].crtUserU+"'></input></td>";
+						result += "</tr><tr>";
+						result += "<td style='font-size:10px'>结论:</td><td><input class='easyui-textbox' name='delStatusU' style='font-size:10px' type='text' readonly='true' value='"+o.submitUrgeList[i].delStatusU+"'></input></td>";
+						result += "<td style='font-size:10px'>备注:</td><td><input class='easyui-textbox' name='memoU' style='font-size:10px' type='text' readonly='true' value='"+o.submitUrgeList[i].memoU+"'></input></td></tr>"
+						result+="</table>";
+						result+="</fieldset>";
+					}
+				}
+				if(o.submitKeyList!=undefined){
+					result+="<h3>其他</h3>";
+					result+="<fieldset>";
+					result+="<legend><span id='f'>1.关键信息回复</span></legend>";
+					for(var i = 0;i<o.submitKeyList.length;i++){
+						result+="<h9>"+(i+1)+"</h9>";
+						result+="<table>";
+						result += "<tr>";
+						if(o.submitKeyList[i].modifyDate==undefined){
+							o.submitKeyList[i].modifyDate="";
+						}
+						if(o.submitKeyList[i].operator==undefined){
+							o.submitKeyList[i].operator="";
+						}
+						if(o.submitKeyList[i].reviewStatus==undefined){
+							o.submitKeyList[i].reviewStatus="";
+						}
+						if(o.submitKeyList[i].modifyValue==undefined){
+							o.submitKeyList[i].modifyValue="";
+						}
+						result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox' name='modifyDate' style='font-size:10px' type='text' readonly='true' value='"+o.submitKeyList[i].modifyDate+"'></input></td>";
+						result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='operator' style='font-size:10px' type='text' readonly='true' value='"+o.submitKeyList[i].operator+"'></input></td>";
+						result += "</tr><tr>";
+						result += "<td style='font-size:10px'>结论:</td><td><input class='easyui-textbox' name='reviewStatus' style='font-size:10px' type='text' readonly='true' value='"+o.submitKeyList[i].reviewStatus+"'></input></td>";
+						result += "<td style='font-size:10px'>备注:</td><td><input class='easyui-textbox' name='modifyValue' style='font-size:10px' type='text' readonly='true' value='"+o.submitKeyList[i].modifyValue+"'></input></td></tr>"
+						result+="</table>";
+						result+="</fieldset>";
+					}
+				}
+				showForm.html(result);
+			}
+		});
+	});
+	</script>
+</body>
+

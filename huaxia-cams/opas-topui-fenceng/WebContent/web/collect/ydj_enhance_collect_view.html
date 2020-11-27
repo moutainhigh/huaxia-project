@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>易达金增强信息采集</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<style type="text/css">
+.valid {
+	border: 1px solid #0000FF;
+}
+
+.invalid {
+	border: 1px solid #FF0000;
+}
+
+ul li {
+	line-height: 22px;
+}
+
+/** START FIELDSET-LEVEL-1 */
+ul li fieldset {
+	display: none;
+	margin-left: 20px;
+}
+/** END FIELDSET-LEVEL-1 */
+ul li ul {
+	margin-left: 20px;
+}
+
+/** START LI-LEVEL-2 */
+ul li ul li {
+	display: none;
+}
+/** END LI-LEVEL-2 */
+
+/** START FIELDSET-LEVEL-3 */
+ul li ul li fieldset {
+	display: block;
+}
+/** END FIELDSET-LEVEL-3 */
+
+/** INCOME INFO */
+fieldset>ul {
+	display: block;
+}
+
+fieldset>ul {
+	padding: 2px 0px;
+}
+
+fieldset ul li {
+	line-height: 25px;
+}
+
+fieldset ul li ul li {
+	line-height: 25px;
+}
+
+fieldset ul li ul li lable {
+	padding-right: 10px;
+}
+
+#adopt_item_01 table, #adopt_item_02 table {
+	width: 100%;
+	text-align: center;
+}
+
+#adopt_item_01 input[type="text"], #adopt_item_02 input[type="text"] {
+	width: 70px;
+}
+
+#tbl_area {
+	padding: 10px;
+	background-color: #F0F0F0;
+}
+
+#tbl_area dl dt {
+	height: 30px;
+	line-height: 30px;
+}
+
+#tbl_area dl dd {
+	height: 20px;
+	line-height: 20px;
+}
+
+.chartreuse {
+	color: #D2691E;
+}
+</style>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript"
+	src="../../topui/easyui/easyui.numberbox.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<script type="text/javascript" src="../../js/common/math.util.js"></script>
+<script type="text/javascript" src="../../js/common/table.util.js"></script>
+
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript">
+//表格标题列
+var tags = [ '月份', '全扣', '不扣公积金1', '不扣公积金2', '年终奖', '不扣税1', '不扣税2',
+				'不扣税年终奖' ];
+				
+// 数字校验正则
+var reg = /^[-]?[0-9]+\.?[0-9]{0,3}$/;
+
+// 计数器
+var counter = [];
+
+// 存储器
+var storage = [];
+
+// 申请表全量信息区域采用字母编号（a-l）
+var sid = [];
+for (var i = 97; i <= 108; i++) {
+	sid.push(String.fromCharCode(i));
+}
+
+/**
+ * 功能：初始化页面样式
+ */
+function fnInitStyle(sid) {
+	$.each(sid, function(i, v) {
+		$('#' + v + '_operate_area').css('padding', '10px');
+		$('#' + v + '_operate_area table').css('width', '650px');
+		$('#' + v + '_operate_area table tr td:even').css('width', '135px')
+				.css('text-align', 'right').css('padding-right', '10px')
+				.css('font', 'normal 12px Arial');
+		
+		if (v == 'j') {
+			// 设置初始隐藏 - 工资流水收入计算
+			$('#' + v + '_operate_area fieldset ul li div').css('display','none');
+			$('#' + v + '_operate_area fieldset ul li table').css('width', '630px');
+			$('#' + v + '_operate_area fieldset ul li table tr').each(function() {
+				$(this).find('th').css('text-align', 'center');
+				$(this).find('td').css('padding', '1px 0px').css('text-align', 'center');
+			});
+			
+			// 社保基金、房租收入、配偶税前月收入、高财力客户日均余额
+			$('#' + v + '_operate_area fieldset ul li label').siblings('.hide').css('display','none');
+		}
+		
+		if (v == 'e') {
+			// 设置初始隐藏 - MBA名单
+			$('#sub_' + v + '_operate_area_02').css('display','none');
+		}
+	});
+	
+	$('#datebox_company_establish_date').datebox('setValue', '');
+	$('#datebox_company_entry_date').datebox('setValue', '');
+	
+	// 设置证明材料类型区域初始不显示
+	$('#tbl_area').css('display', 'none');
+}
+
+// 收入可采纳项赋值
+function fnSetValue(formData, idx) {
+	switch (idx) {
+	// 工资流水
+	case 1:
+		formData['itemSalary'] = '1';
+		break;
+	// 完税证明
+	case 2:
+		formData['itemTaxRecord'] = '1';
+		break;
+	// 工作证明
+	case 3:
+		formData['itemWorkCertif'] = '1';
+		break;
+	// 社保基数 
+	case 4:
+		formData['itemSocialSecurityBase'] = '1';
+		break;
+	// 公积金
+	case 5:
+		formData['itemFund'] = '1';
+		break;
+	// 房租收入
+	case 6:
+		formData['itemHouseRent'] = '1';
+		break;
+	// 配偶税前月收入
+	case 7:
+		formData['itemSpousePreTax'] = '1';
+		break;
+	// 高财力客户日均余额
+	case 8:
+		formData['itemFinancesCust'] = '1';
+		break;
+	}
+}
+
+/**
+ * 功能：调用BLAZE并反显策略结果
+ */
+function fnCallBlaze(data) {
+	$cf.ajax({
+		url : '/opas-naps/enhance_blaze_call.json',
+		data : data,
+		onSuccess : function(response) {
+			if (response.RSP_BODY.success) {
+				var result = response.RSP_BODY.blazeResult;
+				var jsonBlaze = eval('(' + result + ')');
+				
+				// console.info('call blaze!!!'+result);
+				// BLAZE策略结果反显
+				fnViewBlaze1(jsonBlaze);
+				
+				// BLAZE补充证明材料反显
+				fnViewBlaze2(jsonBlaze);
+			}
+		}
+	});
+}
+
+/**
+ * 功能：反显BLAZE策略结果
+ */
+function fnViewBlaze1(json) {
+	// 实际月收入
+	$('#blaze_real_month_income').textbox('setValue', json.realMonthIncome);
+	
+	// 可采纳月收入（反显BLAZE可采信月收入）
+	$('#blaze_adopt_month_income').textbox('setValue', json.adoptMonthIncome);
+	
+	// 人行抵押贷款负债
+	$('#blaze_pboc_montgage_debt').textbox('setValue', json.pbocMontgageDebt);
+	
+	// 人行无抵押贷款负债
+	$('#blaze_pboc_unmontgage_debt').textbox('setValue', json.pbocUnMontgageDebt);
+	
+	// 人行信用卡负债
+	$('#blaze_pboc_credit_debt').textbox('setValue', json.pbocCreditDebt);
+	
+	// 人行无抵押贷款敞口
+	$('#blaze_pboc_unmontgage_open').textbox('setValue', json.pbocUnmontgageOpen);
+	
+	// 信用卡敞口
+	$('#blaze_credit_open').textbox('setValue', json.creditOpen);
+}
+
+/**
+ * 功能修改记录
+ * [20170921] 反显客群及证明材料（第1期）
+ * [20171115] 反显"无抵押DTI"、"综合DTI"、"风险敞口MUE"字段值（第2期）
+ */
+function fnViewBlaze2(json) {
+	
+	var group = json.realGroup;
+	var material = json.certifiMaterial;
+	var remark = json.remark;
+	
+	group = (group == undefined) ? '' : group;
+	material = (material == undefined) ? '' : material;
+	remark = (remark == undefined) ? '' : remark;
+	
+	var result = '该客户';
+	if (group != '' && group.length > 0) {
+		result = result + '为&nbsp;<span class="chartreuse">' + group + '</span>&nbsp;客群。';
+	}
+	
+	if (material != '' && material.length > 0) {
+		result = result + '必附材料为&nbsp;<span class="chartreuse">' + material + '</span>。';
+	}
+	
+	if (remark != '' && remark.length > 0) {
+		result = result + '备注：<span class="chartreuse">' + remark + '</span>。';
+	}
+	
+	// 反显"无抵押DTI"、"综合DTI"、"风险敞口MUE"字段值（第2期）
+	var dti_unmontgage = json.dtiUnMontgage+"";
+	var dti_synthetical = json.dtiSynthetical+"";
+	var mue_risk_open = json.mueRiskOpen+"";
+	var sysAdviseLimit = (json.sysAdviseLimit == undefined ?'':json.sysAdviseLimit)+"";
+	if (dti_unmontgage != '') {
+		result = result + '无抵押DTI：<span class="chartreuse">' + dti_unmontgage + '</span>。';		
+	}
+	
+	if (dti_synthetical != '') {
+		result = result + '综合DTI：<span class="chartreuse">' + dti_synthetical + '</span>。';
+	}
+	
+	if (mue_risk_open != '') {
+		result = result + '风险敞口MUE：<span class="chartreuse">' + mue_risk_open + '</span>。';
+	}
+	if (sysAdviseLimit != '') {
+		result = result + '系统建议额度：<span class="chartreuse">' + sysAdviseLimit + '</span>。';
+	}
+	
+	$('#tbl_area').html(result);
+	$('#tbl_area').css('display', 'block');
+	if(parent.rightIframe0 != undefined){
+		if(parent.rightIframe0.valEnhance != undefined){	
+			parent.rightIframe0.valEnhance(result);
+		}
+	}
+}
+
+/**
+ * 功能：填充计算表格
+ * @param id 表格编号
+ * @param tbl 表格
+ */
+function fnFillSalaryCompute(id, tbl) {
+	for (var i = 1; i < tbl.length; i++) {
+		for (var j = 1; j <= tbl[i].length; j++) {
+			var value = tbl[i][j];
+			if (value == '0') {
+				$('#' + id + (i < 10 ? '0' + i : i) + (j < 10 ? '0' + j : j)).val('');
+			} else {
+				$('#' + id + (i < 10 ? '0' + i : i) + (j < 10 ? '0' + j : j)).val(Number(value));
+			}
+			
+			if (i == tbl.length - 1) {
+				$('#' + id + '13' + (j < 10 ? '0' + j : j)).val(Number(tbl[0][j]));
+			}
+		}
+	}
+}
+
+/**
+ * 功能：收入表格计算数据反显
+ * @param item 可采纳项JSON数据
+ * @param o 表格计算JSON数据
+ */
+function fnReShowSalaryCompute(item, o) {
+	if (o == undefined) {
+		return;	
+	}
+	
+	var array = JSON.parse(o.storage);
+	
+	// 切记：对存储器进行赋值
+	storage = JSON.parse(o.storage);
+	counter = JSON.parse(o.counter);
+	
+	// 工资流水
+ 	if (item.itemSalary == '1') {
+ 		fnFillSalaryCompute('01', array[1]);
+ 	}
+	
+ 	// 完税证明
+	if (item.itemTaxRecord == '1') {
+		fnFillSalaryCompute('02', array[2]);
+	}
+}
+
+/**
+ * 功能：收入可采纳项数据反显
+ * @param o 可采纳项JSON数据
+ */
+function fnReShowSalaryAdoptItem(o) {
+	
+	if (o == null) {
+		return;	
+	}
+	
+	// 工资流水
+	if (o.itemSalary == '1') {
+		$('#adopt_item_01').css('display','block');
+		$('input[name="adoptItem"][value="01"]').prop('checked', 'checked');
+	}
+	// 完税证明
+	if (o.itemTaxRecord == '1') {
+		$('#adopt_item_02').css('display','block');
+		$('input[name="adoptItem"][value="02"]').prop('checked', 'checked');
+	}
+	// 工作证明
+	if (o.itemWorkCertif == '1') {
+		$('#adopt_item_03').css('display','block');
+		$('#adopt_item_03 ul li').css('display','block');
+		$('input[name="adoptItem"][value="03"]').prop('checked', 'checked');
+	}
+	// 社保基数
+	if (o.itemSocialSecurityBase == '1') {
+		$('#adopt_item_04').css('display','inline');
+		$('input[name="adoptItem"][value="04"]').prop('checked', 'checked');
+	}
+	// 公积金
+	if (o.itemFund == '1') {
+		$('#adopt_item_05').css('display','block');
+		$('#adopt_item_05 ul li').css('display','block');
+		$('input[name="adoptItem"][value="05"]').prop('checked', 'checked');
+	}
+	// 房租收入
+	if (o.itemHouseRent == '1') {
+		$('#adopt_item_06').css('display','inline');
+		$('input[name="adoptItem"][value="06"]').prop('checked', 'checked');
+	}
+	// 配偶税前月收入
+	if (o.itemSpousePreTax == '1') {
+		$('#adopt_item_07').css('display','inline');
+		$('input[name="adoptItem"][value="07"]').prop('checked', 'checked');
+	}
+	// 高财力客户日均余额 
+	if (o.itemFinancesCust == '1') {
+		$('#adopt_item_08').css('display','inline');
+		$('input[name="adoptItem"][value="08"]').prop('checked', 'checked');
+	}
+}
+
+/**
+ * 非A重要团办名单
+ *@param appId
+ */
+function fnImportMindan(appId){
+	//目标企业名单
+	$cf.ajax({
+		url : "/opas-naps/queryTeamnoIsmatch.json",
+		data : {
+			"appId" : appId
+		},
+		onSuccess : function(dataRes) {
+			if (dataRes.RSP_BODY.isSuccess) {
+				var teamdeal = dataRes.RSP_BODY.teamdeal;
+				if(teamdeal!=null){
+				var teamdealCode = teamdeal.teamdealCode;
+				var companyType = teamdeal.companyType;
+				if(teamdealCode.substring(0,3)=="YTB"&&companyType!="A类"){
+					$('input[name="unitNature"][value="12"]').prop('checked', 'checked');
+				}else{
+					$('input[name="unitNature"][value="12"]').prop('checked', false);
+				}
+				}else{
+					$('input[name="unitNature"][value="12"]').prop('checked', false);
+				}
+				
+			} 
+		}
+	});
+	
+}
+/**
+ * 学校优质、企业
+ *@param appId
+ */
+function fnMindan(appId){
+	//目标企业名单
+	$cf.ajax({
+		url : "/opas-naps/queryMindan.json",
+		data : {
+			"appId" : appId
+		},
+		onSuccess : function(dataRes) {
+			if (dataRes.RSP_BODY.isSuccess) {
+				var custInfo = dataRes.RSP_BODY.custInfo;
+				workCompany = custInfo.workCompany;
+				if(custInfo!=null){				 
+					if(custInfo.importSchoolMindan=='1'){
+						$('input[name="unitNature"][value="03"]').prop('checked', true);
+						$('#sub_c_operate_area_03 fieldset').css('display', 'block');
+						$('input[name="schoolType"][value="01"]').prop('checked', true);
+					}if(custInfo.importSchoolMindan=='0'){
+						$('input[name="unitNature"][value="03"]').prop('checked', false);
+						$('input[name="schoolType"][value="01"]').prop('checked', false);
+					}if(custInfo.goodCompanyMindan=='1'){
+						$('input[name="unitNature"][value="11"]').prop('checked', 'checked');
+					}
+					if(custInfo.goodCompanyMindan=='0'){
+						$('input[name="unitNature"][value="11"]').prop('checked', false);
+					}	
+				
+				}
+			} 
+		}
+	});
+	
+}
+/**
+ * 目标企业名单
+ *@param appId
+ */
+function fnTargetcompany(appId){
+	//目标企业名单
+	setTimeout(function(){
+	$cf.ajax({
+		url : "/opas-naps/queryTargetcompany.json",
+		data : {
+			"appId" : appId
+		},
+		onSuccess : function(dataRes) {
+			if (dataRes.RSP_BODY.isSuccess) {
+				var target = dataRes.RSP_BODY.target;
+				var bank = appId.substring(10,11);
+				var companyType = target.companyType;
+				if(bank=="S"&&workCompany=="1"){
+					 $('input[name="unitNature"][value="09"]').prop('checked', 'checked');
+				 }else if(bank=="S"&&workCompany=="0"){
+				if(companyType=="中国500强"){
+					$('input[name="unitNature"][value="07"]').prop('checked', 'checked');
+				}if(companyType=="世界500强"){
+					$('input[name="unitNature"][value="06"]').prop('checked', 'checked');
+				}if(companyType=="地方国资委下辖的国有企业"||companyType=="国有重点企业"||companyType=="中央企业"){
+					$('input[name="unitNature"][value="05"]').prop('checked', 'checked');
+				}if(companyType=="银行"||companyType=="基金公司"||companyType=="证券公司"||companyType=="保险公司"||companyType=="再保险公司"||companyType=="保险资产管理公司"){
+					$('input[name="unitNature"][value="08"]').prop('checked', 'checked');
+				}
+			} else{
+				if(companyType=="中国500强"){
+					$('input[name="unitNature"][value="07"]').prop('checked', 'checked');
+				}if(companyType=="世界500强"){
+					$('input[name="unitNature"][value="06"]').prop('checked', 'checked');
+				}if(companyType=="地方国资委下辖的国有企业"||companyType=="国有重点企业"||companyType=="中央企业"){
+					$('input[name="unitNature"][value="05"]').prop('checked', 'checked');
+				}if(companyType=="银行"||companyType=="基金公司"||companyType=="证券公司"||companyType=="保险公司"||companyType=="再保险公司"||companyType=="保险资产管理公司"){
+					$('input[name="unitNature"][value="08"]').prop('checked', 'checked');
+				}
+			}
+			}
+		}
+	});
+	},300);
+	
+}
+ function fnClerk(appId){
+	 var bank = appId.substring(10,11);
+	 if(bank=="S"){
+		 $('input[name="unitNature"][value="09"]').prop('checked', 'checked');
+	 }
+ }
+ function fnBank(appId){
+	// 优质企业名单 学校
+		fnMindan(appId);
+		// 目标企业名单
+		fnTargetcompany(appId);
+		// 行员名单
+		//fnBank(appId);
+		// 非A重要团办名单
+		fnImportMindan(appId); 
+		//行员
+		//fnClerk(appId);
+ }
+/**
+ * 功能：初始加载增强信息
+ * @param appId 申请件编号
+ */
+function fnLoadEnhanceInfo(appId) {
+	if (appId == null || appId.trim() == '') {
+		$.messager.alert("操作提示", "申请件编号不能为空!");
+		return;
+	}
+	
+	$cf.ajax({
+		url : '/opas-naps/enhance_info_load.json',
+		data : {
+			"appId" : appId
+		},
+		onSuccess : function(response) {
+			if (response.RSP_BODY.success) {
+				// === 增强采集信息 ===
+				var resultEnhanceCollectInfo = response.RSP_BODY.enhanceCollectInfo;
+				var jsonEnhanceCollectObject = JSON.parse(resultEnhanceCollectInfo);
+				
+				// 判断"行政级别（工作单位）"勾选情况
+				var level = jsonEnhanceCollectObject.executiveLevel;
+				// 初次加载
+				if (response.RSP_BODY.initLoad) {
+					// 判断"学历信息"勾选情况
+					var resultEducationInfo = response.RSP_BODY.educationInfo;
+					var enhanceInfo = response.RSP_BODY.enhanceInfo;
+					
+					// === 收入计算信息 ===
+				//	var resultSalaryComputeInfo = response.RSP_BODY.salaryComputeInfo;
+					// === 可采纳项信息 ===
+					var resultSalaryAdoptItemInfo = response.RSP_BODY.salaryAdoptItemInfo;
+					if(resultSalaryAdoptItemInfo!=null){
+						var jsonSalaryAdoptItemObject = JSON.parse(resultSalaryAdoptItemInfo);
+						// 公积金
+							$('#adopt_item_05').css('display','block');
+							$('#adopt_item_05 ul li').css('display','block');
+							$('input[name="adoptItem"][value="05"]').prop('checked', 'checked');
+					
+							//$('#txt_fund_month_pay').numberbox('setValue', jsonSalaryAdoptItemObject.fundMonthPay);
+							//$('#txt_fund_base').numberbox('setValue', jsonSalaryAdoptItemObject.fundBase);
+							fnReShowSalaryAdoptItem(jsonSalaryAdoptItemObject);
+							$('#frm_enhance_collect').form('load', jsonSalaryAdoptItemObject);
+					}
+					
+					if (resultEducationInfo == undefined) {
+						// 未查询到三方学历信息
+					} else {
+						var jsonEducationObject = JSON.parse(resultEducationInfo);
+						//alert("学历：" + jsonEducationObject.educationdegree + ',学历类型：' + jsonEducationObject.studystyle);
+					}
+					
+					// 勾选"行政级别（工作单位）"
+					$('input[name="executiveLevel"]').each(function() {
+						if ($(this).val() == level) {
+							$(this).prop('checked', true);
+						}
+					});
+					fnBank(appId);
+					$('#frm_enhance_collect').form('load', jsonEnhanceCollectObject);
+					var codeInfo = response.RSP_BODY.codeInfo;
+					var codeObject = JSON.parse(codeInfo);
+					if(codeObject!=null){
+						$('#txt_position_code').textbox('setValue',codeObject.jobCode);
+						$('#txt_industry_code').textbox('setValue',codeObject.industryCode);
+					}
+					//从易达金blaze决策表中获取区域公积金月收入
+					var fundInfo = response.RSP_BODY.fundInfo;
+					var fundInfoObject = JSON.parse(fundInfo);
+					if(fundInfoObject!=null){
+						$('#accfund_income_xm').textbox('setValue',fundInfoObject.accfundincomexm);
+					}
+				} else {
+					$('#frm_enhance_collect').form('load', jsonEnhanceCollectObject);
+					
+					// 判断"单位性质"勾选情况
+					$('input[name=unitNature]:checked').each(function() {
+						var idx = $(this).val();
+						$('#sub_c_operate_area_' + idx + ' fieldset').css('display', 'block');
+						
+						// 针对"下属企业"特殊处理
+						if (idx == '05' || idx == '06' || idx == '07' || idx == '08') {
+							$('#sub_c_operate_area_' + idx + ' input:radio[name="affiliates"][value="' + jsonEnhanceCollectObject.affiliates + '"]').prop('checked', 'checked');
+						}
+						
+						// 行员类别
+						if (idx == '09') {
+							$('input[name=bankStaffType]:checked').each(function() {
+								$('#c_operate_area ul li ul li').css('display','block');
+								$('#c_operate_area ul li ul li div').css('display','none');
+								var idxSub = $(this).val();
+								$('#sub_c_operate_area_09_' + idxSub).css('display', 'block');
+								$('#sub_c_operate_area_09_' + idxSub + ' fieldset').css('display', 'block');
+								$('#sub_c_operate_area_09_' + idxSub + ' fieldset div').css('display', 'block');
+							});
+						}
+					});
+					
+					// 财力客户
+					$('input[name=financesCust]:checked').each(function() {
+						if ($(this).val() == '04') {
+							$('#sub_d_operate_area fieldset').css('display','block');
+						}
+					});
+					
+					// 特殊客户
+					$('input[name=specialCust]:checked').each(function() {
+						// 重新初始化MBA名单
+						fnLoadMBASchool();
+						
+						if ($(this).val() == '02') {
+							$('#sub_e_operate_area_' + $(this).val()).css('display','inline');
+						}
+					});
+					
+					// === 收入计算信息 ===
+					var resultSalaryComputeInfo = response.RSP_BODY.salaryComputeInfo;
+					// === 可采纳项信息 ===
+					var resultSalaryAdoptItemInfo = response.RSP_BODY.salaryAdoptItemInfo;
+					if(resultSalaryComputeInfo != null&&resultSalaryAdoptItemInfo!=null){
+						var jsonSalaryComputeObject = JSON.parse(resultSalaryComputeInfo);
+							
+						var jsonSalaryAdoptItemObject = JSON.parse(resultSalaryAdoptItemInfo);
+						
+	// 					console.info('adopt:' + resultSalaryComputeInfo);
+	// 					console.info('compute:' + resultSalaryAdoptItemInfo);
+						
+						// 反显收入表格计算结果信息
+						fnReShowSalaryCompute(jsonSalaryAdoptItemObject, jsonSalaryComputeObject);
+						
+						// 反显收入可采纳项结果信息
+						fnReShowSalaryAdoptItem(jsonSalaryAdoptItemObject);
+						$('#frm_enhance_collect').form('load', jsonSalaryAdoptItemObject);
+					}
+					
+					// 反显客群及证明材料等信息
+					fnViewBlaze2(jsonEnhanceCollectObject);
+				}
+				
+				// 反显上次"人工建议可采纳月收入"保存值
+				var v_sysAdoptMonthIncome = $('#sys_adopt_month_income').numberbox('getValue');
+				if (parseInt(v_sysAdoptMonthIncome) == 0) {
+					$('#sys_adopt_month_income').numberbox('setValue', '');
+				} else {
+					$('#sys_adopt_month_income').numberbox('setValue', json.sysAdoptMonthIncome);
+				}
+			}
+		}
+	});
+}
+
+/**
+ * 功能：加载MBA院校名单
+ */
+function fnLoadMBASchool() {
+	$cf.ajax({
+		url : '/opas-naps/mba_school_load.json',
+		data : null,
+		onSuccess : function(response) {
+			if (response.RSP_BODY.success) {
+				var result = response.RSP_BODY.MBASchool;
+				var mba = JSON.parse(result);
+				$('#combox_mba_school_name').combobox('loadData', mba);
+			}
+		}
+	});
+}
+
+/**
+ * 功能：初始化表格计数器
+ * @param tnum 表格数量
+ * @param cnum 表格列数量
+ */
+function fnInitCounter(tnum, cnum) {
+	for (var i = 0; i <= tnum; i++) {
+		var array = [];
+		for (var j = 0; j <= cnum; j++) {
+			array[j] = 0;
+		}
+		counter[i] = array;
+	}
+}
+
+/**
+ * 功能：初始化表格存储器
+ * @param tnum 表格数量
+ * @param rnum 表格行数量
+ * @param cnum 表格列数量
+ */
+function fnInitStorage(tnum, rnum, cnum) {
+	for (var i = 0; i <= tnum; i++) {
+		var r_array = [];
+		for (var j = 0; j <= rnum; j++) {
+			var c_array = [];
+			for (var k = 0; k <= cnum; k++) {
+				c_array[k] = 0;
+			}
+			r_array[j] = c_array;
+		}
+		storage[i] = r_array;
+	}
+}
+
+/**
+ * 功能：均值计算
+ * @param counter 表格计数器
+ * @param sequence 表格序号
+ * @param o 当前对象
+ */
+function fnCompute(counter, sequence, o) {
+	var id = $(o).prop('id');
+	var x = id.substring(2, 4);
+	var y = id.substring(4, 6);
+	
+	var result = 0;
+	for (var i = 1; i <= 12; i++) {
+		var temp = 0;
+		
+		if (i == Number(x)) {
+			temp = Number($(o).val());
+		} else {
+			temp = Number($('#' + sequence + (i < 10 ? '0' + i : i) + y).val())
+		}
+		
+		if (!reg.test(temp)) {
+			continue;
+		}
+		
+		result = fnSum(result, temp);
+	}
+
+	var idx = Number(sequence);
+	var size = counter[idx][Number(y)];
+	if (size > 1) {
+		if (Number(y) == 4 || Number(y) == 7) {
+			result = fnDivide(result, 12);
+		} else {
+			result = fnDivide(result, size);
+		}
+		
+		result = fnFormatFloat(result, 0);
+	} else {
+		if (Number(y) == 4 || Number(y) == 7) {
+			result = fnDivide(result, 12);
+		} else {
+			result = fnDivide(result, size);
+		}
+		
+		result = fnFormatFloat(result, 0);
+	}
+	
+	if (result == 0 && size == 0) {
+		$('#' + sequence + '13' + y).val('');
+	} else {
+		$('#' + sequence + '13' + y).val(result);
+	}
+	
+	return result;
+}
+
+/**
+ * 功能：判断当前表格是否已经存在于表格存储器中
+ * @param storage 表格存储器
+ * @param t 表格索引
+ * @param x 行索引
+ * @param y 列索引
+ */
+function fnCheckExists(storage, t, x, y) {
+	if (x < 1 || x > 12 || y < 1 || y > 12) {
+		alert('超出存储器计算范围');
+		return false;
+	}
+	// storage[t][x][y] > 0 表示修改已有数据
+	// storage[t][x][y] = 0 表示新增数据
+	return storage[t][x][y] > 0 ? true : false;
+}
+
+/**
+ * 功能：精度计算
+ * @param num 数值
+ * @param decimal 要保留的小数位
+ */
+function fnFormatFloat(num, decimal) {
+	return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+}
+
+/**
+ * 功能：重置计数器
+ * @param counter 计数器
+ * @param idx 计数器索引
+ */
+function fnResetCounterById(counter, idx) {
+	var i = Number(idx);
+	if (isNaN(i)) {
+		alert('非有效计数器索引');
+		return;
+	}
+	
+	var size = counter[i].length;
+	for (var j = 1; j < size; j++) {
+		counter[i][j] = 0;
+	}
+}
+
+/**
+ * 功能：重置存储器
+ * @param storage 存储器
+ * @param idx 存储器索引
+ */
+function fnResetStorageById(storage, idx) {
+	var i = Number(idx);
+	if (isNaN(i)) {
+		alert('非有效存储器索引');
+		return;
+	}
+	
+	var oSize = storage[i].length;
+	for (var j = 0; j < oSize; j++) {
+		var iSize = storage[i][j].length;
+		for (var k = 0; k < iSize; k++) {
+			storage[i][j][k] = 0;
+		}
+	}
+}
+
+/**
+ * 功能：删除表格
+ * @param idx 表格索引
+ */
+function fnRemoveTableById(idx) {
+	$('#adopt_item_' + idx).empty();
+}
+
+/**
+ * 功能：计算表格
+ * @param index 索引（例如：'01'）
+ */
+function fnComputeTable(index) {
+	// 清除表格
+	$('#adopt_item_' + index).empty();
+	
+	// 生成表格
+	fnGenTable('#adopt_item_' + index, 12, tags.length - 1);
+	
+	// 表格事件
+	$('#adopt_item_' + index + ' input[type="text"]').focus(function() {
+		$(this).addClass('valid');
+	}).blur(function() {
+		var value = $(this).val();
+		
+		// 输入区域索引
+		var id = $(this).prop('id');
+		var idx = id.substring(id.length - 4, id.length);
+		var x = Number(idx.substring(0, idx.length - 2));
+		var y = Number(idx.substring(idx.length - 2, idx.length));
+		
+		// 存储旧值
+		var old_value = storage[Number(index)][x][y];
+		if (old_value == 0) {
+			var convert = Number(value);
+			if (isNaN(convert)) {
+				storage[Number(index)][x][y] = 0;
+			} else {
+				storage[Number(index)][x][y] = convert;
+			}
+		}
+		
+		if (value == '') {
+			if (value != old_value) {
+				counter[Number(index)][y] = counter[Number(index)][y] - 1;
+				storage[Number(index)][x][y] = 0;
+			}
+			$(this).removeClass('valid').removeClass('invalid');
+		} else {
+			if (!reg.test(value)) {
+				$(this).addClass('invalid');
+				alert('数据格式不正确!');
+				$(this).val('').focus();
+				return;
+			} else {
+				$(this).removeClass('invalid').addClass('valid');
+			}
+			
+			if (value != old_value) {
+				// 判断当前表格是否已经存在于表格存储器中
+				if (fnCheckExists(storage, Number(index), x, y) && old_value > 0) {
+					counter[Number(index)][y] = counter[Number(index)][y] + 0;
+				} else {
+					counter[Number(index)][y] = counter[Number(index)][y] + 1;
+				}
+				
+				storage[Number(index)][x][y] = Number(value);
+			}
+		}
+		
+		// 计算均值
+		var average = fnCompute(counter, index, this);
+		storage[Number(index)][0][y] = average;
+		$('#table_storage').val(JSON.stringify(storage));
+		$('#table_counter').val(JSON.stringify(counter));
+	});
+}
+
+/**
+ * 功能：增强采集表单校验
+ * @param fid 表单ID
+ */
+function fnValidateForm(fid) {
+	// 排除特殊卡种：0082、0084, 不强制核验.
+	if (appProd != '0082' && appProd != '0084' && appProd != '0801') {
+		// [校验] 用工性质
+		if ($('input[name="staffNature"]:checked').val() == null) {
+			waringMessage+= '表单数据 "用工性质" 必输项不能为空!';
+			if(!bigSaveButtonFlag){
+			$.messager.alert('校验提示', '表单数据 "用工性质" 必输项不能为空!', 'error');
+			}
+			fnCleanDisabled();
+			return false;
+		}
+		
+		// [校验] 行政级别（工作单位）
+		if ($('input[name="executiveLevel"]:checked').val() == null) {
+			waringMessage+='表单数据 "行政级别（工作单位）" 必输项不能为空!';
+			if(!bigSaveButtonFlag){
+			$.messager.alert('校验提示', '表单数据 "行政级别（工作单位）" 必输项不能为空!', 'error');
+			}
+			fnCleanDisabled();
+			return false;
+		}
+		
+		// [校验] 单位性质
+		var value = $('input[name="unitNature"]:checked').val();
+		if (value == null) {
+			waringMessage+='表单数据 "单位性质" 必输项不能为空!';
+			if(!bigSaveButtonFlag){
+			$.messager.alert('校验提示', '表单数据 "单位性质" 必输项不能为空!', 'error');
+			}
+			fnCleanDisabled();
+			return false;
+		} else {
+			// == 政府机构 ==
+			if (value == '01') {
+				// 编制
+				if ($('input[name="orgAuthStrength"]:checked').val() == null) {
+					waringMessage+='表单数据 "政府机构 > 编制" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "政府机构 > 编制" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 级别
+				if ($('input[name="orgLevel"]:checked').val() == null) {
+					waringMessage+='表单数据 "政府机构 > 级别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "政府机构 > 级别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+			}
+			
+			// == 事业单位（不含学校、医院） ==
+			else if (value == '02') {
+				// 编制
+				if ($('input[name="institutionAuthStrength"]:checked').val() == null) {
+					waringMessage+='表单数据 "事业单位 > 编制" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "事业单位 > 编制" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 级别
+				if ($('input[name="institutionLevel"]:checked').val() == null) {
+					waringMessage+='表单数据 "事业单位 > 级别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "事业单位 > 级别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+			}
+			
+			// == 学校 ==
+			else if (value == '03') {
+				// 性质
+				if ($('input[name="schoolNature"]:checked').val() == null) {
+					waringMessage+='表单数据 "学校 > 性质" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "学校 > 性质" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 类别
+				if ($('input[name="schoolType"]:checked').val() == null) {
+					waringMessage+='表单数据 "学校 > 类别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "学校 > 类别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 级别
+				if ($('input[name="schoolPositionLevel"]:checked').val() == null) {
+					waringMessage+='表单数据 "学校 > 级别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "学校 > 级别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+			}
+			
+			// == 医院 ==
+			else if (value == '04') {
+				// 性质
+				if ($('input[name="hospitalNature"]:checked').val() == null) {
+					waringMessage+='表单数据 "医院 > 性质" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "医院 > 性质" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 医院级别
+				if ($('input[name="hospitalLevel"]:checked').val() == null) {
+					waringMessage+='表单数据 "医院 > 类别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "医院 > 类别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 等级
+				if ($('input[name="hospitalGrade"]:checked').val() == null) {
+					waringMessage+='表单数据 "医院 > 等级" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "医院 > 等级" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 级别
+				if ($('input[name="doctorLevel"]:checked').val() == null) {
+					waringMessage+='表单数据 "医院 > 级别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "医院 > 级别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+			}
+			
+			// == 国有企业 / 世界500强 / 内外资金融机构 ==
+			else if (value == '05' || value == '06' || value == '07' || value == '08') {
+				// 国有企业 - 行业类型
+				if ((value == '05') && ($('input[name="industryType"]:checked').val() == null)) {
+					waringMessage+='表单数据 "国有企业 > 行业类型" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "国有企业 > 行业类型" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+				
+				// 隶属关系-下属企业
+				if ($('#sub_c_operate_area_' + value + ' input[name="affiliates"]:checked').val() == null) {
+					var message = '';
+					if (value == '05') {
+						message = '国有企业 > 下属企业（非国企）';
+					} else if (value == '06') {
+						message = '世界500强 > 下属企业';
+					} else if (value == '07') {
+						message = '中国500强 > 下属企业';
+					} else if (value = '08') {
+						message = '内外资金融机构 > 下属企业';
+					}
+					waringMessage+=message;
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "' + message + '" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+			}
+	
+			// == 行员 ==
+			else if (value == '09') {
+				var value2 = $('input[name="bankStaffType"]:checked').val();
+				if (value2 == null) {
+					waringMessage+='表单数据 "行员 > 行员类别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "行员 > 行员类别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				} else {
+					// 级别
+					var value3 = $('input[name="bankStaffLevel"]:checked').val();
+					if (value3 == null) {
+						waringMessage+='表单数据 "行员 > 行员类别 > 级别" 必输项不能为空!';
+						if(!bigSaveButtonFlag){
+						$.messager.alert('校验提示', '表单数据 "行员 > 行员类别 > 级别" 必输项不能为空!', 'error');
+						}
+						fnCleanDisabled();
+						return false;
+					}
+				}
+			}
+			
+			// == 私营企业 ==
+			if (value == '13') {
+				// 企业类别
+				if ($('input[name="privateBusinessType"]:checked').val() == null) {
+					waringMessage+='表单数据 "私营企业 > 企业类别" 必输项不能为空!';
+					if(!bigSaveButtonFlag){
+					$.messager.alert('校验提示', '表单数据 "私营企业 > 企业类别" 必输项不能为空!', 'error');
+					}
+					fnCleanDisabled();
+					return false;
+				}
+			}
+		}
+	}
+	
+	// [校验] 财力客户
+ 	var value = $('input[name="financesCust"]:checked').val();
+// 	if (value == null) {
+// 		$.messager.alert('校验提示', '表单数据 "财力客户" 必输项不能为空!', 'error');
+// 		return false;
+// 	} else {
+// 		if ((value == '04') && ($('input[name="wuHanCzType"]:checked').val() == null)) {
+// 			$.messager.alert('校验提示', '表单数据 "财力客户 > 武汉财智分期" 必输项不能为空!', 'error');
+// 			return false;
+// 		}
+// 	}
+
+	// 勾选"符合我行高财力要求"选项则"高财力客户余额"为必填项
+	if (value == '01' && !$('input[name="adoptItem"][value="08"]').is(':checked')) {
+		waringMessage+='表单数据 "收入信息 > 高财力客户余额" 为必输项!';
+		if(!bigSaveButtonFlag){
+		$.messager.alert('校验提示', '表单数据 "收入信息 > 高财力客户余额" 为必输项!', 'error');
+		}
+		fnCleanDisabled();
+		return false;
+	}
+	
+	// [校验] 特殊客户
+// 	value = $('input[name="specialCust"]:checked').val();
+// 	if (value == null) {
+// 		$.messager.alert('校验提示', '表单数据 "特殊客户" 必输项不能为空!', 'error');
+// 		return false;
+// 	} else {
+// 		if ((value == '02') && ($('#combox_mba_school_name').combobox('getValue') == '')) {
+// 			$.messager.alert('校验提示', '表单数据 "MBA院校名单" 必输项不能为空!', 'error');
+// 			return false;
+// 		}
+// 	}
+	
+	// [校验] 学历信息 - 学历证明类型
+// 	if ($('input[name="eduCertifType"]:checked').val() == null) {
+// 		$.messager.alert('校验提示', '表单数据 "学历信息 > 学历证明类型" 必输项不能为空!', 'error');
+// 		return false;
+// 	}
+	
+	// [校验] 学历信息 - 学历类型
+// 	if ($('input[name="eduBackType"]:checked').val() == null) {
+// 		$.messager.alert('校验提示', '表单数据 "学历信息 > 学历类型" 必输项不能为空!', 'error');
+// 		return false;
+// 	}
+	
+	// [校验] 学历信息 - 学历
+// 	if ($('input[name="eduBack"]:checked').val() == null) {
+// 		$.messager.alert('校验提示', '表单数据 "学历信息 > 学历" 必输项不能为空!', 'error');
+// 		return false;
+// 	}
+	
+	// [校验] 房产信息 - 房产证明类型
+// 	if ($('input[name="houseProveType"]:checked').val() == null) {
+// 		$.messager.alert('校验提示', '表单数据 "房产信息 > 房产证明类型" 必输项不能为空!', 'error');
+// 		return false;
+// 	}
+	
+	// 排除特殊卡种：0082、0084
+	if (appProd != '0082' && appProd != '0084') {
+		// [校验] 行业职位企业信息 - 行业代码
+		if ($('#txt_industry_code').val() == '') {
+			waringMessage+='表单数据 "行业职位企业信息 > 行业代码" 必输项不能为空!';
+			if(!bigSaveButtonFlag){
+			$.messager.alert('校验提示', '表单数据 "行业职位企业信息 > 行业代码" 必输项不能为空!', 'error');
+			}
+			fnCleanDisabled();
+	 		return false;
+		}
+		
+		// [校验] 行业职位企业信息 - 职位代码
+		if ($('#txt_position_code').val() == '') {
+			waringMessage+='表单数据 "行业职位企业信息 > 职位代码" 必输项不能为空!';
+			if(!bigSaveButtonFlag){
+			$.messager.alert('校验提示', '表单数据 "行业职位企业信息 > 职位代码" 必输项不能为空!', 'error');
+			}
+			fnCleanDisabled();
+	 		return false;
+		}
+		
+		// [校验] 行业职位企业信息 - 当前单位入职时间
+		if ($('#datebox_company_entry_date').datebox('getValue') == '') {
+			waringMessage+='表单数据 "行业职位企业信息 > 当前单位入职时间" 必输项不能为空!';
+			if(!bigSaveButtonFlag){
+			$.messager.alert('校验提示', '表单数据 "行业职位企业信息 > 当前单位入职时间" 必输项不能为空!', 'error');
+			}
+			fnCleanDisabled();
+	 		return false;
+		}
+		
+		// [校验] 其他信息 - 费率
+		if ($('#txt_rate').val() == '') {
+			waringMessage+='表单数据 "其他信息 > 费率" 必输项不能为空!';
+			if(!bigSaveButtonFlag){
+			$.messager.alert('校验提示', '表单数据 "其他信息 > 费率" 必输项不能为空!', 'error');
+			}
+			$('#txt_rate').focus();
+			fnCleanDisabled();
+	 		return false;
+		}
+	}
+	
+	return true;
+}
+
+/**
+ * 功能：清除"保存"按钮禁用事件
+ */
+function fnCleanDisabled() {
+	$('#btnSave').removeAttr('disabled');
+}
+/**
+ * 功能：全角转换为半角
+ */
+function toCDB(str) {
+	var tmp = "";
+	for(var i=0;i<str.length;i++){
+		if(str.charCodeAt(i) == 12288){
+			tmp += String.fromCharCode(str.charCodeAt(i)-12256);
+			continue;
+		}
+		if(str.charCodeAt(i)>65280 && str.charCodeAt(i)<65375){
+			tmp += String.fromCharCode(str.charCodeAt(i)-65248);
+		}
+		else{
+			tmp += String.fromCharCode(str.charCodeAt(i));
+		}
+	}
+	return tmp;
+}
+/**
+ * 功能：自动跳到下个文本框
+ */
+function moveNext() {
+	$('#txt_industry_code').textbox('textbox').bind('keypress',function(){
+		if ($(this).val().length>2){		
+			$("#txt_position_code").textbox('textbox').focus();
+		}
+	});
+	var length  = $("#txt_position_code").textbox('getValue').length;
+	var val = $("#txt_position_code").val();
+	var value = $("#txt_position_code").textbox('getValue');
+
+	/* if(value>2){
+		$("#txt_position_code").textbox('setValue','');
+	} */
+}
+
+// [事件] 保存
+function fnSave(fid, appId) {
+	isSaveSuccess=false;
+	waringMessage="";
+	if(parent.bigSaveButtonFlag){
+		bigSaveButtonFlag=parent.bigSaveButtonFlag;
+	}else{
+		bigSaveButtonFlag=false;
+	}
+	// BLAZE 策略结果响应回来之前将按钮设置禁用
+	$('#btnSave').attr('disabled', true);
+	
+	if (!fnValidateForm(fid)) {
+		return;
+	}
+	$('#txt_industry_code').val(toCDB($('#txt_industry_code').val()));
+	$('#txt_position_code').val(toCDB($('#txt_position_code').val()));
+	var validate = $('#' + fid).form('validate');
+	if (!validate) {
+		waringMessage+="表单数据未通过校验.";
+		if(!bigSaveButtonFlag){
+		$.messager.alert('校验提示', '表单数据未通过校验', 'warning');
+		}
+		return;
+	}
+	
+	// 清除最下方提示域显示文本
+	$('#tbl_area').css('display','none');
+	$('#tbl_area').html('');
+	
+	var frmObject = $('#' + fid);
+	var jsonData = frmObject.serializeArray();
+	console.log(jsonData);
+	var formData ={};
+	for (var i = 0; i < jsonData.length; i++) {
+		var key = jsonData[i].name;
+		if (formData.hasOwnProperty(key)) {
+			formData[jsonData[i].name] = formData[jsonData[i].name] + ',' + jsonData[i].value;
+		} else {
+			formData[jsonData[i].name] = jsonData[i].value;
+		}
+	}
+	
+	// 对可采纳项数据进行处理
+	if (formData.hasOwnProperty('adoptItem')) {
+		var array = formData.adoptItem.split(',');
+		for (var i = 0; i <= array.length; i++) {
+			console.log(formData);
+			fnSetValue(formData, Number(array[i]));
+		}
+	}
+	
+	// 存储收入可采纳项表数据
+	var storage = $('#table_storage').val();
+	var counter = $('#table_counter').val();
+	if (storage != '') {
+		formData['storage'] = storage;
+		formData['counter'] = counter;
+	}
+	
+	// 设置申请件编号
+	formData['appId'] = appId;
+	
+	
+	
+	//setInterval(function() {
+	setTimeout(function(){
+		// BLAZE 策略结果响应回来之前将按钮设置禁用
+		$('#btnSave').removeAttr('disabled');
+	}, 10000);
+	
+	// alert('税前:' + $('#txt_work_pre_tax').numberbox('getValue') + '\n税后:' + $('#txt_work_after_tax').numberbox('getValue') + '\n公积金基数:' + $('#txt_fund_base').numberbox('getValue') + '\n公积金月缴纳额:' + $('#txt_fund_month_pay').numberbox('getValue'));
+	
+	$cf.ajax({
+		url : '/opas-naps/enhance_info_save.json',
+		data : formData,
+		async:false,
+		onSuccess : function(response) {
+			if (response.RSP_BODY.success) {
+				// $.messager.alert("操作提示!","增强采集信息处理成功");
+				isSaveSuccess=true;
+				// 调用FICO增强接口 - YDJ1008
+				fnCallBlaze(formData);
+			} else {
+				isSaveSuccess=false;
+				waringMessage+="增强采集信息处理失败.";
+				if(!bigSaveButtonFlag){
+				$.messager.alert("操作提示!","增强采集信息处理失败","error");
+				}
+			}
+		}
+	});
+	
+}
+
+/**
+ * [功能] 界面交互定义
+ * [时间] 2017-05-11
+ */
+function fnUIEvent() {
+	// 单位性质
+	$('input[name=unitNature]').click(function() {
+		// 重置本区域各属性域
+		$('input[name=unitNature]').parent().parent().find('fieldset input').prop('checked', false);
+		$('input[name=unitNature]').parent().parent().find('ul li input').prop('checked', false);
+		$('#c_operate_area fieldset').css('display','none');
+		$('#c_operate_area ul ul li').css('display','none');
+		var idx = $(this).val();
+		$('#sub_c_operate_area_' + idx + ' fieldset').css('display', 'block');
+		
+		// 行员类别
+		if (idx == '09') {
+			$('#c_operate_area ul li ul li').css('display','block');
+			$('input[name=bankStaffType]').click(function() {
+				$('#c_operate_area ul li ul li div').css('display','none');
+				var i = $(this).val();
+				$('#sub_c_operate_area_09_' + i).css('display', 'block');
+				$('#sub_c_operate_area_09_' + i + ' fieldset').css('display', 'block');
+				$('#sub_c_operate_area_09_' + i + ' fieldset div').css('display', 'block');
+			});
+		}
+	});
+	
+	// 财力客户
+	$('input[name=financesCust]').click(function() {
+		$('#sub_d_operate_area fieldset').css('display','none');
+		$('input[name="wuHanCzType"]').prop('checked', false);
+		var idx = $(this).val();
+		if (idx == '04') {
+			$('#sub_d_operate_area fieldset').css('display','block');
+		}
+	});
+	
+	// 特殊客户
+	$('input[name=specialCust]').click(function() {
+		$('#sub_e_operate_area_02').css('display','none');
+		
+		// 重新初始化MBA名单
+		fnLoadMBASchool();
+		
+		var idx = $(this).val();
+		if (idx == '02') {
+			$('#sub_e_operate_area_' + idx).css('display','inline');
+		}
+	});
+	
+	// 收入信息 - 可采纳项
+	$('input[name="adoptItem"]').click(function() {
+		$(this).parent().next().css('display','none');
+		var idx = $(this).val();
+		var checked = $(this)[0].checked;
+		
+		if (checked) {
+			$('#adopt_item_' + idx).css('display','block');
+			$('#adopt_item_' + idx + ' ul li').css('display','block');
+			
+			// 工资流水、完税证明
+			if (idx == '01' || idx == '02') {
+				fnComputeTable(idx);
+			}
+			
+			// 工作证明
+			if (idx == '03') {
+				$('#txt_work_pre_tax').numberbox('clear');
+				$('#txt_work_after_tax').numberbox('clear');
+			}
+			
+			// 社保基金、房租收入、配偶税前月收入、高财力客户日均余额
+			if (idx == '04' || idx == '06' || idx == '07' || idx == '08') {
+				$('#adopt_item_' + idx + '>input').numberbox('clear');
+				$('#adopt_item_' + idx).css('display','inline');
+			}
+		} else {
+			// 工资流水、完税证明
+			if (idx == '01' || idx == '02') {
+				// 重置对应计数器和存储器
+				fnResetCounterById(counter, idx);
+				fnResetStorageById(storage, idx);
+				fnComputeTable(idx);
+				
+				// 同步缓存存储区域值（解决无法重新计算"实际月收入"值问题）
+				$('#table_storage').val(JSON.stringify(storage));
+				$('#table_counter').val(JSON.stringify(counter));
+			}
+			
+			// 公积金
+			if (idx == '05') {
+				$('#txt_fund_month_pay').numberbox('clear');
+				$('#txt_fund_base').numberbox('clear');
+			}
+			
+			$('#adopt_item_' + idx).css('display','none');
+		}
+	});	
+
+}
+
+/**
+ * 功能：界面按钮事件定义
+ */
+function fnBtnEvent() {
+	// [事件] 保存
+	$('#btnSave').click(function() {
+		fnSave('frm_enhance_collect', appId);
+	});
+	
+	// [事件] 清除 - "财力客户"区域
+	$('#btn_d_operate_area').click(function() {
+		$('input[name="financesCust"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('input[name="wuHanCzType"]').each(function() {
+			$(this).prop('checked', false);
+		});
+	});
+	
+	// [事件] 清除 - "特殊客户"区域
+	$('#btn_e_operate_area').click(function() {
+		$('input[name="specialCust"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('#sub_e_operate_area_02').css('display','none');
+		$('#combox_mba_school_name').combobox('setValue', '');
+	});
+	
+	// [事件] 清除 - "学历信息"区域
+	$('#btn_f_operate_area').click(function() {
+		$('input[name="eduCertifType"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('input[name="eduBackType"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('input[name="eduBack"]').each(function() {
+			$(this).prop('checked', false);
+		});
+	});
+	
+	// [事件] 清除 - "房产信息"区域
+	$('#btn_g_operate_area').click(function() {
+		$('input[name="houseProveType"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('#houseProveNum').combobox('setValue','请选择');
+		$('input[name="houseLocation"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('#houseArea').numberbox('setValue','');
+		$('#houseTotalPrice').numberbox('setValue','');
+		$('#houseRepayTime').numberbox('setValue','');
+	});
+	
+	// [事件] 清除 - "车产信息"区域
+	$('#btn_h_operate_area').click(function() {
+		$('input[name="vehicleProveType"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('input[name="vehicleHandType"]').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('#vehicleTotalPrice').numberbox('setValue','');
+		$('#vehicleAge').textbox('setValue','');
+	});
+}
+
+/**
+ * 功能：界面文本框事件定义
+ */
+function fnTxtEvent() {
+	// [校验] 收入信息 - 可采纳项 - 工作证明
+	$('input[name="adoptItem"][value="03"]').click(function() {
+		$('#txt_work_after_tax').numberbox('clear');
+		$('#txt_work_pre_tax').numberbox('clear');
+	});
+	$('input[name="adoptItem"][value="03"]').each(function() {
+		$('#txt_work_pre_tax').next('span').find('input').focus(function() {
+			$('#txt_work_after_tax').numberbox('clear');
+		});
+		$('#txt_work_after_tax').next('span').find('input').focus(function() {
+			$('#txt_work_pre_tax').numberbox('clear');
+		});
+	});
+	
+	// [校验] 收入信息 - 社保基数
+	$('input[name="adoptItem"][value="04"]').click(function() {
+		if (!$(this).prop('checked')) {
+			$('#txtSocialSecurityBase').numberbox('clear');
+		}
+	});
+	
+	// [校验] 收入信息 - 可采纳项 - 公积金
+	$('input[name="adoptItem"][value="05"]').click(function() {
+		$('#txt_fund_month_pay').numberbox('clear');
+		$('#txt_fund_base').numberbox('clear');
+	});
+	/* $('input[name="adoptItem"][value="05"]').each(function() {
+		$('#txt_fund_base').next('span').find('input').focus(function() {
+			$('#txt_fund_month_pay').numberbox('clear');
+		});
+		$('#txt_fund_month_pay').next('span').find('input').focus(function() {
+			$('#txt_fund_base').numberbox('clear');
+		});
+	}); */
+	
+	// [校验] 收入信息 - 房租收入
+	$('input[name="adoptItem"][value="06"]').click(function() {
+		if (!$(this).prop('checked')) {
+			$('#txtHouseMonthRental').numberbox('clear');
+		}
+	});
+	
+	// [校验] 收入信息 - 配偶税前月收入
+	$('input[name="adoptItem"][value="07"]').click(function() {
+		if (!$(this).prop('checked')) {
+			$('#txtSpousePreTaxIncome').numberbox('clear');
+		}
+	});
+	
+	// [校验] 收入信息 - 高财力客户日均余额
+	$('input[name="adoptItem"][value="08"]').click(function() {
+		if (!$(this).prop('checked')) {
+			$('#txtFinancesCustAvgDay').numberbox('clear');
+		}
+	});
+	
+	//[校验] 负债、敞口信息 - 核实无抵押贷款负债
+	$('#txtVerifryCleanLoanDebt').next('span').children().first().blur(function() {
+		var value = $('#txtVerifryCleanLoanDebt').numberbox('getValue');
+		if (value.length == 0) {
+			$('#txtVerifryCleanLoanDebt').numberbox('clear');
+		}
+	});
+
+	// [校验] 负债、敞口信息 - 核实抵押贷款负债
+	$('#txtVerifryMortgageDebt').next('span').children().first().blur(function() {
+		var value = $('#txtVerifryMortgageDebt').numberbox('getValue');
+		if (value.length == 0) {
+			$('#txtVerifryMortgageDebt').numberbox('clear');
+		}
+	});
+
+	// [校验] 负债、敞口信息 - 核实无抵押贷款敞口
+	$('#txtVerifryCleanLoanOpen').next('span').children().first().blur(function() {
+		var value = $('#txtVerifryCleanLoanOpen').numberbox('getValue');
+		if (value.length == 0) {
+			$('#txtVerifryCleanLoanOpen').numberbox('clear');
+		}
+	});
+}
+</script>
+</head>
+<body style="padding: 10px;">
+	<form id="frm_enhance_collect" autocomplete="off">
+		<!-- 增强信息采集区 开始 -->
+		<div id="accordion_wrapper" class="easyui-accordion"
+			style="width: 100%;">
+			<!-- 用工性质 -->
+			<div title="用工性质" id="a_operate_area"
+				data-options="collapsed:false,collapsible:false"
+				style="overflow: auto;">
+				<label><input type="radio" name="staffNature" value="02" />正式编制</label>
+				<label><input type="radio" name="staffNature" value="01" />正式合同</label>
+				<label><input type="radio" name="staffNature" value="03" />一线操作、服务、销售等人员</label>
+				<label><input type="radio" name="staffNature" value="04" />其他</label>
+			</div>
+
+			<!-- 行政级别（工作单位） -->
+			<div title="行政级别（工作单位）" id="b_operate_area"
+				data-options="collapsed:false,collapsible:false"
+				style="overflow: auto;">
+				<label><input type="radio" name="executiveLevel" value="01" />市级及以上</label>
+				<label><input type="radio" name="executiveLevel" value="02" />区、县级市</label>
+				<label><input type="radio" name="executiveLevel" value="03" />县级</label>
+				<label><input type="radio" name="executiveLevel" value="04" />乡镇</label>
+				<label><input type="radio" name="executiveLevel" value="05" />其他</label>
+			</div>
+
+			<!-- 单位性质 -->
+			<div title="单位性质" id="c_operate_area"
+				data-options="collapsed:false,collapsible:false"
+				style="overflow: auto;">
+				<ul>
+					<li><label><input type="radio" name="unitNature"
+							value="01" />政府机构</label>
+						<div id="sub_c_operate_area_01">
+							<fieldset>
+								<legend>
+									<span>编制</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="orgAuthStrength"
+										value="01" />公务员编制</label> <label><input type="radio"
+										name="orgAuthStrength" value="02" />事业单位编制</label> <label><input
+										type="radio" name="orgAuthStrength" value="03" />其他</label>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>级别</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="orgLevel" value="01" />司厅级及以上</label>
+									<label><input type="radio" name="orgLevel" value="02" />处县级</label>
+									<label><input type="radio" name="orgLevel" value="03" />科乡级</label>
+									<label><input type="radio" name="orgLevel" value="04" />其他级别</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="02" />事业单位（不含学校、医院）</label>
+						<div id="sub_c_operate_area_02">
+							<fieldset>
+								<legend>
+									<span>编制</span>
+								</legend>
+								<div>
+									<label><input type="radio"
+										name="institutionAuthStrength" value="01" />公务员编制</label> <label><input
+										type="radio" name="institutionAuthStrength" value="02" />事业单位编制</label>
+									<label><input type="radio"
+										name="institutionAuthStrength" value="03" />其他</label>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>级别</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="institutionLevel"
+										value="01" />司厅级及以上</label> <label><input type="radio"
+										name="institutionLevel" value="02" />处县级</label> <label><input
+										type="radio" name="institutionLevel" value="03" />科乡级</label> <label><input
+										type="radio" name="institutionLevel" value="04" />其他级别</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="03" />学校</label>
+						<div id="sub_c_operate_area_03">
+							<fieldset>
+								<legend>
+									<span>性质</span>
+								</legend>
+								<label><input type="radio" name="schoolNature"
+									value="01" />公办</label> <label><input type="radio"
+									name="schoolNature" value="02" />民办</label> <label><input
+									type="radio" name="schoolNature" value="03" />其他性质</label>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>类别</span>
+								</legend>
+								<label><input type="radio" name="schoolType" value="01" />211或985高校</label>
+								<label><input type="radio" name="schoolType" value="02" />其他高校</label>
+								<label><input type="radio" name="schoolType" value="03" />高中及中专等</label>
+								<label><input type="radio" name="schoolType" value="04" />中学</label>
+								<label><input type="radio" name="schoolType" value="05" />小学</label>
+								<label><input type="radio" name="schoolType" value="06" />其他学校</label>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>级别</span>
+								</legend>
+								<label><input type="radio" name="schoolPositionLevel"
+									value="01" />正副校长</label> <label><input type="radio"
+									name="schoolPositionLevel" value="02" />正高级</label> <label><input
+									type="radio" name="schoolPositionLevel" value="03" />副高级</label> <label><input
+									type="radio" name="schoolPositionLevel" value="04" />中级</label> <label><input
+									type="radio" name="schoolPositionLevel" value="05" />未评级</label>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="04" />医院</label>
+						<div id="sub_c_operate_area_04">
+							<fieldset>
+								<legend>
+									<span>性质</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="hospitalNature"
+										value="01" />公办</label> <label><input type="radio"
+										name="hospitalNature" value="02" />民办</label> <label><input
+										type="radio" name="hospitalNature" value="03" />其他性质</label>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>医院级别</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="hospitalLevel"
+										value="01" />一级</label> <label><input type="radio"
+										name="hospitalLevel" value="02" />二级</label> <label><input
+										type="radio" name="hospitalLevel" value="03" />三级</label> <label><input
+										type="radio" name="hospitalLevel" value="04" />未评级</label>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>等级</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="hospitalGrade"
+										value="01" />特等</label> <label><input type="radio"
+										name="hospitalGrade" value="02" />甲等</label> <label><input
+										type="radio" name="hospitalGrade" value="03" />乙等</label> <label><input
+										type="radio" name="hospitalGrade" value="04" />丙等</label>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>级别</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="doctorLevel"
+										value="01" />正副医院院长</label> <label><input type="radio"
+										name="doctorLevel" value="02" />正高级</label> <label><input
+										type="radio" name="doctorLevel" value="03" />副高级</label> <label><input
+										type="radio" name="doctorLevel" value="04" />中级</label> <label><input
+										type="radio" name="doctorLevel" value="05" />未评级</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="05" />国有企业</label>
+						<div id="sub_c_operate_area_05">
+							<fieldset>
+								<legend>
+									<span>行业类型</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="industryType"
+										value="01" />垄断行业</label> <label><input type="radio"
+										name="industryType" value="02" />煤炭、钢贸、光伏</label> <label><input
+										type="radio" name="industryType" value="03" />其他</label>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>
+									<span>隶属关系-下属企业（非国企）</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="affiliates" value="N" />否</label>
+									<label><input type="radio" name="affiliates" value="Y" />是</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="06" />世界500强</label>
+						<div id="sub_c_operate_area_06">
+							<fieldset>
+								<legend>
+									<span>隶属关系-下属企业</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="affiliates" value="N" />否</label>
+									<label><input type="radio" name="affiliates" value="Y" />是</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="07" />中国500强</label>
+						<div id="sub_c_operate_area_07">
+							<fieldset>
+								<legend>
+									<span>隶属关系-下属企业</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="affiliates" value="N" />否</label>
+									<label><input type="radio" name="affiliates" value="Y" />是</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="08" />内外资金融机构</label>
+						<div id="sub_c_operate_area_08">
+							<fieldset>
+								<legend>
+									<span>隶属关系-下属企业</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="affiliates" value="N" />否</label>
+									<label><input type="radio" name="affiliates" value="Y" />是</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="09" />行员</label>
+						<ul>
+							<li><label><input type="radio" name="bankStaffType"
+									value="10" />信用卡中心员工</label>
+								<div id="sub_c_operate_area_09_10">
+									<fieldset>
+										<legend>
+											<span>级别</span>
+										</legend>
+										<div>
+											<label><input type="radio" name="bankStaffLevel"
+												value="11" />高级经理及以上</label> <label><input type="radio"
+												name="bankStaffLevel" value="12" />经理</label> <label><input
+												type="radio" name="bankStaffLevel" value="13" />业务专员（5级以上）</label>
+											<label><input type="radio" name="bankStaffLevel"
+												value="14" />其他</label>
+										</div>
+									</fieldset>
+								</div></li>
+							<li><label><input type="radio" name="bankStaffType"
+									value="20" />总行员工</label>
+								<div id="sub_c_operate_area_09_20">
+									<fieldset>
+										<legend>
+											<span>级别</span>
+										</legend>
+										<div>
+											<label><input type="radio" name="bankStaffLevel"
+												value="21" />7级（含）以上</label> <label><input type="radio"
+												name="bankStaffLevel" value="22" />8-9级</label> <label><input
+												type="radio" name="bankStaffLevel" value="23" />10-12级及以下</label>
+										</div>
+									</fieldset>
+								</div></li>
+							<li><label><input type="radio" name="bankStaffType"
+									value="30" />分行员工</label>
+								<div id="sub_c_operate_area_09_30">
+									<fieldset>
+										<legend>
+											<span>级别</span>
+										</legend>
+										<div>
+											<label><input type="radio" name="bankStaffLevel"
+												value="31" />5级（含）以上</label> <label><input type="radio"
+												name="bankStaffLevel" value="32" />6-7级</label> <label><input
+												type="radio" name="bankStaffLevel" value="33" />8-9级</label> <label><input
+												type="radio" name="bankStaffLevel" value="34" />10-11级</label> <label><input
+												type="radio" name="bankStaffLevel" value="35" />12级及以下</label>
+										</div>
+									</fieldset>
+								</div></li>
+						</ul></li>
+					<li><label><input type="radio" name="unitNature"
+							value="10" />专业执业机构</label></li>
+					<li><label><input type="radio" name="unitNature"
+							value="11" />优质企业</label></li>
+					<li><label><input type="radio" name="unitNature"
+							value="12" />非A重要团办</label></li>
+					<li><label><input type="radio" name="unitNature"
+							value="13" />私营企业</label>
+						<div id="sub_c_operate_area_13">
+							<fieldset>
+								<legend>
+									<span>企业类别</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="privateBusinessType"
+										value="01" />私营业主、法人股东</label> <label><input type="radio"
+										name="privateBusinessType" value="02" />受雇人士</label>
+								</div>
+							</fieldset>
+						</div></li>
+					<li><label><input type="radio" name="unitNature"
+							value="14" />其他（非禁入）</label></li>
+				</ul>
+			</div>
+
+			<!-- 财力客户 -->
+			<div title="财力客户" id="d_operate_area" style="overflow: auto;">
+				<ul>
+					<li><label><input type="radio" name="financesCust"
+							value="01" />符合我行高财力要求</label></li>
+					<li><label><input type="radio" name="financesCust"
+							value="02" />有符合政策要求的房贷</label></li>
+					<li><label><input type="radio" name="financesCust"
+							value="03" />在当前单位已经连续缴纳“住房公积金”超过6个月（含）</label></li>
+					<li><label><input type="radio" name="financesCust"
+							value="04" />武汉财智分期</label>
+						<div id="sub_d_operate_area">
+							<fieldset>
+								<legend>
+									<span>类别</span>
+								</legend>
+								<div>
+									<label><input type="radio" name="wuHanCzType"
+										value="01" />POS商户</label> <label><input type="radio"
+										name="wuHanCzType" value="02" />烟草经销商</label>
+								</div>
+							</fieldset>
+						</div></li>
+				</ul>
+				<div class="area-show center-show">
+					<input type="button" id="btn_d_operate_area" value="清除" />
+				</div>
+			</div>
+
+			<!-- 特殊客户 -->
+			<div title="特殊客户" id="e_operate_area" style="overflow: auto;">
+				<ul>
+					<li><label><input type="radio" name="specialCust"
+							value="01" />商户易达金</label></li>
+					<li><label><input type="radio" name="specialCust"
+							value="02" />MBA</label> <span id="sub_e_operate_area_02"> <select
+							class="easyui-combobox"
+							data-options="valueField:'SCHOOL_NAME',textField:'SCHOOL_NAME',groupField:'FIRST_CHAR'"
+							name="mbaSchoolName" id="combox_mba_school_name"></select>
+					</span></li>
+					<li><label><input type="radio" name="specialCust"
+							value="03" />禁入类客群</label></li>
+				</ul>
+				<div class="area-show center-show">
+					<input type="button" id="btn_e_operate_area" value="清除" />
+				</div>
+			</div>
+
+			<!-- 学历信息 -->
+			<div title="学历信息" id="f_operate_area" style="overflow: auto;">
+				<div>
+					<fieldset>
+						<legend>
+							<span>学历证明类型</span>
+						</legend>
+						<div>
+							<label><input type="radio" name="eduCertifType"
+								value="01" />学信网</label> <label><input type="radio"
+								name="eduCertifType" value="02" />学历证书</label> <label><input
+								type="radio" name="eduCertifType" value="03" />鹏元征信</label> <label><input
+								type="radio" name="eduCertifType" value="04" />其他</label>
+						</div>
+					</fieldset>
+				</div>
+				<div class="area-show">
+					<fieldset>
+						<legend>
+							<span>学历类型</span>
+						</legend>
+						<div>
+							<label><input type="radio" name="eduBackType" value="01" />全日制</label>
+							<label><input type="radio" name="eduBackType" value="02" />非全日制</label>
+						</div>
+					</fieldset>
+				</div>
+				<div class="area-show">
+					<fieldset>
+						<legend>
+							<span>学历</span>
+						</legend>
+						<div>
+							<label><input type="radio" name="eduBack" value="01" />硕士及以上</label>
+							<label><input type="radio" name="eduBack" value="02" />本科</label>
+							<label><input type="radio" name="eduBack" value="03" />大专</label>
+							<label><input type="radio" name="eduBack" value="04" />高中及以下</label>
+						</div>
+					</fieldset>
+				</div>
+				<div class="area-show center-show">
+					<input type="button" id="btn_f_operate_area" value="清除" />
+				</div>
+			</div>
+
+			<!-- 房产信息 -->
+			<div title="房产信息" id="g_operate_area" style="overflow: auto;">
+				<div>
+					<table>
+						<tr>
+							<td>房产证明类型</td>
+							<td colspan="3"><label><input type="radio"
+									name="houseProveType" value="01" />房调</label> <label><input
+									type="radio" name="houseProveType" value="02" />房本</label> <label><input
+									type="radio" name="houseProveType" value="03" />购房合同、发票</label> <label><input
+									type="radio" name="houseProveType" value="04" />人行信息</label> <label><input
+									type="radio" name="houseProveType" value="05" />其他</label></td>
+						</tr>
+						<tr>
+							<td>房产证明份数</td>
+							<td colspan="3"><select class="easyui-combobox"
+								id="houseProveNum" name="houseProveNum">
+									<option value="">请选择</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+							</select>&nbsp;份</td>
+						</tr>
+						<tr>
+							<td>房产面积</td>
+							<td colspan="3"><input type="text" class="easyui-numberbox"
+								data-options="precision:2" max="9999999.99" size="10"
+								maxlength="10" id="houseArea" name="houseArea" />&nbsp;平方米</td>
+						</tr>
+						<tr>
+							<td>房产总价</td>
+							<td colspan="3"><input type="text" class="easyui-numberbox"
+								data-options="precision:2" max="9999999.99" size="10"
+								maxlength="10" id="houseTotalPrice" name="houseTotalPrice" />&nbsp;万元</td>
+						</tr>
+						<tr>
+							<td>房产位置</td>
+							<td colspan="3"><label><input type="radio"
+									name="houseLocation" value="01" />本地房产</label> <label><input
+									type="radio" name="houseLocation" value="02" />异地房产</label></td>
+						</tr>
+						<tr>
+							<td>房贷已还款时间</td>
+							<td colspan="3"><input type="text" class="easyui-numberbox"
+								id="houseRepayTime" data-options="precision:1" max="999.9"
+								size="3" maxlength="3" name="houseRepayTime" />&nbsp;年</td>
+						</tr>
+					</table>
+				</div>
+				<div class="area-show center-show">
+					<input type="button" id="btn_g_operate_area" value="清除" />
+				</div>
+			</div>
+
+			<!-- 车产信息 -->
+			<div title="车产信息" id="h_operate_area" style="overflow: auto;">
+				<div>
+					<table>
+						<tr>
+							<td>车产证明类型</td>
+							<td colspan="3"><label><input type="radio"
+									name="vehicleProveType" value="01" />行驶证</label> <label><input
+									type="radio" name="vehicleProveType" value="02" />购车合同、发票</label> <label><input
+									type="radio" name="vehicleProveType" value="03" />人行信息</label> <label><input
+									type="radio" name="vehicleProveType" value="04" />其他</label></td>
+						</tr>
+						<tr>
+							<td>车辆手别</td>
+							<td colspan="3"><label><input type="radio"
+									name="vehicleHandType" value="01" />一手车</label> <label><input
+									type="radio" name="vehicleHandType" value="02" />二手车</label></td>
+						</tr>
+						<tr>
+							<td>车产价格</td>
+							<td colspan="3"><input type="text" class="easyui-numberbox"
+								data-options="precision:2" max="9999.99" size="7" maxlength="7"
+								id="vehicleTotalPrice" name="vehicleTotalPrice" />&nbsp;万元</td>
+						</tr>
+						<tr>
+							<td>车龄</td>
+							<td colspan="3"><input type="text" class="easyui-numberbox"
+								data-options="precision:1" max="99.9" size="3" maxlength="3"
+								id="vehicleAge" name="vehicleAge" />&nbsp;年</td>
+						</tr>
+					</table>
+				</div>
+				<div class="area-show center-show">
+					<input type="button" id="btn_h_operate_area" value="清除" />
+				</div>
+			</div>
+
+			<!-- 行业职位企业信息 -->
+			<div title="行业职位企业信息" id="i_operate_area"
+				data-options="collapsed:false,collapsible:false"
+				style="overflow: auto;">
+				<div>
+					<table>
+						<tr>
+							<td>行业代码</td>
+							<td><input type="text" class="easyui-textbox"
+								name="industryCode" id="txt_industry_code" /></td>
+							<td>职位代码</td>
+							<td><input type="text" class="easyui-textbox"
+								name="positionCode" id="txt_position_code" />
+								</td>
+						</tr>
+						<tr>
+							<td>注册资本</td>
+							<td><input type="text" class="easyui-numberbox"
+								name="registeredCapital" />&nbsp;万元</td>
+							<td>公司成立日期</td>
+							<td><input type="text" class="easyui-datebox"
+								name="companyEstablishDate" id="datebox_company_establish_date"
+								editable="false" /></td>
+						</tr>
+						<tr>
+							<td>当前单位入职时间</td>
+							<td colspan="3"><input type="text" class="easyui-datebox"
+								name="companyEntryDate" id="datebox_company_entry_date"
+								editable="false" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<!-- 收入信息 -->
+			<div title="收入信息" id="j_operate_area"
+				data-options="collapsed:false,collapsible:false"
+				style="overflow: auto;">
+				<table>
+					<tr>
+						<td>实际月收入</td>
+						<td><input type="text" class="easyui-numberbox"
+							data-options="precision:1" max="99999999.9" size="10"
+							maxlength="10" id="blaze_real_month_income"
+							name="realMonthIncome" disabled="disabled" />&nbsp;元</td>
+						<td>可采纳月收入</td>
+						<td><input type="text" class="easyui-numberbox"
+							id="blaze_adopt_month_income" name="adoptMonthIncome"  disabled="disabled"
+							data-options="precision:2" max="9999999.99" size="10"
+							maxlength="10" />&nbsp;元</td>
+					</tr>
+					<tr>
+						<td>人工建议可采纳月收入</td>
+						<td><input type="text" class="easyui-numberbox"
+							id="sys_adopt_month_income" name="sysAdoptMonthIncome" value=""
+							data-options="precision:2" max="9999999.99" size="10"
+							maxlength="10" />&nbsp;元</td>
+					</tr>
+				</table>
+				<fieldset>
+					<legend>
+						<span>可采纳项</span>
+					</legend>
+					<ul>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="01" />工资流水</label>
+							<div id="adopt_item_01"></div></li>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="02" />完税证明</label>
+							<div id="adopt_item_02"></div></li>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="03" />工作证明</label>
+							<div id="adopt_item_03">
+								<ul>
+									<li><label>税前</label>&nbsp;<input type="text"
+										class="easyui-numberbox" id="txt_work_pre_tax"
+										name="workPreTax" />&nbsp;元</li>
+									<li><label>税后</label>&nbsp;<input type="text"
+										class="easyui-numberbox" id="txt_work_after_tax"
+										name="workAfterTax" />&nbsp;元</li>
+								</ul>
+							</div></li>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="04" />社保基数</label>&nbsp;<span id="adopt_item_04" class="hide"><input
+								type="text" id="txtSocialSecurityBase" name="socialSecurityBase" class="easyui-numberbox"
+								style="width: 210px;" />&nbsp;元</span></li>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="05" />公积金</label>
+							<div id="adopt_item_05">
+								<ul>
+									<li><label>公积金基数</label>&nbsp;<input type="text"
+										class="easyui-numberbox" id="txt_fund_base" name="fundBase" />&nbsp;元</li>
+									<li><label>区域公积金月收入</label>&nbsp;<input type="text"
+										class="easyui-numberbox" data-options="precision:4" max="99999999.9999" size="10" id="accfund_income_xm" name="accfundincomexm" readOnly />&nbsp;元</li>
+									<li><label>公积金月缴纳额</label>&nbsp;<input type="text"
+										class="easyui-numberbox" id="txt_fund_month_pay"
+										name="fundMonthPay" style="width: 126px;" />&nbsp;元</li>
+								</ul>
+							</div></li>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="06" />房租收入</label>&nbsp;<span id="adopt_item_06" class="hide"><input
+								type="text" id="txtHouseMonthRental" name="houseMonthRental" class="easyui-numberbox"
+								style="width: 210px;" />&nbsp;元</span></li>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="07" />配偶税前月收入</label>&nbsp;<span id="adopt_item_07" class="hide"><input
+								type="text" id="txtSpousePreTaxIncome" name="spousePreTaxIncome" class="easyui-numberbox"
+								style="width: 174px;" />&nbsp;元</span></li>
+						<li><label><input type="checkbox" name="adoptItem"
+								value="08" />高财力客户日均余额</label>&nbsp;<span id="adopt_item_08"
+							class="hide"><input type="text" id="txtFinancesCustAvgDay" name="financesCustAvgDay"
+								class="easyui-numberbox"/>&nbsp;元</span></li>
+					</ul>
+					<input type="hidden" id="table_storage" /> <input type="hidden"
+						id="table_counter" />
+				</fieldset>
+			</div>
+
+			<!-- 负债、敞口信息 -->
+			<div title="负债、敞口信息" id="k_operate_area"
+				data-options="collapsed:false,collapsible:false"
+				style="overflow: auto;">
+				<div>
+					<table>
+						<tr>
+							<td>人行抵押贷款负债</td>
+							<td><input type="text" class="easyui-numberbox"
+								id="blaze_pboc_montgage_debt" name="pbocMontgageDebt"
+								data-options="precision:4" max="999999999999999.9999" size="20"
+								maxlength="20" disabled="disabled" />&nbsp;万元</td>
+							<td>人行无抵押贷款负债</td>
+							<td><input type="text" class="easyui-numberbox"
+								id="blaze_pboc_unmontgage_debt" name="pbocUnMontgageDebt"
+								data-options="precision:4" max="999999999999999.9999" size="20"
+								maxlength="20" disabled="disabled" />&nbsp;万元</td>
+						</tr>
+						<tr>
+							<td>人行信用卡负债</td>
+							<td><input type="text" class="easyui-numberbox"
+								id="blaze_pboc_credit_debt" name="pbocCreditDebt"
+								data-options="precision:4" max="999999999999999.9999" size="20"
+								maxlength="20" disabled="disabled" />&nbsp;万元</td>
+							<td>人行无抵押贷款敞口</td>
+							<td><input type="text" class="easyui-numberbox"
+								id="blaze_pboc_unmontgage_open" name="pbocUnmontgageOpen"
+								data-options="precision:4" max="999999999999999.9999" size="20"
+								maxlength="20" disabled="disabled" />&nbsp;万元</td>
+						</tr>
+						<tr>
+							<td>信用卡敞口</td>
+							<td colspan="3"><input type="text" class="easyui-numberbox"
+								id="blaze_credit_open" name="creditOpen"
+								data-options="precision:4" max="999999999999999.9999" size="20"
+								maxlength="20" disabled="disabled" />&nbsp;万元</td>
+						</tr>
+						<tr>
+							<td>核实无抵押贷款负债</td>
+							<td><input type="text" id="txtVerifryCleanLoanDebt" class="easyui-numberbox"
+								data-options="precision:4" max="99999999.9999" size="13"
+								maxlength="13" name="verifryCleanLoanDebt" />&nbsp;万元</td>
+							<td>核实抵押贷款负债</td>
+							<td><input type="text" id="txtVerifryMortgageDebt" class="easyui-numberbox"
+								data-options="precision:4" max="99999999.9999" size="13"
+								maxlength="13" name="verifryMortgageDebt" />&nbsp;万元</td>
+						</tr>
+						<tr>
+							<td>核实无抵押贷款敞口</td>
+							<td colspan="3"><input type="text" id="txtVerifryCleanLoanOpen" class="easyui-numberbox"
+								data-options="precision:4" max="99999999.9999" size="13"
+								maxlength="13" name="verifryCleanLoanOpen" />&nbsp;万元</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<!-- 其他信息-->
+			<div title="其他信息" id="l_operate_area"
+				data-options="collapsed:false,collapsible:false"
+				style="overflow: auto;">
+				<table>
+					<tr>
+						<td>客户需求额度</td>
+						<td><input type="text" class="easyui-numberbox"
+							data-options="precision:2" max="999.99" size="5" maxlength="5"
+							name="custExpectCredit" />&nbsp;万元</td>
+						<td>易达金申请期数</td>
+						<td><select class="easyui-combobox" name="applyTerm"
+							editable="false">
+								<option value="3">3</option>
+								<option value="6">6</option>
+								<option value="12">12</option>
+								<option value="18">18</option>
+								<option value="24">24</option>
+								<option value="36" selected="selected">36</option>
+								<option value="48">48</option>
+						</select>&nbsp;期</td>
+					</tr>
+					<tr>
+						<td>费率</td>
+						<td colspan="3"><input type="text" class="easyui-numberbox"
+							value="0.0075" name="rate" data-options="precision:4"
+							id="txt_rate" /></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="area-function">
+			<input id="btnSave" type="button" value="保存"
+				style="width: 80px; height: 30px;" />
+		</div>
+	</form>
+
+	<!-- 补充证明文件区 -->
+	<div id="tbl_area"></div>
+
+	<!-- 增强信息采集区 结束 -->
+
+	<script type="text/javascript">
+		var url = location.href;
+		
+		// 申请件编号
+		var appId = url.split('=')[1];
+		var workCompany;
+		// 卡产品编号
+		var appProd = parent.appProd;
+		// TODO 测试代码 
+// 		appProd = '0080';
+// 		var appId = '1705150955P00192';
+		var isSaveSuccess=false;//保存是否成功的标志 父页面调用 
+		var waringMessage="";//保存失败时父页面要用的 提示的信息 
+		var bigSaveButtonFlag=false;//判断是否是  进行父页面大保存操作的依据 
+		$(function() {
+			// 初始化页面样式
+			fnInitStyle(sid);
+
+			// 获取申请件信息
+// 			var parent = window.parent;
+// 			var appId = parent.applyId.value;
+			
+// 			if (appId != '') {
+// 				appId = $.trim(appId);
+// 			}
+			
+			// [特殊处理] "特殊客户"82卡产品
+			// [规则需求] 反勾"武汉财智分期"
+			if (appProd == '0082') {
+				$('input[name="financesCust"]').each(function() {
+					if ($(this).val() == '04') {
+						$(this).prop('checked', true);
+					}
+				});
+				$('#accordion_wrapper').accordion('select',3);
+			}
+			
+			// [特殊处理] "特殊客户"84卡产品
+			// [规则需求] 禁止勾选"商户易达金"和"MBA"
+			if (appProd != '0084' && appProd != '0080') {
+				$('input[name="specialCust"]').each(function() {
+					if ($(this).val() == '01' || $(this).val() == '02') {
+						$(this).attr('disabled', 'disabled');
+					}
+				});
+			}
+			if (appProd == '0801') {
+				$('input[name="staffNature"]').prop('disabled', 'disabled');
+				$('input[name="executiveLevel"]').prop('disabled', 'disabled');
+				$('input[name="unitNature"]').prop('disabled', 'disabled');
+				$('input[name="specialCust"]').prop('disabled', 'disabled');
+				
+				$('input[name="financesCust"]').prop('disabled', 'disabled');
+				
+				$('input[name="eduCertifType"]').prop('disabled', 'disabled');
+				$('input[name="eduBackType"]').prop('disabled', 'disabled');
+				$('input[name="eduBack"]').prop('disabled', 'disabled');
+				
+				$('input[name="houseProveType"]').prop('disabled', 'disabled');
+				$('#houseProveNum').combobox('disable');
+				$('#houseArea').numberbox('disable', 'disable');
+				$('#houseTotalPrice').numberbox('disable');
+				$('#houseRepayTime').numberbox('disable', 'disable');				
+				$('input[name="houseLocation"]').prop('disabled', 'disabled');
+				
+				$('input[name="vehicleProveType"]').prop('disabled', 'disabled');
+				$('input[name="vehicleHandType"]').prop('disabled', 'disabled');
+				$('#vehicleTotalPrice').numberbox('disable', 'disable');
+				$('#vehicleAge').numberbox('disable', 'disable');
+				
+				$('#txt_fund_month_pay').numberbox('readonly','readonly');
+				$('#txt_fund_base').numberbox('readonly','readonly');
+			}
+			 
+			// 表格计数器
+			fnInitCounter(2, tags.length - 1);
+			fnInitStorage(2, 12, tags.length - 1);
+			
+			// 初始加载增强信息
+			fnLoadEnhanceInfo(appId);
+	
+			// 初始加载MBA院校名单
+			fnLoadMBASchool();
+			
+			// 生成计算表格 - 工资流水
+			fnComputeTable('01');
+			
+			// 生成计算表格 - 完税证明
+			fnComputeTable('02');
+			
+			// 界面交互部分 
+			fnUIEvent();
+			moveNext();
+			// 界面按钮事件部分
+			fnBtnEvent();
+			
+			// 界面文本框事件部分
+			fnTxtEvent();
+		});
+	</script>
+</body>
+</html>

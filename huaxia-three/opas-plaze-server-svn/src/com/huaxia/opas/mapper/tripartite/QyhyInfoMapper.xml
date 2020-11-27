@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.tripartite.QyhyInfoMapper">
+
+  <select id="selectCountByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM TRD_QYHY_INFO_DATA  WHERE  APP_ID = #{appId, jdbcType = CHAR}
+  </select>
+    <insert id="insertQyhyInfoData" parameterType="com.huaxia.opas.domain.tripartite.QyhyInfoData" >
+    INSERT INTO TRD_QYHY_INFO_DATA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      UUID,
+      <if test="appId != null" >APP_ID,</if>
+      <if test="code != null" >CODE,</if>
+      <if test="msg != null" >MSG,</if>
+      CRT_TIME
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      SYS_GUID(),
+      <if test="appId != null" >#{appId,jdbcType=CHAR},</if>
+      <if test="code != null" >#{code,jdbcType=DECIMAL},</if>
+      <if test="msg != null" >#{msg,jdbcType=VARCHAR},</if>
+      SYSDATE
+    </trim>
+  </insert>
+   <insert id="insertQyhyInfoShareHolderList" parameterType="java.util.List" >
+      INSERT INTO TRD_QYHY_INFO_SHAREHOLDER(UUID, APP_ID, CONDATE, 
+      CONFORM, COUNTRY, FUNDEDRATIO, INVTYPE, REGCAPCUR, SHANAME, 
+      SUBCONAM, CRT_TIME)
+     <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.condate,jdbcType=VARCHAR}, 
+      #{item.conform,jdbcType=VARCHAR}, #{item.country,jdbcType=VARCHAR}, #{item.fundedratio,jdbcType=VARCHAR}, 
+      #{item.invtype,jdbcType=VARCHAR}, #{item.regcapcur,jdbcType=VARCHAR}, #{item.shaname,jdbcType=VARCHAR}, 
+      #{item.subconam,jdbcType=VARCHAR}, SYSDATE
+	  FROM  DUAL
+	</foreach>
+  </insert>
+  <insert id="insertQyhyInfoBasic" parameterType="com.huaxia.opas.domain.tripartite.QyhyInfoBasic" >
+    INSERT INTO TRD_QYHY_INFO_BASIC
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        UUID,
+      <if test="appId != null" >APP_ID,</if>
+      <if test="abuitem != null" >ABUITEM,</if>
+      <if test="ancheyear != null" >ANCHEYEAR,</if>
+      <if test="apprdate != null" >APPRDATE,</if>
+      <if test="candate != null" >CANDATE,</if>
+      <if test="creditcode != null" >CREDITCODE,</if>
+      <if test="dom != null" >DOM,</if>
+      <if test="domdistrict != null" >DOMDISTRICT,</if>
+      <if test="email != null" >EMAIL,</if>
+      <if test="entname != null" >ENTNAME,</if>
+      <if test="entnameeng != null" >ENTNAMEENG,</if>
+      <if test="entnameOld != null" >ENTNAME_OLD,</if>
+      <if test="entstatus != null" >ENTSTATUS,</if>
+      <if test="enttype != null" >ENTTYPE,</if>
+      <if test="enttypecode != null" >ENTTYPECODE,</if>
+      <if test="esdate != null" >ESDATE,</if>
+      <if test="frname != null" >FRNAME,</if>
+      <if test="id != null" >ID,</if>
+      <if test="industrycocode != null" >INDUSTRYCOCODE,</if>
+      <if test="industryconame != null" >INDUSTRYCONAME,</if>
+      <if test="opfrom != null" >OPFROM,</if>
+      <if test="opto != null" >OPTO,</if>
+      <if test="orgcodes != null" >ORGCODES,</if>
+      <if test="oriregno != null" >ORIREGNO,</if>
+      <if test="reccap != null" >RECCAP,</if>
+      <if test="regcap != null" >REGCAP,</if>
+      <if test="regcapcur != null" >REGCAPCUR,</if>
+      <if test="regno != null" >REGNO,</if>
+      <if test="regorg != null" >REGORG,</if>
+      <if test="regorgcity != null" >REGORGCITY,</if>
+      <if test="regorgcode != null" >REGORGCODE,</if>
+      <if test="regorgdistrict != null" >REGORGDISTRICT,</if>
+      <if test="regorgprovince != null" >REGORGPROVINCE,</if>
+      <if test="revdate != null" >REVDATE,</if>
+      <if test="zsopscope != null" >ZSOPSCOPE,</if>
+      <if test="tel != null" >TEL,</if>
+      <if test="empnum != null" >EMPNUM,</if>
+      CRT_TIME
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+       SYS_GUID(),
+      <if test="appId != null" >#{appId,jdbcType=CHAR},</if>
+      <if test="abuitem != null" >#{abuitem,jdbcType=VARCHAR},</if>
+      <if test="ancheyear != null" >#{ancheyear,jdbcType=VARCHAR},</if>
+      <if test="apprdate != null" >#{apprdate,jdbcType=VARCHAR},</if>
+      <if test="candate != null" >#{candate,jdbcType=VARCHAR},</if>
+      <if test="creditcode != null" >#{creditcode,jdbcType=VARCHAR},</if>
+      <if test="dom != null" >#{dom,jdbcType=VARCHAR},</if>
+      <if test="domdistrict != null" >#{domdistrict,jdbcType=VARCHAR},</if>
+      <if test="email != null" >#{email,jdbcType=VARCHAR},</if>
+      <if test="entname != null" >#{entname,jdbcType=VARCHAR},</if>
+      <if test="entnameeng != null" >#{entnameeng,jdbcType=VARCHAR},</if>
+      <if test="entnameOld != null" >#{entnameOld,jdbcType=VARCHAR},</if>
+      <if test="entstatus != null" >#{entstatus,jdbcType=VARCHAR},</if>
+      <if test="enttype != null" >#{enttype,jdbcType=VARCHAR},</if>
+      <if test="enttypecode != null" >#{enttypecode,jdbcType=VARCHAR},</if>
+      <if test="esdate != null" >#{esdate,jdbcType=VARCHAR},</if>
+      <if test="frname != null" >#{frname,jdbcType=VARCHAR},</if>
+      <if test="id != null" >#{id,jdbcType=VARCHAR},</if>
+      <if test="industrycocode != null" >#{industrycocode,jdbcType=VARCHAR},</if>
+      <if test="industryconame != null" >#{industryconame,jdbcType=VARCHAR},</if>
+      <if test="opfrom != null" >#{opfrom,jdbcType=VARCHAR},</if>
+      <if test="opto != null" >#{opto,jdbcType=VARCHAR},</if>
+      <if test="orgcodes != null" >#{orgcodes,jdbcType=VARCHAR},</if>
+      <if test="oriregno != null" >#{oriregno,jdbcType=VARCHAR},</if>
+      <if test="reccap != null" >#{reccap,jdbcType=VARCHAR},</if>
+      <if test="regcap != null" >#{regcap,jdbcType=VARCHAR},</if>
+      <if test="regcapcur != null" >#{regcapcur,jdbcType=VARCHAR},</if>
+      <if test="regno != null" >#{regno,jdbcType=VARCHAR},</if>
+      <if test="regorg != null" >#{regorg,jdbcType=VARCHAR},</if>
+      <if test="regorgcity != null" >#{regorgcity,jdbcType=VARCHAR},</if>
+      <if test="regorgcode != null" >#{regorgcode,jdbcType=VARCHAR},</if>
+      <if test="regorgdistrict != null" >#{regorgdistrict,jdbcType=VARCHAR},</if>
+      <if test="regorgprovince != null" >#{regorgprovince,jdbcType=VARCHAR},</if>
+      <if test="revdate != null" >#{revdate,jdbcType=VARCHAR},</if>
+      <if test="zsopscope != null" >#{zsopscope,jdbcType=VARCHAR},</if>
+      <if test="tel != null" >#{tel,jdbcType=VARCHAR},</if>
+      <if test="empnum != null" >#{empnum,jdbcType=VARCHAR},</if>
+       SYSDATE
+    </trim>
+  </insert>
+     <insert id="insertQyhyInfoPersonList" parameterType="java.util.List" >
+      INSERT INTO TRD_QYHY_INFO_PERSON (UUID, APP_ID, ENTNAME, 
+      PERNAME, PERSONAMOUNT, POSITION, 
+      CRT_TIME)
+     <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.entname,jdbcType=VARCHAR}, 
+      #{item.pername,jdbcType=VARCHAR}, #{item.personamount,jdbcType=VARCHAR}, #{item.position,jdbcType=VARCHAR},
+       SYSDATE
+	  FROM  DUAL
+	</foreach>
+  </insert>
+   <insert id="insertQyhyInfoPunishBreakList" parameterType="java.util.List" >
+      INSERT INTO TRD_QYHY_INFO_PUNISHBREAK (UUID, APP_ID, CASESTATE, 
+      COURTNAME, DISRUPTTYPENAME, PERFORMANCE, 
+      PUBLISHDATECLEAN, CRT_TIME, DUTY
+      )
+      <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT SYS_GUID(),#{item.appId,jdbcType=CHAR}, #{item.casestate,jdbcType=VARCHAR}, 
+      #{item.courtname,jdbcType=VARCHAR}, #{item.disrupttypename,jdbcType=VARCHAR}, #{item.performance,jdbcType=VARCHAR}, 
+      #{item.publishdateclean,jdbcType=VARCHAR}, SYSDATE, #{item.duty}
+	  FROM  DUAL
+	</foreach>
+  </insert>
+  <insert id="insertQyhyInfoOrgBasicList" parameterType="java.util.List" >
+      INSERT INTO TRD_QYHY_INFO_ORGBASIC (UUID, APP_ID, JGDM, 
+      JGDZ, JGMC, ZYBZ, CRT_TIME)
+      <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT SYS_GUID(),#{item.appId,jdbcType=CHAR},#{item.jgdm,jdbcType=VARCHAR}, 
+      #{item.jgdz,jdbcType=VARCHAR}, #{item.jgmc,jdbcType=VARCHAR}, #{item.zybz,jdbcType=VARCHAR},
+      SYSDATE  FROM  DUAL
+	</foreach>
+  </insert>
+  <insert id="insertQyhyInfoOrgDetail" parameterType="com.huaxia.opas.domain.tripartite.QyhyInfoOrgDetail" >
+    INSERT INTO TRD_QYHY_INFO_ORGDETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        UUID,
+      <if test="appId != null" >APP_ID,</if>
+      <if test="bzjg != null" >BZJG,</if>
+      <if test="bzrq != null" >BZRQ,</if>
+      <if test="fddbr != null" >FDDBR,</if>
+      <if test="jgdm != null" >JGDM,</if>
+      <if test="jgdz != null" >JGDZ,</if>
+      <if test="jglx != null" >JGLX,</if>
+      <if test="jgmc != null" >JGMC,</if>
+      <if test="xzqh != null" >XZQH,</if>
+      <if test="zcrq != null" >ZCRQ,</if>
+      <if test="zfrq != null" >ZFRQ,</if>
+      <if test="bgrq != null" >BGRQ,</if>
+      <if test="creditcode != null" >CREDITCODE,</if>
+      <if test="dhhm != null" >DHHM,</if>
+      <if test="email != null" >EMAIL,</if>
+      <if test="jhbz != null" >JHBZ,</if>
+      <if test="jjhydm != null" >JJHYDM,</if>
+      <if test="jjlxdm != null" >JJLXDM,</if>
+      <if test="jyfw != null" >JYFW,</if>
+      <if test="jydz != null" >JYDZ,</if>
+      <if test="jyzt != null" >JYZT,</if>
+      <if test="regno != null" >REGNO,</if>
+      <if test="url != null" >URL,</if>
+      <if test="zczj != null" >ZCZJ,</if>
+      <if test="zgmc != null" >ZGMC,</if>
+      <if test="zgrs != null" >ZGRS,</if>
+      <if test="zybz != null" >ZYBZ,</if>
+        CRT_TIME
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        SYS_GUID(),
+      <if test="appId != null" >#{appId,jdbcType=CHAR},</if>
+      <if test="bzjg != null" >#{bzjg,jdbcType=VARCHAR},</if>
+      <if test="bzrq != null" >#{bzrq,jdbcType=VARCHAR},</if>
+      <if test="fddbr != null" >#{fddbr,jdbcType=VARCHAR},</if>
+      <if test="jgdm != null" >#{jgdm,jdbcType=VARCHAR},</if>
+      <if test="jgdz != null" >#{jgdz,jdbcType=VARCHAR},</if>
+      <if test="jglx != null" >#{jglx,jdbcType=VARCHAR},</if>
+      <if test="jgmc != null" >#{jgmc,jdbcType=VARCHAR},</if>
+      <if test="xzqh != null" >#{xzqh,jdbcType=VARCHAR},</if>
+      <if test="zcrq != null" >#{zcrq,jdbcType=VARCHAR},</if>
+      <if test="zfrq != null" >#{zfrq,jdbcType=VARCHAR},</if>
+      <if test="bgrq != null" >#{bgrq,jdbcType=VARCHAR},</if>
+      <if test="creditcode != null" >#{creditcode,jdbcType=VARCHAR},</if>
+      <if test="dhhm != null" >#{dhhm,jdbcType=VARCHAR},</if>
+      <if test="email != null" >#{email,jdbcType=VARCHAR},</if>
+      <if test="jhbz != null" >#{jhbz,jdbcType=VARCHAR},</if>
+      <if test="jjhydm != null" >#{jjhydm,jdbcType=VARCHAR},</if>
+      <if test="jjlxdm != null" >#{jjlxdm,jdbcType=VARCHAR},</if>
+      <if test="jyfw != null" >#{jyfw,jdbcType=VARCHAR},</if>
+      <if test="jydz != null" >#{jydz,jdbcType=VARCHAR},</if>
+      <if test="jyzt != null" >#{jyzt,jdbcType=VARCHAR},</if>
+      <if test="regno != null" >#{regno,jdbcType=VARCHAR},</if>
+      <if test="url != null" >#{url,jdbcType=VARCHAR},</if>
+      <if test="zczj != null" >#{zczj,jdbcType=VARCHAR},</if>
+      <if test="zgmc != null" >#{zgmc,jdbcType=VARCHAR},</if>
+      <if test="zgrs != null" >#{zgrs,jdbcType=VARCHAR},</if>
+      <if test="zybz != null" >#{zybz,jdbcType=VARCHAR},</if>
+      SYSDATE
+    </trim>
+  </insert>
+  <insert id="insertQyhyInfoMetaData" parameterType="com.huaxia.opas.domain.tripartite.QyhyInfoMetaData" >
+    INSERT INTO  TRD_QYHY_INFO_METADATA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      UUID,
+      <if test="appId != null" >APP_ID,</if>
+      <if test="source != null" >SOURCE,</if>
+      CRT_TIME
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      SYS_GUID(),
+      <if test="appId != null" >#{appId,jdbcType=CHAR},</if>
+      <if test="source != null" >#{source,jdbcType=VARCHAR},</if>
+      SYSDATE
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasPromoterRiskList">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.OpasPromoterRiskList">
+    <id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+    <result column="PROMOTER_NO" jdbcType="VARCHAR" property="promoterNo" />
+    <result column="CERTIFI_TYPE" jdbcType="VARCHAR" property="certifiType" />
+    <result column="CERTIFI_NO" jdbcType="VARCHAR" property="certifiNo" />
+    <result column="MOBILE_NO" jdbcType="VARCHAR" property="mobileNo" />
+    <result column="INFO_CHANNEL" jdbcType="CHAR" property="infoChannel" />
+    <result column="FRAUD_TYPE" jdbcType="CHAR" property="fraudType" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+    <result column="INVALID_TIME" jdbcType="TIMESTAMP" property="invalidTime" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
+    <result column="OPERAT_TIME" jdbcType="TIMESTAMP" property="operatTime" />
+    <result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+    <result column="PROMOTER_NAME" jdbcType="VARCHAR" property="promoterName" />
+  </resultMap>
+  
+ 
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.OpasPromoterRiskList" resultMap="BaseResultMap">
+    select 
+     AUTO_ID, PROMOTER_NO, CERTIFI_TYPE, CERTIFI_NO, MOBILE_NO, INFO_CHANNEL, FRAUD_TYPE, 
+    MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS, PROMOTER_NAME
+     from OPAS_PROMOTER_RISKLIST
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+     AUTO_ID, PROMOTER_NO, CERTIFI_TYPE, CERTIFI_NO, MOBILE_NO, INFO_CHANNEL, FRAUD_TYPE, 
+    MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS, PROMOTER_NAME
+     from OPAS_PROMOTER_RISKLIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPromoterNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+     AUTO_ID, PROMOTER_NO, CERTIFI_TYPE, CERTIFI_NO, MOBILE_NO, INFO_CHANNEL, FRAUD_TYPE, 
+    MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS, PROMOTER_NAME
+     from OPAS_PROMOTER_RISKLIST
+    where PROMOTER_NO = #{promoterNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from OPAS_PROMOTER_RISKLIST 
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.OpasPromoterRiskList">
+    insert into OPAS_PROMOTER_RISKLIST (AUTO_ID, PROMOTER_NO, CERTIFI_TYPE, 
+      CERTIFI_NO, MOBILE_NO, INFO_CHANNEL, 
+      FRAUD_TYPE, MEMO, INVALID_TIME, 
+      CREATE_TIME, OPERATOR, OPERAT_TIME, 
+      CURR_STATUS, PROMOTER_NAME)
+    values (#{autoId,jdbcType=VARCHAR}, #{promoterNo,jdbcType=VARCHAR}, #{certifiType,jdbcType=VARCHAR}, 
+      #{certifiNo,jdbcType=VARCHAR}, #{mobileNo,jdbcType=VARCHAR}, #{infoChannel,jdbcType=CHAR}, 
+      #{fraudType,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR}, #{invalidTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{operatTime,jdbcType=TIMESTAMP}, 
+      #{currStatus,jdbcType=CHAR}, #{promoterName,jdbcType=VARCHAR})
+  </insert>
+  
+</mapper>

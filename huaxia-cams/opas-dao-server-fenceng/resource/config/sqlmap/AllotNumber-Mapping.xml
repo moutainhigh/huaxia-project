@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="AllotNumber">
+	<resultMap id="AllotNumberResultMap" type="com.huaxia.opas.domain.allot.AllotNumber">
+	    <result column="NUMBER_ID" property="numberId" jdbcType="CHAR"/>
+		<result column="RULE_CODE" property="ruleCode" jdbcType="CHAR"/>
+		<result column="AUTO_NUMBER" property="autoNumber" jdbcType="VARCHAR"/>
+		<result column="TYPE_FLAG" property="typeFlag" jdbcType="CHAR"/>
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR"/>
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_DATE" property="lastDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<insert id="insertAllotNumberSelective" parameterType="com.huaxia.opas.domain.allot.AllotNumber">
+		insert into OPAS_ALLOT_NUMBER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			NUMBER_ID,
+			<if test="ruleCode != null">RULE_CODE,</if>
+			<if test="autoNumber != null">AUTO_NUMBER,</if>
+			<if test="typeFlag != null">TYPE_FLAG,</if>
+			<if test="ydjFlag != null">YDJ_FLAG,</if>
+			<if test="currNode != null">CURR_NODE,</if>
+			CRT_DATE,
+			LAST_DATE
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			sys_guid(),
+			<if test="ruleCode != null">#{ruleCode,jdbcType=CHAR},</if>
+			<if test="autoNumber != null">#{autoNumber,jdbcType=VARCHAR},</if>
+			<if test="typeFlag != null">#{typeFlag,jdbcType=CHAR},</if>
+			<if test="ydjFlag != null">#{ydjFlag,jdbcType=CHAR},</if>
+			<if test="currNode != null">#{currNode,jdbcType=VARCHAR},</if>
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		</trim>
+	</insert>
+
+	<update id="updateAllotNumberSelective" parameterType="com.huaxia.opas.domain.allot.AllotNumber">
+		update OPAS_ALLOT_NUMBER
+		<set>
+			<if test="ruleCode != null">RULE_CODE = #{ruleCode,jdbcType=CHAR},</if>
+			<if test="autoNumber != null">AUTO_NUMBER = #{autoNumber,jdbcType=VARCHAR},</if>
+			LAST_DATE=CURRENT_TIMESTAMP
+		</set>
+		where 1=1
+			<if test="ruleCode != null and ruleCode !='' ">
+				AND RULE_CODE = #{ruleCode}
+			</if>
+			<if test=" flag!=null and flag!=''">
+				AND to_char(CRT_DATE,'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+			</if>
+		    <if test="typeFlag != null and typeFlag !='' ">
+				AND TYPE_FLAG = #{typeFlag} 
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test='currNode != null and currNode !="" '>
+				AND CURR_NODE= #{currNode}
+			</if>
+	</update>
+	<select id="queryAllotNumber"  parameterType="java.util.Map" resultMap="AllotNumberResultMap"> 
+		select NUMBER_ID,RULE_CODE,AUTO_NUMBER,TYPE_FLAG,YDJ_FLAG,CURR_NODE,
+		CRT_DATE,LAST_DATE
+		from OPAS_ALLOT_NUMBER 
+		where 1=1 
+		 	<if test="ruleCode != null and ruleCode !='' ">
+				AND RULE_CODE = #{ruleCode}
+			</if>
+		 	<if test="typeFlag != null and typeFlag !='' ">
+				AND TYPE_FLAG = #{typeFlag}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test='currNode != null and currNode !="" '>
+				AND CURR_NODE= #{currNode}
+			</if>
+			<if test='crtDate != null '>
+				AND to_char(CRT_DATE,'yyyy-mm-dd')= to_char(sysdate,'yyyy-mm-dd')
+			</if>
+	</select>
+	
+	<select id="countAllotNumber" parameterType="Map" resultType="java.lang.String">
+		select  NVL(SUM(AUTO_NUMBER),0) AS AUTO_NUMBER
+		 from OPAS_ALLOT_NUMBER
+		 where 1=1 
+		 	<if test="ruleCode != null and ruleCode !='' ">
+				AND RULE_CODE = #{ruleCode}
+			</if>
+		 	<if test="typeFlag != null and typeFlag !='' ">
+				AND TYPE_FLAG = #{typeFlag}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test='currNode != null and currNode !="" '>
+				AND CURR_NODE= #{currNode}
+			</if>
+			<if test='crtDate != null '>
+				AND to_char(CRT_DATE,'yyyy-mm-dd')= to_char(sysdate,'yyyy-mm-dd')
+			</if>
+	</select>
+	
+	<!-- 根据条件查询征信规则分配数量方法-wenyh -->
+	<select id="queryCreditRuleAllotNumber" parameterType="Map" resultType="java.lang.String">
+		SELECT t.AUTO_NUMBER
+		  FROM (SELECT n.AUTO_NUMBER
+		          FROM OPAS_ALLOT_NUMBER n
+		         WHERE n.TYPE_FLAG = '2'
+		           AND n.CURR_NODE = '02'
+		           <if test="ydjFlag != null and ydjFlag !='' ">
+				   	  AND n.YDJ_FLAG = #{ydjFlag}
+				   </if>
+				   <if test="ruleCode != null and ruleCode !='' ">
+		              AND n.RULE_CODE = #{ruleCode}
+		           </if>
+				   AND to_char(n.LAST_DATE, 'yyyy-mm-dd') = to_char(sysdate, 'yyyy-mm-dd')
+		         ORDER BY n.LAST_DATE DESC) t
+		 WHERE ROWNUM = 1
+	</select>
+</mapper>

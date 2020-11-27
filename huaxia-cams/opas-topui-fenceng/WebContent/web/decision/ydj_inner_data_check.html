@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>内部数据检查</title>
+<!-- <link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-win.css" type="text/css" rel="stylesheet" /> -->
+<script src="../../topui/topui.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<h3 id="dataInfoTitle" align="center"></h3>
+	<div id="dataInfo" style="width:99%;height:99%;overflow:auto;" >
+	</div>
+</body>
+<script type="text/javascript">
+function GetQueryString(name){
+	 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	 var r = window.location.search.substr(1).match(reg);
+	 if(r!=null) return unescape(r[2]);
+	 return null;
+}
+var lianjie;
+var appIds;
+$(function(){
+	 //获取父页面参数 
+	 appIds = window.opener.appIds;
+	var s = new Array("repeatCheck","relatedcheckHomeaddr","relatedcheckCompanyaddr","relatedcheckTel","relatedcheckNearlyTelno","graylist");//内部数据检查标识 
+	var ss = new Array("repeatCheck","relatedcheckHomeaddr","relatedcheckCompanyaddr","relatedcheckTel","graylist");
+	var flag = GetQueryString("obj");
+	var index=$.inArray(flag,s);
+	var index2=$.inArray(flag,ss);
+	var tableValue="";
+	if(flag=="repeatCheck"){
+		tableValue="重复申请检查";
+	}else if(flag=="graylist"){
+		tableValue="灰名单检查";
+	}else if(flag=="relatedcheckTel"){
+		tableValue="关联性检查-手机";
+	}else if(flag=="relatedcheckHomeaddr"){
+		tableValue="关联性检查-家庭地址";
+	}else if(flag=="relatedcheckCompanyaddr"){
+		tableValue="关联性检查-非公司的邮寄地址";
+	}else if(flag=="relatedcheckNearlyTelno"){
+		tableValue="关联性检查-直系亲属手机号码";
+	}
+	var queryNum="300";
+	if(flag=="relatedcheckHomeaddr"||flag=="relatedcheckCompanyaddr"){
+		queryNum="5";
+	}
+	$("#dataInfoTitle").html('');
+	$("#dataInfoTitle").html(tableValue);
+	  $cf.ajax({
+		  url : '/opas-naps/inDataChecKList.json',
+		  data : {
+				"appId" : appIds,
+				"page":"0",
+				"rows":queryNum,
+				"flag" : flag
+			},
+		onSuccess : function(response) {
+			var result = response.RSP_BODY.rows;
+			var table=document.createElement("table");
+			table.style='white-space:nowrap;font-size:11px';
+			table.width="auto";
+			table.border="1";
+			if(result){
+				var tr=table.insertRow();
+				//1为该列隐藏 
+				createInputInTrTd(tr,"编号",'40px',"0");
+				/* createInputInTrTd(td,"",'20px',"2"); */
+				createInputInTrTd(tr,"关联件的条形码",'125px',"0");
+				createInputInTrTd(tr,"申请人姓名",'75px',"0");
+				createInputInTrTd(tr,"身份证号码",'135px',"0");
+				if(flag=="relatedcheckNearlyTelno"){//家庭地址
+					createInputInTrTd(tr,"家庭地址",'8%',"0");
+				}
+				if(index2>=0){//隐藏
+					//createInputInTrTd(tr,"住宅电话",'2%',"1");
+				}else{
+					createInputInTrTd(tr,"住宅电话",'70px',"0");
+				}
+				if(flag=="relatedcheckNearlyTelno"){//直系亲属姓名
+					createInputInTrTd(tr,"直系亲属姓名",'6%',"0");
+				}
+				if(flag=="relatedcheckNearlyTelno"){//直系亲属手机号码
+					createInputInTrTd(tr,"直系亲属手机号码",'6%',"0");
+				}
+				if(index>=0){//隐藏
+					//createInputInTrTd(tr,"黑名单（个人）",'2%',"1");
+				}else{
+					createInputInTrTd(tr,"黑名单（个人）",'2%',"0");
+				}
+				createInputInTrTd(tr,"单位名称",'280px',"0");
+				createInputInTrTd(tr,"手机号",'85px',"0");
+				createInputInTrTd(tr,"申请卡种",'180px',"0");
+				createInputInTrTd(tr,"申请状态",'65px',"0");
+				createInputInTrTd(tr,"审批结果",'65px',"0"); 
+				createInputInTrTd(tr,"审批额度",'80px',"0");
+				createInputInTrTd(tr,"拒绝（核批）原因代码",'130px',"0");
+				createInputInTrTd(tr,"当前操作员",'80px',"0");
+				if(index>=0){//隐藏
+					//createInputInTrTd(tr,"重复申请检查-身份证号",'6%',"1");
+				}else{
+					createInputInTrTd(tr,"重复申请检查-身份证号",'6%',"0");
+				}
+				if(flag=="relatedcheckHomeaddr"){//显示家庭地址（非公司邮寄地址）
+					createInputInTrTd(tr,"家庭地址",'6%',"0");
+				}
+				if(flag=="relatedcheckCompanyaddr"){//显示家庭地址（非公司邮寄地址）
+					createInputInTrTd(tr,"非公司邮寄地址",'6%',"0");
+				}
+				if(index>=0){//隐藏
+					//createInputInTrTd(tr,"关联性检查-手机",'6%',"1");
+				}else{
+					createInputInTrTd(tr,"关联性检查-手机",'6%',"0");
+				}
+				/* createInputInTrTd(tr,"直系亲属住宅电话",'6%',"1");
+				createInputInTrTd(tr,"卡产品编号",'80px',"1");
+				createInputInTrTd(tr,"",'6%',"1"); */
+				for (var i = 0; i < result.length; i++) {
+					var tr2=table.insertRow();
+					createInputInTrTd(tr2,i+1+"",'40px',"0");
+					/* createInputInTrTd(tr2,"",'20px',"2"); */
+					lianjie= formatappId(result[i].appId,result[i]);
+					createInputInTrTd(tr2,result[i].appId,'125px',"3");
+					createInputInTrTd(tr2,result[i].c1Cname,'75px',"0");
+					createInputInTrTd(tr2,result[i].c1Idnbr,'135px',"0");
+					if(flag=="relatedcheckNearlyTelno"){//家庭地址
+						createInputInTrTd(tr2,result[i].c1HmaddTotal,'8%',"0");
+					}
+					if(index2>=0){//隐藏
+						//createInputInTrTd(tr2,result[i].c1Hmtel,'2%',"1");
+					}else{
+						createInputInTrTd(tr2,result[i].c1Hmtel,'70px',"0");
+					}
+					if(flag=="relatedcheckNearlyTelno"){//直系亲属手机-直系亲属姓名
+						createInputInTrTd(tr2,result[i].c1Rename,'6%',"0");
+					}
+					if(flag=="relatedcheckNearlyTelno"){//直系亲属手机-直系亲属号码
+						createInputInTrTd(tr2,result[i].c1Remobil,'6%',"0");
+					}
+					if(index>=0){//隐藏
+						//createInputInTrTd(tr2,valc1Idnbr(result[i].c1Idnbrh,result[i].c1Idnbr),'2%',"1");
+					}else{
+						createInputInTrTd(tr2,valc1Idnbr(result[i].c1Idnbrh,result[i].c1Idnbr),'2%',"0");
+					}
+					createInputInTrTd(tr2,result[i].c1Coname,'280px',"0");
+					createInputInTrTd(tr2,result[i].c1Mobile,'85px',"0");
+					createInputInTrTd(tr2,result[i].prodName,'180px',"0");
+					createInputInTrTd(tr2,applyStatus(result[i].flag),'65px',"0");
+					createInputInTrTd(tr2, approveResultFormat(result[i].flag,result[i].approveResult),'65px',"0");
+					createInputInTrTd(tr2,approveCreditLimitFormat(result[i]),'80px',"0");
+					createInputInTrTd(tr2,approveResonCode(result[i]),'130px',"0");
+					createInputInTrTd(tr2,result[i].approverName,'80px',"0");
+					if(index>=0){//隐藏
+						//createInputInTrTd(tr2,valc1Idnbr(result[i].c1Idnbrc,result[i].c1Idnbr),'6%',"1");
+					}else{
+						createInputInTrTd(tr2,valc1Idnbr(result[i].c1Idnbrc,result[i].c1Idnbr),'6%',"0");
+					}
+					if(flag=="relatedcheckHomeaddr"||flag=="relatedcheckCompanyaddr"){//显示家庭地址（非公司邮寄地址）
+						createInputInTrTd(tr2,result[i].c1HmaddTotal,'6%',"0");
+					}
+					if(index>=0){//隐藏
+						//createInputInTrTd(tr2,valc1Mobile(result[i]),'6%',"1");
+					}else{
+						createInputInTrTd(tr2,valc1Mobile(result[i]),'6%',"0");
+					}
+					/* createInputInTrTd(tr2,result[i].c1Retelar,'6%',"1");
+					createInputInTrTd(tr2,result[i].appProd,'80px',"1");
+					createInputInTrTd(tr2,result[i].matchingCardFlag,'6%',"1"); */
+				}
+			$('#dataInfo').html(table);    // 重新载入当前页面数据  
+			}
+		}
+	});  
+});
+/*在指定td标签 创建input标签 并赋值 */
+function createInputInTrTd(tr,value,width,fontType){
+	var td=tr.insertCell();
+	td.style.textAlign='center';
+    var val;
+	if(value){
+		val=value.toString().split("|");
+	}else{
+		val="";
+	}
+    if(fontType=="3"){//超链接情况
+	   td.innerHTML="<a style='color:blue' href="+lianjie+">"+val[val.length-1]+"</a>";
+    }else{//非超链接
+	   if(val==""){
+		   td.innerHTML="";
+	   }else{
+		   td.innerHTML=val[val.length-1];
+	   }
+    }
+  	/* td.style.width=width;
+	var input=document.createElement("input");
+	if(fontType=="1"){
+		input.type='hidden';
+	}else if(fontType=="2"){
+		input.type='checkbox';
+	}else if(fontType=="3"){
+		input.type='text';
+		input.setAttribute("onclick","window.open('"+lianjie+"')");
+		input.style.color="blue";
+	}else{
+		input.type='text';
+	}
+	if(value){
+		var val=value.toString().split("|");
+		input.value= val[val.length-1];
+	}else{
+		input.value="";
+	}
+	input.style.width=width;
+	input.style.fontSize='12px';
+	input.style.textAlign='center';
+	input.readOnly='readOnly';
+	input.style.border='none';
+	td.appendChild(input); */
+}
+function formatappId(val,row){
+	var appId = row.appId;
+	var ydjFlag = row.ydjFlag;
+	var path = "";
+	var appProd = row.appProd;
+	var matchingCardFlag = row.matchingCardFlag;
+	var userId=row.approverName;
+	var flag='3';
+	if(ydjFlag=="1"){//1为易达金
+		path = "../common/copy_credit_control_zxYdj.html?appId="+appId+"&ydjFlag="+ydjFlag+"&appProd="+appProd+"&userCode="+userId;
+	}else {//2为非易达金
+		path = "../common/copy_credit_control_zxBzk.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userId;	
+	}
+	return path;
+} 
+function valc1Idnbr(val, val2) {
+	return val2;
+}
+function applyStatus(flag){
+	if(flag==null){
+		return "待审";
+	}else if(flag=='2'){
+		return "归档";
+	}else{
+		return "待归档";
+	}
+}
+function approveResultFormat(flag,spflag){
+	if(flag==null){
+		return "";
+	}else{
+		if(spflag=="1"){
+			return "批准";
+		}else if(spflag=="0"){
+			return "拒绝";
+		}
+	}
+	
+}
+function approveCreditLimitFormat(row){
+	var flag = row.flag;
+	if(flag==null){
+		return "";
+	}else{
+		var spflag = row.approveResult;
+		if(spflag=="0"){
+			return "";
+		}else{
+			return row.approveCreditLimit
+		}
+	}
+}
+function approveResonCode(row){
+	var flag = row.flag;
+	if(flag==null){
+		return "";
+	}else{
+		return row.creditRefuseReason;
+	}
+}
+function valc1Mobile(row) {
+	return row.c1Mobile;
+} 
+</script>
+</html>

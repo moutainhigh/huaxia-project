@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="opasCustBaseInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.decision.OpasCustBaseInfo">
+		<id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="CUST_NAME" jdbcType="VARCHAR" property="custName" />
+		<result column="SEX" jdbcType="CHAR" property="sex" />
+		<result column="NATIONAITY" jdbcType="CHAR" property="nationaity" />
+		<result column="AGE" jdbcType="DECIMAL" property="age" />
+		<result column="CERTIFI_TYPE" jdbcType="CHAR" property="certifiType" />
+		<result column="CERTIFI_TYPE2" jdbcType="CHAR" property="certifiType2" />
+		<result column="CERTIFI_NO" jdbcType="VARCHAR" property="certifiNo" />
+		<result column="WORK_COMPANY" jdbcType="VARCHAR" property="workCompany" />
+		<result column="OFFICE_TEL" jdbcType="VARCHAR" property="officeTel" />
+		<result column="MOBILE_NO" jdbcType="VARCHAR" property="mobileNo" />
+		<result column="APPLY_CARD" jdbcType="VARCHAR" property="applyCard" />
+		<result column="POLICE_STATUS" jdbcType="VARCHAR" property="policeStatus" />
+		<result column="POLICE_STATUS_FSK" jdbcType="VARCHAR" property="policeStatusFsk" />
+		<result column="TEAMNO_ISMATCH" jdbcType="VARCHAR" property="teamnoIsmatch" />
+		<result column="IS_ONESELF_CUST" jdbcType="VARCHAR" property="isOneselfCust" />
+		<result column="IS_HAVECARD_CUST" jdbcType="VARCHAR" property="isHavecardCust" />
+		<result column="IS_HAVECARD_STANDARD" jdbcType="VARCHAR" property="isHavecardStandard" />
+		<result column="IS_PREFILTERCUST_STANDARD" jdbcType="VARCHAR" property="isPrefiltercustStandard" />
+		<result column="IS_MATCH_QRCODE" jdbcType="VARCHAR" property="isMatchQrcode" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+	    <result column="C4_rushflg" jdbcType="VARCHAR" property="C4_rushflg" />
+	    <result column="PRE_SELLIMIT" jdbcType="VARCHAR" property="preSellimit"/>
+	    <result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
+	    <result column="C1C2_FLAG" jdbcType="VARCHAR" property="c1c2Flag" />
+	    <result column="MATCHING_CARD_FLAG" jdbcType="VARCHAR" property="matchingCardFlag" />
+	    <result column="C4_APBATCH" jdbcType="VARCHAR" property="c4Apbatch" />
+	    <result column="APP_ACCTYP" jdbcType="VARCHAR" property="appAcctyp" />
+	    <result column="C4_VERCODE" jdbcType="VARCHAR" property="c4VerCode" />
+	    <result column="RESULT_CODE" jdbcType="VARCHAR" property="phoneCertification" />
+	    <result column="wsFlag" jdbcType="VARCHAR" property="wsFlag" />
+	    <result column="C4_APSOUR" jdbcType="VARCHAR" property="c4Apsour" /> 
+	    <result column="CLOSE_CODE1" jdbcType="NUMERIC" property="closeCode1" /> 
+	    <result column="C1_NATION" jdbcType="VARCHAR" property="c1Nation" />
+	    <result column="C1_EARN" jdbcType="NUMERIC" property="c1Earn" />
+	   	<result column="CARD_TYPE" jdbcType="VARCHAR" property="cardType" />
+	   	<result column="YDJ_FLAG" jdbcType="VARCHAR" property="ydjFlag" />
+	   	<result column="ysComments" jdbcType="NUMERIC" property="ysComments" />
+	   	<result column="crtTimeC1" jdbcType="TIMESTAMP" property="crtTimeC1" />
+	   	<result column="C1_TITLE" jdbcType="VARCHAR" property="c1Title" />
+	   	<result column="EPAY_MATCH" jdbcType="VARCHAR" property="epayMatch" />
+  		<result column="C5_JCTYPE" jdbcType="VARCHAR" property="c5Jctype" />
+  		<result column="WGR_STATUS" jdbcType="VARCHAR" property="wgrStatus" />
+  		<result column="WGR_STATUS_FSK" jdbcType="VARCHAR" property="wgrStatusFsk" />
+  		<result column="auth_result" jdbcType="VARCHAR" property="authResult" />
+  		<result column="cardStat_ydj" jdbcType="VARCHAR" property="cardStat_ydj" />
+		<result column="cardStat_bzk" jdbcType="VARCHAR" property="cardStat_bzk" />
+		<result column="repetition_verdict" jdbcType="VARCHAR" property="repetitionVerdict" />
+		<result column="credit_limit" jdbcType="VARCHAR" property="creditLimit" />
+		<!-- 20201015 审批分层加 -->
+		<result column="c4_Fconm2" jdbcType="VARCHAR" property="c4Fconm2" />
+		<result column="c1_Coname" jdbcType="VARCHAR" property="c1Coname" />
+		<result column="C4_RELMOD" jdbcType="VARCHAR" property="c4Relmod" /><!-- 推荐方式 -->
+  </resultMap>
+  
+  <select id="selectMainCardAppIdByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+	  select app_id from CCARD_APP_PAD_ADDITION where CONFIRM_NUM = (
+	     select substr(CONFIRM_NUM,1,(length(CONFIRM_NUM)-1))from CCARD_APP_PAD_ADDITION 
+	     where app_id = #{appId,jdbcType=VARCHAR}
+	     and rownum = 1
+      )
+  </select>
+  
+  <select id="selectByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select t.APP_ID,
+       t.C1_CNAME as CUST_NAME,
+       trim(t.C1_GENDER) as SEX,
+       trim(t.C2_NATNCD1) as NATIONAITY,
+       get_age(t.APP_ID) as AGE,
+       trim(t.C1_IDTYPE) as CERTIFI_TYPE,
+       (select trim(C2_IDTYPE)　from opas_biz_inp_appl_c2 where app_id=#{appId,jdbcType=VARCHAR}) as CERTIFI_TYPE2,
+       t.C1_IDNBR as CERTIFI_NO,
+       t.C1_CONAME as WORK_COMPANY,
+       t.C1_COTEL as OFFICE_TEL,
+       t.C1_MOBILE as MOBILE_NO,
+       t.app_prod as APPLY_CARD,
+       t.C1_CONAME,
+       t.C4_FCONM2,
+       t.C4_GTOC,
+       trim(t.C5_JCTYPE) as C5_JCTYPE,
+       t.QUICK_CARD_FLAG as C4_RUSHFLG,
+       trim(t.C4_APBATCH) as C4_APBATCH,
+       (select case
+                 when k.ERROR_MESSAGE is not null and
+                      INSTR(k.ERROR_MESSAGE, '库中无此号') > 0 then
+                  '库中无此号'
+                 when k.ERROR_MESSAGE is not null then
+                  ERROR_MESSAGE
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '一致' then
+                  '完全匹配'
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '不一致' then
+                  '身份证号匹配、姓名不匹配'
+                 when k.RESULT_GMSFHM = '不一致' and k.RESULT_XM = '一致' then
+                  '身份证号不匹配、姓名匹配'
+                 when k.RESULT_GMSFHM = '不一致' or k.RESULT_XM = '不一致' then
+                  '身份证号不匹配、姓名不匹配'
+                 else
+                  ''
+               end as POLICE_STATUS from police_simplify_info k
+         where k.APP_ID = #{appId,jdbcType=VARCHAR} and k.card_flag='0') as POLICE_STATUS,
+         (select n.result_code from nciic_foreigner_info n where n.app_id =#{appId} and  n.card_flag = '0') as WGR_STATUS,
+         (select n.result_code from nciic_foreigner_info n where n.app_id =#{appId} and  n.card_flag = '1') as WGR_STATUS_FSK,
+         (select p.CARD_TYPE from opas_param_card_product p where t.app_prod = p.card_code) as CARD_TYPE,
+        (select auth_result from sfrz_base_data where app_id =#{appId,jdbcType=VARCHAR} and card_flag= '0') as auth_result,
+        (select p.prod_name from opas_param_card_product p where t.app_prod = p.card_code) as prod_name,
+        (select CERTNO from (select row_number()  over (partition by app_id order by D_DATE desc) as rn,app_id,CERTNO from SP_APS_IFS_CUST_INFO
+        where CERTNO is not null and APP_ID = #{appId,jdbcType=VARCHAR} ) s
+        where s.rn='1' ) as IS_ONESELF_CUST,
+       RESULTCODE_NEW( #{appId,jdbcType=VARCHAR}) as RESULT_CODE,
+       t.exist_card_flag as IS_HAVECARD_CUST,
+       IS_MATCHING_CUST( #{appId,jdbcType=VARCHAR}) as IS_PREFILTERCUST_STANDARD,
+       is_match_qrcode_list( #{appId,jdbcType=VARCHAR}) as is_match_qrcode,
+       trim(t.C1C2_FLAG) as C1C2_FLAG,
+       trim(t.MATCHING_CARD_FLAG) as MATCHING_CARD_FLAG,
+       trim(t.C4_APSOUR) as C4_APSOUR,t.C1_NATION,t.C1_EARN,t.YDJ_FLAG,
+       (select count(1) from opas_interface_3118 where (CLOSE_CODE1  not in ('U','Q') and CLOSE_CODE1 is not null)
+       and  APP_ID = #{appId,jdbcType=VARCHAR} ) as CLOSE_CODE1,
+       (select count(1) from YS_ALLOT_APPLY_ALLOT where APP_ID = #{appId,jdbcType=VARCHAR} ) as ysComments,
+       cardStat('5',#{appId}) as cardStat_ydj,
+       cardStat('10',#{appId}) as cardStat_bzk,
+       (select b.credit_limit from OPAS_INTERFACE_3001 b where b.cate = '10'  and b.app_id = #{appId,jdbcType=VARCHAR}) as credit_limit, 
+       t.CRT_TIME AS crtTimeC1,
+       t.C4_RELMOD AS C4_RELMOD<!-- 推荐方式 -->
+  from OPAS_BIZ_INP_APPL_C1 t
+  where  t.APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectCustAndPreSellimitByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
+       select t.APP_ID,
+       t.C1_CNAME as CUST_NAME,
+       t.C1_CONAME,
+       t.C4_FCONM2,
+       trim(t.C1_GENDER) as SEX,
+       trim(t.C2_NATNCD1) as NATIONAITY,
+       get_age(t.APP_ID) as AGE,
+       trim(t.C1_IDTYPE) as CERTIFI_TYPE,
+       (select trim(C2_IDTYPE)　from opas_biz_inp_appl_c2 where app_id=#{appId,jdbcType=VARCHAR}) as CERTIFI_TYPE2,
+       t.C1_IDNBR as CERTIFI_NO,
+       t.C1_COADD1 as WORK_COMPANY,
+       t.C1_COTEL as OFFICE_TEL,
+       t.C1_MOBILE as MOBILE_NO,
+       t.app_prod as APPLY_CARD,
+       (select case
+                 when k.ERROR_MESSAGE is not null and
+                      INSTR(k.ERROR_MESSAGE, '库中无此号') > 0 then
+                  '库中无此号'
+                 when k.ERROR_MESSAGE is not null then
+                  ERROR_MESSAGE
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '一致' then
+                  '完全匹配'
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '不一致' then
+                  '身份证号匹配、姓名不匹配'
+                 when k.RESULT_GMSFHM = '不一致' and k.RESULT_XM = '一致' then
+                  '身份证号不匹配、姓名匹配'
+                 when k.RESULT_GMSFHM = '不一致' or k.RESULT_XM = '不一致' then
+                  '身份证号不匹配、姓名不匹配'
+                 else
+                  ''
+               end as POLICE_STATUS from police_simplify_info k
+         where k.APP_ID = #{appId,jdbcType=VARCHAR} and k.card_flag='0') as POLICE_STATUS,
+         (select case
+                 when k.ERROR_MESSAGE is not null and
+                      INSTR(k.ERROR_MESSAGE, '库中无此号') > 0 then
+                  '库中无此号'
+                 when k.ERROR_MESSAGE is not null then
+                  ERROR_MESSAGE
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '一致' then
+                  '完全匹配'
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '不一致' then
+                  '身份证号匹配、姓名不匹配'
+                 when k.RESULT_GMSFHM = '不一致' and k.RESULT_XM = '一致' then
+                  '身份证号不匹配、姓名匹配'
+                 when k.RESULT_GMSFHM = '不一致' or k.RESULT_XM = '不一致' then
+                  '身份证号不匹配、姓名不匹配'
+                 else
+                  ''
+               end as POLICE_STATUS 
+          from police_simplify_info k
+         where k.APP_ID = #{appId,jdbcType=VARCHAR} and k.card_flag='1') as POLICE_STATUS_FSK,
+          (select n.result_code from nciic_foreigner_info n where n.app_id =#{appId} and  n.card_flag = '0') as WGR_STATUS,
+         (select n.result_code from nciic_foreigner_info n where n.app_id =#{appId} and  n.card_flag = '1') as WGR_STATUS_FSK,
+         (select auth_result from sfrz_base_data where app_id =#{appId,jdbcType=VARCHAR} and card_flag= '0') as auth_result,
+       t.C4_GTOC,
+       t.QUICK_CARD_FLAG as C4_RUSHFLG,
+       trim(t.C1C2_FLAG) as C1C2_FLAG,
+       trim(t.MATCHING_CARD_FLAG) as MATCHING_CARD_FLAG,
+       trim(t.APP_ACCTYP) as APP_ACCTYP,
+       trim(t.C4_VERCODE) as C4_VERCODE,
+       trim(t.C4_APSOUR) as C4_APSOUR,t.C1_NATION,t.C1_EARN,t.YDJ_FLAG,
+       (select p.CARD_TYPE from opas_param_card_product p where t.app_prod = p.card_code) as CARD_TYPE,
+       (select p.prod_name from opas_param_card_product p where t.app_prod = p.card_code) as prod_name,
+       <!-- 避免授信审批页面为空  预筛选数据取单条 20200413 -->
+       (select * from (select t2.PRE_SELLIMIT  from OPAS_PARAM_PRECREDIT t2 join opas_biz_inp_appl_c1 c on  t2.CERTIFI_ID=c.c1_idnbr where c.app_id=#{appId,jdbcType=VARCHAR} and  t2.STATUS = '1' order by  t2.start_date desc) where rownum=1) as PRE_SELLIMIT,
+       <!--(select t2.PRE_SELLIMIT from OPAS_PARAM_PRECREDIT t2 where t.C1_IDNBR = t2.CERTIFI_ID AND t2.STATUS = '1' and t2.end_date > t.crt_date) as PRE_SELLIMIT,-->
+       WSflag(#{appId,jdbcType=VARCHAR}) as wsFlag,
+       (select count(1) from opas_interface_3118 where (CLOSE_CODE1  not in ('U','Q') and CLOSE_CODE1 is not null)
+       and  APP_ID = #{appId,jdbcType=VARCHAR} ) as CLOSE_CODE1,
+       t.C1_TITLE,
+       t.EPAY_MATCH,
+	   t.exist_card_flag as IS_HAVECARD_CUST,
+	   cardStat('10',#{appId}) as cardStat_bzk,
+	   t.REPETITION_VERDICT as repetition_verdict,
+	   (select b.credit_limit from OPAS_INTERFACE_3001 b where b.cate = '10'  and b.app_id = #{appId,jdbcType=VARCHAR}) as credit_limit
+	  from OPAS_BIZ_INP_APPL_C1 t 
+  where t.APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectCustAndPreSellimitByAppNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+       select t.APP_ID,
+       t.C1_CNAME as CUST_NAME,
+       trim(t.C1_GENDER) as SEX,
+       trim(t.C2_NATNCD1) as NATIONAITY,
+       get_age(t.APP_ID) as AGE,
+       trim(t.C1_IDTYPE) as CERTIFI_TYPE,
+       (select trim(C2_IDTYPE)　from opas_biz_inp_appl_c2 where app_id=#{appId,jdbcType=VARCHAR}) as CERTIFI_TYPE2,
+       t.C1_IDNBR as CERTIFI_NO,
+       t.C1_COADD1 as WORK_COMPANY,
+       t.C1_COTEL as OFFICE_TEL,
+       t.C1_MOBILE as MOBILE_NO,
+       t.app_prod as APPLY_CARD,
+       (select case
+                 when k.ERROR_MESSAGE is not null and
+                      INSTR(k.ERROR_MESSAGE, '库中无此号') > 0 then
+                  '库中无此号'
+                 when k.ERROR_MESSAGE is not null then
+                  ERROR_MESSAGE
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '一致' then
+                  '完全匹配'
+                 when k.RESULT_GMSFHM = '一致' and k.RESULT_XM = '不一致' then
+                  '身份证号匹配、姓名不匹配'
+                 when k.RESULT_GMSFHM = '不一致' and k.RESULT_XM = '一致' then
+                  '身份证号不匹配、姓名匹配'
+                 when k.RESULT_GMSFHM = '不一致' or k.RESULT_XM = '不一致' then
+                  '身份证号不匹配、姓名不匹配'
+                 else
+                  ''
+               end as POLICE_STATUS from police_simplify_info k
+         where k.APP_ID = #{appId,jdbcType=VARCHAR} and k.card_flag='0') as POLICE_STATUS,
+       t.C4_GTOC,
+       t.QUICK_CARD_FLAG as C4_RUSHFLG,
+       trim(t.C1C2_FLAG) as C1C2_FLAG,
+       trim(t.MATCHING_CARD_FLAG) as MATCHING_CARD_FLAG,
+       trim(t.APP_ACCTYP) as APP_ACCTYP,
+       trim(t.C4_VERCODE) as C4_VERCODE,
+       (select p.prod_name from opas_param_card_product p where t.app_prod = p.card_code) as prod_name,
+       (select t2.PRE_SELLIMIT from OPAS_PARAM_PRECREDIT t2 where t.C1_IDNBR = t2.CERTIFI_ID AND t2.STATUS = '1' and t2.end_date > t.crt_date) as PRE_SELLIMIT
+	  from OPAS_BIZ_INP_APPL_C1 t
+  where  t.APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <!-- PAD人像比对  20200401 添加备注-->
+  <select id="selectPoliceXPInfo" parameterType="java.lang.String" resultType="java.lang.String">
+  	   select 
+  	   case when a1.RESULT_GMSFHM='一致' and a1.RESULT_XM='一致' and a1.RESULT_FX='系统判断为同一人' then '完全一致'
+       when a1.ERROR_MESSAGE is not null then '未发起查询'
+       else '完全不一致' end 
+  	   from police_xp_info a1  where a1.APP_ID like '${_parameter}%' and rownum=1
+  </select>
+</mapper>

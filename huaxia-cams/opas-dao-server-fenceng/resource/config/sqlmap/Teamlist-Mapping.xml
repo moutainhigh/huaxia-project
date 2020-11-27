@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Teamlist">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.decision.Teamlist">
+    <id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+    <result column="TEAM_ID" jdbcType="VARCHAR" property="teamId" />
+    <result column="TEAM_CONTENT" jdbcType="VARCHAR" property="teamContent" />
+    <result column="COMPANY" jdbcType="VARCHAR" property="company" />
+    <result column="APPROVE_CONTENT" jdbcType="VARCHAR" property="approveContent" />
+    <result column="AUTH_CRITERION" jdbcType="VARCHAR" property="authCriterion" />
+    <result column="APPROVE_TIME" jdbcType="TIMESTAMP" property="approveTime" />
+    <result column="APPROVE_VAILUD_DATE" jdbcType="TIMESTAMP" property="approveVailudDate" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+    <result column="REMARK" jdbcType="OTHER" property="remark" />
+  </resultMap>
+  <!-- <sql id="Base_Column_List">
+    AUTO_ID, TEAM_ID, TEAM_CONTENT, COMPANY, APPROVE_CONTENT, AUTH_CRITERION, APPROVE_TIME, 
+    APPROVE_VAILUD_DATE, CRT_TIME, CRT_DATE, CRT_USER, status, REMARK
+  </sql> -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    AUTO_ID, TEAM_ID, TEAM_CONTENT, COMPANY, APPROVE_CONTENT, AUTH_CRITERION, APPROVE_TIME, 
+    APPROVE_VAILUD_DATE, CRT_TIME, CRT_DATE, CRT_USER, STATUS, REMARK
+    from OPAS_TEAMLIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from OPAS_TEAMLIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.decision.Teamlist">
+    insert into OPAS_TEAMLIST (AUTO_ID, TEAM_ID, TEAM_CONTENT, 
+      COMPANY, APPROVE_CONTENT, AUTH_CRITERION, 
+      APPROVE_TIME, APPROVE_VAILUD_DATE, CRT_TIME, 
+      CRT_DATE, CRT_USER, STATUS, 
+      REMARK)
+    values (#{autoId,jdbcType=VARCHAR}, #{teamId,jdbcType=VARCHAR}, #{teamContent,jdbcType=VARCHAR}, 
+      #{company,jdbcType=VARCHAR}, #{approveContent,jdbcType=VARCHAR}, #{authCriterion,jdbcType=VARCHAR}, 
+      #{approveTime,jdbcType=TIMESTAMP}, #{approveVailudDate,jdbcType=TIMESTAMP}, #{crtTime,jdbcType=TIMESTAMP}, 
+      #{crtDate,jdbcType=TIMESTAMP}, #{crtUser,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, 
+      #{remark,jdbcType=OTHER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.decision.Teamlist">
+    insert into OPAS_TEAMLIST
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="autoId != null">
+        AUTO_ID,
+      </if>
+      <if test="teamId != null">
+        TEAM_ID,
+      </if>
+      <if test="teamContent != null">
+        TEAM_CONTENT,
+      </if>
+      <if test="company != null">
+        COMPANY,
+      </if>
+      <if test="approveContent != null">
+        APPROVE_CONTENT,
+      </if>
+      <if test="authCriterion != null">
+        AUTH_CRITERION,
+      </if>
+      <if test="approveTime != null">
+        APPROVE_TIME,
+      </if>
+      <if test="approveVailudDate != null">
+        APPROVE_VAILUD_DATE,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+      <if test="crtDate != null">
+        CRT_DATE,
+      </if>
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="autoId != null">
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="teamId != null">
+        #{teamId,jdbcType=VARCHAR},
+      </if>
+      <if test="teamContent != null">
+        #{teamContent,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null">
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="approveContent != null">
+        #{approveContent,jdbcType=VARCHAR},
+      </if>
+      <if test="authCriterion != null">
+        #{authCriterion,jdbcType=VARCHAR},
+      </if>
+      <if test="approveTime != null">
+        #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveVailudDate != null">
+        #{approveVailudDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtDate != null">
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null">
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{STATUS,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.decision.Teamlist">
+    update OPAS_TEAMLIST
+    <set>
+      <if test="teamId != null">
+        TEAM_ID = #{teamId,jdbcType=VARCHAR},
+      </if>
+      <if test="teamContent != null">
+        TEAM_CONTENT = #{teamContent,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null">
+        COMPANY = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="approveContent != null">
+        APPROVE_CONTENT = #{approveContent,jdbcType=VARCHAR},
+      </if>
+      <if test="authCriterion != null">
+        AUTH_CRITERION = #{authCriterion,jdbcType=VARCHAR},
+      </if>
+      <if test="approveTime != null">
+        APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveVailudDate != null">
+        APPROVE_VAILUD_DATE = #{approveVailudDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtDate != null">
+        CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null">
+        CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=OTHER},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.decision.Teamlist">
+	update OPAS_TEAMLIST
+	set TEAM_ID = #{teamId,jdbcType=VARCHAR},
+	TEAM_CONTENT = #{teamContent,jdbcType=VARCHAR},
+	COMPANY = #{company,jdbcType=VARCHAR},
+	APPROVE_CONTENT = #{approveContent,jdbcType=VARCHAR},
+	AUTH_CRITERION = #{authCriterion,jdbcType=VARCHAR},
+	APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+	APPROVE_VAILUD_DATE = #{approveVailudDate,jdbcType=TIMESTAMP},
+	CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+	CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+	CRT_USER = #{crtUser,jdbcType=VARCHAR},
+	STATUS = #{status,jdbcType=CHAR},
+	REMARK = #{remark,jdbcType=OTHER}
+	where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

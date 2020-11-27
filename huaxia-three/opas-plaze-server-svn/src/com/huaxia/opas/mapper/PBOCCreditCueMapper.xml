@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCCreditCueMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_CREDIT_CUE (
+			APP_ID,PERSON_HOU_LOAN_NO,PERSON_COM_HOU_LOAN_NO,OTHER_LOAN_NUM,FRS_LOAN_GRANT_MON,CREDIT_CARD_ACCT_NUM,
+			FRS_CRED_CRD_ISSUE_MON,SEMI_CRED_ACCT_NUM,FRS_SEMI_CRED_ISSU_MON,SELF_ANNOUNCE_CNT,DISSENT_COUNT,
+			NUMBER_READ,OPPOSITE_POSITION,
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{perHouseLoanCount, jdbcType = VARCHAR},
+			#{perBusinessHouseLoanCount, jdbcType = VARCHAR},
+			#{otherLoanCount, jdbcType = VARCHAR},
+			#{firstLoanOpenMonth, jdbcType = VARCHAR},
+			#{loancardCount, jdbcType = VARCHAR},
+			#{firstLoancardOpenMonth, jdbcType = VARCHAR},
+			#{standardLoancardCount, jdbcType = VARCHAR},
+			#{firstStandardLoancardOpenMonth, jdbcType = VARCHAR},
+			#{announceCount, jdbcType = VARCHAR},
+			#{dissentCount, jdbcType = VARCHAR},
+			
+			#{score, jdbcType = VARCHAR},
+			#{scoreLevel, jdbcType = VARCHAR},
+			
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+	
+	<insert id="insertScoreElesMapList" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_CREDITSCORE_SCOREELE (
+			 DESC_CONTENT, CRT_USER, LST_UPD_TIME, 
+			 LST_UPD_USER, BATCH_DATE, APP_ID, CRT_TIME
+		) 	
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			 #{item.ScoreEle}, 'SYSTEM',SYSDATE,
+             'SYSTEM',SYSDATE, #{item.appId},SYSDATE
+		FROM DUAL
+		</foreach>
+	</insert>
+	
+</mapper>

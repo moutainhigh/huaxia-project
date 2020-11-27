@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>是否关注客户</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<script type="text/javascript">
+	$(function(){
+		var a=0;
+		var result='';
+		var bigStr="W01,W02,";
+		//关注客户码值
+		var vigilantCust=window.opener.vigilantCust;
+		//获取灰名单结果是否为是
+		var graylist=window.opener.commonRistLit.graylist;
+		//去掉空格并截取
+		var codeList=vigilantCust.replace(/\s*/g,"").split(",");
+		//去掉数组中的空值
+		for(var j=0;j<codeList.length;j++){
+			if(codeList[j]==''||codeList[j]==null||typeof(codeList[j])==undefined){
+				codeList.splice(j,1);
+				j=j-1;
+			}
+		}
+		if(graylist=='0'||graylist==null||graylist==''||graylist==undefined){//此时不查灰名单
+			for(var i=0;i<codeList.length;i++){
+				if(bigStr.indexOf(codeList[i])>-1){	
+					result+="<tr>";
+					result += "<td>"+(a+1)+"</td>";
+					result += "<td>"+codeList[i]+"</td>";
+					if(codeList[i]=="W01"){
+						result += "<td>禁入客户</td>";
+					}else if(codeList[i]=="W02"){
+						result += "<td>灰名单客户</td>";
+					}
+					result+="</tr>";
+					a++;
+				}
+			}
+		}else{//需要查询灰名单
+			$cf.ajax({
+				data : {
+					"appId" : graylist
+				},
+				url : "/opas-naps/queryRefuseCodeList.json",
+				async:false,
+				onSuccess : function(res) {
+					for(var i=0;i<codeList.length;i++){
+						if(bigStr.indexOf(codeList[i])>-1){	
+							result+="<tr>";
+							result += "<td>"+(a+1)+"</td>";
+							result += "<td>"+codeList[i]+"</td>";
+							if(codeList[i]=="W01"){
+								result += "<td>禁入客户</td>";
+							}else if(codeList[i]=="W02"){
+								result += "<td>灰名单客户</td>";
+								if(res.RSP_BODY.rows!=undefined){
+									result += "<td>"+res.RSP_BODY.rows+"</td>";
+								}
+							}
+							result+="</tr>";
+							a++;
+						}
+					}
+					
+				}
+			});
+		}
+		if(result==""){//存在不确定的码值
+			result+="<tr><td>存在不确定的码值</td></tr>";
+		}
+		$("#rzLableTable").append(result);
+	
+	});
+</script>
+<body >
+<fieldset>
+	<legend  align="center" style="font-size:20px;font-weight:bolder">是否关注客户</legend>
+	<form id="jdCardInfoForm">
+		<table id="rzLableTable" style="border-collapse: separate; border-spacing: 10px;">
+		</table>
+	</form>	
+</fieldset>	
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.searchdiv {
+	font-size: 10px;
+}
+</style>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+		<table id="tblAutoDialingLimit" title="avaya信息" class="easyui-datagrid"
+			style="width: 98%;height:100%"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/queryAvayaAutoDialing.json',loadMsg:'数据加载中.....',checkOnSelect:true,method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<th field="id" width="5%" align="center" checkbox="true" >ID</th>
+					<th field="ip" width="10%" align="center">客服电脑IP</th>
+					<th field="avayaLoginId" width="14%" align="center">Avaya登录账号</th>
+					<th field="avayaStationId" width="14%" align="center">分机号</th>
+					<th field="operate" width="8%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="positionCodeCondion" style="padding: 2px 5px;">
+			<form id="seachPositionCodeForm">
+				客服电脑IP: <input class="easyui-textbox" style="width: 100px"
+					name="Ip" id="Ip" data-options="">
+				avaya账号: <input class="easyui-textbox" style="width: 100px"
+					name="avayaLoginId" id="avayaLoginId" data-options="">
+				分机号: <input class="easyui-validatebox textbox" style="height: 20px"
+					name="avayaStationId" id="avayaStationId" precision="2" data-options="">
+			 	<div align = "center">
+			 	<a href="javascript:common.openWin('winAdd');"
+				class="easyui-linkbutton" iconCls="icon-add">新增</a>
+				&nbsp;&nbsp;&nbsp;
+				<a href="javascript:common.searchTbl('seachPositionCodeForm','tblAutoDialingLimit');"
+					class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+				&nbsp;&nbsp;&nbsp;
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 修改页面 -->
+	<div id="winEdit" class="easyui-window" title="avaya电话修改"
+		style="width: 370px; height: 300px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm" method="post">
+		
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<!-- 
+				<tr>
+					<td><input   class="easyui-validatebox" id="id" 
+					data-options="required:true,validType:'maxLength[5]'" name="id" type="text" style="display: none"/></td>
+				</tr>
+				 -->
+				 <tr style = "display: none">
+					<td><input class="easyui-validatebox textbox"  id="id1" 
+						name="id"  data-options="required:true" /></td>
+				</tr>		
+				<tr>
+					<td align="right">avaya登录账号:</td>
+				<td><input class="easyui-validatebox textbox" id="avayaLoginId1"  onchange="onCheck2(this.id);"
+						name="avayaLoginId"  data-options="required:true"  /></td>
+						
+				</tr>
+				<tr>
+					<td align="right">avaya登录密码:</td>
+					<td><input class="easyui-validatebox textbox"  id="avayaPassWd1" 
+						name="avayaPassWd" data-options="required:true"  /></td>
+				</tr>
+				<tr>
+					<td align="right">客服电脑IP:</td>
+					<td><input class="easyui-validatebox textbox" style="height:20px" id="ip1"
+					    name="ip" data-options="required:true"  onchange="onCheck2(this.id);" 
+					     onkeypress="javascript:if(event.keyCode == 32)event.returnValue = false ;"
+					     ></input></td>
+				</tr>
+				<tr>
+					<td align="right">审核系统ID:</td>
+					<td><input class="easyui-validatebox textbox" style="height:20px" id="userid1"
+					    name="userid" data-options="required:true,validType:'maxLength[20]'" onchange="onCheck2(this.id);"></input></td>
+				</tr>
+				<tr>
+					<td align="right">分机号:</td>
+					<td><input class="easyui-validatebox textbox" style="height:20px" id="avayaStationId1"
+					    name="avayaStationId" data-options="required:true,validType:'maxLength[20]'"  onchange="onCheck2(this.id);" ></input></td>
+				</tr>
+				
+				<!-- 
+				<tr>
+					<td align="right">启用状态:</td>
+					<td><select class="easyui-combobox" name="status" >
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+					</td>
+				</tr>
+				 -->
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winEdit')">取消</a>
+			<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		</div>
+	</div>
+
+	<!-- 新增页面 -->
+	<div id="winAdd" class="easyui-window" title="avaya信息添加"
+		style="width: 370px; height: 300px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true,onClose:function(){location.reload(true)} ">
+		<form id="addForm">
+			<table cellpadding="5"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input class="easyui-validatebox" id="Id2"
+						name="Id" style="display: none"></input></td>
+				</tr>
+				<tr>
+					<td align="right">审核系统ID:</td>
+					<td><input class="easyui-validatebox textbox" style="height:20px" id="userid2"
+					    name="userid" data-options="required:true ,validType:'maxLength[20]'"  onchange="onCheck(this.id);"></input></td>
+				</tr>
+				<tr>
+					<td align="right">客服电脑IP:</td>
+					<td><input class="easyui-validatebox textbox" style="height:20px" id="Ip2"
+					    name="Ip" data-options="required:true "  onchange="onCheck(this.id);"
+					    onkeypress="javascript:if(event.keyCode == 32)event.returnValue = false ;"
+					    ></input></td>
+				</tr>
+				<tr>
+					<td align="right">avaya登录账号:</td>
+					<td><input class="easyui-validatebox textbox" id="avayaLoginId2"
+						name="avayaLoginId" data-options="required:true " onchange="onCheck(this.id);"></input></td>
+				</tr>
+				<tr>
+					<td align="right">avaya登录密码:</td>
+					<td><input class="easyui-validatebox textbox" style="height:20px" id="avayaPassWd2"
+					    name="avayaPassWd" data-options="required:true ,validType:'minLength[8]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">分机号:</td>
+					<td><input class="easyui-validatebox textbox" style="height:20px" id="avayaStationId2"
+					    name="avayaStationId" data-options="required:true ,validType:'maxLength[20]' "  onchange="onCheck(this.id);"></input></td>
+				</tr>
+				<td align="right">启用状态:</td>
+					<td><select class="easyui-combobox" name="status" id="status2">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+				</td>
+				<!-- 
+				<tr>
+					<td align="right">状态:</td>
+					<td><input class="easyui-textbox" id="status"
+						name="status" data-options="required:true,validType:'maxLength[8]'"></input></td>
+				</tr>
+				 -->
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onSave()">保存</a>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		
+	
+		var tblAutoDialingLimit = $("#tblAutoDialingLimit");
+		var editWindow = $("#winEdit");
+		var addWindow = $("#winAdd");
+		var editForm = $("#editForm");
+		var addForm = $("#addForm");
+		function formatOper(val, row, index) {
+			return "<a href=javascript:editAutoDialingLimit(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:deleteAutoDialingLimit();>删除</a>";
+		}
+		 
+		//日期格式转换
+		function myformatDate(value) {
+			var str = getTaskTime(value);
+			if(str.indexOf('1970')>=0){
+				return '';
+			}else{
+				return str;
+			}
+		}
+		
+		//工具方法：格式化CST类型时间
+		function getTaskTime(strDate) {
+			if (null == strDate || "" == strDate) {
+				return "";
+			}
+			var dateStr = strDate.trim().split(" ");
+			var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+					+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+			var date = new Date(Date.parse(strGMT));
+			var y = date.getFullYear();
+			var m = date.getMonth() + 1;
+			m = m < 10 ? ('0' + m) : m;
+			var d = date.getDate();
+			d = d < 10 ? ('0' + d) : d;
+			var h = date.getHours();
+			h = h < 10 ? ('0' + h) : h;
+			var minute = date.getMinutes();
+			minute = minute < 10 ? ('0' + minute) : minute;
+			var second = date.getSeconds();
+			second = second < 10 ? ('0' + second) : second;
+
+			return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+					+ second;
+		};
+
+		function formatStatus(val, row, index) {
+			if (val == "0") {
+				return "禁用";
+			} else if (val == "1") {
+				return "启用";
+			}
+		}
+
+		function editAutoDialingLimit() {
+			var autoDialingLimitObj = tblAutoDialingLimit.datagrid("getSelected");
+			editWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+				onBeforeOpen : setData(autoDialingLimitObj)
+			});
+		}
+
+		//调用单条删除方法
+		function deleteAutoDialingLimit() {
+			var autoDialingLimitObj = tblAutoDialingLimit.datagrid("getSelected");
+			$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/delAvayaAutoDialing.json",
+						data : autoDialingLimitObj,
+						onSuccess : function(autoDialingLimitObj) {
+							top.$cf.showMsg("该数据删除成功！");
+							tblAutoDialingLimit.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+		
+		function setData(data) {
+			editForm.form("load", data);
+			$("#id").attr("readonly", "readonly");
+			$("#id").attr("disabled", "disabled");
+		}
+
+		//关闭窗体
+		function onConcle(obj) {
+			var winObj = $("#" + obj);
+			winObj.window("close");
+			location.reload(true); 
+		}
+
+		//调用修改方法
+		function onUpdate() {
+			var autoDialingLimitData = isRequired('editForm');
+			var jsondata = getFormData(editForm.serializeArray());
+			$cf.ajax({
+				url : "/opas-naps/updateAvayaAutoDialing.json",
+				data : jsondata,
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						top.$cf.showMsg("修改已成功！");
+						onConcle("winEdit");
+						tblAutoDialingLimit.datagrid("reload");
+					}else {
+						$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg,"error");
+						return;
+					}
+				}
+			});
+		}
+
+		function getFormData(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value;
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+		}
+
+		//调用新增方法
+		function onSave() {
+			var autoDialingLimitData = isRequired('addForm');
+			var jsondata = getFormData(addForm.serializeArray());
+			$cf.ajax({
+						url : "/opas-naps/saveAvayaAutoDialing.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("添加已成功！");
+								onConcle("winAdd");
+								tblAutoDialingLimit.datagrid("reload");
+							}else {
+							//	$.messager.alert("操作提示", "添加失败:" + data.exMsg,"error");
+							//	return;
+								$.messager.alert("操作提示", "添加失败:" + data.RSP_BODY.exMsg, "error");
+							//	onConcle("winEdit");
+								
+							}
+						}
+
+					});
+		}
+		
+		function onCheck(x){
+			var autoDialingLimitObj = tblAutoDialingLimit.datagrid("getSelected");
+			var a = document.getElementById(x).value;
+			var c = document.getElementById(x).name;
+			if(c == "Ip"){
+				var d = a.replace(/(^\s*)|(\s*$)/g, "");
+				//if(d != a ){
+					var jsondata = {"ip":a};
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+//				}else{
+//					$.messager.alert("操作提示","ip中不应该存在空格！","error");
+//					return;	
+//				}
+
+			}
+			if(c == "avayaStationId"){
+				var jsondata = {"avayaStationId":a};
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+			}
+			if(c == "userid"){
+				var jsondata = {"userid":a};
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+//								top.$cf.showMsg("修改已成功！");
+//								onConcle("winEdit");
+//								tblAutoDialingLimit.datagrid("reload");
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+			}
+			if(c == "avayaLoginId"){
+				var jsondata = {"avayaLoginId":a};
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+			}
+			
+		}
+		
+		
+		
+		
+		
+		function onCheck2(x){
+			var autoDialingLimitObj = tblAutoDialingLimit.datagrid("getSelected");
+			var a = document.getElementById(x).value;
+			var c = document.getElementById(x).name;
+			if(c == "ip"){
+				var d = a.replace(/(^\s*)|(\s*$)/g, "");
+			//	if(d < a ){
+				var jsondata = {"ip":a};
+				if(a != autoDialingLimitObj.ip ){
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+				}
+//					}else{
+//					$.messager.alert("操作提示","ip中不应该存在空格！","error");
+//					return;	
+//				}
+			}
+			if(c == "avayaStationId"){
+				var jsondata = {"avayaStationId":a};
+				if(a != autoDialingLimitObj.avayaStationId ){
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+				}
+			}
+			if(c == "userid"){
+				var jsondata = {"userid":a};
+				if(a != autoDialingLimitObj.userid ){
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+//								top.$cf.showMsg("修改已成功！");
+//								onConcle("winEdit");
+//								tblAutoDialingLimit.datagrid("reload");
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+				}
+			}
+			if(c == "avayaLoginId"){
+				var jsondata = {"avayaLoginId":a};
+				if(a != autoDialingLimitObj.avayaLoginId ){
+					$cf.ajax({
+						url : "/opas-naps/checkData1.json",
+						data : jsondata,
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+
+							}else {
+								$.messager.alert("操作提示", "" + data.RSP_BODY.exMsg,"error");
+								return;
+							}
+						}
+					});
+				}
+			}
+			
+		}
+		
+		
+
+		
+	</script>
+</html>

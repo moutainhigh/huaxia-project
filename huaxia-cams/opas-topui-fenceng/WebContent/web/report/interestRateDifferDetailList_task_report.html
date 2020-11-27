@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:20px;
+}
+.alsptwo{
+	font-family:"宋体";font-size:14px;font-weight:bold;
+}
+</style>
+</head>
+<body style="padding: 10px;">
+<div id="report_interestRateDifferDetailList_center" style="width:100%;height:100%;">
+
+ 		<div align='center' style="background-color:#00FFFF"><br><h3 align='center'>利率差异化明细表</h3></div> 
+	   		<form id="reportTypeForm">
+		 		<br><br><br>
+		 		
+		 		<div align='center'><label>选择时间</label>
+		 		<input id="startDate" name="startDate" class="easyui-datebox" style="width:150px;" 
+		 			data-options="required:true"/> -
+		 		<input id="endDate" name="endDate" class="easyui-datebox" style="width:150px;"
+		 			data-options="required:true"/>
+				<input id="fileName" class="alsptwo" name="fileName" readonly='readonly'  style='border:0px;'></input>
+			 	<a href="javascript:void(0)" onclick="report_interestRateDifferDetailList_downLoad()">利率差异化明细表下载</a>
+			 	</div>
+		 		
+			 </form>
+ 		</div>
+</body>
+<script type="text/javascript">
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;	
+	var reportTypeForm = $("#reportTypeForm");
+	function report_interestRateDifferDetailList_downLoad(){
+		var jsondata = getFormData(reportTypeForm.serializeArray());
+		var startDate = jsondata.startDate;
+		var endDate = jsondata.endDate;
+		if((startDate==null||startDate=="")||(endDate==null||endDate=="")){
+			alert("所选时间不能为空！");
+			return;
+		}
+		var day = GetDateDiff(startDate,endDate);
+		if (day>31){
+			alert("时间区间不能超过30天");
+			return;
+		}
+		
+		var fileName = startDate + "~"+ endDate + ".zip"
+		$("#fileName").val(fileName);
+		location.href = "/opas-naps/report/InterestRateDifferDetailListDownLoadServlet.json?startDate="+startDate+"&endDate="+endDate
+				+"&fileName="+fileName+"&userCode="+userCode;
+	}
+	
+	function GetDateDiff(startDate,endDate) {
+		
+		var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+		var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+		var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+		return dates;
+	}
+	
+	//获取表单数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+</script>
+
+</html>

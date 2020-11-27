@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DifferentGrainStatistics">
+  <select id="selectDifferentGrainStatisticsDataByDateDimension" parameterType="java.util.Map" resultType="java.util.Map">
+		 SELECT
+		 <choose>
+		  <when test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='' ">
+			  max(w1.prod_name) as type,
+	      </when>
+		  <when test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='8'.toString() ">
+			  (select b.dict_detail_name from opas_ap_dict a,opas_ap_dict_detail b
+           where a.dict_id = b.dict_id and a.dict_code='ALLOT_APPCHANNEL' and b.dict_detail_code = substr(l.app_id, 8, 1) ) as type,
+	      </when>
+		  <when test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='9'.toString() ">
+			 (select b.dict_detail_name from opas_ap_dict a,opas_ap_dict_detail b
+           where a.dict_id = b.dict_id and a.dict_code='ALLOT_APPREGION' and b.dict_detail_code = substr(l.app_id, 9, 2) ) as type,
+	      </when>
+		  <when test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='7'.toString() ">
+			  (case when substr(l.app_id, 7, 1)='A' then 'PAD' 
+			       when substr(l.app_id, 7, 1)='B' then '网申' 
+			       else '其他' end ) as type,
+	      </when>
+		  <when test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='11'.toString() ">
+			  (select b.dict_detail_name from opas_ap_dict a,opas_ap_dict_detail b
+           where a.dict_id = b.dict_id and a.dict_code='ALLOT_SERIALNUM' and b.dict_detail_code = substr(l.app_id, 11, 1) ) as type,
+	      </when>
+	      </choose>
+	       count(l.app_id) as appcnt,
+	       sum(case
+	             when w.app_result = '0' then
+	              1
+	             else
+	              0
+	           end) as pass,
+	       sum(case
+	             when w.app_result = '1' then
+	              1
+	             else
+	              0
+	           end) as refuse,
+	       count(r.app_id) as cancel,
+	       count(w.app_id) as approvesum,
+	       count(l.app_id) - count(w.app_id) as nofinish,
+	      
+	        case when ((sum(case when w.app_result = '0' then 1 else 0 end)+
+                        sum(case when w.app_result = '1' then 1 else 0 end)))=0 then 0 else 
+	       round((sum(case when w.app_result = '0' then 1 else 0 end) / 
+         	(sum(case when w.app_result = '1' then 1 else 0 end)+
+           sum(case when w.app_result = '0' then 1 else 0 end))) * 100,2) end 
+          as passrate,
+	        case when ((sum(case when w.app_result = '1' then 1 else 0 end)+
+                        sum(case when w.app_result = '0' then 1 else 0 end)))=0 then 0 else 
+	       round((sum(case when w.app_result = '1' then 1 else 0 end) / 
+         	(sum(case when w.app_result = '1' then 1 else 0 end)+
+           sum(case when w.app_result = '0' then 1 else 0 end))) * 100,2) end 
+          as refuserate,
+	             
+	       round((((count(l.app_id) - count(w.app_id)) / count(l.app_id))) * 100,
+	             2) as waitdealrate,
+		  max(l.app_prod) as app_prod
+	  FROM OPAS_BIZ_INP_APPL_C1 l
+	  left join OPAS_PARAM_CARD_PRODUCT w1 on w1.card_code = l.app_prod
+	  left join OPAS_FILE_APPLICATION_DETAIL w on w.app_id = l.app_id and  w.flag in ('0','2') 
+	  left join opas_biz_approval r on r.app_id = w.app_id and( r.refuse_code1 in ('D702', 'YD406')
+	  or r.refuse_code2 in ('D702', 'YD406') or r.refuse_code3 in ('D702', 'YD406'))
+	<where> 
+	 		 l.allot_status ='0' 
+		 	 and l.crt_time &gt;= to_date(#{beginDate}, 'yyyy-mm-dd')
+			 and l.crt_time &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+	     <if test="ydjFlag != null and ydjFlag !='' ">
+			AND l.YDJ_FLAG = #{ydjFlag}
+		 </if>
+	     <if test="allApplicationCard !=null and allApplicationCard !='' and allApplicationCard !='' and dictDetailCodeValue != null and dictDetailCodeValue !=''">
+	     	and w1.card_code=#{dictDetailCodeValue}
+	     </if>
+	     <if test="choseOperator != NULL and choseOperator != '' and (choseOperator =='A'.toString() or choseOperator =='B'.toString()) ">
+	     	and substr(l.app_id, 7, 1)=#{choseOperator}
+	     </if>
+	     <if test="choseOperator != NULL and choseOperator != '' and choseOperator =='1'.toString() ">
+	     	and (substr(l.app_id, 7, 1) !='A' AND substr(l.app_id, 7, 1) !='B')
+	     </if>
+	     <!-- 渠道 -->
+	     <if test="choseChannel != null and choseChannel !='' ">
+	     	and substr(l.app_id, 8, 1)=#{choseChannel}
+	     </if>
+	     <if test="choseArea != null and choseArea !='' ">
+	     	and substr(l.app_id, 9, 2)=#{choseArea}
+	     </if>
+	     <if test="choseApplicationCard != null and choseApplicationCard !='' ">
+	    	 and  l.APP_PROD =#{choseApplicationCard}
+	     </if>
+	     <if test="choseSerialWaterNum != null and choseSerialWaterNum !='' ">
+	     	and  substr(l.app_id, 11, 1)=#{choseSerialWaterNum}
+	     </if>
+	   </where>
+	     <if test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='8'.toString() ">
+				 group by substr(l.app_id, 8, 1)
+		 </if>
+		 <if test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='9'.toString() ">
+				 group by substr(l.app_id, 9, 2)
+		 </if>
+		 <if test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='7'.toString() ">
+				 group by substr(l.app_id, 7, 1)
+		 </if>
+	     <if test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='11'.toString() ">
+				 group by substr(l.app_id, 11, 1)
+		 </if>
+		 <if test="choseDimensionColumnGroup != null and choseDimensionColumnGroup =='' ">
+				 group by l.APP_PROD
+		 </if> 
+	 
+  </select>
+  
+  <resultMap id="ApplicationCardProductsResultMap" type="java.util.Map" >
+    <id column="prod_name" property="dictDetailName" jdbcType="VARCHAR" />
+    <result column="card_code" property="dictDetailCode" jdbcType="VARCHAR" />
+   </resultMap>
+  <select id="selectApplicationCardProducts" resultMap="ApplicationCardProductsResultMap" >
+  	select prod_name ,card_code from OPAS_PARAM_CARD_PRODUCT
+  </select>
+  
+  
+</mapper>

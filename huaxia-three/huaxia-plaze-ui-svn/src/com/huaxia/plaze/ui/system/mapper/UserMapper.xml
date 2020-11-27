@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.UserMapper">
+
+	<!-- <cache flushInterval="12000" /> -->
+
+	<resultMap id="result_BaseUser" type="User">
+		<result column="USER_ID" property="userId" jdbcType="CHAR" />
+		<result column="USER_ACCT" property="account" jdbcType="VARCHAR" />
+		<result column="USER_PASS" property="password" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+		<result column="FIRST_LOGIN" property="firstLogin" jdbcType="CHAR" />
+		<result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="VARCHAR" />
+		<result column="PASS_EXPIRE_TIME" property="passwordExpireTime" jdbcType="VARCHAR" />
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="CERT_TYPE" property="certType" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+		<result column="TEAM" property="team" jdbcType="VARCHAR" />
+		<result column="POST" property="post" jdbcType="VARCHAR" />
+		<result column="PBOC_AUTH" property="pbocAuth" jdbcType="VARCHAR" />
+		<result column="PBOC_AUTH_QUERY" property="pbocAuthQuery" jdbcType="VARCHAR" />
+		<result column="PBOC_AUTH_QUERY_TIME" property="pbocAuthQueryTime" jdbcType="VARCHAR" />
+		<result column="PBOC_DAY_QUERY_MAX_COUNT" property="pbocDayQueryMaxCount" jdbcType="VARCHAR" />
+		<result column="PBOC_DAY_SEARCH_MAX_COUNT" property="pbocDaySearchMaxCount" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_USER
+		<where>
+        	<if test="account != null">
+        		AND USER_ACCT LIKE '${account}%'
+        	</if>
+        	<if test="staffName != null">
+        		AND STAFF_NAME LIKE '${staffName}%'
+        	</if>
+        	<if test="status != null">
+        		AND STATUS = #{status,jdbcType=CHAR}
+        	</if>
+        	<if test="pbocAuth != null">
+        		AND PBOC_AUTH = #{pbocAuth,jdbcType=CHAR}
+			</if>
+        </where>
+	</select>
+	
+	<select id="selectListByPage" parameterType="java.util.Map" resultMap="result_BaseUser">
+		SELECT USER_ID,USER_ACCT,USER_PASS,STATUS,IP,FIRST_LOGIN,LAST_LOGIN_TIME,PASS_EXPIRE_TIME,STAFF_ID,STAFF_NAME,CERT_TYPE,CERT_NO,MOBILE,DEPARTMENT,TEAM,POST,PBOC_AUTH,PBOC_AUTH_QUERY,PBOC_AUTH_QUERY_TIME,PBOC_DAY_QUERY_MAX_COUNT,PBOC_DAY_SEARCH_MAX_COUNT
+		  FROM (SELECT ROWNUM RN,USER_ID,USER_ACCT,USER_PASS,STATUS,IP,FIRST_LOGIN,LAST_LOGIN_TIME,PASS_EXPIRE_TIME,CRT_TIME,STAFF_ID,STAFF_NAME,CERT_TYPE,CERT_NO,MOBILE,DEPARTMENT,TEAM,POST,PBOC_AUTH,PBOC_AUTH_QUERY,PBOC_AUTH_QUERY_TIME,PBOC_DAY_QUERY_MAX_COUNT,PBOC_DAY_SEARCH_MAX_COUNT
+		          FROM (SELECT USER_ID,USER_ACCT,USER_PASS,STATUS,IP,FIRST_LOGIN,TO_CHAR(LAST_LOGIN_TIME, 'YYYY-MM-DD HH24:MI:SS') LAST_LOGIN_TIME,TO_CHAR(PASS_EXPIRE_TIME, 'YYYY-MM-DD HH24:MI:SS') PASS_EXPIRE_TIME,CRT_TIME,STAFF_ID,STAFF_NAME,CERT_TYPE,CERT_NO,MOBILE,DEPARTMENT,TEAM,POST,PBOC_AUTH,PBOC_AUTH_QUERY,PBOC_AUTH_QUERY_TIME,PBOC_DAY_QUERY_MAX_COUNT,PBOC_DAY_SEARCH_MAX_COUNT
+		                  FROM SYS_USER
+		                <where>
+		                	<if test="account != null">
+				        		AND USER_ACCT LIKE '${account}%'
+				        	</if>
+				        	<if test="staffName != null">
+				        		AND STAFF_NAME LIKE '${staffName}%'
+				        	</if>
+				        	<if test="status != null">
+				        		AND STATUS = #{status,jdbcType=CHAR}
+				        	</if>
+				        	<if test="pbocAuth != null">
+				        		AND PBOC_AUTH = #{pbocAuth,jdbcType=CHAR}
+				        	</if>
+		                </where>
+		                ORDER BY CRT_TIME DESC) T
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		 WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	  ORDER BY CRT_TIME DESC
+	</select>
+	
+	<insert id="insert" parameterType="User">
+		INSERT INTO SYS_USER (
+			UUID,CRT_TIME,CRT_USER,USER_ID,USER_ACCT,USER_PASS,STATUS,IP,FIRST_LOGIN,PASS_EXPIRE_TIME,STAFF_ID,STAFF_NAME,CERT_TYPE,CERT_NO,MOBILE,DEPARTMENT,TEAM,POST,PBOC_AUTH,PBOC_AUTH_QUERY,PBOC_AUTH_QUERY_TIME,PBOC_DAY_QUERY_MAX_COUNT,PBOC_DAY_SEARCH_MAX_COUNT
+		) VALUES (
+			SYS_GUID(),SYSDATE,#{createUser,jdbcType=VARCHAR},SYS_GUID(),
+			#{account,jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{ip,jdbcType=VARCHAR},
+			#{firstLogin,jdbcType=CHAR},
+			SYSDATE + 30,
+			#{staffId,jdbcType=VARCHAR},
+			#{staffName,jdbcType=VARCHAR},
+			#{certType,jdbcType=VARCHAR},
+			#{certNo,jdbcType=VARCHAR},
+			#{mobile,jdbcType=VARCHAR},
+			#{department,jdbcType=VARCHAR},
+			#{team,jdbcType=VARCHAR},
+			#{post,jdbcType=VARCHAR},
+			#{pbocAuth,jdbcType=VARCHAR},
+			#{pbocAuthQuery,jdbcType=VARCHAR},
+			#{pbocAuthQueryTime,jdbcType=VARCHAR},
+			#{pbocDayQueryMaxCount,jdbcType=VARCHAR},
+			#{pbocDaySearchMaxCount,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateWithParamsByAcct" parameterType="java.util.Map">
+		UPDATE SYS_USER
+		<set>
+		   <if test="lastLoginTime != null">
+		       LAST_LOGIN_TIME = TO_DATE(#{lastLoginTime,jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS'),
+		   </if>
+		   <if test="passwordExpireTime != null">
+		       PASS_EXPIRE_TIME = TO_DATE(#{passwordExpireTime}, 'YYYY-MM-DD HH24:MI:SS'),
+		   </if>
+		   <if test="password != null">
+		       USER_PASS = #{password,jdbcType=VARCHAR},
+		   </if>
+		   <if test="firstLogin != null">
+		       FIRST_LOGIN = #{firstLogin,jdbcType=CHAR},
+		   </if>
+		   <if test="status != null">
+		       STATUS = #{status,jdbcType=CHAR},
+		   </if>
+		   <if test="ip != null">
+		       IP = #{ip,jdbcType=CHAR},
+		   </if>
+		   <if test="staffId != null">
+		       STAFF_ID = #{staffId,jdbcType=VARCHAR},
+		   </if>
+		   <if test="staffName != null">
+		       STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+		   </if>
+		   <if test="certType != null">
+		       CERT_TYPE = #{certType,jdbcType=VARCHAR},
+		   </if>
+		   <if test="certNo != null">
+		       CERT_NO = #{certNo,jdbcType=VARCHAR},
+		   </if>
+		   <if test="mobile != null">
+		       MOBILE = #{mobile,jdbcType=VARCHAR},
+		   </if>
+		   <if test="department != null">
+		       DEPARTMENT = #{department,jdbcType=VARCHAR},
+		   </if>
+		   <if test="team != null">
+		       TEAM = #{team,jdbcType=VARCHAR},
+		   </if>
+		   <if test="post != null">
+		       POST = #{post,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocAuth != null">
+		       PBOC_AUTH = #{pbocAuth,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocAuthQuery != null">
+		       PBOC_AUTH_QUERY = #{pbocAuthQuery,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocAuthQueryTime != null">
+		       PBOC_AUTH_QUERY_TIME = #{pbocAuthQueryTime,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocDayQueryMaxCount != null">
+		       PBOC_DAY_QUERY_MAX_COUNT = #{pbocDayQueryMaxCount,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocDaySearchMaxCount != null">
+		       PBOC_DAY_SEARCH_MAX_COUNT = #{pbocDaySearchMaxCount,jdbcType=VARCHAR},
+		   </if>
+		 </set>
+		 WHERE USER_ACCT = #{account,jdbcType=CHAR}
+	</update>
+	
+	<update id="updateWithParamsById" parameterType="java.util.Map">
+		UPDATE SYS_USER
+		<set>
+		   <if test="lastLoginTime != null">
+		       LAST_LOGIN_TIME = TO_DATE(#{lastLoginTime,jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS'),
+		   </if>
+		   <if test="passwordExpireTime != null">
+		       PASS_EXPIRE_TIME = TO_DATE(#{passwordExpireTime,jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS'),
+		   </if>
+		   <if test="password != null">
+		       USER_PASS = #{password,jdbcType=VARCHAR},
+		   </if>
+		   <if test="firstLogin != null">
+		       FIRST_LOGIN = #{firstLogin,jdbcType=CHAR},
+		   </if>
+		   <if test="status != null">
+		       STATUS = #{status,jdbcType=CHAR},
+		   </if>
+		   <if test="ip != null">
+		       IP = #{ip,jdbcType=CHAR},
+		   </if>
+		   <if test="staffId != null">
+		       STAFF_ID = #{staffId,jdbcType=VARCHAR},
+		   </if>
+		   <if test="staffName != null">
+		       STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+		   </if>
+		   <if test="certType != null">
+		       CERT_TYPE = #{certType,jdbcType=VARCHAR},
+		   </if>
+		   <if test="certNo != null">
+		       CERT_NO = #{certNo,jdbcType=VARCHAR},
+		   </if>
+		   <if test="mobile != null">
+		       MOBILE = #{mobile,jdbcType=VARCHAR},
+		   </if>
+		   <if test="department != null">
+		       DEPARTMENT = #{department,jdbcType=VARCHAR},
+		   </if>
+		   <if test="team != null">
+		       TEAM = #{team,jdbcType=VARCHAR},
+		   </if>
+		   <if test="post != null">
+		       POST = #{post,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocAuth != null">
+		       PBOC_AUTH = #{pbocAuth,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocAuthQuery != null">
+		       PBOC_AUTH_QUERY = #{pbocAuthQuery,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocAuthQueryTime != null">
+		       PBOC_AUTH_QUERY_TIME = #{pbocAuthQueryTime,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocDayQueryMaxCount != null">
+		       PBOC_DAY_QUERY_MAX_COUNT = #{pbocDayQueryMaxCount,jdbcType=VARCHAR},
+		   </if>
+		   <if test="pbocDaySearchMaxCount != null">
+		       PBOC_DAY_SEARCH_MAX_COUNT = #{pbocDaySearchMaxCount,jdbcType=VARCHAR},
+		   </if>
+		 </set>
+		 WHERE USER_ID = #{id,jdbcType=CHAR}
+	</update>
+	
+	<update id="updateByUser" parameterType="User">
+		UPDATE SYS_USER
+		<set>
+		   <if test="lastLoginTime != null">
+		       LAST_LOGIN_TIME = TO_DATE(#{lastLoginTime},'YYYY-MM-DD HH24:MI:SS'),
+		   </if>
+		   <if test="passwordExpireTime != null">
+		       PASS_EXPIRE_TIME = TO_DATE(#{passwordExpireTime},'YYYY-MM-DD HH24:MI:SS'),
+		   </if>
+		   <if test="password != null">
+		       USER_PASS = #{password},
+		   </if>
+		   <if test="firstLogin != null">
+		       FIRST_LOGIN = #{firstLogin},
+		   </if>
+		   <if test="status != null">
+		       STATUS = #{status},
+		   </if>
+		   <if test="ip != null">
+		       IP = #{ip},
+		   </if>
+		   <if test="staffId != null">
+		       STAFF_ID = #{staffId},
+		   </if>
+		   <if test="staffName != null">
+		       STAFF_NAME = #{staffName},
+		   </if>
+		   <if test="certType != null">
+		       CERT_TYPE = #{certType},
+		   </if>
+		   <if test="certNo != null">
+		       CERT_NO = #{certNo},
+		   </if>
+		   <if test="mobile != null">
+		       MOBILE = #{mobile},
+		   </if>
+		   <if test="department != null">
+		       DEPARTMENT = #{department},
+		   </if>
+		   <if test="team != null">
+		       TEAM = #{team},
+		   </if>
+		   <if test="post != null">
+		       POST = #{post},
+		   </if>
+		   <if test="pbocAuth != null">
+		       PBOC_AUTH = #{pbocAuth},
+		   </if>
+		   <if test="pbocAuthQuery != null">
+		       PBOC_AUTH_QUERY = #{pbocAuthQuery},
+		   </if>
+		   <if test="pbocAuthQueryTime != null">
+		       PBOC_AUTH_QUERY_TIME = #{pbocAuthQueryTime},
+		   </if>
+		   <if test="pbocDayQueryMaxCount != null">
+		       PBOC_DAY_QUERY_MAX_COUNT = #{pbocDayQueryMaxCount},
+		   </if>
+		   <if test="pbocDaySearchMaxCount != null">
+		       PBOC_DAY_SEARCH_MAX_COUNT = #{pbocDaySearchMaxCount},
+		   </if>
+		 </set>
+		 <where>
+		   <if test="userId != null">
+			   AND USER_ID = #{userId}
+		   </if>
+		   <if test="account != null">
+			   AND USER_ACCT = #{account}
+		   </if>
+	   	 </where>
+	</update>
+	<update id="updateForResetById" parameterType="java.util.Map">
+		UPDATE SYS_USER 
+		   SET USER_PASS = #{password},
+		       FIRST_LOGIN = #{firstLogin},
+		       LAST_LOGIN_TIME = NULL 
+		 WHERE USER_ID = #{id}
+	</update>
+	
+	<select id="selectByUserAcct" parameterType="java.lang.String" resultMap="result_BaseUser">
+		SELECT USER_ID,USER_ACCT,USER_PASS,STATUS,IP,FIRST_LOGIN,TO_CHAR(LAST_LOGIN_TIME, 'YYYY-MM-DD HH24:MI:SS') LAST_LOGIN_TIME,TO_CHAR(PASS_EXPIRE_TIME, 'YYYY-MM-DD HH24:MI:SS') PASS_EXPIRE_TIME,STAFF_ID,STAFF_NAME,CERT_TYPE,CERT_NO,MOBILE,DEPARTMENT,TEAM,POST,PBOC_AUTH,PBOC_AUTH_QUERY,PBOC_AUTH_QUERY_TIME,PBOC_DAY_QUERY_MAX_COUNT,PBOC_DAY_SEARCH_MAX_COUNT
+		  FROM SYS_USER 
+		 WHERE USER_ACCT = #{account,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_BaseUser">
+		SELECT USER_ID,USER_ACCT,USER_PASS,STATUS,IP,FIRST_LOGIN,TO_CHAR(LAST_LOGIN_TIME, 'YYYY-MM-DD HH24:MI:SS') LAST_LOGIN_TIME,TO_CHAR(PASS_EXPIRE_TIME, 'YYYY-MM-DD HH24:MI:SS') PASS_EXPIRE_TIME,STAFF_ID,STAFF_NAME,CERT_TYPE,CERT_NO,MOBILE,DEPARTMENT,TEAM,POST,PBOC_AUTH,PBOC_AUTH_QUERY,PBOC_AUTH_QUERY_TIME,PBOC_DAY_QUERY_MAX_COUNT,PBOC_DAY_SEARCH_MAX_COUNT
+		  FROM SYS_USER 
+		 WHERE USER_ID = #{id,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectCountExistByKeyParam" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) 
+		  FROM SYS_USER 
+		 WHERE USER_ACCT = #{account,jdbcType=VARCHAR} 
+		    OR CERT_NO = #{certNo,jdbcType=VARCHAR}
+		    OR MOBILE = #{mobile,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectCountSameByKeyParam" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) 
+		  FROM SYS_USER 
+		 WHERE (CERT_NO = #{certNo,jdbcType=VARCHAR} 
+		    OR MOBILE = #{mobile,jdbcType=VARCHAR}) 
+		   AND USER_ACCT <![CDATA[ <> ]]> #{account,jdbcType=VARCHAR} 
+	</select>
+	
+</mapper>

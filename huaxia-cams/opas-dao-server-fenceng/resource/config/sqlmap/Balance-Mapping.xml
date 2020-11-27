@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Balance">
+
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="BalanceMoveResultMap" type="com.huaxia.opas.domain.sysparm.Balance">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PROD_CODE" property="prodCode" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+		<result column="MOVELIMITPER" property="moveLimitPer" jdbcType="NUMERIC" />
+		<result column="MAXLIMIT" property="maxLimit" jdbcType="NUMERIC" />
+		<result column="LOWLIMIT" property="lowLimit" jdbcType="NUMERIC" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryBalance" parameterType="com.huaxia.opas.domain.sysparm.Balance"
+		resultMap="BalanceMoveResultMap">
+		select
+		AUTO_ID,
+		PROD_CODE,
+		PROD_NAME,
+		MOVELIMITPER,
+		MAXLIMIT,
+		LOWLIMIT,
+		STATUS,
+		START_DATE,
+		STOP_DATE,
+		CRT_USER,
+		CRT_DATE,
+		LST_UPD_USER,
+		LST_UPD_DATE
+		from OPAS_BALANCE_MOVE
+		<where>
+			<if test="prodCode != null and prodCode !='' ">
+				AND PROD_CODE LIKE '%${prodCode}%'
+			</if>
+			<if test="prodName != null and prodName !='' ">
+				AND PROD_NAME LIKE '%${prodName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by PROD_CODE
+	</select>
+
+	<select id="queryBalanceCount" parameterType="com.huaxia.opas.domain.sysparm.Balance"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_BALANCE_MOVE
+		<where>
+			<if test="prodCode != null and prodCode !='' ">
+				AND PROD_CODE LIKE '%${prodCode}%'
+			</if>
+			<if test="prodName != null and prodName !='' ">
+				AND PROD_NAME LIKE '%${prodName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteBalance" parameterType="java.util.List">
+		delete from
+		OPAS_BALANCE_MOVE
+		where AUTO_ID in 
+		<foreach collection="list" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insertBalance" parameterType="com.huaxia.opas.domain.sysparm.Balance">
+		insert into
+		OPAS_BALANCE_MOVE
+		(AUTO_ID,
+		PROD_CODE,
+		PROD_NAME,
+		MOVELIMITPER,
+		MAXLIMIT,
+		LOWLIMIT,
+		STATUS,
+		START_DATE,
+		STOP_DATE,
+		CRT_USER,
+		CRT_DATE,
+		LST_UPD_USER,
+		LST_UPD_DATE)
+		values
+		(#{autoId,jdbcType=VARCHAR},
+		#{prodCode,jdbcType=VARCHAR},
+		#{prodName,jdbcType=VARCHAR},
+		#{moveLimitPer,jdbcType=VARCHAR},
+		#{maxLimit,jdbcType=VARCHAR},
+		#{lowLimit,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		CURRENT_TIMESTAMP,
+		#{lstUpUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateBalance" parameterType="com.huaxia.opas.domain.sysparm.Balance">
+		update OPAS_BALANCE_MOVE
+		<set>
+			<if test="prodCode != null">
+				PROD_CODE = #{prodCode,jdbcType=VARCHAR},</if>
+			<if test="prodName != null">
+				PROD_NAME = #{prodName,jdbcType=VARCHAR},</if>
+			<if test="moveLimitPer != null">
+				MOVELIMITPER = #{moveLimitPer,jdbcType=VARCHAR},</if>
+			<if test="maxLimit != null">
+				MAXLIMIT = #{maxLimit,jdbcType=VARCHAR},</if>
+			<if test="lowLimit != null">
+				LOWLIMIT = #{lowLimit,jdbcType=VARCHAR},</if>
+									
+			<if test="status != null">STATUS = #{status,jdbcType=CHAR},</if><!-- 当前状态,修改过的 -->	
+			LST_UPD_USER = #{lstUpUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<!-- 修改 -->
+	<update id="updateBalance2" parameterType="com.huaxia.opas.domain.sysparm.Balance">
+		update OPAS_BALANCE_MOVE
+		<set>
+			<if test="prodCode != null">
+				PROD_CODE = #{prodCode,jdbcType=VARCHAR},</if>
+			<if test="prodName != null">
+				PROD_NAME = #{prodName,jdbcType=VARCHAR},</if>
+			<if test="moveLimitPer != null">
+				MOVELIMITPER = #{moveLimitPer,jdbcType=VARCHAR},</if>
+			<if test="maxLimit != null">
+				MAXLIMIT = #{maxLimit,jdbcType=VARCHAR},</if>
+			<if test="lowLimit != null">
+				LOWLIMIT = #{lowLimit,jdbcType=VARCHAR},</if>
+									
+			<if test="status != null">STATUS = #{status,jdbcType=CHAR},</if><!-- 当前状态,修改过的 -->		
+			<!-- 未修改的当前状态和修改后的当前状态进行对比，不一样的情况下，执行下面代码 -->		
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+
+	<!-- 批量启用 -->
+	<update id="setBalanceStatusOK" parameterType="com.huaxia.opas.domain.sysparm.Balance">
+		update OPAS_BALANCE_MOVE
+		<set>
+			STATUS = '1',
+			START_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<!-- 批量禁用 -->
+	<update id="setBalanceStatusNO" parameterType="com.huaxia.opas.domain.sysparm.Balance">
+		update OPAS_BALANCE_MOVE
+		<set>
+			STATUS = '0',
+			STOP_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 根据id进行查询 -->
+	
+
+	<select id="findByid" parameterType="java.lang.String"
+		resultMap="BalanceMoveResultMap">
+		select AUTO_ID,
+		PROD_CODE,
+		PROD_NAME,
+		MOVELIMITPER,
+		MAXLIMIT,
+		LOWLIMIT,
+		STATUS,
+		START_DATE,
+		STOP_DATE,
+		CRT_USER,
+		CRT_DATE,
+		LST_UPD_USER,
+		LST_UPD_DATE
+		 from OPAS_BALANCE_MOVE WHERE AUTO_ID = #{id,jdbcType=VARCHAR}
+		
+	</select>
+	
+	
+	<select id ="queryBalanceCountByProCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(PROD_CODE) from OPAS_BALANCE_MOVE where PROD_CODE = #{prodCode}
+	</select>
+</mapper>

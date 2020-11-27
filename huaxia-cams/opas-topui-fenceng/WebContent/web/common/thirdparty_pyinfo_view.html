@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>深圳社会保险信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding: 10px;">
+	<fieldset>
+		<legend>深圳社会保险信息</legend>
+		<form id="pyInfoForm" style="width: 100%">
+			<div>
+				<fieldset>
+					<legend>
+						<span style="font-weight: bold">鹏元个人信用报告</span>
+					</legend>
+					<table style="width: 100%">
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;姓名：<input name="name" id="name" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>证件号码：<input name="documentNo" id="documentNo" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>性别：<input name="gender" id="gender" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;户籍状况：<input
+								name="registeredStatus" id="registeredStatus" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>电脑号：<input name="insuranceNo" id="insuranceNo" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>当前状态：<input name="currentStatus" id="currentStatus" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>参保日期：<input name="startDate" id="startDate" type="text"
+								style="border: none; text-align: left;" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;最近申报缴费基数：<input name="insurePay"
+								id="insurePay" type="text" style="border: none; text-align: left;" /></td>
+							<td>最近实际缴费基数：<input name="factInsurePay" id="factInsurePay" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>最近一次缴保的单位名称：<input name="lastUnitName" id="lastUnitName" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>参保单位类型：<input name="unitType" id="unitType"
+								type="text" style="border: none; text-align: left;" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;单位参保人数：<input name="unitPersonCount"
+								id="unitPersonCount" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>兼职单位数：<input name="pluralityCount" id="pluralityCount"
+								type="text" style="border: none; text-align: left;" /></td>
+							<td>养老保险参保情况：<input name="endowmentState" id="endowmentState" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>医疗保险参保情况：<input name="hospitalState" id="hospitalState" type="text"
+								style="border: none; text-align: left;" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;生育险参保情况：<input name="bearingState"
+								id="bearingState" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>工伤保险参保情况：<input name="injureState" id="injureState"
+								type="text" style="border: none; text-align: left;" /></td>
+							<td>失业保险参保情况：<input name="idlenessState" id="idlenessState"
+								type="text" style="border: none; text-align: left;" /></td>
+							<td>养老保险专户余额：<input name="endowmentAmount" id="endowmentAmount" type="text"
+								style="border: none; text-align: left;" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;医疗保险专户余额：<input name="hospitalAmount"
+								id="hospitalAmount" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>信息获取日期：<input name="infoDate" id="infoDate"
+								type="text" style="border: none; text-align: left;" /></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+		
+		</form>
+		<h5>兼职单位信息</h5>
+		<div id="pluralityUnitInfo" ></div>
+		<h5>近60个月内参保历史信息表</h5>
+		<div id="historyInfo5Year" ></div>
+		<h5>近60个月内参保信息汇总表</h5>
+		<div id="summaryInfo5Year" ></div>
+
+	</fieldset>
+</body>
+<script>
+	function GetQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+	var pyInfoForm = $("#pyInfoForm");
+	var appId = GetQueryString("appId");
+	$(function() {
+		$cf.ajax({
+			data : {
+				"appId" : appId
+			},
+			url : "/opas-naps/queryPyInfo.json",
+			onSuccess : function(res) {
+				var jsonPyInfo = res.RSP_BODY.pyInfo;
+				var pyInfo = eval('(' + jsonPyInfo + ')');
+				console.log(pyInfo)
+				$('#name').val(pyInfo.name);
+				$('#documentNo').val(pyInfo.documentNo);
+				$('#insuranceNo').val(pyInfo.insuranceNo);
+				$('#currentStatus').val(pyInfo.currentStatus);
+				$('#startDate').val(pyInfo.startDate);
+				$('#insurePay').val(pyInfo.insurePay);
+				$('#factInsurePay').val(pyInfo.factInsurePay);
+				$('#lastUnitName').val(pyInfo.lastUnitName);
+				$('#unitPersonCount').val(pyInfo.unitPersonCount);
+				$('#pluralityCount').val(pyInfo.pluralityCount);
+				$('#infoDate').val(pyInfo.infoDate);
+				$('#endowmentAmount').val(pyInfo.endowmentAmount);
+				$('#hospitalAmount').val(pyInfo.hospitalAmount);
+				$('#unitType').val(pyInfo.unitType);
+				//性别
+				var gender = pyInfo.gender;
+				if (gender == '1') {
+					$('#gender').val("男");
+				} else if (gender == '2') {
+					$('#gender').val("女");
+				} else {
+					$('#gender').val("不详");
+				}
+				
+				//户籍
+				var registeredStatus = pyInfo.registeredStatus;
+				if (registeredStatus == '1') {
+					$('#registeredStatus').val("男");
+				} else if (gender == '2') {
+					$('#registeredStatus').val("女");
+				} else {
+					$('#registeredStatus').val("不详");
+				}
+				//当前状态currentStatus
+				//户籍
+				/* var currentStatus = pyInfo.currentStatus;
+				if (currentStatus == '1') {
+					$('#currentStatus').val("正使用");
+				} else if (currentStatus == '2') {
+					$('#currentStatus').val("正式销户");
+				} else if (currentStatus == '3'){
+					$('#currentStatus').val("有效期到期销户");
+				} else if (currentStatus == '4'){
+					$('#currentStatus').val("预约销户");
+				} else if (currentStatus == '5'){
+					$('#currentStatus').val("欠费销户");
+				} else if (currentStatus == '6'){
+					$('#currentStatus').val("强制退网");
+				} else if (currentStatus == '7'){
+					$('#currentStatus').val("回退（注销）");
+				} else if (currentStatus == '8'){
+					$('#currentStatus').val("已转换品牌");
+				} else if (currentStatus == '9'){
+					$('#currentStatus').val("临时生成资料");
+				} else if (currentStatus == '10'){
+					$('#currentStatus').val("停机");
+				} else if (currentStatus == '11'){
+					$('#currentStatus').val("半停");
+				} else if (currentStatus == '12'){
+					$('#currentStatus').val("全停");
+				} else if (currentStatus == '13'){
+					$('#currentStatus').val("欠费停用");
+				} else if (currentStatus == '14'){
+					$('#currentStatus').val("欠费呼出限制");
+				} else if (currentStatus == '15'){
+					$('#currentStatus').val("欠费长途限制");
+				}else if (currentStatus == '16'){
+					$('#currentStatus').val("欠费国际长途限制");
+				}else if (currentStatus == '17'){
+					$('#currentStatus').val("申请报停");
+				}else if (currentStatus == '18'){
+					$('#currentStatus').val("销户订单处理中");
+				}else if (currentStatus == '19'){
+					$('#currentStatus').val("集团预约销户");
+				}else if (currentStatus == '20'){
+					$('#currentStatus').val("集团产品停用");
+				}else{
+					$('#currentStatus').val("其他");
+				} */
+				//参保单位类型
+				
+				//养老保险参保情况
+				$('#endowmentState').val(formatStatus(pyInfo.endowmentState));
+				
+				//医疗保险参保情况
+				$('#hospitalState').val(formatStatus(pyInfo.hospitalState));
+				
+				//医疗缴费类别
+				
+				//生育险参保情况
+				$('#bearingState').val(formatStatus(pyInfo.bearingState));
+				
+				//工伤保险参保情况
+				//var injureState = pyInfo.injureState;
+				$('#injureState').val(formatStatus(pyInfo.injureState));
+				
+				//失业保险参保情况
+				$('#idlenessState').val(formatStatus(pyInfo.idlenessState));
+				
+			}
+		});
+		/**
+		 *兼职单位信息，一个兼职单位对应一个item  PY_PCR_CRS_CRT_SISZ2_PUI
+		 */
+		$cf.ajax({
+			url : '/opas-naps/queryPluralityUnitInfo.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.pyInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "兼职单位名称", '30%', "1");
+					createInputInTd(td, "参保单位类型", '35%', "1");
+					createInputInTd(td, "信息获取日期", '32%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["unitName"], '30%', "0");
+						createInputInTd(td, needDataInt2["unitType"], '35%', "0");
+						createInputInTd(td, needDataInt2["infoDate"], '32%', "0");
+					}
+					$('#pluralityUnitInfo').html(table); //
+				}
+			}
+		}); 
+		/**
+		 *最近5年每月参保记录 PY_PCR_CRS_CRT_SISZ2_HI5Y
+		 */
+		$cf.ajax({
+			url : '/opas-naps/queryHistoryInfo5Year.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.pyInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "单位名称", '20%', "1");
+					createInputInTd(td, "参保单位类型", '7%', "1");
+					createInputInTd(td, "参保种类", '5%', "1");
+					createInputInTd(td, "参保开始日期", '7%', "1");
+					createInputInTd(td, "参保结束日期", '7%', "1");
+					createInputInTd(td, "上述时间段内各月的参保情况(0表示没有参保，1表示正常参保)", '50%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["unitName"],'20%', "0");
+						createInputInTd(td,needDataInt2["unitType"], '7%',"0");
+						createInputInTd(td,formatUnitType(needDataInt2["insuranceType"]),'5%', "0");
+						createInputInTd(td,needDataInt2["startDate"], '7%',"0");
+						createInputInTd(td,needDataInt2["endDate"],'7%', "0");
+						createInputInTd(td, needDataInt2["insuranceState"],'50%', "0");
+					}
+					$('#historyInfo5Year').html(table); // 
+				}
+			}
+		});
+		
+		/**
+		 *最近5年参保信息汇总   PY_PCR_CRS_CRT_SISZ2_SI5Y
+		 */
+	 	$cf.ajax({
+			url : '/opas-naps/querySummaryInfo5Year.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.pyInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "最近12个月累计参保次数", '10%', "1");
+					createInputInTd(td, "最近24个月累计参保次数", '10%', "1");
+					createInputInTd(td, "最近36个月累计参保次数", '12%', "1");
+					createInputInTd(td, "最近48个月累计参保次数", '15%', "1");
+					createInputInTd(td, "最近60个月累计参保次数", '15%', "1");
+					createInputInTd(td, "60个月内最近连续参保次数", '15%', "1");
+					createInputInTd(td, "最近60个月参保单位总数，不含兼职单位", '18%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["timesRecently12Months"],'10%', "0");
+						createInputInTd(td, needDataInt2["timesRecently24Months"],'10%', "0");
+						createInputInTd(td,needDataInt2["timesRecently36Months"], '12%', "0");
+						createInputInTd(td, needDataInt2["timesRecently48Months"],'15%', "0");
+						createInputInTd(td, needDataInt2["timesRecently60Months"],'15%', "0");
+						createInputInTd(td, needDataInt2["stRecently60Months"],'15%', "0");
+						createInputInTd(td, needDataInt2["ucRecently60Months"],'18%', "0");
+					}
+					$('#summaryInfo5Year').html(table); // 
+				}
+			}
+		});
+		
+	});
+
+	/*在指定td标签 创建input标签 并赋值 */
+	function createInputInTd(td, value, width, fontType) {
+		td.style.width = width;
+		var input = document.createElement("input");
+		input.type = 'text';
+		if (value) {
+			var val = value.toString().split("|");
+			input.value = val[val.length - 1];
+		} else {
+			input.value = "";
+		}
+		input.style.width = width;
+		input.style.fontSize = '12px';
+		input.style.textAlign = 'center';
+		if (fontType == "1") {
+			input.style.fontWeight = 'bold';
+		}
+		if (fontType == "0") {
+			input.style.color = 'blue';
+		}
+		input.readOnly = 'readOnly';
+		td.appendChild(input);
+	}
+	/*在指定td标签 创建Div标签 并赋值 */
+	function createDivInTd(td, value, width, fontType) {
+		td.style.width = width;
+		var div = document.createElement("div");
+		div.style.class = "word-wrap:break-word;overflow:hidden;"
+		div.style.fontSize = '12px';
+		if (value) {
+			var textNode = document.createElement('p');
+			textNode.innerHTML = value;
+			div.appendChild(textNode);
+		} else {
+			//div.appendChild(document.createTextNode(""+typeValue));
+		}
+		/* input.style.width=width;
+		input.style.fontSize='12px';
+		input.style.textAlign='center'; */
+		if (fontType == "1") {
+			div.style.fontWeight = 'bold';
+			div.style.color = 'black';
+		}
+		if (fontType == "0") {
+			div.style.color = 'blue';
+		}
+		div.readOnly = 'readOnly';
+		td.appendChild(div);
+	}
+	
+	function formatStatus(value){
+		if (value == '0') {
+			return "不参加";
+		} else if (value == '1') {
+			return "参加";
+		} else {
+			return "不详";
+		}
+	}
+	
+	
+	function formatUnitType(value){
+		console.log(value)
+		if(value=="0"){
+			return "没有参保";
+		}else if (value=="1"){
+			return "正常参保";
+		}else {
+			return "";
+		}
+	}
+</script>
+</html>

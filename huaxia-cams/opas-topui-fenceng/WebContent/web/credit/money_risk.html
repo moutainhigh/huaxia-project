@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>洗钱风险名单查询</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	//查询
+	function onSearch(){
+		var fullName = $("#fullName").val();
+		var cardType = $("#cardType").val();
+		var cardNo = $("#cardNo").val();
+		if (cardNo==""||cardNo=="undefined") {
+			alert("请输入 证件号码!");
+			return;
+		}
+		if (cardType==""|| cardType=="undefined") {
+			alert("请输入 证件类型!");
+			return;
+		}
+		if (fullName==""||fullName=="undefined") {
+			alert("请输入 姓名!");
+			return;
+		}
+		$cf.ajax({
+			url : '/opas-naps/queryT5eEsMiddle.json', 
+			data : {
+				cardType:cardType,
+				cardNo:cardNo,
+				fullName:fullName
+			},onSuccess : function(data) {
+				if (data.RSP_BODY.success) { 
+					var moneyRisk = data.RSP_BODY.t5eEsMiddle;
+					$('#moneyRiskForm').form("load", moneyRisk);
+					alert("查询成功！");
+				} else {
+					alert("无数据！");
+				}
+			}
+		}); 
+	}
+	
+	
+	//转换数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			if(objValue.indexOf('"') != -1){
+				objValue = objValue.replace(/\"/g,"\\"+"\""); 
+			} 
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">洗钱风险名单查询</legend>
+	<form id="moneyRiskForm">
+		<table id="moneyRiskTable" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td>姓名:</td>
+	  			<td><input id="fullName" name="fullName" type="text" style="width:240px"></input></td>
+	  			<td>证件号:</td>
+	  			<td><input id="cardNo" name="cardNo" type="text" style="width:240px"></input></td>
+	  			<td>证件类型：</td><td><select style="width:240px" name="cardType" id="cardType">
+                        <option value="">请选择</option>
+                        <option value="51">身份证</option>
+                        <option value="52">护照</option>
+                        <option value="01">其他</option>
+                       	</select>
+                </td>
+	  			<td><input onclick="onSearch()" value="查询" type="button" class="alsp" style="width:100px;"/></td>
+			</tr>
+			<tr>
+				<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+			</tr>
+			<tr>
+				<td>档案唯一ID:</td>
+				<td><input id="id" name="id" type="text" style="width:240px"></input></td>
+				<td>档案类型:</td>
+				<td><input id="ei" name="ei" type="text" style="width:240px"></input></td>
+				<td>分类:</td>
+				<td><input id="category" name="category" type="text" style="width:240px"></input></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>更新类型:</td>
+				<td><input id="updateCategory" name="updateCategory" type="text" style="width:240px"></input></td>
+				<td>子分类:</td>
+				<td><input id="subCategory" name="subCategory" type="text" style="width:240px"></input></td>
+				<td>更新日期:</td>
+				<td><input id="updated" name="updated" type="text" style="width:240px"></input></td>
+				<td></td>
+			</tr>
+	  		<tr>
+				<td>职位:</td>
+				<td><input id="position" name="position" type="text" style="width:240px"></input></td>
+				<td>头衔:</td>
+				<td><input id="title" name="title" type="text" style="width:240px"></input></td>
+				<td>出生地址:</td>
+				<td><input id="placeOfBirth" name="placeOfBirth" type="text" style="width:240px"></input></td>
+				<td></td>
+			</tr>
+	  		<tr>
+				<td>出生日期:</td>
+				<td><input id="dob" name="dob" type="text" style="width:240px"></input></td>
+				<td>死亡日期:</td>
+				<td><input id="deceased" name="deceased" type="text" style="width:240px"></input></td>
+				<td>国籍:</td>
+				<td><input id="countries" name="countries" type="text" style="width:240px"></input></td>
+				<td></td>
+			</tr>
+	  		<tr>
+				<td>名单来源:</td>
+				<td><input id="listSource" name="listSource" type="text" style="width:240px"></input></td>
+				<td>护照号码:</td>
+				<td><input id="passportsNo" name="passportsNo" type="text" style="width:240px"></input></td>
+				<td>全名:</td>
+				<td><input id="fullName" name="fullName" type="text" style="width:240px"></input></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

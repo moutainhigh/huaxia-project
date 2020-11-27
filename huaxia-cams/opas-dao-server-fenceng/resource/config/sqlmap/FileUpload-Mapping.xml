@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FileUpload">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.system.FileUpload">
+		<id column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
+		<result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
+		<result column="FILE_PATH" jdbcType="VARCHAR" property="filePath" />
+		<result column="BIG_CATEGORY" jdbcType="VARCHAR" property="bigCategory" />
+		<result column="SMALL_CATEGORY" jdbcType="VARCHAR" property="smallCategory" />
+		<result column="FILE_DESCRIBE" jdbcType="VARCHAR" property="fileDescribe" />
+		<result column="RIGHT_CONTROL" jdbcType="VARCHAR" property="rightControl" />
+		<result column="UPLOAD_DATE" jdbcType="TIMESTAMP" property="uploadDate" />
+		<result column="OPERAT_CODE" jdbcType="VARCHAR" property="operatCode" />
+		<result column="OPERAT_PERSON" jdbcType="VARCHAR" property="operatPerson" />
+	</resultMap>
+	<!-- <sql id="Base_Column_List"> FILE_ID, FILE_NAME, FILE_PATH, BIG_CATEGORY, 
+		SMALL_CATEGORY, FILE_DESCRIBE, RIGHT_CONTROL, UPLOAD_DATE, OPERAT_CODE, OPERAT_PERSON 
+		</sql> -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		FILE_ID, FILE_NAME, FILE_PATH, BIG_CATEGORY, SMALL_CATEGORY, FILE_DESCRIBE,
+		RIGHT_CONTROL,
+		UPLOAD_DATE, OPERAT_CODE, OPERAT_PERSON
+		from OPAS_FILE_UPLOAD
+		where FILE_ID = #{fileId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByFileName" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		FILE_ID, FILE_NAME, FILE_PATH, BIG_CATEGORY, SMALL_CATEGORY, FILE_DESCRIBE,
+		RIGHT_CONTROL,
+		UPLOAD_DATE, OPERAT_CODE, OPERAT_PERSON
+		from OPAS_FILE_UPLOAD
+		where FILE_NAME = #{fileName,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_FILE_UPLOAD
+		where FILE_ID = #{fileId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.system.FileUpload">
+		insert into OPAS_FILE_UPLOAD (FILE_ID, FILE_NAME, FILE_PATH,
+		BIG_CATEGORY, SMALL_CATEGORY, FILE_DESCRIBE,
+		RIGHT_CONTROL, UPLOAD_DATE, OPERAT_CODE,
+		OPERAT_PERSON)
+		values (#{fileId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+		#{filePath,jdbcType=VARCHAR},
+		#{bigCategory,jdbcType=VARCHAR}, #{smallCategory,jdbcType=VARCHAR}, #{fileDescribe,jdbcType=VARCHAR},
+		#{rightControl,jdbcType=VARCHAR}, #{uploadDate,jdbcType=TIMESTAMP},
+		#{operatCode,jdbcType=VARCHAR},
+		#{operatPerson,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.system.FileUpload">
+		insert into OPAS_FILE_UPLOAD
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fileId != null">
+				FILE_ID,
+			</if>
+			<if test="fileName != null">
+				FILE_NAME,
+			</if>
+			<if test="filePath != null">
+				FILE_PATH,
+			</if>
+			<if test="bigCategory != null">
+				BIG_CATEGORY,
+			</if>
+			<if test="smallCategory != null">
+				SMALL_CATEGORY,
+			</if>
+			<if test="fileDescribe != null">
+				FILE_DESCRIBE,
+			</if>
+			<if test="rightControl != null">
+				RIGHT_CONTROL,
+			</if>
+			<if test="uploadDate != null">
+				UPLOAD_DATE,
+			</if>
+			<if test="operatCode != null">
+				OPERAT_CODE,
+			</if>
+			<if test="operatPerson != null">
+				OPERAT_PERSON,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fileId != null">
+				#{fileId,jdbcType=VARCHAR},
+			</if>
+			<if test="fileName != null">
+				#{fileName,jdbcType=VARCHAR},
+			</if>
+			<if test="filePath != null">
+				#{filePath,jdbcType=VARCHAR},
+			</if>
+			<if test="bigCategory != null">
+				#{bigCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="smallCategory != null">
+				#{smallCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="fileDescribe != null">
+				#{fileDescribe,jdbcType=VARCHAR},
+			</if>
+			<if test="rightControl != null">
+				#{rightControl,jdbcType=VARCHAR},
+			</if>
+			<if test="uploadDate != null">
+				#{uploadDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatCode != null">
+				#{operatCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operatPerson != null">
+				#{operatPerson,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.system.FileUpload">
+		update OPAS_FILE_UPLOAD
+		<set>
+			<if test="fileName != null">
+				FILE_NAME = #{fileName,jdbcType=VARCHAR},
+			</if>
+			<if test="filePath != null">
+				FILE_PATH = #{filePath,jdbcType=VARCHAR},
+			</if>
+			<if test="bigCategory != null">
+				BIG_CATEGORY = #{bigCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="smallCategory != null">
+				SMALL_CATEGORY = #{smallCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="fileDescribe != null">
+				FILE_DESCRIBE = #{fileDescribe,jdbcType=VARCHAR},
+			</if>
+			<if test="rightControl != null">
+				RIGHT_CONTROL = #{rightControl,jdbcType=VARCHAR},
+			</if>
+			<if test="uploadDate != null">
+				UPLOAD_DATE = #{uploadDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatCode != null">
+				OPERAT_CODE = #{operatCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operatPerson != null">
+				OPERAT_PERSON = #{operatPerson,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where FILE_ID = #{fileId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.system.FileUpload">
+		update OPAS_FILE_UPLOAD
+		set FILE_NAME = #{fileName,jdbcType=VARCHAR},
+		FILE_PATH = #{filePath,jdbcType=VARCHAR},
+		BIG_CATEGORY = #{bigCategory,jdbcType=VARCHAR},
+		SMALL_CATEGORY = #{smallCategory,jdbcType=VARCHAR},
+		FILE_DESCRIBE = #{fileDescribe,jdbcType=VARCHAR},
+		RIGHT_CONTROL = #{rightControl,jdbcType=VARCHAR},
+		UPLOAD_DATE = #{uploadDate,jdbcType=TIMESTAMP},
+		OPERAT_CODE = #{operatCode,jdbcType=VARCHAR},
+		OPERAT_PERSON = #{operatPerson,jdbcType=VARCHAR}
+		where FILE_ID = #{fileId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryFileCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from opas_file_upload a
+		where 1=1
+			<if test="fileRightControl != null and fileRightControl !='' ">
+				AND a.SMALL_CATEGORY in (${fileRightControl})
+			</if>
+			<if test="fileName != null and fileName !='' ">
+				AND a.FILE_NAME LIKE '%${fileName}%'
+			</if>
+			<if test="bigCategory != null and bigCategory!='' ">
+				and a.BIG_CATEGORY = #{bigCategory,jdbcType=VARCHAR}
+			</if>
+			<if test="smallCategory != null and smallCategory !='' ">
+				AND a.SMALL_CATEGORY LIKE '%${smallCategory}%'
+				<!-- AND a.SMALL_CATEGORY = #{smallCategory} -->
+			</if>
+			<if test="uploadDateStr != null and uploadDateStr !='' ">
+				AND to_char(a.UPLOAD_DATE,'yyyy-MM-dd') = #{uploadDateStr}
+			</if>
+	</select>
+
+	<select id="queryFileList" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		select
+			FILE_ID, FILE_NAME, FILE_PATH, BIG_CATEGORY, SMALL_CATEGORY, FILE_DESCRIBE,
+			RIGHT_CONTROL,
+			UPLOAD_DATE, OPERAT_CODE, OPERAT_PERSON
+		from opas_file_upload a
+		where
+		1 = 1
+		<if test="fileRightControl != null and fileRightControl !='' ">
+			AND a.SMALL_CATEGORY in (${fileRightControl})
+		</if>
+		<if test="fileName != null and fileName !='' ">
+			AND a.FILE_NAME LIKE '%${fileName}%'
+		</if>
+		<if test="bigCategory != null and bigCategory !='' ">
+			and a.BIG_CATEGORY = #{bigCategory,jdbcType=VARCHAR}
+		</if>
+		<if test="smallCategory != null and smallCategory !='' ">
+			AND a.SMALL_CATEGORY LIKE '%${smallCategory}%'
+		</if>
+		<if test="uploadDateStr != null and uploadDateStr !='' ">
+			AND to_char(a.UPLOAD_DATE,'yyyy-MM-dd') = #{uploadDateStr}
+		</if>
+		order by UPLOAD_DATE desc
+	</select>
+</mapper>

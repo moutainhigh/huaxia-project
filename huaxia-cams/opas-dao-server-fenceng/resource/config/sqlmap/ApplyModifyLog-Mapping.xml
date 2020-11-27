@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApplyModifyLog">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+		<result column="FIELD_OLD_VALUE" property="fieldOldValue"
+			jdbcType="VARCHAR" />
+		<result column="FIELD_NEW_VALUE" property="fieldNewValue"
+			jdbcType="VARCHAR" />
+		<result column="IS_KEY_FIELD" property="isKeyField" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > AUTO_ID, APP_ID, FIELD_NAME, FIELD_OLD_VALUE, 
+		FIELD_NEW_VALUE, IS_KEY_FIELD, CRT_DATE, CRT_USER, LST_UPD_DATE, LST_UPD_USER 
+		</sql> -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, FIELD_NAME, FIELD_OLD_VALUE, FIELD_NEW_VALUE, IS_KEY_FIELD,
+		CRT_DATE,
+		CRT_USER, LST_UPD_DATE, LST_UPD_USER
+		from OPAS_APPLY_MODIFY_LOG
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectApplyLogByAppId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, FIELD_NAME, FIELD_OLD_VALUE, FIELD_NEW_VALUE, IS_KEY_FIELD,
+		CRT_DATE,CRT_USER, LST_UPD_DATE, LST_UPD_USER
+		from OPAS_APPLY_MODIFY_LOG
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_APPLY_MODIFY_LOG
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		insert into OPAS_APPLY_MODIFY_LOG (AUTO_ID, APP_ID,
+		FIELD_NAME,
+		FIELD_OLD_VALUE, FIELD_NEW_VALUE, IS_KEY_FIELD,
+		CRT_DATE, CRT_USER, LST_UPD_DATE,
+		LST_UPD_USER)
+		values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR},
+		#{fieldName,jdbcType=VARCHAR},
+		#{fieldOldValue,jdbcType=VARCHAR}, #{fieldNewValue,jdbcType=VARCHAR}, #{isKeyField,jdbcType=VARCHAR},
+		#{crtDate,jdbcType=TIMESTAMP}, #{crtUser,jdbcType=VARCHAR},
+		#{lstUpdDate,jdbcType=TIMESTAMP},
+		#{lstUpdUser,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		insert into OPAS_APPLY_MODIFY_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="fieldName != null">
+				FIELD_NAME,
+			</if>
+			<if test="fieldOldValue != null">
+				FIELD_OLD_VALUE,
+			</if>
+			<if test="fieldNewValue != null">
+				FIELD_NEW_VALUE,
+			</if>
+			<if test="isKeyField != null">
+				IS_KEY_FIELD,
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="crtUser != null">
+				CRT_USER,
+			</if>
+			<if test="lstUpdDate != null">
+				LST_UPD_DATE,
+			</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldName != null">
+				#{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldOldValue != null">
+				#{fieldOldValue,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldNewValue != null">
+				#{fieldNewValue,jdbcType=VARCHAR},
+			</if>
+			<if test="isKeyField != null">
+				#{isKeyField,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				#{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				#{crtUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdDate != null">
+				#{lstUpdDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lstUpdUser != null">
+				#{lstUpdUser,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		update OPAS_APPLY_MODIFY_LOG
+		<set>
+			<if test="appId != null">
+				APP_ID = #{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldName != null">
+				FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldOldValue != null">
+				FIELD_OLD_VALUE = #{fieldOldValue,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldNewValue != null">
+				FIELD_NEW_VALUE = #{fieldNewValue,jdbcType=VARCHAR},
+			</if>
+			<if test="isKeyField != null">
+				IS_KEY_FIELD = #{isKeyField,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				CRT_USER = #{crtUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdDate != null">
+				LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		update OPAS_APPLY_MODIFY_LOG
+		set APP_ID = #{appId,jdbcType=VARCHAR},
+		FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+		FIELD_OLD_VALUE = #{fieldOldValue,jdbcType=VARCHAR},
+		FIELD_NEW_VALUE = #{fieldNewValue,jdbcType=VARCHAR},
+		IS_KEY_FIELD = #{isKeyField,jdbcType=VARCHAR},
+		CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+		CRT_USER = #{crtUser,jdbcType=VARCHAR},
+		LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP},
+		LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<!-- 申请件信息修改 日志记录 jiangming.yang -->
+	<insert id="insertModifyLog" parameterType="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		insert into OPAS_APPLY_MODIFY_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="fieldName != null">
+				FIELD_NAME,
+			</if>
+			<if test="fieldOldValue != null">
+				FIELD_OLD_VALUE,
+			</if>
+			<if test="fieldNewValue != null">
+				FIELD_NEW_VALUE,
+			</if>
+			<if test="isKeyField != null">
+				IS_KEY_FIELD,
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="crtUser != null">
+				CRT_USER,
+			</if>
+			<if test="lstUpdDate != null">
+				LST_UPD_DATE,
+			</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER,
+			</if>
+			<if test="checkFlag != null">
+				CHECK_FLAG,
+			</if>
+			<if test="applyName != null">
+				APPLY_NAME,
+			</if>
+			<if test="cretifiType != null">
+				CRETIFI_TYPE,
+			</if>
+			<if test="cretifiId != null">
+				CRETIFI_ID,
+			</if>
+			<if test="flag != null">
+				FLAG,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldName != null">
+				#{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldOldValue != null">
+				#{fieldOldValue,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldNewValue != null">
+				#{fieldNewValue,jdbcType=VARCHAR},
+			</if>
+			<if test="isKeyField != null">
+				#{isKeyField,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				#{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				#{crtUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdDate != null">
+				#{lstUpdDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lstUpdUser != null">
+				#{lstUpdUser,jdbcType=VARCHAR},
+			</if>
+			<if test="checkFlag != null">
+				#{checkFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="applyName != null">
+				#{applyName,jdbcType=VARCHAR},
+			</if>
+			<if test="cretifiType != null">
+				#{cretifiType,jdbcType=VARCHAR},
+			</if>
+			<if test="cretifiId != null">
+				#{cretifiId,jdbcType=VARCHAR},
+			</if>
+			<if test="flag != null">
+				#{flag,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateApplyModify" parameterType="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		update OPAS_APPLY_MODIFY_LOG
+		<set>
+			<if test="fieldName != null">
+				FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldOldValue != null">
+				FIELD_OLD_VALUE = #{fieldOldValue,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldNewValue != null">
+				FIELD_NEW_VALUE = #{fieldNewValue,jdbcType=VARCHAR},
+			</if>
+			<if test="isKeyField != null">
+				IS_KEY_FIELD = #{isKeyField,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				CRT_USER = #{crtUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdDate != null">
+				LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR} and CHECK_FLAG = '0' and FIELD_NAME = #{fieldName,jdbcType=VARCHAR}
+	</update>
+	<select id="queryApplyModify" resultMap="BaseResultMap"
+		parameterType="com.huaxia.opas.domain.apply.ApplyModifyLog">
+		select AUTO_ID, APP_ID, FIELD_NAME, FIELD_OLD_VALUE, FIELD_NEW_VALUE 
+		from OPAS_APPLY_MODIFY_LOG
+		where 1=1 
+		<if test="fieldName != null and fieldName != ''">
+			and Field_name = #{fieldName,jdbcType=VARCHAR}
+		</if>
+		<if test="fieldOldValue != null ">
+			and FIELD_OLD_VALUE = #{fieldOldValue,jdbcType=VARCHAR}
+		</if>
+		AND CHECK_FLAG = '0'
+		and APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>	
+	<!-- wangtao 征信环节修改标准卡增强信息采集时插入申请信息日志表 -->
+	<insert id="insertinsertApplyModifyLogList" parameterType="java.util.List">
+		insert into OPAS_APPLY_MODIFY_LOG (FLAG,AUTO_ID, APP_ID,FIELD_NAME,FIELD_OLD_VALUE, FIELD_NEW_VALUE, 
+			IS_KEY_FIELD,CRT_DATE, CRT_USER, LST_UPD_DATE,LST_UPD_USER,CHECK_FLAG,APPLY_NAME,CRETIFI_TYPE,CRETIFI_ID) 
+		<foreach collection="list" item="applyModify" index="index"  separator="union all" >
+			(select
+			#{applyModify.flag,jdbcType=VARCHAR},
+			#{applyModify.autoId,jdbcType=VARCHAR},
+			#{applyModify.appId,jdbcType=VARCHAR},
+			#{applyModify.fieldName,jdbcType=VARCHAR},
+			#{applyModify.fieldOldValue,jdbcType=VARCHAR},
+			#{applyModify.fieldNewValue,jdbcType=VARCHAR},
+			#{applyModify.isKeyField,jdbcType=VARCHAR},
+			#{applyModify.crtDate,jdbcType=TIMESTAMP},
+			#{applyModify.crtUser,jdbcType=VARCHAR},
+			#{applyModify.lstUpdDate,jdbcType=TIMESTAMP},
+			#{applyModify.lstUpdUser,jdbcType=VARCHAR},
+			#{applyModify.checkFlag,jdbcType=VARCHAR},
+			#{applyModify.applyName,jdbcType=VARCHAR},
+			#{applyModify.cretifiType,jdbcType=VARCHAR},
+			#{applyModify.cretifiId,jdbcType=VARCHAR}
+			 from dual
+			)
+		</foreach>
+	</insert>
+</mapper>

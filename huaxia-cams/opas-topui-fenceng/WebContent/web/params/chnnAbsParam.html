@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblChnnAbs" title="渠道进件代码列表" class="easyui-datagrid" style="width: 98%"
+		       data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-manualnode-auth/queryChnnAbsParamList.json',loadMsg:'数据加载中.....',method:'get',toolbar:'#chnnAbsCondion'">
+			<thead>
+				<tr>
+					<th field="chnnAbsCodeId" width="5%" align="center" checkbox="true">渠道进件代码ID</th>
+					<th field="bankCode" width="8%" align="center">银行</th>
+					<th field="codeType" width="8%" align="center">代码类型</th>
+					<th field="codeVlu" width="8%" align="center">代码值</th>
+					<th field="mainDes" width="12%" align="center">主要说明</th>
+					<th field="briefDes" width="15%" align="center">简要说明</th>
+					<th field="codeVluDef" width="15%" align="center">代码值定义</th>	
+					<th field="operate" width="12%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="chnnAbsCondion" style="padding: 2px 5px;">
+			<form id="seachchnnAbsForm">
+				<a href="javascript:common.openWin('winAdd');"
+					class="easyui-linkbutton" iconCls="icon-add">新增
+				</a> 
+					银行: 
+					<input class="easyui-textbox" style="width: 110px" name="bankCode"
+					id="bankCode">
+					代码类型: 
+					<input class="easyui-textbox" style="width: 110px" name="codeType"
+					id="codeType"> 
+					代码值: 
+					<input class="easyui-textbox" style="width: 110px" name="codeVlu"
+					id="codeVlu"> 
+				<a
+					href="javascript:common.searchTbl('seachchnnAbsForm','tblChnnAbs');"
+					class="easyui-linkbutton" iconCls="icon-search">查询
+				</a>
+			</form>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="渠道进件代码修改"
+		style="width: 550px; height: 550px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="editForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">				
+						<tr>
+							<td align="right">银行:</td>
+							<td><input class="easyui-validatebox textbox" id="bankCode" 
+								type="text" name="bankCode" ></input>
+								<input type="hidden" name="chnnAbsCodeId" id="chnnAbsCodeId" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">代码类型:</td>
+							<td><input class="easyui-validatebox textbox" id="codeType" 
+								type="text" name="codeType" ></input>
+							</td>
+							<td align="right">代码值:</td>
+							<td><input class="easyui-validatebox textbox" id="codeVlu" 
+								type="text" name="codeVlu" ></input>
+							</td>
+						</tr>	
+						<tr>
+							<td align="right">主要说明:</td>
+							<td><textarea class="easyui-validatebox textbox" id="mainDes"  style="width: 150px; height: 50px"
+								type="text" name="mainDes" ></textarea>
+							</td>
+							<td align="right">简要说明:</td>
+							<td><textarea class="easyui-validatebox textbox" id="briefDes"  style="width: 150px; height: 50px"
+								type="text" name="briefDes" ></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">代码值定义:</td>
+							<td><textarea class="easyui-validatebox textbox" id="codeVluDef"  style="width: 150px; height: 50px"
+								type="text" name="codeVluDef" ></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">字符型参数1:</td>
+							<td><input class="easyui-validatebox textbox" id="charParam1" 
+								type="text" name="charParam1" ></input>
+							</td>
+							<td align="right">字符型参数2:</td>
+							<td><input class="easyui-validatebox textbox" id="charParam2" 
+								type="text" name="charParam2" ></input>
+							</td>
+						</tr>
+						
+						<tr>
+							<td align="right">数字型参数1:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam1" 
+								type="text" name="numParam1" ></input>
+							</td>
+							<td align="right">数字型参数2:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam2" 
+								type="text" name="numParam2" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">数字型参数3:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam3" 
+								type="text" name="numParam3" ></input>
+							</td>
+							<td align="right">数字型参数4:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam4" 
+								type="text" name="numParam4" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">数字型参数5:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam5" 
+								type="text" name="numParam5" ></input>
+							</td>
+							<td align="right">选项1:</td>
+							<td><input class="easyui-validatebox textbox" id="option1" 
+								type="text" name="option1" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项2:</td>
+							<td><input class="easyui-validatebox textbox" id="option2" 
+								type="text" name="option2" ></input>
+							</td>
+							<td align="right">选项3:</td>
+							<td><input class="easyui-validatebox textbox" id="option3" 
+								type="text" name="option3" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项4:</td>
+							<td><input class="easyui-validatebox textbox" id="option4" 
+								type="text" name="option4" ></input>
+							</td>
+							<td align="right">选项5:</td>
+							<td><input class="easyui-validatebox textbox" id="option5" 
+								type="text" name="option5" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项6:</td>
+							<td><input class="easyui-validatebox textbox" id="option6" 
+								type="text" name="option6" ></input>
+							</td>
+							<td align="right">选项7:</td>
+							<td><input class="easyui-validatebox textbox" id="option7" 
+								type="text" name="option7" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项8:</td>
+							<td><input class="easyui-validatebox textbox" id="option8" 
+								type="text" name="option8" ></input>
+						</tr>
+					</table>
+					
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="渠道进件代码信息添加"
+		style="width: 550px; height: 550px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="addForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">银行:</td>
+							<td><input class="easyui-validatebox textbox" id="bankCode" 
+								type="text" name="bankCode" ></input>
+						</tr>
+						<tr>
+							<td align="right">代码类型:</td>
+							<td><input class="easyui-validatebox textbox" id="codeType" 
+								type="text" name="codeType" ></input>
+							</td>
+							<td align="right">代码值:</td>
+							<td><input class="easyui-validatebox textbox" id="codeVlu" 
+								type="text" name="codeVlu" ></input>
+							</td>
+						</tr>	
+						<tr>
+							<td align="right">主要说明:</td>
+							<td><textarea class="easyui-validatebox textbox" id="mainDes"  style="width: 150px; height: 50px"
+								type="text" name="mainDes" ></textarea>
+							</td>
+							<td align="right">简要说明:</td>
+							<td><textarea class="easyui-validatebox textbox" id="briefDes"  style="width: 150px; height: 50px"
+								type="text" name="briefDes" ></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">代码值定义:</td>
+							<td><textarea class="easyui-validatebox textbox" id="codeVluDef"  style="width: 150px; height: 50px"
+								type="text" name="codeVluDef" ></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">字符型参数1:</td>
+							<td><input class="easyui-validatebox textbox" id="charParam1" 
+								type="text" name="charParam1" ></input>
+							</td>
+							<td align="right">字符型参数2:</td>
+							<td><input class="easyui-validatebox textbox" id="charParam2" 
+								type="text" name="charParam2" ></input>
+							</td>
+						</tr>
+						
+						<tr>
+							<td align="right">数字型参数1:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam1" 
+								type="text" name="numParam1" ></input>
+							</td>
+							<td align="right">数字型参数2:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam2" 
+								type="text" name="numParam2" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">数字型参数3:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam3" 
+								type="text" name="numParam3" ></input>
+							</td>
+							<td align="right">数字型参数4:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam4" 
+								type="text" name="numParam4" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">数字型参数5:</td>
+							<td><input class="easyui-validatebox textbox" id="numParam5" 
+								type="text" name="numParam5" ></input>
+							</td>
+							<td align="right">选项1:</td>
+							<td><input class="easyui-validatebox textbox" id="option1" 
+								type="text" name="option1" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项2:</td>
+							<td><input class="easyui-validatebox textbox" id="option2" 
+								type="text" name="option2" ></input>
+							</td>
+							<td align="right">选项3:</td>
+							<td><input class="easyui-validatebox textbox" id="option3" 
+								type="text" name="option3" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项4:</td>
+							<td><input class="easyui-validatebox textbox" id="option4" 
+								type="text" name="option4" ></input>
+							</td>
+							<td align="right">选项5:</td>
+							<td><input class="easyui-validatebox textbox" id="option5" 
+								type="text" name="option5" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项6:</td>
+							<td><input class="easyui-validatebox textbox" id="option6" 
+								type="text" name="option6" ></input>
+							</td>
+							<td align="right">选项7:</td>
+							<td><input class="easyui-validatebox textbox" id="option7" 
+								type="text" name="option7" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">选项8:</td>
+							<td><input class="easyui-validatebox textbox" id="option8" 
+								type="text" name="option8" ></input>
+						</tr>
+					</table>
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>
+		        </div>
+				
+	</div>	
+
+</body>
+<script>
+	//$.parser.parse();
+	var tblChnnAbs = $("#tblChnnAbs");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editChnnAbsParam(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:deleteChnnAbsParam();>删除</a>";
+	}
+
+	function editChnnAbsParam() {
+		var orgObj = tblChnnAbs.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(orgObj)
+		});
+	}
+
+	function deleteChnnAbsParam() {
+		var orgObj = tblChnnAbs.datagrid("getSelected");
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-manualnode-auth/deleteChnnAbsParam.json",
+						data : orgObj,
+						onSuccess : function(orgObj) {
+							onConcle("save");
+							tblChnnAbs.datagrid("reload");
+						}
+					});
+				}
+			});
+	}
+
+	function setData(data) {
+		var jsondata = data;
+		var rstData;
+		$cf.ajax({
+			url : "/opas-manualnode-auth/getChnnAbsParamByChnnAbsCodeId.json",
+			async:false,
+			data : jsondata,
+			onSuccess : function(data) {
+				rstData = data.RSP_BODY.chnnAbsCodeParam;
+			}
+		});
+
+		editForm.form("load", rstData);
+		$("#id").attr("readonly", "readonly");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-manualnode-auth/updateChnnAbsParam.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblChnnAbs.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		var paramData = isRequired('addForm');
+		$cf.ajax({
+			url : "/opas-manualnode-auth/addChnnAbsParam.json",
+			data : paramData,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblChnnAbs.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+	
+
+</script>

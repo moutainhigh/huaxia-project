@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opaspbocqueryreclmrecsum">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opaspbocqueryreclmrecsum">
+    <result column="INSIDE_APP_NO" jdbcType="CHAR" property="insideAppNo" />
+    <result column="QRY_REASON" jdbcType="VARCHAR" property="qryReason" />
+    <result column="SUM" jdbcType="VARCHAR" property="sum" />
+    <result column="CRT_TIME" jdbcType="VARCHAR" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="DATE" property="lstUpdTime" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="CHAR" property="recStatus" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+  </resultMap>
+ 
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.Opasbizinpapplc1" resultMap="BaseResultMap">
+    select 
+    INSIDE_APP_NO, QRY_REASON, SUM, CRT_TIME, CRT_USER, LST_UPD_TIME, LST_UPD_USER, BATCH_DATE, 
+    REC_STATUS, APP_ID
+     from OPAS_PBOC_QUERYREC_LM_RECSUM
+      where APP_ID = #{appId,jdbcType=VARCHAR} order by CRT_TIME asc<!-- and substr (qry_reason,1,2) like '%02%' --><!-- 20191111 标准卡取贷款贷记卡修改 -->
+  </select>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opaspbocqueryreclmrecsum">
+    insert into OPAS_PBOC_QUERYREC_LM_RECSUM (INSIDE_APP_NO, QRY_REASON, SUM, 
+      CRT_TIME, CRT_USER, LST_UPD_TIME, 
+      LST_UPD_USER, BATCH_DATE, REC_STATUS, 
+      APP_ID)
+    values (#{insideAppNo,jdbcType=CHAR}, #{qryReason,jdbcType=VARCHAR}, #{sum,jdbcType=VARCHAR}, 
+      #{crtTime,jdbcType=VARCHAR}, #{crtUser,jdbcType=VARCHAR}, #{lstUpdTime,jdbcType=DATE}, 
+      #{lstUpdUser,jdbcType=VARCHAR}, #{batchDate,jdbcType=DATE}, #{recStatus,jdbcType=CHAR}, 
+      #{appId,jdbcType=CHAR})
+  </insert>
+ 
+</mapper>

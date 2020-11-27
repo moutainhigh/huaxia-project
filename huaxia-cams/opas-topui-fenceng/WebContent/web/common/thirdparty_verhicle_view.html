@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>车产信息结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding:10px;">
+	<div id="verhicleMessage" style="width:100%;">
+	  <fieldset style="font-size: 12px">
+		<legend>
+			<span  style="font-weight: bold">车辆核查信息</span>
+		</legend>
+		<form id="verhicle_check_info_form">
+			<table>
+				<tr>
+					<td>查询结果: <input name="queryResultChinese"
+						style="width: 220px" type="text" readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;有无车辆: <input name="quantityChinese"
+						style="width: 220px" type="text" readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td>价格范围: <input name="price" style="width: 220px"
+						type="text" readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;车龄范围: <input name="months"
+						style="width: 220px" type="text" readonly="readonly" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	  </fieldset>
+	</div>	
+</body>
+<script type="text/javascript">
+
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var appId = GetQueryString("appId");
+	$(function(){
+		
+		fnLoadVehicle(appId);
+	});
+	
+	//加载 车辆信息 
+	function fnLoadVehicle(appId) {
+		$cf.ajax({
+			url : '/opas-naps/queryVerhicleCheckInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					var formData = eval('(' + data.RSP_BODY.htmlMap + ')');
+					$('#verhicle_check_info_form').form("load", formData);
+				}
+			}
+		});
+	}
+
+</script>
+</html>

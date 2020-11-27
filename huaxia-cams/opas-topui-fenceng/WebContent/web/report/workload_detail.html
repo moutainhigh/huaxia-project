@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:20px;
+}
+.alsptwo{
+	font-family:"宋体";font-size:14px;font-weight:bold;
+}
+</style>
+</head>
+<body>
+<div id="workload_detail" style="width:100%;height:100%;">
+		
+	<div align='center' style="background-color:#00FFFF"><br><h3 align='center'>工作量明细表</h3></div> 
+	   		<form id="reportTypeForm">
+		 		<br><br><br>
+		 		
+		 		<div align='center'><label>选择时间</label>
+		 		<input id="startDate" name="startDate" class="easyui-datebox" style="width:100px;" 
+		 			data-options="required:true"/>
+		 		<!-- <input id="endDate" name="endDate" class="easyui-datebox" style="width:100px;"
+		 			data-options="required:true"/> -->
+				<input id="fileName" class="alsptwo" name="fileName" readonly='readonly'  style='border:0px; align:left;width:185px;'></input>
+			 	<a href="javascript:void(0)" onclick="report_interestRateDifferDetailList_downLoad()">工作量明细表下载</a>
+			 	</div>
+			</form>
+ 	</div>	
+</body>
+<script type="text/javascript">
+var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;	
+var reportTypeForm = $("#reportTypeForm");
+function report_interestRateDifferDetailList_downLoad(){
+	var jsondata = getFormData(reportTypeForm.serializeArray());
+	var startDate = jsondata.startDate;
+	/* var endDate = jsondata.endDate; */
+	
+	if(startDate==null||startDate==""){
+		alert("所选时间不能为空！");
+		return;
+	}
+	/* var hours = new Date().getHours();
+	var minutes = new Date().getMinutes();
+	if (((hours >= 8 && minutes >= 30) && (hours <=12))||((hours >=13)&&(hours<=18))) {
+		 alert("请勿在工作时间内下载报表！！！早八点半到十二点 下午一点到下午六点");
+		 return;
+	} */
+	var fileName = startDate + "~"+ startDate + ".zip"
+	$("#fileName").val(fileName);
+	location.href = "/opas-naps/common/WorkloadDetailDownLoadServlet.json?startDate="+startDate+"&endDate="+startDate
+			+"&fileName="+fileName+"&userCode="+userCode;
+
+	
+}
+
+function GetDateDiff(startDate,endDate) {
+	
+	var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+	var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+	var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+	return dates;
+}
+
+
+//获取表单数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+} 
+
+/* var src='/opas-naps/WorkloadDetailDownLoadServlet.json?currentDate='+currentDate+'&downStyle='+downStyle;
+	location.href=src;
+} */
+</script>
+
+</html>

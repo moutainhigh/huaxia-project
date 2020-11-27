@@ -1,0 +1,88 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.huaxia.opas.service" />
+	<context:component-scan base-package="com.huaxia.opas.dao" />
+
+	<context:component-scan base-package="com.huaxia.plaze.*.service" />
+	<context:component-scan base-package="com.huaxia.plaze.modules.*.service" />
+	
+	<!-- 联通 -->
+	<context:component-scan base-package="com.huaxia.cams.modules.*.service" />
+	
+	<!-- 三方模块引入依赖扫描包 -->
+	<context:component-scan base-package="com.huaxia.util" />
+	<context:component-scan base-package="com.huaxia.cams.webservice" />
+	<context:component-scan base-package="com.huaxia.support.cams.service" />
+	
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc-sit.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 加密算法配置 -->
+	<bean id="dataSourceProperties" class="com.huaxia.util.PropertiesEncryptFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="user">${jdbc.username}</prop>
+				<prop key="password">${jdbc.password}</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="properties" ref="dataSourceProperties" />
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+	    <property name="acquireIncrement" value="1" />
+	    <property name="maxPoolSize" value="100" />
+		<!-- 	<property name="initialPoolSize" value="5" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxStatements" value="100" />
+		<property name="testConnectionOnCheckout" value="true" /> -->
+		<property name="initialPoolSize" value="10"/>
+		<property name="minPoolSize" value="10" />
+		<!-- 定义从数据库获取新连接失败后，重复尝试的次数 -->
+		<property name="acquireRetryAttempts" value="10" />
+		<!-- 为true会导致连接池占满后不提供服务。所以必须为false -->
+	   	<property name="breakAfterAcquireFailure" value="false" />
+	   	<!-- 获取连接超时时间为60秒 -->
+		<property name="checkoutTimeout" value="60000" />
+	   	<!-- 每30秒检查一次空闲连接，加快释放连接 -->
+		<property name="idleConnectionTestPeriod" value="30" />
+		<!-- 10秒内不使用则释放连接 -->
+		<!-- <property name="maxIdleTime" value="10" /> -->
+		<!-- 连接回收超时时间  比maxIdleTime大-->
+		<!-- <property name="unreturnedConnectionTimeout" value="20" /> -->
+		<!-- 连接泄漏时打印堆栈信息 -->
+		<property name="debugUnreturnedConnectionStackTraces" value="true" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.huaxia.opas.mapper,com.huaxia.plaze.*.mapper,com.huaxia.plaze.modules.*.mapper,com.huaxia.support.cams.mapper,com.huaxia.cams.modules.*.mapper"/>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+</beans>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BizInpApplC1Sf">
+
+	<update id="updateCardC1SeaMemberId" parameterType="java.util.Map">
+	  UPDATE OPAS_BIZ_INP_APPL_C1 SET C4_BUEMB=#{seaMemberId},LST_UPD_TIME=SYSDATE,
+	  LST_UPD_USER=#{lstUpdUser}  WHERE APP_ID LIKE '${appId}%' AND (C4_BUEMB!=#{seaMemberId,jdbcType=VARCHAR} OR C4_BUEMB IS NULL)
+	</update>
+
+</mapper>

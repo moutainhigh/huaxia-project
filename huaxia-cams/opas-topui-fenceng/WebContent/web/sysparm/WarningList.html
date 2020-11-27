@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="padding: 10px;width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblWarningList" title="WarningList" class="easyui-datagrid"
+		style="width: 98%;height:100%"
+		data-options="pageSize:20,pageList:[15,20,50],rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,
+		url:'/opas-naps/querywarninglist.json',loadMsg:'数据加载中.....',
+		method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">Id</th>
+				<th field="riskType" width="10%" align="center">风险类型</th>
+				<th field="status" width="5%" align="center"
+					formatter="formatStatus">当前状态</th>
+				<th field="startDate" width="10%" align="center"
+					formatter="myformatDate" sortable="true">启用日期</th>
+				<th field="stopDate" width="10%" align="center"
+					formatter="myformatDate" sortable="true">禁用日期</th>
+				<th field="crtDate" width="10%" align="center"
+					formatter="myformatDate" sortable="true">创建日期</th>
+				<th field="crtUser" width="10%" align="center">创建人</th>
+				<th field="lstUpdDate" width="10%" align="center"
+					formatter="myformatDate" sortable="true">修改日期</th>
+				<th field="lstUpdUser" width="10%" align="center">修改人</th>
+				<th field="operate" width="10%" align="center"
+					data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion" 
+		 style="padding: 10px; text-align: laft;">
+		<!-- 查询按钮对应的窗口 -->
+		<form id="seachPositionCodeForm">
+			风险类型: <input class="easyui-textbox" style="width: 110px" name="riskType" id="riskType">
+			 当前状态: <select class="easyui-combobox" style="width: 80px"
+				id="status" name="status">
+				<option value="">请选择</option>
+				<option value="1">启用</option>
+				<option value="0">停用</option>
+			</select>
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblWarningList');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a href="javascript:common.openWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">新增</a>
+		</form>
+	</div>
+</div>
+	<!--修改窗口  -->
+	<div id="winEdit" class="easyui-window" title="WarnlingList修改"
+		style="width: 300px; height: 250px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>风险类型:</td>
+					<td><input class="easyui-validatebox textbox" 
+						id="riskType"  type="text"  name="riskType" data-options="required:true"
+						data-options="required:true,validType:'length[1,32]'"></input>
+						<input type="hidden" name="autoId" id="autoId" /></td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" 
+				onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+
+	<!--新增窗口  -->
+	<div id="winAdd" class="easyui-window" title="WarningList添加"
+		style="width: 300px; height: 250px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>风险类型:</td>
+					<!-- name属性和实体类中对应的属性名称保持一致 -->
+					<td>
+						<input class="easyui-validatebox textbox" id="riskType"	type="text" name="riskType" 
+						data-options="required:true,validType:'length[1,32]'"></input>
+						<input type="hidden" name="autoId" id="autoId" />
+					</td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+		</div>
+	</div>
+</body>
+
+<!-- 对应的js方法 -->
+<script>
+	//warning表单
+	var tblWarningList = $("#tblWarningList");
+	//修改
+	var editWindow = $("#winEdit");
+	//新增窗口
+	var addWindow = $("#winAdd");
+	//创建时间
+	var editForm = $("#editForm");
+	//添加表单
+	var addForm = $("#addForm");
+
+	var menuTree = $("#menuTree");
+	//操作超链接按钮设置
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editWarning();>修改</a>&nbsp;<a href=javascript:deleteWarning();>删除</a>";
+	}
+	
+	//设置当前状态
+	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	}
+
+	function addRole() {
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	//超链接修改按钮方法
+	function editWarning() {
+		var roleObj = tblWarningList.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(roleObj)
+		});
+	}
+
+	//超链接删除按钮方法
+	function deleteWarning() {
+		var roleObj = tblWarningList.datagrid("getSelected");
+
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/warning_remove.json",
+					data : roleObj,
+					onSuccess : function(roleObj) {
+
+						top.$cf.showMsg("删除成功！");
+
+						onConcle("save");
+						tblWarningList.datagrid("reload");
+					}
+				});
+			}
+		});
+	}
+
+	//设置日期的方法
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//修改日期格式
+	function myformatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+			}
+		}
+	
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+				+ second;
+	};
+	
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	//数据校验的方法
+	function checkData(jsondata , cue){
+		
+		if (jsondata.riskType == null || jsondata.riskType.trim().length <=0 ) {
+			$.messager.alert("操作提示", cue+"失败:风险类型不能为空!", "error");
+			return true;
+		}else if(jsondata.riskType.trim().length>32){
+			$.messager.alert("操作提示", cue+"失败:风险类型长度不能超过32个字符!", "error");
+			return true;
+		}
+		
+		if (jsondata.status != "1" && jsondata.status != "0" &&  jsondata.status != "") {
+			$.messager.alert("操作提示", cue+"失败:启用状态格式不正确!", "error");
+			return true;
+		}else if(jsondata.status == ""){
+			jsondata.status = "1";
+		}
+	}
+	
+	//修改按钮
+	function onUpdate() {
+		var warningListData = isRequired('editForm');
+		var jsondata = getFormData(editForm.serializeArray());
+		var cue = "修改";
+		if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/warning_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblWarningList.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.RSP_BODY.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//添加按钮的窗口方法
+	function onSave() {
+		var warningListData = isRequired('addForm');
+		var jsondata = getFormData(addForm.serializeArray());
+		var cue = "添加";
+		if(checkData(jsondata , cue)){
+					return;
+				}
+		$cf.ajax({
+			url : "/opas-naps/warning_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblWarningList.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+</script>

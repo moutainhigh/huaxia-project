@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<title>信息录入</title>
+<link href="../../topui/easyui/default/theme/default/easyui.16.3.6.css"
+	type="text/css" rel="stylesheet" />
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.min.js"></script>
+<script type="text/javascript"
+	src="../../topui/framework/framework.util.js"></script>
+<script type="text/javascript"
+	src="../../topui/easyui/default/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="../../topui/easyui/default/locale/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+input[type="button"] {
+	width: 150px;
+}
+
+button {
+	width: 102px;
+	height: 20px;
+}
+
+textarea {
+	border: 1px solid #C0C0C0;
+	outline: none;
+	-webkit-transition: .1s ease-in-out;
+	-moz-transition: .1s ease-in-out;
+	-o-transition: .1s ease-in-out;
+	background-color: #fff;
+}
+
+fieldset {
+	margin: 10px;
+}
+
+.area-view {
+	text-align: right;
+}
+
+.area-view caption {
+	padding: 5px 0;
+	text-align: center;
+	padding-left: 5px;
+	background: #ECECEC;
+}
+
+.area-view td label {
+	width: 90px;
+}
+
+.area-title {
+	height: 26px;
+	line-height: 26px;
+	background: #E0E0E0;
+	padding-left: 10px;
+}
+
+.accordion {
+	padding: 5px 10px;
+	background: #95B8E7;
+	vertical-align: middle;
+}
+
+.accordion label {
+	display: block;
+	font: bold 12px sans-serif;
+}
+</style>
+</head>
+<body>
+	<form id="infoCollForm">
+		<div title="行职业信息" class="accordion">
+			<label>行职业信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td align="center" style="width: 70px"><label align="left" style="width: 60px">行业代码：</label></td>
+					<td align="left" style="width: 200px"><input id="industryCode" type="text" name="industryCode"  
+						maxlength="3" style="width: 150px" /></td>
+					<td align="right"><label align="right" >职业代码：</label></td>
+					<td align="left"><input id="jobCode" type="text" name="jobCode" 
+						maxlength="2" style="width: 110px" /></td>
+				</tr>
+				<tr>
+					<td><input type="hidden" id="appId" name="appId" value="" /></td>
+				</tr>
+			</table>
+		</fieldset>
+
+		<div title="学历信息" class="accordion">
+			<label>学历信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+				<td style="width: 70px"><label style="width: 60px">学历类型：</label></td>
+					<td><select id="eduType" name="eduType" class="xx">
+					</select></td>
+					
+					<td>学习形式：</td>
+				    <td><input type="radio" value="0" name="eduModel">全日制 <input
+					type="radio" value="1" name="eduModel">非全日制</td>
+				</tr>
+			</table>	
+		</fieldset>
+		
+		<div title="社保信息" class="accordion">
+			<label>社保信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td><label>当前缴交状态：</label></td>
+					<td><input type="radio" name="sbCurrPayStatus" value="1">正常
+						<input type="radio" name="sbCurrPayStatus" value="0">非正常</td>
+					<td><label align="right" style="width: 110px;">月缴交金额：</label></td>
+					<td><input id="sbMonthPayment" name="sbMonthPayment"
+						type="text" style="width: 60px;" />（万元）</td>
+					<td align="right" ><label>参保日期：</label></td>
+					<td><input id="sbPayDate" name="sbPayDate" type="text"
+						class="easyui-datebox" style="width: 110px;" /></td>	
+				</tr>
+				<tr>
+				    <td><label>月缴交基数：</label></td>
+					<td style="width: 120px;"><input id="sbMonthPaybase" name="sbMonthPaybase"
+						type="text" style="width: 60px;">（万元）</td>
+						
+						<!-- <td><label align="right" >当前缴交单位：</label></td>
+					<td><input id="sbCurrPaycompany" name="sbCurrPaycompany"
+						type="text" style="width: 96px;"></td> -->
+						<td><label align="right" style="width: 110px;">是否第三方代缴：</label></td>
+					<td><input type="radio" value="1" name="thirdPartPay">是 <input
+						type="radio" value="0" name="thirdPartPay">否</td>
+					<td align="right" ><label align="right" style="width: 110px;">当前单位缴交月数：</label></td>
+					<td><input id="sbCurrCompanyMonth" name="sbCurrCompanyMonth"
+						type="text" style="width: 110px;"></td>
+				</tr>
+				
+			</table>
+		</fieldset>
+		
+		<div title="公积金信息" class="accordion">
+			<label>公积金信息</label>
+		</div>
+		
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td align="right" ><label align="right"  style="width: 110px;">公积金缴交状态：</label></td>
+					<td><select id="gjjPayStatus" name="gjjPayStatus"
+						class="xx" style="width: 100px;"></select></td>
+					<td align="right"><label align="right"  style="width: 110px;">公积金月缴交金额：</label></td>
+					<td><input id="gjjMonthPayment" name="gjjMonthPayment"
+						type="text" style="width: 40px;" />（万元）</td>	
+					<td><label>个人缴存比例：</label></td>
+					<td><input id="gjjPerPayrate" name="gjjPerPayrate" type="text"
+						style="width: 96px;" /></td>	
+				</tr>
+				
+				<tr>
+					<td align="right"><label>参缴日期：</label></td>
+					<td><input id="gjjPayDate" name="gjjPayDate" type="text" align="right" 
+						class="easyui-datebox" style="width: 110px;"></td>
+					<td align="right"><label>缴至月份：</label></td>
+					<td><input id="gjjEndMonth" name="gjjEndMonth" type="text"
+						class="easyui-datebox"
+						data-options="formatter:myformatter,parser:myparser"
+						style="width: 110px;"></td>
+				</tr>
+			</table>
+		</fieldset>
+		
+		<div title="房产信息" class="accordion">
+			<label>房产信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td><label>房产信息来源：</label></td>
+					<td><select id="houseInfoFrom" name="houseInfoFrom" style="width: 120px;" class="xx"></select></td>
+					<td><label>房产价值：</label></td>
+					<td><input id="houseCost" name="houseCost" type="text"
+						style="width: 60px;" />（万元）</td>
+					<td><label>房产面积：</label></td>
+					<td><input id="houseArea" type="text" 
+						name="houseArea" style="width: 60px;"/>（平米）</td>	
+				</tr>
+			</table>
+		</fieldset>
+		
+		<div title="车产信息" class="accordion">
+			<label>车产信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+				    <td><label>车辆性质：</label></td>
+					<!-- <td colspan="3"><input type="radio" name="carCategroy" value="0" />营运 -->
+					<td><input type="radio" name="carCategroy" value="0" />营运 
+					<input type="radio" name="carCategroy" value="1" />非营运</td>
+				    <td><label>车产价值：</label></td>
+					<td><input id="carCost" name="carCost" type="text"
+						style="width: 60px;" />（万元）</td>
+				    <td><label>车辆手别：</label></td>
+					<td><input type="radio" name="carHand" value="1" />一手
+						<input type="radio" name="carHand" value="2" />二手</td>
+				</tr>
+				<tr>
+					<td><label>注册日期：</label></td>
+					<td><input class="easyui-datebox" id="registerDate"
+						name="registerDate" type="text" style="width: 150px;" /></td>
+					<td><label>发证日期：</label></td>
+					<td><input class="easyui-datebox" id="issueDate"
+						name="issueDate" type="text" style="width: 96px;" /></td>
+					<td><label>车龄：</label></td>
+					<td><input type="text" id="carOld" name="carOld" type="text"
+						style="width: 60px;" />（年）</td>	
+				</tr>
+			</table>
+		</fieldset>
+
+        <div title="收入信息" class="accordion">
+			<label>收入信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>收入类型：</label></td>
+					<td><select id="salaryCategroy" name="salaryCategroy">
+					</select></td>
+					<td style="width: 90px;"><label>年收入：</label></td>
+					<td><input type="text" id="yearSalary" name="yearSalary"
+						type="text" style="width: 150px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset>
+		<div title="流动资产信息" class="accordion">
+			<label>流动资产信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>资产类型：</label></td>
+					<td><select id="balanceCategroy" name="balanceCategroy">
+					</select></td>
+					<td style="width: 90px;"><label>资产金额：</label></td>
+					<td><input type="text" id="balanceAcount" name="balanceAcount"
+						type="text" style="width: 150px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset>
+		
+		<div title="我行往来资产信息" class="accordion">
+			<label>我行往来资产信息</label>
+		</div>
+		
+		<fieldset>
+			<legend>
+				<label>a)个人客户</label>
+			</legend>
+			<table class="area-view">
+				<tr>
+					<td><label>最早开户日期：</label></td>
+					<td><input id="perOpendate" name="perOpendate" type="text"
+						class="easyui-datebox" style="width: 110px;" /></td>
+					<td style="width: 130px;><label style="width: 130px;">日均总资产余额(ADB)：</label></td>
+					<td><input id="perAssetBalance" name="perAssetBalance"
+						type="text" style="width: 60px;" />（万元）</td>
+					<td style="width: 130px;><label style="width: 130px;>金融资产可用总额：</label></td>
+					<td><input id="perFinAssetSum" name="perFinAssetSum"
+						type="text" style="width: 60px;" />（万元）</td>	
+				</tr>
+				
+				<tr>
+					<td><label>月代发工资额：</label></td>
+					<td><input id="perPayWage" name="perPayWage" type="text"
+						style="width: 60px;" />（万元）</td>
+					<td style="width: 110px;"><label style="width: 130px;">代发工资签约日期：</label></td>
+					<td><input id="salarySignDate" name="salarySignDate"
+						type="text" class="easyui-datebox" style="width: 110px;" /></td>	
+					<td style="width: 140px;><label style="width: 140px;>最近一次代发工资日期：</label></td>
+					<td><input id="salarySignLatestDate"
+						name="salarySignLatestDate" type="text" class="easyui-datebox"
+						style="width: 110px;" /></td>	
+				</tr>
+				<tr>
+					<td><label>贷款状态：</label></td>
+					<td><input type="radio" name="perLoanstatus" value="1" />正常 <input
+						type="radio" name="perLoanstatus" value="0" />非正常</td>
+					<td><label style="width: 130px;">贷款本金：</label></td>
+					<td><input id="perLoanpri" name="perLoanpri" type="text"
+						style="width: 60px;" />（万元）</td>	
+				</tr>
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend>
+				<label>b)对公客户</label>
+			</legend>
+			<table class="area-view">
+				<tr>
+					<td><label>最早开户日期：</label></td>
+					<td><input id="pubOpendate" name="pubOpendate" type="text"
+						class="easyui-datebox" style="width: 110px;"></td>
+					<td align="right"><label>授信额度：</label></td>
+					<td><input id="pubCreditlimit" name="pubCreditlimit"
+						type="text" style="width: 80px;" />（万元）</td>
+					<td><label style="width: 70px;" >贷款状态：</label></td>
+					<td><input type="radio" name="pubLoanstatus"
+						value="1" />正常 <input type="radio" name="pubLoanstatus" value="0" />非正常
+					</td>	
+				</tr>
+				<tr>
+					<td><label>对公存款余额：</label></td>
+					<td><input id="pubSavebalance" name="pubSavebalance"
+						type="text" style="width: 50px;" />（万元）</td>
+					<td style="width: 100px;"><label align="left" style="width: 110px;">对公存款日均余额：</label></td>
+					<td><input id="pubSaveDaybalance" name="pubSaveDaybalance"
+						type="text" style="width: 80px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset>
+		
+		<div title="单位信息" class="accordion">
+			<label>单位信息</label>
+	     </div>
+		<fieldset>
+			<table class="area-view">
+				<tr><td style="width: 110px;">是否个体：</td>
+					<td><input type="radio" value="1" name="individual">是 <input
+						type="radio" value="0" name="individual">否</td>
+					<td align="right" style="width: 90px;"><label>个体成立日期：</label></td>
+					<td><input id="individualMonth" name="individualMonth" type="text"
+						class="easyui-datebox" style="width: 90px;" /></td>
+				</tr>
+			</table>
+		</fieldset>
+	<!-- 	<div title="车产信息" class="accordion">
+			<label>车产信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td><label>车产价值：</label></td>
+					<td><input id="carCost" name="carCost" type="text"
+						style="width: 80px;" />（万元）</td>
+					<td><label>车辆手别：</label></td>
+					<td><input type="radio" name="carHand" value="1" />一手
+						<input type="radio" name="carHand" value="2" />二手</td>	
+					<td><label>车龄：</label></td>
+					<td><input type="text" id="carOld" name="carOld" type="text"
+						style="width: 80px;" />（年）</td>
+				</tr>
+				<tr>
+					<td><label>注册日期：</label></td>
+					<td><input class="easyui-datebox" id="registerDate"
+						name="registerDate" type="text" style="width: 150px;" /></td>
+					<td><label>发证日期：</label></td>
+					<td><input class="easyui-datebox" id="issueDate"
+						name="issueDate" type="text" style="width: 110px;" /></td>
+					<td><label>车辆性质：</label></td>
+					<td colspan="3"><input type="radio" name="carCategroy" 
+						value="0" />营运 <input type="radio" name="carCategroy" value="1" />非营运</td>	
+				</tr>
+			</table>
+		</fieldset>
+
+        <div title="收入信息" class="accordion">
+			<label>收入信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>收入类型：</label></td>
+					<td><select id="salaryCategroy" name="salaryCategroy">
+					</select></td>
+					<td style="width: 90px;"><label>年收入：</label></td>
+					<td><input type="text" id="yearSalary" name="yearSalary"
+						type="text" style="width: 150px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset>
+		<div title="流动资产信息" class="accordion">
+			<label>流动资产信息</label>
+		</div>
+		<fieldset>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>资产类型：</label></td>
+					<td><select id="balanceCategroy" name="balanceCategroy">
+					</select></td>
+					<td style="width: 90px;"><label>资产金额：</label></td>
+					<td><input type="text" id="balanceAcount" name="balanceAcount"
+						type="text" style="width: 150px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset> -->
+	  <div title="本行员工信息" class="accordion">
+			<label>本行员工信息</label>
+	  </div>
+		<fieldset>
+			<legend>
+				<label>a)华夏卡中心员工</label>
+			</legend>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>用工性质：</label></td>
+					<td style="width: 205px;"><select id="hxCardcentreStaff" name="hxCardcentreStaff"
+						class="xx"></select></td>
+					<td style="width: 90px;"><label>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级：</label></td>
+					<td><select id="hxCardcentreStaffLevel"
+						name="hxCardcentreStaffLevel" class="xx">
+					</select></td>
+				</tr>
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend>
+				<label>b)华夏银行员工</label>
+			</legend>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>用工性质：</label></td>
+					<td style="width: 205px;"><select id="hxBankStaff" name="hxBankStaff" class="xx"></select></td>
+					<td style="width: 90px;"><label>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级：</label></td>
+					<td><select id="hxBankStaffLevel" name="hxBankStaffLevel"
+						class="xx"></select></td>
+				</tr>
+			</table>
+		</fieldset>
+		 <div title="推荐客户信息" class="accordion">
+			<label>推荐客户信息</label>
+	     </div>
+		<fieldset>
+			<legend>
+				<label>a)我行对公客户</label>
+			</legend>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>推荐人：</label></td>
+					<td><input id="refree" name="refree" type="text"
+						style="width: 150px;" /></td>
+					<td style="width: 90px;"><label>推荐额度：</label></td>
+					<td><input id="refreeLimit" name="refreeLimit" type="text"
+						style="width: 150px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend>
+				<label>b)我行个人客户</label>
+			</legend>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>推荐人：</label></td>
+					<td><input id="refree2" name="refree2" type="text"
+						style="width: 150px;" /></td>
+					<td style="width: 90px;"><label>推荐额度：</label></td>
+					<td><input id="refreeLimit2" name="refreeLimit2" type="text"
+						style="width: 150px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend>
+				<label>c)非我行客户</label>
+			</legend>
+			<table class="area-view">
+				<tr>
+					<td style="width: 90px;"><label>推荐人：</label></td>
+					<td><input id="refree3" name="refree3" type="text"
+						style="width: 150px;" /></td>
+					<td style="width: 90px;"><label>推荐额度：</label></td>
+					<td><input id="refreeLimit3" name="refreeLimit3" type="text"
+						style="width: 150px;" />（万元）</td>
+				</tr>
+			</table>
+		</fieldset>
+		
+		 <div title="项目信息" class="accordion">
+			<label>项目信息</label>
+	     </div>
+		<fieldset>
+			<table class="area-view">
+				<tr><td>是否特殊项目：</td>
+					<td><input type="radio" value="1" name="specialProject">是 <input
+						type="radio" value="0" name="specialProject">否
+					<td><label>项目类型：</label></td>
+					<td><select id="projectCategroy" name="projectCategroy" style="width: 80px;">
+					</select></td>
+					<td><label>项目金额：</label></td>
+					<td><input id="projectAcount" name="projectAcount"
+						type="text" style="width: 100px;" />（万元）
+				</tr>
+				<tr>
+					<td><label>项目内容：</label></td>
+					<td><input id="projectMemo" name="projectMemo"
+						type="text" style="width: 100px;" /></td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
+	<div style="text-align: center; padding: 5px">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			onclick="onSave()">保存</a>
+	</div>
+</body>
+<script type="text/javascript">
+	var infoCollForm = $("#infoCollForm");
+	var appId = $.fnGetAppId("appId");
+	var userCode = window.parent.userCode;
+	var currNode = window.parent.currNode;
+	$('#appId').val(appId);
+	var roleObj = {
+		"appId" : appId
+	};
+	var isCanCommit = false;//判断是否是  进行父页面是否可提交 	
+	var isSaveSuccess = true;//保存是否成功的标志 父页面调用 
+	var waringMessage = "";//保存失败时父页面要用的 提示的信息 
+	var bigSaveButtonFlag = false;//判断是否是  进行父页面大保存操作的依据 
+	var industryCodeMatFlag = false;//判断职业代码是否匹配成功
+	var radios = $("input[type='radio']");
+	radios.each(function() {
+		var _this = this;
+		this.onclick = function() {
+			if ($(_this).attr('checked')) {
+				$(_this).removeAttr('checked');
+			} else {
+				$(_this).attr('checked', 'checked');
+			}
+		}
+	});
+	$(function() {
+		$("#industryCode").keyup(function() {
+			var industryCode = $("#industryCode").val();
+			if (industryCode.length == 3) {
+				$("#jobCode").focus();
+			}
+			// 			var result=CtoH(industryCode);
+			// 			$("#industryCode").val(result);
+		})
+		// 		$("#jobCode").keyup(function(){
+		// 			var jobCode = $("#jobCode").val();
+		// 			var result=CtoH(jobCode);
+		// 			$("#jobCode").val(result);
+		// 		})
+		
+			// 			var result=CtoH(industryCode);
+			// 			$("#industryCode").val(result);
+		var arr = new Array('houseCost', 'houseArea', 'perAssetBalance',
+				'perLoanpri', 'perPayWage', 'perFinAssetSum', 'pubCreditlimit',
+				'pubSavebalance', 'pubSaveDaybalance', 'sbMonthPayment',
+				'sbMonthPaybase', 'gjjMonthPayment','yearSalary','balanceAcount','projectAcount','carCost');
+		for (var i = 0; i < arr.length; i++) {
+			$("#" + arr[i]).on(
+					'keyup',
+					function(event) {
+						var input = $(this);
+						event = window.event || event;
+						if (event.keyCode == 37 | event.keyCode == 39) {
+							return;
+						}
+						if(input.val()!='' && input.val()!= null){
+							input.val(input.val().replace(/[^\d.]/g, "").replace(
+									/^\./g, "").replace(/\.{2,}/g, "."));
+							input.blur(function() {
+								// 							var sValue = Math.round(input.val() * 100) / 100;
+								if(input.val()!='' && input.val()!= null){
+									var sValue = new Number(input.val()).toFixed("2");
+									input.val(sValue);
+								}
+							});
+						}
+						
+					})
+		}
+		$cf
+				.loadAllDictOnly('FCXXLY,KZXYGYGXZ,KZXYGZJ,ZHYGYGXZ,ZHYGZJ,GJIJINZT,SRLX,ZCLX,XMLX,XLXX,');
+		var jsonArray = new Array("houseInfoFrom:FCXXLY",
+				"hxCardcentreStaff:KZXYGYGXZ",
+				"hxCardcentreStaffLevel:KZXYGZJ", "hxBankStaff:ZHYGYGXZ",
+				"hxBankStaffLevel:ZHYGZJ", "gjjPayStatus:GJIJINZT","salaryCategroy:SRLX",
+				"balanceCategroy:ZCLX","projectCategroy:XMLX","eduType:XLXX"
+		);
+		for (var i = 0; i < jsonArray.length; i++) {
+			var temp = jsonArray[i].split(":");
+			var json = $cf.getDictJSON(temp[1]);
+			var dict = {
+				"json" : {}
+			};
+			var code = '';
+			$u.push(dict, '{"selected":true,"key":"' + code + '"}');
+			$u.push(dict.json, json);
+			$("#" + temp[0]).fnLoadComponent($u.stringify(dict));
+		}
+
+		$cf
+				.ajax({
+					url : "/opas-naps/query_infoCollect.json",
+					data : roleObj,
+					onSuccess : function(ret) {
+						var jsonapprovaInfoSupp = ret.RSP_BODY.jsonapprovaInfoSupp;
+						var approvaInfoSupp = ret.RSP_BODY.approvaInfoSupp;
+						var approvaInfoSuppjson;
+						var custType = '';
+						var gjjEndMonth = '';
+						if (jsonapprovaInfoSupp != ""
+								&& jsonapprovaInfoSupp != null) {
+							approvaInfoSuppjson = eval('('
+									+ jsonapprovaInfoSupp + ')');
+							custType = approvaInfoSuppjson.custType;
+						}
+						var approvaInfoSuppExamine;
+						if (approvaInfoSupp != "" && approvaInfoSupp != null) {
+							approvaInfoSuppExamine = eval('(' + approvaInfoSupp
+									+ ')');
+						}
+						infoCollForm.form('load', approvaInfoSuppjson);
+						//infoCollForm.form('load', approvaInfoSuppExamine);
+						var plaze_id = new Array("houseCost",
+								"perAssetBalance", "perLoanpri", "perPayWage",
+								"perFinAssetSum", "sbMonthPaybase",
+								"sbMonthPayment", "gjjMonthPayment");
+						for (var s = 0; s < plaze_id.length; s++) {
+							if (approvaInfoSuppjson != null
+									&& approvaInfoSuppjson != "") {
+								var value = approvaInfoSuppjson[plaze_id[s]];
+								if (value != null) {
+									var convertValue = (value / 10000)
+											.toFixed("2");
+									$("#" + plaze_id[s]).val(convertValue);
+								}
+							}
+						}
+						infoCollForm.form('load', approvaInfoSuppExamine);
+						for (var s = 0; s < arr.length; s++) {
+							if (approvaInfoSuppExamine != null
+									&& approvaInfoSuppExamine != "") {
+								if(arr[s] != 'yearSalary' && arr[s] != 'balanceAcount' && arr[s] != 'projectAcount'){
+									var value = approvaInfoSuppExamine[arr[s]];
+									if (value != null) {
+										var convertValue =value.toFixed("2");
+										$("#" + arr[s]).val(convertValue);
+									}
+								}
+							}
+						}
+						/* 
+						if (custType != undefined && custType != null
+								&& custType != '') {
+							var i = custType.length;
+							for (var a = 0; a < i; a += 2) {//设置用户类型相关复选框 禁用 
+								var value = custType.substring(a, a + 2);
+								$(":checkbox[value='" + value + "']").prop(
+										"checked", true);
+							}
+						}
+						//客户类型不可编辑
+						var checkboxs = $("input[type='checkbox']");
+						checkboxs.each(function() {
+							value = $(this).val();
+							$(this).attr("disabled", true);
+						}); */
+						if(currNode != '02'){
+						//将时间格式 blaze返回有值的禁用
+						$(".easyui-datebox")
+								.each(
+										function() {
+											var id = $(this).attr('id');
+											var blazeValue = approvaInfoSuppjson[id];
+											if (blazeValue !== null
+													&& blazeValue !== undefined
+													&& blazeValue !== "") {
+												$(this).datebox("readonly",
+														"readonly");
+											}
+										});
+
+						//下拉框格式有blaze返回有值的禁用 
+						$(".xx").each(
+								function() {
+									var id = $(this).attr('id');
+									var blazeValue = approvaInfoSuppjson[id];
+									if (blazeValue !== null
+											&& blazeValue !== undefined
+											&& blazeValue !== "") {
+										$(this).attr("disabled", true);
+									}
+								});
+
+						var eduModel = approvaInfoSuppjson.eduModel;//教育模式 全日制 
+						var sbCurrPayStatus= approvaInfoSuppjson.sbCurrPayStatus;
+						var carHand = approvaInfoSuppjson.carHand;
+						var perLoanstatus = approvaInfoSuppjson.perLoanstatus;
+						//设置有值的单选框只读（循环单选框选中的值，如果值不为空，找到这个值对应的name属性，然后把所有name等于这个的万元素设置为只读）
+						if (eduModel != null && eduModel != '') {
+							$(":radio[name='eduModel']").attr("disabled", true);
+						}
+						if (sbCurrPayStatus != null && sbCurrPayStatus != '') {
+							$(":radio[name='sbCurrPayStatus']").attr("disabled", true);
+						}
+						if (carHand != null && carHand != '') {
+							$(":radio[name='carHand']").attr("disabled", true);
+						}
+						if (perLoanstatus != null && perLoanstatus != '') {
+							$(":radio[name='perLoanstatus']").attr("disabled", true);
+						}
+						
+						//设置blaze返回有值的输入框只读
+						$("input[type='text']")
+								.each(
+										function() {
+											var id = $(this).attr('id');
+											var blazeValue = approvaInfoSuppjson[id];
+												if (id != 'industryCode'
+														&& id != 'jobCode'
+														&& approvaInfoSuppjson[id] != null) {
+													$(this).attr("readonly",
+															"readonly");
+												}
+										});
+						}
+					}
+				});
+	});
+	function onSave(obj) {
+		var eduModelFlag = false;
+		var sbCurrPayStatusFlag = false;
+		var perLoanstatusFlag = false;
+		var carHandFlag = false;
+		var houseInfoFromFlag = false;
+		var eduTypeFlag = false;
+		var gjjPayStatusFlag = false;
+		isSaveSuccess = true;
+		waringMessage = "";
+		if (parent.bigSaveButtonFlag) {
+			bigSaveButtonFlag = parent.bigSaveButtonFlag;
+		} else {
+			bigSaveButtonFlag = false;
+		}
+        if($(":radio[name='eduModel']").attr("disabled")){
+        	$(":radio[name='eduModel']").attr("disabled",false);
+        	eduModelFlag=true;
+        }
+        if($(":radio[name='sbCurrPayStatus']").attr("disabled")){
+        	$(":radio[name='sbCurrPayStatus']").attr("disabled", false);
+        	sbCurrPayStatusFlag = true;
+        }
+        if($(":radio[name='perLoanstatus']").attr("disabled")){
+        	$(":radio[name='perLoanstatus']").attr("disabled", false);
+        	perLoanstatusFlag = true;
+        }
+        if($(":radio[name='carHand']").attr("disabled")){
+        	$(":radio[name='carHand']").attr("disabled", false);
+        	carHandFlag = false;
+        }
+        if($("#houseInfoFrom").attr("disabled")){
+        	$("#houseInfoFrom").attr("disabled", false);
+        	houseInfoFromFlag = true;
+        }
+ 		if($("#eduType").attr("disabled")){
+ 			$("#eduType").attr("disabled", false);
+ 			eduTypeFlag = true;
+ 		}
+ 		//保存前设置公积金缴交状态下拉框disabled属性为false，获取对应的数据以便保存
+ 		if($("#gjjPayStatus").attr("disabled")){
+ 			$("#gjjPayStatus").attr("disabled", false);
+ 			gjjPayStatusFlag = true;
+		 }
+ 		
+		var jsondata = getFormData(infoCollForm.serializeArray());
+		if (jsondata.yearSalary.trim()!= 0 && jsondata.yearSalary.trim()!=null && jsondata.yearSalary.trim()!='' && !checkRate1(jsondata.yearSalary)) {
+			waringMessage += "年收入格式不符!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,年收入格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		if (jsondata.balanceAcount.trim()!= 0 && jsondata.balanceAcount.trim()!=null && jsondata.balanceAcount.trim()!='' && !checkRate1(jsondata.balanceAcount)) {
+			waringMessage += "资产金额格式不符!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,资产金额格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		if (jsondata.projectAcount.trim()!= 0 && jsondata.projectAcount.trim()!=null && jsondata.projectAcount.trim()!='' && !checkRate1(jsondata.projectAcount)) {
+			waringMessage += "项目金额格式不符!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,项目金额格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		if (jsondata.sbCurrCompanyMonth.trim()!= 0 && jsondata.sbCurrCompanyMonth.trim()!=null && jsondata.sbCurrCompanyMonth.trim()!='' && !checkRate(jsondata.sbCurrCompanyMonth)) {
+			waringMessage += "添加失败,当前单位缴交月数中请添加整数!!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "当前单位缴交月数中请添加整数!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		if (jsondata.gjjPerPayrate.trim()!= 0 && jsondata.gjjPerPayrate.trim()!=null && jsondata.gjjPerPayrate.trim()!='' && !checkRate(jsondata.gjjPerPayrate) ) {
+			waringMessage += "个人缴存比例格式不符!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,个人缴存比例格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		if (jsondata.refreeLimit.trim()!= 0 && jsondata.refreeLimit.trim()!=null && jsondata.refreeLimit.trim()!='' && !checkRate(jsondata.refreeLimit)) {
+			waringMessage += "推荐额度为非数字格式!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,推荐额度格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		if (jsondata.refreeLimit2.trim()!= 0 && jsondata.refreeLimit2.trim()!=null && jsondata.refreeLimit2.trim()!='' && !checkRate(jsondata.refreeLimit2)) {
+			waringMessage += "推荐额度为非数字格式!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,推荐额度格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		if (jsondata.refreeLimit3.trim()!=0 && jsondata.refreeLimit3.trim()!=null && jsondata.refreeLimit3.trim()!='' && !checkRate(jsondata.refreeLimit3)) {
+			waringMessage += "推荐额度为非数字格式!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,推荐额度格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		if (jsondata.carOld.trim()!= 0 && jsondata.carOld.trim()!=null && jsondata.carOld.trim()!='' && !checkCarOld(jsondata.carOld)) {
+			waringMessage += "车龄格式不符!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,车龄格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		if (jsondata.industryCode == null || jsondata.industryCode.trim() == "") {
+			waringMessage += "添加失败,请输入行业代码!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,请输入行业代码!");
+			}
+			isSaveSuccess = false;
+			return;
+		} else if (jsondata.industryCode.trim().length != 3) {
+			waringMessage += "添加失败,行业代码只能输入3位数字!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,行业代码只能输入3位数字!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		if (!checkRate2(jsondata.industryCode) && !checkRate(jsondata.industryCode)) {
+			waringMessage += "行业代码为非数字格式!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,行业代码格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		if (jsondata.jobCode == null || jsondata.jobCode.trim() == "") {
+			waringMessage += "添加失败,请输入职业代码!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,请输入职业代码!");
+			}
+			isSaveSuccess = false;
+			return;
+		} else if (jsondata.jobCode.trim().length != 2) {
+			waringMessage += "添加失败,职业代码只能输入2位数字!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,职业代码只能输入2位数字!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		if (!checkRate(jsondata.jobCode) ) {
+			waringMessage += "职业代码为非数字格式!";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,职业代码格式不符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} 
+		
+		if(jsondata.refree.trim()!=null && jsondata.refree.trim()!='' && !checkTeShuZiFu(jsondata.refree.trim())){
+			waringMessage += "推荐人非法字符！";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,推荐人非法字符!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		
+		//车产价值
+		/* if(jsondata.carCost.trim()!=null && jsondata.carCost.trim()!='' && !checkCarCost(jsondata.carCost.trim())){
+			waringMessage += "车产价值非法字符！";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,车产价值非法字符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} */
+		
+		//社保_参保日期 sbPayDate
+		if(jsondata.sbPayDate.trim()!=null && jsondata.sbPayDate.trim()!='' && !checkDate(jsondata.sbPayDate.trim())){
+			waringMessage += "社保_参保日期格式异常！";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,社保_参保日期格式异常!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		
+		if(jsondata.refree2.trim()!=null && jsondata.refree2.trim()!='' && !checkTeShuZiFu(jsondata.refree2.trim())){
+			waringMessage += "推荐人非法字符！";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,推荐人非法字符!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		if(jsondata.refree3.trim()!=null && jsondata.refree3.trim()!='' && !checkTeShuZiFu(jsondata.refree3.trim())){
+			waringMessage += "推荐人非法字符！";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,推荐人非法字符!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		/* if(jsondata.sbCurrPaycompany.trim()!=null && jsondata.sbCurrPaycompany.trim()!='' && !checkTeShuZiFu(jsondata.sbCurrPaycompany.trim())){
+			waringMessage += "当前缴交单位非法字符！";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,当前缴交单位非法字符!");
+			}
+			isSaveSuccess = false;
+			return;
+		} */
+		if(jsondata.projectMemo.trim()!=null && jsondata.projectMemo.trim()!='' && !checkTeShuZiFu(jsondata.projectMemo.trim())){
+			waringMessage += "项目内容非法字符！";
+			if (!bigSaveButtonFlag) {
+				$.messager.alert("操作提示", "添加失败,项目内容非法字符!");
+			}
+			isSaveSuccess = false;
+			return;
+		}
+		jsondata['industryCode'] = tobanjiao(jsondata.industryCode);
+		jsondata['userCode'] = userCode;
+		jsondata['currNode'] = currNode;
+		if(obj == "1"){
+			jsondata['commitFlag'] = '1';
+		}
+		$cf
+				.ajax({
+					url : "/opas-naps/info_collect_save.json",
+					data : jsondata,
+					async : false,
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							isCanCommit = true;
+							if (!bigSaveButtonFlag) {
+								top.$cf.showMsg("录入信息保存成功！");
+							}
+							if(data.RSP_BODY.industryCodeFlag){
+								industryCodeMatFlag = true;
+							}
+							if(currNode != '02'){
+								if(eduModelFlag){
+									$(":radio[name='eduModel']").attr("disabled", true);
+								}
+								if(sbCurrPayStatusFlag){
+									$(":radio[name='sbCurrPayStatus']").attr("disabled", true);
+								}
+  								if(perLoanstatusFlag){
+  									$(":radio[name='perLoanstatus']").attr("disabled", true);
+								}
+								if(carHandFlag){
+									$(":radio[name='carHand']").attr("disabled", true);
+								}
+								if(houseInfoFromFlag){
+									$("#houseInfoFrom").attr("disabled", true);
+								}
+  								if(eduTypeFlag){
+  									$("#eduType").attr("disabled", true);
+								}
+								if(gjjPayStatusFlag){
+									$("#gjjPayStatus").attr("disabled", true);
+								}
+						    }
+						} else {
+							isCanCommit = false;
+							isSaveSuccess = false;
+							waringMessage += "数据异常，保存失败。";
+							if (!bigSaveButtonFlag) {
+								$.messager.alert("操作提示", "添加失败:" + data.exMsg,
+										"error");
+							}
+							onConcle("winEdit");
+						}
+					}
+				});
+	}
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	function myformatter(date) {
+		if (null == date || "" == date) {
+			return "";
+		}
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		var d = date.getDate();
+		return y + '.' + (m < 10 ? ('0' + m) : m);
+
+	}
+	function myparser(s) {
+		if (!s) {
+			return null;
+		} else {
+			var ss = "";
+			if (s.indexOf("-") != -1) {
+				ss = (s.split('-'));
+			} else {
+				ss = (s.split('.'));
+			}
+			var y = parseInt(ss[0], 10);
+			var m = parseInt(ss[1], 10);
+			if (!isNaN(y) && !isNaN(m)) {
+				return new Date(y, m - 1, 1);
+			}
+			return null;
+		}
+	}
+
+	document.onkeydown = function(event) {
+		if (window.event.altKey && window.event.keyCode == "20") {
+			if (window.parent.hrefFlag == '0') {
+				window.parent.right_tab.tabs('select', '比对');
+				window.parent.hrefFlag = '1';
+				window.parent.flag = '1';
+			} else {
+				window.parent.right_tab.tabs('select', '录入');
+				window.parent.hrefFlag = '0';
+			}
+		}
+		if (window.event.keyCode == "13") {
+			window.parent.examineSubmitAfterSave();
+		}
+	}
+	//正则匹配正整数
+	function checkRate(number){
+		var re = /^[1-9]\d*$/;
+		if(!re.test(number)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	//正则匹配非负数
+	function checkCarOld(number){
+		var reg = /^\d+(\.{0,1}\d+){0,1}$/;
+		if(!reg.test(number)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	//正则匹配浮点数
+	function checkRate1(number){
+		//var re = /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/;
+	    var reg = new RegExp("^\\d+(\\.\\d{0,2})?$");
+		if(!reg.test(number)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	//正则匹配汉子与英文
+	function checkRate2(number){
+		var re = /[\uFF10-\uFF19]/;
+		if(!re.test(number)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	//正则匹配日期格式yyyy-MM-dd
+	function checkDate(date){
+		var dateType = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
+		if(!dateType.test(date)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	//正则匹配数字、一位小数点（如25.55、25.00等）、+号(对车产价值的校验，如25+、26.3+等)
+	function checkCarCost(number){
+		var reg = /^[0-9]+.?([0-9]?)+(\+)?$/
+		if(!reg.test(number)){
+			return false;
+		}else{
+			return true;
+		}
+	} 
+	
+	function checkTeShuZiFu(data){
+		var re = /^[a-zA-Z\u4e00-\u9fa5]+$/;
+		data = data.replace('·','');
+		if(!re.test(data)&&data!=''&&data!=null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	//全角数字转化为半角数字
+	function tobanjiao(str){
+		var tmp = "";
+		for(var i = 0;i < str.length;i++){
+			if(str.charCodeAt(i) < 127){
+				tmp += String.fromCharCode(str.charCodeAt(i));
+			}else if(str.charCodeAt(i) > 65280 && str.charCodeAt(i) < 65375){
+				tmp += String.fromCharCode(str.charCodeAt(i) - 65248);
+			}else{
+				tmp += String.fromCharCode(str.charCodeAt(i));
+			}
+		}
+		return tmp;
+	}
+</script>
+</html>

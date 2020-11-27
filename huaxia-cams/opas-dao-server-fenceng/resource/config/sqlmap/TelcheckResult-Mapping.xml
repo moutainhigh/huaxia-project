@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="TelcheckResult" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.input.TelcheckResult" >
+    <id column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="BLOCK_CODE" property="blockCode" jdbcType="VARCHAR" />
+    <result column="CREDIT_REFUSE_REASON" property="creditRefuseReason" jdbcType="VARCHAR" />
+    <result column="TELCHECK_RESULT" property="telcheckResult" jdbcType="VARCHAR" />
+    <result column="IDENTITY_RESULT" property="identityResult" jdbcType="VARCHAR" />
+    <result column="CREDIT_TIME" property="creditTime" jdbcType="TIMESTAMP" />
+    <result column="CREDITER" property="crediter" jdbcType="VARCHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    <result column="CURR_OPT_GROUP" property="currOptGroup" jdbcType="VARCHAR" />
+    <result column="CREDITER_NAME" property="crediterName" jdbcType="VARCHAR" />
+    <result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+    <result column="PBOC_MOBILE_FLAG" jdbcType="CHAR" property="pbocMobileFlag" />
+    <result column="PBOC_BUSPHONE_FLAG" jdbcType="CHAR" property="pbocBusphoneFlag" />
+    <result column="PBOC_PHONE_FLAG" jdbcType="CHAR" property="pbocPhoneFlag" />
+    <result column="PBOC_COMPANY_FLAG" jdbcType="CHAR" property="pbocCompanyFlag" />
+    <result column="PBOC_BUSADDR_FLAG" jdbcType="CHAR" property="pbocBusaddrFlag" />
+    <result column="PBOC_HOMEADDR_FLAG" jdbcType="CHAR" property="pbocHomeaddrFlag" />
+    <result column="VERIFYINFO_FLAG" jdbcType="CHAR" property="verifyinfoFlag" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    APP_ID, AUTO_ID, BLOCK_CODE, CREDIT_REFUSE_REASON, TELCHECK_RESULT, IDENTITY_RESULT, 
+    CREDIT_TIME, CREDITER, CRT_DATE, CRT_USER, CURR_OPT_GROUP, CREDITER_NAME,YDJ_FLAG,PBOC_MOBILE_FLAG,
+    PBOC_BUSPHONE_FLAG,PBOC_PHONE_FLAG,PBOC_COMPANY_FLAG,PBOC_BUSADDR_FLAG,PBOC_HOMEADDR_FLAG,VERIFYINFO_FLAG
+    from OPAS_TELCHECK_RESULT
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_TELCHECK_RESULT
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.input.TelcheckResult" >
+    insert into OPAS_TELCHECK_RESULT (APP_ID, AUTO_ID, BLOCK_CODE, 
+      CREDIT_REFUSE_REASON, TELCHECK_RESULT, IDENTITY_RESULT, 
+      CREDIT_TIME, CREDITER, CRT_DATE, CRT_USER, CURR_OPT_GROUP, 
+      CREDITER_NAME,YDJ_FLAG, PBOC_MOBILE_FLAG, PBOC_BUSPHONE_FLAG,
+      PBOC_PHONE_FLAG, PBOC_COMPANY_FLAG, PBOC_BUSADDR_FLAG,
+      PBOC_HOMEADDR_FLAG, VERIFYINFO_FLAG
+      )
+    values (#{appId,jdbcType=VARCHAR}, #{autoId,jdbcType=VARCHAR}, #{blockCode,jdbcType=VARCHAR}, 
+      #{creditRefuseReason,jdbcType=VARCHAR}, #{telcheckResult,jdbcType=VARCHAR}, #{identityResult,jdbcType=VARCHAR}, 
+      #{creditTime,jdbcType=TIMESTAMP}, #{crediter,jdbcType=VARCHAR}, #{crtDate,jdbcType=TIMESTAMP}, 
+      #{crtUser,jdbcType=VARCHAR}, #{currOptGroup,jdbcType=VARCHAR}, #{crediterName,jdbcType=VARCHAR},
+      #{ydjFlag,jdbcType=CHAR}, #{pbocMobileFlag,jdbcType=CHAR}, #{pbocBusphoneFlag,jdbcType=CHAR}, #{pbocPhoneFlag,jdbcType=CHAR},
+      #{pbocCompanyFlag,jdbcType=CHAR}, #{pbocBusaddrFlag,jdbcType=CHAR}, #{pbocHomeaddrFlag,jdbcType=CHAR}, #{verifyinfoFlag,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.input.TelcheckResult" >
+    insert into OPAS_TELCHECK_RESULT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="blockCode != null" >
+        BLOCK_CODE,
+      </if>
+      <if test="creditRefuseReason != null" >
+        CREDIT_REFUSE_REASON,
+      </if>
+      <if test="telcheckResult != null" >
+        TELCHECK_RESULT,
+      </if>
+      <if test="identityResult != null" >
+        IDENTITY_RESULT,
+      </if>
+        CREDIT_TIME,
+      <if test="crediter != null" >
+        CREDITER,
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE,
+      </if>
+      <if test="crtUser != null" >
+        CRT_USER,
+      </if>
+      <if test="currOptGroup != null" >
+        CURR_OPT_GROUP,
+      </if>
+      <if test="crediterName != null" >
+        CREDITER_NAME,
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG,
+      </if>
+      <if test="pbocMobileFlag != null" >
+        PBOC_MOBILE_FLAG,
+      </if>
+      <if test="pbocBusphoneFlag != null" >
+        PBOC_BUSPHONE_FLAG,
+      </if>
+      <if test="pbocPhoneFlag != null" >
+        PBOC_PHONE_FLAG,
+      </if>
+      <if test="pbocCompanyFlag != null" >
+        PBOC_COMPANY_FLAG,
+      </if>
+      <if test="pbocBusaddrFlag != null" >
+        PBOC_BUSADDR_FLAG,
+      </if>
+      <if test="pbocHomeaddrFlag != null" >
+        PBOC_HOMEADDR_FLAG,
+      </if>
+      <if test="verifyinfoFlag != null" >
+        VERIFYINFO_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="blockCode != null" >
+        #{blockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="creditRefuseReason != null" >
+        #{creditRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="telcheckResult != null" >
+        #{telcheckResult,jdbcType=VARCHAR},
+      </if>
+      <if test="identityResult != null" >
+        #{identityResult,jdbcType=VARCHAR},
+      </if>
+        systimestamp,
+      <if test="crediter != null" >
+        #{crediter,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null" >
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null" >
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+      <if test="currOptGroup != null" >
+        #{currOptGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="crediterName != null" >
+        #{crediterName,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        #{ydjFlag,jdbcType=CHAR},
+      </if>
+      <if test="pbocMobileFlag != null" >
+        #{pbocMobileFlag,jdbcType=CHAR},
+      </if>
+      <if test="pbocBusphoneFlag != null" >
+        #{pbocBusphoneFlag,jdbcType=CHAR},
+      </if>
+      <if test="pbocPhoneFlag != null" >
+        #{pbocPhoneFlag,jdbcType=CHAR},
+      </if>
+      <if test="pbocCompanyFlag != null" >
+        #{pbocCompanyFlag,jdbcType=CHAR},
+      </if>
+      <if test="pbocBusaddrFlag != null" >
+        #{pbocBusaddrFlag,jdbcType=CHAR},
+      </if>
+      <if test="pbocHomeaddrFlag != null" >
+        #{pbocHomeaddrFlag,jdbcType=CHAR},
+      </if>
+      <if test="verifyinfoFlag != null" >
+        #{verifyinfoFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.input.TelcheckResult" >
+    update OPAS_TELCHECK_RESULT
+    <set >
+      <if test="autoId != null" >
+        AUTO_ID = #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="blockCode != null" >
+        BLOCK_CODE = #{blockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="creditRefuseReason != null" >
+        CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="telcheckResult != null" >
+        TELCHECK_RESULT = #{telcheckResult,jdbcType=VARCHAR},
+      </if>
+      <if test="identityResult != null" >
+        IDENTITY_RESULT = #{identityResult,jdbcType=VARCHAR},
+      </if>
+      <if test="creditTime != null" >
+        CREDIT_TIME = #{creditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crediter != null" >
+        CREDITER = #{crediter,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null" >
+        CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      </if>
+      <if test="currOptGroup != null" >
+        CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="crediterName != null" >
+        CREDITER_NAME = #{crediterName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.input.TelcheckResult" >
+    update OPAS_TELCHECK_RESULT
+    set AUTO_ID = #{autoId,jdbcType=VARCHAR},
+      BLOCK_CODE = #{blockCode,jdbcType=VARCHAR},
+      CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      TELCHECK_RESULT = #{telcheckResult,jdbcType=VARCHAR},
+      IDENTITY_RESULT = #{identityResult,jdbcType=VARCHAR},
+      CREDIT_TIME = #{creditTime,jdbcType=TIMESTAMP},
+      CREDITER = #{crediter,jdbcType=VARCHAR},
+      CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+      CREDITER_NAME = #{crediterName,jdbcType=VARCHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateTelcheckResult" parameterType="com.huaxia.opas.domain.input.TelcheckResult" >
+    update OPAS_TELCHECK_RESULT
+    set BLOCK_CODE = #{blockCode,jdbcType=VARCHAR},
+      CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      TELCHECK_RESULT = #{telcheckResult,jdbcType=VARCHAR},
+      IDENTITY_RESULT = #{identityResult,jdbcType=VARCHAR},
+      CREDIT_TIME = #{creditTime,jdbcType=TIMESTAMP},
+      CREDITER = #{crediter,jdbcType=VARCHAR},
+      CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+      CREDITER_NAME = #{crediterName,jdbcType=VARCHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="selectResultById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    APP_ID, AUTO_ID, BLOCK_CODE, CREDIT_REFUSE_REASON, TELCHECK_RESULT, IDENTITY_RESULT, 
+    CREDIT_TIME, CREDITER, CRT_DATE, CRT_USER, CURR_OPT_GROUP, CREDITER_NAME,YDJ_FLAG,
+    PBOC_MOBILE_FLAG,PBOC_BUSPHONE_FLAG,PBOC_PHONE_FLAG,PBOC_COMPANY_FLAG,PBOC_BUSADDR_FLAG,
+    PBOC_HOMEADDR_FLAG,VERIFYINFO_FLAG
+    from OPAS_TELCHECK_RESULT
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  														   				
+   <update id="updateByAppIdTelcheckResult" parameterType="com.huaxia.opas.domain.input.TelcheckResult" >
+    update OPAS_TELCHECK_RESULT
+    <set >
+      <if test="blockCode != null" >
+        BLOCK_CODE = #{blockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="creditRefuseReason != null" >
+        CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="telcheckResult != null" >
+        TELCHECK_RESULT = #{telcheckResult,jdbcType=VARCHAR},
+      </if>
+      <if test="identityResult != null" >
+        IDENTITY_RESULT = #{identityResult,jdbcType=VARCHAR},
+      </if>
+      CREDIT_TIME = systimestamp,
+      <if test="crediter != null" >
+        CREDITER = #{crediter,jdbcType=VARCHAR},
+      </if>
+      <if test="currOptGroup != null" >
+        CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="crediterName != null" >
+        CREDITER_NAME = #{crediterName,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG = #{ydjFlag,jdbcType=CHAR},
+      </if>
+       <if test="pbocMobileFlag != null" >
+        PBOC_MOBILE_FLAG = #{pbocMobileFlag,jdbcType=CHAR},
+      </if>
+       <if test="pbocBusphoneFlag != null" >
+        PBOC_BUSPHONE_FLAG = #{pbocBusphoneFlag,jdbcType=CHAR},
+      </if>
+       <if test="pbocPhoneFlag != null" >
+        PBOC_PHONE_FLAG = #{pbocPhoneFlag,jdbcType=CHAR},
+      </if>
+       <if test="pbocCompanyFlag != null" >
+        PBOC_COMPANY_FLAG = #{pbocCompanyFlag,jdbcType=CHAR},
+      </if>
+       <if test="pbocBusaddrFlag != null" >
+        PBOC_BUSADDR_FLAG = #{pbocBusaddrFlag,jdbcType=CHAR},
+      </if>
+       <if test="pbocHomeaddrFlag != null" >
+        PBOC_HOMEADDR_FLAG = #{pbocHomeaddrFlag,jdbcType=CHAR},
+      </if>
+       <if test="verifyinfoFlag != null" >
+        VERIFYINFO_FLAG = #{verifyinfoFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateBizInpApplComporeByAppId" parameterType="java.util.Map" >
+    update opas_biz_inp_appl_compore
+    <set >
+       <if test="c1Hmadd != null" >
+        C1_HMADD1 = #{c1Hmadd,jdbcType=CHAR},
+      </if>
+      <if test="c1Hmadd != null" >
+        C1_IDNBR = #{c1Idnbr,jdbcType=CHAR},
+      </if>
+    </set>
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

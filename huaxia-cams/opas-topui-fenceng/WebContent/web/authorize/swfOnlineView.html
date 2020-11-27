@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body
+	style="background-color: rgb(38, 38, 38); height: 100%; width: 100%; overflow: hidden; margin: 0">
+	
+	<div id="main_r">
+		<h3>
+			<a id="plugin" href=""></a>
+		</h3>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			var url = location.href.split("/opas-topui")[0];
+			//$("#myframe").attr('href',url+"/opas-topui/generic/web/viewer.html");
+			var fileName = 	location.href.split("=")[1];
+			$('#plugin').attr(
+					'href',
+					url+"/opas-topui/generic/web/viewer.html?file2=/opas-naps/FileCheckServlet.json?fileName="
+							+ fileName);
+			document.getElementById('plugin').click();
+		});
+		function GetQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null)
+				return unescape(r[2]);
+			return null;
+		}
+	</script>
+</body>
+</html>

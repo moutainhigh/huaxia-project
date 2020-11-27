@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.searchdiv {
+	font-size: 10px;
+}
+</style>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+		<table id="tblApproveZipcode" title="邮编区号信息列表"
+			class="easyui-datagrid" style="width: 98%;height:100%"
+			data-options="rownumbers:true,singleSelect:false,pagination:true,
+			pageSize:20,pageList:[15, 20, 50],fitColumns:true,
+			url:'/opas-naps/queryApproveZipcode.json',loadMsg:'数据加载中.....',
+			checkOnSelect:true,method:'post',toolbar:'#positionCodeCondion'">
+			<thead frozen="true">
+				<tr>
+					<th field="autoId" width="5%" align="center" checkbox="true">ID</th>
+					<th field="zipCode" width="7%" align="center">邮编代码</th>
+				    <th field="acctType" width="8%" align="center" formatter="formatAcctTypeCode">账户类型</th>
+					<th field="province" width="10%" align="center">省份</th>
+					<th field="city" width="10%" align="center">城市</th>
+					<th field="telNo" width="6%" align="center">电话区号</th>
+					<th field="areaChannel" width="6%" align="center"
+						data-options="formatter:formatAreaChannel">区号渠道</th>
+					<th field="status" width="6%" align="center"
+						data-options="formatter:formatStatus">网点状态</th>
+					<th field="startDate" width="12%" align="center"
+						data-options="formatter:myformatDate">网点启用时间</th>
+					<th field="stopDate" width="12%" align="center"
+						data-options="formatter:myformatDate">网点停用时间</th>
+				</tr>
+			</thead>
+			<thead>
+				<tr>
+					<th field="remoteMarket" width="6%" align="center"
+						data-options="formatter:formatRemoteMarket">异地营销</th>
+					<th field="remoteMarketCity" width="10%" align="center"
+						data-options="formatter:formatRemoteMarketCity">异地营销城市分类</th>
+					<th field="remoteMarketStatus" width="10%" align="center"
+						data-options="formatter:formatStatus">异地营销城市状态</th>
+					<th field="remoteStartDate" width="12%" align="center"
+						data-options="formatter:myformatDate">异地营销城市启用时间</th>
+					<th field="remoteStopDate" width="12%" align="center"
+						data-options="formatter:myformatDate">异地营销城市停用时间</th>
+					<th field="crtUser" width="8%" align="center">创建人</th>
+					<th field="crtDate" width="12%" align="center"
+						data-options="formatter:myformatDate">创建时间</th>
+					<th field="lstUpdUser" width="8%" align="center">最后操作人</th>
+					<th field="lstUpdDate" width="12%" align="center"
+						data-options="formatter:myformatDate">最后修改时间</th>
+					<th field="operate" width="8%" align="center"
+						data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="positionCodeCondion" style="padding: 2px 5px;">
+			<form id="seachPositionCodeForm">
+				<div style="padding: 10px">
+				邮编:
+				<input class="easyui-textbox" style="width: 90px" name="zipCode" id="zipCode"
+					data-options="validType:'maxLength[3]'">&nbsp;
+				账户类型:
+					<select class="easyui-combobox" name="acctType" id="acctType" style="width: 100px" dict_type="ZDZHLX1" 
+					data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select>&nbsp;
+				省份:
+				<input class="easyui-textbox" style="width: 150px" name="province" id="province"
+					data-options="validType:'maxLength[32]'">&nbsp;
+				城市:
+				<input class="easyui-textbox" style="width: 150px" name="city" id="city"
+					data-options="validType:'maxLength[32]'">&nbsp;
+				电话区号:
+				<input class="easyui-textbox" style="width: 50px" name="telNo" id="telNo"
+					data-options="validType:'maxLength[4]'">&nbsp;
+				网点状态:
+				<select id="status" name="status" class="easyui-combobox">
+					<option value="">--请选择--</option>
+					<option value="1">启用</option>
+					<option value="0">停用</option>
+				</select>
+				</div>
+				<div style="padding: 10px">
+				异地营销:
+				<select class="easyui-combobox" name="remoteMarket" id="remoteMarket" style="width: 80px;">
+					<option value="">--请选择--</option>
+					<option value="1">是</option>
+					<option value="0">否</option>
+				</select>&nbsp;
+				异地营销城市分类:
+				<select class="easyui-combobox" name="remoteMarketCity" id="remoteMarketCity" style="width: 90px" dict_type="DZYDYXCSFL" 
+					data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+				</select>&nbsp;
+				异地营销城市状态:
+				<select class="easyui-combobox" name="remoteMarketStatus" id="remoteMarketStatus">
+					<option value="">--请选择--</option>
+					<option value="1">启用</option>
+					<option value="0">停用</option>
+				</select>
+				排序条件:
+				<select id="dateType" class="easyui-combobox" name="dateType" style="width: 120px;">
+					<option value="0">--请选择--</option>
+					<option value="1">网点启用时间</option>
+					<option value="2">网点停用时间</option>
+					<option value="3">异地营销城市启用时间</option>
+					<option value="4">异地营销城市停用时间</option>
+					<option value="5">修改时间</option>
+				</select>&nbsp;
+				排序方式:
+				<select id="order" class="easyui-combobox" name="order" style="width: 80px;">
+					<option value="0">--请选择--</option>
+					<option value="1">升序</option>
+					<option value="2">降序</option>
+				</select>
+				</div>
+				<div style="padding: 10px">
+					<a href="javascript:common.openWin('winAdd');"
+						class="easyui-linkbutton" iconCls="icon-add">新增</a>					
+					<a href="javascript:common.searchTbl('seachPositionCodeForm','tblApproveZipcode');"
+						class="easyui-linkbutton" iconCls="icon-search">查询 </a>					
+					<a href="javascript:deleteApproveZipcodes();" class="easyui-linkbutton" iconCls="icon-remove">批量删除</a>					
+					<a href="javascript:deleteAllApproveZipcodes();"  class="easyui-linkbutton" iconCls="icon-remove">全部删除</a>
+					<font color="blue" size="2">批量导入格式:邮编代码  账户类型  省份  城市  电话区号  区号渠道  是否异地营销  异地营销城市分类  异地营销城市状态</font>	
+				</div>
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post"
+				ACTION="/opas-naps/common/ApproveZipcodeServlet.json"
+				target="tartIframe">
+				<div style="margin: 10px 0 0 10px; width: 100%;">
+					<label for="impFileNamelb"><font size="2">选择导入文件:</font></label> <input
+						id="fb" name="file1" class="easyui-filebox"
+						data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'"
+						style="width: 400px"> <input type="hidden" id="userCode"
+						class="easyui-textbox" name="userCode"> <input
+						type="hidden" id="userName" class="easyui-textbox" name="userName">
+					<span class="textbox"
+						style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;"
+						onclick="importExcel()"> <span
+						class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span> <span
+						class="filebox-label" style="left: 25px;"><font size="2">导入数据</font></span></span>
+				</div>
+			</form>
+			<iframe frameborder="0" height="0" width="0" name="tartIframe"
+				id="tartIframe"></iframe>
+		</div>
+	</div>
+
+	<!-- 修改页面 -->
+	<div id="winEdit" class="easyui-window" title="邮编区号信息修改"
+		style="width: 420px; height: 500px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm" method="post">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input class="easyui-validatebox" id="autoId"
+						name="autoId" style="display: none"></input></td>
+				</tr>
+				<tr>
+					<td align="right">邮编:</td>
+					<td><input class="easyui-textbox" id="zipCode" name="zipCode"
+						data-options="required:true,validType:'maxLength[3]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">账户类型:</td>
+					<td><select class="easyui-combobox" name="acctType" id="acctType" required="true" validType="selectValueRequired['#acctType']" style="width: 100px" dict_type="ZDZHLX1" 
+					data-options="required:true,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">省份:</td>
+					<td><input class="easyui-textbox" id="province" name="province"
+						data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">城市:</td>
+					<td><input class="easyui-textbox" id="city" name="city"
+						data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">电话区号:</td>
+					<td><input class="easyui-textbox" id="telNo" name="telNo"
+						data-options="required:true,validType:'maxLength[4]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">区号渠道:</td>
+					<td>
+					<select class="easyui-combobox" name="areaChannel" id="areaChannel" style="width: 60px;">
+						<option value="0">线上</option>
+						<option value="1">线下</option>
+						<option value="2">均可</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">网点状态:</td>
+					<td><select class="easyui-combobox" name="status" id="status" style="width: 60px;">
+						<option value="1">启用</option>
+						<option value="0">停用</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td align="right">异地营销:</td>
+					<td>
+					<select class="easyui-combobox" name="remoteMarket" id="remoteMarket1" style="width: 50px;">
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">异地营销城市分类:</td>
+					<td>
+					<select class="easyui-combobox" name="remoteMarketCity" id="remoteMarketCity1" style="width: 100px" dict_type="DZYDYXCSFL" 
+					data-options="valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">异地城市状态:</td>
+					<td>
+					<select class="easyui-combobox" name="remoteMarketStatus" id="remoteMarketStatus1" style="width: 60px;" editable="false">
+						<option value="1">启用</option>
+						<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winEdit')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		</div>
+	</div>
+
+	<!-- 新增页面 -->
+	<div id="winAdd" class="easyui-window" title="邮编区号信息添加"
+		style="width: 420px; height: 500px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true,onClose:function(){location.reload(true)} ">
+		<form id="addForm"  method="post">
+			<table cellpadding="5"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>
+					<input class="easyui-validatebox" id="autoId"
+						name="autoId" style="display: none"></input>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">邮编:</td>
+					<td>
+					<input class="easyui-textbox" id="zipCode" name="zipCode"
+						data-options="required:true,validType:'maxLength[3]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">账户类型:</td>
+					<td><select class="easyui-combobox" name="acctType" id="acctType" required="true" validType="selectValueRequired['#acctType']" style="width: 100px" dict_type="ZDZHLX1" 
+					data-options="valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">省份:</td>
+					<td>
+					<input class="easyui-textbox" id="province" name="province"
+						data-options="required:true,validType:'maxLength[32]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">城市:</td>
+					<td>
+					<input class="easyui-textbox" id="city" name="city"
+						data-options="required:true,validType:'maxLength[32]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td 
+					align="right">电话区号:</td>
+					<td><input class="easyui-textbox" id="telNo" name="telNo"
+						data-options="required:true,validType:'maxLength[4]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">区号渠道:</td>
+					<td>
+					<select class="easyui-combobox" name="areaChannel" id="areaChannel" style="width: 60px;">
+							<option value="0">线上</option>
+							<option value="1">线下</option>
+							<option value="2">均可</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">网点状态:</td>
+					<td>
+					<select class="easyui-combobox" name="status" id="status" style="width: 60px;" >
+					
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">异地营销:</td>
+					<td>
+					<select class="easyui-combobox" name="remoteMarket" id="remoteMarket2" style="width: 50px;">
+							<option value="1">是</option>
+							<option value="0">否</option>
+					</select>
+					</td>
+				</tr> 
+				<tr>
+					<td align="right">异地营销城市分类:</td>
+					<td>
+					<select class="easyui-combobox" name="remoteMarketCity" id="remoteMarketCity2" style="width: 100px" dict_type="DZYDYXCSFL" 
+					data-options="valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select> 
+					</td>
+				</tr>
+				<tr>
+					<td align="right">异地城市状态:</td>
+					<td>
+					<select class="easyui-combobox" name="remoteMarketStatus" id="remoteMarketStatus2" style="width: 60px;" editable="false">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="queryRepetition()">保存</a>
+		</div>
+	</div>
+	
+
+	<script type="text/javascript">
+	$cf.loadAllDict();//加载业务字典
+	
+		var tblApproveZipcode = $("#tblApproveZipcode");
+		var editWindow = $("#winEdit");
+		var addWindow = $("#winAdd");
+		var editForm = $("#editForm");
+		var addForm = $("#addForm");
+		function formatOper(val, row, index) {
+			return "<a href=javascript:editApproveZipcode(); >修改</a>&nbsp;&nbsp;<a href=javascript:deleteApproveZipcode();>删除</a>";
+		}
+
+
+		//日期格式转换
+		function myformatDate(value) {
+			var str = getTaskTime(value);
+			if (str.indexOf('1970') >= 0) {
+				return '';
+			} else {
+				return str;
+			}
+		}
+		
+		//工具方法：格式化CST类型时间
+
+		function getTaskTime(strDate) {
+			if (null == strDate || "" == strDate) {
+				return "";
+			}
+			var dateStr = strDate.trim().split(" ");
+			var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+					+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+			var date = new Date(Date.parse(strGMT));
+			var y = date.getFullYear();
+			var m = date.getMonth() + 1;
+			m = m < 10 ? ('0' + m) : m;
+			var d = date.getDate();
+			d = d < 10 ? ('0' + d) : d;
+			var h = date.getHours();
+			h = h < 10 ? ('0' + h) : h;
+			var minute = date.getMinutes();
+			minute = minute < 10 ? ('0' + minute) : minute;
+			var second = date.getSeconds();
+			second = second < 10 ? ('0' + second) : second;
+
+			return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+					+ second;
+		};
+		
+		function formatRemoteMarket(val, row, index) {
+			if (val == "1") {
+				return "是";
+			} else if (val == "0") {
+				return "否";
+			}
+		}
+
+		function formatAreaChannel(val, row, index) {
+			if (val == "0") {
+				return "线上";
+			} else if (val == "1") {
+				return "线下";
+			} else if (val == "2") {
+				return "均可";
+			}
+		}
+		
+		function formatStatus(val, row, index) {
+			if (val == "0") {
+				return "停用";
+			} else if (val == "1") {
+				return "启用";
+			}
+		}
+		
+		function formatAcctTypeCode(val, row, index) {
+			return $cf.getDictDetailName("ZDZHLX1", val);
+		}
+		
+		function formatRemoteMarketCity(val, row, index) {
+			return $cf.getDictDetailName("DZYDYXCSFL", val); 
+
+		}
+		
+		function editApproveZipcode(){
+			var approveZipcodeObj = tblApproveZipcode.datagrid("getSelected");
+			editWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+				onBeforeOpen : setData(approveZipcodeObj)
+			});
+		}
+
+		//调用删除方法
+		function deleteApproveZipcode() {
+			var approveZipcodeObj = tblApproveZipcode.datagrid("getSelected");
+			$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/removeApproveZipcode.json",
+						data : approveZipcodeObj,
+						onSuccess : function(approveZipcodeObj) {
+							top.$cf.showMsg("删除成功！");
+							tblApproveZipcode.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+
+		function setData(data) {
+			editForm.form("load", data);
+			$("#id").attr("readonly", "readonly");
+			$("#id").attr("disabled", "disabled");
+		}
+
+		//关闭窗体
+		function onConcle(obj) {
+			var winObj = $("#" + obj);
+			winObj.window("close");
+			location.reload(true); 
+		}
+
+		//调用修改方法
+		function onUpdate() {
+			var approveZipcodeData = isRequired('editForm');
+			
+			if (approveZipcodeData.zipCode == null
+					|| approveZipcodeData.zipCode.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请输入邮编代码!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.zipCode);
+			if (len > 3) {
+				$.messager.alert("操作提示", "修改失败,邮编代码长度超过3位!");
+				return;
+			}
+			
+			if (approveZipcodeData.city == null
+					|| approveZipcodeData.city.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请输入城市!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.city);
+			if (len > 32) {
+				$.messager.alert("操作提示", "修改失败,城市长度超过32位!");
+				return;
+			}
+			
+			if (approveZipcodeData.telNo == null
+					|| approveZipcodeData.telNo.trim() == "") {
+				$.messager.alert("操作提示", "修改失败,请输入电话区号!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.telNo);
+			if (len > 4) {
+				$.messager.alert("操作提示", "修改失败,电话区号长度超过4位!");
+				return;
+			}
+			
+			var jsondata = getFormData(editForm.serializeArray());
+			$cf.ajax({
+				url : "/opas-naps/updateApproveZipcode.json",
+				data : jsondata,
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						top.$cf.showMsg("修改已成功！");
+						onConcle("winEdit");
+						tblApproveZipcode.datagrid("reload");
+					} else {
+						$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg,"error");
+						return;
+					}
+				}
+			});
+		}
+
+		function getFormData(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value;
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+		}
+
+		//调用新增方法
+		function onSave() {
+			var approveZipcodeData = isRequired('addForm');
+			
+			if (approveZipcodeData.zipCode == null
+					|| approveZipcodeData.zipCode.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入邮编代码!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.zipCode);
+			if (len > 3) {
+				$.messager.alert("操作提示", "添加失败,邮编代码长度超过3位!");
+				return;
+			}
+			
+			if (approveZipcodeData.city == null
+					|| approveZipcodeData.city.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入城市!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.city);
+			if (len > 32) {
+				$.messager.alert("操作提示", "添加失败,城市长度超过32位!");
+				return;
+			}
+			
+			if (approveZipcodeData.telNo == null
+					|| approveZipcodeData.telNo.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入电话区号!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.telNo);
+			if (len > 4) {
+				$.messager.alert("操作提示", "添加失败,电话区号长度超过4位!");
+				return;
+			}
+			
+			var jsondata = getFormData(addForm.serializeArray());
+
+			$cf.ajax({
+					url : "/opas-naps/saveApproveZipcode.json",
+					data : jsondata,
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							top.$cf.showMsg("添加已成功！");
+							onConcle("winAdd");
+							tblApproveZipcode.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "添加失败:" + data.exMsg,"error");
+							return;
+						}
+					}
+				});
+		}
+
+		$(function (){
+			$('#remoteMarket1').combobox({
+				onChange: function() {
+					var type1 = $('#remoteMarket1').combobox('getValue');
+					if (type1 == '0') {
+						$('#remoteMarketCity1').combobox('setValue', '').combobox('disable');
+						$('#remoteMarketStatus1').combobox('setValue', '').combobox('disable');
+					} else if (type1 == '1') {
+						$('#remoteMarketCity1').combobox('enable').combobox('setValue', '');
+						$('#remoteMarketStatus1').combobox('enable').combobox('setValue', '1');
+					}
+				}
+			});
+		})
+		$(function (){
+			$('#remoteMarket2').combobox({
+				onChange: function() {
+					var type1 = $('#remoteMarket2').combobox('getValue');
+					if (type1 == '0') {
+						$('#remoteMarketCity2').combobox('setValue', '').combobox('disable');
+						$('#remoteMarketStatus2').combobox('setValue', '').combobox('disable');
+					} else if (type1 == '1') {
+						$('#remoteMarketCity2').combobox('enable').combobox('setValue', '');
+						$('#remoteMarketStatus2').combobox('enable').combobox('setValue', '1');
+					}
+				}
+			});
+		})
+		
+		//查重方法,新增优先触发查重,之后执行新增
+		function queryRepetition() {
+			var approveZipcodeData = isRequired('addForm');
+			
+			if (approveZipcodeData.zipCode == null
+					|| approveZipcodeData.zipCode.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入邮编代码!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.zipCode);
+			if (len > 3) {
+				$.messager.alert("操作提示", "添加失败,邮编代码长度超过3位!");
+				return;
+			}
+			
+			if (approveZipcodeData.city == null
+					|| approveZipcodeData.city.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入城市!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.city);
+			if (len > 32) {
+				$.messager.alert("操作提示", "添加失败,城市长度超过32位!");
+				return;
+			}
+			
+			if (approveZipcodeData.telNo == null
+					|| approveZipcodeData.telNo.trim() == "") {
+				$.messager.alert("操作提示", "添加失败,请输入电话区号!");
+				return;
+			}
+			var len = getByteLen(approveZipcodeData.telNo);
+			if (len > 4) {
+				$.messager.alert("操作提示", "添加失败,电话区号长度超过4位!");
+				return;
+			}
+			
+			var jsondata = getFormData(addForm.serializeArray());
+
+			$cf.ajax({
+					url : "/opas-naps/queryRepetition.json",
+					data : jsondata,
+					onSuccess : function(data) {
+						if (data.RSP_BODY.repetition) {
+							$.messager.confirm(
+									'添加提示',
+									'邮政编码,账户类型,电话区号存在重复数据,确定要添加吗?',
+									function(r){
+										if(r){
+											onSave();
+											$.messager.alert("操作提示","添加成功");										
+										}
+									});
+							//top.$cf.showMsg("添加已成功！");
+							//onConcle("winAdd");
+							//tblApproveZipcode.datagrid("reload");
+						} else {
+							//$.messager.alert("操作提示", "添加失败:" + data.exMsg,"error");
+							onSave();
+							return;
+						}
+					}
+				});
+		}
+		
+		//批量删除
+		function deleteApproveZipcodes() {
+		var orgObj = tblApproveZipcode.datagrid("getChecked");
+		if (orgObj.length <= 0) {
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;
+		}
+		var ids = new Array();
+		for (var i = 0; i < orgObj.length; i++) {
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/deleteApproveZipcodes.json",
+							data : {"ids":ids},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("删除成功！");
+									tblApproveZipcode.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+		//全部删除
+		function deleteAllApproveZipcodes() {
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/deleteAllApproveZipcodes.json",
+							data : {},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("删除成功！");
+									tblApproveZipcode.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+	
+	//导入文件方法
+	var trigger = true;
+	$('#fb').filebox({    
+	buttonText: '选择文件', 
+	buttonAlign: 'right',
+	buttonIcon:'icon-search',
+	onChange: function (newValue, oldValue) {
+			excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+			if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+				alert("请上传excel格式的文件");
+				$('#fb').filebox('setValue','');
+				return;
+			}
+			if (trigger) {
+				$.messager.confirm({
+					width : 1000,
+					height : 200,
+					title : '请确认文件格式',
+					msg : "请确认导入的表格格式为：<br><br><br>邮编代码  账户类型  省份  城市  电话区号  区号渠道  是否异地营销  异地营销城市分类  异地营销城市状态",
+					fn : function(r) {
+						if (!r) {
+							trigger = false;
+							$('#fb').filebox("reset");
+							$('#fb').filebox('setValue','');
+						}
+					}
+				})
+			}
+		}
+	})
+
+	function resetValue(){
+	$('#fb').filebox('setValue','');
+	}
+
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+				$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+				importSave();
+		}
+	}
+	
+	
+	//上传保存数据
+	function importSave() {
+		$('#formFile').submit();
+ 		$.messager.progress(); 
+	}
+	
+	var tartIframe = document.getElementById("tartIframe");
+	tartIframe.src = "/opas-naps/common/ApproveZipcodeServlet.json";
+	if(tartIframe.attachEvent){
+		tartIframe.attachEvent("onload",function(){
+			responPage();
+		});
+	}else{
+		tartIframe.onload = function(){
+			responPage();			
+		}
+	}
+	
+	function responPage(){
+ 		$.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+			tblApproveZipcode.datagrid("reload");
+			top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+		}
+		if(value[0] == "false"){
+			$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+		}
+		
+	}	
+		
+		
+		
+		
+	</script>
+</html>

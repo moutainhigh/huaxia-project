@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.RoleResourceMapper">
+	
+	<resultMap id="result_BaseMenu" type="Menu">
+		<result column="RSRC_ID" property="id" jdbcType="CHAR" />
+		<result column="RSRC_NAME" property="name" jdbcType="VARCHAR" />
+		<result column="RSRC_URL" property="link" jdbcType="VARCHAR" />
+		<result column="RSRC_LEVEL" property="level" jdbcType="NUMERIC" />
+		<result column="RSRC_INDEX" property="index" jdbcType="NUMERIC" />
+		<result column="RSRC_PARENT_ID" property="pid" jdbcType="CHAR" />
+	</resultMap>
+	
+	<resultMap id="result_SelectListMapping" type="java.util.Map">
+		<result column="ROLE_ID" property="ROLE_ID" jdbcType="CHAR" />
+		<result column="RSRC_ID" property="RSRC_ID" jdbcType="CHAR" />
+	</resultMap>
+	
+	<select id="selectListMapping" resultMap="result_SelectListMapping">
+		SELECT RR.ROLE_ID, R.RSRC_ID
+		  FROM SYS_RESOURCE R, SYS_ROLE_RESOURCE RR
+		 WHERE R.RSRC_ID = RR.RSRC_ID
+		   AND R.RSRC_STATUS = '1'
+	</select>
+	
+	<select id="selectListByAccount" parameterType="java.lang.String" resultMap="result_BaseMenu">
+		SELECT DISTINCT T5.RSRC_ID,T5.RSRC_NAME,T5.RSRC_URL,T5.RSRC_LEVEL,T5.RSRC_INDEX,T5.RSRC_PARENT_ID
+		  FROM SYS_USER          T1,
+		       SYS_USER_ROLE     T2,
+		       SYS_ROLE          T3,
+		       SYS_ROLE_RESOURCE T4,
+		       SYS_RESOURCE      T5
+		 WHERE T1.USER_ID = T2.USER_ID
+		   AND T3.ROLE_ID = T2.ROLE_ID
+		   AND T3.ROLE_ID = T4.ROLE_ID
+		   AND T5.RSRC_ID = T4.RSRC_ID
+		   AND T1.USER_ACCT = #{account,jdbcType=VARCHAR}
+		   AND T5.RSRC_STATUS = '1'
+	  ORDER BY T5.RSRC_LEVEL, T5.RSRC_INDEX
+	</select>
+	
+	<delete id="deleteListMappingByKey" parameterType="java.lang.String">
+		DELETE FROM SYS_ROLE_RESOURCE WHERE ROLE_ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertListMapping" parameterType="java.util.Map">
+		INSERT INTO SYS_ROLE_RESOURCE (UUID,ROLE_ID,RSRC_ID)
+		<foreach collection="array" item="item" index="index" open="(" close=")" separator="UNION ALL">
+			 SELECT SYS_GUID(),#{id},#{item} FROM DUAL
+		</foreach>
+	</insert>
+	
+	<select id="selectTreeListMappingByKey" parameterType="java.lang.String" resultMap="result_SelectListMapping">
+		SELECT ROLE_ID,RSRC_ID FROM SYS_ROLE_RESOURCE WHERE ROLE_ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

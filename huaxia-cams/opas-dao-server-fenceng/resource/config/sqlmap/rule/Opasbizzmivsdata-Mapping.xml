@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opasbizzmivsdata">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opasbizzmivsdata">
+    <result column="INSIDE_APP_NO" jdbcType="VARCHAR" property="insideAppNo" />
+    <result column="IVS_SCORE" jdbcType="VARCHAR" property="ivsScore" />
+    <result column="BIZ_ID" jdbcType="VARCHAR" property="bizId" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="VARCHAR" property="recStatus" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="CERT_NO" jdbcType="CHAR" property="certNo" />
+    <result column="CERT_TYPE" jdbcType="CHAR" property="certType" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="MOBILE" jdbcType="CHAR" property="mobile" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="BANK_CARD" jdbcType="CHAR" property="bankCard" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="CODEADDRENGLISH" jdbcType="VARCHAR" property="codeAddrEnglish" />
+    <result column="CODEPHOENENGLISH" jdbcType="VARCHAR" property="codePhoenEnglish" />
+    <result column="CODENAMEENGLISH" jdbcType="VARCHAR" property="codeNameEnglish" />
+    <result column="CODEEMAILENGLISH" jdbcType="VARCHAR" property="codeEmailEnglish" />
+    <result column="CODECERTNOENGLISH" jdbcType="VARCHAR" property="codeCertnoEnglish" />
+  </resultMap>
+  
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.Opasbizinpapplc1" resultMap="BaseResultMap">
+    select 
+    INSIDE_APP_NO, IVS_SCORE, BIZ_ID, CRT_TIME, CRT_DATE, CRT_USER, 
+    LST_UPD_TIME, LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, REC_STATUS, APP_ID, CERT_NO, 
+    CERT_TYPE, NAME, MOBILE, EMAIL, BANK_CARD, ADDRESS,
+    CODEADDRENGLISH,CODEPHOENENGLISH,CODENAMEENGLISH,CODEEMAILENGLISH,CODECERTNOENGLISH
+     from OPAS_BIZ_ZM_IVS_DATA
+      where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opasbizzmivsdata">
+    insert into OPAS_BIZ_ZM_IVS_DATA (INSIDE_APP_NO, IVS_SCORE, BIZ_ID, 
+      CRT_TIME, 
+      CRT_DATE, CRT_USER, LST_UPD_TIME, 
+      LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, 
+      REC_STATUS, APP_ID, CERT_NO, 
+      CERT_TYPE, NAME, MOBILE, EMAIL, 
+      BANK_CARD, ADDRESS, IP, 
+      MAC, WIFIMAC, IMEI, 
+      IMSI)
+    values (#{insideAppNo,jdbcType=VARCHAR}, #{ivsScore,jdbcType=VARCHAR}, #{bizId,jdbcType=VARCHAR}, 
+      #{crtTime,jdbcType=TIMESTAMP}, 
+      #{crtDate,jdbcType=DATE}, #{crtUser,jdbcType=VARCHAR}, #{lstUpdTime,jdbcType=TIMESTAMP}, 
+      #{lstUpdDate,jdbcType=DATE}, #{lstUpdUser,jdbcType=VARCHAR}, #{batchDate,jdbcType=DATE}, 
+      #{recStatus,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{certNo,jdbcType=CHAR}, 
+      #{certType,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
+      #{bankCard,jdbcType=CHAR}, #{address,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
+      #{mac,jdbcType=VARCHAR}, #{wifimac,jdbcType=VARCHAR}, #{imei,jdbcType=VARCHAR}, 
+      #{imsi,jdbcType=VARCHAR})
+  </insert>
+  
+</mapper>

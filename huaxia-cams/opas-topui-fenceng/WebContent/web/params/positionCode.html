@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblPosition" title="职业代码列表" class="easyui-datagrid" style="width: 98%"
+		       data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-manualnode-auth/queryPositionCodeList.json',loadMsg:'数据加载中.....',method:'get',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<th field="positionId" width="5%" align="center" checkbox="true">职业代码ID</th>
+					<th field="positionCode" width="30%" align="center">职业代码</th>				
+					<th field="memo" width="30%" align="center">备注</th>			
+					<th field="operate" width="12%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="positionCodeCondion" style="padding: 2px 5px;">
+			<form id="seachPositionCodeForm">
+				<a href="javascript:common.openWin('winAdd');"
+					class="easyui-linkbutton" iconCls="icon-add">新增
+				</a> 
+					职业代码: 
+					<input class="easyui-textbox" style="width: 110px" name="positionCode"
+					id="positionCode"> 
+				<a
+					href="javascript:common.searchTbl('seachPositionCodeForm','tblPosition');"
+					class="easyui-linkbutton" iconCls="icon-search">查询
+				</a>
+			</form>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="职业代码修改"
+		style="width: 400px; height: 300px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="editForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">				
+						<tr>
+							<td align="right">职业代码:</td>
+							<td><textarea class="easyui-validatebox textbox" id="positionCode" style="height: 70px;width: 250px"
+								type="text" name="positionCode" ></textarea>
+							<input type="hidden" name="positionId" id="positionId" />
+						</tr>
+						<tr>
+							<td align="right">备注:</td>
+							<td><textarea class="easyui-validatebox textbox" id="memo" style="height: 70px;width: 250px"
+								type="text" name="memo" ></textarea>
+							</td>
+						</tr>
+					</table>
+					
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="职业码信息添加"
+		style="width: 400px; height: 300px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="addForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">职业代码:</td>
+							<td><textarea class="easyui-validatebox textbox" id="positionCode" style="height: 70px;width: 250px"
+								type="text" name="positionCode" ></textarea>
+						</tr>
+						<tr>
+							<td align="right">备注:</td>
+							<td><textarea class="easyui-validatebox textbox" id="memo" style="height: 70px;width: 250px"
+								type="text" name="memo" ></textarea>
+							</td>
+						</tr>
+					</table>
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>
+		        </div>
+				
+	</div>	
+
+</body>
+<script>
+	//$.parser.parse();
+	var tblPosition = $("#tblPosition");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editPositionCode(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:deletePositionCode();>删除</a>";
+	}
+
+	function editPositionCode() {
+		var orgObj = tblPosition.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(orgObj)
+		});
+	}
+
+	function deletePositionCode() {
+		var orgObj = tblPosition.datagrid("getSelected");
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-manualnode-auth/deletePositionCode.json",
+						data : orgObj,
+						onSuccess : function(orgObj) {
+							onConcle("save");
+							tblPosition.datagrid("reload");
+						}
+					});
+				}
+			});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-manualnode-auth/updatePositionCode.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblPosition.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		var paramData = isRequired('addForm');
+		$cf.ajax({
+			url : "/opas-manualnode-auth/addPositionCode.json",
+			data : paramData,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblPosition.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+	
+
+</script>

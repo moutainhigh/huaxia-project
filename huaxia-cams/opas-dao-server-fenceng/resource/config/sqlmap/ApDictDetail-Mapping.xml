@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="ApDictDetail">
+
+	<resultMap id="ApDictDetailResultMap" type="com.huaxia.opas.domain.dict.ApDictDetail">
+		<result column="DICT_ID" property="dictId" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_CODE" property="dictDetailCode" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_ID" property="dictDetailId" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_NAME" property="dictDetailName" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="DATE" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="DATE" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+	</resultMap>
+	
+	<resultMap id="ApDictDetailSmallResultMap" type="com.huaxia.opas.domain.dict.ApDictDetailSmall">
+		<result column="DICT_DETAIL_CODE" property="dictDetailCode" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_NAME" property="dictDetailName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insertApDictDetail"
+		parameterType="com.huaxia.opas.domain.dict.ApDictDetail">
+		insert into OPAS_AP_DICT_DETAIL
+		(DICT_ID,DICT_DETAIL_CODE,DICT_DETAIL_ID,DICT_DETAIL_NAME,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL)
+		values (
+		#{dictId,jdbcType=VARCHAR},
+		#{dictDetailCode,jdbcType=VARCHAR},
+		#{dictDetailId,jdbcType=VARCHAR},
+		#{dictDetailName,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{batchDate,jdbcType=DATE},
+		'0',
+		'00'
+		)
+	</insert>
+
+	<insert id="insertApDictDetailSelective"
+		parameterType="com.huaxia.opas.domain.dict.ApDictDetail">
+		insert into OPAS_AP_DICT_DETAIL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dictId != null">DICT_ID,</if>
+			<if test="dictDetailCode != null">DICT_DETAIL_CODE,</if>
+			<if test="dictDetailId != null">DICT_DETAIL_ID,</if>
+			<if test="dictDetailName != null">DICT_DETAIL_NAME,</if>
+			CRT_DATE,
+			CRT_TIME,
+			<if test="crtUser != null">CRT_USER,</if>
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			<if test="batchDate != null">BATCH_DATE,</if>
+			REC_STATUS,
+			SCR_LEVEL
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dictId != null">#{dictId,jdbcType=VARCHAR},</if>
+			<if test="dictDetailCode != null">#{dictDetailCode,jdbcType=VARCHAR},</if>
+			<if test="dictDetailId != null">#{dictDetailId,jdbcType=VARCHAR},</if>
+			<if test="dictDetailName != null">#{dictDetailName,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="batchDate != null">#{batchDate,jdbcType=DATE},</if>
+			'0',
+			'00'
+		</trim>
+	</insert>
+
+	<delete id="deleteApDictDetailByDictDetailId" parameterType="java.lang.String">
+		delete from OPAS_AP_DICT_DETAIL
+		where DICT_DETAIL_ID =
+		#{dictDetailId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateApDictDetail"
+		parameterType="com.huaxia.opas.domain.dict.ApDictDetail">
+		update OPAS_AP_DICT_DETAIL
+		<set>
+			DICT_ID = #{dictId,jdbcType=VARCHAR},
+			DICT_DETAIL_CODE =
+			#{dictDetailCode,jdbcType=VARCHAR},
+			DICT_DETAIL_NAME =
+			#{dictDetailName,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			BATCH_DATE =
+			#{batchDate,jdbcType=DATE}
+		</set>
+		where DICT_DETAIL_ID = #{dictDetailId,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateApDictDetailSelective"
+		parameterType="com.huaxia.opas.domain.dict.ApDictDetail">
+		update OPAS_AP_DICT_DETAIL
+		<set>
+			<if test="dictId != null">DICT_ID = #{dictId,jdbcType=VARCHAR},</if>
+			<if test="dictDetailCode != null">DICT_DETAIL_CODE = #{dictDetailCode,jdbcType=VARCHAR},</if>
+			<if test="dictDetailName != null">DICT_DETAIL_NAME = #{dictDetailName,jdbcType=VARCHAR},</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null">BATCH_DATE = #{batchDate,jdbcType=DATE}</if>
+		</set>
+		where DICT_DETAIL_ID = #{dictDetailId,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="queryApDictDetailByDictDetailId" parameterType="java.lang.String"
+		resultMap="ApDictDetailResultMap">
+		select * from OPAS_AP_DICT_DETAIL
+		where
+		DICT_DETAIL_ID = #{dictDetailId,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="queryDictDetailByCode" parameterType="java.lang.String"
+		resultMap="ApDictDetailSmallResultMap">
+		select detail.DICT_DETAIL_CODE,detail.DICT_DETAIL_NAME from
+		OPAS_AP_DICT_DETAIL detail,OPAS_AP_DICT dict
+		where dict.DICT_CODE = #{dictCode,jdbcType=VARCHAR} and
+		dict.DICT_ID=detail.DICT_ID
+		order by detail.DICT_DETAIL_CODE
+	</select>
+
+	<select id="queryApDictDetailList"
+		parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select * from OPAS_AP_DICT_DETAIL 
+		where DICT_ID = #{dictId,jdbcType=VARCHAR}
+		<if test="dictDetailName != null and dictDetailName != ''"> 
+		    AND DICT_DETAIL_NAME LIKE '%${dictDetailName}%'
+		</if>
+		<if test="dictDetailCode != null and dictDetailCode != ''">
+			AND DICT_DETAIL_CODE LIKE '%${dictDetailCode}%'
+		</if>
+
+	</select>
+
+	<select id="queryApDictDetailCount" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+	resultType="java.lang.String">
+	select count(*) from OPAS_AP_DICT_DETAIL
+	where DICT_ID = #{dictId,jdbcType=VARCHAR}
+		<if test="dictDetailName != null and dictDetailName != ''"> 
+		    AND DICT_DETAIL_NAME LIKE '%${dictDetailName}%'
+		</if>
+		<if test="dictDetailCode != null and dictDetailCode != ''">
+			AND DICT_DETAIL_CODE LIKE '%${dictDetailCode}%'
+		</if>
+
+	</select>
+
+	<delete id="deleteDictDetailByDictId" parameterType="java.lang.String">
+		delete from
+		OPAS_AP_DICT_DETAIL
+		where DICT_DETAIL_ID =
+		#{dictDetailId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryDictDetailListByDictId" parameterType="java.lang.String" resultMap="ApDictDetailResultMap">
+		select * from
+		OPAS_AP_DICT_DETAIL
+		where DICT_ID =
+		#{dictId,jdbcType=VARCHAR}
+	</select>
+
+	<!--参数管理:行职业参数字典表维护  -->
+	<!--城市代码 -->
+	<select id="queryCityMap" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'ZDCSDM'
+	</select>
+	<!--单位性质 -->
+	<select id="queryUnionMap" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'ZDDWXZID'
+	</select>
+	<!--教育程度 -->
+	<select id="queryEducationMap" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'ZDJYCDID'
+	</select>
+	<!--行业代码 -->
+	<select id="queryIndustryMap" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'ZDGZHYDM'
+	</select>
+	<!--职业代码 -->
+	<select id="queryJobMap" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'ZDZY'
+	</select>
+	<!--推荐来源 -->
+	<select id="queryRcdSrc" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'RCDSRC'
+	</select>
+	
+	<!-- 平台类型 -->
+	<select id="queryPlatType" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'PLATTYPE'
+	</select>
+	
+	<!-- 合作类型 -->
+	<select id="queryCoprType" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'COPRTYPE'
+	</select>
+	
+	<!-- 平台风险层级 -->
+	<select id="queryPlatRiskLvl" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'PLATRISKLVL'
+	</select>
+	
+	<!-- 接口模式-wenyh -->
+	<select id="queryInterfaceMode" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultMap="ApDictDetailResultMap">
+		select DICT_DETAIL_NAME,DICT_DETAIL_CODE from
+		OPAS_AP_DICT,OPAS_AP_DICT_DETAIL
+		where OPAS_AP_DICT_DETAIL.DICT_ID = OPAS_AP_DICT.DICT_ID
+		and OPAS_AP_DICT.DICT_CODE = 'INTERFACE_MODE'
+	</select>
+	
+	
+	<!-- 添加业务字典时校验是否添加重复   shihuan 2017-04-10 -->
+	<select id="queryApDetailByDictCode" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_DICT_DETAIL
+		where DICT_DETAIL_CODE = #{dictDetailCode,jdbcType=VARCHAR}
+		and DICT_ID = #{dictId,jdbcType=VARCHAR}
+	</select>
+	<!-- 添加业务字典时校验是否添加重复   shihuan 2017-04-10 -->
+	<select id="queryApDetailByDictName" parameterType="com.huaxia.opas.domain.dict.ApDictDetail"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_DICT_DETAIL
+		where DICT_DETAIL_NAME = #{dictDetailName,jdbcType=VARCHAR}
+		and DICT_ID = #{dictId,jdbcType=VARCHAR}
+	</select>
+</mapper>

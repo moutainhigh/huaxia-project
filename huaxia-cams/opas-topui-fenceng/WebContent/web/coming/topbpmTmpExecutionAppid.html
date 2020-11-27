@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<div>
+		<form id="seachPositionCodeForm">
+			<table >
+				<tr>		
+							<td>推进ID:</td>
+							<td><input type="text" class="easyui-textbox"
+								id="executionId" name="executionId" /></td>
+							<td>引擎ID:</td>
+							<td>
+								<input type="text" class="easyui-textbox"
+								id="webApplicationId" name="webApplicationId" />
+							</td>
+					
+				</tr>
+				<tr>
+							<td>状态:</td>
+							<td>
+								<select id="status" name="status" class="easyui-combobox" editable="false">
+									<option value="">--请选择--</option>
+									<option value="0">0</option>
+									<option value="99">99</option>
+									<option value="512">512</option>
+									<option value="-1">-1</option>
+								</select>
+							</td>
+							<td>节点ID:</td>
+							<td><input type="text" class="easyui-textbox"
+								id="activityName" name="activityName" /></td>
+				</tr>
+				<tr>		
+							<td>优先级:</td>
+							<td>
+								<select id="priority" name="priority" class="easyui-combobox" editable="false">
+									<option value="">--请选择--</option>
+									<option value="6">6</option>
+									<option value="5">5</option>
+									<option value="4">4</option>
+									<option value="3">3</option>
+									<option value="0">0</option>
+								</select>
+							</td>
+							<td>申请流水号:</td>
+							<td><input type="text" class="easyui-textbox"
+								id="appId" name="appId" /></td>
+				</tr>
+				<tr>
+							<td><a  class="easyui-linkbutton" id="btnCurrQuery" onclick="btnCurrQuery();">查询 </a>
+						    </td>  
+							<td><a  class="easyui-linkbutton" id="updateTmpSingleOrBatch" onclick="updateTmpSingleOrBatch();">批量更改</a>
+						    </td>  
+							<td><a  class="easyui-linkbutton" id="insertTmpSingle" onclick="insertTmpSingle();">单个插入</a>
+						    </td>  
+				
+				</tr>
+			</table>
+		</form>
+		
+	</div>
+	<table id="tblInfo" title="待处理条码" class="easyui-datagrid"
+		style="width: 98%;height:670px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[10,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="code" width="5%" align="center" checkbox="true">选择</th>
+				<th field="executionId" width="40%" align="center" data-options="formatter:queryDetail" >推进ID</th>
+				<th field="webApplicationId" width="35%"  align="center" hidden="true" >引擎ID</th>
+				<th field="appId" width="25%"  align="center" >申请件编号</th>
+				<th field="status" width="5%"  align="center" >状态</th>
+				<th field="activityName" width="15%"  align="center" >节点ID</th>
+				<th field="priority" width="10%"  align="center" >优先级</th>
+				<!-- <th field="dbid" width="20%"  align="center">主键</th> -->
+			</tr>
+		</thead>
+	</table>
+	
+</body>
+<script>
+		var tblInfo = $("#tblInfo");
+		var url = location.href;
+		$(function(){
+			var opts = tblInfo.datagrid("options");
+			opts.url = '/opas-naps/queryTopbpmTmpExecutionAppid.json';
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			tblInfo.datagrid("reload",jsondata);
+		});
+		
+		
+		function btnCurrQuery() {
+			var appIds = tblInfo.datagrid("getSelections");//选中的记录
+			//表单序列化
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			//动态加载url
+			$("#tblInfo").datagrid('options').url='/opas-naps/queryTopbpmTmpExecutionAppid.json';
+			$("#tblInfo").datagrid('load', jsondata);
+			
+		}
+		
+		function overTrim(dataObject) {
+				var jsonObject = '{';
+				var k = 0;
+				$.each(dataObject, function() {
+					k++;
+					var objName = this.name;
+					var objValue = this.value.trim();
+					jsonObject += '"' + objName + '":';
+					jsonObject += '"' + objValue + '"';
+					if (k < dataObject.length) {
+						jsonObject += ",";
+					}
+				});
+				jsonObject += '}';
+				return eval("(" + jsonObject + ")");
+		}
+		
+		//推进详情查看
+		function queryDetail(val, row, index) {
+			
+			var executionId = val+"";
+			return "<a href=javascript:getInfo();>"+executionId+"</a>";
+		}
+		function getInfo(){
+			var infoObj = tblInfo.datagrid("getSelected");
+			var executionId = infoObj["executionId"]; //动态传参数 
+			window.open("topbpmTmpExecutionDetail.html?executionId="+executionId,
+					"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-67));
+			
+		}
+		//
+		function updateTmpSingleOrBatch(){
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			var executionIds = tblInfo.datagrid("getSelections");//选中的记录
+			if(executionIds.length==0){
+				alert("请至少选中一条记录!");
+				return;
+			}
+			
+			var executionIdList = new Array();
+			for(var i=0;i<executionIds.length;i++){
+				var executionId = executionIds[i].executionId;
+				executionIdList.push(executionId);
+				
+			}	
+			$cf.ajax({
+				url : "/opas-naps/updateTmpSingleOrBatch.json",
+				data : {
+					"executionIdList" : executionIdList,
+					"jsondata":jsondata
+				},
+				onSuccess : function(dataRes) {
+					if (dataRes.RSP_BODY.isSuccess) {
+						$.messager.alert("操作提示", "更改成功!", "info", function() {
+							tblInfo.datagrid("reload");	
+						});
+
+					} else {
+						$.messager.alert("操作提示", "更改失败!", "error");
+						return;
+					}
+				}
+			});
+		}
+		function insertTmpSingle(){
+			var appId = document.getElementById("appId").value;
+			if(appId==null||appId==''||appId.trim()==''||appId.length!=16){
+				alert("请输入正确的条码!");
+				return;
+			}
+			var status = $('#status').combobox("getValue");
+			if(status!='0'&& status!='512'){
+				alert("请选定指定的状态0或512!");
+				return;
+			}
+			var activityName = $('#activityName').textbox("getValue");
+			if(activityName!=null && activityName!='' && 
+					(!activityName.match(RegExp(/AutoNode_/))
+					 && !activityName.match(RegExp(/WaitNode_/))
+					 && !activityName.match(RegExp(/StartNode_/))
+					 && !activityName.match(RegExp(/EndNode_/)))){
+				alert("请输入正确的节点ID!");
+				return;
+			}
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			$cf.ajax({
+				url : "/opas-naps/insertTmpSingle.json",
+				data : {
+					"jsondata":jsondata
+				},
+				onSuccess : function(dataRes) {
+					if (dataRes.RSP_BODY.isSuccess) {
+						$.messager.alert("操作提示", "更改成功!", "info", function() {
+							tblInfo.datagrid("reload");	
+						});
+
+					} else {
+						$.messager.alert("操作提示", "更改失败!", "error");
+						return;
+					}
+				}
+			});
+		}
+		
+		
+		
+</script>

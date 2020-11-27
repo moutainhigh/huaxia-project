@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>工作量统计</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+
+</head>
+<body style="padding: 10px;">
+	<h1>工作量查询</h1>
+	<fieldset>
+		<legend align="left">
+			<font size="2">搜索条件</font>
+		</legend>
+			<form id="searchForm" name="searchForm" method="post"
+				accept-charset="UTF-8">
+				<table id="tblSearch" name="tblSearch">
+					<tr align="left">
+						<td>起始时间： <input class="easyui-datebox" name="startTime"
+							id="startTime" style="width: 150px;" data-options="required:true" value="" />&nbsp;
+							结束时间:<input class="easyui-datebox" name="endTime"
+							id="endTime" style="width: 150px;" data-options="required:true" value="" /> <a
+							href="javascript:queryCount();" class="easyui-linkbutton"
+							style="margin-left: 20px;">查询</a>
+						</td>
+					</tr>
+
+				</table>
+			</form>
+	</fieldset>
+
+	<fieldset style="margin-top: 10px;">
+		<div id="workcount" name="workcount">
+			<table>
+				<tr><td>查看详情:</td></tr>
+				<tr>
+					<td>个人完成量:</td>
+					<td><input id="finishedWork" name="finishedWork" type="text"
+						class="easyui-validatebox textbox" readonly="readonly" style="height: 20px">&nbsp;件</td>
+				</tr>
+				<tr>
+					<td>未完成申请件数:</td>
+					<td><input id="unfinishedWork" name="unfinishedWork" type="text"
+						class="easyui-validatebox textbox" readonly="readonly" style="height: 20px">&nbsp;件</td>
+				</tr>
+				<tr>
+					<td>提交至其他环节数:</td>
+					<td><input id="sub2Other" name="sub2Other" type="text"
+						class="easyui-validatebox textbox" readonly="readonly" style="height: 20px">&nbsp;件</td>
+				</tr>
+			</table>
+		</div>
+	</fieldset>
+	<script type="text/javascript">
+	 
+	var d = new Date();
+	var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+	$('#startTime').val(str);
+	$('#endTime').val(str);
+	var searchForm = $("#searchForm");
+	var ydjFlag;
+	var url = location.href;
+	ydjFlag = url.split("=")[1];
+	//工作量查询
+	function queryCount() {
+		var searchData = isRequired('searchForm');
+		var startTime = searchData.startTime;
+		var jsondata = getFormData(searchForm.serializeArray());
+			jsondata.ydjFlag = ydjFlag;
+		if(jsondata.startTime == null || jsondata.startTime == "" || jsondata.endTime == null || jsondata.endTime == ""){
+			$.messager.alert("操作提示", "请指定要查询的日期", "error");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/credit_work_count_ydj.json",
+			data : jsondata,
+			onSuccess : function(response) {
+				//获取后台返回数据
+				var data1 = response.RSP_BODY.total1;
+				var data2 = response.RSP_BODY.total2;
+				var data3 = response.RSP_BODY.total3;
+				//取值
+				var finished = eval('(' +data1+ ')');
+				var unfinished = eval('(' +data2+ ')');
+				var toOther = eval('(' +data3+ ')');
+				//给文本框赋值
+				$("#finishedWork").val(finished);
+				$("#unfinishedWork").val(unfinished);
+				$("#sub2Other").val(toOther);
+			}
+		});
+	}
+	
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	}
+	
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tbFile" title="文档列表信息" class="easyui-datagrid"
+			style="width: 98%;height:440px"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-naps/fileUploadSelect.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#div_No2'">
+			<thead frozen="true">
+				<tr>
+					<th field="fileId" width="10%" align="center" checkbox="true"></th>
+					<th field="fileName" width="35%">文档名称</th>
+					<th field="bigCategory" width="8%" formatter="formatFileType" align="center">文档所属大类</th>
+					<th field="smallCategory" width="8%" formatter="formatFileSmallType" align="center">文档所属小类</th>
+					<!-- <th field="filePath" width="10%">文档路径</th>
+					<th field="rightControl" width="10%" align="center">所属权限</th> -->
+					<th field="uploadDate" width="12%" align="center" formatter="formatDate">创建日期</th>
+				    <th field="operatCode" width="8%" align="center">创建人工号</th>
+				    <th field="operatPerson" width="8%" align="center">创建人名称</th>
+					<th field="operate" width="16%" align="center"
+						data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="div_No2"
+			style="padding: 10px; text-align: center;">
+			<form id="seachPositionCodeForm">
+				<div id="seachCondion" class="area-search" style="padding: 10px;">
+					<form id="seachForm">
+						<table>
+							<tr>
+								<td>文档名称：</td>
+								<td><input class="easyui-textbox" name="fileName"
+									data-options="validType:'maxLength[12]'" style="width: 150px;" />
+								</td>
+								<td>文档所属小类：</td>
+								<td>
+									<select class="easyui-combobox" id="smallCategory_select"
+										style="width: 150px;" editable="false"
+										name="smallCategory"
+										data-options="valueField:'dictDetailCode',
+										textField:'dictDetailName'"></select>
+								</td>
+								<td>上传日期：</td>
+								<td><input class="easyui-datebox" id="" name="uploadDate" ></input></td>
+							</tr>
+						</table>
+					</form>
+					<div class="area-function">
+						<a href="javascript:common.searchTbl('seachPositionCodeForm','tbFile');" class="easyui-linkbutton" iconCls="icon-search">文档查询 </a>&nbsp;
+						<a href="javascript:common.openAddWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">PDF文件上传</a>
+						<a href="javascript:common.searchTblAndOpenWin('fileRoleConf_seachForm','tb_fileRoleConf','fileRoleConf');" class="easyui-linkbutton" iconCls="icon-save">文档角色配置</a>
+						<a href="javascript:common.searchTblAndOpenWin('personFilePowerConf_seachForm','tb_personFilePowerConf','personFilePowerConf');" class="easyui-linkbutton" iconCls="icon-save">单独个人文档浏览权限配置</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- 文档角色配置 -->
+	<div id="fileRoleConf" class="easyui-window" title="文档角色配置" style="width: 800px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<table id="tb_fileRoleConf" title="文档角色配置信息" class="easyui-datagrid"
+			style="width: 98%"
+			data-options="remoteSort:false,rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-naps/fileRoleSelect.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#fileRoleConf_No2'">
+			<thead frozen="true">
+				<tr>
+					<th field="roleName" width="30%">角色名称</th>
+				</tr>
+			</thead>
+			<thead>
+				<tr>
+				    <th field="smallCategory" width="30%" align="center">文档浏览类型</th>
+				    <th field="fileType" hidden="true"></th>
+				    <th field="roleCode" hidden="true"></th>
+					<th field="fileOperate" width="10%" align="center"
+						data-options="formatter:formatFileOperate">操作</th>
+						
+				</tr>
+			</thead>
+		</table>
+		<div id="fileRoleConf_No2"
+			style="padding: 10px; text-align: center;">
+			<form id="fileRoleConf_seachForm">
+				<div id="seachCondion" class="area-search" style="padding: 10px;">
+					<form id="seachForm">
+						<table>
+							<tr>
+								<td>角色：</td>
+								<td><input class="easyui-textbox" id = "roleName_1" name="roleName" style="width: 150px;" />
+								</td>
+								<td>文档类型：</td>
+								<td><input class="easyui-textbox" id = "fileType_1" name="fileType" style="width: 150px;" />
+								</td>
+								<td>
+									<a href="javascript:common.searchTbl('fileRoleConf_seachForm','tb_fileRoleConf');" class="easyui-linkbutton" iconCls="icon-search">文档查询 </a>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- 单独个人文档浏览权限配置 -->
+	<div id="personFilePowerConf" class="easyui-window" title="单独个人文档浏览权限配置" style="width: 800px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<table id="tb_personFilePowerConf" title="单独个人文档浏览权限配置" class="easyui-datagrid"
+			style="width: 98%"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-naps/personFilePowerSelect.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#personFilePowerConf_No2'">
+			<thead frozen="true">
+				<tr>
+					<th field="userName" width="30%">用户</th>
+				</tr>
+			</thead>
+			<thead>
+				<tr>
+				    <th field="fileRightControl" width="30%" align="center">文档浏览类型</th>
+					<th field="fileOperate" width="10%" align="center"
+						data-options="formatter:formatFileOperate_2">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="personFilePowerConf_No2"
+			style="padding: 10px; text-align: center;">
+			<form id="personFilePowerConf_seachForm">
+				<div id="seachCondion" class="area-search" style="padding: 10px;">
+					<form id="seachForm">
+						<table>
+							<tr>
+								<td>用户姓名：</td>
+								<td><input class="easyui-textbox" id="userName_2" name="userName" style="width: 150px;" />
+								</td>
+								<td>文档类型：</td>
+								<td><input class="easyui-textbox" id="fileType_2" name="fileType" style="width: 150px;" />
+								</td>
+								<td>
+									<a href="javascript:common.searchTbl('personFilePowerConf_seachForm','tb_personFilePowerConf');" class="easyui-linkbutton" iconCls="icon-search">文档查询 </a>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="updateFileRoleConf" class="easyui-window" title="配置文件类型" style="width: 400px; height: 200px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="updateFileRoleConfForm">
+			<table id = "addTable" cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr><td>文档权限类别：</td>
+					<td><input class="easyui-textbox" id="meBigCategory" style="width: 150px;" readonly="true"/>
+						<input type="hidden" name="flag" id = "flag"/>
+					</td>
+				</tr>
+				<tr><td>选择对应小类：</td>
+					<td>
+						<input id = "smallCategory1" name = "smallCategoryBox" type="checkbox" value="1"/>1&nbsp;
+						<input id = "smallCategory2" name = "smallCategoryBox" type="checkbox" value="2"/>2&nbsp;
+						<input id = "smallCategory3" name = "smallCategoryBox" type="checkbox" value="3"/>3&nbsp;
+						<input id = "smallCategory4" name = "smallCategoryBox" type="checkbox" value="4"/>4&nbsp;
+						<input id = "smallCategory5" name = "smallCategoryBox" type="checkbox" value="5"/>5&nbsp;
+						<input id = "smallCategory6" name = "smallCategoryBox" type="checkbox" value="6"/>6&nbsp;
+						<input id = "smallCategory7" name = "smallCategoryBox" type="checkbox" value="7"/>7&nbsp;
+						<input id = "smallCategory8" name = "smallCategoryBox" type="checkbox" value="8"/>8&nbsp;
+						<input id = "smallCategory9" name = "smallCategoryBox" type="checkbox" value="9"/>9&nbsp;
+						<input id = "smallCategory10" name = "smallCategoryBox" type="checkbox" value="10"/>10
+					</td>
+				</tr>
+				<tr>
+					<td>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSubmitConf('updateFileRoleConf')">提交</a>&nbsp;
+					</td>
+					<td>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('updateFileRoleConf')">关闭</a>
+					<input type="reset" name="reset" style="display:none"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<!-- PDF文档上传 -->
+	<div id="winAdd" class="easyui-window" title="文件上传" style="width: 400px; height: 300px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm" enctype="multipart/form-data" method="post" ACTION="/opas-naps/FileUploadServlet.json">
+			<table id = "addTable" cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>文件路径</td>
+					<td><input id="fileUploadPath" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个pdf文件'" size="20" name="fileUploadPath"/></td>
+				</tr>
+				<tr>
+					<td>备注：</td>
+					<td>上传文件只可以为PDF格式</td>
+				</tr>
+				<tr>
+					<td>文件所属小类</td>
+					<td><input id="smallCategory_add" class="easyui-combobox" size="25" name="smallCategory" data-options="required:true"/> 
+					</td>
+				</tr>
+				<tr>
+					<td>描述（少于200字）</td>
+					<td><textarea id="fileDescribe_add" cols="22" rows="5" name="fileDescribe" maxlength="200" class="required"></textarea></td>
+				</tr>
+				<tr>
+					<td>
+					<!-- <input id="submit" type="submit"  name="提交" onclick="onSubmit('winAdd')"/> -->
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSubmit('winAdd')">提交</a>&nbsp;
+					</td>
+					<td>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+					<input type="reset" name="reset" style="display:none"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<!-- 修改文档信息 -->
+	<div id="winEdit" class="easyui-window" title="用户信息修改"
+		style="width: 450px; height: 500px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="left">文档名称：</td>
+					<td>
+						<input type="hidden" size="30" name="fileId" data-options="validType:'fileId'"/>
+						<input class="easyui-textbox" name="fileName"
+						data-options="validType:'fileName'" style="width: 150px;" readonly="true"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="left">文件所属小类:</td>
+					<td>
+					<select class="easyui-combobox" id="smallCategory_update"
+										style="width: 150px;" editable="false"
+										name="smallCategory"
+										data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+					</td>
+				</tr>
+				<tr>
+					<td align="left">描述（少于200字）:</td>
+					<td><textarea id="fileDescribe_update" cols="28" rows="5" name="fileDescribe" maxlength="200" data-options="validType:'fileDescribe'"></textarea></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">关闭</a>
+		</div>
+	</div>
+	
+	<!-- 管理员树 -->
+	<div id="userRelationMenu" title="关联用户" class="easyui-window"
+		title="Window Layout"
+		data-options="iconCls:'icon-save',modal:true,closed:true"
+		style="width: 400px; height: 500px; padding: 5px;">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'" style="padding: 2px;">
+				<div id="menuInfo" data-options="region:'west'" title="用户信息"
+					style="width: 30%; height: 100%; padding: 1px">
+					<ul id="menuTree" class="easyui-tree"
+						data-options="animate:true,checkbox:true,cascadeCheck:false"></ul>
+				</div>
+			</div>
+			<div data-options="region:'south',border:false"
+				style="text-align: right; padding: 5px 0 0;">
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+					href="javascript:void(0)" onclick="saveUserControl()"
+					style="width: 80px">保存</a> <a class="easyui-linkbutton"
+					data-options="iconCls:'icon-cancel'" href="javascript:void(0)"
+					onclick="$('#userRelationMenu').window('close')"
+					style="width: 80px">关闭</a>
+			</div>
+		</div>
+	</div>
+	<!-- 文档流水信息 -->
+	<div id="relationOrg" class="easyui-window" title="文档流水信息"
+		style="width: 610px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="tblOrg" class="easyui-datagrid"
+				style="width: 600px; height: 310px" iconCls="icon-save"
+				rownumbers="true">
+				<thead>
+					<tr>
+						<th field="fileId" width="10%" align="center" checkbox="true"></th>
+						<th field="fileName" width="15%">文档名称</th>
+						<th field="operatType" width="15%" formatter="formatCode">操作类型</th>
+						<th field="operatCode" width="15%">操作人工号</th>
+						<th field="operator" width="15%">操作人姓名</th>
+						<th field="operatDate" width="20%" formatter="formatDate">操作日期</th>
+					</tr>
+				</thead>
+			</table>
+			<div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('relationOrg')">取消</a>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+<script>
+	$cf.loadAllDict();//加载业务字典
+	var tbFile = $("#tbFile");
+	var editWindow = $("#winEdit");
+	var editForm = $("#editForm");
+	var menuTree = $("#menuTree");
+	var tbFileLog = $("#tbFileLog");
+	var orgWindow = $("#relationOrg");
+	var fileRole;
+	var meBigCategory = "";
+	$(function(){
+		$cf.ajax({
+			url : "/opas-naps/currPersonBigCategoryControl.json",
+			data :{},
+			onSuccess : function(data) {
+				meBigCategory = data.RSP_BODY.powerCate;
+				comboboxAudit(meBigCategory,"smallCategory_select");
+			}
+		});
+		
+	});
+	
+	function formatOper(val, row, index) {
+		var fileName = row.fileName;
+		var fileId = row.fileId;
+		var swfname = fileName.substring(0, fileName.lastIndexOf("."))+".pdf";
+		return "<a href=javascript:editFile();>修改</a>&nbsp;<a href=javascript:deleteFile();>删除</a>&nbsp;"
+		/* +"<a href=javascript:relationUser();>授权</a>&nbsp;" */
+		+"<a href=javascript:relateOrg();>流水日志</a>&nbsp;"
+		+"<a href='javascript:openControlPage(\""+fileName+"\")' >浏览文档</a>";
+		//+"<a href=swfOnlineView.html?fileName="+fileName+"  target=_blank>浏览文档</a>";
+	}
+	function formatFileOperate(val, row, index){
+		return "<a href=javascript:updateFileTypes();>修改</a>"
+	}
+	function formatFileOperate_2(val, row, index){
+		return "<a href=javascript:updateFileTypes_2();>修改</a>"
+	}
+	var oldFileTypes = "";
+	function updateFileTypes(){
+		oldFileTypes = "";
+		var row = $("#tb_fileRoleConf").datagrid("getSelected");
+		//var meBigCategory = row.fileType;//当前人所属的文档大类
+		$("#meBigCategory").textbox('setValue',meBigCategory);
+		var smallCategoryList = row.smallCategory;
+		if(smallCategoryList!=null && smallCategoryList!=''){
+			var array = smallCategoryList.split(",");
+			for(var i = 0; i < array.length; i++){
+				var category = array[i].substring(0,1);
+				if(category==meBigCategory){
+					var num = array[i].substring(1);
+					$("#smallCategory"+num).prop("checked",true);
+					oldFileTypes = oldFileTypes + num + ",";
+				}
+			} 
+		}else{
+			for(var i=1;i<11;i++){
+				$("#smallCategory"+i).prop("checked",false);
+			}
+		}
+		$("#flag").val("1");
+		var winObj = $("#updateFileRoleConf");
+		winObj.window({
+			closed : false
+		});
+	}
+	function updateFileTypes_2(){
+		oldFileTypes = "";
+		var row = $("#tb_personFilePowerConf").datagrid("getSelected");
+		//var meBigCategory = row.fileType;//当前人所属的文档大类
+		$("#meBigCategory").textbox('setValue',meBigCategory);
+		var smallCategoryList = row.fileRightControl;
+		if(smallCategoryList!=null && smallCategoryList!=''){
+			var array = smallCategoryList.split(",");
+			for(var i = 0; i < array.length; i++){
+				var category = array[i].substring(0,1);
+				if(category==meBigCategory){
+					var num = array[i].substring(1);
+					$("#smallCategory"+num).prop("checked",true);
+					oldFileTypes = oldFileTypes + num + ",";
+				}
+			} 
+		}else{
+			for(var i=1;i<11;i++){
+				$("#smallCategory"+i).prop("checked",false);
+			}
+		}
+		$("#flag").val("2");
+		var winObj = $("#updateFileRoleConf");
+		winObj.window({
+			closed : false
+		});
+	}
+	function onSubmitConf(){
+		var row;
+		var data;
+		var newFileTypes = "";
+		for(var i = 1;i<11;i++){
+			var checked = $("#smallCategory"+i).prop("checked");
+			if(checked){
+				newFileTypes = newFileTypes + $("#smallCategory"+i).val() + ",";
+			}
+		}
+		if($("#flag").val()=="1"){
+			row = $("#tb_fileRoleConf").datagrid("getSelected");
+			var roleCode =  row.roleCode;
+			data ={
+					"flag" : "1",
+					"meBigCategory" : meBigCategory,
+					"roleCode" : roleCode,
+					"oldFileTypes" : oldFileTypes,
+					"newFileTypes" : newFileTypes
+				 }
+		}else{
+			row = $("#tb_personFilePowerConf").datagrid("getSelected");
+			data ={
+					"flag" : "2",
+					"userCode" : row.userCode,
+					"meBigCategory" : meBigCategory,
+					"newFileTypes" : newFileTypes
+				 }
+		}
+		
+		$cf.ajax({
+			url : "/opas-naps/updateFileRoleConf.json",
+			data : data,
+			onSuccess : function(data) {
+				if($("#flag").val()=="1"){
+					common.searchTbl('fileRoleConf_seachForm','tb_fileRoleConf');
+				}else{
+					common.searchTbl('personFilePowerConf_seachForm','tb_personFilePowerConf');
+				}
+				$("#updateFileRoleConf").window({
+					closed : true
+				});
+			}
+		});
+	}
+	function relateOrg() {
+		var fileObj = tbFile.datagrid("getSelected");
+		var fileid = fileObj.fileId;
+		logSelect(fileid);//获取用户相关联的机构信息及机构总信息
+
+	}
+	function logSelect(fileid) {
+		$cf.ajax({
+			url : "/opas-naps/fileUploadLog.json",
+			data : {
+				"fileId" : fileid
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					orgWindow.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false,
+					});
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					
+					var va = $('#tblOrg').datagrid("loadData", dataMap);
+					var dataRows = $('#tblOrg').datagrid('getRows');
+					var userOrgList = data.RSP_BODY.userOrgList;
+					var userOrgLength = userOrgList.length;
+					var dataLen = dataRows.length;
+					if (userOrgList != null) {
+						for (i = 0; i < dataLen; i++) { //遍历权限表	
+							var datarow = dataRows[i];
+							for (var j = 0; j < userOrgLength; j++) {
+								var userOrgRow = userOrgList[j];
+								if (datarow.orgId == userOrgRow.orgId) {
+									$("#tblOrg").datagrid('checkRow', i);
+								}
+							}
+						}
+					}
+				} else {
+					return;
+				}
+			}
+		});
+	}
+	
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/updateFile.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				onConcle('winEdit');
+				alert(data.RSP_BODY.msg);
+				tbFile.datagrid("reload");
+			}
+		});
+	}
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	function editFile() {
+		comboboxAudit(meBigCategory,"smallCategory_update");
+		var fileObj = tbFile.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(fileObj)
+		});
+	}
+	function comboboxAudit(model,obj){
+		var dictData = "[";
+		dictData = dictData + "{dictDetailCode:'',"
+		+ "dictDetailName:'--请选择--'},";
+		for (var i = 1; i <= 10; i++) {
+			var code = model+""+i;
+			if(i==10){
+				dictData = dictData + "{dictDetailCode:'" + code + "',"
+				+ "dictDetailName:'" + code + "'}]";
+			}else{
+				dictData = dictData + "{dictDetailCode:'" + code + "',"
+				+ "dictDetailName:'" + code + "'},";
+			}
+		}
+		// 自定义下拉框
+		dictData = eval('('+dictData+')');
+		$("#"+obj).combobox({    
+		    valueField:'dictDetailCode',    
+		    textField:'dictDetailName',
+		    data:dictData
+		});
+	}
+	function deleteFile() {
+		var fileObj = tbFile.datagrid("getSelected");
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/deleteFile.json",
+					data : fileObj,
+					onSuccess : function(data) {
+						alert(data.RSP_BODY.msg);
+						tbFile.datagrid("reload");
+					}
+				});
+			}
+		});
+	}
+	//关联管理员
+	function relationUser() {
+		$cf.ajax({
+			url : "/opas-naps/allUser.json",
+			/* data : {
+				"roleId" : roleId
+			}, */
+			onSuccess : function(data) {
+				var node = data.RSP_BODY.listUser;
+				menuTree.tree({
+					data : node,
+					onClick : function(node) {
+
+					}
+				});
+				showWin("userRelationMenu");
+			}
+		});
+	}
+	//保存用户授权
+	function saveUserControl() {
+		var row = tbFile.datagrid('getSelected');
+		var checkeNode = menuTree.tree('getChecked');
+		var smallCategory = row.smallCategory;
+		var userMenus = [];
+		for (var i = 0; i < checkeNode.length; i++) {
+			var roleObj = {"fileRightControl" : smallCategory};
+			roleObj.userId = checkeNode[i].id;
+			userMenus[i] = roleObj;
+		}
+		var data = {
+			"menuInfo" : userMenus
+		};
+		$cf.ajax({
+			url : "/opas-naps/user_right_control_save.json",
+			data : data,
+			onSuccess : function(data) {
+				alert(data.RSP_BODY.msg);
+				tbFile.datagrid("reload");
+				onConcle("userRelationMenu");
+			}
+		});
+	}
+	
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+		$("input[type=reset]").trigger("click");
+	}
+	//文件上传
+	function onSubmit(obj){
+		var fileUploadPath = $("#fileUploadPath").filebox('getValue');
+		if(fileUploadPath != ""){
+			if(fileUploadPath.indexOf(".pdf")<0){
+				alert("请选择正确的pdf格式的文件！");
+				return;
+			}
+		}
+		if($("#smallCategory_add").combobox("getValue") == null || $("#smallCategory_add").combobox("getValue") == ""){
+			alert("请选择文档所属小类！");
+			return;
+		}
+		
+		if (fileUploadPath == "") {
+			$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+			$.messager.progress();	// 显示进度条
+			$('#addForm').form('submit',{
+				url: "/opas-naps/FileUploadServlet.json",
+				onSubmit: function(){
+					var isValid = $(this).form('validate');
+					if (!isValid){
+						$.messager.progress('close');	// 如果表单是无效的则隐藏进度条
+					}
+					return isValid;	// 返回false终止表单提交
+				},
+				success: function(){
+					$.messager.progress('close');	// 如果提交成功则隐藏进度条
+					var smallCategory = $("#smallCategory_add").combobox('getValue');
+					var fileDescribe = $("#fileDescribe_add").val();
+					if (fileUploadPath == null || fileUploadPath.trim() == "") {
+						$.messager.alert("操作提示", "未选择上传文件,请选择要上传的文件!");
+						return;
+					}
+					var fileUploadData = {"fileUploadPath" : fileUploadPath,
+										  "smallCategory":smallCategory,
+										  "fileDescribe":fileDescribe};
+					$cf.ajax({
+						url : "/opas-naps/fileUpload.json",
+						data : fileUploadData,
+						onSuccess : function(data) {
+							onConcle('winAdd');
+							alert(data.RSP_BODY.msg);
+						}
+					});  
+				}
+			});
+			//$('#addForm').submit(); 
+		}
+	} 
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	};
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	//字段格式转换
+	function formatCode(value) {
+		if(value=='1'){
+			return "新增";
+		}else if(value=='2'){
+			return "删除";
+		}else{
+			return "修改";
+		}
+	}
+	common.openAddWin = function(winName){
+		comboboxAudit(meBigCategory,"smallCategory_add");
+		winObj = $("#" + winName + "");
+		winObj.window({
+			closed : false
+		});
+	}
+	//文件大类别
+	function formatFileType(val, row, index) {
+		return $cf.getDictDetailName("ZDWDDL", val);
+	}
+	//文件小类别
+	function formatFileSmallType(val, row, index) {
+		return $cf.getDictDetailName("ZDWDXL", val);
+	}
+	/** 打开控制页面 */
+	function openControlPage(fileName){
+		var path="swfOnlineView.html?fileName="+fileName;
+		window.open(path,"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-50));
+	}
+</script>

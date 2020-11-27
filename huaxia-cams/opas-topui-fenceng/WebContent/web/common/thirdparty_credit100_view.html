@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>百融核查详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var c_credit100 = new Array("0:本人直接命中","1:一度关系命中","2:二度关系命中");
+	var maxPaycate = new Array("C1:本地生活","C2:保险/理财","C3:出差旅游","C4:宠物生活","C5:电脑/办公","C6:房产","C7:服装配饰","C8:个护化妆",
+			"C9:家具建材","C10:家居家纺","C11:家用电器","C12:教育培训","C13:美食特产","C14:母婴用品","C15:汽车用品","C16:其他","C17:日用百货",
+			"C18:收藏","C19:手机/手机配件","C20:数码","C21:通讯","C22:文化娱乐","C23:网络游戏/虚拟物品 ","C24:鞋","C25:箱包","C26:运动户外",
+			"C27:医疗保健","C28:珠宝贵金属","C29:钟表首饰","C88:未知");
+	$(function(){
+		var credit100DetailForm=$("#credit100DetailForm");
+		var appId = GetQueryString("appId");
+		$cf.ajax({
+			data : {
+				"appId" : appId//'1512241611P10141'
+			},
+			url : "/opas-naps/credit100_detail_query.json",
+			onSuccess : function(res) {
+				var jsonCredit100Detail = res.RSP_BODY.applyCredit100Detail;
+				var credit100Detailjson = eval('(' +jsonCredit100Detail+ ')');
+				credit100DetailForm.form("load", credit100Detailjson); 
+				
+				if(res.RSP_BODY.QUERYID){
+					$("#slIdBankBad").val(valChange(credit100Detailjson.slIdBankBad,c_credit100));//不良
+					$("#slIdBankOverdue").val(valChange(credit100Detailjson.slIdBankOverdue,c_credit100));//短时间逾期
+					$("#slIdBankFraud").val(valChange(credit100Detailjson.slIdBankFraud,c_credit100));//资信不佳 
+					$("#slIdBankLost").val(valChange(credit100Detailjson.slIdBankLost,c_credit100));//失联
+					
+					$("#slIdPhoneOverdue").val(valChange(credit100Detailjson.slIdPhoneOverdue,c_credit100));//电信欠费 
+					$("#slIdCourtBad").val(valChange(credit100Detailjson.slIdCourtBad,c_credit100)); //法院失信人 
+					$("#slIdBankRefuse").val(valChange(credit100Detailjson.slIdBankRefuse,c_credit100));//拒绝 
+					$("#slIdAbnormal").val(valChange(credit100Detailjson.slIdAbnormal,c_credit100));//高危行为 
+					
+					$("#slIdNbankP2pFraud").val(valChange(credit100Detailjson.slIdP2pFraud,c_credit100));//P2P资信不佳
+					$("#slIdNbankP2pBad").val(valChange(credit100Detailjson.slIdNbankP2pBad,c_credit100));//P2P不良 
+					$("#slIdNbankP2pRefuse").val(valChange(credit100Detailjson.slIdNbankP2pRefuse,c_credit100));//P2P拒绝 
+					$("#slIdNbankP2pOverdue").val(valChange(credit100Detailjson.slIdNbankP2pOverdue,c_credit100));//P2P短期逾期
+					
+					$("#slIdNbankP2pLost").val(valChange(credit100Detailjson.slIdNbankP2pLost,c_credit100));//P2P失联 
+				}
+				
+				if(res.RSP_BODY.QUERYCELL){
+					$("#slCellBankBad").val(valChange(credit100Detailjson.slCellBankBad,c_credit100));//不良
+					$("#slCellBankOverdue").val(valChange(credit100Detailjson.slCellBankOverdue,c_credit100));//短期逾期
+					$("#slCellBankFraud").val(valChange(credit100Detailjson.slCellBankFraud,c_credit100));//资信不佳 
+					$("#slCellBankLost").val(valChange(credit100Detailjson.slCellBankLost,c_credit100));//失联 
+					
+					$("#slCellPhoneOverdue").val(valChange(credit100Detailjson.slCellPhoneOverdue,c_credit100));//电信欠费 
+					$("#slCellAbnormal").val(valChange(credit100Detailjson.slCellAbnormal,c_credit100));//高危行为 
+					$("#slCellBankRefuse").val(valChange(credit100Detailjson.slCellBankRefuse,c_credit100));//拒绝 
+					
+					$("#slCellNbankP2pFraud").val(valChange(credit100Detailjson.slCellNbankP2pFraud,c_credit100));//P2P资信不佳 
+					$("#slCellNbankP2pBad").val(valChange(credit100Detailjson.slCellNbankP2pBad,c_credit100));//P2P不良 
+					$("#slCellNbankP2pRefuse").val(valChange(credit100Detailjson.slCellNbankP2pRefuse,c_credit100));//P2P拒绝 
+					$("#slCellNbankP2pOverdue").val(valChange(credit100Detailjson.slCellNbankP2pOverdue,c_credit100));//P2P短期预期 
+					
+					$("#slCellNbankP2pLost").val(valChange(credit100Detailjson.slCellNbankP2pLost,c_credit100)); //p2p失联 
+				}
+				
+				$("#consMaxM3Paycate").val(valChangePaycate(credit100Detailjson.consMaxM3Paycate,maxPaycate));
+				$("#consMaxM12Paycate").val(valChangePaycate(credit100Detailjson.consMaxM12Paycate,maxPaycate));
+				//过滤null
+				nullChange();
+				// add by qingfeng.xiu 20190218 18:00 查询结果取父页面的查询结果
+				$("#recStatus").val(window.opener.document.getElementById("br_query_result").value);
+			}
+			});
+		//将页面所有input变为只读 
+		$("input[type='text']").each(function(){
+			$(this).attr("readonly","readonly");
+		});
+		
+	});
+	function valChange(oldVal,arr){
+		var len = arr.length;
+		var str_null = "";
+		if (oldVal == null||oldVal == ""){
+			return str_null;
+		}
+		if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal==temp[0]){
+					return temp[1];
+				}
+			}
+		}
+		return oldVal;
+	}
+	
+	function valChangePaycate(oldVal,arr){
+		var len = arr.length;
+		var str_null = "";
+		if (oldVal == null||oldVal == ""){
+			return str_null;
+		}
+		if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal==temp[0]){
+					return temp[1];
+				}
+			}
+		}
+		return oldVal;
+	}
+	
+	function nullChange(){
+		var inputs = $("input");
+		inputs.each(function(){
+			if($(this).val() == "null"){
+				$(this).val("");
+			}
+		});
+	}
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend>百融信息核查详细结果</legend>
+	<form id="credit100DetailForm" style="width:85%">
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">百融</span></legend>
+		<table   style="width:85%">
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;百融评分：</td>
+				<td><input name="brcreditpoint" id="brcreditpoint" type="text" style="border:none;text-align:left;"/></td>
+				<td>流水号：</td>
+				<td><input name="swiftNumber" id="swiftNumber"  type="text"  style="border:none;text-align:left;"/></td>
+				<td>状态：</td>
+				<td colspan="3"><input name="recStatus" id="recStatus"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">反欺诈</span></legend>
+		<table   style="width:95%">
+			<tr>
+				<td colspan="4">身份证检查</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;不良：<input name="slIdBankBad" id="slIdBankBad"  type="text" style="border:none;text-align:left;"/></td>
+				<td>短时间逾期：<input name="slIdBankOverdue" id="slIdBankOverdue"  type="text" style="border:none;text-align:left;"/></td>
+				<td>资信不佳：<input name="slIdBankFraud" id="slIdBankFraud"  type="text" style="border:none;text-align:left;"/></td>
+				<td>失联：<input name="slIdBankLost" id="slIdBankLost"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+			    <td>&nbsp;&nbsp;&nbsp;&nbsp;电信欠费：<input name="slIdPhoneOverdue" id="slIdPhoneOverdue"  type="text" style="border:none;text-align:left;"/></td>
+				<td>法院失信人：<input name="slIdCourtBad" id="slIdCourtBad"  type="text" style="border:none;text-align:left;"/></td>
+				<td>拒绝：<input name="slIdBankRefuse" id="slIdBankRefuse"  type="text" style="border:none;text-align:left;"/></td>
+				<td>高危行为：<input name="slIdAbnormal" id="slIdAbnormal"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;P2P资信不佳：<input name="slIdNbankP2pFraud" id="slIdNbankP2pFraud"  type="text" style="border:none;text-align:left;"/></td>
+				<td>P2P不良：<input name="slIdNbankP2pBad" id="slIdNbankP2pBad"  type="text" style="border:none;text-align:left;"/></td>
+				<td>P2P拒绝：<input name="slIdNbankP2pRefuse" id="slIdNbankP2pRefuse"  type="text" style="border:none;text-align:left;"/></td>
+				<td>P2P短期逾期：<input name="slIdNbankP2pOverdue" id="slIdNbankP2pOverdue"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+			    <td>P2P失联：<input name="slIdNbankP2pLost" id="slIdNbankP2pLost"  type="text" style="border:none;text-align:left;"/></td>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td colspan="4">手机检查</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;不良：<input name="slCellBankBad" id="slCellBankBad"  type="text" style="border:none;text-align:left;"/></td>
+				<td>短时间逾期：<input name="slCellBankOverdue" id="slCellBankOverdue"  type="text" style="border:none;text-align:left;"/></td>
+				<td>资信不佳：<input name="slCellBankFraud" id="slCellBankFraud"  type="text" style="border:none;text-align:left;"/></td>
+				<td>失联：<input name="slCellBankLost" id="slCellBankLost"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;电信欠费：<input name="slCellPhoneOverdue" id="slCellPhoneOverdue"  type="text" style="border:none;text-align:left;"/></td>
+				<td>高危行为：<input name="slCellAbnormal" id="slCellAbnormal"  type="text" style="border:none;text-align:left;"/></td>
+				<td>拒绝：<input name="slCellBankRefuse" id="slCellBankRefuse"  type="text" style="border:none;text-align:left;"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;P2P资信不佳：<input name="slCellNbankP2pFraud" id="slCellNbankP2pFraud"  type="text" style="border:none;text-align:left;"/></td>
+				<td>P2P不良：<input name="slCellNbankP2pBad" id="slCellNbankP2pBad"  type="text" style="border:none;text-align:left;"/></td>
+				<td>P2P拒绝：<input name="slCellNbankP2pRefuse" id="slCellNbankP2pRefuse"  type="text" style="border:none;text-align:left;"/></td>
+				<td>P2P短期逾期：<input name="slCellNbankP2pOverdue" id="slCellNbankP2pOverdue"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;P2P失联：<input name="slCellNbankP2pLost" id="slCellNbankP2pLost"  type="text" style="border:none;text-align:left;"/></td>
+				<td colspan="3"></td>
+			</tr>
+			</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">用户地址核对</span></legend>
+		<table  style="width:85%">
+			<tr>
+				<td colspan="2" >家庭住址</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第一个地址：<input name="locationHomeAddr1" id="locationHomeAddr1"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第二个地址：<input name="locationHomeAddr2" id="locationHomeAddr2"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+ 			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第三个地址：<input name="locationHomeAddr3" id="locationHomeAddr3"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第四个地址：<input name="locationHomeAddr4" id="locationHomeAddr4"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第五个地址：<input name="locationHomeAddr5" id="locationHomeAddr5"  type="text" style="border:none;text-align:left;"/></td>
+			    <td></td>
+			</tr>
+			<tr>
+				<td colspan="2" >公司地址</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第一个地址：<input name="locationBizAddr1" id="locationBizAddr1"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第二个地址：<input name="locationBizAddr2" id="locationBizAddr2"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第三个地址：<input name="locationBizAddr3" id="locationBizAddr3"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第四个地址：<input name="locationBizAddr4" id="locationBizAddr4"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第五个地址：<input name="locationBizAddr5" id="locationBizAddr5"  type="text" style="border:none;text-align:left;"/></td>
+				<td></td>
+			</tr>
+ 			<tr>
+				<td colspan="2" >户籍地址</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第一个地址：<input name="locationPerAddr1" id="locationPerAddr1"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第二个地址：<input name="locationPerAddr2" id="locationPerAddr2"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第三个地址：<input name="locationPerAddr3" id="locationPerAddr3"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第四个地址：<input name="locationPerAddr4" id="locationPerAddr4"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第五个地址：<input name="locationPerAddr5" id="locationPerAddr5"  type="text" style="border:none;text-align:left;"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" >申请地址</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第一个地址：<input name="locationApplyAddr1" id="locationApplyAddr1"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第二个地址：<input name="locationApplyAddr2" id="locationApplyAddr2"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第三个地址：<input name="locationApplyAddr3" id="locationApplyAddr3"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第四个地址：<input name="locationApplyAddr4" id="locationApplyAddr4"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第五个地址：<input name="locationApplyAddr5" id="locationApplyAddr5"  type="text" style="border:none;text-align:left;"/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" >其他地址</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第一个地址：<input name="locationOthAddr1" id="locationOthAddr1"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第二个地址：<input name="locationOthAddr2" id="locationOthAddr2"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第三个地址：<input name="locationOthAddr3" id="locationOthAddr3"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">第四个地址：<input name="locationOthAddr4" id="locationOthAddr4"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;第五个地址：<input name="locationOthAddr5" id="locationOthAddr5"  type="text" style="border:none;text-align:left;"/></td>
+				<td></td>
+			</tr>
+			</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">商品消费评估</span></legend>
+		<table   style="width:95%">
+			<tr>
+				<td colspan="4"  >总和</td>
+			</tr>
+			<tr>
+				<td colspan="4"  >最近3个月</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;浏览次数：<input name="consTotM3Visits" id="consTotM3Visits"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">消费次数：<input name="consTotM3Num" id="consTotM3Num"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:right;">&nbsp;&nbsp;消费金额：<input name="consTotM3Pay" id="consTotM3Pay"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:right;">浏览类目数：<input name="consTotM3PCatenum" id="consTotM3PCatenum"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+ 			<tr>
+				<td colspan="4">消费类目数：<input name="consTotM3VCatenum" id="consTotM3VCatenum"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4"  >最近12个月</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;浏览次数：<input name="consTotM12Visits" id="consTotM12Visits"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">消费次数：<input name="consTotM12Num" id="consTotM12Num"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:right;">&nbsp;&nbsp;消费金额：<input name="consTotM12Pay" id="consTotM12Pay"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:right;">浏览类目数：<input name="consTotM12PCatenum" id="consTotM12PCatenum"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4" >消费类目数：<input name="consTotM12VCatenum" id="consTotM12VCatenum"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">最大消费</td>
+			</tr>
+			<tr>
+				<td colspan="4">最近3个月</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;消费次数：<input name="consMaxM3Num" id="consMaxM3Num"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">消费金额：<input name="consMaxM3Pay" id="consMaxM3Pay"  type="text" style="border:none;text-align:left;"/></td>
+				<td colspan="2" style="text-align:center;">最大单类目消费金额的类目：<input name="consMaxM3Paycate" id="consMaxM3Paycate"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">最近12个月</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;消费次数：<input name="consMaxM12Num" id="consMaxM12Num"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">消费金额：<input name="consMaxM12Pay" id="consMaxM12Pay"  type="text" style="border:none;text-align:left;"/></td>
+				<td colspan="2" style="text-align:center;">最大单类目消费金额的类目：<input name="consMaxM12Paycate" id="consMaxM12Paycate"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">消费明细</td>
+			</tr>
+			<tr>
+				<td colspan="4">最近3个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;类目名称：家用电器</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" colspan="2">&nbsp;&nbsp;&nbsp;消费次数：<input name="consM3JydqNum" id="consM3JydqNum"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;" colspan="2">消费金额：<input name="consM3JydqPay" id="consM3JydqPay"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;类目名称：日用百货</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" colspan="2">&nbsp;&nbsp;&nbsp;消费次数：<input name="consM3RybhNum" id="consM3RybhNum"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;" colspan="2">消费金额：<input name="consM3RybhPay" id="consM3RybhPay"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;类目名称：母婴用品</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" colspan="2">&nbsp;&nbsp;&nbsp;消费次数：<input name="consM3MyypNum" id="consM3MyypNum"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;" colspan="2">消费金额：<input name="consM3MyypPay" id="consM3MyypPay"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">最近12个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;类目名称：家用电器</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" colspan="2">&nbsp;&nbsp;&nbsp;消费次数：<input name="consM12JydqNum" id="consM12JydqNum"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;" colspan="2">消费金额：<input name="consM12JydqPay" id="consM12JydqPay"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;类目名称：日用百货</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" colspan="2">&nbsp;&nbsp;&nbsp;消费次数：<input name="consM12RybhNum" id="consM12RybhNum"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;" colspan="2">消费金额：<input name="consM12RybhPay" id="consM12RybhPay"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;类目名称：母婴用品</td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" colspan="2">&nbsp;&nbsp;&nbsp;消费次数：<input name="consM12MyypNum" id="consM12MyypNum"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;" colspan="2">消费金额：<input name="consM12MyypPay" id="consM12MyypPay"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">收支等级评估</span></legend>
+		<table >
+			<tr>
+				<td>卡指数：</td>
+				<td><input name="" id=""  type="text" style="border:none"/></td>
+				<td>城市区号：</td>
+				<td><input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">过去1到3个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡</td>
+			</tr>
+			<tr>
+				<td>信用卡取现金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>信用卡逾期情况：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td  colspan="4">信用卡状态：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">储蓄卡</td>
+			</tr>
+			<tr>
+				<td>储蓄卡可用余额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>投资金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">还贷金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款</td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">过去4到6个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡</td>
+			</tr>
+			<tr>
+				<td>信用卡取现金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>信用卡逾期情况：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡状态：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">储蓄卡</td>
+			</tr>
+			<tr>
+				<td>储蓄卡可用余额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>投资金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">还贷金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款</td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款金额：</td>
+				<td><input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">过去7到9个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡</td>
+			</tr>
+			<tr>
+				<td>信用卡取现金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>信用卡逾期情况：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡状态：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">储蓄卡</td>
+			</tr>
+			<tr>
+				<td>储蓄卡可用余额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>投资金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">还贷金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款</td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">过去10到12个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡</td>
+			</tr>
+			<tr>
+				<td>信用卡取现金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>信用卡逾期情况：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td  colspan="4">信用卡状态：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">储蓄卡</td>
+			</tr>
+			<tr>
+				<td>储蓄卡可用余额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>投资金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">还贷金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款</td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">过去13到15个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡</td>
+			</tr>
+			<tr>
+				<td>信用卡取现金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>信用卡逾期情况：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡状态：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">储蓄卡</td>
+			</tr>
+			<tr>
+				<td>储蓄卡可用余额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>投资金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">还贷金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款</td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">过去16到18个月</td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡</td>
+			</tr>
+			<tr>
+				<td>信用卡取现金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>信用卡逾期情况：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">信用卡状态：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">储蓄卡</td>
+			</tr>
+			<tr>
+				<td>储蓄卡可用余额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>收入金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>支出金额：<input name="" id=""  type="text" style="border:none"/></td>
+				<td>投资金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">还贷金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款</td>
+			</tr>
+			<tr>
+				<td colspan="4">贷款金额：<input name="" id=""  type="text" style="border:none"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>		
+	</form>
+</fieldset>	
+</body>
+</html>

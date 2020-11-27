@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="addressLev">
+
+  <resultMap id="opasProvinceResultMap" type="com.huaxia.opas.domain.address.OpasProvince" >
+    <result column="P_UUID" property="Puuid" jdbcType="VARCHAR" />
+ 	<result column="PRO_ID" property="ProId" jdbcType="VARCHAR" />
+ 	<result column="PRO_NAME" property="ProName" jdbcType="VARCHAR" />
+ 	<result column="LEV" property="Lev" jdbcType="VARCHAR" />
+ 	<result column="CURR_STATUS" property="CurrStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="opasCityResultMap" type="com.huaxia.opas.domain.address.OpasCity" >
+	    <result column="C_UUID" property="Cuuid" jdbcType="VARCHAR" />
+	 	<result column="CITY_ID" property="CityId" jdbcType="VARCHAR" />
+	 	<result column="CITY_NAME" property="CityName" jdbcType="VARCHAR" />
+	 	<result column="PRO_ID" property="ProId" jdbcType="VARCHAR" />
+	 	<result column="LEV" property="Lev" jdbcType="VARCHAR" />
+	 	<result column="CURR_STATUS" property="CurrStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="opasAreaResultMap" type="com.huaxia.opas.domain.address.OpasArea" >
+	    <result column="A_UUID" property="Auuid" jdbcType="VARCHAR" />
+	 	<result column="AREA_ID" property="AreaId" jdbcType="VARCHAR" />
+	 	<result column="AREA_NAME" property="AreaName" jdbcType="VARCHAR" />
+	 	<result column="CITY_ID" property="CityId" jdbcType="VARCHAR" />
+	 	<result column="LEV" property="Lev" jdbcType="VARCHAR" />
+	 	<result column="CURR_STATUS" property="CurrStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="opasTownResultMap" type="com.huaxia.opas.domain.address.OpasTown">
+	    <result column="T_UUID" property="Tuuid" jdbcType="VARCHAR" />
+	 	<result column="TOWN_ID" property="TownId" jdbcType="VARCHAR" />
+	 	<result column="TOWN_ID1" property="TownId1" jdbcType="VARCHAR" />
+	 	<result column="TOWN_NAME" property="TownName" jdbcType="VARCHAR" />
+	 	<result column="LEV" property="Lev" jdbcType="VARCHAR" />
+	 	<result column="CURR_STATUS" property="CurrStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="queryProvinceDetail" resultMap="opasProvinceResultMap" parameterType="java.lang.String" >
+    select P_UUID,PRO_ID,PRO_NAME,LEV,CURR_STATUS from OPAS_PROVINCE
+    where CURR_STATUS = #{CurrStatus,jdbcType=VARCHAR}
+  </select>
+  <select id="queryCityDetail" resultMap="opasCityResultMap" parameterType="java.lang.String" >
+    select C_UUID,CITY_ID,CITY_NAME,PRO_ID,LEV,CURR_STATUS from OPAS_CITY
+    where CURR_STATUS = #{CurrStatus,jdbcType=VARCHAR}
+  </select>
+  <select id="queryAreaDetail" resultMap="opasAreaResultMap" parameterType="java.lang.String" >
+    select A_UUID,AREA_ID,AREA_NAME,CITY_ID,LEV,CURR_STATUS from OPAS_AREA
+    where CURR_STATUS = #{CurrStatus,jdbcType=VARCHAR}
+  </select>
+  <select id="queryTownDetail" resultMap="opasTownResultMap" parameterType="java.lang.String" >
+    select T_UUID,TOWN_ID,TOWN_ID1,TOWN_NAME,LEV,CURR_STATUS from OPAS_TOWN
+    where CURR_STATUS = #{CurrStatus,jdbcType=VARCHAR}
+  </select>
+</mapper>

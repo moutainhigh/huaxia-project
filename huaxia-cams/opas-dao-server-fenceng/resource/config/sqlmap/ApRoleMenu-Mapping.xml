@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApRoleMenu">
+
+	<resultMap id="ApRoleMenuResultMap" type="com.huaxia.opas.domain.system.ApRoleMenu">
+		<result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+		<result column="MENU_ID" property="menuId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="DATE" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="DATE" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+	</resultMap>
+
+	<insert id="insertApRoleMenu" parameterType="com.huaxia.opas.domain.system.ApRoleMenu">
+		insert into
+		OPAS_AP_ROLE_MENU
+		(ROLE_ID,MENU_ID,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_USER,LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL)
+		values (
+		#{roleId,jdbcType=VARCHAR},
+		#{menuId,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{batchDate,jdbcType=DATE},
+		'0',
+		'00'
+		)
+	</insert>
+
+	<insert id="insertApRoleMenuSelective" parameterType="com.huaxia.opas.domain.system.ApRoleMenu">
+		insert into OPAS_AP_ROLE_MENU
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">ROLE_ID,</if>
+			<if test="menuId != null">MENU_ID,</if>
+			CRT_DATE,
+			CRT_TIME,
+			<if test="crtUser != null">CRT_USER,</if>
+			<if test="lstUpdUser != null">LST_UPD_USER,</if>
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			<if test="batchDate != null">BATCH_DATE,</if>
+			REC_STATUS,
+			SCR_LEVEL
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">#{roleId,jdbcType=VARCHAR},</if>
+			<if test="menuId != null">#{menuId,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">#{lstUpdUser,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="batchDate != null">#{batchDate,jdbcType=DATE},</if>
+			'0',
+			'00'
+		</trim>
+	</insert>
+
+	<delete id="deleteApRoleMenuByMenuIdAndRoleId" parameterType="com.huaxia.opas.domain.system.ApRoleMenu">
+		delete from OPAS_AP_ROLE_MENU
+		where MENU_ID =
+		#{menuId,jdbcType=VARCHAR}
+		and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateApRoleMenu" parameterType="com.huaxia.opas.domain.system.ApRoleMenu">
+		update OPAS_AP_ROLE_MENU
+		<set>
+			ROLE_ID = #{roleId,jdbcType=VARCHAR},
+			MENU_ID =
+			#{menuId,jdbcType=VARCHAR},
+			LST_UPD_USER =
+			#{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			BATCH_DATE =
+			#{batchDate,jdbcType=DATE}
+		</set>
+		where MENU_ID = #{menuId,jdbcType=VARCHAR}
+		and ROLE_ID =
+		#{roleId,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateApRoleMenuSelective" parameterType="com.huaxia.opas.domain.system.ApRoleMenu">
+		update OPAS_AP_ROLE_MENU
+		<set>
+			<if test="roleId != null">ROLE_ID = #{roleId,jdbcType=VARCHAR},</if>
+			<if test="menuId != null">MENU_ID = #{menuId,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null">BATCH_DATE = #{batchDate,jdbcType=DATE}</if>
+		</set>
+		where MENU_ID = #{menuId,jdbcType=VARCHAR}
+		and ROLE_ID =
+		#{roleId,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="queryApRoleMenuByMenuIdAndRoleId" parameterType="com.huaxia.opas.domain.system.ApRoleMenu"
+		resultMap="ApRoleMenuResultMap">
+		select * from OPAS_AP_ROLE_MENU
+		where MENU_ID =
+		#{menuId,jdbcType=VARCHAR}
+		and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+
+	</select>
+
+	<delete id="deleteApRoleMenuByRoleId" parameterType="com.huaxia.opas.domain.system.ApRoleMenu">
+	delete from
+	OPAS_AP_ROLE_MENU
+	where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="deleteApRoleMenuByMenuId" parameterType="java.lang.String">
+		delete from
+		OPAS_AP_ROLE_MENU
+		where MENU_ID = #{menuId,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insertRoleMenuBatch" parameterType="java.util.List">
+		insert into OPAS_AP_ROLE_MENU
+		(ROLE_ID,MENU_ID,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.roleId,jdbcType=VARCHAR},
+			#{item.menuId,jdbcType=VARCHAR},
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			#{item.crtUser,jdbcType=VARCHAR},
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			#{item.batchDate,jdbcType=DATE},
+			'0',
+			'00'
+			from dual)
+		</foreach>
+	</insert>
+
+</mapper>

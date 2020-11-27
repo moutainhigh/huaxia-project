@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<div id="tblInfo"></div>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: left;">
+		<form id="seachPositionCodeForm">
+			开始时间：<input class="easyui-datebox" name="startDate" id="startDate"
+					style="width: 100px;" editable="false"/>
+			结束时间：<input class="easyui-datebox" name="endDate" id="endDate"
+					style="width: 100px;" editable="false"/>
+			<tr><td><br>	
+			<br>
+				<label class="alsp">用户所在组:</label> 
+				<input id="userOrg"  name="userOrg" class="easyui-combobox"  editable="false" />   
+				<label class="alsp">录入员:</label> 
+			 	<input id="operator"  name="operator" class="easyui-combobox" data-options="value:'--请选择所在组--'"  editable="false"/>
+	        	
+				<!-- <label class="alsp">工作组</label><input id="orgName" name="orgName" class="easyui-combobox" style="width:150px;" dict_type="ALLOT_SERIALNUM" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+				<label class="alsp">操作员</label><input id="applyer" name="applyer" class="easyui-combobox" style="width:150px;" dict_type="ALLOT_SERIALNUM" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/> -->
+				<label class="alsp">人工\系统</label><input id="gmOrAi" editable="false" name="gmOrAi" class="easyui-combobox" style="width:150px;" dict_type="GM_OR_AI" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+			</td></tr>
+			<!-- <a href="javascript:common.searchTbl('seachPositionCodeForm','tblInfo');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			 -->
+			<a href="javascript:seachPositionCodeForm();" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a id="cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+	$cf.loadAllDict();//用于引进    业务字典     
+	var tblInfo = $('#tblInfo')
+	$(function(){
+		$('#cleanButton').bind('click',function(){
+			buttonClean();
+		});
+		//获取小组名称
+		$cf.ajax({
+			url : '/opas-naps/query_orgName_apply.json',
+			onSuccess : function(response) {
+				debugger;
+				var resultList = response.RSP_BODY.resultList;
+				var list = eval('(' +resultList+ ')');
+				console.log(resultList);
+				$("#userOrg").combobox({
+					data:list,
+					valueField:'orgNo',
+					textField:'orgName',
+					
+					onSelect:function(rec){
+						//获取组员
+						//console.log(rec.orgNo);
+						$cf.ajax({
+							url : '/opas-naps/query_operatorName_apply.json',
+							data : {
+								'orgNo' : rec.orgNo
+							},
+							onSuccess : function(response) {
+								var userList = response.RSP_BODY.userList;
+								var operatorList = eval('(' +userList+ ')');
+								$('#operator').combobox({
+									data:operatorList,
+									valueField:'userName',
+									textField:'userName'
+								});  
+							}
+						});
+					}
+				});
+			}
+		});
+		tblInfo.datagrid({
+			toolbar:'#positionCodeCondion',
+			url:"",//"/opas-naps/apply_statistics.json",
+			border:false,
+			title:'审批工作量统计表',
+			animate:true,
+			pagination:true,
+			fitColumns:true,
+			singleSelect:false,
+			rownumbers:true,
+			pageSize:20,
+			pageList:[15,20,50],
+			columns:[[{
+				title:'工作组',
+				field:'orgName',
+				width:"9%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'审批员姓名',
+				field:'applyer',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'审批时间',
+				field:'approveTime',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'总审批件数',
+				field:'sumNum',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'总过件数',
+				field:'acceptNum',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'总拒件数',
+				field:'refuseNum',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'违例件数',
+				field:'invalidNum',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'过件率%',
+				field:'acceptPerc',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'拒件率%',
+				field:'refusePers',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'违例率%',
+				field:'invalidPerc',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			}
+			]]
+		});
+	})
+	
+	function seachPositionCodeForm(){
+		
+		var startDate=$('#startDate').datebox('getValue');
+		var endDate=$('#endDate').datebox('getValue');
+		
+		if((startDate==null||startDate=="")||(endDate==null||endDate=="")){
+			alert("所选时间不能为空！");
+			return;
+		}
+		var day = GetDateDiff(startDate,endDate);
+		if (day>32){
+			alert("区间不能超过31天");
+			return;
+		}
+		
+		var userOrg1 = $("#userOrg").combobox('getText');
+		var userOrg = $("#userOrg").combobox('getValue');
+		var operator1 =  $("#operator").combobox('getText');
+		var operator =  $("#operator").combobox('getValue');
+		var gmOrAi = $("#gmOrAi").combobox('getValue');
+		tblInfo.datagrid('options').url="/opas-naps/apply_statistics.json";
+		var s={"startDate":startDate,"endDate":endDate,"userOrg":userOrg,"operator":operator,"gmOrAi":gmOrAi};
+		tblInfo.datagrid("reload", s); 
+	}
+	
+	function GetDateDiff(startDate,endDate) {
+		var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+		var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+		var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+		return dates;
+	}
+	
+	function buttonClean(){
+		//因为 加了 value=-1 属性 以至于   form的reset 对这些input框失效了 所以单独clear
+		$('#orgName').combobox('clear');
+		$('#applyer').combobox('clear');
+		$('#gmOrAi').combobox('clear');
+		$('#card').combobox('clear');
+		$('#seachPositionCodeForm').form('reset');
+	}
+</script>

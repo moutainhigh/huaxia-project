@@ -1,0 +1,285 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+</head>
+	<body style="width:70%;">
+	<form id="patchForm">
+		<input type="hidden" name="appId" id="appId"/>
+		<div>
+		<table>
+			<tr>
+				<td align="right">补件期限:</td>
+				<td><input class="easyui-datebox" id="dueDate" name="dueDate" readonly="readonly"  style="width:150px"></input><span style="color: red">&nbsp;&nbsp;&nbsp;(万年历)</span></td>
+			</tr>
+			<h3>请选择需要补交的证明材料</h3>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="identityCard" value="1" name="identityCard" disabled="disabled"/></td>
+				<td>身份证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="isHavesign" value="1"  name="isHavesign" disabled="disabled"/></td>
+				<td>是否有签名</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="workConfirm" value="1"  name="workConfirm" disabled="disabled"/></td>
+				<td>工作证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="incomeConfirm" value="1"  name="incomeConfirm" disabled="disabled"/></td>
+				<td>收入证明文件</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="liveConfirm" value="1"  name="liveConfirm" disabled="disabled"/></td>
+				<td>居住证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="houseConfirm" value="1"  name="houseConfirm" disabled="disabled"/></td>
+				<td>房产证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="drivingLicense" value="1" name="drivingLicense"  disabled="disabled"/></td>
+				<td>行驶证</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="eduConfirm" value="1" name="eduConfirm" disabled="disabled"/></td>
+				<td>学历证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="titleConfirm" value="1" name="titleConfirm" disabled="disabled"/></td>
+				<td>资格证书</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="otherCreditcard" value="1"  name="otherCreditcard" disabled="disabled"/></td>
+				<td>他行信用卡或账单</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="ownerBankConfirm" value="1"  name="ownerBankConfirm" disabled="disabled"/></td>
+				<td>我行业务往来证明</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="financalConfirm" value="1"  name="financalConfirm" disabled="disabled"/></td>
+				<td>财力证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="others" value="1"  name="others" disabled="disabled"/></td>
+				<td>其他</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="nonAddfiles" value="1" name="nonAddfiles" disabled="disabled"/></td>
+				<td>未补充资料</td> 
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="workerOrder" value="1"  name="workerOrder" disabled="disabled"/></td>
+				<td>工单</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="vipAttr" value="1" name="vipAttr" disabled="disabled"/></td>
+				<td>VIP</td>
+			</tr>
+		</table>
+		</div>
+		<table>
+			<!-- 文档数据库表无以下字段 -->
+			<tr>
+				<td align="right">备注<span style="color: red">(最多50字)</span></td><!--  style="width:300px;height:100px" -->
+				<td><input class="easyui-textbox" id="memo" name="memo" style="width:300px;height:100px" data-options="multiline:true" disabled="disabled"></input></td>
+			</tr>
+			<tr>
+				<td align="right">分机号</td>
+				<td><input class="easyui-validatebox textbox" id="optTelno" name="optTelno" maxlength=3 disabled="disabled"></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="applyerCheckbox"  onclick="checkAp(this);" name="applyerCheckbox" disabled="disabled"/>&nbsp;&nbsp;&nbsp;申请人</td>
+				<td><input class="easyui-textbox" width="250px" id="applyer" name="applyer" readonly="readonly" ></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="promoterCheckbox" onclick="checkPr(this);" name="promoterCheckbox" disabled="disabled"/>&nbsp;&nbsp;&nbsp;推广人</td>
+				<td><input class="easyui-textbox" width="250px" id="promoter" name="promoter" readonly="readonly" ></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="riskCheckbox" onclick="checkRi(this);" name="riskCheckbox" disabled="disabled"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;风险</td>
+				<td><input class="easyui-textbox" width="250px" id="risk" name="risk" readonly="readonly" ></input></td>
+			</tr>
+		</table>
+	</form>
+	<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()" disabled="disabled">提交此补件</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')" disabled="disabled">关闭</a>
+	</div>
+	<script>
+	var aCheckbox = document.getElementById("applyerCheckbox");
+	var pCheckbox = document.getElementById("promoterCheckbox");
+	var rCheckbox = document.getElementById("riskCheckbox");
+	var patchForm = $("#patchForm");
+	var patchWin = $("#patchWin");
+	var patcauseForm = $("#patch2Form");
+	var appId  = "";
+	var userCode = parent.userCode;
+	$(function(){
+		appId = GetQueryString("appId");
+		$("#appId").val(appId);
+		$cf.ajax({
+			url : "/opas-naps/queryPatch.json",
+			data : {"appId":appId},
+			/* data : {"appId":"88"}, */
+			onSuccess : function(data) {
+				var jsonpatchbolt = data.RSP_BODY.jsonpatchbolt;
+				var patchboltjson = eval('(' +jsonpatchbolt+ ')');
+				var bizInfo = data.RSP_BODY.bizInfo;
+				console.log(patchboltjson);
+				if(patchboltjson.applyer!=null&&patchboltjson.applyer!=''){
+					$('input[name=applyerCheckbox]').prop("checked",true);
+				}
+				if(patchboltjson.promoter!=null&&patchboltjson.promoter!=''){
+					$('input[name=promoterCheckbox]').prop("checked",true);
+				}
+				if(patchboltjson.risk!=null&&patchboltjson.risk!=''){
+					$('input[name=riskCheckbox]').prop("checked",true);
+				}
+				patchForm.form("load", patchboltjson);
+				$("#applyer").textbox('setValue',bizInfo.c1Mobile);
+				$("#promoter").textbox('setValue',bizInfo.c4Abphon);
+			}
+		});
+	})
+	/* 二次补件 */
+	function twochange(){
+		$("#appId").val(appId);
+		$("#userCodes").val(userCode);
+		var jsondata = getFormData2(patchForm.serializeArray());//勾选的补件信息
+		if(jsondata.memo.trim().length > 50){
+			$.messager.alert("操作提示", "备注字数太多,请检查!");
+			return;
+		}
+		if(jsondata.applyer.trim().length > 16){
+			$.messager.alert("操作提示", "申请人字数太多,请检查!");
+			return;
+		}
+		if(jsondata.promoter.trim().length > 16){
+			$.messager.alert("操作提示", "推广人字数太多,请检查!");
+			return;
+		}
+		if(jsondata.risk.trim().length > 16){
+			$.messager.alert("操作提示", "风险字数太多,请检查!");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/patchboltTwo_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "提交二次补件成功!", "info", function() {
+						onConcle("winAdd");
+						window_close();
+					});
+				}else {
+					$.messager.alert("操作提示", "提交二次补件失败:" + data.exMsg, "error");
+					onConcle("winAdd");
+					return;
+				}
+			}
+
+		});
+	}
+	function checkAp(self){
+		if(aCheckbox.checked==true){
+			$("#applyer").textbox('readonly',false);
+		}else{
+			//$("#applyer").textbox('setValue','');
+			$("#applyer").textbox('readonly',true);
+		}
+	}
+	function checkPr(self){
+		if(pCheckbox.checked==true){
+			rCheckbox.checked = false;
+			$("#promoter").textbox('readonly',false);
+			$("#risk").textbox('readonly',true);
+		}else{
+			$("#promoter").textbox('readonly',true);
+			$("#risk").textbox('readonly',false);
+		}
+	}
+	function checkRi(self){
+		if(rCheckbox.checked==true){
+			pCheckbox.checked = false;
+			$("#risk").textbox('readonly',false);
+			$("#promoter").textbox('readonly',true);
+		}else{
+			$("#risk").textbox('readonly',true);
+			$("#promoter").textbox('readonly',false);
+		}
+	}
+	$(function(){
+		$("input[name=patchStatus]").change(function(){
+			var flag = $("input[name=patchStatus]:checked").attr("id");
+			if(flag=="a1"){
+		    $("#patchCode").textbox({disabled:false});			
+			}else{
+			$("#patchCode").textbox({disabled:true});	
+			$("#patchCode").textbox('setValue','');						
+			}
+		});
+	})
+	
+	/* 对补件下结论 */
+	function onSave() {
+		$("#appIds").val(appId);
+		$("#userCode").val(userCode);
+		var jsondatacause = getFormData2(patcauseForm.serializeArray());//对补件结果下结论，选择原因
+		var patchSta = jsondatacause.patchStatus;
+		var patchCod = jsondatacause.patchCode;
+		if(patchSta==1&&patchCod==null||patchCod==""){
+			alert("请输入补件码！");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/surePatchbolt_save.json",
+			data : jsondatacause,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.flag==2) {
+					$.messager.alert("操作提示", "提交成功!", "info", function() {
+						onConcle("patchWin");
+					});
+				}else if(data.RSP_BODY.flag==1) {
+					$.messager.alert("操作提示", "提交成功!", "info", function() {
+						onConcle("patchWin");
+						window.parent.opener.reload();
+						window_close();
+					});
+				}else {
+					$.messager.alert("操作提示", "提交失败:" + data.exMsg, "error");
+					onConcle("patchWin");
+					return;
+				}
+			}
+
+		});
+		
+	}
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	function getFormData2(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}	
+	function window_close(){
+		//为了屏蔽ie的 小弹框提示 
+		var newWin=parent.window.open("","_parent","");
+		newWin.opener.location.reload();
+		newWin.close();
+	}
+	</script>
+</body>
+

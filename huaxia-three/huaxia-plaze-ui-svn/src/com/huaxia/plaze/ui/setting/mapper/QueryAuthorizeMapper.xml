@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.setting.mapper.QueryAuthorizeMapper">
+
+	<select id="selectAuthorizeSettingByParams" parameterType="java.util.Map" resultType="java.util.Map">
+		  select crt_time，USERNAME，PASSWORD，SOURCE from (
+		SELECT T1.crt_time crt_time, T1.QUERY_USER USERNAME,T1.QUERY_PASS PASSWORD,T2.DICT_CODE SOURCE
+		  FROM SYS_QUERY_AUTHORIZE T1, SYS_DICT T2
+		 WHERE T1.QUERY_SOURCE = T2.DICT_CODE
+		   AND T2.PARENT_ID = '7EEE9DF9386A6A0FE0531907806A091F'
+		   AND T2.DICT_CODE = '01'
+		   <if test="queryUserBefore != null">
+       	   AND T1.QUERY_USER = #{queryUserBefore,jdbcType=VARCHAR} 
+           </if>
+           order by crt_time desc )
+           where   rownum&lt;2 
+	</select>
+	
+	<insert id="insertAuthorizeSetting" parameterType="java.util.Map">
+		INSERT INTO SYS_QUERY_AUTHORIZE (
+			UUID,CRT_TIME,CRT_USER,QUERY_USER,QUERY_PASS,QUERY_SOURCE
+		) VALUES (
+			SYS_GUID(),SYSDATE,
+			#{createUser,jdbcType=VARCHAR},
+			#{queryUser,jdbcType=VARCHAR},
+			#{queryPass,jdbcType=VARCHAR},
+			#{querySource,jdbcType=CHAR}
+		)
+	</insert>
+	
+	<update id="updateAuthorizeSetting" parameterType="java.util.Map">
+		UPDATE SYS_QUERY_AUTHORIZE
+		   SET QUERY_USER = #{queryUser,jdbcType=VARCHAR},
+		       QUERY_PASS = #{queryPass,jdbcType=VARCHAR},
+		       UPD_USER = #{updateUser,jdbcType=VARCHAR},
+		       UPD_TIME = SYSDATE
+		 WHERE QUERY_SOURCE = #{querySource,jdbcType=CHAR}
+	</update>
+	
+</mapper>

@@ -1,0 +1,833 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<!-- 	初始列表展示 -->
+	<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+		<table id="tblIdentityRisk" title="内部风险信息名单列表" class="easyui-datagrid" style="width: 98%;height:100%""
+		       data-options="rownumbers:true,singleSelect:false,checkOnSelect:false,pagination:true,fitColumns:true,pageSize:20,pageList:[15, 20, 50],url:'/opas-naps/innerRiskInfo_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#activeCodeCondion'">
+			<thead>
+				<tr>
+					<th field="autoId" id="autoIdList" name="autoId" align="center" checkbox="true">全选</th>
+					<th field="opretionLevel" align="center"  width="5%">风险等级</th>
+					<th field="companyName" align="center"  width="15%">单位名称</th>
+					<th field="companyTel" align="center"  width="10%">单位电话</th>
+					<th field="certifiNo" align="center"  width="10%">证件号码</th>
+					<th field="houseHold" align="center"  width="10%">户籍</th>
+					<th field="spreadOrg" align="center"  width="10%">推广机构</th>
+					<th field="spreadPer" align="center"  width="5%">推广人</th>
+					<th field="spreadNo" align="center"  width="10%">推广人编号</th>				
+					<th field="currStatus" align="center" formatter="formatStatus"  width="5%">状态</th>
+					<th field="operator" align="center"  width="5%">操作用户</th>
+					<th field="createTime" align="center"  formatter="gridDateFormatYMD"  width="10%">添加日期/时间</th>
+					<th field="invalidTime" align="center"  formatter="gridDateFormatYMD"  width="10%">结束日期/时间</th>
+					<th field="operatTime" align="center"  formatter="gridDateFormatYMD"  width="10%">修改日期/时间</th>
+					<th field="operate" align="center" data-options="formatter:formatOper"  width="10%">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="activeCodeCondion" style="padding: 2px 5px;">
+			<form id="seachActiveCodeForm">
+					单位名称:	<input class="easyui-textbox" style="width: 110px" name="companyName"> 
+					单位电话:	<input class="easyui-textbox" style="width: 110px" name="companyTel"> 
+					证件编号: <input class="easyui-textbox" style="width: 110px" name="certifiNo">
+					户籍:    <input class="easyui-textbox" style="width: 110px" name="houseHold">
+					推广机构: <input class="easyui-textbox" style="width: 110px" name="spreadOrg">
+					推广人员: <input class="easyui-textbox" style="width: 110px" name="spreadPer">
+					<br>
+					推广人编号: <input class="easyui-textbox" style="width: 110px" name="spreadNo">
+					风险等级: <input class="easyui-textbox" style="width: 110px" name="opretionLevel">
+					添加时间: <input class="easyui-datebox" style="width: 110px" name="createTime">
+					失效时间: <input class="easyui-datebox" style="width: 110px" name="invalidTime">
+				<a
+				href="javascript:common.searchTbl('seachActiveCodeForm','tblIdentityRisk');"
+					class="easyui-linkbutton" iconCls="icon-search">查询
+				</a>
+				<a href="javascript:myOpenWin('winAdd');"
+					class="easyui-linkbutton" iconCls="icon-add">新增
+				</a>  
+				<a href="javascript:deleteActivCode();"
+					class="easyui-linkbutton" iconCls="icon-remove">批量删除
+				</a>  
+				<a href="javascript:setActiveOk();"
+					class="easyui-linkbutton" iconCls="icon-ok">批量启用
+				</a>  
+				<a href="javascript:setActiveNo();"
+					class="easyui-linkbutton" iconCls="icon-no">批量停用
+				</a>  
+				<br>
+				<font color="blue" size="2">批量导入格式：单位名称	单位电话	证件号	户籍	推广机构	推广人员	推广编号	内容描述	失效时间	 风险等级 当前状态</font>
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/InnerRiskInfoServlet.json" target="tartIframe"> 
+				<div style="margin: 10px 0 0 30px;width:100%;">
+			        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+					<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+					<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+					<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+					<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+					<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+					<span class="filebox-label" style="left: 25px;"><font size="2">导入数据</font></span></span>
+				</div>
+			</form>	
+			<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+		</div>
+	</div>
+<!-- 	查看修改 -->
+	<div id="winEdit" class="easyui-window" title="内部风险信息名单修改"
+		style="width: 330px; height: 480px" 
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<form id="editForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">单位名称:</td>
+							<td><input class="easyui-textbox" type="text" name="companyName" style="width: 160px" data-options="validType:'length[0,50]'" ></input>
+								<input type="hidden" name="autoId"/>
+							</td>						
+						</tr>
+						<tr>		
+							<td align="right">单位电话:</td>
+							<td><input class="easyui-validatebox" type="text" name="companyTel" style="width: 160px"  ></input>
+						</tr>
+						<tr>
+							<td align="right">证件号码:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="certifiNo" style="width: 160px"  data-options="validType:'length[0,20]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">户籍:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="houseHold" style="width: 160px" data-options="validType:'length[0,20]'"  ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广机构:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadOrg" style="width: 160px"  data-options="validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广人员:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadPer" style="width: 160px"  data-options="validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广人编号:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadNo" style="width: 160px"  data-options="validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">风险等级:</td>
+							<td>
+								<select  class="easyui-combobox"  style="width: 160px" name="opretionLevel" editable="false">
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+									<option value="E">E</option>
+								</select>														
+							</td>
+						</tr>
+						<tr>
+							<td align="right">状态:</td>
+							<td>
+								<select  class="easyui-combobox"  style="width: 160px" name="currStatus">
+									<option value="1">启用</option>
+									<option value="0">停用</option>
+								</select>														
+							</td>
+						</tr>
+						<tr>
+							<td align="right">操作员:</td>
+							<td>
+								<input class="easyui-textbox" name="operator" style="width: 160px" disabled="disabled"/>
+							</td>
+						</tr>						
+						<tr>
+							<td align="right" >添加日期:</td>
+							<td>
+								<input id="showCreateTime" class="easyui-datebox" style="width: 160px" name="createTime"/>
+							</td>
+						</tr>						
+						<tr>
+							<td align="right" >失效时间:</td>
+							<td>
+								<input class="easyui-datebox" id="invalidTime" name="invalidTime" style="width: 160px" editable="false"></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">内容描述:</td>
+							<td><textarea class="easyui-validatebox textbox" style="height: 100px;width: 160px" data-options="multiline:true,validType:'length[0,50]'"
+								type="text" name="contentDesc" ></textarea>
+							</td>								
+						</tr>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+		  </div>
+		</div>	        
+	</div>
+<!-- 	新增页面 -->
+	<div id="winAdd" class="easyui-window" title="内部风险信息名单添加"
+		style="width: 480px; height: 480px" 
+			data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<form id="addForm" method="post">
+				<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">单位名称:</td>
+							<td><input class="easyui-textbox" type="text" name="companyName" style="width: 160px"data-options="validType:'length[0,50]'" ></input>
+								<input type="hidden" name="autoId"/>
+							</td>						
+						</tr>
+						<tr>		
+							<td align="right">单位电话:</td>
+							<td><input class="easyui-textbox" type="text" name="companyTel" style="width: 160px"></input></td>
+						</tr>
+						<tr>
+							<td align="right">证件号码:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="certifiNo"  style="width: 160px" data-options="validType:'length[0,20]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">户籍:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="houseHold" style="width: 160px"  data-options="validType:'length[0,20]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广机构:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadOrg" style="width: 160px"  data-options="validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广人员:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadPer" style="width: 160px" data-options="validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广人编号:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadNo" style="width: 160px"  data-options="validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">风险等级:</td>
+							<td>
+								<select  class="easyui-combobox"  id="opretionLevel" style="width: 160px" name="opretionLevel" editable="false">
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+									<option value="E">E</option>
+								</select>														
+							</td>
+						</tr>						
+						<tr>
+							<td align="right">状态:</td>
+							<td>
+								<select  class="easyui-combobox"  id="currStatusAdd" style="width: 160px" name="currStatus">
+									<option value="1" selected="selected">启用</option>
+									<option value="0">停用</option>
+								</select>														
+							</td>
+						</tr>
+						<tr>
+							<td align="right" >失效时间:</td>
+							<td>
+								<input class="easyui-datebox" id="invalidTimeAdd" name="invalidTime" editable="false" style="width: 160px" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">内容描述:</td>
+							<td><textarea class="easyui-validatebox" rows="5" style="height: 100px;width: 160px" data-options="multiline:true,validType:'length[0,50]'"
+								type="text" name="contentDesc" ></textarea>
+							<span>(50字以内)</span></td>								
+						</tr>
+					</table>					
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>
+		        </div>
+		     </div>
+		</div>        
+	</div>	
+	
+	<div id="showWindow" class="easyui-window" title="内部风险信息名单查看"
+		style="width: 330px; height: 480px" 
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<form id="showForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">单位名称:</td>
+							<td><input class="easyui-textbox" type="text" name="companyName" style="width: 160px" data-options="readonly:true,editable:false,validType:'length[0,50]'" ></input>
+								<input type="hidden" name="autoId"/>
+							</td>						
+						</tr>
+						<tr>		
+							<td align="right">单位电话:</td>
+							<td><input class="easyui-textbox" type="text" name="companyTel" style="width: 160px"  data-options="readonly:true,editable:false"></input>
+						</tr>
+						<tr>
+							<td align="right">证件号码:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="certifiNo" style="width: 160px"  data-options="readonly:true,editable:false,validType:'length[0,20]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">户籍:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="houseHold" style="width: 160px" data-options="readonly:true,editable:false,validType:'length[0,20]'"  ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广机构:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadOrg" style="width: 160px"  data-options="readonly:true,editable:false,validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广人员:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadPer" style="width: 160px"  data-options="readonly:true,editable:false,validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">推广人编号:</td>
+							<td>
+								<input class="easyui-textbox" type="text" name="spreadNo" style="width: 160px"  data-options="readonly:true,editable:false,validType:'length[0,32]'" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">风险等级:</td>
+							<td>
+								<select  class="easyui-combobox"  style="width: 160px" name="opretionLevel" readonly="true",editable="false">
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+									<option value="E">E</option>
+								</select>														
+							</td>
+						</tr>
+						<tr>
+							<td align="right">状态:</td>
+							<td>
+								<select  class="easyui-combobox"  style="width: 160px" name="currStatus" readonly="true",editable="false">
+									<option value="1">启用</option>
+									<option value="0">停用</option>
+								</select>														
+							</td>
+						</tr>
+						<tr>
+							<td align="right">操作员:</td>
+							<td>
+								<input class="easyui-textbox" name="operator" style="width: 160px" disabled="disabled" readonly="true",editable="false"/>
+							</td>
+						</tr>						
+						<tr>
+							<td align="right" >添加日期:</td>
+							<td>
+								<input id="showCreateTime3" class="easyui-datetimebox" style="width: 160px" name="createTime" readonly="true",editable="false"/>
+							</td>
+						</tr>						
+						<tr>
+							<td align="right" >失效时间:</td>
+							<td>
+								<input class="easyui-datebox" id="invalidTime3" name="invalidTime" style="width: 160px" editable="false" readonly="true"></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">内容描述:</td>
+							<td><textarea class="easyui-validatebox textbox" style="height: 100px;width: 160px" data-options="multiline:true,validType:'length[0,50]'"
+								type="text" name="contentDesc" readonly="true",editable="false"></textarea>
+							</td>								
+						</tr>
+					</table>
+				</form>
+		  </div>
+		</div>	        
+	</div>
+	<!-- 历史列表页面展示 -->
+	<div id="dictWin" class="easyui-window" title="操作历史记录"
+		style="width: 1000px; height: 600px;"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<table id="tblDict1" class="easyui-datagrid"
+					data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,pageSize:20,pageList:[15, 20, 50],loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+						<tr>
+							<th field="companyName" align="center"  width="15%">单位名称</th>
+							<th field="companyTel" align="center"  width="10%">单位电话</th>
+							<th field="certifiNo" align="center"  width="10%">证件号码</th>
+							<th field="houseHold" align="center"  width="10%">户籍</th>
+							<th field="spreadOrg" align="center"  width="10%">推广机构</th>
+							<th field="spreadPer" align="center"  width="5%">推广人</th>
+							<th field="spreadNo" align="center"  width="10%">推广人编号</th>
+							<th field="contentDesc"  align="center"  width="10%">内容描述</th>
+							<th field="opretionLevel"  align="center"  width="8%">风险等级</th>
+							<th field="currStatus" align="center" formatter="formatStatus"  width="5%">状态</th>
+							<th field="operator" align="center"  width="8%">操作用户</th>
+<!-- 							<th field="createTime" align="center"  formatter="gridDateFormatYMD"  width="10%">添加日期/时间</th> -->
+							<th field="invalidTime" align="center"  formatter="gridDateFormatYMD"  width="10%">结束日期/时间</th>
+							<th field="operatTime" align="center"  formatter=gridDateFormatYMD  width="10%">修改日期/时间</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+</body>
+<script>
+	//$.parser.parse();
+	//$cf.loadAllDict();//加载业务字典
+	var tblIdentityRisk = $("#tblIdentityRisk");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	var showWindow = $("#showWindow");
+	var showForm = $("#showForm");
+	//选中行临时存储变量
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+	 tblIdentityRisk.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})	 
+	
+	function formatOper(val, row, index) {
+		return "<a href=javascript:showInnerRisk(); >查看</a>&nbsp;<a href=javascript:editActiveCode(); >修改</a>&nbsp;<a href=javascript:openWinTbll('dictWin','tblIdentityRisk','tblDict1','/opas-naps/innerRiskInfo_history_list.json','autoId');>历史记录</a>";
+	}
+
+	function addActive(){
+		addWindow.window({
+			closed : false
+		});
+	} 
+	 
+	//查看
+	function showInnerRisk() {
+		showWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+ 		var cTime = gridDateFormatYMD(value.createTime);
+ 		var iTime = gridDateFormatYMD(value.invalidTime);
+		$('#showCreateTime3').textbox('setValue',cTime);
+// 		$('#showCreateTime').textbox({disabled:true});
+		$('#invalidTime3').datebox('setValue',iTime); 
+	}
+	//展示编辑数据
+	function editActiveCode() {
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+ 		var cTime = gridDateFormatYMD(value.createTime);
+ 		var iTime = gridDateFormatYMD(value.invalidTime);
+		$('#showCreateTime').textbox('setValue',cTime);
+// 		$('#showCreateTime').textbox({disabled:true});
+		$('#invalidTime').datebox('setValue',iTime); 
+	}
+	
+	function setData(data) {
+		editForm.form("load", data);
+		showForm.form("load",data);
+	}
+ 
+	//页面状态展示启用状态
+	function  formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	}	
+ 	//批量删除
+	function deleteActivCode() {
+		var orgObj = tblIdentityRisk.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}		
+		var ids = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/innerRiskInfo_delete.json",
+						data : {"ids":ids},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单删除成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "名单删除失败！", "error");
+							}
+						}
+					});
+				}
+			});
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	
+	//数据校验
+	 function checkData(jsondata , cue){
+		
+		if (null != jsondata.companyName && jsondata.companyName.trim().length > 50) {
+			$.messager.alert("操作提示", cue+"失败:单位名称长度不能超过50个字符!", "error");
+			return true;
+		}
+		
+		if (null != jsondata.companyTel) {
+			if(jsondata.companyTel.trim().length > 0 && jsondata.companyTel.trim().length > 20){
+			$.messager.alert("操作提示", cue+"失败:单位电话长度过长!", "error");
+			return true;
+			}
+		}
+		
+		if (null != jsondata.certifiNo && jsondata.certifiNo.trim().length > 20) {
+			$.messager.alert("操作提示", cue+"失败:证件号码长度不能超过20个字符!", "error");
+			return true;
+		}
+		
+		if (null != jsondata.houseHold && jsondata.houseHold.trim().length > 20) {
+			$.messager.alert("操作提示", cue+"失败:户籍长度不能超过20个字符!", "error");
+			return true;
+		}
+		
+		if (null != jsondata.spreadOrg && jsondata.spreadOrg.trim().length > 32) {
+			$.messager.alert("操作提示", cue+"失败:推广机构长度不能超过32个字符!", "error");
+			return true;
+		}
+		
+		if (null != jsondata.spreadPer && jsondata.spreadPer.trim().length > 32 ) {
+			$.messager.alert("操作提示", cue+"失败:推广人员长度不能超过32个字符!", "error");
+			return true;
+		}
+		
+		if (null != jsondata.spreadNo && jsondata.spreadNo.trim().length > 32 ) {
+			$.messager.alert("操作提示", cue+"失败:推广人编号长度不能超过32个字符!", "error");
+			return true;
+		}
+		
+		if ("0" != jsondata.currStatus &&  "1" != jsondata.currStatus) {
+			$.messager.alert("操作提示", cue+"失败:启用状态格式不正确!", "error");
+			return true;
+		}
+		
+		if (jsondata.invalidTime != null) {
+			if(jsondata.invalidTime.trim().length != 10 && jsondata.invalidTime.trim().length > 0){
+			$.messager.alert("操作提示", cue+"失败:失效时间格式不正确!", "error");
+			return true;
+			}
+		}
+		
+		if (null != jsondata.contentDesc && jsondata.contentDesc.length > 50) {
+			$.messager.alert("操作提示", cue+"失败:内容描述长度不能超过50个字符!", "error");
+			return true;
+		}
+		
+	}	
+	//修改
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		var cue = "修改"
+			if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/innerRiskInfo_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					onConcle("winEdit");
+					top.$cf.showMsg("名单修改成功！");
+					tblIdentityRisk.datagrid("reload");
+				} else {
+					$.messager.alert("操作提示", "修改失败:"+data.RSP_BODY.exMsg, "error");
+				}
+			}
+		});
+	}
+	
+	//获取表单数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	//保存
+	function onSave() {
+		var jsondata = getFormData(addForm.serializeArray());
+		var cue = "添加"
+			if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/innerRiskInfo_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					onConcle("winAdd");
+					top.$cf.showMsg("名单添加成功！");
+					tblIdentityRisk.datagrid("reload");
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.RSP_BODY.exMsg, "error");
+				}
+			}
+		});
+	}
+
+	//批量启用 
+	function setActiveOk() {
+		var orgObj = tblIdentityRisk.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		for(var i=0; i<orgObj.length; i++){
+			if(orgObj[i].currStatus=="1"){
+				$.messager.alert("操作提示", "操作失败:当前选中的名单已有处于启用状态!", "error");
+				return;
+			}
+		}
+		var ids = new Array();
+		var currStatus = "1";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要启用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/innerRiskInfo_active_update.json",
+						data : {"ids":ids,"currStatus":currStatus},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单启用成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+	 //批量停用
+	function setActiveNo() {
+		var orgObj = tblIdentityRisk.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		for(var i=0; i<orgObj.length; i++){
+			if(orgObj[i].currStatus=="0"){
+				$.messager.alert("操作提示", "操作失败:当前选中的名单已有处于停用状态!", "error");
+				return;
+			}
+		}
+		var ids = new Array();
+		var currStatus = "0";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要停用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/innerRiskInfo_active_update.json",
+						data : {"ids":ids,"currStatus":currStatus},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单停用成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}	
+
+	//历史记录选项窗口展示
+	openWinTbll = function(winName, tblName, tarTblName, tarUrl, tarParam) {
+		var tblObj = $("#" + tblName + "");
+		var tblDict = $("#" + tarTblName + "");
+		winObj = $("#" + winName + "");
+		var id = value.autoId;
+		var paramObj = document.getElementsByName(tarParam);
+		for (var i = 0; i < paramObj.length; i++) {
+			paramObj[i].value = id;
+		}
+		winObj.window({
+			closed : false
+		});
+		var quryParam = {};
+		quryParam[tarParam] = id;
+		tblDict.datagrid({
+			url : tarUrl,
+			queryParams : quryParam
+		});
+	}
+	
+	myOpenWin = function(winName) {
+		winObj = $("#" + winName + "");
+		winObj.form('clear');
+		$('#currStatusAdd').combobox('select','1');
+		winObj.window({
+			closed : false
+		});
+	}
+	
+	<!-- 批量导入EXCEL文件相关js -->
+	var trigger = true;
+	$('#fb').filebox({    
+		buttonText: '选择文件', 
+		buttonAlign: 'right',
+		buttonIcon:'icon-search',
+		onChange: function (newValue, oldValue) {
+				excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+				if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+					alert("请上传excel格式的文件");
+					$('#fb').filebox('setValue','');
+					return;
+				}
+				if (trigger) {
+					$.messager.confirm({
+						width : 700,
+						height : 200,
+						title : '请确认文件格式',
+						msg : "请确认导入的表格格式为：<br><br><br>单位名称	单位电话	证件号	户籍	推广机构	推广人员	推广编号	内容描述	失效时间	风险等级 当前状态",
+						fn : function(r) {
+							if (!r) {
+								trigger = false;
+								$('#fb').filebox("reset");
+								$('#fb').filebox('setValue','');
+							}
+						}
+					})
+				}
+		},
+		onClickButton:function(){
+			trigger = true;
+		}
+	})
+
+	function resetValue(){
+	$('#fb').filebox('setValue','');
+	}
+
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+	var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+				$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+				importSave();
+		}
+	}
+
+	//保存数据
+	function importSave() {
+		$('#formFile').submit();
+ 		$.messager.progress(); 
+	}
+	
+	
+	var tartIframe = document.getElementById("tartIframe");
+	tartIframe.src = "/opas-naps/InnerRiskInfoServlet.json";
+	if(tartIframe.attachEvent){
+		tartIframe.attachEvent("onload",function(){
+			responPage();
+		});
+	}else{
+		tartIframe.onload = function(){
+			responPage();			
+		}
+	}
+	
+	function responPage(){
+ 		$.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+			tblIdentityRisk.datagrid("reload");
+			top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+		}
+		if(value[0] == "false"){
+			$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+		}
+		
+	}	
+</script>

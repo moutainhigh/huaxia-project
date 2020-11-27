@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--邮编区号维护数据库处理-->
+<!-- @author liudi -->
+<mapper namespace="ApproveZipcode">
+
+	<resultMap id="ApproveZipcodeResultMap" type="com.huaxia.opas.domain.sysparm.ApproveZipcode">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE" property="acctType" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="TEL_NO" property="telNo" jdbcType="VARCHAR" />
+		<result column="AREA_CHANNEL" property="areaChannel" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="REMOTE_MARKET" property="remoteMarket" jdbcType="CHAR" />
+		<result column="REMOTE_MARKET_CITY" property="remoteMarketCity" jdbcType="VARCHAR" />
+		<result column="REMOTE_MARKET_STATUS" property="remoteMarketStatus" jdbcType="CHAR" />
+		<result column="REMOTE_START_DATE" property="remoteStartDate" jdbcType="TIMESTAMP" />
+		<result column="REMOTE_STOP_DATE" property="remoteStopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+
+<!--添加-->
+	<insert id="insertApproveZipcode" parameterType="com.huaxia.opas.domain.sysparm.ApproveZipcode">
+		insert into
+		OPAS_APPROVE_ZIPCODE
+		(AUTO_ID,ZIP_CODE,ACCT_TYPE,CITY,TEL_NO,
+		AREA_CHANNEL,STATUS,START_DATE,STOP_DATE,
+		REMOTE_MARKET,REMOTE_MARKET_CITY,REMOTE_MARKET_STATUS,
+		REMOTE_START_DATE,REMOTE_STOP_DATE,CRT_USER,CRT_DATE,
+		LST_UPD_USER,LST_UPD_DATE,PROVINCE) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{zipCode,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{telNo,jdbcType=VARCHAR},
+		#{areaChannel,jdbcType=CHAR},
+		#{status,jdbcType=CHAR},
+		#{startDate,jdbcType=TIMESTAMP},
+		#{stopDate,jdbcType=TIMESTAMP},
+		#{remoteMarket,jdbcType=CHAR},
+		#{remoteMarketCity,jdbcType=VARCHAR},
+		#{remoteMarketStatus,jdbcType=CHAR},
+		#{remoteStartDate,jdbcType=TIMESTAMP},
+		#{remoteStopDate,jdbcType=TIMESTAMP},
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{province,jdbcType=VARCHAR}
+		)
+	</insert>
+<!--删除-->
+	<delete id="deleteApproveZipcodeById" parameterType="java.lang.String">
+		delete from
+		OPAS_APPROVE_ZIPCODE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectStatus" parameterType="java.lang.String" resultMap="ApproveZipcodeResultMap">
+		select STATUS,REMOTE_MARKET_STATUS from OPAS_APPROVE_ZIPCODE where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 更新对象信息不包括状态 wangtao-->
+	<update id="updateApproveZipcodeWithoutAllStatus" parameterType="com.huaxia.opas.domain.sysparm.ApproveZipcode">
+		update OPAS_APPROVE_ZIPCODE
+		<set>
+			ZIP_CODE = #{zipCode,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			PROVINCE = #{province,jdbcType=VARCHAR},
+			CITY = #{city,jdbcType=VARCHAR},
+			TEL_NO = #{telNo,jdbcType=VARCHAR},
+			AREA_CHANNEL = #{areaChannel,jdbcType=CHAR},
+			REMOTE_MARKET = #{remoteMarket,jdbcType=CHAR},
+			REMOTE_MARKET_CITY = #{remoteMarketCity,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<!-- 修改对象信息不包括网点状态wangtao -->
+	<update id="updateApproveZipcodeWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.ApproveZipcode">
+		update OPAS_APPROVE_ZIPCODE
+		<set>
+			ZIP_CODE = #{zipCode,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			PROVINCE = #{province,jdbcType=VARCHAR},
+			CITY = #{city,jdbcType=VARCHAR},
+			TEL_NO = #{telNo,jdbcType=VARCHAR},
+			AREA_CHANNEL = #{areaChannel,jdbcType=CHAR},
+			REMOTE_MARKET = #{remoteMarket,jdbcType=CHAR},
+			REMOTE_MARKET_CITY = #{remoteMarketCity,jdbcType=VARCHAR},
+			REMOTE_MARKET_STATUS = #{remoteMarketStatus,jdbcType=CHAR},
+			<if test="remoteMarketStatus==null">
+				REMOTE_START_DATE = #{remoteStartDate,jdbcType=TIMESTAMP},
+				REMOTE_STOP_DATE = #{remoteStopDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remoteMarketStatus=='1'.toString()">REMOTE_START_DATE = #{remoteStartDate,jdbcType=TIMESTAMP},</if>
+			<if test="remoteMarketStatus=='0'.toString()">REMOTE_STOP_DATE = #{remoteStopDate,jdbcType=TIMESTAMP},</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<!-- 更新对象状态不包括异地状态wangtao -->
+	<update id="updateApproveZipcodeWithoutRemoteStatus" parameterType="com.huaxia.opas.domain.sysparm.ApproveZipcode">
+		update OPAS_APPROVE_ZIPCODE
+		<set>
+			ZIP_CODE = #{zipCode,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			PROVINCE = #{province,jdbcType=VARCHAR},
+			CITY = #{city,jdbcType=VARCHAR},
+			TEL_NO = #{telNo,jdbcType=VARCHAR},
+			AREA_CHANNEL = #{areaChannel,jdbcType=CHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status=='1'.toString()">START_DATE = #{startDate,jdbcType=TIMESTAMP},</if>
+			<if test="status=='0'.toString()">STOP_DATE = #{stopDate,jdbcType=TIMESTAMP},</if>
+			REMOTE_MARKET = #{remoteMarket,jdbcType=CHAR},
+			REMOTE_MARKET_CITY = #{remoteMarketCity,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!--更新-->
+	<update id="updateApproveZipcode" parameterType="com.huaxia.opas.domain.sysparm.ApproveZipcode">
+		update OPAS_APPROVE_ZIPCODE
+		<set>
+			ZIP_CODE = #{zipCode,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			PROVINCE = #{province,jdbcType=VARCHAR},
+			CITY = #{city,jdbcType=VARCHAR},
+			TEL_NO = #{telNo,jdbcType=VARCHAR},
+			AREA_CHANNEL = #{areaChannel,jdbcType=CHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status=='1'.toString()">START_DATE = #{startDate,jdbcType=TIMESTAMP},</if>
+			<if test="status=='0'.toString()">STOP_DATE = #{stopDate,jdbcType=TIMESTAMP},</if>
+			REMOTE_MARKET = #{remoteMarket,jdbcType=CHAR},
+			REMOTE_MARKET_CITY = #{remoteMarketCity,jdbcType=VARCHAR},
+			REMOTE_MARKET_STATUS = #{remoteMarketStatus,jdbcType=CHAR},
+			<if test="remoteMarketStatus==null">
+				REMOTE_START_DATE = #{remoteStartDate,jdbcType=TIMESTAMP},
+				REMOTE_STOP_DATE = #{remoteStopDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remoteMarketStatus=='1'.toString()">REMOTE_START_DATE = #{remoteStartDate,jdbcType=TIMESTAMP},</if>
+			<if test="remoteMarketStatus=='0'.toString()">REMOTE_STOP_DATE = #{remoteStopDate,jdbcType=TIMESTAMP},</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!--邮编区号件数查询-->
+	<select id="queryApproveZipcodeCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_APPROVE_ZIPCODE
+		<where>
+			<if test="zipCode != null and zipCode !='' ">
+				AND ZIP_CODE LIKE '%${zipCode}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="province != null and province !='' ">
+				AND PROVINCE LIKE '%${province}%'
+			</if>
+			<if test="city != null and city !='' ">
+				AND CITY LIKE '%${city}%'
+			</if>
+			<if test="telNo != null and telNo !='' ">
+				AND TEL_NO LIKE '%${telNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+			<if test="remoteMarket != null and remoteMarket !='' ">
+				AND REMOTE_MARKET = #{remoteMarket}
+			</if>
+			<if test="remoteMarketCity != null and remoteMarketCity !='' ">
+				AND REMOTE_MARKET_CITY = #{remoteMarketCity}
+			</if>
+			<if test="remoteMarketStatus != null and remoteMarketStatus !='' ">
+				AND REMOTE_MARKET_STATUS = #{remoteMarketStatus}
+			</if>
+		</where>
+	</select>
+<!--邮编区号页面初始化详细查询-->
+	<select id="queryApproveZipcode1" parameterType="com.huaxia.opas.domain.sysparm.ApproveZipcode"
+		resultMap="ApproveZipcodeResultMap">
+		select
+		AUTO_ID,ZIP_CODE,ACCT_TYPE,PROVINCE,CITY,TEL_NO,AREA_CHANNEL,STATUS,START_DATE,STOP_DATE,REMOTE_MARKET,REMOTE_MARKET_CITY,REMOTE_MARKET_STATUS,REMOTE_START_DATE,REMOTE_STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_APPROVE_ZIPCODE
+		<where>
+			<if test="zipCode != null and zipCode !='' ">
+				AND ZIP_CODE LIKE '%${zipCode}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="province != null and province !='' ">
+				AND PROVINCE LIKE '%${province}%'
+			</if>
+			<if test="city != null and city !='' ">
+				AND CITY LIKE '%${city}%'
+			</if>
+			<if test="telNo != null and telNo !='' ">
+				AND TEL_NO LIKE '%${telNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+			<if test="remoteMarket != null and remoteMarket !='' ">
+				AND REMOTE_MARKET = #{remoteMarket}
+			</if>
+			<if test="remoteMarketCity != null and remoteMarketCity !='' ">
+				AND REMOTE_MARKET_CITY = #{remoteMarketCity}
+			</if>
+			<if test="remoteMarketStatus != null and remoteMarketStatus !='' ">
+				AND REMOTE_MARKET_STATUS = #{remoteMarketStatus}
+			</if>
+		</where>
+		order by CRT_DATE 
+	</select>
+<!--邮编区号页面点击查询后实现查询和排序-->
+	<select id="queryApproveZipcode2" parameterType="java.util.Map"
+		resultMap="ApproveZipcodeResultMap">
+		select
+		AUTO_ID,ZIP_CODE,ACCT_TYPE,PROVINCE,CITY,TEL_NO,AREA_CHANNEL,STATUS,START_DATE,STOP_DATE,REMOTE_MARKET,REMOTE_MARKET_CITY,REMOTE_MARKET_STATUS,REMOTE_START_DATE,REMOTE_STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE 
+		from OPAS_APPROVE_ZIPCODE
+		<where>
+			<if test="zipCode != null and zipCode !='' ">
+				AND ZIP_CODE LIKE '%${zipCode}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="province != null and province !='' ">
+				AND PROVINCE LIKE '%${province}%'
+			</if>
+			<if test="city != null and city !='' ">
+				AND CITY LIKE '%${city}%'
+			</if>
+			<if test="telNo != null and telNo !='' ">
+				AND TEL_NO LIKE '%${telNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+			<if test="remoteMarket != null and remoteMarket !='' ">
+				AND REMOTE_MARKET = #{remoteMarket}
+			</if>
+			<if test="remoteMarketCity != null and remoteMarketCity !='' ">
+				AND REMOTE_MARKET_CITY = #{remoteMarketCity}
+			</if>
+			<if test="remoteMarketStatus != null and remoteMarketStatus !='' ">
+				AND REMOTE_MARKET_STATUS = #{remoteMarketStatus}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CRT_DATE
+		</if>
+	</select>
+	<!--根据电话区号查询邮编区号信息-->
+	<select id="queryApproveZipcodeByTelno" parameterType="java.util.Map"
+		resultMap="ApproveZipcodeResultMap">
+		select
+		AUTO_ID,ZIP_CODE,ACCT_TYPE,PROVINCE,CITY,TEL_NO,AREA_CHANNEL,STATUS,START_DATE,STOP_DATE,REMOTE_MARKET,REMOTE_MARKET_CITY,REMOTE_MARKET_STATUS,REMOTE_START_DATE,REMOTE_STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE 
+		from OPAS_APPROVE_ZIPCODE
+		where
+			TEL_NO = #{telNo}
+		and ACCT_TYPE = #{acctType}
+		and STATUS = '1'
+		<if test="zipCode != null and zipCode !='' ">
+			AND ZIP_CODE = #{zipCode}
+		</if>
+	</select>
+	
+	<!--  查看区号是否存在-->
+	<select id="queryTelno" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(AUTO_ID) from OPAS_APPROVE_ZIPCODE
+		where TEL_NO = #{telNo,jdbcType=VARCHAR} 
+		AND ACCT_TYPE =#{ydjFlag,jdbcType=VARCHAR} AND STATUS = '1'
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteApproveZipcodes" parameterType="java.util.List">
+		delete from OPAS_APPROVE_ZIPCODE
+			where AUTO_ID in
+			<foreach collection="list" open="(" close=")" item="id" separator=",">
+				#{id,jdbcType=VARCHAR}
+			</foreach>
+	</delete>
+	<!-- 全部删除 -->
+	<delete id="deleteAllApproveZipcodes">
+		truncate table OPAS_APPROVE_ZIPCODE
+	</delete>
+	
+	<!-- 导入 -->
+	<insert id="insertApproveZipcodeFromFile" parameterType="java.util.List">
+		insert into OPAS_APPROVE_ZIPCODE (
+			AUTO_ID,
+			ZIP_CODE,
+			ACCT_TYPE,
+			PROVINCE,
+			CITY,
+			TEL_NO,
+			AREA_CHANNEL,
+			STATUS,
+			START_DATE,
+			REMOTE_MARKET,
+			REMOTE_MARKET_CITY,
+			REMOTE_MARKET_STATUS,
+			REMOTE_START_DATE,
+			CRT_USER,
+			CRT_DATE,
+			LST_UPD_USER,
+			LST_UPD_DATE)
+			<foreach collection="list" item="item" index="index" separator="union all">
+			(select 
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.zipCode,jdbcType=VARCHAR},
+			#{item.acctType,jdbcType=CHAR},
+			#{item.province,jdbcType=VARCHAR},
+			#{item.city,jdbcType=VARCHAR},
+			#{item.telNo,jdbcType=VARCHAR},
+			#{item.areaChannel,jdbcType=VARCHAR},
+			#{item.status,jdbcType=CHAR},
+			SYSDATE,
+			#{item.remoteMarket,jdbcType=VARCHAR},
+			#{item.remoteMarketCity,jdbcType=VARCHAR},
+			#{item.remoteMarketStatus,jdbcType=VARCHAR},
+			#{item.remoteStartDate,jdbcType=DATE},
+			#{item.crtUser,jdbcType=VARCHAR},
+			SYSDATE,
+			#{item.lstUpdUser,jdbcType=VARCHAR},
+			SYSDATE
+			from dual)
+			</foreach>
+	
+	</insert>
+	
+	<select id="queryRepetition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(AUTO_ID) from OPAS_APPROVE_ZIPCODE
+		where ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
+			  and ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+			  and TEL_NO = #{telNo,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

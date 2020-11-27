@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.unicom.mapper.AddressQueryMapper">
+	
+	<select id="selectCountByTime" parameterType="java.util.Map" resultType="java.util.Map">
+		<!-- 单条当前工作地址查询数量 -->
+		SELECT '00110200' TASK_TYPE, COUNT(1) TASK_COUNT
+		FROM UNICOM_ADDRESS_INFO
+		WHERE CRT_USER = 'SINGLE' AND API_KEY='360015'
+		<if test="startTime != null and endTime != null">
+			AND CRT_TIME BETWEEN TO_DATE(#{startTime} || '00:00:00','YYYY-MM-DD HH24:MI:SS')
+			AND TO_DATE(#{endTime} || '23:59:59','YYYY-MM-DD HH24:MI:SS')
+		</if>
+		
+		UNION
+		<!-- 单条当前居住地址查询数量 -->
+		SELECT '00110300' TASK_TYPE, COUNT(1) TASK_COUNT
+		FROM UNICOM_ADDRESS_INFO
+		WHERE CRT_USER = 'SINGLE' AND API_KEY='360016'
+		<if test="startTime != null and endTime != null">
+			AND CRT_TIME BETWEEN TO_DATE(#{startTime} || '00:00:00','YYYY-MM-DD HH24:MI:SS')
+			AND TO_DATE(#{endTime} || '23:59:59','YYYY-MM-DD HH24:MI:SS')
+		</if>
+		
+		UNION
+		<!-- 审批当前工作地址查询数量 -->
+		SELECT '00110210' TASK_TYPE,(SELECT COUNT(*) FROM UNICOM_ADDRESS_INFO
+					WHERE CRT_USER = 'CAMS' AND API_KEY='360015'
+					<if test="startTime != null and endTime != null">
+						AND CRT_TIME BETWEEN TO_DATE(#{startTime} || '00:00:00','YYYY-MM-DD HH24:MI:SS')
+						AND TO_DATE(#{endTime} || '23:59:59','YYYY-MM-DD HH24:MI:SS')
+					</if>
+		) TASK_COUNT FROM DUAL WHERE 1=1
+		
+		UNION
+		<!-- 审批当前居住地址查询数量 -->
+		SELECT '00110310' TASK_TYPE,(SELECT COUNT(*) FROM UNICOM_ADDRESS_INFO
+					WHERE CRT_USER = 'CAMS' AND API_KEY='360016'
+					<if test="startTime != null and endTime != null">
+						AND CRT_TIME BETWEEN TO_DATE(#{startTime} || '00:00:00','YYYY-MM-DD HH24:MI:SS')
+						AND TO_DATE(#{endTime} || '23:59:59','YYYY-MM-DD HH24:MI:SS')
+					</if>
+		) TASK_COUNT FROM DUAL WHERE 1=1
+	</select>
+
+	<select id="query001102ResultByResource" parameterType="java.util.Map"
+		statementType="CALLABLE">
+		<![CDATA[
+		        {CALL ds_unicom_001102_count(#{source_code_num,mode=IN,jdbcType=VARCHAR},
+		        #{channel_code_num,mode=IN,jdbcType=VARCHAR},
+		        #{v_set,mode=OUT,jdbcType=VARCHAR},
+		        #{end_num,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<select id="query001103ResultByResource" parameterType="java.util.Map"
+		statementType="CALLABLE">
+		<![CDATA[
+		        {CALL ds_unicom_001103_count(#{source_code_num,mode=IN,jdbcType=VARCHAR},
+		        #{channel_code_num,mode=IN,jdbcType=VARCHAR},
+		        #{v_set,mode=OUT,jdbcType=VARCHAR},
+		        #{end_num,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="HZGJJ">
+  
+	<resultMap id="grxxInfoResultMap" type="java.util.Map">
+		<result column="XM" property="xm" jdbcType="VARCHAR" />
+		<result column="SFZH" property="sfzh" jdbcType="VARCHAR" />
+		<result column="XB" property="xb" jdbcType="VARCHAR" />
+		<result column="CSRQ" property="csrq" jdbcType="VARCHAR" />
+		<result column="MZ" property="mz" jdbcType="VARCHAR" />
+		<result column="ADDR" property="addr" jdbcType="VARCHAR" />
+		<result column="HKSX" property="hksx" jdbcType="VARCHAR" />
+		<result column="JXDM" property="jxdm" jdbcType="VARCHAR" />
+		<result column="ZZDZ" property="zzdz" jdbcType="VARCHAR" />
+		<result column="DJRQ" property="djrq" jdbcType="VARCHAR" />
+		<result column="ZXBZ" property="zxbz" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="gjjxxInfoResultMap" type="java.util.Map">
+		<result column="DEPT_NAME" property="deptName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="SET_DATE" property="setDate" jdbcType="VARCHAR" />
+		<result column="PAY_YM" property="payYm" jdbcType="VARCHAR" />
+		<result column="LXYS" property="lxys" jdbcType="VARCHAR" />
+		<result column="LJYS" property="ljys" jdbcType="VARCHAR" />
+		<result column="PAY_BASE" property="payBase" jdbcType="VARCHAR" />
+		<result column="PPAY_AMT" property="ppayAmt" jdbcType="VARCHAR" />
+		<result column="CPAY_AMT" property="cpayAmt" jdbcType="VARCHAR" />
+		<result column="PAY_AMT" property="payAmt" jdbcType="VARCHAR" />
+		<result column="GRJCJZ" property="grjcjz" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="SBfeeinfogridInfoResultMap" type="java.util.Map">
+		<result column="AAE003" property="aae003" jdbcType="VARCHAR" />
+		<result column="AAE020_100" property="aae020_100" jdbcType="VARCHAR" />
+		<result column="AAE180_100" property="aae180_100" jdbcType="VARCHAR" />
+		<result column="AAB004" property="aab004" jdbcType="VARCHAR" />
+		<result column="AAA115" property="aaa115" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="hzRsjZxAc01ResultMap" type="java.util.Map">
+		<result column="AAC002" property="aac002" jdbcType="VARCHAR" />
+		<result column="AAB004" property="aab004" jdbcType="VARCHAR" />
+		<result column="AAE002" property="aae002" jdbcType="VARCHAR" />
+		<result column="BAC601" property="bac601" jdbcType="VARCHAR" />
+		<result column="LXYS" property="lxys" jdbcType="VARCHAR" />
+		<result column="LJYS" property="ljys" jdbcType="VARCHAR" />
+		<result column="BAC603" property="bac603" jdbcType="VARCHAR" />
+		<result column="BAD006" property="bad006" jdbcType="VARCHAR" />
+		<result column="BAD007" property="bad007" jdbcType="VARCHAR" />
+		<result column="BAD008" property="bad008" jdbcType="VARCHAR" />
+		<result column="BAD009" property="bad009" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="waterAffairsInfoResultMap" type="java.util.Map">
+		<result column="SERV_CODE" property="servCode" jdbcType="VARCHAR" />
+		<result column="COLLECTION_DT" property="collectionDt" jdbcType="VARCHAR" />
+		<result column="PAYMENT_STATUS" property="paymentStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="fyNaturalPersonesultMap" type="java.util.Map">
+		<result column="SQZXBD" property="sqzxbd" jdbcType="VARCHAR" />
+		<result column="AH" property="ah" jdbcType="VARCHAR" />
+		<result column="AY" property="ay" jdbcType="VARCHAR" />
+		<result column="ZXFYMC" property="zxfymc" jdbcType="VARCHAR" />
+		<result column="AJZT" property="ajzt" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="gjjLoadBriefResultMap" type="java.util.Map">
+		<result column="LN_AMT" property="lnAmt" jdbcType="VARCHAR" />
+		<result column="LN_BAL" property="lnBal" jdbcType="VARCHAR" />
+		<result column="LN_TERM" property="lnTerm" jdbcType="VARCHAR" />
+		<result column="REM_TERM" property="remTerm" jdbcType="VARCHAR" />
+		<result column="SUM_OVL_DAY" property="sumOvlDay" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="vehicleInfoResultMap" type="java.util.Map">
+		<result column="DYBJ" property="dybj" jdbcType="VARCHAR" />
+		<result column="HPZL" property="hpzl" jdbcType="VARCHAR" />
+		<result column="DJRQ" property="djrq" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="vehiclePenaltyInfoResultMap" type="java.util.Map">
+		<result column="WFSJ" property="wfsj" jdbcType="VARCHAR" />
+		<result column="WFJFS" property="wfjfs" jdbcType="VARCHAR" />
+		<result column="DSR" property="dsr" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 个人公积金信息展示 -->
+	<select id="selectGrxxInfo" parameterType="java.lang.String" resultMap="grxxInfoResultMap">	
+		select APP_ID,XM,SFZH,XB,CSRQ,MZ,ADDR,HKSX,JXDM,ZZDZ,DJRQ,ZXBZ
+        from HZ_GRXX  where app_id = #{appId,jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 公积金信息 --> 
+	<select id="selectGjjxxInfo" parameterType="java.lang.String" resultMap="gjjxxInfoResultMap">	
+		select  APP_ID,DEPT_NAME,STATUS,SET_DATE,PAY_YM,LXYS,
+				LJYS,PAY_BASE,PPAY_AMT,CPAY_AMT,PAY_AMT,GRJCJZ
+		from HZ_GJJXX where app_id = #{appId,jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 社保缴费信息 --> 
+	<select id="selectSBfeeinfogridInfo" parameterType="java.lang.String" resultMap="SBfeeinfogridInfoResultMap">	
+		select APP_ID,AAE003,AAE020_100,AAE180_100,AAB004,AAA115
+		from HZ_SB_FEEINFOGRID where app_id = #{appId,jdbcType=VARCHAR} 
+	</select>
+	<!-- 社保基本信息 --> 
+	<select id="selectHzRsjZxAc01" parameterType="java.lang.String" resultMap="hzRsjZxAc01ResultMap">	
+		select APP_ID,AAC002,AAB004,AAE002,LXYS,LJYS,BAC601,BAC603,BAD006,BAD007,BAD008,BAD009
+  		from HZ_RSJ_ZX_AC01 where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 水务缴费信息 --> 
+	<select id="selectHzWaterAffairsInfo" parameterType="java.lang.String" resultMap="waterAffairsInfoResultMap">	
+		SELECT SERV_CODE,COLLECTION_DT,PAYMENT_STATUS
+		FROM HZ_WATER_AFFAIRS_INFO where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 法院失信信息--> 
+	<select id="selectHzFyNaturalPerson" parameterType="java.lang.String" resultMap="fyNaturalPersonesultMap">	
+		select SQZXBD,AH,AY,ZXFYMC,AJZT
+		from HZ_FY_NATURAL_PERSON where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 公积金贷款信息--> 
+	<select id="selectGjjLoadBrief" parameterType="java.lang.String" resultMap="gjjLoadBriefResultMap">	
+		 select LN_AMT,LN_BAL,LN_TERM,REM_TERM,SUM_OVL_DAY
+		from HZ_GJJ_LOAN_INFO where  app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	<!-- 车辆信息--> 
+	<select id="selectHzVehicleInfo" parameterType="java.lang.String" resultMap="vehicleInfoResultMap">	
+		 select DYBJ,HPZL,DJRQ
+		from HZ_VEHICLE_INFO where  app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	<!-- 车辆处罚信息--> 
+	<select id="selectHzVehiclePenaltyInfo" parameterType="java.lang.String" resultMap="vehiclePenaltyInfoResultMap">	
+		 select WFSJ,WFJFS,DSR
+		from HZ_VEHICLE_PENALTY_INFO where  app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div id="report_interestRateDifferAnalysisStatistics_center"  data-options="fit:true,boder:false">
+<div data-options="region='north',title:'查询',border:false,icons:'icon-searh'"
+ style="height:40px;overflow:hidden;">
+ <form id="report_interestRateDifferAnalysisStatistics_form">
+ <table class="report_interestRateDifferAnalysisStatistics_tableForm datagrid-toolbar" style="width:100%;height:100%">
+  <tr>
+   <td><label>开始时间</label><input id="report_interestRateDifferAnalysisStatistics_beginDate" name="beginDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   $(this).datebox('setValue',date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate());
+   }"/><label>结束时间</label><input id="report_interestRateDifferAnalysisStatistics_endDate" name="endDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   $(this).datebox('setValue',date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate());
+   }"/>
+   <a id="report_interestRateDifferAnalysisStatistics_searchButton" class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>
+   <a id="report_interestRateDifferAnalysisStatistics_cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+   </td>
+  </tr>
+ </table>
+ </form>
+ </div>
+ <div data-options="region:'center',border:true" >
+ <table id="report_interestRateDifferAnalysisStatistics_datagrid" style="height: 600px"></table>
+ </div>
+</div>
+</body>
+<script type="text/javascript">
+var report_interestRateDifferAnalysisStatistics_form=undefined;
+var report_interestRateDifferAnalysisStatistics_datagrid=undefined;
+$(function(){
+	report_interestRateDifferAnalysisStatistics_form=$('#report_interestRateDifferAnalysisStatistics_form');
+	$('#report_interestRateDifferAnalysisStatistics_searchButton').bind('click',function(){
+		report_interestRateDifferAnalysisStatistics_search();
+	});
+	$('#report_interestRateDifferAnalysisStatistics_cleanButton').bind('click',function(){
+		report_interestRateDifferAnalysisStatistics_clean();
+	});
+	report_interestRateDifferAnalysisStatistics_datagrid=$('#report_interestRateDifferAnalysisStatistics_datagrid').datagrid({
+		url:"",
+		resizable:true,border:false,rownumbers:true,singleSelect:true,fitColumns:true,nowrap:false,
+		columns:[[
+         {
+			title:'申请类型',
+			field:'TYPE',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'新旧户',
+			field:'NEWOLDCUST',
+			width:"8%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'卡产品',
+			field:'CARDPRODUCT',
+			width:"20%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'利率客户分层结果标签',
+			field:'LEVELTAG',
+			width:"15%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'利率代码',
+			field:'RATECODE',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'核准数量',
+			field:'PASSCOUNT',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'核准数量占比%',
+			field:'PASSRATE',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}
+		]]/* onLoadSuccess:function(data){
+		 var rows=$('#report_interestRateDifferAnalysisStatistics_datagrid').datagrid('getRows');
+			var rowsLength=rows.length;
+		  	 if(rowsLength>0){
+				for(var i=(rowsLength-1);i>=0;i--){
+					if(rows[i].PASSCOUNT=='0'){
+						 report_interestRateDifferAnalysisStatistics_datagrid.datagrid('deleteRow',i); 
+		    		}
+				}
+			}	
+	}   */
+	});
+});
+function report_interestRateDifferAnalysisStatistics_search(){
+	var beginDate=$('#report_interestRateDifferAnalysisStatistics_beginDate').datebox('getValue');
+	var endDate=$('#report_interestRateDifferAnalysisStatistics_endDate').datebox('getValue');
+	if(beginDate==""||endDate==""){//没有选择起止时间
+		$.messager.alert('提示','请选择起止时间.','warning'); return null;
+	}
+	var day = GetDateDiff(beginDate,endDate);
+	if (day>32){
+		alert("时间区间不能超过31天");
+		return;
+	}
+	
+	var jsondata =common.formToJson(report_interestRateDifferAnalysisStatistics_form.serializeArray());
+	report_interestRateDifferAnalysisStatistics_datagrid.datagrid('options').url='/opas-naps/queryInterestRateDifferAnalysisStatisticsDataByDate.json';
+	report_interestRateDifferAnalysisStatistics_datagrid.datagrid('load',jsondata);
+	
+}
+function GetDateDiff(startDate,endDate) {
+	
+	var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+	var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+	var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+	return dates;
+}
+function report_interestRateDifferAnalysisStatistics_clean(){
+	report_interestRateDifferAnalysisStatistics_datagrid.datagrid('load',{});
+	report_interestRateDifferAnalysisStatistics_form.form('reset');
+	
+}
+
+</script>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>易达金复核列表</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style>
+</head>
+<body style="padding: 10px;">
+		<fieldset style="margin-top:10px;">
+		<table id="standardtbl" title="易达金复核列表" class="easyui-datagrid" style="width:98%" data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,pageSize:15,pageList:[15,20,50],url:'/opas-naps/yidajinCheck_Page.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#tblRoleCondion'">
+				<thead>
+					<tr>
+						<th field="check_number"		width="15%"	align="center"	sortable="true"	data-options="formatter:formatCheckNumber">流水号</th>
+						<th field="check_custName"		width="15%"	align="center"	sortable="true">客户姓名</th>
+						<th field="check_certType"		width="8%"	align="center"	sortable="true">证件类型</th>
+						<th field="check_certNo"		width="20%"	align="center"	sortable="true">证件号</th>
+						<th field="check_currentCN"		width="20%"	align="center"	sortable="true">现单位名称</th>
+						<th field="check_lastOU" 		width="15%"	align="center"	sortable="true">最后操作员</th>
+						<th field="check_lastOD"		width="20%"	align="center"	sortable="true">最后操作时间</th>
+						<th field="check_GourpDate"		width="8%"	align="center"	sortable="true">分组天数</th>
+						<th field="check_queueDate"		width="8%"	align="center"	sortable="true">进入队列天数</th>
+						<th field="check_nclearPS"		width="15%"	align="center"	sortable="true">电核情况</th>
+						<th field="check_aproveFlag"	width="8%"	align="center"	sortable="true">快速审批标识</th>
+						<th field="check_prompt"		width="8%"	align="center"	sortable="true">提示</th>
+						<th field="check_remark"		width="20%"	align="center"	sortable="true"	data-options="formatter:formatCheckRemark">备注</th>
+					</tr>
+				</thead>
+			</table>
+		</fieldset>
+
+
+
+
+<script type="text/javascript">
+var standardData_one = $("#standardCardAdd1Form");
+var standardtbl=$("#standardtbl");
+
+function formatCheckNumber(val, row, index){
+	var check_number=row.check_number;
+	return "<a href=javascript:ViewPage('credit_check_control.html?check_number="+check_number+"&node=1');>"+check_number+"</a>";
+}
+
+function ViewPage(url){
+	window.open(url,"_blank","channelmode=yes",false);
+}
+
+function formatCheckRemark(val, row, index) {
+	return "<a href=javascript:opWind();>查看</a>";
+}
+
+function opWind() {
+	var opts = $.extend({
+		title : '查看备注',
+		showType : 'show',
+		showSpeed : 400,
+		top : 100,
+		modal : false,
+		onOpen : function() {
+			$.messager.progress('close');
+		},
+		onClose : function() {
+			processInsNo = "";
+			$(this).dialog('destroy');
+			$(this).appendTo($("body"));
+		}
+	}, {});
+	opts.content = '<iframe id="" src="../common/comment.html" allowTransparency="true" scrolling="auto" width="360px" height="300px" frameBorder="0" name=""></iframe>';
+	$('#dd').dialog(opts);
+	var src = $('div>iframe').attr("src");
+	$('#dd').dialog('refresh');
+}
+
+ 
+function reload(){
+	standardtbl.datagrid("reload");
+}
+</script>
+
+
+
+
+
+</body>
+</html>

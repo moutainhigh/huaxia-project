@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.nciic.mapper.NciicInfoMapper">
+
+	<resultMap id="result_Base" type="NciicInfo">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="GMSFHM" property="gmsfhm" jdbcType="VARCHAR" />
+		<result column="RESULT_GMSFHM" property="gmsfhmResult" jdbcType="VARCHAR" />
+		<result column="XM" property="xm" jdbcType="VARCHAR" />
+		<result column="RESULT_XM" property="xmResult" jdbcType="VARCHAR" />
+		<result column="XP" property="xp" jdbcType="VARCHAR" />
+		<result column="SEARCHRESULT" property="searchResult" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 分页总数 -->
+	<select id="selectHistoryListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM NCIIC_INFO
+		<where>
+			<if test="gmsfhm != null">
+				AND GMSFHM = #{gmsfhm}
+			</if>
+		</where>
+	</select>
+
+	<!-- 分页记录 -->
+	<select id="selectHistoryListByPage" parameterType="java.util.Map"
+		resultMap="result_Base">
+		SELECT TRN_ID,CRT_TIME,GMSFHM,RESULT_GMSFHM,XM,RESULT_XM,XP,
+		case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+        when ERROR_MESSAGE is not null then ERROR_MESSAGE 
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+		when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+        else '' end as SEARCHRESULT ,RN FROM (
+			SELECT TRN_ID,CRT_TIME,GMSFHM,RESULT_GMSFHM,XM,RESULT_XM,XP,ERROR_MESSAGE, ROWNUM RN FROM (
+				SELECT TRN_ID,TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') AS CRT_TIME,GMSFHM,RESULT_GMSFHM,XM,ERROR_MESSAGE,RESULT_XM,XP,
+		case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+        when ERROR_MESSAGE is not null then ERROR_MESSAGE 
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+		when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+        else '' end as SEARCHRESULT 
+				  FROM NCIIC_INFO
+				  <where>
+					<if test="gmsfhm != null">
+						AND gmsfhm = #{gmsfhm}
+					</if>
+				  </where>
+				ORDER BY CRT_TIME DESC ) A
+			WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize}) 
+		WHERE RN<![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	</select>
+
+	<!-- 分页总数 -->
+	<select id="selectResult" parameterType="java.util.Map" resultMap="result_Base">
+		SELECT TRN_ID,TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,GMSFHM,RESULT_GMSFHM,XM,RESULT_XM,XP,
+		case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+        when ERROR_MESSAGE is not null then ERROR_MESSAGE 
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+		when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+        else '' end as SEARCHRESULT 
+		  FROM NCIIC_INFO
+		 WHERE TRN_ID = #{trnId}
+	</select>
+
+</mapper>

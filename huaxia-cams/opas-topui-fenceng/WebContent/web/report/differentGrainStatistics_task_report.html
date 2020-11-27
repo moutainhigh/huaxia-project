@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:10px
+}
+</style>
+</head>
+<body>
+<div id="report_differentGrainStatistics_center"  data-options="fit:true,boder:true">
+<div data-options="region='north',border:true,fit:true" style="overflow:auto;">
+ <form id="report_differentGrainStatistics_form">
+ <table class="report_differentGrainStatistics_tableForm datagrid-toolbar" style="width:100%;height:100%">
+  <tr>
+   <td><label class="alsp">开始时间</label><input id="report_differentGrainStatistics_beginDate" name="beginDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+  var beginDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',beginDate);
+   $('#report_differentGrainStatistics_table_beginDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;<label class="alsp">截止时间</label><input id="report_differentGrainStatistics_endDate" name="endDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   var endDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',endDate);
+   $('#report_differentGrainStatistics_table_endDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;&nbsp;
+   <a id="report_differentGrainStatistics_searchButton" class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>&nbsp;
+   <a id="report_differentGrainStatistics_cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+   </td>
+  </tr>
+  <tr><td><br><label class="alsp">选择渠道</label><input id="report_differentGrainStatistics_choseChannel_id" name="choseChannel" class="easyui-combobox" style="width:100px;" dict_type="ALLOT_APPCHANNEL" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+  <label class="alsp">地区</label><input id="report_differentGrainStatistics_choseArea_id" name="choseArea" class="easyui-combobox" style="width:100px;" dict_type="ALLOT_APPREGION" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+  <label class="alsp">申请卡产品</label><select id="report_differentGrainStatistics_allApplicationCard_id" name="allApplicationCard" style="width:100px;">
+                    <option value="-1">--请选择--</option>
+                    <option value="allCard">全部</option>
+  </select><input id="report_differentGrainStatistics_choseApplicationCard_id" name="choseApplicationCard" class="easyui-combobox" style="width:170px;" dict_type="ALLOT_APPPROD" data-options="valueField:'dictDetailCode',textField:'dictDetailName',onSelect: function(rec){    
+        if(rec.dictDetailCode!=''){
+        $('#report_differentGrainStatistics_allApplicationCard_id').combobox('setValue','-1');
+        }
+        }"/>
+  <label class="alsp">录入商</label><input id="report_differentGrainStatistics_choseOperator_id" name="choseOperator" class="easyui-combobox" style="width:100px;" dict_type="ALLOT_APPINPUT" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+  <label class="alsp">流水号字母</label><input id="report_differentGrainStatistics_choseSerialWaterNum_id" name="choseSerialWaterNum" class="easyui-combobox" style="width:150px;" dict_type="ALLOT_SERIALNUM" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+  </td>
+  </tr>
+  <tr><td><br><label class="alsp">选择维度</label><select id="report_differentGrainStatistics_choseDimension_id" name="choseDimension" class="easyui-combobox" style="width:150px;"data-options="
+        onSelect: function(rec){
+            report_differentGrainStatistics_choseDimensionIsWhat=rec.value;
+        }">
+                    <option value="-1">--请选择--</option>
+                    <option value="8-ALLOT_APPCHANNEL">渠道</option>
+					<option value="9-ALLOT_APPREGION">地区</option>
+				    <option value="CARD-ALLOT_APPPROD">申请卡产品</option>
+				    <option value="7-ALLOT_APPINPUT">录入商</option>
+				    <option value="11-ALLOT_SERIALNUM">流水号字母</option>
+  </select>
+  </td>
+  </tr>
+ </table>
+ </form>
+ </div>
+ <div data-options="region:'center',border:true,fit:true">
+<!--  进件核准率统计表(按选择维度) -->
+<br><table><tr><td id="report_differentGrainStatistics_table_beginDate" style="width:80px;"></td><td>至</td><td id="report_differentGrainStatistics_table_endDate" style="width:80px;"></td></tr></table>
+<h4 align="center">不同粒度进件情况统计表(按选择维度)</h4><br> 
+ <table id="report_differentGrainStatistics_datagrid" style="height: 480px"></table>
+ </div>
+</div>
+</body>
+<script type="text/javascript">
+$cf.loadAllDict();//用于引进    业务字典     
+var report_differentGrainStatistics_form=undefined;
+var report_differentGrainStatistics_datagrid=undefined;
+var report_differentGrainStatistics_choseDimensionIsWhat=undefined;//用于必填项的控制
+var report_differentGrainStatistics_ydjFlagType=''; //易达金卡1或标准卡2的判断依据 
+$(function(){
+	if(report_differentGrainStatistics_ydjFlagType==''){
+		report_differentGrainStatistics_ydjFlagType=getCurrentUrlParam();
+	}
+	report_differentGrainStatistics_form=$('#report_differentGrainStatistics_form');
+	$('#report_differentGrainStatistics_searchButton').bind('click',function(){
+		report_differentGrainStatistics_search();
+	});
+	$('#report_differentGrainStatistics_cleanButton').bind('click',function(){
+		report_differentGrainStatistics_clean();
+	});
+	report_differentGrainStatistics_datagrid=$('#report_differentGrainStatistics_datagrid').datagrid({
+		url:"/opas-naps/queryDifferentGrainStatisticsDataByDateDimension.json",
+		border:true,
+		animate:true,
+		singleSelect:false,
+		nowrap:false,
+		rownumbers:true,
+		columns:[[{
+			title:'维度类型',
+			field:'TYPE',
+			width:"20%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'进件数量',
+			field:'APPCNT',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'核准',
+			field:'PASS',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'拒绝',
+			field:'REFUSE',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'取消',
+			field:'CANCEL',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'未完成',
+			field:'NOFINISH',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'审批量',
+			field:'APPROVESUM',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'核准率%',
+			field:'PASSRATE',
+			width:"6%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'拒绝率%',
+			field:'REFUSERATE',
+			width:"6%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'待处理率%',
+			field:'WAITDEALRATE',
+			width:"6%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}
+		]]
+	});
+	$('#report_differentGrainStatistics_allApplicationCard_id').combobox({
+		panelHeight:60,
+        onSelect: function(rec){
+        	if(rec.value!=-1){
+        	$('#report_differentGrainStatistics_choseApplicationCard_id').combobox('setValue','');
+        	}
+        }  
+	}); 
+	
+	$cf.ajax({
+		url : "/opas-naps/queryApplicationCardProducts.json",
+		onSuccess:function(data){
+			var applicationCardProduct = data.RSP_BODY.applicationCardProducts;
+			var mba = JSON.parse(applicationCardProduct);
+			$('#report_differentGrainStatistics_choseApplicationCard_id').combobox('loadData', mba);
+		}
+	}); 
+});
+function showWaringBox(message){
+	$.messager.alert('提示',message,'warning');
+}
+function report_differentGrainStatistics_search(){
+	var beginDate=$('#report_differentGrainStatistics_beginDate').datebox('getValue');
+	var endDate=$('#report_differentGrainStatistics_endDate').datebox('getValue');
+	var day = GetDateDiff(beginDate,endDate);
+	if (day>32){
+		alert("区间不能超过31天");
+		return;
+	}
+	
+	if(report_differentGrainStatistics_choseDimensionIsWhat==undefined||report_differentGrainStatistics_choseDimensionIsWhat==-1){//没有选择 选择维度 
+		showWaringBox('请选择维度.');return null;
+	}else if(beginDate==""||endDate==""){//没有选择起止时间
+		showWaringBox('请选择起止时间.');return null;
+	}else{//判断 选择维度如果选择渠道则 选择渠道下拉框必填、选择维度如果选择地区则 地区 下拉框必填
+	/* var dimension=report_differentGrainStatistics_choseDimensionIsWhat;
+	var dimensionDetail=undefined;//维度选择后 相应下拉框的值 
+	if(dimension=="8-ALLOT_APPCHANNEL"){//选择渠道必填
+		dimensionDetail=$('#report_differentGrainStatistics_choseChannel_id').combobox('getValue');
+		if(dimensionDetail==""){showWaringBox('请选择渠道.');return null;}
+	}else if(dimension=="9-ALLOT_APPREGION"){//地区必填
+		dimensionDetail=$('#report_differentGrainStatistics_choseArea_id').combobox('getValue');
+		if(dimensionDetail==""){showWaringBox('请选择地区.');return null;}
+	}else if(dimension=="CARD-ALLOT_APPPROD"){//申请卡产品必填
+		var dimensionDetailCard=$('#report_differentGrainStatistics_allApplicationCard_id').combobox('getValue');
+		 dimensionDetail=$('#report_differentGrainStatistics_choseApplicationCard_id').combobox('getValue');
+		if((dimensionDetail==""||dimensionDetail=="-1"||dimensionDetail=="--请选择--")&&(dimensionDetailCard==""||dimensionDetailCard=="-1"||dimensionDetailCard=="--请选择--")){
+			showWaringBox('请选择申请卡产品.');return null;
+		}
+	}else if(dimension=="7-ALLOT_APPINPUT"){//录入商必填
+		dimensionDetail=$('#report_differentGrainStatistics_choseOperator_id').combobox('getValue');
+		if(dimensionDetail==""){showWaringBox('请选择录入商.');return null;}
+	}else if(dimension=="11-ALLOT_SERIALNUM"){//流水号字母必填
+		dimensionDetail=$('#report_differentGrainStatistics_choseSerialWaterNum_id').combobox('getValue');
+		if(dimensionDetail==""){showWaringBox('请选择流水号字母.');return null;}
+	} */
+
+	var ydjObject=new Object();
+	ydjObject.name='ydjFlag';
+	ydjObject.value=report_differentGrainStatistics_ydjFlagType;
+	var paramArray=report_differentGrainStatistics_form.serializeArray();//new Array();
+	paramArray.push(ydjObject);
+	var jsondata =common.formToJson(paramArray);
+	report_differentGrainStatistics_datagrid.datagrid('load',jsondata);
+	}
+}
+function report_differentGrainStatistics_clean(){
+	report_differentGrainStatistics_datagrid.datagrid('load',{});
+	//因为 加了 value=-1 属性 以至于   form的reset 对这些input框失效了 所以单独clear
+	$('#report_differentGrainStatistics_choseChannel_id').combobox('clear');
+	$('#report_differentGrainStatistics_choseArea_id').combobox('clear');
+	$('#report_differentGrainStatistics_allApplicationCard_id').combobox('clear');
+	$('#report_differentGrainStatistics_choseApplicationCard_id').combobox('clear');
+	$('#report_differentGrainStatistics_choseOperator_id').combobox('clear');
+	$('#report_differentGrainStatistics_choseSerialWaterNum_id').combobox('clear');
+	$('#report_differentGrainStatistics_choseDimension_id').combobox('clear');
+	$('#report_differentGrainStatistics_table_beginDate').html('');
+	$('#report_differentGrainStatistics_table_endDate').html('');
+	report_differentGrainStatistics_form.form('reset');
+	report_differentGrainStatistics_choseDimensionIsWhat=undefined;
+}
+function GetDateDiff(startDate,endDate) {
+	
+	var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+	var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+	var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+	return dates;
+}
+function getCurrentUrlParam(){
+	var currentUrl=window.location.href;
+	return  ydjFlagType=currentUrl.split("=")[1];
+}
+</script>
+
+</html>

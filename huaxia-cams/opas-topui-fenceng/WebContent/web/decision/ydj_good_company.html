@@ -1,0 +1,68 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>优质企业名单</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<!-- 优质企业名单 -->
+			<table id="tb_goodCompanyWin" class="easyui-datagrid"
+				style="width: 99%; height: 99%"  iconCls="icon-save" 
+				data-options="nowrap:false,rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#goodCompanyWinCondion'">
+				<thead>
+					<tr>
+						<th field="projectCode" width="10%" align="left">项目代码</th>
+						<th field="companyName" width="25%" align="left">企业名称</th>
+						<th field="area" width="25%" align="left">地区</th>
+						<th field="startTime"  width="15%" align="left"  formatter="formatDate">开始日期</th>
+						<th field="endTime" width="15%" align="left"  formatter="formatDate">结束日期</th>
+				
+					</tr>
+				</thead>
+			</table>
+			<div id="goodCompanyWinCondion" style="padding: 10px; text-align: center;">
+				<form id="seachDictForm">
+					项目代码:<input class="easyui-textbox" style="width: 110px" name="projectCode" id="goodCompanyWin_projectCode" >
+					单位名称:<input class="easyui-textbox" style="width: 110px" name="companyName" id="goodCompanyWin_companyName" >
+					<a href="javascript:goodCompanyWin('goodCompanyWin')"
+					      class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</form>
+			</div>
+			<!-- <div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('goodCompanyWin')">取消</a>
+			</div> -->
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var appId;
+	 $(function(){
+		 //获取参数
+		 appId = GetQueryString("appId");
+		 var obj= GetQueryString("obj");
+		 var param= GetQueryString("param");
+		 if(param=='yes'){
+			 openGoodCompanyWin(obj);
+		 }else if(param=='no'){
+			 showOpenWin(obj,'goodCompanyMindan');
+		 }
+	 });
+	//优质企业名单
+	function openGoodCompanyWin(obj){
+		var urljson = "queryGoodCompany_tab_view";
+		openCommonWinYjd(obj,urljson,appId);
+	}
+	//优质企业名单
+	function goodCompanyWin(obj){
+		var urljson = "queryGoodCompany_tab_view";
+		var paramMap = {
+				projectCode:$("#goodCompanyWin_projectCode").textbox('getValue'),
+				companyName:$("#goodCompanyWin_companyName").textbox('getValue').toUpperCase()
+		};
+		commonWinYjd(obj,urljson,appId,paramMap);
+	}
+</script>

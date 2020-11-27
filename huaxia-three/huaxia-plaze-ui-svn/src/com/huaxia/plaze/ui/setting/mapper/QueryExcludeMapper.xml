@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.setting.mapper.QueryExcludeMapper">
+
+	<resultMap id="result_BaseQueryExclude" type="QueryExclude">
+		<result column="QUERY_ID" property="queryId" jdbcType="CHAR" />
+		<result column="USER_ACCT" property="account" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="EXCLUDE_START_DATE" property="excludeStartDate" jdbcType="VARCHAR" />
+		<result column="EXCLUDE_END_DATE" property="excludeEndDate" jdbcType="VARCHAR" />
+		<result column="EXCLUDE_TIME" property="excludeTime" jdbcType="VARCHAR" />
+		<result column="EXCLUDE_CAUSE" property="excludeCause" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_QUERY_EXCLUDE
+		<where>
+        	<if test="account != null">
+        		AND USER_ACCT LIKE '%${account}%'
+        	</if>
+        </where>
+	</select>
+	
+	<select id="selectListByPage" parameterType="java.util.Map" resultMap="result_BaseQueryExclude">
+		SELECT QUERY_ID,USER_ACCT,STAFF_NAME,EXCLUDE_START_DATE,EXCLUDE_END_DATE,EXCLUDE_TIME,EXCLUDE_CAUSE
+		  FROM (SELECT ROWNUM RN,T.CRT_TIME,T.QUERY_ID,T.USER_ACCT,T.STAFF_NAME,T.EXCLUDE_START_DATE,T.EXCLUDE_END_DATE,T.EXCLUDE_TIME,T.EXCLUDE_CAUSE
+		          FROM (SELECT CRT_TIME,QUERY_ID,USER_ACCT,STAFF_NAME,EXCLUDE_START_DATE,EXCLUDE_END_DATE,EXCLUDE_TIME,EXCLUDE_CAUSE
+		                  FROM SYS_QUERY_EXCLUDE
+		                <where>
+		                	<if test="account != null">
+				        		AND USER_ACCT LIKE '%${account}%'
+				        	</if>
+		                </where>) T
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		 WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	  ORDER BY CRT_TIME DESC
+	</select>
+	
+	<insert id="insert" parameterType="QueryExclude">
+		INSERT INTO SYS_QUERY_EXCLUDE (
+			UUID,CRT_TIME,CRT_USER,QUERY_ID,USER_ACCT,STAFF_NAME,EXCLUDE_START_DATE,EXCLUDE_END_DATE,EXCLUDE_TIME,EXCLUDE_CAUSE
+		) VALUES (
+			SYS_GUID(),SYSDATE,'SYSTEM',SYS_GUID(),
+			#{account,jdbcType=VARCHAR},
+			#{staffName,jdbcType=VARCHAR},
+			#{excludeStartDate,jdbcType=VARCHAR},
+			#{excludeEndDate,jdbcType=VARCHAR},
+			#{excludeTime,jdbcType=VARCHAR},
+			#{excludeCause,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM SYS_QUERY_EXCLUDE WHERE QUERY_ID = #{id,jdbcType=CHAR}
+	</delete>
+	<select id="selectExclude" parameterType="java.util.Map" resultType="java.lang.String">
+		  SELECT 
+		  LISTAGG(EXCLUDE_TIME,',') within group (order by EXCLUDE_TIME)
+		  AS TIME
+		 FROM SYS_QUERY_EXCLUDE 
+		 WHERE USER_ACCT=#{userAcct}
+		 AND 
+		 TO_DATE(#{excludeDate},'YYYY-MM-DD')
+		 BETWEEN
+		 TO_DATE(EXCLUDE_START_DATE,'YYYY-MM-DD')
+		 AND 
+		 TO_DATE(EXCLUDE_END_DATE,'YYYY-MM-DD ')
+	</select>
+</mapper>

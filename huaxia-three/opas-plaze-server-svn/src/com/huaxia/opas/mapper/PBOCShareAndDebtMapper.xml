@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCShareAndDebtMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_SHAREANDDEBT_INFO (
+			APP_ID,OUTS_LOANS_LOAN_CORP_NUMBER,OUTSTAND_LOANS_LOAN_ORG_NUMBER,
+			OUTSTAND_LOANS_ACCT_NUM,OUTSTAND_LOANS_CONTRACT_AMT,OUTSTAND_LOANS_BALANCE,
+			OUTSTAND_LOANS_6MONTH_AVE_PAY,NO_PD_CARD_LOAN_CORP_NUMBER,
+			NO_PD_CARD_LOAN_ORG_NUMBER,	NO_PIN_DEBIT_CARD_ACCT_NUM,
+			NO_PIN_DEBIT_CARD_CONTRACT_AMT,NO_PD_CARD_BANK_MAX_CREDIT_LIM,
+			NO_PD_CARD_BANK_MIN_CREDIT_LIM,NO_PD_CODRAFT_AMT,
+			NO_PD_CARD_6MONTH_AVE_PAY,NO_PADC_LOAN_CORP_NUMBER,
+			NO_PADC_LOAN_ORG_NUMBER,NO_PIN_APP_DEBIT_CARD_ACCT_NUM,
+			NO_PADC_CONTRACT_AMT,NO_PADC_BANK_MAX_CREDIT_LIM,
+			NO_PADC_BANK_MIN_CREDIT_LIM,
+			NO_PAD_CODRAFT_AMT,
+			NO_PADC_6MONTH_AVE_PAY,GUARANTY_GUARANTEE_NUM,
+			GUARANTY_GUARANTEE_AMT,GUARANTY_ASSURE_BALANCE,
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},#{financeCorpCountOfUnpaidLoan, jdbcType = VARCHAR},#{financeOrgCountOfUnpaidLoan, jdbcType = VARCHAR},
+			#{accountCountOfUnpaidLoan, jdbcType = VARCHAR},#{creditLimitOfUnpaidLoan, jdbcType = VARCHAR},#{balanceOfUnpaidLoan, jdbcType = VARCHAR},
+			#{latest6MonthUsedAvgAmountOfUnpaidLoan, jdbcType = VARCHAR},#{financeCorpCountOfUndestoryLoancard, jdbcType = VARCHAR},
+			#{financeOrgCountOfUndestoryLoancard, jdbcType = VARCHAR},#{accountCountOfUndestoryLoancard, jdbcType = VARCHAR},
+			#{creditLimitOfUndestoryLoancard, jdbcType = VARCHAR},#{maxCreditLimitPerOrgOfUndestoryLoancard, jdbcType = VARCHAR},
+			#{minCreditLimitPerOrgOfUndestoryLoancard, jdbcType = VARCHAR},#{usedCreditLimitOfUndestoryLoancard, jdbcType = VARCHAR},
+			#{latest6MonthUsedAvgAmountOfUndestoryLoancard, jdbcType = VARCHAR},#{financeCorpCountOfUndestoryStandardLoancard, jdbcType = VARCHAR},
+			#{financeOrgCountOfUndestoryStandardLoancard, jdbcType = VARCHAR},#{accountCountOfUndestoryStandardLoancard, jdbcType = VARCHAR},
+			#{creditLimitOfUndestoryStandardLoancard, jdbcType = VARCHAR},#{maxCreditLimitPerOrgOfUndestoryStandardLoancard, jdbcType = VARCHAR},
+			#{minCreditLimitPerOrgOfUndestoryStandardLoancard, jdbcType = VARCHAR},
+			#{usedCreditLimitOfUndestoryStandardLoancard,jdbcType = VARCHAR},
+			#{latest6MonthUsedAvgAmountOfUndestoryStandardLoancard, jdbcType = VARCHAR},#{count, jdbcType = VARCHAR},
+			#{amount, jdbcType = VARCHAR},#{balance, jdbcType = VARCHAR},
+			SYSDATE,'SYSTEM'
+		)
+	</insert>
+
+</mapper>

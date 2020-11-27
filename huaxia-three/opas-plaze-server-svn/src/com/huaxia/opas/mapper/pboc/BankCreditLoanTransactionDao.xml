@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankCreditLoanTransactionDao">
+	<!-- 保存信贷交易提示信息段 PC02/PC02A/PC02Adata -->
+	<insert id="insertCreditTransactionData" parameterType="com.huaxia.opas.domain.pboc.pco.PC02Adata" >
+      INSERT INTO PBOC_CREDIT_TRANSACTION_DATA (UUID, APP_ID, ACCOUNT_COUNT_TOTAL, 
+      SERVICE_TYPE_COUNT, CRT_TIME)
+      VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02AS01,jdbcType=VARCHAR}, 
+      #{PC02AS02,jdbcType=VARCHAR}, SYSDATE)
+  </insert>
+  <!-- 保存信贷交易提示信息 PC02AH 集合  PC02/PC02A/PC02AH -->
+   <insert id="insertCreditTransactionDetailList" parameterType="java.util.List" >
+      INSERT INTO  PBOC_CREDIT_TRANSACTION_DEL (UUID, APP_ID, SERVICE_TYPE, 
+      SERVICE_DL, ACCOUNT_COUNT, FIRST_YW_GRANT_MONTH, 
+      CRT_TIME)
+      <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	   SELECT
+	        SYS_GUID(),#{item.appId},#{item.PC02AD01},
+			#{item.PC02AD02},#{item.PC02AS03},#{item.PC02AR01},
+			SYSDATE
+		FROM DUAL
+	 </foreach>
+  </insert>
+  <!-- 保存被追偿汇总信息段数据PC02/PC02B/PC02Bdata -->
+  <insert id="insertBeRecoveriedSumData" parameterType="com.huaxia.opas.domain.pboc.pco.PC02Bdata" >
+    INSERT INTO PBOC_BE_RECOVERIED_SUM_DATA (UUID, APP_ID, ACCOUNT_COUNT_TOTAL, 
+      BALANCE_TOTAL, SERVICE_TYPE_COUNT, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02BS01,jdbcType=VARCHAR}, 
+      #{PC02BJ01,jdbcType=VARCHAR}, #{PC02BS02,jdbcType=VARCHAR}, SYSDATE)
+  </insert>
+  <!-- 被追偿汇总信息 PC02/PC02B/PC02BH  集合 -->
+    <insert id="insertBeRecoveriedSumDelList" parameterType="java.util.List" >
+    INSERT INTO PBOC_BE_RECOVERIED_SUM_DEL (UUID, APP_ID, SERVICE_TYPE, 
+      ACCOUNT_COUNT, BALANCE, CRT_TIME
+      )
+    <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	   SELECT
+	        SYS_GUID(),#{item.appId},#{item.PC02BD01},
+			#{item.PC02BS03},#{item.PC02BJ02},SYSDATE
+		FROM DUAL
+	 </foreach>
+    </insert>
+  <!-- 呆账汇总信息段 PC02C  -->
+   <insert id="insertBadDebtsSum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02C" >
+    INSERT INTO PBOC_BAD_DEBTS_SUM (UUID, APP_ID, ACCOUNT_COUNT, 
+      BALANCE, CRT_TIME)
+    VALUES (SYS_GUID(),#{appId,jdbcType=CHAR}, #{PC02CS01,jdbcType=VARCHAR}, 
+      #{PC02CJ01,jdbcType=VARCHAR}, SYSDATE)
+   </insert>
+  <!--保存逾期（透支）汇总信息段数据 PC02D/PC02Ddata-->
+   <insert id="insertOverdueDraftSum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02Ddata" >
+    INSERT INTO PBOC_OVERDUE_DRAFT_SUM (UUID, APP_ID, ACCOUNT_TYPE_COUNT, 
+      CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02DS01,jdbcType=VARCHAR}, 
+      SYSDATE)
+   </insert>
+  <!-- 保存逾期（透支）汇总信息  PC02D/PC02DH集合 -->
+   <insert id="insertOverdueDraftSumDelList" parameterType="java.util.List">
+    INSERT INTO PBOC_OVERDUE_DRAFT_SUM_DEL (UUID, APP_ID, ACCOUNT_TYPE, 
+      ACCOUNT_COUNT, MONTH_COUNT, SINGLEM_MAX_OVERDUE_SUM, MAX_OVERDUE_MONTH_COUNT,
+      CRT_TIME)
+   <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	   SELECT
+	        SYS_GUID(),#{item.appId},#{item.PC02DD01},
+			#{item.PC02DS02},#{item.PC02DS03},#{item.PC02DJ01},#{item.PC02DS04},
+			SYSDATE
+		FROM DUAL
+	 </foreach>
+  </insert>
+ <!--保存非循环贷账户汇总信息段 PC02E  -->
+  <insert id="insertNoRevolveLoanAccoSum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02E" >
+    INSERT INTO PBOC_NOREVOLVE_LOAN_ACCOSUM (UUID, APP_ID, MANAGE_ORGAN_COUNT, 
+      ACCOUNT_COUNT, CREDIT_TOTAL_AMOUNT, BALANCE, 
+      RECENT_6MS_AVG_YHK, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02ES01,jdbcType=VARCHAR}, 
+      #{PC02ES02,jdbcType=VARCHAR}, #{PC02EJ01,jdbcType=VARCHAR}, #{PC02EJ02,jdbcType=VARCHAR}, 
+      #{PC02EJ03,jdbcType=VARCHAR}, SYSDATE)
+  </insert>
+ <!-- 保存循环额度下分账户汇总信息段 PC02F  -->
+  <insert id="insertRevolveLimSubAccoSum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02F" >
+     INSERT INTO PBOC_REVOLVELIM_SUBACCOSUM (UUID, APP_ID, MANAGE_ORGAN_COUNT, 
+      ACCOUNT_COUNT, CREDIT_TOTAL_AMOUNT, BALANCE, 
+      RECENT_6MS_AVG_YHK, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02FS01,jdbcType=VARCHAR}, 
+      #{PC02FS02,jdbcType=VARCHAR}, #{PC02FJ01,jdbcType=VARCHAR}, #{PC02FJ02,jdbcType=VARCHAR}, 
+      #{PC02FJ03,jdbcType=VARCHAR},SYSDATE)
+  </insert>
+ <!-- 保存循环贷账户汇总信息段 PC02G  -->
+  <insert id="insertRevolveLoanAccoSum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02G" >
+     INSERT INTO PBOC_REVOLVE_LOAN_ACCOSUM (UUID, APP_ID, MANAGE_ORGAN_COUNT, 
+      ACCOUNT_COUNT, CREDIT_TOTAL_AMOUNT, BALANCE, 
+      RECENT_6MS_AVG_YHK, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02GS01,jdbcType=VARCHAR}, 
+      #{PC02GS02,jdbcType=VARCHAR}, #{PC02GJ01,jdbcType=VARCHAR}, #{PC02GJ02,jdbcType=VARCHAR}, 
+      #{PC02GJ03,jdbcType=VARCHAR}, SYSDATE)
+  </insert>
+ <!-- 保存 贷记卡账户汇总信息段 PC02H --> 
+  <insert id="insertCreditCardAccoSum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02H" >
+    INSERT INTO PBOC_CREDIT_CARD_ACCOSUM (UUID, APP_ID, FK_ORGAN_COUNT, 
+      ACCOUNT_COUNT, CREDIT_TOTAL_AMOUNT, SINGLE_BANK_MAX_CREDIT, 
+      SINGLE_BANK_MIN_CREDIT, USED_LIMIT, RECENT_6MS_AVG_SYED, 
+      CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02HS01,jdbcType=VARCHAR}, 
+      #{PC02HS02,jdbcType=VARCHAR}, #{PC02HJ01,jdbcType=VARCHAR}, #{PC02HJ02,jdbcType=VARCHAR},
+      #{PC02HJ03,jdbcType=VARCHAR}, #{PC02HJ04,jdbcType=VARCHAR}, #{PC02HJ05,jdbcType=VARCHAR}, 
+      SYSDATE)
+  </insert>
+ <!-- 保存保存准贷记卡账户汇总信息段 PC02I  --> 
+  <insert id="insertSemiCreditCardAccoSum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02I" >
+     INSERT INTO PBOC_SEMICREDIT_CARD_ACCOSUM (UUID, APP_ID, FK_ORGAN_COUNT, 
+      ACCOUNT_COUNT, CREDIT_TOTAL_AMOUNT, SINGLE_BANK_MAX_CREDIT, 
+      SINGLE_BANK_MIN_CREDIT, OVERDUE_BALANCE, RECENT_6MS_AVG_TZYE, 
+      CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02IS01,jdbcType=VARCHAR}, 
+      #{PC02IS02,jdbcType=VARCHAR}, #{PC02IJ01,jdbcType=VARCHAR}, #{PC02IJ02,jdbcType=VARCHAR}, 
+      #{PC02IJ03,jdbcType=VARCHAR}, #{PC02IJ04,jdbcType=VARCHAR}, #{PC02IJ05,jdbcType=VARCHAR}, 
+      SYSDATE)
+  </insert>
+ <!-- 保存相关还款责任汇总信息段数据   PC02K/pc02kData --> 
+  <insert id="insertRelatedRepayDutySum" parameterType="com.huaxia.opas.domain.pboc.pco.PC02Kdata" >
+    INSERT INTO PBOC_RELATED_REPAY_DUTYSUM (UUID, APP_ID, RELATED_HKZR_COUNT, 
+      CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC02KS01,jdbcType=VARCHAR}, 
+     SYSDATE)
+  </insert>
+ <!-- 保存 相关还款责任汇总信息  PC02KH 集合 -->  
+  <insert id="insertRelatedRepayDutySumDelList" parameterType="java.util.List" >
+    INSERT INTO PBOC_RELATED_REPAY_ZRXI_DEL (UUID, APP_ID, BOEEOWER_IDENTITY_TYPE, 
+      REPAY_DUTY_TYPE, ACCOUNT_COUNT, REPAY_DUTY_MONEY, 
+      BALANCE, CRT_TIME)
+   <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	   SELECT
+	        SYS_GUID(),#{item.appId},#{item.PC02KD01},
+			#{item.PC02KD02},#{item.PC02KS02},#{item.PC02KJ01},
+			#{item.PC02KJ02},SYSDATE
+		FROM DUAL
+	 </foreach>
+  </insert>
+
+</mapper>

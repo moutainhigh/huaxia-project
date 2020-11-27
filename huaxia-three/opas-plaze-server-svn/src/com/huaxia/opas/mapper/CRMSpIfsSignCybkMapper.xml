@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsSignCybkMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsSignCybk">
+		INSERT INTO SP_APS_IFS_SIGN_CYBK (
+			APP_ID,CUSTID,CUSTCODE,SIGN_VERSION,SIGN_DATE,SUBBRID,SIGN_CHANEL,SIGN_CARD,HQACCTNO,STATUS,D_DATE,BRID
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{signVersion, jdbcType = VARCHAR},
+			#{signDate, jdbcType = VARCHAR},
+			#{subBrId, jdbcType = VARCHAR},
+			#{signChanel, jdbcType = VARCHAR},
+			#{signCard, jdbcType = VARCHAR},
+			#{hqAccNo, jdbcType = VARCHAR},
+			#{status, jdbcType = INTEGER},
+			#{dDate, jdbcType = VARCHAR},
+			#{brId, jdbcType = INTEGER}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_SIGN_CYBK (
+			APP_ID,CUSTID,CUSTCODE,SIGN_VERSION,SIGN_DATE,SUBBRID,SIGN_CHANEL,SIGN_CARD,HQACCTNO,STATUS,D_DATE,BRID
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.signVersion, jdbcType = VARCHAR},
+			TO_DATE(#{item.signDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.subBrId, jdbcType = VARCHAR},
+			#{item.signChanel, jdbcType = VARCHAR},
+			#{item.signCard, jdbcType = VARCHAR},
+			#{item.hqAccNo, jdbcType = VARCHAR},
+			#{item.status, jdbcType = INTEGER},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.brId, jdbcType = INTEGER}
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

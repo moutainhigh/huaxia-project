@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankDao">
+	 <!-- 复制人行二期数据  -->
+	<select id="saveCloneBankData" parameterType="java.util.Map" statementType="CALLABLE">
+	<![CDATA[
+		{CALL PROC_FN_CLONEBANK(#{appId,mode=IN,jdbcType=CHAR},
+		#{lateAppId,mode=IN,jdbcType=CHAR},
+		#{callResult,mode=OUT,jdbcType=INTEGER},
+		#{callMsg,mode=OUT,jdbcType=VARCHAR})}
+		]]> 
+	</select>
+	<select id="selectBankLateAppIdByDayNameIdNo" parameterType="java.util.Map" resultType="java.lang.String">
+	SELECT APP_ID FROM 
+    (SELECT APP_ID,CRT_TIME,QUERYED_CERT_NO,QUERYED_NAME,
+    ROW_NUMBER() OVER( ORDER BY CRT_TIME DESC) AS RN 
+	FROM OPAS_PBOC_PERSONAL_INFO 
+    WHERE QUERYED_CERT_NO=#{idNo} AND QUERYED_NAME=#{name} 
+    AND CRT_TIME &gt;= (SYSDATE-TO_NUMBER(#{dayControl}))
+    AND CRT_TIME IS NOT NULL AND APP_ID IS NOT NULL
+    and QUERYED_CERT_TYPE = '10'
+    )
+    WHERE RN =1
+	</select>
+</mapper>

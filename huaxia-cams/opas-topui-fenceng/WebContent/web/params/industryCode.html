@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblIndustry" title="行业代码列表" class="easyui-datagrid" style="width: 98%"
+		       data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-manualnode-auth/queryIndustryCodeList.json',loadMsg:'数据加载中.....',method:'get',toolbar:'#industryCodeCondion'">
+			<thead>
+				<tr>
+				    <th field="industryCodeId" width="10%" align="center" checkbox="true">行业信息系统编码ID</th>
+					<th field="industryType" width="10%" align="center">行业</th>
+					<th field="industryCode" width="10%" align="center">行业代码</th>
+					<th field="remark" width="10%" align="center">备注</th>
+					<th field="sample" width="10%" align="center">示例</th>
+					<th field="crtDate" width="15%" align="center">创建日期</th>
+					<th field="crtUser" width="8%" align="center">创建人</th>
+					<th field="operate" width="12%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="industryCodeCondion" style="padding: 2px 5px;">
+			<form id="seachIndustryCodeForm">
+				<a href="javascript:addIndustryCode();"
+					class="easyui-linkbutton" iconCls="icon-add">新增
+				</a> 
+					行业类型: 
+					<input class="easyui-textbox" style="width: 110px" name="industryType" id="industryType"> 
+					行业代码: 
+					<input class="easyui-textbox" style="width: 110px" name="industryCode" id="industryCode"> 
+				<a
+					href="javascript:common.searchTbl('seachIndustryCodeForm','tblIndustry');"
+					class="easyui-linkbutton" iconCls="icon-search">查询
+				</a>
+			</form>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="行业代码信息修改"
+		style="text-align:center; width: 350px; height: 300px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="editForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;margin:auto;">
+					    <tr>
+							<td align="right">行业类型:</td>
+							<td><input class="easyui-validatebox textbox" id="industryType"
+								type="text" name="industryType" data-options="validType:'length[0,50]'">
+								</input>
+								<input type="hidden" name="industryCodeId" id="industryCodeId" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">行业代码:</td>
+							<td><input class="easyui-validatebox textbox" id="industryCode"
+								type="text" name="industryCode" data-options="validType:'length[0,10]'">
+								</input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">备注:</td>
+							<td><input class="easyui-validatebox textbox" id="remark"
+								type="text" name="remark" data-options="validType:'length[0,100]'">
+								</input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">示例:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="sample" type="text" name="sample" data-options="validType:'length[0,200]'"></input>
+							</td>
+						</tr>
+					</table>
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="行业代码信息添加" style="text-align:center; width: 400px; height: 400px" top="200" data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="addForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;margin:auto;">
+						  <tr>
+							<td align="right">行业类型:</td>
+							<td>
+							 	<input class="easyui-validatebox textbox" id="industryType" type="text" name="industryType" data-options="validType:'length[0,50]'"></input>
+								<input type="hidden" name="industryCodeId" id="industryCodeId" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">行业代码:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="industryCode" type="text" name="industryCode" data-options="validType:'length[0,10]'"></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">备注:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="remark" type="text" name="remark" data-options="validType:'length[0,100]'"></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">示例:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="sample" type="text" name="sample" data-options="validType:'length[0,200]'"></input>
+							</td>
+						</tr>
+					</table>
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>
+		        </div>
+	</div>	
+
+</body>
+<script>
+	//$.parser.parse();
+	var tblIndustry = $("#tblIndustry");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	var userCode=$cf.getStore("userRelInfo","index").userInfo.userCode;
+	
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editIndustryCode(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:deleteIndustryCode();>删除</a>";
+	}
+
+	function addIndustryCode(){
+		addForm[0].reset();
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	function editIndustryCode() {
+		var orgObj = tblIndustry.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(orgObj)
+		});
+	}
+
+	function deleteIndustryCode() {
+		var orgObj = tblIndustry.datagrid("getSelected");
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-manualnode-auth/deleteIndustryCode.json",
+						data : orgObj,
+						onSuccess : function(orgObj) {
+							onConcle("save");
+							tblIndustry.datagrid("reload");
+						}
+					});
+				}
+			});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	function onUpdate() {
+		
+		var industryTypeLen = getByteLen($("#editForm input[id=industryType]").val());
+		
+		if (industryTypeLen == 0){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业类型未输入" , "error");
+			return;
+		}
+		
+		if (industryTypeLen > 50){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业类型过长，请输入50位以内" , "error");
+			return;
+		}
+		
+		var industryCodeLen = getByteLen($("#editForm input[id=industryCode]").val());
+		
+		if (industryCodeLen == 0){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业代码未输入" , "error");
+			return;
+		}
+		
+		if (industryCodeLen > 10){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业代码过长，请输入10位以内" , "error");
+			return;
+		}
+		
+		var remarkLen = getByteLen($("#editForm input[id=remark]").val());
+		
+		if (remarkLen > 100){
+			
+			$.messager.alert("操作提示", "修改异常,原因:备注过长，请输入100位以内" , "error");
+			return;
+		}
+		
+		var sampleLen = getByteLen($("#editForm input[id=sample]").val());
+		
+		if (sampleLen > 200){
+			
+			$.messager.alert("操作提示", "修改异常,原因:示例 过长，请输入200位以内" , "error");
+			return;
+		}
+		
+		var jsondata = getFormData(editForm.serializeArray());
+		jsondata.lstUpdUser = userCode;
+		$cf.ajax({
+			url : "/opas-manualnode-auth/updateIndustryCode.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblIndustry.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		
+		var industryTypeLen = getByteLen($("#addForm input[id=industryType]").val());
+		
+		if (industryTypeLen == 0){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业类型未输入" , "error");
+			return;
+		}
+		
+		if (industryTypeLen > 50){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业类型过长，请输入50位以内" , "error");
+			return;
+		}
+		
+		var industryCodeLen = getByteLen($("#addForm input[id=industryCode]").val());
+		
+		if (industryCodeLen == 0){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业代码未输入" , "error");
+			return;
+		}
+		
+		if (industryCodeLen > 10){
+			
+			$.messager.alert("操作提示", "修改异常,原因:行业代码过长，请输入10位以内" , "error");
+			return;
+		}
+		
+		var remarkLen = getByteLen($("#addForm input[id=remark]").val());
+		
+		if (remarkLen > 100){
+			
+			$.messager.alert("操作提示", "修改异常,原因:备注过长，请输入100位以内" , "error");
+			return;
+		}
+		
+		var sampleLen = getByteLen($("#addForm input[id=sample]").val());
+		
+		if (sampleLen > 200){
+			
+			$.messager.alert("操作提示", "修改异常,原因:示例 过长，请输入200位以内" , "error");
+			return;
+		}
+		
+		var paramData = isRequired('addForm');
+		paramData.crtUser = userCode;
+		$cf.ajax({
+			url : "/opas-manualnode-auth/addIndustryCode.json",
+			data : paramData,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblIndustry.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+
+</script>

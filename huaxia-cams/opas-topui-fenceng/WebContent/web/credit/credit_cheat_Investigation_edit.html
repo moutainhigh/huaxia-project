@@ -1,0 +1,784 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>反欺诈调查编辑页面</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script src="../../topui/easyui/default/easyuiExt.js" type="text/javascript"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<!-- <script type="text/javascript" src="../../js/common/win.js"></script> -->
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+</head>
+ <body style="padding: 10px;">
+	<div>
+	<fieldset style="margin-top:10px;border:0px"> 
+	
+				<table  style="width:100%; border-collapse:collapse;font-size:14px" border="1px" id="invest_table">
+					<tr>
+						<td align="right">提报原因:</td>
+						<td colspan="3">  
+						  <div id="reasonInfoForm" ></div>
+						</td>
+					</tr> 
+					<tr>
+						<td align="right">提报备注:</td>
+						<td  colspan="3">
+							<textarea rows="5" style="width:99%;" id="memo" disabled="disabled" ></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">提报人:</td>
+						<td  colspan="3">
+							<input  style="width:100%;height:100%" id="check_currOptUser" type="text" disabled="disabled"/>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">调查备注:</td>
+						<td  colspan="3">
+							<div style="color:red;font-size:14px" >记录欺诈调查过程备注（666）</div> 
+							<textarea rows="10"  id="invest_memo" name="invest_memo" style="width:99%;" ></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">欺诈调查结果:</td>
+						<td   colspan="3"> 
+							<table  style="width:100%">
+								<tr>
+									<td> 
+									 	<div id="investResultDiv" style="border:1px;border-color:red;border-width:1px">
+									 	</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">审批备注:</td>
+						<td  colspan="3">
+							<textarea rows="5" style="width:99%;"   disabled="disabled" id="invest_approvalMemo" name="invest_approvalMemo"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td width="100px">是否对调查结果进行复核 :</td>
+						<td  colspan="3">
+							是<input type="checkbox" name="invest_resultFlag" id="invest_resultFlag" value="true"/> 
+						</td>
+					</tr>
+					<tr>
+						<td>提交审批员 :</td>
+						<td colspan="3">
+							<!-- 用户号:<input type="text" name="invest_crtUser" readonly="readonly" id="invest_crtUser" width="15px"> -->
+							<!-- <input type="combobox" name="invest_crtUserName" readonly="readonly" id="invest_crtUserName" width="15px"> -->
+							<input id="zxExamineOperationPerson" class="easyui-combobox" name="zxExamineOperationPerson"/>
+							<!-- <input type="button" value="选择人" onclick="candidateFunction()">  -->
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" style="text-align:center;">
+							<div style="margin-top:20px;margin-bottom:20px" id="buttonDiv">
+								<input type="hidden" id="investResultSize"/>
+							</div>
+						</td>
+					</tr>
+				</table>
+	</fieldset>  
+	
+	<!-- 选择分行小页面内 -->
+	<div id="changeBank" class="easyui-window"  title="选择分行" style="width: 50%;height:300px;" data-options="iconCls:'icon-search',maximized:false,modal:true,closed:true">
+			<table>
+			    <tr>
+			    <td>分行:</td>
+			    <td>
+			       <select class="easyui-combobox" id="fenHang" name="fenHang"
+							dict_type="PFXC" editable="false" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+			       </select>
+			    </td>
+			    </tr>
+			</table>
+			<a href="" class="easyui-linkbutton"  style="margin-top:200px;margin-left:65px"onclick="onConcle('')">取消</a>
+		    <a href="" class="easyui-linkbutton"  style="margin-top:200px;margin-left:65px"onclick="onSaveBatch()">发送</a>
+	</div>
+
+<script type="text/javascript">
+var creditCheckDetailedForm=$("#creditCheckDetailedForm");
+var appId="";
+var examineType="";
+var invest_autoId="";
+var resultName="";
+var resultCode="";
+var userCode="";
+var userUuid=window.parent.userUuid;
+var operationPerson="";
+var a=0;
+var isChange = false;
+$cf.loadAllDict(); // 加载数据字典
+/*****************************
+ *@describe:自动加载页面数据
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+$(function(){
+	var parent = window.parent;
+	userCode = parent.userCode;
+	var applyId = parent.applyId;
+	var type=parent.examineType;
+		invest_autoId=parent.autoId;
+	if(applyId!=undefined){
+		appId=applyId.value;
+	}
+	if(type!=undefined){
+		examineType=type.value;
+	}
+	if(appId!=""){
+		Load(appId);
+	}
+	if(invest_autoId!=""){
+		LoadInvestResult(invest_autoId);
+	}
+	if(examineType=='examine'){
+		$("#invest_memo").attr("disabled","disabled");
+		
+		$("#invest_approvalMemo").removeAttr("disabled");
+		//q欺诈调查审批页面不需要显示 提交审批员
+		var table=document.getElementById("invest_table");
+		table.deleteRow(7);
+		
+		var examineSave=document.createElement("input");
+		var examineAgree=document.createElement("input");
+		var examineBackqc=document.createElement("input");
+		var examineBackzx=document.createElement("input");
+		var examinepfxc=document.createElement("input");
+		examineSave.type="button";
+		examineAgree.type="button";
+		examineBackqc.type="button";
+		examineBackzx.type="button";
+		examinepfxc.type="button";
+		
+		examineSave.value="保 存";
+		examineAgree.value="同意欺诈调查结论";
+		examineBackqc.value="退回欺诈调查";
+		examineBackzx.value="退回征信调查";
+		examinepfxc.value="派发协查";
+		examinepfxc.id="pfxc";
+		examinepfxc.disabled = true;
+		
+		examineSave.onclick=function(){examineOnSave('examineSave');};
+		examineAgree.onclick=function(){examineOnSave('examineAgree');};
+		examineBackqc.onclick=function(){examineOnSave('examineBackqc');};
+		examineBackzx.onclick=function(){examineOnSave('examineBackzx');};
+		examinepfxc.onclick=function(){examineOnSave('examinepfxc');};
+		
+		examineSave.style='text-align:center;display:inline-block;width:50px;height:32px';
+		examineAgree.style='text-align:center;display:inline-block;width:120px;height:32px';
+		examineBackqc.style='text-align:center;display:inline-block;width:100px;height:32px';
+		examineBackzx.style='text-align:center;display:inline-block;width:100px;height:32px';
+		examinepfxc.style='text-align:center;display:inline-block;width:100px;height:32px';
+		$("#buttonDiv").append(examineSave);
+		$("#buttonDiv").append(document.createTextNode(" "));
+		$("#buttonDiv").append(examineAgree);
+		$("#buttonDiv").append(document.createTextNode(" "));
+		$("#buttonDiv").append(examineBackqc);
+		$("#buttonDiv").append(document.createTextNode(" "));
+		$("#buttonDiv").append(examineBackzx);
+		$("#buttonDiv").append(document.createTextNode(" "));
+		$("#buttonDiv").append(examinepfxc);
+	}else{
+		findQzOperationPerson(userCode);
+		var element=document.createElement("input");
+		element.type="button";
+		element.value="保 存";
+		element.onclick=function(){onSave('save');};
+		element.style='text-align:center;display:inline-block;width:50px;height:32px';
+		
+		var element1=document.createElement("input");
+		element1.type="button";
+		element1.value="提交至欺诈审批";
+		element1.onclick=function(){onSave('submit');} 
+		element1.style='text-align:center;display:inline-block;width:120px;height:32px';
+		
+		var element2=document.createElement("input");
+		element2.type="button";
+		element2.value="退 回";
+		element2.onclick=function(){onSave('backzx');} 
+		element2.style='text-align:center;display:inline-block;width:50px;height:32px';
+		
+		// addBy liuheng 2019-8-21 加一个派发协查按钮
+		var element3=document.createElement("input");
+		element3.type="button";
+		element3.name="paifa";
+		element3.id="pai";
+		element3.disabled = true;
+		element3.value="派发协查";
+		element3.onclick=function(){onSave('pfxc');} 
+		element3.style='text-align:center;display:inline-block;width:100px;height:32px';
+		
+		$("#buttonDiv").append(element);
+		$("#buttonDiv").append(document.createTextNode(" "));
+		$("#buttonDiv").append(element1);
+		$("#buttonDiv").append(document.createTextNode(" "));
+		$("#buttonDiv").append(element2);
+		$("#buttonDiv").append(document.createTextNode(" "));
+		$("#buttonDiv").append(element3);
+	}
+	
+	
+});
+/*****************************
+ *@describe:自动加页面数据
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+function LoadInvestResult(invest_autoId) {
+	$cf.ajax({
+		url : '/opas-naps/select_OpasApDict.json',
+		data : {
+			'invest_autoId':invest_autoId,
+		},
+		onSuccess : function(response) {
+			if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.investResult;
+					var resultSize=response.RSP_BODY.investResultSize; 
+					$("#investResultDiv").html(result);
+					$("#investResultSize").val(resultSize);
+					var size=$("#investResultSize").val();
+					if(examineType=='examine'){
+					for(var i=0;i<size;i++){
+						var other=$("input[type=checkbox][name='investResult"+i+"']");					
+						other.attr("disabled","disabled");
+
+					}
+					}else{
+						for(var i=0;i<size;i++){
+							var other=$("input[type=checkbox][name='investResult"+i+"']");
+							//var box=$("input[type=checkbox][name='investResult"+i+"box']");
+							other.removeAttr("disabled");
+							//box.removeAttr("disabled");
+						}
+					}
+					var creditChecks=response.RSP_BODY.creditCheck;  
+					//查询征信提报欺诈结果信息，只此只会返回一条
+					if(creditChecks!=null){
+							for(var i=0;i<creditChecks.length;i++){
+									//调查结果	  数据格式  单位地址虚假|工作证明虚假|申请单位虚假
+				 					var invest_result=creditChecks[i].invest_result; 
+				 					//调查结果编码    数据格式   103|302|101
+				 					var invest_resultCode=creditChecks[i].invest_resultCode;
+				 					
+				 					if(invest_resultCode!=null){
+				 					//查分调查结果码，每一个编码是唯一
+				 					var resultCodes=invest_resultCode.split('|');
+				 					//获取页面所有的 复选框
+				 					var checks=$("input[type=checkbox]");
+				 					$("#pfxc").attr("disabled");
+				 					//循环 拆分 调查结果码数组
+				 					for(var j=0;j<resultCodes.length;j++){
+				 						//得到调查结果码
+				 						var resultCode=resultCodes[j];
+				 						if(resultCode =="455"){			
+				 							$("#pai").removeAttr("disabled"); 	
+				 							$("#pfxc").removeAttr("disabled"); 				 							
+				 						}
+				 						//循环 所有的复选框
+				 						for(var m=0;m<checks.length;m++){
+				 							//获取复选框name
+					 						var name=$(checks[m]).attr("name");
+				 							//剔除name含有box的复选框 肯name为invest_resultFlag复选框 
+					 						if(name.indexOf("box")<0 && name!='invest_resultFlag'){
+					 							//获取复选框value
+						 						var value=$(checks[m]).val();
+					 							//判断调查结果码是否在复选框返回值中，有需要选中此复选框
+					 							if(value.indexOf(resultCode)>=0){
+					 								$(checks[m]).attr("checked","checked");
+					 								$("#"+name+"box").attr("checked","checked");
+					 								$("#"+name+"box").removeAttr("disabled");
+						 						}	
+					 						}
+				 						}
+				 					}
+				 					
+				 					}
+				 					//设置审批备注值
+				 					var invest_approvalMemo=creditChecks[i].invest_approvalMemo;
+				 					$('#invest_approvalMemo').val(invest_approvalMemo);
+				 					
+				 					var invest_crtUser=creditChecks[i].invest_crtUser;//提交审批员
+									//保存操作员
+				 					 for(var j=0;j<operationPerson.length;j++){
+				 						if(invest_crtUser==operationPerson[j].dictDetailCode){
+				 							$('#zxExamineOperationPerson').combobox('setValue',invest_crtUser);
+				 						}				 					
+				 					}
+				 				//	$('#zxExamineOperationPerson').combobox('setValue',invest_crtUser);
+				 				//	alert(844848);
+				 					//var invest_crtUserName=creditChecks[i].invest_crtUserName;//提交审批员名称
+				 				
+				 				//	$('#invest_crtUserName').val(invest_crtUserName);
+				 					//设置调查备注值
+				 					var invest_memo=creditChecks[i].invest_memo;//调查备注
+				 					$('#invest_memo').val(invest_memo);
+				 					
+				 					//设置 是否调查结果复核
+				 					var invest_resultFlag=creditChecks[i].invest_resultFlag; 
+				 					if(invest_resultFlag=='1'){
+				 						$("#invest_resultFlag").attr("checked","checked");
+				 					}
+				 					
+							}
+					}
+			}
+		}
+	});
+}
+/*********************
+ * 加载审批操作人
+ ********************/
+function findQzOperationPerson(userCode){
+	$cf.ajax({
+	 url:'/opas-naps/findQzOperationPerson.json', 
+	 async:false,
+	 data : {
+			'userCode':userCode,
+		},
+	 onSuccess : function(response) {
+		var resultList = response.RSP_BODY.listMap;
+		operationPerson = resultList;
+		$('#zxExamineOperationPerson').combobox({
+			data:resultList,
+		    valueField:'dictDetailCode',
+		    textField:'dictDetailName',
+		    width:100,
+		    onLoadSuccess:function(){
+
+		    //	$('#zxExamineOperationPerson').combobox('setValue','admin');
+		    //	var val=$(this).combobox("getData");
+		    //	$(this).combobox("select",'');
+		    }
+		}); 
+	}
+});
+}
+/*****************************
+ *@describe:自动加载提报原因
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+function Load(appId) {
+	$cf.ajax({
+		url : '/opas-naps/selectMention_antiFraud.json',
+		data : {
+			'appId':appId,
+			'type':'1'
+		},
+		onSuccess : function(response) {
+			if (response.RSP_BODY.success) {
+				var result = response.RSP_BODY.creditReason;
+				var memo = response.RSP_BODY.memo;
+				var check_currOptUser = response.RSP_BODY.check_currOptUser;
+				$("#reasonInfoForm").html(result);
+				$("#memo").val(memo);
+				$("#check_currOptUser").val(check_currOptUser);
+			}
+		}
+	});
+}
+
+/*****************************
+ *@describe:控制调查结果原因码逻辑
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+ function selectCheckFunction(obj){
+	var size=$("#investResultSize").val();
+	//var number=0;
+	for(var i=0;i<size;i++){
+		var checkBox=$("input[type=checkbox][name='investResult"+i+"']");
+		/* if(checkBox.is(":checked")) {
+			number++;	
+		}  */
+		//原因码不能超过三个
+		/* if(number>3){
+			alert("欺诈调查结果原因码不能超过三个"); */
+			var checks=$("input[type=checkbox]");
+			for(var j=0;j<checks.length;j++){
+				 var id=$(checks[j]).attr("id");
+				 var name=$(checks[j]).attr("name");
+				 if(id!="invest_resultFlag"){
+					 //清空选择复选框
+					// $(checks[j]).removeAttr("checked");
+					/* if(name.indexOf("box")>0){
+	 					$("input[type=checkbox][name='"+name+"']").attr("disabled","disabled");
+					} */
+				 }
+			}
+			//break;
+		//} 
+	} 
+	var cname = $(obj).attr("name");
+	var cvalue = $(obj).attr("value");
+	var cnid = $(obj).attr("id");
+	var other=$("input[type=checkbox][name='investResult"+cnid+"box']");
+	if ($(obj).is(":checked")) {
+		if(cvalue == "455-派发协查"){
+			 $("#pai").removeAttr("disabled"); 
+		/*  var paifa = $("input[name='paifa']");
+			paifa.removeAttr("disabled");  */
+		}
+		other.removeAttr("disabled");
+		other.prop("checked",true);
+	}else{
+		var paifa = $("input[name='paifa']");
+		paifa.attr("disabled","disabled");
+		other.attr("disabled","disabled");
+		other.removeAttr("checked");
+	}
+}
+/*****************************
+ *@describe:封装复选框选中的值
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+function encapsulationCheckBoxValue(type){
+	var checks=$("input[type=checkbox]");
+	for(var j=0;j<checks.length;j++){
+		 var id=$(checks[j]).attr("id");
+		 var name=$(checks[j]).attr("name");
+		 if($(checks[j]).is(":checked")){
+			 if(id != "invest_resultFlag" && name.indexOf("box")<0){
+				 var resultFlag='false';
+				 var result=$(checks[j]).val();
+				 var results=result.split('-');
+				 var value="";
+				 var valueCode="";
+				 if(results!=null && results.length==2){
+					    valueCode=results[0];
+					    value=results[1];
+				 }
+				 if(type=='save'){
+					 resultCode=resultCode+valueCode+"|";
+					 resultName=resultName+value+"|";
+				 }else{
+					  
+					 if($("#"+name+"box").is(":checked")){
+						 resultFlag=$("#"+name+"box").val();
+						 if(resultFlag=='true'){
+							 resultCode=resultCode+valueCode+"|";
+							 resultName=resultName+value+"|";
+						 }
+					 }
+				 }
+				 
+			 }
+		 }
+	}
+	resultCode=resultCode.substr(0,resultCode.length-1);
+	resultName=resultName.substr(0,resultName.length-1);
+}
+/**************
+ * 不做校验
+ */
+function unencapsulationCheckBoxValue(type){
+	resultCode = '';
+	resultName = '';
+	var checks=$("input[type=checkbox]");
+	for(var j=0;j<checks.length;j++){
+		 var id=$(checks[j]).attr("id");
+		 var name=$(checks[j]).attr("name");
+		 if($(checks[j]).is(":checked")){
+			 if(id != "invest_resultFlag" && name.indexOf("box")<0){
+				 var resultFlag='false';
+				 var result=$(checks[j]).val();
+				 var results=result.split('-');
+				 var value="";
+				 var valueCode="";
+				 if(results!=null && results.length==2){
+					    valueCode=results[0];
+					    value=results[1];
+				 }
+				 resultCode=resultCode+valueCode+"|";
+				 resultName=resultName+value+"|";
+			 }
+		 }
+	}
+	resultCode=resultCode.substr(0,resultCode.length-1);
+	resultName=resultName.substr(0,resultName.length-1);
+}
+//addBy liuheng 2019-08-21
+function onSaveBatch(){
+	if(isChange){
+		if(confirm("是否发送协查")==true){
+			if(examineType=='examine'){
+				examineOnSave("examinepfxc1");
+				window.parent.window_close();
+			}else{
+				onSave("pfxc1");
+				window.parent.window_close();
+			}		
+		}else{
+			return;
+		}
+	}else{
+		alert("操作提示:组别必须选择 ");
+	}	
+}
+/*****************************
+ *@describe:反欺诈调查
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+function onSave(type){
+
+	 	var jsondata={};
+		var invest_memo=$("#invest_memo").val();//调查备注
+		//var invest_crtUser=$("#invest_crtUser").val();
+		var specialExamineUser=$("#zxExamineOperationPerson").combobox('getValue');
+		if(type=='submit'){			
+		if(specialExamineUser==""||typeof(specialExamineUser)=="undefined"){
+			alert("请选择提交审批员");
+			return;
+		}
+		}
+		var invest_crtUserName=$("#invest_crtUserName").val(); 
+		var invest_resultFlag=$("#invest_resultFlag").val();//是否对调查结果进行复核
+		//判断是否勾选对调查结果进行复核
+		var flag = $("#invest_resultFlag").is(":checked");		
+		if(!flag){
+			alert("请对调查结果进行复核");
+			return;
+		}
+		unencapsulationCheckBoxValue(type);
+		
+		 if($("#invest_resultFlag").is(":checked")){
+			 jsondata.invest_resultFlag='1'; 
+		 }else{
+			 jsondata.invest_resultFlag='0'; 
+		 }
+		
+		jsondata.invest_memo=invest_memo; 
+		//jsondata.invest_crtUser=invest_crtUser; 
+		//jsondata.invest_resultName=resultName; 
+		
+		jsondata.check_number=appId;
+		jsondata.invest_autoId=invest_autoId;
+		jsondata.invest_crtUserName=invest_crtUserName;
+		jsondata.userCode=userCode;
+		jsondata.userUuid=userUuid;
+		jsondata.specialExamineUser=specialExamineUser;
+		jsondata.invest_resultCode=resultCode; 
+		jsondata.invest_resultName=resultName; 
+		var info="反欺诈调查保存";
+		if('submit'==type){
+			jsondata.invest_delStatus='2';//提交欺诈审批
+			info="提交欺诈审批";
+		}else if('backzx'==type){
+			info="欺诈调查回退";
+			jsondata.invest_delStatus='3';//退回征信调查
+		//	jsondata.check_currNode='02';//设置征信环节
+		//addBy liuheng 2019-8-21 设置派发协查按钮，点击出一个小页面选择分行
+		}else if("pfxc"==type){
+			$("#changeBank").window('open');		
+			return;		
+		}else if("pfxc1"==type){
+			info="欺诈派发协查";
+			jsondata.invest_delStatus = '5';//预审贷前风险案件协查队列设置为5
+			jsondata.fenHang = $("input[name='fenHang']").val();
+		}
+		if(type!='save' && type!='pfxc' && type!='pfxc1'){
+			if(confirm(info)==true){
+				
+			}else{
+				return;
+			}
+		}
+		//addBy liuheng 2019-8-21 点击派发协查复选框，按钮不点击派发协查，则不保存派发协查到数据库
+ 		/* if(type!='pfxc'){
+			var flag = $("#0").is(":checked");
+			if(flag){
+				$("#0").removeAttr("checked");
+				$("#investResult0box").removeAttr("checked");				
+				$("#pai").attr("disabled","disabled"); 
+			 resultCodes = resultCode.split('|');
+			 resultCodes =  resultCodes.splice(1,resultCodes.length-1);
+			 var resultCode1 ="" ;
+			 if(resultCodes.length<2){
+				 
+			 }
+			 for(var i = 0; i< resultCodes.length;i++){
+				 resultCode1 = resultCode1 +resultCodes[i] + '|';
+			 }
+			 resultCode1=resultCode1.substr(0,resultCode1.length-1);
+				jsondata.invest_resultCode=resultCode1; 
+			 resultNames = resultName.split('|')
+			 resultNames = resultNames.splice(1,resultNames.length-1);
+			 var resultName1 ="" ;
+			 for(var i = 0; i< resultNames.length;i++){
+				 resultName1 = resultName1 +resultNames[i] + '|';
+			 }
+			 resultName1=resultName1.substr(0,resultName1.length-1);
+			 jsondata.invest_resultName=resultName1; 			
+			}
+		} */
+		$cf.ajax({
+			url:"/opas-naps/creditcheatInvestigation_Handle.json",
+			data:jsondata,
+			async:false,
+			onSuccess:function(data) {
+				if (data.RSP_BODY.success) {
+					alert(info+"成功!");
+					 if(jsondata.invest_delStatus=='2'){
+						 window.parent.zidonPush();
+					 }else {
+						 if(type!='save'){	
+							window.parent.window_close();
+						 }
+					 }
+				} else {
+					alert(info+"失败");
+					return;			
+			}
+			}
+		});
+}
+/*****************************
+ *@describe:反欺诈审批
+ *author:xiaoJianFeng
+ *@date:2017-03-10
+ ****************************/
+function examineOnSave(type){
+	var invest_approvalMemo=$("#invest_approvalMemo").val();//审批备注
+	var invest_resultFlag=$("#invest_resultFlag").val();//是否对调查结果进行复核
+	var jsondata={};
+	 if($("#invest_resultFlag").is(":checked")){
+		 jsondata.invest_resultFlag='1'; 
+	 }else{
+		 jsondata.invest_resultFlag='0'; 
+	 }
+	jsondata.invest_approvalMemo=invest_approvalMemo; 
+	unencapsulationCheckBoxValue(type);
+	jsondata.invest_resultName=resultName; 
+	if(type!='examineSave'){		
+		jsondata.invest_resultCode=resultCode; 
+	}
+	jsondata.invest_autoId=invest_autoId;
+	jsondata.userUuid=userUuid;
+	jsondata.check_number=appId;
+	jsondata.userCode=userCode;
+	var info="欺诈审批保存";
+	if('examineAgree'==type){
+		jsondata.invest_delStatus='4';//审批同意
+		info="反欺诈审批";
+	}else if('examineBackqc'==type){//退回欺诈调查
+		info="退回欺诈调查";
+		jsondata.invest_delStatus='1'; 
+	}else if('examineBackzx'==type){//退回征信
+		info="退回征信调查";
+		jsondata.invest_delStatus='3'; 
+	}else if("examinepfxc"==type){//派发协查
+		$("#changeBank").window('open');		
+		return;	
+	}else if("examinepfxc1"==type){
+		info="审批派发协查";
+		jsondata.invest_delStatus = '5';//预审贷前风险案件协查队列设置为5
+		jsondata.fenHang = $("input[name='fenHang']").val();
+	}
+	if(type!='examineSave'&& type!='examinepfxc'&& type!='examinepfxc1'){
+		
+		if(confirm(info)==true){
+			
+		}else{
+			return;
+		}
+	
+	}
+	$cf.ajax({
+		url:"/opas-naps/creditcheatExamine_Handle.json",
+		data:jsondata,
+		async:false,
+		onSuccess:function(data) {
+			if (data.RSP_BODY.success) {
+				alert(info+"成功!");
+				if('examineAgree'==type){
+				resultCode='';
+				resultName='';
+				encapsulationCheckBoxValue(type);
+				debugger;
+				if(resultCode!=''){	
+				addRiskList();
+				}
+				} 
+				if(type!='examineSave'){
+					 window.parent.zidonPush();
+				 }else{
+					 if(type!='examineSave'){					 
+					 window.parent.window_close();
+					 }
+				 }
+				 /* if('examineSave'!=type){					
+					
+					}  */
+				
+			}
+			else {
+				alert(info+"失败");
+				return;
+			}
+		}
+	});	
+}
+/***********************
+ *@describe:风险库
+ *author:hang
+ ***********************/
+function addRiskList(){
+	var jsondata={};
+	var userId = userCode;
+	jsondata.userCode=userCode;
+	jsondata.resultCode=resultCode;
+	jsondata.appId=appId;
+	debugger;
+	var info="风险信息名单库更新";
+	$cf.ajax({
+		url:"/opas-naps/addRiskList.json",
+		data:jsondata,
+		onSuccess:function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				alert(info+"成功!");
+				//window.parent.window_close();
+			} else {
+				alert(info+"失败");
+				return;
+			}
+		}
+	});	
+}
+
+//[事件] 选择组别
+$('#changeBank select').combobox({
+	onChange : function(n, o) {
+		if(n==""){
+			$.messager.alert("操作提示","组别必须选择 ","error");
+			return;
+		}else{
+			isChange = true;
+		}
+	}
+});
+
+function candidateFunction(){
+	var url="candidate_list.html";
+	winOption="height=500,width=700,toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,reszable=yes,fullscreen=0"
+	window.open(url,window,winOption);
+}
+
+function setCandidateValue(user,userName){
+	$("#invest_crtUser").val(user);
+	$("#invest_crtUserName").val(userName);
+	 
+}
+</script>
+
+</body>
+</html>

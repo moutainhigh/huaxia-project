@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="OpaRiskInfoCheckMapper">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.decision.OpaRiskInfoCheck">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="IDENTITY_RISKLIST" property="identityRisklist"
+			jdbcType="CHAR" />
+		<result column="COMPANY_RISKLIST" property="companyRisklist"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_1" property="telRisklist1"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_2" property="telRisklist2"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_3" property="telRisklist3"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_4" property="telRisklist4"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_5" property="telRisklist5"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_6" property="telRisklist6"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_7" property="telRisklist7"
+			jdbcType="CHAR" />
+		<result column="TEL_RISKLIST_8" property="telRisklist8"
+			jdbcType="CHAR" />
+		<result column="ADDR_RISKLIST_1" property="addrRisklist1"
+			jdbcType="CHAR" />
+		<result column="ADDR_RISKLIST_2" property="addrRisklist2"
+			jdbcType="CHAR" />
+		<result column="PROMOTER_RISKLIST" property="promoterRisklist"
+			jdbcType="CHAR" />
+		<result column="UNION_RISKLIST" property="unionRisklist"
+			jdbcType="CHAR" />
+		<result column="SAME_RISKLIST" property="sameRisklist"
+			jdbcType="CHAR" />
+		<result column="RISK_STAR" property="riskStar" jdbcType="DECIMAL" />
+		<result column="POLICE_BADINFO" property="policeBadinfo"
+			jdbcType="CHAR" />
+		<result column="BAIRONG_RISKLIST" property="bairongRisklist"
+			jdbcType="CHAR" />
+		<result column="ANT_RISKLIST" property="antRisklist" jdbcType="CHAR" />
+		<result column="WASHMONEY_RISKLIST" property="washmoneyRisklist"
+			jdbcType="CHAR" />
+		<result column="CUSTWASHMONEY_RISKLEVEL" property="custwashmoneyRisklevel"
+			jdbcType="CHAR" />
+		<result column="PHONE_CERTIFICATION" property="phoneCertification"
+			jdbcType="CHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectByAppId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, IDENTITY_RISKLIST, COMPANY_RISKLIST, TEL_RISKLIST_1,
+		TEL_RISKLIST_2,
+		TEL_RISKLIST_3, TEL_RISKLIST_4, TEL_RISKLIST_5, TEL_RISKLIST_6, TEL_RISKLIST_7,
+		TEL_RISKLIST_8,
+		ADDR_RISKLIST_1, ADDR_RISKLIST_2, PROMOTER_RISKLIST, UNION_RISKLIST, SAME_RISKLIST,
+		RISK_STAR, POLICE_BADINFO, BAIRONG_RISKLIST, ANT_RISKLIST,
+		WASHMONEY_RISKLIST, CUSTWASHMONEY_RISKLEVEL,
+		PHONE_CERTIFICATION, CRT_DATE, CRT_USER
+		from OPAS_RISKINFO_CHECK
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+</mapper>

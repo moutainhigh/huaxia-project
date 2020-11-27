@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>学历查询匹配设置</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style>
+</head>
+<body style="padding: 10px;">
+		<fieldset style="margin-top:10px;"> 
+				<form id="creditEducationForm">
+						<div align="center"> 
+								<table style="border-collapse:separate;border-spacing:1px;width:50%" >
+										<tr>
+											<td align="right">
+												规则ID:
+											</td>
+											<td> 
+												<input class="easyui-textbox" id="edu_eduRuleId" name="edu_eduRuleId" width="98%"/>
+											</td>
+											<td align="right">
+												当前状态:
+											</td>
+											<td>
+												<select class="easyui-combobox" style="width: 80px" id="edu_eduCurrStatus" name="edu_eduCurrStatus">
+									                <option value="1">启用</option>
+													<option value="0">停用</option>
+												</select>
+											</td>
+											<td align="right">
+												规则名称:
+											</td>
+											<td>
+												<input class="easyui-textbox" id="edu_eduRuleName" name="edu_eduRuleName"  width="98%"/>
+											</td>
+											<td>
+												<a href="javascript:common.searchTbl('creditEducationForm','tblSeach');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+											</td>
+										</tr>
+								</table>
+						</div>
+				</form>
+		</fieldset> 
+	
+	
+	
+		<fieldset style="margin-top:10px;"> 
+				<table id="tblSeach" class="easyui-datagrid" style="width: 99%;height:270px"
+					data-options="url:'/opas-naps/education_page.json',remoteSort:false,rownumbers:true,singleSelect:false,pagination:true,pageSize:15,pageList:[15,20,50],fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#toolbar'">
+					<thead>
+						<tr>
+							<th field="edu_eduRuleId" width="20px" align="center" sortable="true">规则ID</th>
+							<th field="edu_eduRuleName" width="20px" align="center" sortable="true">规则名称</th>
+							<th field="edu_eduCurrStatus" width="20px" align="center" sortable="true" data-options="formatter:formatStatus">当前状态</th>
+							<th field="hhhhhh" width="40px" align="center" sortable="true"  data-options="formatter:formatOperation">操作</th>
+							<th field="edu_autoId" width="20px" align="center" sortable="true" hidden="true"></th>
+						</tr>
+					</thead>
+				</table>
+				<div id="toolbar">
+					<a href="javascript:common.openWin('winAdd')" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addMenu()">新 增</a>
+				</div>
+		</fieldset> 
+
+
+
+		<div id="winAdd" class="easyui-window" title="学历查询匹配设置添加" style="width: 300px; height: 250px" data-options="iconCls:'icon-save',modal:true,closed:true">
+			<form id="addForm">
+				<table  style="border-collapse: separate; border-spacing: 10px;">
+					<tr>
+						<td align="right">规则ID:</td>
+						<td>
+							<input class="easyui-validatebox textbox" id="edu_eduRuleId" type="text" name="edu_eduRuleId" data-options="required:true"></input>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">规则名称:</td>
+						<td>
+							<input class="easyui-validatebox textbox" id="edu_eduRuleName" type="text" name="edu_eduRuleName" data-options="required:true"></input>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">启用状态:</td>
+						<td>
+							<select class="easyui-combobox" style="width: 80px" id="edu_eduCurrStatus" name="edu_eduCurrStatus">
+									<option value="1">启用</option>
+									<option value="0">停用</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</form>
+			<div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>&nbsp;
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+			</div>
+	</div>		
+
+
+	<div id="winEdit" class="easyui-window" title="人行征信查询匹配设置修改" style="width: 300px; height: 250px"	data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td  align="right">规则ID:</td>
+					<td>
+						<input class="easyui-validatebox textbox" id="edu_eduRuleId" type="text" name="edu_eduRuleId" data-options="required:true"></input>
+						<input type="hidden" name="edu_autoId" id="edu_autoId" />
+					</td>
+				</tr>
+				<tr>
+					<td  align="right">规则名称:</td>
+					<td>
+						<input class="easyui-validatebox textbox" id="edu_eduRuleName" type="text" name="edu_eduRuleName" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">启用状态:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 80px"	id="edu_eduCurrStatus" name="edu_eduCurrStatus">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">修 改</a>&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取 消</a>
+		</div>
+	</div>
+	
+	
+	
+<script type="text/javascript">
+var tblSeach = $("#tblSeach");
+var addForm = $("#addForm");
+var editForm= $("#editForm");
+var editWindow = $("#winEdit");
+function formatOperation(val, row, index) {
+	var result='<a href="javascript:editEducation()">修改   </a>'+
+	'<a href="javascript:void(0)"  onclick="deleteEducation()">删除</a>'
+	return result;
+}
+
+function editEducation() {
+	var tblObj = tblSeach.datagrid("getSelected");
+	editWindow.window({
+		closed : false,
+		collapsible: false,
+		minimizable: false,
+		onBeforeOpen:setData(tblObj)
+	});
+}
+
+function setData(data) {
+	editForm.form("load", data);
+	$("#id").attr("readonly", "readonly");
+	$("#id").attr("disabled", "disabled");
+}
+
+function formatStatus(val, row, index){
+	if(row.edu_eduCurrStatus=='1'){
+		return "启用";
+	}else{
+		return "禁用";
+	}
+}
+
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window("close");
+}
+/*******************************
+ *@describe:修改人行征信查询匹配设置
+ *@author:xiaoJianFeng
+ *@date:2017-03-20
+ *******************************/
+function onUpdate() {
+	var formData = isRequired('editForm');
+	if (formData.edu_eduRuleId == null || formData.edu_eduRuleId.trim() == "") {
+		alert("修改失败,请输入正确规则id!");
+		return;
+	}
+	if (formData.edu_eduRuleName == null || formData.edu_eduRuleName.trim() == "") {
+		alert("修改失败,请输入正确规则名称!");
+		return;
+	}
+	var jsondata = getFormDataJson(editForm.serializeArray());
+	$cf.ajax({
+		url : "/opas-naps/update_education.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+			 	alert("修改成功!");
+				onConcle("winEdit");
+				tblSeach.datagrid("reload");
+			} else {
+				alert("修改失败!");
+				onConcle("winEdit");
+				return;
+			}
+		}
+	});
+}
+
+/*******************************
+ *@describe:保存人行征信查询匹配设置
+ *@author:xiaoJianFeng
+ *@date:2017-03-20
+ *******************************/
+function onSave() {
+	var formData = isRequired('addForm');
+	if (formData.edu_eduRuleId == null || formData.edu_eduRuleId.trim() == "") {
+		 alert("添加失败,请输入正确规则id!");
+		return;
+	}
+	if (formData.edu_eduRuleName == null || formData.edu_eduRuleName.trim() == "") {
+		alert("添加失败,请输入正确规则名称!");
+		return;
+	}
+	var jsondata = getFormDataJson(addForm.serializeArray());
+	$cf.ajax({
+		url : "/opas-naps/add_education.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+					alert("添加成功!");
+					onConcle("winAdd");
+					tblSeach.datagrid("reload");
+			} else {
+				alert("添加失败!");
+				onConcle("winEdit");
+				return;
+			}
+		}
+
+	});
+}
+/*******************************
+ *@describe:删除人行征信查询匹配设置
+ *@author:xiaoJianFeng
+ *@date:2017-03-20
+ *******************************/
+function deleteEducation(){
+	var tblObj = tblSeach.datagrid("getSelected");
+	var jsondata={};
+	jsondata.edu_autoId=tblObj.edu_autoId;
+	$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+		if (r) {
+			$cf.ajax({
+				url : "/opas-naps/delete_education.json",
+				data:jsondata,
+				onSuccess : function(tblObj) {
+					top.$cf.showMsg("角色删除成功！");
+					tblSeach.datagrid("reload");
+				}
+			});
+		}
+	});
+}
+</script>
+
+</body>
+</html>

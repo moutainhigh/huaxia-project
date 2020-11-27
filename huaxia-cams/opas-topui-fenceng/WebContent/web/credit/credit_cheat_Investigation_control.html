@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>反欺诈调查控制页面</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<script type="text/javascript">
+/******获取url地址中的参数并封装成对象begin*************************/
+var url=location.search;
+var theRequest=new Object();
+if(url.indexOf("?")!=-1){
+	var str=url.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+} 
+var appId=theRequest.check_number;//获取流程号
+var autoId=theRequest.autoId; 
+/******获取url地址中的参数并封装成对象end*************************/
+  
+$(function(){
+	$("#applyId").val(appId);
+});
+</script>
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div data-options="region:'west',title:'左区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="false" style="height: 100%; width: 100%;">
+		
+			<div title="系统决策" style="overflow: hidden">
+				<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/thirdparty_summary_view.html?appId='"+appId+"'"></iframe>
+			</div>
+			
+			<div title="征信调查查看" style="overflow: hidden">
+				<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="credit_check_detailed.html"></iframe>
+			</div>		
+				
+			<div title="征信信息" style="overflow: hidden">
+				<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/credit_investigation_notes.html"></iframe>
+			</div>
+			
+			<div title="申请表信息" style="overflow: hidden">
+				<iframe name="iframe4" id="iframe4" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/apply_info_view.html"></iframe>
+			</div>
+			
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="false" style="height: 100%; width: 100%;">
+			<div title="欺诈调查" style="overflow: hidden"><iframe name="iframe5" id="iframe5" style="border: 0; width: 100%; height: 100%" src="credit_cheat_Investigation_edit.html"></iframe></div>
+		</div>
+	</div>
+	<div id="dd" data="0" style="left: 534px"></div>
+	<input type="hidden" id="applyId" name="applyId" value="">
+	<input type="hidden" id="autoId" name="autoId" value="">
+</body>
+</html>

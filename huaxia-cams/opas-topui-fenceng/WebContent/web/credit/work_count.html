@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css"
+	type="text/css"></link>
+<link type="text/css" rel="stylesheet"
+	href="../../css/common/layout.css" />
+<link rel="stylesheet" href="../../css/normalize-ext.css"
+	type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+</head>
+<body>
+	<fieldset>
+		<legend align="left">
+			<font size="2">搜索条件</font>
+		</legend>
+		<table class="formtable">
+			<tr>
+				<td>时间选择</td>
+				<td><input class="easyui-datebox" id="industryType"
+					type="text" name="industryType" data-options="required:true"
+					value="">
+				<a href="javascript:checkAndSearchTab('seachForm','tblSeach');"
+						class="easyui-linkbutton" iconCls="icon-search">查询</a>	
+				</td>
+				
+			</tr>
+		</table>
+	</fieldset>
+	<br>
+	<fieldset>
+		<table class="formtable">
+			<tr>
+				<td>授信审批完成量</td>
+				<td><input class="easyui-validatebox textbox" id="industryType"
+					type="text" name="industryType" data-options="required:true"
+					value=""></td>
+			</tr>
+			<tr>
+				<td>提至高级审批量</td>
+				<td><input class="easyui-validatebox textbox"
+					id="occupationCode" type="text" name="occupationCode"
+					data-options="required:true"></td>
+			</tr>
+			<tr>
+				<td>完成归档量</td>
+				<td><input class="easyui-validatebox textbox"
+					id="occupationCode" type="text" name="occupationCode"
+					data-options="required:true"></td>
+			</tr>
+		</table>
+	</fieldset>
+	<script>
+		var infoCollForm = $("#infoCollForm");
+		var roleObj = {
+			"appId" : "1601240945P00101"
+		};
+		/* $(function(){
+		 $cf.ajax({
+		 url : "/opas-naps/query_infoCollect.json",
+		 data : roleObj,
+		 onSuccess : function(ret) {
+		 //给输入框和下拉框赋值写法（后台传给前台一个json串）
+		 var jsoninfoCollect = ret.RSP_BODY.jsoninfoCollect;
+		 var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+		 infoCollForm.form("load", InfoCollectjson);
+		
+		 //给单选框赋值，后台给前台传递一个对象
+		 var infoCollect = ret.RSP_BODY.infoCollect;
+		 var educationDegreestr = infoCollect.educationDegree;
+		 $("[value='" + educationDegreestr + "']").attr("checked", true);
+		
+		 //设置有值的输入框只读
+		 $("input[type='text']").each(function(){
+		 var val=$(this).val();
+		 if(val!==null&&val!==undefined&&val!==""){
+		 $(this).attr("readonly","readonly");
+		 }
+		 });
+		
+		 //设置有值的单选框只读（循环单选框选中的值，如果值不为空，找到这个值对应的name属性，然后把所有name等于这个的元素设置为只读）
+		 $("input[type='radio']:checked").each(function(){
+		 var val=$(this).val();
+		 if(val!==null&&val!==undefined&&val!==""){
+		 var name=$(this).attr("name");
+		 $("input[name='"+name+"']").attr("disabled","true");
+		 }
+		 });
+		 }
+		 });
+		 }) */
+	</script>
+</body>
+</html>

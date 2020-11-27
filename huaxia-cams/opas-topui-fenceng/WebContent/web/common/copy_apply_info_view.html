@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>申请件信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/validate.js"></script>
+</head>
+<script type="text/javascript">
+	var flag = '';
+	var url = location.href;
+	var appId = url.split("=")[1];
+	var lvru = url.split("=")[2];
+	var flagType = '';
+	$(function() {
+		
+		fnInitStyle(sid);
+		$cf.loadAllDict();
+		/* // 获取申请件信息
+		var parent = window.parent;
+		var appId = parent.applyId.value;
+		if (appId != '') {
+			appId = $.trim(appId);
+		} */
+		//归档修改相关内容---qbn
+		//	var appId = window.parent.document.getElementById('appId').value;
+		//var flag = window.parent.document.getElementById('flag').value;
+		//alert('gaohui=='+appId);
+		//	document.getElementById('flag').value = flag;
+		//判断若原appid为空，则可能页面从归档修改跳过来，重新取得相关内容--qbn
+  		if(appId == null){
+ 			 appId = window.parent.document.getElementById('appId').value;
+			 flagType = window.parent.document.getElementById('flag').value;
+			  document.getElementById('flag').value = flagType; 
+		} 
+		fnLoadAppInfo(appId);
+		if(lvru!==null&&lvru==="lvru"){
+			$(":radio[name='c1Idtype']").attr("onclick","return false ;");
+			$('#c1Cname').attr("readonly","readonly");
+			$('#c1Idnbr').attr("readonly","readonly");
+			$(":radio[name='c2Idtype']").attr("onclick","return false ;");
+			$('#c2Cname').attr("readonly","readonly");
+			$('#c2Idnbr').attr("readonly","readonly");
+		}
+		//alert("appId======================="+appId);
+		//fnLoadAppInfo("1601240915P01361");
+		//校验申请件数据
+
+	});
+	// 申请表全量信息区域采用字母编号（a-q）
+	var sid = [];
+	for (var i = 97; i <= 113; i++) {
+		sid.push(String.fromCharCode(i));
+	}
+
+	function fnInitStyle(sid) {
+		$.each(sid, function(i, v) {
+			$('#' + v + '_operate_area fieldset table').css('width', '650')
+					.css('margin', '0 auto');
+			$('#' + v + '_operate_area table tr td:even').css('width', '135')
+					.css('text-align', 'right').css('padding-right', '10px')
+					.css('font', 'normal 12px Arial');
+		});
+	}
+
+	var jsonBiz2Info2 = null;
+	var InfoBizjson = null;
+	function fnLoadAppInfo(appId) {
+		var infoBizForm = $("#infoBizForm");
+		$cf.ajax({
+			url : '/opas-naps/apply_info_load.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsonBizInfo = ret.RSP_BODY.jsonBizInfo;
+				jsonBiz2Info2 = ret.RSP_BODY.jsonBiz2Info;
+				InfoBizjson = eval('(' + jsonBizInfo + ')');
+				InfoBizjson2 = eval('(' + jsonBiz2Info2 + ')');
+				check(InfoBizjson);
+				//$(".easyui-validatebox").attr({"required":true});
+				infoBizForm.form("load", InfoBizjson2);
+				infoBizForm.form("load", InfoBizjson);
+				//给单选框赋值，后台给前台传递一个对象
+				var bizInpApplC1 = ret.RSP_BODY.bizInpApplC1;
+				var c4Cdsel = bizInpApplC1.c4Cdsel;
+				//$("[value='" + c2Signck + "']").attr("checked", true);
+				$("[value='" + c4Cdsel + "']").attr("checked", true);
+			}
+		});
+
+	}
+	//页面加载校验
+	function check(jsonBizInfo1) {
+		var win = $("#win");
+		var c1Cname = jsonBizInfo1.c1Cname;//姓名
+		var c1Ename = jsonBizInfo1.c1Ename;//拼音
+		var c1Hmadd1 = jsonBizInfo1.c1Hmadd1;//住宅
+		var c1Mobile = jsonBizInfo1.c1Mobile;//手机
+		var c1Coadd1 = jsonBizInfo1.c1Coadd1;//单位地址
+		var c1Coname = jsonBizInfo1.c1Coname;//单位名称
+		var c1Cotel = jsonBizInfo1.c1Cotel;//单位电话
+		var c1Rename = jsonBizInfo1.c1Rename; //联系人名字
+		var c1Remobil = jsonBizInfo1.c1Remobil; // 联系人手机
+		var c1Retel = jsonBizInfo1.c1Retel; //联系人电话
+		var c1Xname1 = jsonBizInfo1.c1Xname1; //其他联系人
+		var c1Xtel1 = jsonBizInfo1.c1Xtel1; //其他联系人电话
+		var c1Xmobil1 = jsonBizInfo1.c1Xmobil1; //其他联系人手机
+		//var c2Signck = jsonBizInfo1.c2Signck; //主申请人签名
+
+		//校验是否包含字符
+		var containSpecial = RegExp(/[(\?)(\@)(\#)(\$)(\%)(\^)(\&)(\*)(\[)(\])(\|)(\>)(\<)(\;)(\:)]+/);
+		//校验手机
+		var myreg = /^((1)+([3,5,7,8]{1})+\d{9})$/;
+		//校验姓名
+		if (c1Cname == "" || c1Cname == null) {
+			win.html("<p style='color:red'>申请人中文姓名不能为空!</p>");
+			//win.append("<p>wocao</p>");
+		}
+		if (containSpecial.test(c1Cname)) {
+			win.append("<p style='color:red'>申请人-姓名包含非法字符!</p>");
+		}
+		//校验拼音
+		if (c1Ename == "" || c1Ename == null) {
+			win.append("<p style='color:red'>申请人-英文姓名不能为空!</p>");
+		}
+
+		//校验住宅
+		if (c1Hmadd1 == "" || c1Hmadd1 == null) {
+			win.append("<p style='color:red'>申请人-住宅地址不能为空!</p>");
+		}
+		//手机
+		if (c1Mobile == "" || c1Mobile == null) {
+			win.append("<p style='color:red'>申请人-手机号码不能为空!</p>");
+		}
+		//单位地址
+		if (c1Coadd1 == "" || c1Coadd1 == null) {
+			win.append("<p style='color:red'>申请人-单位地址不能为空!</p>");
+		}
+		//单位名称
+		if (c1Coname == "" || c1Coname == null) {
+			win.append("<p style='color:red'>申请人-单位名称不能为空!</p>");
+		}
+		//单位电话
+		if (c1Cotel == "" || c1Cotel == null) {
+			win.append("<p style='color:red'>申请人-单位电话不能为空!</p>");
+		}
+		//联系人姓名
+		if (c1Rename == "" || c1Rename == null) {
+			win.append("<p style='color:red'>联系人-姓名不能为空!</p>");
+		}
+		//其他联系人姓名
+		if (c1Xname1 == "" || c1Xname1 == null) {
+			win.append("<p style='color:red'>联系人-姓名不能为空!</p>");
+		}
+		//联系人电话和手机
+		if (c1Remobil == "" && c1Retel == "") {
+			win.append("<p style='color:red'>联系人-手机和电话至少填写一项!</p>");
+		}
+		if (!myreg.test(c1Remobil)) {
+			win.append("<p style='color:red'>联系人-手机号填写无效!</p>");
+		}
+		//其他联系人电话和手机
+		if (c1Xname1 == "" && c1Xmobil1 == "") {
+			win.append("<p style='color:red'>其他联系人-手机和电话至少填写一项!</p>");
+		}
+		//其他联系人姓名
+		/* if (c2Signck == "" || c2Signck == null) {
+			win.append("<p style='color:red'>主卡申请人签名不能为空!</p>");
+
+		} */
+		//var t = "15311266229";
+		//var b = myreg.test(t);
+		var p = $("p").val();
+		if (p == null) {
+			win.html("<p style='color:red'>重要信息全部正确!</p>");
+		}
+		win.window("open");
+	}
+
+	//校验页面数据是否有修改
+	function checkPageData() {
+		/* 	var collnput = document.getElementsByTagName("input");
+			for(var i=0;i<collnput.length;i++){
+				//alert("new"+collnput[i].value);
+				//alert("old"+collnput[i].defaultValue);
+				if(collnput[i].value!=collnput[i].defaultValue){
+					//alert("页面被修改过");
+					//触发业务逻辑保存功能
+					onUpdate();
+					return;
+				}else{
+					alert("页面没有被修改过");
+				}
+			} */
+		//检查关键信息是否修改
+		var c1name = InfoBizjson.c1Cname;
+		var c1Idtype = InfoBizjson.c1Idtype;
+		var c1Idnbr = InfoBizjson.c1Idnbr;
+		var c1Idtype2 = $("input[name='c1Idtype']:checked").val();
+		var c1name2 = $("#c1Cname").val();
+		var c1Idnbr2 = $("#c1Idnbr").val();
+		/* if(jsonBiz2Info2 != null){
+			
+		} */
+		if (c1name == c1name2 && c1Idtype == c1Idtype2 && c1Idnbr2 == c1Idnbr) {//关键信息没有修改
+			//alert("关键信息hehe!");
+			onUpdate();
+		} else {//关键信息有修改
+			var resu = onUpdate();
+			if (resu) {
+				$.messager.alert('申请表信息页面保存提示', "修改关键信息，申请件流转至关键信息修改复核人员队列!",
+						'warning');
+			}
+		}
+	}
+
+	//保存
+	function onUpdate() {
+		var infoBizForm = $("#infoBizForm");
+		var a = infoBizForm.serializeArray();
+		var jsondata = getFormData(infoBizForm.serializeArray());
+		//区分是从归档跳转过来的修改信息flagType--qbn
+		var flagType = jsondata.flag;
+		var appId = jsondata.appId;
+		//--
+		var flag = $("input[name='appFlag']:checked").val();
+		if (flag == 2) {//只申请附卡
+			aa = check2(jsondata);
+		}
+		if (flag == 3) {//只申请主卡
+			aa = check1(jsondata);
+		}
+		if (flag == 1) {//申请主卡或主附卡同时申请
+			if (check1(jsondata) && check2(jsondata)) {
+				aa = true;
+			} else {
+				aa = false;
+			}
+		}
+
+		if (aa) {
+			$cf.ajax({
+				url : "/opas-naps/bizinfo_update.json",
+				data : jsondata,
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+
+						top.$cf.showMsg("保存成功！");
+						//修改成功后，判断来源为归档修改，则对相应归档表进行修改--qbn
+						if (flagType == 1) {
+							updateArDetail(appId);
+							updateArFailBack(appId);
+						}
+
+						//-----
+					} else {
+						$.messager.alert("操作提示", "修改异常,原因:"
+								+ data.RSP_BODY.exMsg, "error");
+						return;
+					}
+				}
+			});
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	//修改归档明细表中该申请件从已发卡变为"未发卡"---qbn
+	function updateArDetail(appId) {
+		var quryParam = {};
+		quryParam['appId'] = appId;
+		$cf.ajax({
+			url : "/opas-naps/updateArDetail.json",
+			data : quryParam,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSucc) {
+					/* $.messager.alert("操作提示", "归档明细申请件发卡状态修改成功", "info", function() {
+					}); */
+				} else {
+					/* $.messager.alert("操作提示", "归档明细申请件发卡状态修改异常,原因:" + data.exMsg, "error"); */
+					return;
+				}
+			}
+		});
+	}
+
+	//修改失败归档表中修改状态为"已修改"--qbn
+	function updateArFailBack(appId) {
+		var quryParam = {};
+		quryParam['appId'] = appId;
+		$cf.ajax({
+			url : "/opas-naps/updateArFailBack.json",
+			data : quryParam,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSucc) {
+					/* 	$.messager.alert("操作提示", "归档失败信息状态修改成功", "info", function() {
+						}); */
+				} else {
+					/* $.messager.alert("操作提示", "归档失败信息状态修改异常,原因:" + data.exMsg, "error"); */
+					return;
+				}
+			}
+		});
+	}
+
+	//校验附卡
+	function check2(jsondata) {
+		var c2Gender = jsondata.c2Gender;
+		var c2Birth = jsondata.c2Birth;
+		var c2Nation = jsondata.c2Nation;
+		var c2Idtype = jsondata.c2Idtype;
+		var message = "";
+
+		if (c2Gender == "" || c2Gender == null || c2Birth == ""
+				|| c2Birth == null || c2Nation == "" || c2Nation == null
+				|| c2Idtype == "" || c2Idtype == null) {
+			message += "附卡申请人- ";
+			if (c2Gender == "" || c2Gender == null) {
+				//$.messager.alert('申请表信息页面保存提示', "附卡申请人-性别信息不能为空!", 'warning');
+				message += " 性别信息-  ";
+				$("#c2Gender1").focus();
+				//return false;
+			}
+			if (c2Birth == "" || c2Birth == null) {
+				//	alert("附卡申请人-出生日期不能为空!");
+				//$.messager.alert('申请表信息页面保存提示', "附卡申请人-出生日期不能为空!", 'warning');
+				message += "出生日期- ";
+				$("#c2Birth1").focus();
+				//return false;
+			}
+
+			if (c2Nation == "" || c2Nation == null) {
+				//	alert("附卡申请人-国籍信息不能为空!");
+				//$.messager.alert('申请表信息页面保存提示', "附卡申请人-国籍信息不能为空!", 'warning');
+				message += "国籍信息-";
+				$("#c2Nation1").focus();
+				//return false;
+			}
+			if (c2Idtype == "" || c2Idtype == null) {
+				//	alert("附卡申请人-证件类别信息不能为空!");
+				//$.messager.alert('申请表信息页面保存提示', "附卡申请人-证件类别信息不能为空!", 'warning');
+				message += "证件类别- ";
+				$("#c2Idtype1").focus();
+				//return false;
+			}
+		}
+
+		if (message != "" && message != null) {
+			message += "不能为空! ";
+			$.messager.alert('申请表信息页面保存提示', message, 'warning');
+			return false;
+		} else {
+			return true;
+		}
+	}
+	//保存校验主卡数据
+	function check1(jsondata) {
+		var c1Cname = jsondata.c1Cname;//姓名
+		var c1Ename = jsondata.c1Ename;//拼音
+		var c1Hmadd1 = jsondata.c1Hmadd1;//住宅
+		var c1Mobile = jsondata.c1Mobile;//手机
+		var c1Coadd1 = jsondata.c1Coadd1;//单位地址
+		var c1Coname = jsondata.c1Coname;//单位名称
+		var c1Cotel = jsondata.c1Cotel;//单位电话
+		var c1Rename = jsondata.c1Rename; //联系人名字
+		var c1Remobil = jsondata.c1Remobil; // 联系人手机
+		var c1Retel = jsondata.c1Retel; //联系人电话
+		var c1Xname1 = jsondata.c1Xname1; //其他联系人
+		var c1Xtel1 = jsondata.c1Xtel1; //其他联系人电话
+		var c1Xmobil1 = jsondata.c1Xmobil1; //其他联系人手机
+		//var c2Signck = jsondata.c2Signck; //主申请人签名
+		var c1Gender = jsondata.c1Gender;// 性别--后加的
+		var c1Birth = jsondata.c1Birth;
+		var c2Natncd1 = jsondata.c2Natncd1;//国家
+		var c1Idtype = jsondata.c1Idtype;
+		var c5Idte1 = jsondata.c5Idte1;//有效期
+		//校验是否包含字符
+		var containSpecial = RegExp(/[(\?)(\@)(\#)(\$)(\%)(\^)(\&)(\*)(\[)(\])(\|)(\>)(\<)(\;)(\:)]+/);
+		//校验手机
+		var myreg = /^((1)+([3,5,7,8]{1})+\d{9})$/;
+		//校验姓名
+
+		if (c1Cname == "" || c1Cname == null) {
+			//alert("申请人中文姓名不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人中文姓名不能为空!", 'warning');
+			$("#c1Cname").focus();
+			return false;
+		}
+		if (containSpecial.test(c1Cname)) {
+			//	alert("申请人中文姓名存在非法字符!");
+			$.messager.alert('申请表信息页面保存提示', "申请人中文姓名存在非法字符!", 'warning');
+			$("#c1Cname").focus();
+			return false;
+		}
+		//校验拼音
+		if (c1Ename == "" || c1Ename == null) {
+			//	alert("申请人英文名称为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人英文名称为空!", 'warning');
+			$("#c1Ename").focus();
+			return false;
+		}
+		//校验住宅
+		if (c1Hmadd1 == "" || c1Hmadd1 == null) {
+			//alert("申请人-住宅地址不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-住宅地址不能为空!", 'warning');
+			$("#c1Hmadd1").focus();
+			return false;
+		}
+		//手机
+		if (c1Mobile == "" || c1Mobile == null) {
+			//alert("申请人-手机号码不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-手机号码不能为空!", 'warning');
+			$("#c1Mobile").focus();
+			return false;
+		}
+		//单位地址
+		if (c1Coadd1 == "" || c1Coadd1 == null) {
+			//alert("申请人-单位地址不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-单位地址不能为空!", 'warning');
+			$("#c1Coadd1").focus();
+			return false;
+		}
+		//单位名称
+		if (c1Coname == "" || c1Coname == null) {
+			//alert("申请人-单位名称不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-单位名称不能为空!", 'warning');
+			$("#c1Coname").focus();
+			return false;
+		}
+		//单位电话
+		if (c1Cotel == "" || c1Cotel == null) {
+			//	alert("申请人-单位电话不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-单位电话不能为空!", 'warning');
+			$("#c1Cotel").focus();
+			return false;
+		}
+		//联系人姓名
+		if (c1Rename == "" || c1Rename == null) {
+			//	alert("联系人-姓名不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "联系人-姓名不能为空!", 'warning');
+			$("#c1Rename").focus();
+			return false;
+		}
+		//其他联系人姓名
+		if (c1Xname1 == "" || c1Xname1 == null) {
+			//	alert("其他联系人-姓名不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "其他联系人-姓名不能为空!", 'warning');
+			$("#c1Xname1").focus();
+			return false;
+		}
+		//联系人电话和手机
+		if (c1Remobil == "" && c1Retel == "") {
+			//alert("联系人-手机和电话至少填写一项!");
+			$.messager.alert('申请表信息页面保存提示', "联系人-手机和电话至少填写一项!", 'warning');
+			$("#c1Remobil").focus();
+			return false;
+		}
+		//其他联系人电话和手机
+		if (c1Xname1 == "" && c1Xmobil1 == "") {
+			//alert("其他联系人-手机和电话至少填写一项!");
+			$.messager.alert('申请表信息页面保存提示', "其他联系人-手机和电话至少填写一项!", 'warning');
+			$("#c1Xname1").focus();
+			return false;
+		}
+		//其他联系人姓名
+		/* if (c2Signck == "" || c2Signck == null) {
+			//alert("申请人-亲见签名不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "主卡申请人签名不能为空!", 'warning');
+			$("#c2Signck").focus();
+			return false;
+		} */
+		//--追加
+		if (c1Gender == "" || c1Gender == null) {
+			//	alert("申请人-性别信息不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-性别信息不能为空!", 'warning');
+			$("#c1Gender1").focus();
+			return false;
+		}
+		if (c1Birth == "" || c1Birth == null) {
+			//	alert("申请人-出生日期不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-出生日期不能为空!", 'warning');
+			$("#c1Gender1").focus();
+			return false;
+		}
+		if (c2Natncd1 == "" || c2Natncd1 == null) {
+			//alert("申请人-国籍信息没有选择!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-国籍信息没有选择!", 'warning');
+			$("#c1Gender1").focus();
+			return false;
+		}
+		if (c1Idtype == "" || c1Idtype == null) {
+			//alert("申请人-证件类别不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-证件类别不能为空!", 'warning');
+			$("#c1Idtype1").focus();
+			return false;
+		}
+		if (c5Idte1 == "" || c5Idte1 == null) {
+			//alert("申请人-证件有效期不能为空!");
+			$.messager.alert('申请表信息页面保存提示', "申请人-证件有效期不能为空!", 'warning');
+			$("#c5Idte11").focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	//转换数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	//失去焦点 - 赋 默认值
+	function checkValue(obj) {
+		var a = obj.value;
+		if (a == "") {
+			obj.value = "0";
+		}
+	}
+
+	//失去焦点校验
+	function codeBlurValid(data) {
+		var c1name = InfoBizjson.c1Cname;
+		if (c1name != data) {
+			document.getElementById("c1CnameErr").innerHTML = "<font color='red'> 修改内容为关键信息,需要进行保存!</font>";
+			return;
+		} else {
+			document.getElementById("c1CnameErr").innerHTML = "";
+		}
+	}
+	function codeIdnbrValid(data) {
+		var c1Idnbr = InfoBizjson.c1Idnbr;
+		if (c1Idnbr != data) {
+			document.getElementById("c1IdnbrErr").innerHTML = "<font color='red'> 修改内容为关键信息,需要进行保存!</font>";
+			return;
+		} else {
+			document.getElementById("c1IdnbrErr").innerHTML = "";
+		}
+	}
+</script>
+<body style="padding: 10px;">
+	<div id="win" class="easyui-window" style="width: 400px; height: 250px"
+		title="错误信息"
+		data-options="modal:false,closed:true,top:($(window).height()+10)*0.5,left:($(window).width()+50)*0.3">
+
+	</div>
+	<form id="infoBizForm">
+		<div class="easyui-layout" style="width: 100%; height: 760px;">
+			<!-- 快速定位区 开始 -->
+			<div data-options="region:'north',title:'快速定位'"
+				style="height: 100px; padding: 10px;">
+				<a href="#A" class="easyui-linkbutton">申请要求</a> <a href="#B"
+					class="easyui-linkbutton">个人资料</a> <a href="#C"
+					class="easyui-linkbutton">职业信息</a> <a href="#D"
+					class="easyui-linkbutton">其他信息</a> <a href="#E"
+					class="easyui-linkbutton">联系人资料</a> <a href="#F"
+					class="easyui-linkbutton">附属卡申请人资料</a> <a href="#G"
+					class="easyui-linkbutton">自动还款授权</a> <a href="#H"
+					class="easyui-linkbutton">短信服务</a> <a href="#I"
+					class="easyui-linkbutton">多倍积分套餐计划</a> <a href="#J"
+					class="easyui-linkbutton">增值服务申请</a> <a href="#K"
+					class="easyui-linkbutton">推荐人信息</a> <a href="#L"
+					class="easyui-linkbutton">账单寄送方式</a> <!-- <a href="#M"
+					class="easyui-linkbutton">声明事项</a> --> <a href="#N"
+					class="easyui-linkbutton">年费方案</a> <a href="#O"
+					class="easyui-linkbutton">开卡优享礼</a> <a href="#P"
+					class="easyui-linkbutton">轻松周转申请表</a> <a href="#Q"
+					class="easyui-linkbutton">银行专用栏位</a>
+			</div>
+			<!-- 快速定位区 结束 -->
+
+			<!-- 申请件全量信息区 开始 -->
+			<div data-options="region:'center'" style="padding: 10px;">
+				<!-- 申请要求 -->
+				<div id="a_operate_area">
+					<fieldset>
+						<legend>
+							<span id="A">申请要求</span>
+						</legend>
+						<table>
+							<tr>
+								<td>申请主/附卡标准</td>
+								<td colspan="3"><label><input type="radio"
+										name="appFlag" value="1" />主附卡同时申请</label><label><input
+										type="radio" name="appFlag" value="2" />单独申请附卡</label><label><input
+										type="radio" name="appFlag" value="3" />单独申请主卡</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>流水号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox" readonly
+									name="appId" id="txt_app_id" /><em>*</em>
+									<!-- 增加归档修改相关内容：隐藏域flag--qbn -->
+									<input type="hidden" id="flag" name ="flag">
+									</td>
+							</tr>
+							<tr>
+								<td>请选择您希望申请的华夏信用卡</td>
+								<td colspan="3"><select class="easyui-combobox"
+									style="width: 110px" name="appProd" id="appProd"
+									dict_type="ALLOT_APPPROD"
+									data-options="required:true,editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+									<em>*</em></td>
+							</tr>
+							<tr>
+								<td>请选择申请的信用卡的版面</td>
+								<td colspan="3"><select class="easyui-combobox"
+									style="width: 110px" name="c4Vercode" id="c4Vercode"
+									dict_type="ZDHXKBM"
+									data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+									<em>*</em></td>
+							</tr>
+							<tr>
+								<td>您希望申请的信用额度</td>
+								<td colspan="3"><input type="text" class=""
+									name="c4Ccredit" onblur="checkValue(this)" id="" />&nbsp;自选卡号申请标志（默认为非自选卡号申请）<label><input
+										type="checkbox" name="c4Cdsel" id="c4Cdsel"></label></td>
+							</tr>
+							<tr>
+								<td>金卡申请未能通过核准，是否愿意接受普卡</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Gtoc" value="1" />愿意</label><label><input
+										type="radio" name="c4Gtoc" value="0" />不愿意</label></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 个人资料 -->
+				<div id="b_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="B">个人资料</span>
+						</legend>
+						<table>
+							<tr>
+								<td>中文姓名</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" name="c1Cname" id="c1Cname"
+									data-options="required:true"
+									onblur="codeBlurValid(this.value)" /><em>*</em><span
+									id="c1CnameErr"></span></td>
+							</tr>
+							<tr>
+								<td>拼音/英文姓名</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" name="c1Ename" id="c1Ename"
+									data-options="required:true" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>性别</td>
+								<td><label><input type="radio" name="c1Gender"
+										value="M" data-options="required:true" />男</label><label><input
+										type="radio" name="c1Gender" value="F"
+										data-options="required:true" />女</label><em>*</em> <input type="text"
+									id="c1Gender1" style="width: 10px; border-style: none;"></td>
+								<td>出生日期</td>
+								<td><input type="text" class="easyui-datebox"
+									data-options="required:true" id="appAcctyp" name="c1Birth"
+									id="c1Birth" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>国家/地区</td>
+								<td colspan="3"><label><input type="radio"
+										name="c1Nation" value="1" />境内居民</label><label><input
+										type="radio" name="c1Nation" value="2" />港澳人士</label><label><input
+										type="radio" name="c1Nation" value="3" />台胞</label><label><input
+										type="radio" name="c1Nation" value="4" />外籍人士</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>国籍</td>
+								<td colspan="3"><select class="easyui-combobox"
+									style="width: 110px" name="c2Natncd1" id="c2Natncd1"
+									dict_type="ZDNATIONALITYGJ"
+									data-options="required:true,editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+									<em>*</em></td>
+							</tr>
+							<tr>
+								<td>证件类别</td>
+								<td colspan="3" style="line-height: 20px;"><label><input
+										type="radio" name="c1Idtype" value="01"
+										data-options="required:true" />居民身份证</label><label><input
+										type="radio" name="c1Idtype" value="09"
+										data-options="required:true" />外国护照</label><label><input
+										type="radio" name="c1Idtype" value="05"
+										data-options="required:true" />港澳台居民来往内地通行证、台胞证</label> <label><input
+										type="radio" name="c1Idtype" value="03"
+										data-options="required:true" />军官证</label><label><input
+										type="radio" name="c1Idtype" value="06"
+										data-options="required:true" />其他</label> <!--<input type="text" class="easyui-textbox" id="" />-->
+									<em>*</em><input type="text" id="c1Idtype1"
+									style="width: 10px; border-style: none;"></td>
+							</tr>
+							<tr>
+								<td>证件号码</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox"
+									data-options="required:true,validType:'idcard'" name="c1Idnbr"
+									onblur="codeIdnbrValid(this.value)" id="c1Idnbr" /><em>*</em><span
+									id="c1IdnbrErr"></span></td>
+							</tr>
+							<tr>
+								<td>证件签发日期</td>
+								<td><input type="text" class="easyui-datebox" id="c2Iddt1"
+									required name="c2Iddt1" /><em>*</em></td>
+								<td>证件有效期至</td>
+								<td><input type="text" class="easyui-datebox" id="c5Idte1"
+									required name="c5Idte1" /><em>*</em> <input type="text"
+									id="c5Idte11" style="width: 10px; border-style: none;"></td>
+							</tr>
+							<tr>
+								<td>婚姻状况</td>
+								<td><label><input type="radio" name="c1Marst"
+										value="S" />未婚</label><label><input type="radio"
+										name="c1Marst" value="M" />已婚</label><label><input
+										type="radio" name="c1Marst" value="O" />其他</label><em>*</em></td>
+								<td>供养人数</td>
+								<td><input type="text" class="" id="" name="c1Depend"
+									onblur="checkValue(this)" /></td>
+							</tr>
+							<tr>
+								<td>教育程度</td>
+								<td colspan="3"><label><input type="radio"
+										name="c1Educls" value="7" />初中及以下</label><label><input
+										type="radio" name="c1Educls" value="5" />中专/高中</label><label><input
+										type="radio" name="c1Educls" value="4" />大专</label><label><input
+										type="radio" name="c1Educls" value="3" />本科</label><label><input
+										type="radio" name="c1Educls" value="2" />硕士及以上</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>现住宅地址</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" data-options="required:true"
+									name="c1Hmadd1" id="c1Hmadd1" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>详细地址1</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Hmadd2" id="c1Hmadd2" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>详细地址2</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Hmadd3" id="c1Hmadd3" /></td>
+							</tr>
+							<tr>
+								<td>详细地址3</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Hmadd4" id="c1Hmadd4" /></td>
+							</tr>
+							<tr>
+								<td>邮编编码</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" data-options="validType:'ZIP'"
+									name="c1Hmpost" id="c1Hmpost" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>现住宅居住开始时间</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Hmyr" id="" /></td>
+							</tr>
+							<tr>
+								<td>曾居住地址</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>曾居住详细地址</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>曾居住地址从</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" />&nbsp;年月始</td>
+							</tr>
+							<tr>
+								<td>户籍地址</td>
+								<td colspan="3" style="line-height: 20px;"><label><input
+										type="radio" name="c1Idadd1" />同住宅地址</label><label><input
+										type="radio" name="c1Idadd1" />如下</label><br /> <input type="text"
+									class="easyui-textbox" id="" name="c1Idadd1" /></td>
+							</tr>
+							<tr>
+								<td>户籍详细地址1</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Idadd2" id="" /></td>
+							</tr>
+							<tr>
+								<td>户籍详细地址2</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Idadd3" id="" /></td>
+							</tr>
+							<tr>
+								<td>户籍详细地址3</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Idadd4" id="" /></td>
+							</tr>
+							<tr>
+								<td>邮编编码</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" data-options="validType:'ZIP'"
+									name="c1Idpost" id="" /></td>
+							</tr>
+							<tr>
+								<td>现住宅电话</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Hmare" id="" style="width: 40px;" />&nbsp;&nbsp;&nbsp;<input
+									type="text" class="easyui-textbox" name="c1Hmtel" id=""
+									style="width: 100px;" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>手机</td>
+								<td colspan="3"><input type="text" 
+									class="easyui-validatebox" maxLength="11"
+									data-options="validType:'zidngyimobile',required:true" name="c1Mobile"
+									id="c1Mobile" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>电子信箱地址</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Email" id="" /><em>*</em>（请填写常用电子邮箱）</td>
+							</tr>
+							<tr>
+								<td>住宅情况</td>
+								<td colspan="3"><label><input type="radio"
+										name="c1Hmst" value="1" />自购有贷款</label><label><input
+										type="radio" name="c1Hmst" value="1" />自购无贷款</label><label><input
+										type="radio" name="c1Hmst" value="2" />单位分配</label><label><input
+										type="radio" name="c1Hmst" value="3" />集体宿舍</label><label><input
+										type="radio" name="c1Hmst" value="4" />租用</label><label><input
+										type="radio" name="c1Hmst" value="5" />与父母同住</label><label><input
+										type="radio" name="c1Hmst" value="6" />其他</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>购房价格</td>
+								<td><input type="text" class="" id="" name="c4Hmamt"
+									onblur="checkValue(this)" style="width: 112px;" />&nbsp;万元<em>*</em></td>
+								<td>月还款额（住宅情况是租用时月租费）</td>
+								<td><input type="text" class="" id="" name="c1Hloan"
+									onblur="checkValue(this)" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>贷款年限</td>
+								<td colspan="3"><input type="text" class=""
+									name="c4Hloanyr" onblur="checkValue(this)" id=""
+									style="width: 135px;" />&nbsp;年<em>*</em></td>
+							</tr>
+							<tr>
+								<td>您拥有的车辆情况</td>
+								<td colspan="3"><label><input type="radio"
+										name="c1Carst" value="1" />有</label><label><input
+										type="radio" name="c1Carst" value="2" />无</label></td>
+							</tr>
+							<tr>
+								<td>如有请填写：车牌号码</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Carnbr" id="" /></td>
+							</tr>
+							<tr>
+								<td>品牌</td>
+								<td><input type="text" class="easyui-textbox" id=""
+									name="c1Carbrnd" /></td>
+								<td>车龄</td>
+								<td><input type="text" class="easyui-textbox" id=""
+									name="c1Cardate" /></td>
+							</tr>
+							<tr>
+								<td>总金额</td>
+								<td><input type="text" class="" id="" name="c4Caramt"
+									onblur="checkValue(this)" style="width: 130px;" />&nbsp;万元</td>
+								<td>月还款额</td>
+								<td><input type="text" class="" id="" name="c4Carloan"
+									onblur="checkValue(this)" />&nbsp;元</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 职业信息 -->
+				<div id="c_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="C">职业信息</span>
+						</legend>
+						<table>
+							<tr>
+								<td>现单位全称</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" data-options="required:true"
+									name="c1Coname" id="c1Coname" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>部门名称</td>
+								<td><input type="text" class="easyui-textbox" id=""
+									name="c1Codept" /></td>
+								<td>企业代码</td>
+								<td><input type="text" class="easyui-textbox" id=""
+									name="c1Cobuscd" /></td>
+							</tr>
+							<tr>
+								<td>单位地址</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" data-options="required:true"
+									name="c1Coadd1" id="c1Coadd1" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>单位详细地址1</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Coadd2" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>单位详细地址2</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Coadd3" id="" /></td>
+							</tr>
+							<tr>
+								<td>单位详细地址3</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Coadd4" id="" /></td>
+							</tr>
+							<tr>
+								<td>邮编编码</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Copost" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>单位电话</td>
+								<td><input type="text" class="easyui-validatebox"
+									data-options="required:true" id="c1Cotel" name="c1Cotel" /><em>*</em></td>
+								<td>分机</td>
+								<td><input type="text" class="easyui-textbox" id=""
+									name="c1Coext" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>行业类别</td>
+								<td colspan="3"><select class="easyui-combobox"
+									style="width: 110px" name="c1Cocode" id="c1Cocode"
+									dict_type="ZDSSXY"
+									data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+								</td>
+							</tr>
+							<tr>
+								<td>单位性质</td>
+								<td colspan="3" style="line-height: 20px;"><label><input
+										type="radio" name="c1Cokind" value="0" required />机关、事业单位</label><label><input
+										type="radio" name="c1Cokind" value="02" />国有企业</label><label><input
+										type="radio" name="c1Cokind" value="03" />独资企业</label><label><input
+										type="radio" name="c1Cokind" value="04" />中外合资/合作企业</label><label><input
+										type="radio" name="c1Cokind" value="05" />股份制企业</label><label><input
+										type="radio" name="c1Cokind" value="06" />私营企业</label><label><input
+										type="radio" name="c1Cokind" value="07" />其他</label><input
+									type="text" class="easyui-textbox" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>职务</td>
+								<td colspan="3" style="line-height: 20px;"><label><input
+										type="radio" name="c1Title" value="01" />厅局级以上</label><label><input
+										type="radio" name="c1Title" value="02" />处级</label><label><input
+										type="radio" name="c1Title" value="03" />科级</label><label><input
+										type="radio" name="c1Title" value="04" />科员或办事员</label><label><input
+										type="radio" name="c1Title" value="06" />工勤</label><label><input
+										type="radio" name="c1Title" value="12" />中高层管理人员</label><label><input
+										type="radio" name="c1Title" value="13" />一般管理人员</label><br /> <label><input
+										type="radio" name="c1Title" value="14" />普通职员</label>
+										<label><input type="radio" name="c1Title" value="18" />操作工</label>
+										<label><input type="radio" name="c1Title" value="19" />销售/业务代表</label>
+										<label><input type="radio" name="c1Title" value="20" />后勤/营业员/服务员</label>
+										<em>*</em></td>
+							</tr>
+							<tr>
+								<td>现职年限</td>
+								<td colspan="3"><input type="text" class="" name="c1Coyr"
+									onblur="checkValue(this)" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>当前税前年收入</td>
+								<td colspan="3"><input type="text" class="" name="c1Earn"
+									onblur="checkValue(this)" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>曾经工作单位</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Fconame" id="" /></td>
+							</tr>
+							<tr>
+								<td>前单位工作年限</td>
+								<td><input type="text" class="" id="" name="c1Fcoyr"
+									onblur="checkValue(this)" /></td>
+								<td>前单位工作电话</td>
+								<td><input type="text" class="easyui-textbox" id=""
+									name="c1Fcotel" /></td>
+							</tr>
+							<tr>
+								<td>税前年收入</td>
+								<td colspan="3"><input type="text" class=""
+									name="c1Foreann" onblur="checkValue(this)" id="" />&nbsp;元</td>
+							</tr>
+							<tr>
+								<td>工作时间</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" />&nbsp;月开始</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 其他信息 -->
+				<div id="d_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="D">其他信息</span>
+						</legend>
+						<table>
+							<tr>
+								<td>请将主卡及主卡对账单寄往</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Cycadd1" value="B" />我的单位地址</label><label><input
+										type="radio" name="c4Cycadd1" value="H" />我的住宅地址</label></td>
+							</tr>
+							<tr>
+								<td>你的主卡刷卡消费是否凭密码</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Pinreq" value="1" />凭密码+签名</label><label><input
+										type="radio" name="c4Pinreq" value="0" />凭签名</label></td>
+							</tr>
+							<tr>
+								<td>您的华夏银行的开户种类</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Usprod" value="1" />至尊金卡</label><label><input
+										type="radio" name="c4Usprod" value="2" />普通华夏卡</label><label><input
+										type="radio" name="c4Usprod" value="3" />华夏信用卡</label><label><input
+										type="radio" name="c4Usprod" value="4" />个人贷款</label><label><input
+										type="radio" name="c4Usprod" value="5" />储蓄</label></td>
+							</tr>
+							<tr>
+								<td>您成为华夏银行客户的时间</td>
+								<td colspan="3"><input type="text" class="easyui-datebox"
+									name="c4Usmeb" id="" /></td>
+							</tr>
+							<tr>
+								<td>您的持卡情况</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Othtype" value="D" />无信用卡</label><label><input
+										type="radio" name="c4Othtype" value="C" />持有华夏信用卡</label><label><input
+										type="radio" name="c4Othtype" value="X" />持有他行信用卡</label><input
+									type="text" class="easyui-textbox" id="" style="width: 40px;"
+									name="" />&nbsp;张</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 联系人资料（无需负担保责任） -->
+				<div id="e_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="E">联系人资料（无需负担保责任）</span>
+						</legend>
+						<table>
+							<tr>
+								<td>配偶或直系亲属联系人姓名</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox"
+									data-options="required:true"
+									name="c1Rename" id="c1Rename" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>关系</td>
+								<td colspan="3"><label><input type="radio"
+										name="c1Reship" value="A" />同事</label><label><input
+										type="radio" name="c1Reship" value="B" />朋友</label><label><input
+										type="radio" name="c1Reship" value="C" />同学</label><label><input
+										type="radio" name="c1Reship" value="I" />同事</label><label><input
+										type="radio" name="c1Reship" value="D" />夫妻</label><label><input
+										type="radio" name="c1Reship" value="E" />父母</label><label><input
+										type="radio" name="c1Reship" value="F" />子女</label><label><input
+										type="radio" name="c1Reship" value="G" />兄弟姐妹</label><label><input
+										type="radio" name="c1Reship" value="H" />其他</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>住宅电话</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Retelar" id="c1Retelar" style="width: 40px;" />&nbsp;&nbsp;&nbsp;<input
+									type="text" class="easyui-textbox" id="c1Retel" name="c1Retel"
+									data-options="required:true" style="width: 100px;" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>手机</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" maxLength='11'
+									data-options="required:true,validType:'zidngyimobile'"
+									name="c1Remobil" id="c1Remobil" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>其他联系人的姓名</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox"
+									data-options="required:true"
+									name="c1Xname1" id="c1Xname1" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>关系</td>
+								<td colspan="3"><label><input type="radio"
+										name="c1Xship1" value="A" />同事</label><label><input
+										type="radio" name="c1Xship1" value="B" />朋友</label><label><input
+										type="radio" name="c1Xship1" value="C" />同学</label><label><input
+										type="radio" name="c1Xship1" value="I" />同事</label><label><input
+										type="radio" name="c1Xship1" value="D" />夫妻</label><label><input
+										type="radio" name="c1Xship1" value="E" />父母</label><label><input
+										type="radio" name="c1Xship1" value="F" />子女</label><label><input
+										type="radio" name="c1Xship1" value="G" />兄弟姐妹</label><label><input
+										type="radio" name="c1Xship1" value="H" />其他</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>单位电话</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Xtelar1" id="c1Xtelar1" style="width: 40px;" />&nbsp;&nbsp;&nbsp;<input
+									type="text" class="easyui-textbox" id="c1Xtel1" name="c1Xtel1"
+									data-options="required:true" style="width: 100px;" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>手机</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" maxLength='11'
+									data-options="required:true,validType:'zidngyimobile'"
+									name="c1Xmobil1" id="c1Xmobil1" /><em>*</em></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 附属卡申请人资料 -->
+				<div id="f_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="F">附属卡申请人资料</span>
+						</legend>
+						<table>
+							<tr>
+								<td>如单独申请附属卡，请提供主卡卡号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c1Cardnbr" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>请选择附属信用卡的卡版面</td>
+								<td><select class="easyui-combobox" style="width: 110px"
+									name="c4Vercod2" id="c4Vercod2" dict_type="ZDHXKBM"
+									data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+									<em>*</em></td>
+							</tr>
+							<tr>
+								<td>附属卡申请人中文姓名</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c2Cname" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>拼音/英文姓名</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c2Ename" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>性别</td>
+								<td colspan="3"><label><input type="radio"
+										name="c2Gender" value="M" />男</label><label><input
+										name="c2Gender" type="radio" value="F" />女</label><em>*</em><input
+									type="text" id="c2Gender1"
+									style="width: 1px; border-style: none;"></td>
+							</tr>
+							<tr>
+								<td>出生日期</td>
+								<td colspan="3"><input type="text" class="easyui-datebox"
+									data-options="required:true" name="c2Birth" id="" /><em>*</em><input
+									type="text" id="c2Birth1"
+									style="width: 10px; border-style: none;"></td>
+							</tr>
+							<tr>
+								<td>国籍</td>
+								<td colspan="3"><label><input type="radio"
+										name="c2Nation" value="1" />境内居民</label><label><input
+										type="radio" name="c2Nation" value="2" />港澳人士</label><label><input
+										type="radio" name="c2Nation" value="3" />台胞</label><label><input
+										type="radio" name="c2Nation" value="4" />外籍人士</label><em>*</em><input
+									type="text" id="c2Nation1"
+									style="width: 10px; border-style: none;"></td>
+							</tr>
+							<tr>
+								<td>证件类别</td>
+								<td colspan="3" style="line-height: 20px;"><label><input
+										type="radio" name="c2Idtype" value="01"
+										data-options="required:true" />居民身份证</label><label><input
+										type="radio" name="c2Idtype" value="09"
+										data-options="required:true" />外国护照</label><label><input
+										type="radio" name="c2Idtype" value="05"
+										data-options="required:true" />港澳台居民来往内地通行证、台胞证</label> <label><input
+										type="radio" name="c2Idtype" value="03"
+										data-options="required:true" />军官证</label><label><input
+										type="radio" name="c2Idtype" value="06"
+										data-options="required:true" />其他</label> <!--<input type="text" class="easyui-textbox" id="" style="width: 80px;"/>-->
+									<em>*</em><input type="text" id="c2Idtype1"
+									style="width: 10px; border-style: none;"></td>
+							</tr>
+							<tr>
+								<td>证件号码</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c2Idnbr" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>与主卡持有/申请人关系</td>
+								<td colspan="3"><label><input type="radio"
+										name="c2Relship" value="M" />配偶</label><label><input
+										type="radio" name="c2Relship" value="F" />子女</label><label><input
+										type="radio" name="c2Relship" value="P" />父母</label><label><input
+										type="radio" name="c2Relship" value="O" />其他</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>联系电话</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c2Hmare" id="" style="width: 40px;" />&nbsp;&nbsp;&nbsp;<input
+									type="text" class="easyui-textbox" id="" style="width: 100px;"
+									name="c2Hmtel" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>手机</td>
+								<td colspan="3"><input type="text"
+									class="easyui-validatebox" maxLength='11'
+									data-options="required:true,validType:'zidngyimobile'"
+									name="c2Mobile" id="c2Mobile"/><em>*</em></td>
+							</tr>
+							<tr>
+								<td>您的附属卡额度</td>
+								<td colspan="3"><label><input type="radio"
+										name="c1Credamt" value="1" />与主卡共用</label><label><input
+										type="radio" name="c1Credamt" value="2" />为主卡的</label><input
+									type="text" class="easyui-textbox" name="c1Credpct" id="" /></td>
+							</tr>
+							<tr>
+								<td>您的附属卡刷卡消费是否凭密码</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Pinreq2" value="1" />凭密码+签名</label><label><input
+										type="radio" name="c4Pinreq2" value="0" />凭签名</label></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 自动还款授权 -->
+				<div id="g_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="G">自动还款授权</span>
+						</legend>
+						<table>
+							<tr>
+								<td>授权还款华夏卡（借记卡）卡号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>还款方式</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Excode" value="T" />全额</label><label><input
+										type="radio" name="c4Excode" value="M" />最低</label></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 短信服务 -->
+				<div id="h_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="H">短信服务</span>
+						</legend>
+						<table>
+							<tr>
+								<td>华夏银行信用卡中心将免费为您提供各项促销活动的短信通知，请勾选您是否愿意接受此类信息</td>
+								<td colspan="3"><label><input type="radio"
+										name="c5Msgfree" value="1" />是</label><label><input
+										type="radio" name="c5Msgfree" value="0" />否</label></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 多倍积分套餐计划 -->
+				<div id="i_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="I">多倍积分套餐计划</span>
+						</legend>
+						<table>
+							<tr>
+								<td>套餐计划</td>
+								<td colspan="3"><select class="easyui-combobox"
+									name="c5Ptplan">
+										<option value="0">半年</option>
+										<option value="1">全年</option>
+								</select>（请在套餐计划中任选一项）</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 增值服务申请 -->
+				<div id="j_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="J">增值服务申请</span>
+						</legend>
+						<table>
+							<tr>
+								<td>交易信息短信通知服务</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Messreq" value="1" />需要</label><label><input
+										type="radio" name="c4Messreq" value="0" />不需要</label></td>
+							</tr>
+							<tr>
+								<td>加急办卡</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Rushflg" value="1" />需要</label><label><input
+										type="radio" name="c4Rushflg" value="0" />不需要</label></td>
+							</tr>
+							<tr>
+								<td>24小时道路汽车救援服务</td>
+								<td colspan="3"><label><input type="radio"
+										name="c5Sercd11" />需要</label><label><input type="radio"
+										name="c5Sercd11" />不需要</label></td>
+							</tr>
+							<tr>
+								<td>机场VIP</td>
+								<td colspan="3"><label><input type="radio"
+										name="c5Sercd12" />需要</label><label><input type="radio"
+										name="c5Sercd12" />不需要</label></td>
+							</tr>
+							<tr>
+								<td>畅想GOLF</td>
+								<td colspan="3"><label><input type="radio"
+										name="c5Sercd13" />需要</label><label><input type="radio"
+										name="c5Sercd13" />不需要</label></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 推荐人信息 -->
+				<div id="k_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="K">推荐人信息</span>
+						</legend>
+						<table>
+							<tr>
+								<td>推荐人姓名</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Recname" id="" /></td>
+							</tr>
+							<tr>
+								<td>推荐人华夏信用卡卡号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Reccard" id="" /></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 账单寄送方式 -->
+				<div id="l_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="L">账单寄送方式</span>
+						</legend>
+						<table>
+							<tr>
+								<td>账单日</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Cycdate" id="" /></td>
+							</tr>
+							<tr>
+								<td>账单寄送方式</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Stmcode" value="EM" />电子账单</label><label><input
+										type="radio" name="c4Stmcode" value="LT" />纸质账单</label><label><input
+										type="radio" name="c4Stmcode" value="EL" />纸质账单和同时接受电子账单</label></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 声明事项 -->
+				<!-- <div id="m_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="M">声明事项</span>
+						</legend>
+						<table>
+							<tr>
+								<td>主卡申请人签名</td>
+								<td colspan="3"><label><input type="checkbox"
+										name="c2Signck" value="1" id="c2Signck"></label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>日期</td>
+								<td colspan="3"><input type="text" class="easyui-datebox"
+									name="c5Sgndte1" id="" /></td>
+							</tr>
+							<tr>
+								<td>附属卡申请人或代理人（主卡申请人）签名</td>
+								<td colspan="3"><label><input type="checkbox"
+										name="" value=""></label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>日期</td>
+								<td colspan="3"><input type="text" class="easyui-datebox"
+									name="" id="" /></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div> -->
+
+				<!-- 年费方案 -->
+				<div id="n_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="N">年费方案</span>
+						</legend>
+						<table>
+							<tr>
+								<td>申请卡片年费类型<em>*</em></td>
+								<td colspan="3"><select class="easyui-combobox"
+									style="width: 110px" name="" id="" dict_type="ZDHXNFDM"
+									data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 开卡优享礼 -->
+				<div id="o_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="O">开卡优享礼</span>
+						</legend>
+						<table>
+							<tr>
+								<td>请选择你所需要优享方案（功能礼品编号）</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Giftn2" value="8001" />轻松周转（8001）</label><label><input
+										type="radio" name="c4Giftn2" value="8002" />大借小还（8002）</label><label><input
+										type="radio" name="c4Giftn2" value="8080" />个人开卡礼</label><label><input
+										type="radio" name="c4Giftn2" value="5180" />团办活动</label></td>
+							</tr>
+							<tr>
+								<td>礼品编号</td>
+								<td><input type="text" class="easyui-textbox" id=""
+									name="c4Giftno" /></td>
+								<td>礼品名称</td>
+								<td><input type="text" class="easyui-textbox" id="" name="" /></td>
+							</tr>
+							<tr>
+								<td>团办申请人签字</td>
+								<td><input type="text" class="easyui-textbox" id="" name="" /></td>
+								<td>日期</td>
+								<td><input type="text" class="easyui-datebox" id="" name="" /></td>
+							</tr>
+							<tr>
+								<td>团办主申请人证件号码</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Apbtid" id="" /></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 轻松周转申请表 -->
+				<div id="p_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="P">轻松周转申请表</span>
+						</legend>
+						<table>
+							<tr>
+								<td>请完整填写其他信用卡卡号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Othcard" id="" /></td>
+							</tr>
+							<tr>
+								<td>其他信用卡所属发卡行名称及网点名称</td>
+								<td><input type="text" class="easyui-textbox" id="" name="" /></td>
+								<td>卡片到期日</td>
+								<td><input type="text" class="easyui-datebox" id="" name="" /></td>
+							</tr>
+							<tr>
+								<td>卡片背面签字栏显示的名称</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>要求被周转余额（人民币）</td>
+								<td colspan="3"><input type="text" class="" name="c4Othcrq"
+									onblur="checkValue(this)" id="" /></td>
+							</tr>
+							<tr>
+								<td>要求被周转余额大写</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>申请人签名</td>
+								<td><input type="text" class="easyui-textbox" id="" name="" /></td>
+								<td>日期</td>
+								<td><input type="text" class="easyui-datebox" id=""
+									name="c5Sgndte1" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>信用额度</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Othcred" id="" /></td>
+							</tr>
+							<tr>
+								<td>申请号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>“轻松周转”服务批准金额</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Vccred" id="" /></td>
+							</tr>
+							<tr>
+								<td>拒绝原因</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Vcode" id="" /></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+
+				<!-- 银行专用栏位 -->
+				<div id="q_operate_area" class="area-show">
+					<fieldset>
+						<legend>
+							<span id="Q">银行专用栏位</span>
+						</legend>
+						<table>
+							<tr>
+								<td>推广单位代码</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c5Abcode" id="" /></td>
+							</tr>
+							<tr>
+								<td>员工号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Abuser" id="" /></td>
+							</tr>
+							<tr>
+								<td>推广人员姓名</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Abname" id="" /></td>
+							</tr>
+							<tr>
+								<td>电话</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Abphon" id="" /></td>
+							</tr>
+							<tr>
+								<td>营销中心联络人签名</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>营销中心客户经理签名</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>团办号</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Apbatch" id="c4Apbatch" /></td>
+							</tr>
+							<tr>
+								<td>提供行驶证情况</td>
+								<td><label><input type="radio" name="c4Clyn1"
+										value="1" />有</label><label><input type="radio"
+										name="c4Clyn1" value="0" />无</label></td>
+								<td>注册日期</td>
+								<td><input type="text" class="easyui-datebox" id="" name="" /></td>
+							</tr>
+							<tr>
+								<td>推广方式</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Abtype" value="1" />亲见签名</label><label><input
+										type="radio" name="c4Abtype" value="2" />亲访单位</label><label><input
+										type="radio" name="c4Abtype" value="3" />亲访住宅</label><label><input
+										type="radio" name="c4Abtype" value="4" />未亲签未亲访</label><em>*</em></td>
+							</tr>
+							<tr>
+								<td>进件来源</td>
+								<td colspan="3" style="line-height: 20px;"><label><input
+										type="radio" name="c4Apsour" value="1" />我行客户</label><label><input
+										type="radio" name="c4Apsour" value="2" />陌生拜访</label><label><input
+										type="radio" name="c4Apsour" value="3" />他人转件</label><label><input
+										type="radio" name="c4Apsour" value="4" />设点营销</label><label><input
+										type="radio" name="c4Apsour" value="5" />电话营销</label><label><input
+										type="radio" name="c4Apsour" value="6" />信函营销</label><label><input
+										type="radio" name="c4Apsour" value="7" />自进件</label><label><input
+										type="radio" name="c4Apsour" value="8" />转介绍</label><label><input
+										type="radio" name="c4Apsour" value="9" />其他</label><input type="text"
+									class="easyui-textbox" id="" /><em>*</em></td>
+							</tr>
+							<tr>
+								<td>推广人员与申请人关系</td>
+								<td colspan="3"><label><input type="radio"
+										name="c4Relship" value="1" />亲戚</label><label><input
+										type="radio" name="c4Relship" value="2" />朋友</label><label><input
+										type="radio" name="c4Relship" value="3" />同学</label><label><input
+										type="radio" name="c4Relship" value="4" />客户</label><label><input
+										type="radio" name="c4Relship" value="5" />其他</label><input
+									type="text" class="easyui-textbox" id="" /></td>
+							</tr>
+							<tr>
+								<td>客户类别</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>其他说明</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>推广单位主管签名</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>初审人员代码</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="c4Decemp" id="" /></td>
+							</tr>
+							<tr>
+								<td>签名</td>
+								<td><input type="text" class="easyui-textbox" id="" name="" /></td>
+								<td>签名日期</td>
+								<td><input type="text" class="easyui-datebox" id="" name="" /></td>
+							</tr>
+							<tr>
+								<td>复审人员代码</td>
+								<td colspan="3"><input type="text" class="easyui-textbox"
+									name="" id="" /></td>
+							</tr>
+							<tr>
+								<td>签名</td>
+								<td><input type="text" class="easyui-textbox" id="" name="" /></td>
+								<td>签名日期</td>
+								<td><input type="text" class="easyui-datebox" id="" name="" /></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+			</div>
+			<!-- 申请件全量信息区 结束 -->
+
+		</div>
+	</form>
+	
+</body>
+
+
+</html>

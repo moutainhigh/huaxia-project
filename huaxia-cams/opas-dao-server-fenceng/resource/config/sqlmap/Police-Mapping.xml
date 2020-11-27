@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Police">
+
+	<resultMap id="resultSummaryInfo" type="java.util.Map">
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="IDENTITY_NO" property="identityNo" jdbcType="VARCHAR" />
+		<result column="IDENTITY_NO_CHECK_RST" property="identityNoCheckRst" jdbcType="VARCHAR" />
+		<result column="OLD_NAME" property="oldName" jdbcType="VARCHAR" />
+		<result column="JGSSXHOME_PROV_CITY" property="jgssxHomeProvCity" jdbcType="VARCHAR" />
+		<result column="BELONG_HOME_PROV_CITY" property="belongHomeProvCity" jdbcType="VARCHAR" />
+		<result column="SRVS_LOCATION" property="srvsLocation" jdbcType="VARCHAR" />
+		<result column="BIRTH_HOME_PROV_CITY" property="birthHomeProvCity" jdbcType="VARCHAR" />
+		<result column="result_code" property="resultCode" jdbcType="VARCHAR" />
+		<result column="xm" property="xm" jdbcType="VARCHAR" />
+		<result column="zjhm" property="zjhm" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="resultInfoView" type="java.util.Map">
+		 <result column="INSIDE_APP_NO" property="insideAppNo" jdbcType="VARCHAR" />
+	    <result column="IDENTITY_NO" property="identityNo" jdbcType="VARCHAR" />
+	    <result column="IDENTITY_NO_CHECK_RST" property="identityNoCheckRst" jdbcType="VARCHAR" />
+	    <result column="NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="NAME_CHECK_RST" property="nameCheckRst" jdbcType="VARCHAR" />
+	    <result column="OLD_NAME" property="oldName" jdbcType="VARCHAR" />
+	    <result column="GENDER" property="gender" jdbcType="VARCHAR" />
+	    <result column="NATIONALITY" property="nationality" jdbcType="VARCHAR" />
+	    <result column="BIRTH_DAY" property="birthDay" jdbcType="VARCHAR" />
+	    <result column="BELONG_HOME_PROV_CITY" property="belongHomeProvCity" jdbcType="VARCHAR" />
+	    <result column="BIRTH_HOME_PROV_CITY" property="birthHomeProvCity" jdbcType="VARCHAR" />
+	    <result column="JGSSXHOME_PROV_CITY" property="jgssxhomeProvCity" jdbcType="VARCHAR" />
+	    <result column="MARITAL_STATUS" property="maritalStatus" jdbcType="VARCHAR" />
+	    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+	    <result column="SRVS_LOCATION" property="srvsLocation" jdbcType="VARCHAR" />
+	    <result column="EDU_DEGREE" property="eduDegree" jdbcType="VARCHAR" />
+	    <result column="ERROR_CODE" property="errorCode" jdbcType="DECIMAL" />
+	    <result column="ERROR_DESC" property="errorDesc" jdbcType="VARCHAR" />
+	    <result column="ERRORMESAGECOL" property="errormesagecol" jdbcType="VARCHAR" />
+	    <result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+	    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+	    <result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+	    <result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	    <result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	    <result column="BATCH_DATE" property="batchDate" jdbcType="TIMESTAMP" />
+	    <result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+	    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	    <result column="DN1" property="dn1" jdbcType="VARCHAR" />
+	    <result column="DES1" property="des1" jdbcType="VARCHAR" />
+	    <result column="DN2" property="dn2" jdbcType="VARCHAR" />
+	    <result column="DES2" property="des2" jdbcType="VARCHAR" />
+	    <result column="PCSMC" property="pcsMc" jdbcType="VARCHAR" />
+	    <result column="SEARCHRESULT" property="searchResult" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="resultList" type="java.util.Map">
+		<result column="CASECODE" property="casecode" jdbcType="VARCHAR" />
+		<result column="GISTUNIT" property="gistunit" jdbcType="VARCHAR" />
+		<result column="PERFORMANCE" property="performance" jdbcType="VARCHAR" />
+		<result column="DISREPUTTYPENAME" property="disreputtypename" jdbcType="VARCHAR" />
+		<result column="PUBLISHDATE" property="publishdate" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="taskStatusInfo" type="java.util.Map" >
+	    <id column="AUTO_ID" property="autoId" jdbcType="CHAR" />
+	    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	    <result column="INSIDE_APP_NO" property="insideAppNo" jdbcType="VARCHAR" />
+	    <result column="NODE_ID" property="nodeId" jdbcType="VARCHAR" />
+	    <result column="PROCESS_ID" property="processId" jdbcType="VARCHAR" />
+	    <result column="NODE_NAME" property="nodeName" jdbcType="VARCHAR" />
+	    <result column="TASK_STATUS" property="taskStatus" jdbcType="VARCHAR" />
+	    <result column="TIME_STAMP" property="timeStamp" jdbcType="TIMESTAMP" />
+	    <result column="INCOMINGDATA_TYPE" property="incomingdataType" jdbcType="VARCHAR" />
+	    <result column="IDENTITY_NO" property="identityNo" jdbcType="VARCHAR" />
+	    <result column="NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+	    <result column="C1C2_FLAG" property="c1c2Flag" jdbcType="VARCHAR" />
+	    <result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR" />
+   </resultMap>
+
+	<select id="querySummaryInfo" parameterType="java.util.Map"
+		resultMap="resultSummaryInfo">
+		SELECT name,identity_no,identity_no_check_rst,old_name,jgssxhome_prov_city,belong_home_prov_city,srvs_location,birth_home_prov_city
+		  FROM opas_biz_pubsec_gather
+		 WHERE identity_no = #{identityNo, jdbcType=VARCHAR}
+		   AND name = #{name, jdbcType=VARCHAR}
+	</select>
+	<select id="queryList" parameterType="java.util.Map" resultMap="resultList">
+		SELECT t1.CASECODE,t1.GISTUNIT,t1.PERFORMANCE,t1.DISREPUTTYPENAME,t1.PUBLISHDATE
+		from opas_biz_pubsec_gather_bl t1 join opas_biz_inp_appl_c1 c on c.C1_IDNBR = t1.CARDNUM
+		WHERE c.app_id =  #{appId, jdbcType=CHAR}
+	</select>
+	<select id="queryPoliceSummaryInfo" parameterType="java.lang.String"
+		resultMap="resultSummaryInfo">
+		select  XM as name, GMSFHM as identity_no,
+		case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+        when ERROR_MESSAGE is not null then ERROR_MESSAGE
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+		when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+        else '' end as IDENTITY_NO_CHECK_RST 
+        from police_simplify_info 
+		WHERE app_id = #{appId, jdbcType=CHAR} and card_flag = #{cardFlag, jdbcType=CHAR}
+	</select>
+	<select id="queryPoliceStatusInfoByAppId" parameterType="java.lang.String"  resultType="java.util.Map">
+		<![CDATA[select  
+         (select  
+			case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+	        when ERROR_MESSAGE is not null then ERROR_MESSAGE
+			when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+			when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+			when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+	        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+	        else '' end as IDENTITY_NO_CHECK_RST 
+        from police_simplify_info
+		WHERE app_id like #{appId, jdbcType=CHAR}  and  (card_flag = '0' or card_flag is null ) and  rownum < 2 ) as C1_POLICE,
+        (select  
+			case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+	        when ERROR_MESSAGE is not null then ERROR_MESSAGE
+			when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+			when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+			when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+	        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+	        else '' end as IDENTITY_NO_CHECK_RST 
+        from police_simplify_info 
+		WHERE app_id like #{appId, jdbcType=CHAR}  and  card_flag = '1' and  rownum < 2 ) as C2_POLICE   
+        from dual]]>
+	</select> 	
+	
+	<select id="querySVoiceInfoByAppId" parameterType="java.lang.String"  resultType="java.util.Map">
+		<![CDATA[select *from (select to_char(v.crt_time,'yyyy-MM-dd hh24:mi:ss') crt_time , v.conclusion ,v.summary 
+                      from cams_voice_callback_record  v  where v.app_id like #{appId, jdbcType=CHAR} and v.finish = '1' order by v.crt_time desc) 
+                      where rownum=1]]>
+	</select>
+	
+    <select id="querySVoiceBackInfoByAppId" parameterType="java.lang.String"  resultType="java.lang.String">
+		<![CDATA[select count(1) from opas_allot_apply_allot_his h 
+		         where h.app_id = #{appId, jdbcType=CHAR} and h.curr_node = '07' and h.back_flag = '6']]>
+	</select>
+
+	<select id="queryDetailInfo" parameterType="java.util.Map"
+		resultMap="resultInfoView">
+		select INSIDE_APP_NO, IDENTITY_NO, IDENTITY_NO_CHECK_RST, 
+		      NAME, NAME_CHECK_RST, OLD_NAME, 
+		      GENDER, NATIONALITY, BIRTH_DAY, 
+		      BELONG_HOME_PROV_CITY, BIRTH_HOME_PROV_CITY, 
+		      JGSSXHOME_PROV_CITY, MARITAL_STATUS, ADDRESS, 
+		      SRVS_LOCATION, EDU_DEGREE, ERROR_CODE, 
+		      ERROR_DESC, ERRORMESAGECOL, CRT_TIME, 
+		      CRT_DATE, CRT_USER, LST_UPD_TIME, 
+		      LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, 
+		      REC_STATUS, APP_ID, DN1, 
+		      DES1, DN2, DES2
+ 			from opas_biz_pubsec_gather t
+		  WHERE identity_no = #{identityNo, jdbcType=VARCHAR}
+		   AND name = #{name, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectPoliceDetailInfo" parameterType="java.util.Map"
+		resultMap="resultInfoView">
+		select  XM as name, GMSFHM as identity_no,
+		case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+        when ERROR_MESSAGE is not null then ERROR_MESSAGE 
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+		when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+        else '' end as SEARCHRESULT,RESULT_GMSFHM as IDENTITY_NO_CHECK_RST
+        ,RESULT_XM as NAME_CHECK_RST
+        from police_simplify_info 
+		WHERE app_id = #{appId, jdbcType=CHAR} and card_flag = #{cardFlag, jdbcType=CHAR}		
+	</select>
+	
+	<select id="querytaskStatusInfoByAppId" parameterType="java.lang.String" resultMap="taskStatusInfo">
+		select *
+ 			from TASK_STATUS_INFO t
+		 WHERE app_id = #{appId, jdbcType=CHAR}
+	
+	</select>
+	
+	<resultMap id="resultView" type="java.util.Map">
+		<result column="BIRTH_DAY" jdbcType="VARCHAR" property="birthDay" />
+		<result column="SRVS_LOCATION" jdbcType="VARCHAR" property="srvsLocation" />
+		<result column="OLD_NAME" jdbcType="VARCHAR" property="oldName" />
+		<result column="JGSSXHOME_PROV_CITY" jdbcType="VARCHAR" property="jgssxhomeProvCity" />
+	</resultMap>								
+	<select id="queryPoliceInfo" parameterType="java.lang.String"
+		resultMap="resultView">
+		 SELECT BIRTH_DAY,SRVS_LOCATION,OLD_NAME,JGSSXHOME_PROV_CITY
+		 FROM opas_biz_pubsec_gather
+		 WHERE identity_no = #{certifiNo}
+		 AND name = #{custName}
+	</select>
+	<select id="selectPoliceCountByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*) from  police_simplify_info
+		WHERE APP_ID= #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectDependableIdentityCardByAppid" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*) from  sfrz_base_data
+		WHERE APP_ID= #{appId,jdbcType=VARCHAR}
+		AND CARD_FLAG = '0'
+	</select>
+	<!--目前只取主卡的可信身份认证信息  -->
+	<select id="selectAuthResultByAppid" parameterType="java.lang.String"  resultType="java.util.Map">
+		select APP_ID as APPID,AUTH_RESULT as AUTHRESULT
+		FROM sfrz_base_data
+		WHERE APP_ID = #{appId,jdbcType=VARCHAR}
+		AND CARD_FLAG = '0'
+	</select>
+
+	<select id="queryTaxidInfoByAppId" parameterType="java.lang.String" resultType="java.util.Map">
+	<![CDATA[SELECT C1.C1C2_FLAG,C1.C1_NATION,C1.C1_IDTYPE,TO_CHAR(C1.C6_RESI_TAXID1) C6_RESI_TAXID1,C2.C2_NATION,C2.C2_IDTYPE,TO_CHAR(C2.C6_RESI_TAXID2) C6_RESI_TAXID2
+        FROM OPAS_BIZ_INP_APPL_C1 C1, OPAS_BIZ_INP_APPL_C2 C2
+        WHERE C1.APP_ID = #{appId,jdbcType=VARCHAR} AND C1.APP_ID = C2.APP_ID AND ROWNUM < 2]]>
+    </select>
+   
+    <resultMap id="resultPoliceXpInfo" type="java.util.Map">
+		<result column="result_gmsfhm" jdbcType="VARCHAR" property="resultGmsfhm" />
+		<result column="result_xm" jdbcType="VARCHAR" property="resultXm" />
+		<result column="result_fx" jdbcType="VARCHAR" property="resultFx" />
+		<result column="gmsfhm" jdbcType="VARCHAR" property="gmsfhm" />
+		<result column="xm" jdbcType="VARCHAR" property="xm" />
+		<result column="xp" jdbcType="VARCHAR" property="xp" />
+		<result column="result_fs" jdbcType="VARCHAR" property="resultFs" />
+		<result column="app_id" jdbcType="VARCHAR" property="appId" />
+		<result column="error_message" jdbcType="VARCHAR" property="errorMessage" />
+	</resultMap>	
+	<select id="queryPoliceXpInfo" parameterType="java.lang.String" resultMap="resultPoliceXpInfo">
+		select o.result_gmsfhm,o.result_xm,o.result_fx from police_xp_info o
+		WHERE APP_ID= #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryPoliceXpDetail" parameterType="java.lang.String" resultMap="resultPoliceXpInfo">
+		select o.gmsfhm,o.result_gmsfhm,o.xm,o.result_xm,o.result_fx,o.result_fs,error_message,app_Id 
+		from police_xp_info o where APP_ID= #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="querySummaryByAppId" parameterType="java.lang.String"
+		resultMap="resultSummaryInfo">
+		select  XM as name, GMSFHM as identity_no,
+		case when ERROR_MESSAGE is not null and INSTR(ERROR_MESSAGE,'库中无此号')>0  then '库中无此号'
+        when ERROR_MESSAGE is not null then ERROR_MESSAGE
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '一致' then '完全匹配'
+		when RESULT_GMSFHM ='一致' and RESULT_XM = '不一致' then '身份证号匹配、姓名不匹配'
+		when RESULT_GMSFHM ='不一致' and RESULT_XM = '一致' then '身份证号不匹配、姓名匹配'
+        when RESULT_GMSFHM ='不一致' or RESULT_XM = '不一致' then '身份证号不匹配、姓名不匹配'
+        else '' end as IDENTITY_NO_CHECK_RST 
+        from police_simplify_info 
+		WHERE app_id = #{appId, jdbcType=CHAR} and card_flag = #{cardFlag, jdbcType=CHAR}
+	</select>
+	
+	<resultMap id="resultC1Map" type="java.util.Map">	
+		<result column="matching_card_flag" property="matchingCardFlag" jdbcType="VARCHAR" />
+		<result column="C1_Idtype" property="c1Idtype" jdbcType="VARCHAR" />
+		<result column="c1c2_flag" property="c1c2Flag" jdbcType="VARCHAR" />
+		<result column="C2_Idtype" property="c2Idtype" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryC2Idtype" parameterType="java.lang.String" resultMap="resultC1Map">
+		select C2_Idtype
+		from opas_biz_inp_appl_c2  where APP_ID= #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryC1Idtype" parameterType="java.lang.String" resultMap="resultC1Map">
+		select C1_Idtype,matching_card_flag,c1c2_flag
+		from opas_biz_inp_appl_c1  where APP_ID= #{appId,jdbcType=VARCHAR}
+	</select>
+	<!--  外国人公安信息-->
+	<select id="queryNciicForeignerInfo" parameterType="java.util.Map"
+		resultMap="resultNciicForeignerInfo">
+		select  result_code,xm,zjhm
+        from nciic_foreigner_info 
+		WHERE  APP_ID= #{appId,jdbcType=VARCHAR} and card_flag = #{cardFlag, jdbcType=CHAR}
+	</select>
+	
+	<resultMap id="resultNciicForeignerInfo" type="java.util.Map">	
+		<result column="result_code" property="resultCode" jdbcType="VARCHAR" />
+		<result column="xm" property="xm" jdbcType="VARCHAR" />
+		<result column="zjhm" property="zjhm" jdbcType="VARCHAR" />
+	</resultMap>
+</mapper>

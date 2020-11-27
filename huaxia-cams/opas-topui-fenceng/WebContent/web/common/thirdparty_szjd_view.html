@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>数字解读详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding:10px;">
+<fieldset>
+	<legend>数字解读详细结果</legend>
+	<form id="szjdDetailForm" style="width:100%">
+	<div>
+		<table  style="width:100%">
+			<tr>
+				<td>创建时间：</td>
+				<td><input name="crtTime" id="crtTime"  type="text" style="width:300px;" /></td>
+				<!-- <td>创建用户：</td>
+				<td><input name="crtUser" id="crtUser"  type="text" style="width:300px;"/></td> -->
+			</tr>
+			<tr>
+				<td>查询结果代码：</td>
+				<td><input name="resultCode" id="resultCode"  type="text" style="width:300px;"/></td>
+				<td>查询结果描述：</td>
+				<td><input name="resultDesc" id="resultDesc"  type="text" style="width:300px;"/></td>
+			</tr>
+			<!-- <tr>
+				<td>发起机构代码：</td>
+				<td><input name="originateOrgCode" id="originateOrgCode"  type="text" style="width:300px;"/></td>
+				<td>发起用户代码：</td>
+				<td><input name="originateUserCode" id="originateUserCode"  type="text" style="width:300px;"/></td>
+			</tr> -->
+			<tr>
+				<td>信息主体名称：</td>
+				<td><input name="userName" id="userName"  type="text" style="width:300px;"/></td>
+				<td>信息主体证件类型：</td>
+				<td><input name="idType" id="idType"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>信息主体证件号：</td>
+				<td><input name="idNum" id="idNum"  type="text" style="width:300px;"/></td>
+				<td>查询原因：</td>
+				<td><input name="queryReason" id="queryReason"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>服务代码：</td>
+				<td><input name="serviceCode" id="serviceCode"  type="text" style="width:300px;"/></td>
+				<td>产品日期：</td>
+				<td><input name="productDate" id="productDate"  type="text" style="width:300px;"/></td>
+			</tr>
+		<!-- 	<tr>
+				<td>查询结果类型：</td>
+				<td><input name="resultType" id="resultType"  type="text" style="width:300px;"/></td>
+			</tr> -->
+			<tr>
+				<td>数字解读值：</td>
+				<td><input name="score" id="score"  type="text" style="width:300px;"/></td>
+				<td>影响因素个数：</td>
+				<td><input name="factorNum" id="factorNum"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>影响因素01：</td>
+				<td><input name="factor1" id="factor1"  type="text" style="width:300px;"/></td>
+				<td>影响因素02：</td>
+				<td><input name="factor2" id="factor2"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>影响因素03：</td>
+				<td><input name="factor3" id="factor3"  type="text" style="width:300px;"/></td>
+				<td>影响因素04：</td>
+				<td><input name="factor4" id="factor4"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>影响因素05：</td>
+				<td><input name="factor5" id="factor5"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>相对位置：</td>
+				<td><input name="position" id="position"  type="text" style="width:300px;"/></td>
+				<td>计算日期：</td>
+				<td><input name="scoreDate" id="scoreDate"  type="text" style="width:300px;"/></td>
+			</tr>
+		</table>
+	</div>
+	</form>
+	
+</fieldset>	
+</body>
+<script type="text/javascript">
+
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var szjdDetailForm=$("#szjdDetailForm");
+	var appId = GetQueryString("appId");
+	$(function(){
+		$cf.ajax({
+			data : {
+				"appId" : appId//'1601240945P00101'
+			},
+			url : "/opas-naps/selectSzjdInfoByAppId.json",
+			onSuccess : function(res) {
+				szjdDetailForm.form("load", res.RSP_BODY.szjdSummary);
+				idTypeChange();
+				
+			}
+		});
+		
+		//将页面所有input变为只读 
+		$("input[type='text']").each(function(){
+			$(this).attr("readonly","readonly");
+		});	
+	});
+	
+	function idTypeChange(){
+		if(document.getElementById("idType").value=='10'){
+			document.getElementById("idType").value = "居民身份证";
+		}
+		if(document.getElementById("idType").value=='03'){
+			document.getElementById("idType").value = "外国护照";
+		}
+		if(document.getElementById("idType").value=='04'){
+			document.getElementById("idType").value = "港澳台居民来往内地通行证台胞证";
+		}
+		if(document.getElementById("idType").value=='05'){
+			document.getElementById("idType").value = "军官证";
+		}
+		if(document.getElementById("idType").value=='07'){
+			document.getElementById("idType").value = "外国人永久居留身份证";
+		}
+		if(document.getElementById("idType").value=='90'){
+			document.getElementById("idType").value = "港澳居民居住证";
+		}
+		if(document.getElementById("idType").value=='91'){
+			document.getElementById("idType").value = "台湾居民居住证";
+		}
+	}
+</script>
+</html>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ApplyLifeCicle">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.apply.ApplyLifeCicle">
+		<id column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="OPERATER" property="operater" jdbcType="VARCHAR" />
+		<result column="OPERATE_DESC" property="operateDesc" jdbcType="VARCHAR" />
+		<result column="OPERATE_RESULT" property="operateResult"
+			jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_APPLY_LIFE_CICLE
+		where UUID = #{uuid,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.apply.ApplyLifeCicle">
+		insert into OPAS_APPLY_LIFE_CICLE (UUID, APP_ID, OPERATER, 
+      OPERATE_DESC, OPERATE_RESULT, CRT_DATE, 
+      CRT_USER, LST_UPD_DATE, LST_UPD_USER
+      )
+    values (#{uuid,jdbcType=CHAR}, #{appId,jdbcType=CHAR}, #{operater,jdbcType=VARCHAR}, 
+      #{operateDesc,jdbcType=VARCHAR}, #{operateResult,jdbcType=VARCHAR}, systimestamp, 
+      #{crtUser,jdbcType=VARCHAR}, #{lstUpdDate,jdbcType=TIMESTAMP}, #{lstUpdUser,jdbcType=VARCHAR}
+      )
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.apply.ApplyLifeCicle">
+		update OPAS_APPLY_LIFE_CICLE
+		set APP_ID = #{appId,jdbcType=CHAR},
+		OPERATER = #{operater,jdbcType=VARCHAR},
+		OPERATE_DESC = #{operateDesc,jdbcType=VARCHAR},
+		OPERATE_RESULT = #{operateResult,jdbcType=VARCHAR},
+		CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+		CRT_USER = #{crtUser,jdbcType=VARCHAR},
+		LST_UPD_DATE = #{lstUpdDate,jdbcType=TIMESTAMP},
+		LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		where UUID = #{uuid,jdbcType=CHAR}
+	</update>
+	<!-- 生命周期查询 -->
+	<select id="queryApplyLifeList" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select OPERATER,
+		OPERATE_DESC,
+		CRT_DATE
+		from OPAS_APPLY_LIFE_CICLE
+		where APP_ID = #{appId,jdbcType=CHAR}
+		order by CRT_DATE desc
+	</select>
+	<!-- 生命周期  批量插入  王德彬  速度太慢  应分批次插入   -->
+	<insert id="insertApplyLifeBatch" parameterType="java.util.List">
+		insert into OPAS_APPLY_LIFE_CICLE 
+		  (UUID, APP_ID, OPERATER, 
+	      OPERATE_DESC, OPERATE_RESULT, CRT_DATE, 
+	      CRT_USER, LST_UPD_DATE, LST_UPD_USER
+	      )
+	  	<foreach collection="list" item="item" index="index" separator="union all" > 
+	      	(select  
+				#{item.uuid,jdbcType=CHAR},
+				#{item.appId,jdbcType=CHAR},
+				#{item.operater,jdbcType=VARCHAR},
+				#{item.operateDesc,jdbcType=VARCHAR},
+				#{item.operateResult,jdbcType=VARCHAR},
+				systimestamp,
+				<!-- #{item.crtDate,jdbcType=TIMESTAMP}, -->
+				#{item.crtUser,jdbcType=VARCHAR},
+				#{item.lstUpdDate,jdbcType=TIMESTAMP},
+				#{item.lstUpdUser,jdbcType=VARCHAR}
+			from dual
+			)
+	    </foreach>
+	</insert>
+	<!-- 生命周期查询 -->
+	<select id="queryOperater" parameterType="java.util.Map" resultType="java.lang.String" >
+		select OPERATER  from (select OPERATER
+		from OPAS_APPLY_LIFE_CICLE
+		where APP_ID = #{appId,jdbcType=CHAR}
+	  	<if test="operateResult !=null and operateResult !=''">
+             AND OPERATE_RESULT= #{operateResult,jdbcType=VARCHAR}
+        </if>
+		<if test="operateDesc !=null and operateDesc !=''">
+             AND OPERATE_DESC= #{operateDesc,jdbcType=VARCHAR}
+        </if>
+		order by CRT_DATE desc) where rownum='1'
+	</select>
+</mapper>

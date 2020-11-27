@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>乱码修改</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	//更新
+	function onUpdate(obj){
+		var errorCodeFormData = $("#errorCodeForm").serializeArray();
+		var jsondata = getFormData(errorCodeFormData);
+		$cf.ajax({
+			url : '/opas-naps/updateErrorCode.json', 
+			data : jsondata,
+			onSuccess : function(data) {
+				var msg = data.RSP_BODY.msg;
+				alert(msg);
+			}
+		}); 
+	}
+	//查询
+	function onSearch(obj){
+		var appId = $("#app_id").val();
+		console.log(appId)
+		if (appId==null) {
+			alert("请输入正确APPID!");
+			return;
+		}
+		var inputChannel = obj;
+		$cf.ajax({
+			url : '/opas-naps/queryErrorCode.json', 
+			data : {
+				appId:appId
+			},onSuccess : function(data) {
+				var errorCode = data.RSP_BODY.inputChannel;
+				$('#errorCodeForm').form("load", errorCode);
+				console.log(errorCode)
+			}
+		}); 
+	}
+	
+	
+	//转换数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			if(objValue.indexOf('"') != -1){
+				objValue = objValue.replace(/\"/g,"\\"+"\""); 
+			} 
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">乱码查询</legend>
+	<form id="errorCodeForm">
+		<table id="errorCodeTable" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td>申请流水号:</td>
+	  			<td><input id="app_id" name="app_id" type="text" style="width:240px"></input></td>
+	  			<td><input onclick="onSearch('appId')" value="查询" type="button" class="alsp" style="width:100px;"/></td>
+	  			<td></td>
+	  			<td></td>
+			</tr>
+			<tr>
+				<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+			</tr>
+			<tr>
+				<td>单位名称:</td>
+				<td><input id="c1Coname" name="c1Coname" type="text" style="width:240px"></input></td>
+				<td>直系亲属姓名:</td>
+				<td><input id="c1Rename" name="c1Rename" type="text" style="width:240px"></input></td>
+				<td><input id="appId" name="appId" hidden="hidden" style="width:240px"></input></td>
+				
+			</tr>
+			<tr>
+				<td>公司地址:</td>
+				<td><input id="c1Coadd1" name="c1Coadd1" type="text" style="width:240px"></input></td>
+	  			<td><input id="c1Coadd2" name="c1Coadd2" type="text" style="width:240px"></input></td>
+	  			<td><input id="c1Coadd3" name="c1Coadd3" type="text" style="width:240px"></input></td>
+	  			<td><input id="c1Coadd4" name="c1Coadd4" type="text" style="width:240px"></input></td>
+	  		</tr>
+	  		<tr>
+				<td>家庭地址:</td>
+				<td><input id="c1Hmadd1" name="c1Hmadd1" type="text" style="width:240px"></input></td>
+	  			<td><input id="c1Hmadd2" name="c1Hmadd2" type="text" style="width:240px"></input></td>
+	  			<td><input id="c1Hmadd3" name="c1Hmadd3" type="text" style="width:240px"></input></td>
+	  			<td><input id="c1Hmadd4" name="c1Hmadd4" type="text" style="width:240px"></input></td>
+	  		</tr>
+	  		<tr>
+				<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+			</tr>
+	  		<tr>
+	  			<td></td>
+	  			<td></td>
+	  			<td align="center"><input onclick="onUpdate('appId')" value="保存" type="button" class="alsp" style="width:100px;"/></td>
+	  			<td></td>
+	  			<td></td>
+	  		</tr>
+		</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

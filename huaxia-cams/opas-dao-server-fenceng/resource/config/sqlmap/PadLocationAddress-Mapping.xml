@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="PadLocationAddress" >
+	<resultMap id="padLocationAddressResultMap" type="com.huaxia.opas.domain.sysparm.PadLocationAddress">
+		<result column="AUTO_ID" property="autoID" jdbcType="VARCHAR" />
+		<result column="IMPORT_DATE" property="importDate" jdbcType="TIMESTAMP" />
+		<result column="CITY_ID" property="cityID" jdbcType="VARCHAR" />
+		<result column="PAD_LOCATION_ADDRESS" property="padLocationAddress" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="BEGIN_DATE" property="beginDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- PAD定位地址信息的条数  -->
+  	<select id="queryPadLocationAddressCount" parameterType="com.huaxia.opas.domain.sysparm.PadLocationAddress" resultType="java.lang.Integer">
+		select count(1) from OPAS_PAD_LOCATION_ADDRESS_INFO
+		<where>		   
+			<if test="cityID != null and cityID !='' ">
+				AND CITY_ID LIKE '%${cityID}%'
+			</if>
+			<if test="padLocationAddress != null and padLocationAddress !='' ">
+				AND PAD_LOCATION_ADDRESS LIKE '%${padLocationAddress}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		
+	</select>
+	
+	<!-- 分页显示PAD定位地址信息  -->
+	<select id="queryPadLocationAddressList" parameterType="com.huaxia.opas.domain.sysparm.PadLocationAddress" resultMap="padLocationAddressResultMap">
+		select AUTO_ID,IMPORT_DATE,CITY_ID,PAD_LOCATION_ADDRESS,STATUS,BEGIN_DATE,STOP_DATE,CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE
+		 from OPAS_PAD_LOCATION_ADDRESS_INFO
+		<where>		   
+			<if test="cityID != null and cityID !='' ">
+				AND CITY_ID LIKE '%${cityID}%'
+			</if>
+			<if test="padLocationAddress != null and padLocationAddress !='' ">
+				AND PAD_LOCATION_ADDRESS LIKE '%${padLocationAddress}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+	
+	<insert id="insertPadLocationAddressStart" parameterType="com.huaxia.opas.domain.sysparm.PadLocationAddress">
+		insert into
+		OPAS_PAD_LOCATION_ADDRESS_INFO
+		(AUTO_ID,IMPORT_DATE,CITY_ID,PAD_LOCATION_ADDRESS,STATUS,BEGIN_DATE,STOP_DATE,CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoID,jdbcType=VARCHAR},
+		#{importDate,jdbcType=TIMESTAMP},
+		#{cityID,jdbcType=VARCHAR},
+		#{padLocationAddress,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+	
+	<insert id="insertPadLocationAddressEnd" parameterType="com.huaxia.opas.domain.sysparm.PadLocationAddress">
+		insert into
+		OPAS_PAD_LOCATION_ADDRESS_INFO
+		(AUTO_ID,IMPORT_DATE,CITY_ID,PAD_LOCATION_ADDRESS,STATUS,BEGIN_DATE,STOP_DATE,CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoID,jdbcType=VARCHAR},
+		#{importDate,jdbcType=TIMESTAMP},
+		#{cityID,jdbcType=VARCHAR},
+		#{padLocationAddress,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		NULL,
+		SYSDATE,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+	<select id="queryPadLocationAddressStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_PAD_LOCATION_ADDRESS_INFO where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updatePadLocationAddressWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.PadLocationAddress">
+		update OPAS_PAD_LOCATION_ADDRESS_INFO
+		<set>
+			CITY_ID = #{cityID,jdbcType=VARCHAR},
+			PAD_LOCATION_ADDRESS = #{padLocationAddress,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updatePadLocationAddress" parameterType="com.huaxia.opas.domain.sysparm.PadLocationAddress">
+		update OPAS_PAD_LOCATION_ADDRESS_INFO
+		<set>
+			CITY_ID = #{cityID,jdbcType=VARCHAR},
+			PAD_LOCATION_ADDRESS = #{padLocationAddress,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=VARCHAR},
+			<if test="status == '1'.toString() ">BEGIN_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deletePadLocationAddress" parameterType="java.lang.String">
+		delete from
+		OPAS_PAD_LOCATION_ADDRESS_INFO
+		where AUTO_ID = #{autoID,jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="batchStartPadLocationAddress" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_PAD_LOCATION_ADDRESS_INFO
+			<set>
+				STATUS = #{item.status,jdbcType=VARCHAR},
+				BEGIN_DATE = SYSDATE,
+				LST_UPD_USER = #{item.lstUpdUser,jdbcType=VARCHAR},
+				LST_UPD_DATE = SYSDATE
+			</set>
+			where AUTO_ID = #{item.autoID,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<update id="batchStopPadLocationAddress" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_PAD_LOCATION_ADDRESS_INFO
+			<set>
+				STATUS = #{item.status,jdbcType=VARCHAR},
+				STOP_DATE = SYSDATE,
+				LST_UPD_USER = #{item.lstUpdUser,jdbcType=VARCHAR},
+				LST_UPD_DATE = SYSDATE
+			</set>
+			where AUTO_ID = #{item.autoID,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<delete id="batchDeletePadLocationAddress" parameterType="java.util.ArrayList">
+		delete from
+		OPAS_PAD_LOCATION_ADDRESS_INFO where AUTO_ID in
+		<foreach collection="list" item="autoId"  open="(" separator="," close=")">
+		#{autoId}
+		</foreach>
+	</delete>
+	
+	<insert id="insertPadLocationAddressImportFile" parameterType="java.util.ArrayList">
+			insert into OPAS_PAD_LOCATION_ADDRESS_INFO
+			(AUTO_ID,IMPORT_DATE,CITY_ID,PAD_LOCATION_ADDRESS,
+				STATUS,BEGIN_DATE,STOP_DATE,
+				CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+			<foreach collection="list" item="padLocationAddress" index="index"  separator="union all" >
+				(select
+				#{padLocationAddress.autoID,jdbcType=VARCHAR},
+				#{padLocationAddress.importDate,jdbcType=TIMESTAMP},
+				#{padLocationAddress.cityID,jdbcType=VARCHAR},
+				#{padLocationAddress.padLocationAddress,jdbcType=VARCHAR},
+				#{padLocationAddress.status,jdbcType=CHAR},
+				#{padLocationAddress.beginDate,jdbcType=TIMESTAMP},
+				#{padLocationAddress.stopDate,jdbcType=TIMESTAMP},
+				#{padLocationAddress.crtDate,jdbcType=TIMESTAMP},
+				#{padLocationAddress.crtUser,jdbcType=VARCHAR},
+				#{padLocationAddress.lstUpdUser,jdbcType=VARCHAR},
+				#{padLocationAddress.lstUpdDate,jdbcType=TIMESTAMP}
+				from dual)
+		</foreach>
+	</insert>
+	
+	<insert id="insertPLA" parameterType ="com.huaxia.opas.domain.sysparm.BatchfileInfo">
+		insert into OPAS_PLA_BATCHUPLOAD_INFO (ID, FILE_NAME, INPUT_TIME, 
+	      INPUT_COUNTS, FILE_TYPE, OPERAT_CODE, 
+	      OPERATOR, REMARK
+	      )
+	    values (#{id,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, 
+	      #{inputCounts,jdbcType=DECIMAL}, #{fileType,jdbcType=CHAR}, #{operatCode,jdbcType=VARCHAR}, 
+	      #{operator,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+     	 )
+	</insert>
+
+</mapper>

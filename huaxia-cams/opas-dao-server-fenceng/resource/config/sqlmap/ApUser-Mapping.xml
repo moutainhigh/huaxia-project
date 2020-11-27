@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ApUser">
+	<resultMap id="ApUserResultMap" type="com.huaxia.opas.domain.system.ApUser">
+		<id column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		<result column="USER_PASSWORD" property="userPassword"
+			jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="APPLYER_SEX" property="applyerSex" jdbcType="VARCHAR" />
+		<result column="CELLPHONE" property="cellphone" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="TIMESTAMP" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+		<result column="YDJ_LIMIT_LEVEL" property="ydjLimitLevel"
+			jdbcType="DECIMAL" />
+		<result column="TELEPHONE" property="telephone" jdbcType="VARCHAR" />
+		<result column="BZK_LIMIT_LEVEL" property="bzkLimitLevel"
+			jdbcType="DECIMAL" />
+		<result column="USER_VALIDITY_PERRIOD" property="userValidityPerriod"
+			jdbcType="TIMESTAMP" />
+		<result column="IP_ADDR" property="ipAddr" jdbcType="VARCHAR" />
+		<result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+		<result column="TEAM" property="team" jdbcType="VARCHAR" />
+		<result column="USER_GROUP" property="userGroup" jdbcType="VARCHAR" />
+		<result column="STATION" property="station" jdbcType="VARCHAR" />
+		<result column="FILE_RIGHT_CONTROL" property="fileRightControl" jdbcType="VARCHAR" />
+		<result column="FILE_UPLOAD_CONTROL" property="fileUploadControl" jdbcType="VARCHAR" />
+		<result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+		<result column="SESSION_ID" property="sessionId" jdbcType="VARCHAR" />
+		<result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP" />
+		<result column="LOGIN_STATUS" property="loginStatus" jdbcType="CHAR" />
+		<result column="LOGIN_FAIL_NUM" property="loginFailNum" jdbcType="DECIMAL" />
+		<result column="LOGIN_FAIL_TIME" property="loginFailTime" jdbcType="TIMESTAMP" />
+		<result column="PASSWORD_FLAG" property="passwordFlag" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<delete id="deleteApUserByUserId" parameterType="java.lang.String">
+		delete from
+		OPAS_AP_USER
+		where USER_ID = #{userId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertApUser" parameterType="com.huaxia.opas.domain.system.ApUser">
+		insert into OPAS_AP_USER
+		(USER_ID, USER_CODE,
+		USER_PASSWORD,
+		USER_NAME, APPLYER_SEX, CELLPHONE,
+		EMAIL, STATUS, CRT_DATE,
+		CRT_TIME, CRT_USER, LST_UPD_USER,LST_UPD_TIME,
+		LST_UPD_DATE, BATCH_DATE, REC_STATUS,
+		SCR_LEVEL, YDJ_LIMIT_LEVEL,
+		TELEPHONE,
+		BZK_LIMIT_LEVEL, USER_VALIDITY_PERRIOD, IP_ADDR,
+		DEPARTMENT,
+		TEAM, USER_GROUP,
+		STATION,
+		FILE_RIGHT_CONTROL,FILE_UPLOAD_CONTROL)
+		values (
+		#{userId,jdbcType=VARCHAR},
+		#{userCode,jdbcType=VARCHAR},
+		#{userPassword,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR},
+		#{applyerSex,jdbcType=VARCHAR},
+		#{cellphone,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		CURRENT_TIMESTAMP,
+		CURRENT_DATE,
+		#{batchDate,jdbcType=TIMESTAMP},
+		'0',
+		'00',
+		#{scrLevel,jdbcType=CHAR},
+		#{ydjLimitLevel,jdbcType=DECIMAL},
+		#{telephone,jdbcType=VARCHAR},
+		#{bzkLimitLevel,jdbcType=DECIMAL},
+		#{userValidityPerriod,jdbcType=TIMESTAMP},
+		#{ipAddr,jdbcType=VARCHAR},
+		#{department,jdbcType=VARCHAR},
+		#{team,jdbcType=VARCHAR},
+		#{userGroup,jdbcType=VARCHAR},
+		#{station,jdbcType=VARCHAR},
+		#{fileRightControl,jdbcType=VARCHAR},
+		#{fileUploadControl,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertApUserSelective" parameterType="com.huaxia.opas.domain.system.ApUser">
+		insert into OPAS_AP_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				USER_ID,
+			</if>
+			<if test="userCode != null">
+				USER_CODE,
+			</if>
+			<if test="userPassword != null">
+				USER_PASSWORD,
+			</if>
+			<if test="userName != null">
+				USER_NAME,
+			</if>
+			<if test="applyerSex != null">
+				APPLYER_SEX,
+			</if>
+			<if test="cellphone != null">
+				CELLPHONE,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			CRT_DATE,
+			CRT_TIME,
+			<if test="crtUser != null">
+				CRT_USER,
+			</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER,
+			</if>
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			<if test="batchDate != null">
+				BATCH_DATE,
+			</if>
+			REC_STATUS,
+			SCR_LEVEL,
+			<if test="ydjLimitLevel != null">
+				YDJ_LIMIT_LEVEL,
+			</if>
+			<if test="telephone != null">
+				TELEPHONE,
+			</if>
+			<if test="bzkLimitLevel != null">
+				BZK_LIMIT_LEVEL,
+			</if>
+			<if test="userValidityPerriod != null">
+				USER_VALIDITY_PERRIOD,
+			</if>
+			<if test="ipAddr != null">
+				IP_ADDR,
+			</if>
+			<if test="department != null">
+				DEPARTMENT,
+			</if>
+			<if test="team != null">
+				TEAM,
+			</if>
+			<if test="userGroup != null">
+				USER_GROUP,
+			</if>
+			<if test="station != null">
+				STATION,
+			</if>
+			<if test="fileRightControl != null">
+				FILE_RIGHT_CONTROL,
+			</if>
+			<if test="fileUploadControl != null">
+				FILE_UPLOAD_CONTROL,
+			</if>
+			<if test="userLdnamber != null">
+				USER_LDNUMBER,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userPassword != null">
+				#{userPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="applyerSex != null">
+				#{applyerSex,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone != null">
+				#{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">#{lstUpdUser,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="batchDate != null">
+				#{batchDate,jdbcType=TIMESTAMP},
+			</if>
+			'0',
+			'00',
+			<if test="ydjLimitLevel != null">
+				#{ydjLimitLevel,jdbcType=DECIMAL},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="bzkLimitLevel != null">
+				#{bzkLimitLevel,jdbcType=DECIMAL},
+			</if>
+			<if test="userValidityPerriod != null">
+				#{userValidityPerriod,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ipAddr != null">
+				#{ipAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="department != null">
+				#{department,jdbcType=VARCHAR},
+			</if>
+			<if test="team != null">
+				#{team,jdbcType=VARCHAR},
+			</if>
+			<if test="userGroup != null">
+				#{userGroup,jdbcType=VARCHAR},
+			</if>
+			<if test="station != null">
+				#{station,jdbcType=VARCHAR},
+			</if>
+			<if test="fileRightControl != null">
+				#{fileRightControl,jdbcType=VARCHAR},
+			</if>
+			<if test="fileUploadControl != null">
+				#{fileUploadControl,jdbcType=VARCHAR},
+			</if>
+			<if test="userLdnamber != null">
+				#{userLdnamber,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateApUserSelective" parameterType="com.huaxia.opas.domain.system.ApUser">
+		update OPAS_AP_USER
+		<set>
+			<if test="userCode != null and userCode !='' ">
+				USER_CODE = #{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userPassword != null and userPassword !='' ">
+				USER_PASSWORD = #{userPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null and userName !='' ">
+				USER_NAME = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userLdnamber != null and userLdnamber  !='' ">
+				 USER_LDNUMBER = #{userLdnamber,jdbcType=VARCHAR},
+			</if>
+			<if test="applyerSex != null and applyerSex !='' ">
+				APPLYER_SEX = #{applyerSex,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone != null and cellphone !='' ">
+				CELLPHONE = #{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null and email !='' ">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status !='' ">
+				STATUS = #{status,jdbcType=CHAR},
+			</if>
+			<if test="lstUpdUser != null and lstUpdUser !='' ">
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null and batchDate !='' ">
+				BATCH_DATE = #{batchDate,jdbcType=TIMESTAMP},
+			</if>
+				YDJ_LIMIT_LEVEL = #{ydjLimitLevel,jdbcType=DECIMAL},
+				TELEPHONE = #{telephone,jdbcType=VARCHAR},
+				BZK_LIMIT_LEVEL = #{bzkLimitLevel,jdbcType=DECIMAL},
+			<if test="userValidityPerriod != null and userValidityPerriod !='' ">
+				USER_VALIDITY_PERRIOD =
+				#{userValidityPerriod,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ipAddr != null and ipAddr !='' ">
+				IP_ADDR = #{ipAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="department != null and department !='' ">
+				DEPARTMENT = #{department,jdbcType=VARCHAR},
+			</if>
+			<if test="team != null and team !='' ">
+				TEAM = #{team,jdbcType=VARCHAR},
+			</if>
+			<if test="userGroup != null and userGroup !='' ">
+				USER_GROUP = #{userGroup,jdbcType=VARCHAR},
+			</if>
+			<if test="station != null and station !='' ">
+				STATION = #{station,jdbcType=VARCHAR},
+			</if>
+			<if test="fileRightControl != null and fileRightControl !='' ">
+				FILE_RIGHT_CONTROL =
+				#{fileRightControl,jdbcType=VARCHAR},
+			</if>
+			<if test="fileUploadControl != null and fileUploadControl !='' ">
+				FILE_UPLOAD_CONTROL = #{fileUploadControl,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where USER_ID = #{userId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateApUser" parameterType="com.huaxia.opas.domain.system.ApUser">
+		update OPAS_AP_USER
+		set
+		USER_CODE = #{userCode,jdbcType=VARCHAR},
+		USER_PASSWORD =
+		#{userPassword,jdbcType=VARCHAR},
+		USER_NAME =
+		#{userName,jdbcType=VARCHAR},
+		APPLYER_SEX =
+		#{applyerSex,jdbcType=VARCHAR},
+		CELLPHONE =
+		#{cellphone,jdbcType=VARCHAR},
+		EMAIL = #{email,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=CHAR},
+		LST_UPD_USER =
+		#{lstUpdUser,jdbcType=VARCHAR},
+		LST_UPD_DATE = CURRENT_DATE,
+		LST_UPD_TIME = CURRENT_TIMESTAMP,
+		BATCH_DATE =
+		#{batchDate,jdbcType=TIMESTAMP},
+		REC_STATUS =
+		#{recStatus,jdbcType=CHAR},
+		SCR_LEVEL = #{scrLevel,jdbcType=CHAR},
+		YDJ_LIMIT_LEVEL = #{ydjLimitLevel,jdbcType=DECIMAL},
+		TELEPHONE =
+		#{telephone,jdbcType=VARCHAR},
+		BZK_LIMIT_LEVEL =
+		#{bzkLimitLevel,jdbcType=DECIMAL},
+		USER_VALIDITY_PERRIOD =
+		#{userValidityPerriod,jdbcType=TIMESTAMP},
+		IP_ADDR =
+		#{ipAddr,jdbcType=VARCHAR},
+		DEPARTMENT =
+		#{department,jdbcType=VARCHAR},
+		TEAM = #{team,jdbcType=VARCHAR},
+		USER_GROUP = #{userGroup,jdbcType=VARCHAR},
+		STATION =
+		#{station,jdbcType=VARCHAR},
+		FILE_RIGHT_CONTROL =
+		#{fileRightControl,jdbcType=VARCHAR},
+		FILE_UPLOAD_CONTROL = #{fileUploadControl,jdbcType=VARCHAR}
+		where USER_ID =
+		#{userId,jdbcType=VARCHAR}
+	</update>
+		<update id="updateApUserFailNumAndFailTime" parameterType="com.huaxia.opas.domain.system.ApUser">
+		UPDATE OPAS_AP_USER
+		SET
+		LOGIN_FAIL_NUM = #{loginFailNum,jdbcType=DECIMAL},
+        LOGIN_FAIL_TIME = #{loginFailTime,jdbcType=TIMESTAMP}
+		WHERE USER_CODE =#{userCode,jdbcType=VARCHAR}
+	</update>
+	<select id="queryApUserByUserId" parameterType="java.lang.String"
+		resultMap="ApUserResultMap">
+		select
+		USER_ID,
+		USER_CODE,
+		USER_PASSWORD,
+		USER_NAME,
+		APPLYER_SEX,
+		CELLPHONE,
+		EMAIL,
+		STATUS,
+		LST_UPD_USER,
+		LST_UPD_DATE,
+		LST_UPD_TIME,
+		BATCH_DATE,
+		SCR_LEVEL,
+		REC_STATUS,
+		YDJ_LIMIT_LEVEL,
+		TELEPHONE,
+		BZK_LIMIT_LEVEL,
+		USER_VALIDITY_PERRIOD,
+		IP_ADDR,
+		DEPARTMENT,
+		TEAM,
+		USER_GROUP,
+		STATION,
+		FILE_RIGHT_CONTROL,
+		FILE_UPLOAD_CONTROL
+		from OPAS_AP_USER
+		where USER_ID =
+		#{userId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryApUserByUserCode" parameterType="java.lang.String"
+		resultMap="ApUserResultMap">
+		select
+		USER_ID,
+		USER_CODE,
+		USER_PASSWORD,
+		USER_NAME,
+		APPLYER_SEX,
+		CELLPHONE,
+		EMAIL,
+		STATUS,
+		LST_UPD_USER,
+		LST_UPD_DATE,
+		LST_UPD_TIME,
+		BATCH_DATE,
+		SCR_LEVEL,
+		REC_STATUS,
+		YDJ_LIMIT_LEVEL,
+		TELEPHONE,
+		BZK_LIMIT_LEVEL,
+		USER_VALIDITY_PERRIOD,
+		IP_ADDR,
+		DEPARTMENT,
+		TEAM,
+		USER_GROUP,
+		STATION,
+		FILE_RIGHT_CONTROL,
+		LOGIN_FAIL_NUM,
+		LOGIN_FAIL_TIME,
+		PASSWORD_FLAG,
+		FILE_UPLOAD_CONTROL
+		from OPAS_AP_USER
+		where USER_CODE =
+		#{userCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryUserCodeCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_USER
+		where USER_CODE =
+		#{userCode,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updatePassword" parameterType="com.huaxia.opas.domain.system.ApUser">
+		update OPAS_AP_USER
+		<set>
+			USER_PASSWORD = #{userPassword,jdbcType=VARCHAR},
+			PASSWORD_FLAG = '0'
+		</set>
+		where USER_CODE = #{userCode,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryAllApUser" resultMap="ApUserResultMap">
+		select USER_ID, USER_CODE,
+		USER_PASSWORD,
+		USER_NAME, APPLYER_SEX, CELLPHONE,
+		EMAIL, STATUS,
+		CRT_DATE,
+		CRT_TIME, CRT_USER, LST_UPD_USER,LST_UPD_TIME,
+		LST_UPD_DATE,
+		BATCH_DATE, REC_STATUS,
+		SCR_LEVEL, YDJ_LIMIT_LEVEL,
+		TELEPHONE,
+		BZK_LIMIT_LEVEL, USER_VALIDITY_PERRIOD, IP_ADDR,
+		DEPARTMENT,
+		TEAM,
+		USER_GROUP,
+		STATION,
+		FILE_RIGHT_CONTROL,FILE_UPLOAD_CONTROL from OPAS_AP_USER
+	</select>
+	<update id="updateFileRightControlBatch" parameterType="com.huaxia.opas.domain.system.ApUser">
+		update OPAS_AP_USER
+		<set>
+			FILE_RIGHT_CONTROL =
+			concat(FILE_RIGHT_CONTROL,concat('|',#{fileRightControl,jdbcType=VARCHAR}))
+		</set>
+		where USER_ID = #{userId}
+	</update>
+	<select id="queryUserByThreeApRole" parameterType="java.util.Map" resultMap="ApUserResultMap">
+		select distinct a.USER_ID, a.USER_CODE,
+			a.USER_PASSWORD,
+			a.USER_NAME, a.APPLYER_SEX, a.CELLPHONE,
+			a.EMAIL, a.STATUS,
+			a.CRT_DATE,
+			a.CRT_TIME, a.CRT_USER, a.LST_UPD_USER,a.LST_UPD_TIME,
+			a.LST_UPD_DATE,
+			a.BATCH_DATE, a.REC_STATUS,
+			a.SCR_LEVEL, a.YDJ_LIMIT_LEVEL,
+			a.TELEPHONE,
+			a.BZK_LIMIT_LEVEL, a.USER_VALIDITY_PERRIOD, a.IP_ADDR,
+			a.DEPARTMENT,
+			a.TEAM,
+			a.USER_GROUP,
+			a.STATION,
+			a.FILE_RIGHT_CONTROL,b.role_code,a.FILE_UPLOAD_CONTROL
+		from OPAS_AP_USER a, opas_ap_role b, OPAS_AP_USER_ROLE c,OPAS_AP_USER_ORG d
+		 where a.user_id = c.user_id
+		   and c.role_id = b.role_id
+		   and a.user_id = d.user_id
+		   and a.status = '1'
+		   and b.status = '1'
+		   and b.role_code in (${roleCode})
+		   and d.org_id = (select cc.org_id
+		                     from OPAS_AP_USER aa, OPAS_AP_USER_ORG cc
+		                    where aa.user_id = cc.user_id
+		                      and aa.user_code = #{userCode})
+		 	<if test="selectName !=null and selectName !=''">
+			and a.USER_NAME like '${selectName}%'
+		    </if>
+		   order by b.role_code,user_code
+	</select>
+	<select id="queryUserByZSJ" parameterType="java.util.Map" resultMap="ApUserResultMap">
+		select sa.USER_ID, sa.USER_CODE,
+			sa.USER_PASSWORD,
+			sa.USER_NAME, sa.APPLYER_SEX, sa.CELLPHONE,
+			sa.EMAIL, sa.STATUS,
+			sa.CRT_DATE,
+			sa.CRT_TIME, sa.CRT_USER, sa.LST_UPD_USER,sa.LST_UPD_TIME,
+			sa.LST_UPD_DATE,
+			sa.BATCH_DATE, sa.REC_STATUS,
+			sa.SCR_LEVEL, sa.YDJ_LIMIT_LEVEL,
+			sa.TELEPHONE,
+			sa.BZK_LIMIT_LEVEL, sa.USER_VALIDITY_PERRIOD, sa.IP_ADDR,
+			sa.DEPARTMENT,
+			sa.TEAM,
+			sa.USER_GROUP,
+			sa.STATION,
+			sa.FILE_RIGHT_CONTROL
+		  from (select a.*
+		          from OPAS_AP_USER      a,
+		               opas_ap_role      b,
+		               OPAS_AP_USER_ROLE c,
+		               OPAS_AP_USER_ORG  d
+		         where a.user_id = c.user_id
+		           and c.role_id = b.role_id
+		           and a.user_id = d.user_id
+		           and a.status = '1'
+		           and b.status = '1'
+		           and b.role_code in (${roleCode})
+		           and d.org_id = (select cc.org_id
+		                             from OPAS_AP_USER     aa,
+		                                  OPAS_AP_USER_ORG cc
+		                            where aa.user_id = cc.user_id
+		                              and aa.user_code = #{userCode})) sa,
+		       opas_ap_role sb,
+		       OPAS_AP_USER_ROLE sc
+		 where sa.user_id = sc.user_id
+		   and sc.role_id = sb.role_id
+		   and sa.status = '1'
+		   and sb.status = '1'
+		   and sb.role_code = 'DO40'
+	</select>
+	<select id="queryUserCodeByUserId" parameterType="java.lang.String" resultMap="ApUserResultMap">
+	select s.user_name,s.user_code, s.role_code, s.ydj_limit_level,s.bzk_limit_level
+	  from (
+			select distinct a.user_name,a.user_code,b.role_code,a.ydj_limit_level,a.bzk_limit_level
+			from OPAS_AP_USER a,
+				opas_ap_role b,
+				OPAS_AP_USER_ROLE c
+			where a.user_id = c.user_id 
+				and c.role_id = b.role_id
+				and a.status = '1'
+				and b.status = '1'
+				and b.role_code in ('L1','L2','L3')
+		    	and a.user_code = #{userCode}
+		    	order by b.role_code desc
+		    ) s
+	 where rownum = 1
+	</select>
+	<!-- 查询当前用户是否是征审合一的角色 -->
+	<select id="queryCurrUserCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(distinct b.role_code)
+		from OPAS_AP_USER a,
+			opas_ap_role b,
+			OPAS_AP_USER_ROLE c
+		where a.user_id = c.user_id 
+			and c.role_id = b.role_id
+			and a.status = '1'
+			and b.status = '1'
+			and b.role_code = 'HY'
+	    	and a.user_code = #{userCode}
+	    order by b.role_code desc
+	</select>
+	<select id="queryAllUserByRoleCode" parameterType="java.util.Map" resultMap="ApUserResultMap">
+		select distinct a.USER_CODE,
+			a.USER_NAME,
+			b.role_code
+		from OPAS_AP_USER a,
+			opas_ap_role b,OPAS_AP_USER_ROLE c
+		where a.user_id = c.user_id 
+		and c.role_id = b.role_id
+		and a.status = '1'
+		and b.status = '1'
+		and b.role_code in ('L1','L2','L3')
+		<if test="selectName !=null and selectName !=''">
+			and a.USER_NAME like '${selectName}%'
+		</if>
+		order by b.role_code desc
+	</select>
+	<!-- 查询所有拥有征信角色的人 -->
+	<select id="queryZXAllUserByRoleCode" parameterType="java.util.Map" resultMap="ApUserResultMap">
+		select distinct a.USER_CODE,
+			a.USER_NAME,
+			b.role_code
+		from OPAS_AP_USER a,
+			opas_ap_role b,OPAS_AP_USER_ROLE c
+		where a.user_id = c.user_id 
+		and c.role_id = b.role_id
+		and a.status = '1'
+		and b.status = '1'
+		and b.role_code ='CI'
+		<if test="selectName !=null and selectName !=''">
+			and a.USER_NAME like '${selectName}%'
+		</if>
+		order by b.role_code desc
+	</select>
+	<!-- 用于单点登入   shihuan  2017-05-05 -->
+	<update id="updateApUserByLogin" parameterType="com.huaxia.opas.domain.system.ApUser">
+		update OPAS_AP_USER
+		set
+		SESSION_ID = #{sessionId,jdbcType=VARCHAR},
+		LOGIN_TIME = #{loginTime,jdbcType=TIMESTAMP},
+		LOGIN_STATUS = #{loginStatus,jdbcType=CHAR}
+		where USER_ID =#{userId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryConfApUserByUserCode" parameterType="java.util.Map"
+		resultMap="ApUserResultMap">
+		select
+			USER_ID,
+			USER_CODE,
+			USER_NAME,
+			FILE_RIGHT_CONTROL,FILE_UPLOAD_CONTROL
+		from OPAS_AP_USER
+		where 1=1
+		<if test="userName !=null and userName !=''">
+			and instr(USER_NAME,#{userName}) > 0
+		</if>
+		<if test="fileRightControl !=null and fileRightControl !=''">
+			and instr(FILE_RIGHT_CONTROL,#{fileRightControl}) > 0
+		</if>
+	</select>
+	<select id="queryConfUserCodeCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_USER
+		where 1=1
+		<if test="userName !=null and userName !=''">
+			and instr(USER_NAME,#{userName}) > 0
+		</if>
+		<if test="fileRightControl !=null and fileRightControl !=''">
+			and instr(FILE_RIGHT_CONTROL,#{fileRightControl}) > 0
+		</if>
+	</select>
+	
+	<select id="queryTime" resultType="java.util.Map">
+		select to_char(SYSDATE,'yyyy-MM-dd') as time from dual
+	</select>
+</mapper>

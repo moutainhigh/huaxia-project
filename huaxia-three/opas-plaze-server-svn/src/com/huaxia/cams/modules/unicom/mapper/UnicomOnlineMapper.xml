@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.cams.modules.unicom.mapper.UnicomOnlineMapper">
+
+	<select id="selectCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM TRD_OPERATOR_ONLINE WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+	
+	<insert id="insertUnicomOnline" parameterType="com.huaxia.cams.modules.unicom.domain.UnicomOnline">
+		INSERT INTO TRD_OPERATOR_ONLINE (
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			APP_ID,
+			CODE,
+			RESULT_DATA,
+			STATUS,
+			ERROR_DESC,
+			CARRIER
+		) VALUES (
+			sys_guid(),
+			sysdate,
+			#{crtUser, jdbcType = VARCHAR},
+			#{appId, jdbcType = CHAR},
+			#{code, jdbcType = VARCHAR},
+			#{checkResult, jdbcType = VARCHAR},
+			#{status, jdbcType = VARCHAR},
+			#{errorDesc, jdbcType = VARCHAR},
+			#{carrier, jdbcType = VARCHAR}
+		)	
+	</insert>
+	
+</mapper>

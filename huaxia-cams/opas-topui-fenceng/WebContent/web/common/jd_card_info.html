@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>京东小白卡</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId = GetQueryString("appId");
+		var jdCardInfoForm=$("#jdCardInfoForm");
+		$cf.ajax({
+			data : {
+				"appId" : appId
+			},
+			url : "/opas-naps/systemDecision_jdCardInfo_view.json",
+			onSuccess : function(res) {
+				var cardInfo = res.RSP_BODY.cardInfo;
+				console.log(cardInfo);
+				jdCardInfoForm.form("load", cardInfo);
+				$("#infoFlag").val(valueChangeInfoFlag(cardInfo.infoFlag));
+				$("#buyCycle").val(valueChangeBuyCycle(cardInfo.buyCycle));
+				$("#useActive").val(valueChangeUseActive(cardInfo.useActive));
+				$("#buyLevle").val(valueChangeBuyLevle(cardInfo.buyLevle));				
+				$("#isUsenameWhtname").val(valueChangeIsUsenameWhtname(cardInfo.isUsenameWhtname));
+				$("#isUsetelWhttel").val(valueChangeIsUsenameWhtname(cardInfo.isUsetelWhttel));
+				$("#isUseidnoWhtidno").val(valueChangeIsUsenameWhtname(cardInfo.isUseidnoWhtidno));
+				$("#isUsetelMalltel").val(valueChangeIsUsenameWhtname(cardInfo.isUsetelMalltel));
+				$("#isBlackIdno").val(valueChangeIsUsenameWhtname(cardInfo.isBlackIdno));
+				$("#isBlackTel").val(valueChangeIsUsenameWhtname(cardInfo.isBlackTel));
+				$("#whtLimit").val(valueChangeWhtLimit(cardInfo.whtLimit));
+				$("#whtUsetype").val(valueChangeWhtUsetype(cardInfo.whtUsetype));
+				$("#whtRefusetype").val(valueChangeWhtRefusetype(cardInfo.whtRefusetype));
+				$("#isdueCurrwht").val(valueChangeIsUsenameWhtname(cardInfo.isdueCurrwht));
+				$("#whtMaxhisDuedays").val(valueChangeWhtMaxhisDuedays(cardInfo.whtMaxhisDuedays));
+			}
+		});
+
+	});
+	/*************信息验证标示***************/
+	function valueChangeInfoFlag(obj){
+		var info = '';
+		if(obj!=''&&obj!=null&&obj!=undefined){
+			var name1 = obj.substr(0,1);
+			var name2 = obj.substr(1,2);
+			var name3 = obj.substr(2,3);
+			if(name1=="1"){
+				 info = info+"实名验证  ";
+			}if(name2=="1"){
+				 info = info+"短信验证  ";
+			}if(name3=="1"){
+				 info = info+"手机实名验证";
+			}
+		}else{
+			info = "未命中";
+		}
+		return info;
+	}
+	/*************网购网龄***************/
+	function valueChangeBuyCycle(obj){
+		if(obj=='1'){
+			return "3个月内";
+		}else if(obj=='2'){
+			return "3-6个月";
+		}else if(obj=='3'){
+			return "6-12个月";
+		}else if(obj=='4'){
+			return "12-24个月";
+		}else if(obj=='5'){
+			return "24-36个月";
+		}else if(obj=='6'){
+			return "36+";
+		}else if(obj=='-1'){
+			return "未定义";
+		}
+	}
+	/*************用户活跃度***************/
+	function valueChangeUseActive(obj){
+		if(obj=='1'){
+			return "高";
+		}else if(obj=='2'){
+			return "中";
+		}else if(obj=='3'){
+			return "低";
+		}else if(obj=='-1'){
+			return "未定义";
+		}
+	}
+	/*************购买力等级***************/
+	function valueChangeBuyLevle(obj){
+		if(obj=='1'){
+			return "低等级";
+		}else if(obj=='2'){
+			return "中等级";
+		}else if(obj=='3'){
+			return "高等级";
+		}else if(obj=='-1'){
+			return "未定义";
+		}else if(obj=='0'){
+			return "无法判断";
+		}
+	}
+	/**用户填写姓名与白条激活姓名是否一致
+	**用户填写手机号与白条激活手机是否一致
+	**用户填写身份证号与白条激活身份证号是否一致
+	**用户填写手机号与商城注册手机是否一致
+	**身份证号是否黑名单
+	**手机号是否黑名单
+	***************/
+	function valueChangeIsUsenameWhtname(obj){
+		if(obj=='1'){
+			return "是";
+		}else if(obj=='-1'){
+			return "未定义";
+		}else if(obj=='0'){
+			return "否";
+		}
+	}
+	/*************白条额度***************/
+	function valueChangeWhtLimit(obj){
+		if(obj=='1'){
+			return "(0,2000]";
+		}else if(obj=='2'){
+			return "(2000,4000]";
+		}else if(obj=='3'){
+			return "(4000,6000]";
+		}else if(obj=='4'){
+			return "(6000,8000]";
+		}else if(obj=='5'){
+			return "(8000,+∞]";
+		}else if(obj=='-1'){
+			return "未定义";
+		}else if(obj=='0'){
+			return "[0]";
+		}
+	}
+	/*************白条用户类别***************/
+	function valueChangeWhtUsetype(obj){
+		if(obj=='1'){
+			return "白条使用";
+		}else if(obj=='2'){
+			return "中低";
+		}else if(obj=='3'){
+			return "中";
+		}else if(obj=='4'){
+			return "中高";
+		}else if(obj=='5'){
+			return "高";
+		}else if(obj=='-1'){
+			return "未定义";
+		}else if(obj=='0'){
+			return "无";
+		}
+	}
+	/*************白条拒绝原因类别***************/
+	function valueChangeWhtRefusetype(obj){
+		if(obj=='1'){
+			return "资质拒绝";
+		}else if(obj=='2'){
+			return "黑名单拒绝";
+		}else if(obj=='3'){
+			return "风控拒绝";
+		}else if(obj=='-1'){
+			return "未定义";
+		}
+	}
+	/*************白条历史逾期最高天数***************/
+	function valueChangeWhtMaxhisDuedays(obj){
+		if(obj=='M1'){
+			return "(0-30天)";
+		}else if(obj=='M2'){
+			return "(30-60天)";
+		}else if(obj=='M3'){
+			return "(60-90天)";
+		}else if(obj=='M4'){
+			return "(90天+)";
+		}else if(obj=='-1'){
+			return "未定义";
+		}else if(obj=='M0'){
+			return "(0天)";
+		}
+	}
+	
+</script>
+<body >
+<fieldset>
+	<legend>京东小白卡</legend>
+	<form id="jdCardInfoForm">
+		<table  style="border-collapse: separate; border-spacing: 10px;">
+<!-- 				style="border-collapse: separate; border-spacing: 10px;">
+ -->				<tr>
+					<td>信息验证标识:</td>
+					<td><input type="text" name="infoFlag" id="infoFlag" readonly="true" > </td>
+					<td>小白信用分:</td>
+					<td><input type="text" name="creditScore" id="creditScore" class="easyui-numberbox" readonly="true"></td>
+				</tr>
+				<tr>
+					<td>网购账龄(月):</td>
+					<td><input type="text" name="buyCycle" id="buyCycle" readonly="true"></td>
+					<td>用户活跃度:</td>
+					<td><input type="text" name="useActive" id="useActive" readonly="true"></td>
+				</tr>
+				<tr>
+					<td>购买力等级:</td>
+					<td><input type="text" name="buyLevle" id="buyLevle" readonly="true"></td>
+					<td>用户填写姓名与白条激活姓名是否一致:</td>
+					<td><input type="text" name="isUsenameWhtname" id="isUsenameWhtname" readonly="true"></td>
+				</tr><tr>
+					<td>用户填写手机号与白条激活手机是否一致:</td>
+					<td><input type="text"name="isUsetelWhttel" id="isUsetelWhttel" readonly="true"></td>
+					<td>用户填写身份证号与白条激活身份证号是否一致:</td>
+					<td><input type="text" name="isUseidnoWhtidno" id="isUseidnoWhtidno" readonly="true"></td>
+				</tr><tr>
+					<td>用户填写手机号与商城注册手机是否一致:</td>
+					<td><input type="text" name="isUsetelMalltel" id="isUsetelMalltel" readonly="true"></td>
+					<td>身份证号是否黑名单:</td>
+					<td><input type="text" name="isBlackIdno" id="isBlackIdno" readonly="true"></td>
+				</tr>
+				<tr>
+					<td>手机号是否黑名单：</td>
+					<td><input type="text" name="isBlackTel" id="isBlackTel" readonly="true"></td>
+					<td>白条额度：</td>
+					<td><input type="text" name="whtLimit" id="whtLimit" readonly="readonly"></td>
+				</tr>
+				<tr>
+					<td>白条用户类别：</td>
+					<td><input type="text" name="whtUsetype" id="whtUsetype" readonly="true"></td>
+					<td>白条拒绝原因类别：</td>
+					<td><input type="text" name="whtRefusetype" id="whtRefusetype" readonly="readonly"></td>
+				</tr>
+				<tr>
+					<td>白条当前是否逾期：</td>
+					<td><input type="text" name="isdueCurrwht" id="isdueCurrwht" readonly="true"></td>
+					<td>白条历史最高逾期天数：</td>
+					<td><input type="text" name="whtMaxhisDuedays" id="whtMaxhisDuedays" readonly="readonly"></td>
+				</tr>
+			</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

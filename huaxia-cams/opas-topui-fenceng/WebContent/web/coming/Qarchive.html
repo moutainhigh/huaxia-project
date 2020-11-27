@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding:10px;scroll:auto;">
+	<div style="height:690px;overflow-y:auto;">
+	<table id="tblInfo" title="申请件查询页面" class="easyui-datagrid"
+		style="width: 98%;height:100%"
+		data-options="rownumbers:true,singleSelect:true,url:'',pagination:true,fitColumns:true,pageSize:20,
+		pageList:[15,20,50],loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion',onLoadSuccess:function(data){
+			if(data.msg!=null&&data.msg!='')
+				{alert(data.msg)};
+		}">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">选择</th>
+				<th field="appId"  width="11%"  align="center" data-options="formatter:formatOper">流水号</th>
+				<th field="c1Cname" width="9%"  align="center">客户姓名</th>
+				<th field="c1Idnbr"  width="13%" align="center">证件号码</th>
+				<th field="c2Cname"  width="9%" align="center">附卡客户名</th>
+				<th field="c2Idnbr"  width="14%" align="center">附卡证件号码</th>
+				<th field="patchCode"  width="9%"  align="center">补件码</th>
+				<th field="operateDesc" width="26%"  align="center" data-options="formatter:formatStatus">当前状态</th>
+				<th field="ydjFlag" width="5%"  align="center"  hidden="true" ></th>
+				<th field="appProd" width="10%"  align="center" hidden="true"></th>  <!-- 商品易达金85 , 其它：80,82,83,84  --> 
+				<th field="remark" width="4%" align="center"
+					data-options="formatter:formatRemark">备注</th>
+				<th field="matchingCardFlag" width="10%"  align="center"  hidden="true" ></th><!-- 套卡标识 -->
+				<th field="applicationFlag" width="1%"  align="center"  hidden="true" ></th>
+				<th field="flag" width="2%"  align="center"  hidden="true" ></th>
+				<th field="appResult" width="3%"  align="center"  hidden="true" ></th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: left" >
+		<form id="seachPositionCodeForm">
+			<table >
+				<tr >
+					<td width="30%">申请流水号:</td>
+					<td><input class="easyui-validatebox"  type="text" 
+							name="appId" id="appId"></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><a href="javascript:void(0);" class="easyui-linkbutton" id="btnCurrQuery">当前查询 </a>
+					&nbsp;
+					    <a href="javascript:void(0);" class="easyui-linkbutton" id="btnHistQuery">历史查询 </a>
+				    </td>
+				    </td>  
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+		var tblInfo = $("#tblInfo");
+		var showWindow = $("#winShow");
+		var editForm = $("#editForm");
+		var showForm = $("#showForm");
+		var appFlag = "";
+		var appId = "";
+		$(function(){
+			
+			// 当前查询
+			$('#btnCurrQuery').click(function() {
+				//表单序列化
+				var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+				var jsondata =overTrim(jsonFrom);
+				//判断是否输入查询条件
+				var flag=true;
+				for(var i=0;i<jsonFrom.length;i++){
+					if(jsonFrom[i].value!=null&&jsonFrom[i].value.trim()!=''){
+						flag=false;
+					}
+				}
+				if(flag){
+					alert("请至少输入一项要查询条件！");
+					return;
+				}    
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length<4){
+					alert("请至少输入4位流水号");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Cname!=null&&jsondata.c1Cname!=""&&jsondata.c1Cname.length<2){
+					alert("客户姓名，至少输入两个汉字");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Idnbr!=null&&jsondata.c1Idnbr!=""&&jsondata.c1Idnbr.length<6){
+					alert("请至少输入6位证件号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c2Cname!=null&&jsondata.c2Cname!=""&&jsondata.c2Cname.length<2){
+					alert("附属卡申请人姓名，至少输入两个汉字");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c2Idnbr!=null&&jsondata.c2Idnbr!=""&&jsondata.c2Idnbr.length<6){
+					alert("请至少输入6位附属卡申请人证件号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Mobile!=null&&jsondata.c1Mobile!=""&&jsondata.c1Mobile.length<3){
+					alert("请至少输入3位手机号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length==16){
+					appFlag = "2";
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length==15){
+					appFlag = "1";
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length<15){
+					appFlag = "0";
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length>16){
+					alert("流水号长度超过16位");
+					return;
+				}
+				jsondata['appFlag'] = appFlag;
+				//动态加载url
+				$("#tblInfo").datagrid('options').url='/opas-naps/query_current_info.json';
+				$("#tblInfo").datagrid('load', jsondata);
+			});
+			
+			// 历史查询
+			$('#btnHistQuery').click(function() {
+				//表单序列化
+				var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+				var jsondata =overTrim(jsonFrom);
+				//判断是否输入查询条件
+				var flag=true;
+				for(var i=0;i<jsonFrom.length;i++){
+					if(jsonFrom[i].value!=null&&jsonFrom[i].value.trim()!=''){
+						flag=false;
+					}
+				}
+				if(flag){
+					alert("请至少输入一项要查询条件！");
+					return;
+				}     
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length<4){
+					alert("请至少输入4位流水号");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Cname!=null&&jsondata.c1Cname!=""&&jsondata.c1Cname.length<2){
+					alert("客户姓名，至少输入两个汉字");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Idnbr!=null&&jsondata.c1Idnbr!=""&&jsondata.c1Idnbr.length<6){
+					alert("请至少输入6位证件号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c2Cname!=null&&jsondata.c2Cname!=""&&jsondata.c2Cname.length<2){
+					alert("附属卡申请人姓名，至少输入两个汉字");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c2Idnbr!=null&&jsondata.c2Idnbr!=""&&jsondata.c2Idnbr.length<6){
+					alert("请至少输入6位附属卡申请人证件号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.c1Mobile!=null&&jsondata.c1Mobile!=""&&jsondata.c1Mobile.length<3){
+					alert("请至少输入3位手机号码");
+					return;
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length==16){
+					appFlag = "2";
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length==15){
+					appFlag = "1";
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length<15){
+					appFlag = "0";
+				}
+				if(jsondata!=null&&jsondata!=''&&jsondata.appId!=null&&jsondata.appId!=""&&jsondata.appId.length>16){
+					alert("流水号长度超过16位");
+					return;
+				}
+				jsondata['appFlag'] = appFlag;
+				//动态加载url
+				$("#tblInfo").datagrid('options').url='/opas-naps/query_history_info.json';
+				$("#tblInfo").datagrid('load', jsondata);
+			});
+			
+		});
+		
+		function formatStatus(val,row,index){
+			if(row.flag=="4"&&row.appResult=="0"){
+				return "批准";
+			}else if (row.flag=="4"&&row.appResult=='1'){
+				return "拒绝";
+			}else{
+				return val;
+			}
+		}
+		//征信和授信审批详情查看
+		function formatOper(val, row, index) {
+			
+			var appId = val+"";
+			return "<a href=javascript:getInfo();>"+appId+"</a>";
+		}
+		
+		
+		//申请件全局信息备注信息查询
+		function formatRemark(val, row, index) {
+			 var remark = row.remark;
+			 if(remark == 0){
+				 return "";
+			 }else{
+				 return "<a href=javascript:getInfo1();>查看</a>"; 
+			 }
+		}
+		
+		function setData(data) {
+			editForm.form("load", data);
+			showForm.form("load", data);
+			$("#id").attr("readonly", "readonly");
+			$("#id").attr("disabled", "disabled");
+		}
+		
+		//关闭窗体
+		function onConcle(obj) {
+			var winObj = $("#" + obj);
+			winObj.window("close");
+		}
+		function getFormData(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value;
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+		}
+		
+		function showWindow(obj) {
+			var winObj = $("#" + obj);
+			winObj.window({
+				closed : false
+			});
+		}
+		function showWindow1(obj) {
+			var winObj = $("#" + obj);
+			winObj.window({
+				closed : false
+			});
+		}
+		
+		function getInfo() {
+			var infoObj = tblInfo.datagrid("getSelected");
+			var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+			appId = infoObj["appId"]; //动态传参数 appId 
+			var ydjFlag = infoObj["ydjFlag"]; //动态传参数 ydjFlag
+			var appProd = infoObj.appProd;  //商品易达金85 , 其它：80,82,83,84 
+			var matchingCardFlag = infoObj.matchingCardFlag;
+			var check_meuoFlag = "1";
+			if(ydjFlag=="1"){//1为易达金
+				if(matchingCardFlag=="1"){//易达金套的标准卡 check_meuoFlag
+					window.open("fastArchiving.html?appId="+appId+"&ydjFlag="+ydjFlag+"&check_meuoFlag="+check_meuoFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag,
+							"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-67));
+				}else{
+					window.open("fastArchiving.html?appId="+appId+"&ydjFlag="+ydjFlag+"&check_meuoFlag="+check_meuoFlag+"&appProd="+appProd+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag,
+							"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-67));
+					
+				}
+			}else {//2为非易达金
+				if(matchingCardFlag=="2"||matchingCardFlag=="1"){
+					window.open("fastArchiving.html?appId="+appId.substr(0,15) + "1"+"&ydjFlag="+ydjFlag+"&check_meuoFlag="+check_meuoFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag,
+							"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-67));	
+				}else{
+					window.open("fastArchiving.html?appId="+appId+"&ydjFlag="+ydjFlag+"&check_meuoFlag="+check_meuoFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag,
+							"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-67));	
+				}
+				
+			}
+			
+			// 操作留痕  appId
+			var menuName = self.frameElement.getAttribute("name");
+			operaMarkRecord(appId, menuName);
+		}
+		
+		// 后台记录操作留痕
+		function operaMarkRecord(appId, menuName) {
+			$cf.ajax({
+				url : "/opas-naps/opera_mark_record.json",
+				data : {
+					"appId" : appId,
+					"menuName" : menuName
+				}
+			});
+		}
+		
+		 function getInfo1() {
+			var infoObj = tblInfo.datagrid("getSelected");
+			var appIdObj = infoObj["appId"]; //动态传参数 appId 
+			window.open("apply_remark_view.html?appId ="+appIdObj,"_blank","channelmode=no,width=1300,height=600,scrollbars=yes,resizable=yes,top=200");	
+		} 
+		 function overTrim(dataObject) {
+				var jsonObject = '{';
+				var k = 0;
+				$.each(dataObject, function() {
+					k++;
+					var objName = this.name;
+					var objValue = this.value.trim();
+					jsonObject += '"' + objName + '":';
+					jsonObject += '"' + objValue + '"';
+					if (k < dataObject.length) {
+						jsonObject += ",";
+					}
+				});
+				jsonObject += '}';
+				return eval("(" + jsonObject + ")");
+		}
+</script>

@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblAddr" title="第三方任务监控" class="easyui-datagrid" style="width: 98%;height:100%"
+		data-options="rownumbers:true,singleSelect:false,checkOnSelect:false,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/monitor3rd_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead frozen="true">
+			<tr>
+				<th field="id" width="5%" align="center" checkbox="true">Id</th>
+				<th field="app_ID" width="10%" align="center">申请件编号</th>
+				<th field="name" width="5%" align="center">姓名</th>
+				<th field="identity_TYPE" width="6%" align="center">证件类型</th>
+				<th field="identity_NO" width="10%" align="center">证件号码</th>
+				<th field="task_TYPE" width="6%" align="center">任务类型</th>
+				<th field="task_STATUS" width="6%" align="center">任务状态</th>
+			</tr>
+		</thead>
+		<thead>
+			<tr>
+				<th field="process_ID" width="15%" align="center">流程编号</th>
+				<th field="node_ID" width="10%" align="center">节点编号</th>
+				<th field="time_STAMP" width="12%" align="center">任务创建时间</th>
+				<th field="minus" width="10%" align="center" name="minus" id="minus" data-options="formatter:valChange">任务等待时间(分钟)</th>
+				<th field="operate" width="5%" align="center" data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			申请件编号: <input class="easyui-textbox" style="width: 110px" name="app_ID" id="app_ID"> 
+			任务状态: <input class="easyui-textbox" style="width: 110px" name="task_STATUS" id="task_STATUS"> 
+			任务类型: <input class="easyui-textbox" style="width: 110px" name="task_TYPE" id="task_TYPE" >
+			<a  href="javascript:common.searchTbl('seachPositionCodeForm','tblAddr');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a	href="javascript:editOrg2();" class="easyui-linkbutton" iconCls="icon-ok">批量修改</a>&nbsp;
+		</form>
+			<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+	    </div>
+
+	<div id="winEdit" class="easyui-window" title="修改"
+		style="width: 350px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm" method="post">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">任务状态:</td>
+					<td><input class="easyui-numberbox" id="task_STATUS"
+						type="text" name="task_STATUS" ></input> 
+						<input type="hidden" name="app_ID" id="app_ID" />
+						<input type="hidden" name="task_TYPE" id="task_TYPE" /></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winEdit')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		</div>
+	</div>
+	
+	<div id="winEdit2" class="easyui-window" title="批量修改"
+		style="width: 350px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm2" method="post">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">任务状态:</td>
+					<td><input class="easyui-numberbox" id="task_STATUS2"
+						type="text" name="task_STATUS2" ></input> 
+						<input type="hidden" name="app_ID2" id="app_ID2" />
+						<input type="hidden" name="task_TYPE2" id="task_TYPE2" /></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winEdit2')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="updateStatus()">保存</a>
+		</div>
+	</div>
+
+</body>
+<script>
+    $cf.loadAllDict();//加载业务字典
+	var tblAddr = $("#tblAddr");
+	var editWindow = $("#winEdit");
+	var editWindow2 = $("#winEdit2");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var editForm2 = $("#editForm2");
+	var addForm = $("#addForm");
+	var fileWindow = $("#winFile");
+	var showForm = $("#showForm");
+	var selectWindow = $("#winShow");
+	function formatOper(val, row, index) {
+		return "&nbsp;<a href=javascript:editOrg();>修改</a>&nbsp";
+	}
+
+	//启用状态
+	function formatStatus(val, row, index) {
+		if (val == "1") {
+			return "启用";
+		} else if (val == "0") {
+			return "停用";
+		}
+	}
+	
+	//选中行临时存储变量
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+	 tblAddr.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})
+	
+	function addOrg() {
+		addWindow.window({
+			closed : false
+		});
+	}
+	
+	function editOrg() {
+		if(value.task_STATUS == '2'){
+			$.messager.alert("操作提示", "禁止修改任务状态为 2 的数据!", "error");
+			return null;
+		}
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+	}
+	
+	function editOrg2() {
+		var orgObj = tblAddr.datagrid("getChecked");
+		if(orgObj.length == 0){
+ 			$.messager.alert("操作提示", "请选择操作数据", "error");
+ 			return;
+ 		}
+		for(var i=0; i<orgObj.length; i++){
+			if(orgObj[i].task_STATUS == '2'){
+				$.messager.alert("操作提示", "禁止修改任务状态为 2 的数据!", "error");
+				return null;
+			}
+		}
+		editWindow2.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+		});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		showForm.form("load", data);
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+		//location.reload(true);
+	}
+
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+	 	if(jsondata.task_STATUS != null&&jsondata.task_STATUS != "" && jsondata.task_STATUS.trim().length >=0 ){
+	 		if(jsondata.task_STATUS.trim().length!=1){
+				$.messager.alert("操作提示", "失败:任务状态长度必须为1位数字!", "error");
+				return null;
+			}
+		}
+		$cf.ajax({
+			url : "/opas-naps/monitor3rd_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("修改成功！");
+					tblAddr.datagrid("reload");
+					onConcle("winEdit");
+				}else {
+					$.messager.alert("操作提示", "修改失败:" + data.exMsg, "error");
+					return;
+				}
+			}
+		});
+	}
+	
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function valChange(val, row, index) {
+		if(val >'10'){
+			return '<font color="red">'+val+'</font>';
+		} else{
+			return val;
+		}
+	}
+	
+	//批量修改
+	function updateStatus() {
+		var jsondata = getFormData(editForm2.serializeArray());
+		var orgObj = tblAddr.datagrid("getChecked");
+		var app_IDs = new Array();
+		var task_TYPEs = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			app_IDs.push(orgObj[i].app_ID);
+			task_TYPEs.push(orgObj[i].task_TYPE);
+		}
+				$cf.ajax({
+					url : "/opas-naps/updateStatusSelective.json",
+					data : {"app_IDs":app_IDs,"task_TYPEs":task_TYPEs,"task_STATUS":jsondata.task_STATUS2},
+					onSuccess : function(data) {
+						if(data.RSP_BODY.isSuccess){
+						top.$cf.showMsg("修改成功！");
+						tblAddr.datagrid("reload");
+						onConcle("winEdit2");
+						} else {
+							$.messager.alert("操作提示", "修改失败:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+	}
+
+	
+</script>

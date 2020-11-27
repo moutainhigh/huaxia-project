@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblInfo" title="申请件全局备注信息" class="easyui-datagrid"
+		style="width: 98%"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,pageSize:20,nowrap:false,
+		pageList:[15,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="code" width="15%" align="center" checkbox="true">选择</th>
+				<th field=appId width="15%" align="center">备注编号</th>
+				<th field="remarkInfo" width="20%"  align="center" >备注信息</th>
+				<th field="remarkUser" width="15%"  align="center">备注人姓名</th>
+				<th field="remarkTime"  width="15%" align="center">备注时间</th>
+				<th field="currNode"  width="15%" align="center">备注节点</th>
+			</tr>
+		</thead>
+	</table>
+</body>
+<script>
+		var tblInfo = $("#tblInfo");
+		var url = location.href;
+		var appId = url.split("=")[1];
+		$(function(){
+			//动态获取 Url和appId
+			var opts = tblInfo.datagrid("options");
+			opts.url = '/opas-naps/query_remark_info.json';
+			var data={"appId":appId};
+			tblInfo.datagrid("reload", data);
+		});
+		
+		
+		//关闭窗体
+		function onConcle(obj) {
+			var winObj = $("#" + obj);
+			winObj.window("close");
+		}
+		function getFormData(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value;
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+		}
+		
+		function showWindow(obj) {
+			var winObj = $("#" + obj);
+			winObj.window({
+				closed : false
+			});
+		}
+		
+		function getInfo() {
+			var infoObj = tblInfo.datagrid("getSelected");
+			showWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+				onBeforeOpen : setData(infoObj)
+			});
+		}
+		
+</script>

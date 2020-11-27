@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Monitor3rdLogList">
+	<resultMap id="Monitor3rdLogResultMap" type="com.huaxia.opas.domain.monitor.Monitor3rdLog">
+		<result column="APP_ID" jdbcType="CHAR" property="app_ID" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crt_TIME" />
+		<result column="MODULE_NAME" jdbcType="VARCHAR" property="module_NAME" />
+		<result column="FLAG_DISPOSE" jdbcType="CHAR" property="flag_DISPOSE" />
+		<result column="DISPOSE_RESULT_CODE" jdbcType="VARCHAR" property="dispose_RESULT_CODE" />
+		<result column="DISPOSE_RESULT_DESC" jdbcType="CLOB" property="dispose_RESULT_DESC" />
+	</resultMap>
+
+	<!--丁国峰 三方 monitor 日志监控 -->
+	<select id="queryMonitor3rdLogList" parameterType="com.huaxia.opas.domain.monitor.Monitor3rdLog"
+		resultMap="Monitor3rdLogResultMap">
+		select
+		APP_ID,
+		CRT_TIME,
+		MODULE_NAME,
+		FLAG_DISPOSE,
+		DISPOSE_RESULT_CODE,
+		DISPOSE_RESULT_DESC
+		from log_record_result
+		where
+		FLAG_DISPOSE = '1'
+		<if test="app_ID != null and app_ID !='' ">
+			AND
+			APP_ID = #{app_ID}
+		</if>
+		order by CRT_TIME desc
+	</select>
+
+	<!--丁国峰 三方 monitor 日志监控-->
+	<select id="queryMonitor3rdLogCount" parameterType="com.huaxia.opas.domain.monitor.Monitor3rdLog"
+		resultType="java.lang.Integer">
+		select count(1) from log_record_result
+		where
+		FLAG_DISPOSE = '1'
+		<if test="app_ID != null and app_ID !='' ">
+			AND
+			APP_ID = #{app_ID}
+		</if>
+	</select>
+
+</mapper>

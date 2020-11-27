@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp {
+	font-family: "宋体";
+	font-size: 10px
+}
+</style>
+</head>
+<body>
+	<div
+		data-options="region='north',title:'查询',border:false,icons:'icon-searh'"
+		style="height: 40px; overflow: hidden;">
+		<table class="report_outsource_tableForm datagrid-toolbar"
+			style="width: 100%; height: 100%">
+			<tr>
+				<td>开始日期:<input class="easyui-datebox" style="width: 110px"
+					name="beginDate" id="beginDate" /> 结束日期:<input
+					class="easyui-datebox" style="width: 110px" name="endDate"
+					id="endDate" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a
+					href="javascript:outsourceReportCount();" class="easyui-linkbutton"
+					iconCls="icon-search">查询</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div data-options="region:'center',border:false">
+		<table id="report_outsource_datagrid"></table>
+	</div>
+	<div id="outsourceDetailDiv" class="easyui-window" title="组员退件详情  明细查看"
+		style="width: 750px; height: 350px" top="45px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<table id="outsourceDetailTab" class="easyui-datagrid"
+			style="width: 99%">
+			<thead>
+				<tr>
+					<th field="id" width="5%" align="center" checkbox="true">ID</th>
+					<th field="appId" width="25%" align="center">流水号</th>
+					<th field="memo" width="75%" align="center">退件原因</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+	/* var d = new Date();
+	var str = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+	$('#beginDate').val(str);
+	$('#endDate').val(str); */
+
+	$(function() {
+		report_outsource_datagrid = $('#report_outsource_datagrid').datagrid({
+			url : "",
+			border : false,
+			animate : true,
+			pagination : true,
+			fitColumns : true,
+			singleSelect : true,
+			rownumbers : true,
+			pageSize : 15,
+			pageList : [ 15, 20, 50 ],
+			columns : [
+			[{
+				title : '姓名',
+				field : 'userName',
+				width : "12%",
+				halign : 'center',
+				rowspan : 2,
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			},
+			{
+				title : '当日提交量',
+				field : 'nowSubNum',
+				width : "6%",
+				halign : 'center',
+				rowspan : 2,
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			},
+			{
+				title : '当日归档量',
+				field : 'nowDetailNum',
+				width : "10%",
+				halign : 'center',
+				rowspan : 2,
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			},
+			{
+				title : '当日库存量',
+				field : 'nowInventoryNum',
+				width : "10%",
+				halign : 'center',
+				rowspan : 2,
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			},
+			{
+				title : '操作人',
+				field : 'userCode',
+				width : "10%",
+				halign : 'center',
+				hidden : true,
+				rowspan : 2,
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			},
+			{
+				title : '退件数量',
+				field : 'backNum',
+				formatter : function formatOper( val, row, index) {
+					if(val==0) {
+						return "<a>"+val+"</a>";
+					} else {
+						return "<a href=javascript:checkDetailedApp();>"+ val + "</a>";
+					}
+				},
+				width : "10%",
+				halign : 'center',
+				rowspan : 2,
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, {
+				title : '进入个人未完成队列申请件天数',
+				field : 'cretifiId',
+				width : "12%",
+				rowspan : 1,
+				colspan : 5,
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			} ], [ {
+				title : '1天',
+				field : 'oneDay',
+				width : "10%",
+				rowspan : 1,
+				colspan : 1,
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, {
+				title : '2天',
+				field : 'twoDay',
+				width : "10%",
+				rowspan : 1,
+				colspan : 1,
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, {
+				title : '3天',
+				field : 'threeDay',
+				width : "10%",
+				rowspan : 1,
+				colspan : 1,
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, {
+				title : '4天',
+				field : 'fourDay',
+				width : "10%",
+				rowspan : 1,
+				colspan : 1,
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, {
+				title : '5天',
+				field : 'fiveDay',
+				width : "10%",
+				rowspan : 1,
+				colspan : 1,
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, ] ]
+		});
+	});
+
+	function outsourceReportCount() {
+		var beginDate = $('#beginDate').datebox('getValue');
+		var endDate = $('#endDate').datebox('getValue');
+
+		if((beginDate==null||beginDate=="")||(endDate==null||endDate=="")){
+			alert("所选时间不能为空！");
+			return;
+		}
+		
+		var day = GetDateDiff(beginDate,endDate);
+		if (day>32){
+			alert("区间不能超过31天");
+			return;
+		}
+		var opts = $('#report_outsource_datagrid').datagrid("options");
+		opts.url = '/opas-naps/showOutsourceData.json';
+		var s = {
+			"beginDate" : beginDate,
+			"endDate" : endDate
+		};
+		$('#report_outsource_datagrid').datagrid("reload", s);
+	}
+
+	var outsourceDetailWindow = $("#outsourceDetailDiv");
+	function checkDetailedApp() {
+		var outsourceTab = $("#report_outsource_datagrid").datagrid("getSelected");
+		var userCode = outsourceTab.userCode;
+		var beginDate = $('#beginDate').datebox('getValue');
+		var endDate = $('#endDate').datebox('getValue');
+		$cf.ajax({
+			url : "/opas-naps/queryReturnNumInfo.json",
+			data : {
+				"userCode" : userCode,
+				"beginDate" : beginDate,
+				"endDate" : endDate
+			},
+			onSuccess : function(data) {
+				var dataMap = {
+					"rows" : data.RSP_BODY.rows,
+					"total" : data.RSP_BODY.total
+				};
+				$("#outsourceDetailTab").datagrid("loadData", dataMap);
+				$("#outsourceDetailTab").datagrid('getRows');
+				outsourceDetailWindow.window({
+					closed : false,
+					collapsible : false,
+					minimizable : false,
+				});
+			}
+		});
+	}
+
+	function GetDateDiff(startDate,endDate) {
+		
+		var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+		var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+		var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+		return dates;
+	}
+</script>
+
+</html>

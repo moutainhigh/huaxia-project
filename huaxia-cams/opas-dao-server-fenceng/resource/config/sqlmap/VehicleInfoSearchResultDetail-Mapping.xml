@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="VehicleInfoSearchResultDetail">
+	<select id="selectVehicleInfoSearchResultDetailDataByDate" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT t.QUERY_RESULT,t.STATUS,t.ERROR_CODE,t2.C1_CNAME,t.APP_ID,t2.C1C2_FLAG,#{choseClass} as RESULT
+		FROM VEHICLE_INFO t left join opas_biz_inp_appl_c1 t2 on t.APP_ID = t2.APP_ID
+		where t.crt_time &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+  		and t.crt_time &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+  	 <if test="choseClass == 'SELECT' ">
+			 order by t.crt_time desc
+	 </if>
+  	 <if test="choseClass == 'SELECTSUCCANDOWNVEHICLE' ">
+			 and t.QUERY_RESULT = '1' and t.STATUS = '1' order by t.crt_time desc
+	 </if>
+	 <if test="choseClass == 'SELECTSUCCANDNOVEHICLE' ">
+			 and t.QUERY_RESULT = '1' and t.STATUS = '0' order by t.crt_time desc
+	 </if>
+	 <if test="choseClass == 'SELECTFAIL' ">
+			 and (t.QUERY_RESULT = '-1' or (t.ERROR_CODE != '0' and t.ERROR_CODE != '40100')) order by t.crt_time desc
+	 </if>
+	 <if test="choseClass == 'NAMEANDCARDISNOTMATCH' ">
+			 and t.ERROR_CODE = '40100' order by t.crt_time desc
+	 </if>
+	</select>
+	
+	<select id="getCountVehicleInfoSearchResultDetailDataByDate" parameterType="java.util.Map"  resultType="java.lang.String">
+		select count(*) from VEHICLE_INFO t
+		where t.crt_time &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+  		and t.crt_time &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+  		<if test="choseClass == 'SELECTSUCCANDOWNVEHICLE' ">
+		and t.QUERY_RESULT = '1' and t.STATUS = '1'
+		</if>
+		<if test="choseClass == 'SELECTSUCCANDNOVEHICLE' ">
+		and t.QUERY_RESULT = '1' and t.STATUS = '0'
+		</if>
+		<if test="choseClass == 'SELECTFAIL' ">
+		and (t.QUERY_RESULT = '-1' or (t.ERROR_CODE != '0' and t.ERROR_CODE != '40100'))
+		</if>
+		<if test="choseClass == 'NAMEANDCARDISNOTMATCH' ">
+		and t.ERROR_CODE = '40100'
+		</if>
+	</select>
+	
+	<select id="getC2CnameFromTableC2" parameterType="java.util.Map"  resultType="java.lang.String">
+		select t.C2_CNAME from opas_biz_inp_appl_c2 t
+		where t.APP_ID = #{APP_ID}
+	</select>
+</mapper>

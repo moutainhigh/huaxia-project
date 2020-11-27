@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasPbocCreditCue">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.OpasPbocCreditCue">
+    <result column="INSIDE_APP_NO" jdbcType="CHAR" property="insideAppNo" />
+    <result column="PERSON_HOU_LOAN_NO" jdbcType="VARCHAR" property="personHouLoanNo" />
+    <result column="PERSON_COM_HOU_LOAN_NO" jdbcType="VARCHAR" property="personComHouLoanNo" />
+    <result column="OTHER_LOAN_NUM" jdbcType="VARCHAR" property="otherLoanNum" />
+    <result column="FRS_LOAN_GRANT_MON" jdbcType="VARCHAR" property="frsLoanGrantMon" />
+    <result column="CREDIT_CARD_ACCT_NUM" jdbcType="VARCHAR" property="creditCardAcctNum" />
+    <result column="FRS_CRED_CRD_ISSUE_MON" jdbcType="VARCHAR" property="frsCredCrdIssueMon" />
+    <result column="SEMI_CRED_ACCT_NUM" jdbcType="VARCHAR" property="semiCredAcctNum" />
+    <result column="FRS_SEMI_CRED_ISSU_MON" jdbcType="VARCHAR" property="frsSemiCredIssuMon" />
+    <result column="SELF_ANNOUNCE_CNT" jdbcType="VARCHAR" property="selfAnnounceCnt" />
+    <result column="DISSENT_COUNT" jdbcType="VARCHAR" property="dissentCount" />
+    <result column="NUMBER_READ" jdbcType="VARCHAR" property="numberRead" />
+    <result column="OPPOSITE_POSITION" jdbcType="VARCHAR" property="oppositePosition" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="DATE" property="lstUpdTime" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="CHAR" property="recStatus" />
+    <result column="REPORT_NO" jdbcType="CHAR" property="reportNo" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="query_req_time" jdbcType="VARCHAR" property="queryReqTime" />
+  </resultMap>
+  
+  
+  <select id="selectByExample" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select c.INSIDE_APP_NO,
+       c.PERSON_HOU_LOAN_NO,
+       c.PERSON_COM_HOU_LOAN_NO,
+       c.OTHER_LOAN_NUM,
+       c.FRS_LOAN_GRANT_MON,
+       c.CREDIT_CARD_ACCT_NUM,
+       c.FRS_CRED_CRD_ISSUE_MON,
+       c.SEMI_CRED_ACCT_NUM,
+       c.FRS_SEMI_CRED_ISSU_MON,
+       c.SELF_ANNOUNCE_CNT,
+       c.DISSENT_COUNT,
+       c.NUMBER_READ,
+       c.OPPOSITE_POSITION,
+       c.CRT_TIME,
+       c.CRT_USER,
+       c.LST_UPD_TIME,
+       c.LST_UPD_USER,
+       c.BATCH_DATE,
+       c.REC_STATUS,
+       c.REPORT_NO,
+       c.APP_ID,
+       p.query_req_time
+  from OPAS_PBOC_CREDIT_CUE c
+  left join OPAS_PBOC_PERSONAL_INFO p on c.app_id = p.app_id
+   where c.APP_ID = #{appId,jdbcType=CHAR}
+  </select>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.OpasPbocCreditCue">
+    insert into OPAS_PBOC_CREDIT_CUE (INSIDE_APP_NO, PERSON_HOU_LOAN_NO, PERSON_COM_HOU_LOAN_NO, 
+      OTHER_LOAN_NUM, FRS_LOAN_GRANT_MON, CREDIT_CARD_ACCT_NUM, 
+      FRS_CRED_CRD_ISSUE_MON, SEMI_CRED_ACCT_NUM, FRS_SEMI_CRED_ISSU_MON, 
+      SELF_ANNOUNCE_CNT, DISSENT_COUNT, NUMBER_READ, 
+      OPPOSITE_POSITION, CRT_TIME, CRT_USER, 
+      LST_UPD_TIME, LST_UPD_USER, BATCH_DATE, 
+      REC_STATUS, REPORT_NO, APP_ID)
+    values (#{insideAppNo,jdbcType=CHAR}, #{personHouLoanNo,jdbcType=VARCHAR}, #{personComHouLoanNo,jdbcType=VARCHAR}, 
+      #{otherLoanNum,jdbcType=VARCHAR}, #{frsLoanGrantMon,jdbcType=VARCHAR}, #{creditCardAcctNum,jdbcType=VARCHAR}, 
+      #{frsCredCrdIssueMon,jdbcType=VARCHAR}, #{semiCredAcctNum,jdbcType=VARCHAR}, #{frsSemiCredIssuMon,jdbcType=VARCHAR}, 
+      #{selfAnnounceCnt,jdbcType=VARCHAR}, #{dissentCount,jdbcType=VARCHAR}, #{numberRead,jdbcType=VARCHAR}, 
+      #{oppositePosition,jdbcType=VARCHAR}, #{crtTime,jdbcType=VARCHAR}, #{crtUser,jdbcType=VARCHAR}, 
+      #{lstUpdTime,jdbcType=DATE}, #{lstUpdUser,jdbcType=VARCHAR}, #{batchDate,jdbcType=DATE}, 
+      #{recStatus,jdbcType=CHAR}, #{reportNo,jdbcType=CHAR}, #{appId,jdbcType=CHAR})
+  </insert>
+  
+  <select id="queryPbocPhone"  parameterType="java.lang.String" resultType="java.lang.String">
+  	  select CELL_PHONE from OPAS_PBOC_PERSONAL_INFO
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	<!-- 人行有民事判决记录 -->
+  <select id="selectCivjudgeCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT  count(app_ID) FROM OPAS_PBOC_PUBLIC_CIVJUDGE 
+		 <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		 </where>
+	</select>
+	<!-- 人行有强制执行记录 -->
+  <select id="selectForceexeCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT  count(app_ID)	FROM OPAS_PBOC_PUBLIC_FORCEEXE 
+		 <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		 </where>
+	</select>
+	<!-- 人行有无记录(有无个人信息) -->
+	 <select id="selectPbocMsg"  parameterType="java.lang.String" resultType="java.lang.String">
+  	  select  a.query_result_prompt from opas_pboc_personal_info a
+  	  <where>
+			a.APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	<!-- 社保 -->
+	 <select id="selectEninsurdepMsg" parameterType="java.lang.String" resultType="java.lang.String">
+  		 SELECT PAY_STATUS FROM OPAS_PBOC_PUBLIC_ENINSURDEP
+		WHERE APP_ID = #{appId,jdbcType=VARCHAR}  
+		ORDER BY INFO_UPD_TIME desc 
+	</select>
+	<!-- 公积金 -->
+	<resultMap id="accfundMap" type="java.util.Map">
+	    <result column="PAY_YM" jdbcType="VARCHAR" property="payYm" />
+	    <result column="PAY_STATUS" jdbcType="VARCHAR" property="payStatus" />
+	    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    </resultMap>
+	
+	 <select id="selectAccfundMsg"  parameterType="java.lang.String" resultMap="accfundMap">
+		select  APP_ID, PAY_YM, PAY_STATUS  from (
+	   	 SELECT
+		  APP_ID,PAY_YM, PAY_STATUS 
+			FROM OPAS_PBOC_PUBLIC_ACCFUND
+	 		WHERE APP_ID = #{appId,jdbcType=VARCHAR}
+			ORDER BY  INFO_UPD_TIME desc,JOIN_SOCL_INSU_DT desc,PAY_YM desc
+	    )   where rownum =1
+	</select>
+	<!-- SELECT pay_STATUS FROM OPAS_PBOC_PUBLIC_ACCFUND 
+  		where app_id = #{appId,jdbcType=VARCHAR}
+		ORDER BY PAY_YM desc  -->
+	<!-- 人行有无社保记录 -->
+  <select id="selectEninsurdepMsgCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT  count(app_ID)	FROM OPAS_PBOC_PUBLIC_ENINSURDEP 
+		 <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		 </where>
+	</select>
+	<!-- 人行有无公积金记录 -->
+  <select id="selectAccfundMsgCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT  count(app_ID)	FROM OPAS_PBOC_PUBLIC_ACCFUND 
+		 <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		 </where>
+	</select>
+</mapper>

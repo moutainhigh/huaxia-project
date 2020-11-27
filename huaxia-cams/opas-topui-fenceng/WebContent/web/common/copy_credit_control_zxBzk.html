@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>详情页面信息展示</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/modify/modify.js"></script>
+<script type="text/javascript">
+/******获取url地址中的参数并封装成对象begin*************************/
+var url=location.search;
+var theRequest=new Object();
+if(url.indexOf("?")!=-1){
+	var str=url.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+}
+var appId=theRequest.appId;//获取流程号
+var ydjFlag=theRequest.ydjFlag;//易达金标示
+var userCode=theRequest.userCode;//用户登录名 
+var matchingCardFlag= theRequest.matchingCardFlag;
+var submitType="";
+var flag = "";
+if(theRequest.flag == undefined||theRequest.flag==""){
+
+}else{
+	flag = theRequest.flag;
+	flag = 1;
+}
+//控制 tab点击 是否触发 加载页面
+var liLeft0='';
+var liLeft1='';
+var liLeft2='';
+var liLeft3='';
+var liLeft4='';
+var liLeft5='';
+var liLeft6='';
+var liLeft7='';
+var liRtght0='';
+var liRtght1='';
+var liRtght2='';
+var liRtght3='';
+/******获取url地址中的参数并封装成对象end*************************/
+$(function(){
+	$("#appId").val(appId);
+	var liLeft =document.getElementById("credit_control_leftTab").getElementsByTagName("li");
+	for(var i=0;i<liLeft.length;i++){
+		liLeft[i].number=i;
+		liLeft[i].onclick=function(){loadCurrentPageLeft(this);};
+	}
+	var liRtght =document.getElementById("credit_control_rightTab").getElementsByTagName("li");
+	for(var i=0;i<liRtght.length;i++){
+		liRtght[i].number=i;
+		liRtght[i].onclick=function(){loadCurrentPageRight(this);};
+	}
+	$("#credit_control_right0").html('<iframe name="rightIframe0" id="rightIframe0" style="border: 0; width: 100%; height: 100%"  src="../credit/credit_investigation_zxBzk_readOnly.html?appId='+appId+'"></iframe>');
+	if(flag==""){
+		//var appIdPlus = appId.substr(0,15) + "1";
+		$("#credit_control_left0").html('<iframe name="leftIframe0" id="leftIframe0" style="border: 0; width: 100%; height: 100%"  src="../common/apply_node_view.html?appId='+appId+'"></iframe>');
+	}
+}); 
+/**
+ * 加载页面 左边 所选择的当前tab页
+ */
+function loadCurrentPageLeft(currentObject){
+	var number=currentObject.number;	
+	var currObj=currentObject;
+	if(number==0){
+	}else if(number==2&&liLeft2==''){
+		liLeft2='1';
+		$("#credit_control_left2").html('<iframe name="leftIframe1" id="leftIframe1" style="border: 0; width: 100%; height: 100%"  src="../common/thirdparty_summary_zxspbzk_view.html?appId='+appId+'"></iframe>');
+		}else if(number==3&&liLeft3==''){
+			liLeft3='1';
+		$("#credit_control_left3").html('<iframe name="leftIframe2" id="leftIframe2" style="border: 0; width: 100%; height: 100%"  src="../shenpi/bzk_info_collect_view.html?appId='+appId+'"></iframe>');		
+		} else if(number==4&&liLeft4==''){
+			liLeft4='1';
+		$("#credit_control_left4").html('<iframe name="leftIframe3" id="leftIframe3" style="border: 0; width: 100%; height: 100%"  src="../common/apply_info_view_readonly.html?appId='+appId+'"></iframe>');	
+		} else if(number==5&&liLeft5==''){
+			liLeft5='1';
+		$("#credit_control_left5").html('<iframe name="leftIframe4" id="leftIframe4" style="border: 0; width: 100%; height: 100%"  src="../credit/credit_check_detailed.html?appId='+appId+'"></iframe>');	
+		}else if(number==6&&liLeft6==''){
+			liLeft6='1';
+		$("#credit_control_left6").html('<iframe name="leftIframe5" id="leftIframe5" style="border: 0; width: 100%; height: 100%"  src="../credit/submit_reply.html?appId='+appId+'"></iframe>');
+		}else if(number==1&&liLeft1==''){
+			liLeft1='1';
+		$("#credit_control_left1").html('<iframe name="leftIframe6" id="leftIframe6" style="border: 0; width: 100%; height: 100%"  src="../common/bzk_system_decision_view.html?appId='+appId+'"></iframe>');
+		}else if(number==7&&liLeft7==''){
+			liLeft7='1';
+		$("#credit_control_left7").html('<iframe name="leftIframe7" id="leftIframe7" style="border: 0; width: 100%; height: 100%"  src="../common/history_audit_result.html?appId='+appId+'"></iframe>');
+		}	
+}
+/**
+ * 加载页面 右边 所选择的当前tab页
+ */
+function loadCurrentPageRight(currentObject){
+	var number=currentObject.number;
+	var currObj=currentObject;
+	
+	if(number==0&&liRtght0==''){
+	}else if(number==1&&liRtght1==''){
+		liRtght1='1';                                                                                                                    /* patchbolt.html */
+	    $("#credit_control_right1").html('<iframe name="rightIframe1" id="rightIframe1" style="border: 0; width: 100%; height: 100%"  src="../credit/patchbolt_search.html?appId='+appId+'"></iframe>');
+		} else if(number==2&&liRtght2==''){
+			liRtght2='2';
+		$("#credit_control_right2").html('<iframe name="rightIframe2" id="rightIframe2" style="border: 0; width: 100%; height: 100%" src="../common/bzk_credit_approve_action.html?appId='+appId+'"></iframe>');
+		} else if(number==3&&liRtght3==''){
+			liRtght3='3';
+		$("#credit_control_right3").html('<iframe name="rightIframe3" id="rightIframe3" style="border: 0; width: 100%; height: 100%"  src="../credit/credit_cheat_submit_ReadOnly.html?appId='+appId+'"></iframe>');	
+	}
+}	
+function openWin(){
+	window.open('creditSubmitNewspaper.html',"newWindow",'height=150,width=300,toolbar=0,menubar=0,scrollbars=0,resizable=0,location=0,status=0,top=400,left=400');
+}
+
+function getCurrNode(){
+	return "04";//审批节点
+}
+
+//提交
+function creditControlSubmit(){
+	var jsondata = {};
+	jsondata.check_delStatus='1';//征信 未完成、退回    提交   修改人工处理状态   变为已完成 
+	jsondata.check_ydjFlag=ydjFlag;
+	jsondata.check_number=appId; 
+	jsondata.userCode=userCode;
+	  $cf.ajax({
+		url : "/opas-naps/credit_submit.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+				var  paramData={"appId":appId,"nodeId":'22'};
+				//调工作流 
+				$cf.ajax({
+			      url : "/opas-naps/lineNewUrlClient.json",
+			      data :paramData,
+			      async:false,
+			      onSuccess : function(data) {
+			
+			     }
+		        });
+				alert("征信提交成功");
+				window.close();
+				window.opener.reload();
+				//自动推送 
+				window.close();
+				window.opener.reload();
+				//自动推送 
+			if($("#zidongPushCheckbox").is(":checked")){
+				window.opener.ziDongZhuiJiaAfterSubmit();
+			}
+			} else {
+				alert("征信提交失败");
+				return;
+			}
+		}
+	}); 
+	
+	
+}
+
+
+function showViewCreditControl(){
+	window.open("../win/image_new/imgShow.html?appId=" + appId,"newWindow");
+}
+function showCompareSubmit(){
+	window.open("../common/info_compare_zxInvestigation.html?appId="+appId+"&flag=true","_blank");	
+}
+
+</script>
+
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<div
+		data-options="region:'west',title:'左区域',split:true,noheader:true,border:false"
+		style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="credit_control_leftTab" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div id="credit_control_left0" title="节点流程页面"></div>
+			<div id="credit_control_left1" title="系统决策"></div>
+			<div id="credit_control_left2" title="征信信息"></div>
+			<div id="credit_control_left3" title="录入界面"></div>
+			<div id="credit_control_left4" title="申请表信息"></div>
+			<div id="credit_control_left5" title="征信调查查看 "></div>
+			<div id="credit_control_left6" title="提报回复查看"></div>
+			<div id="credit_control_left7" title="历史审批结果"></div>
+		</div>
+	</div>
+	<div
+		data-options="region:'east',title:'右区域',split:true,noheader:true,border:false"
+		style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="credit_control_rightTab" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div id="credit_control_right0" title="征信调查"></div>
+			<div id="credit_control_right1" title="提交补件"></div>
+			<div id="credit_control_right2" title="授信审批"></div>
+			<div id="credit_control_right3" title="欺诈提报"></div>
+		</div>
+	</div>
+
+	<!-- 按钮区 -->
+	<div id="n09000_tool"
+		data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false"
+		style="height: 45px; text-align: center; margin-top: 10px">
+		<a href="javascript:showViewCreditControl();"
+			class="easyui-linkbutton"
+			style="text-align: center; display: inline-block; width: 93px; height: 30px">影像调阅</a>&nbsp;
+		<a href="javascript:showCompareSubmit();" class="easyui-linkbutton"
+			style="text-align: center; display: inline-block; width: 93px; height: 30px">审查库</a>&nbsp;
+		<a href="javascript:creditControlUpdateMessageRecord();"
+			class="easyui-linkbutton"
+			style="text-align: center; display: inline-block; width: 93px; height: 30px">信息修改记录</a>&nbsp;
+	</div>
+
+	<!-- 申请表信息修改查看 -->
+	<div id="applyDealView" class="easyui-window" title="申请表信息修改查看" style="width: 98%;height:670px;" data-options="iconCls:'icon-search',maximized:false,modal:true,closed:true">
+			<div id="tb_applyDealView"></div>
+	</div>
+</body>
+</html>

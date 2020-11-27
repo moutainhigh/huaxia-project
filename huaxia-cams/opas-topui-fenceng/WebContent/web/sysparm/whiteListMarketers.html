@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblIncome" title="营销员白名单" class="easyui-datagrid"
+		style="width: 98%;height:100%"
+		data-options="pageSize:20,pageList:[15,20,50],rownumbers:true,singleSelect:false,selectOnCheck:false,checkOnSelect:false,pagination:true,fitColumns:true,
+		url:'/opas-naps/queryWhiteListMarketers.json',loadMsg:'数据加载中.....',
+		method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">Id</th>
+				<th field="userName" width="10%" align="center">姓名</th>
+				<th field="spreadOrg" width="10%" align="center">推广机构号</th>
+				<th field="spreadNo" width="10%" align="center">推广人员编号</th>
+				<th field="startDate" width="10%" align="center"
+					formatter="myformatDate">有效期起</th>
+				<th field="endDate" width="10%" align="center"
+					formatter="myformatDate">有效期至</th>
+				<th field="crtDate" width="15%" align="center"
+					formatter="myformatDate">创建时间</th>
+				<th field="lstUpdDate" width="15%" align="center"
+					formatter="myformatDate" >最后修改时间</th>
+				<th field="status" width="5%" align="center"
+					formatter="formatStatus">当前状态</th>
+				<th field="operate" width="6%" align="center"
+					data-options="formatter:formatOper">操作</th>
+				
+			</tr>
+		</thead>
+	</table>
+
+	<!-- 功能部分区设置 -->
+	<div id="positionCodeCondion" style="padding: 10px; text-align: laft;">
+		<form id="seachPositionCodeForm">
+			姓名: <input class="easyui-textbox" style="width: 110px"
+				name="userName" id="userName"  data-options="validType:'maxLength[32]'"></input>
+			推广机构号: <input class="easyui-textbox" style="width: 110px"
+				name="spreadOrg" id="spreadOrg"  data-options="validType:'maxLength[32]'"></input>
+			推广人员编号: <input class="easyui-textbox" style="width: 110px"
+				name="spreadNo" id="spreadNo"  data-options="validType:'maxLength[32]'"></input>
+			当前状态: <select class="easyui-combobox" style="width: 80px" id="status"
+				name="status">
+				<option value="">请选择</option>
+				<option value="1">启用</option>
+				<option value="0">停用</option>
+			</select> <a href="javascript:common.searchTbl('seachPositionCodeForm','tblIncome');"
+				class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+				<br/>
+				<a href="javascript:common.openWin('winAdd');"
+				class="easyui-linkbutton" iconCls="icon-add">新增</a>
+				<a href="javascript:deleteIncome();"
+					class="easyui-linkbutton" iconCls="icon-remove">批量删除</a>  
+				<a href="javascript:setActiveOk();"
+					class="easyui-linkbutton" iconCls="icon-ok">批量启用</a>  
+				<a href="javascript:setActiveNo();"
+					class="easyui-linkbutton" iconCls="icon-no">批量禁用</a>
+				<a href="javascript:common.openWin('winLoad')"
+				class="easyui-linkbutton" iconCls="icon-print">导入</a>
+			<font color="blue" size="2">批量导入格式：姓名   推广机构号  推广人员编号 有效期起 有效期至（时间格式：1900/01/01）</font>
+		</form>
+	</div>
+</div>
+	<!--修改窗口  -->
+	<div id="winEdit" class="easyui-window" title="营销员白名单修改"
+		style="width: 300px; height: 350px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>姓名:</td>
+					<td><input class="easyui-textbox" id="userName" name="userName" 
+							required="true" style="width: 100px"  
+							data-options="required:true">
+					</input>
+					<input type="hidden" name="autoId" id="autoId" />
+					</td>
+				</tr>
+				<tr>
+					<td>推广机构号:</td>
+					<td><input  class="easyui-textbox" id="spreadOrg" name="spreadOrg" required="true"
+							style="width: 100px" data-options="required:true">
+					</input></td>
+				</tr>
+				<tr>
+					<td>推广人员编号:</td>
+					<td><input class="easyui-validatebox textbox" id="spreadNo"
+						type="text" name="spreadNo" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>有效期起:</td>
+					<td><input  class="easyui-datebox"   id="startDate"
+						type="text" name="startDate" ></input>
+					</td>
+				</tr>
+				<tr>
+					<td>有效期至:</td>
+					<td><input  class="easyui-datebox"  id="endDate"
+						type="text" name="endDate" ></input>
+					</td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px" data-options="required:true"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp; <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+
+	<!--新增窗口  -->
+	<div id="winAdd" class="easyui-window" title="营销员白名单添加"
+		style="width: 300px; height: 350px" top="40px" 
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>姓名:</td>
+					<td><input class="easyui-textbox" id="userName" name="userName" 
+							required="true" style="width: 100px"  
+							data-options="required:true">
+					</input></td>
+				</tr>
+				<tr>
+					<td>推广机构号:</td>
+					<td><input  class="easyui-textbox" id="spreadOrg" name="spreadOrg" required="true"
+							style="width: 100px" data-options="required:true">
+					</input></td>
+				</tr>
+				<tr>
+					<td>推广人员编号:</td>
+					<td><input class="easyui-validatebox textbox" id="spreadNo"
+						type="text" name="spreadNo" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>有效期起:</td>
+					<td><input  class="easyui-datebox"   id="startDate"
+						type="text" name="startDate"  ></input>
+					</td>
+				</tr>
+				<tr>
+					<td>有效期至:</td>
+					<td><input  class="easyui-datebox"  id="endDate"
+						type="text" name="endDate" ></input>
+					</td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px" data-options="required:true"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+		</div>
+	</div>
+</body>
+
+<!-- 导入窗口 -->
+<div id="winLoad" class="easyui-window" title="营销员白名单库导入"
+	style="width: 700px; height: 200px"
+	data-options="iconCls:'icon-save',modal:true,closed:true">
+	
+	<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/MarketerListUploadServlet.json"> 
+    	<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据导入</h3>
+		<div style="margin: 10px 0 0 30px;width:100%;">
+	        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+			<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+			<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+			<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+			<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+			<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+			<a href="javascript:importExcel()" class="easyui-linkbutton"  iconCls="icon-print">导入</a>
+		</div>
+		</form>
+</div>
+
+<!-- 对应的js方法 -->
+<script>
+	//加载业务字典
+	$cf.loadAllDict();
+
+	var tblIncome = $("#tblIncome");
+	//修改
+	var editWindow = $("#winEdit");
+	//新增窗口
+	var addWindow = $("#winAdd");
+	//创建时间
+	var editForm = $("#editForm");
+	//添加表单
+	var addForm = $("#addForm");
+
+	var menuTree = $("#menuTree");
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+	tblIncome.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})
+	//操作超链接按钮设置
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editCust();>修改</a>&nbsp;";
+	}
+
+	
+
+	//设置当前状态
+	function formatStatus(val, row, index) {
+		val = val.trim();
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	}
+
+	function addRole() {
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	//超链接修改按钮方法
+	function editBalanceMove() {
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+	}
+
+	//删除方法
+	function deleteIncome() {
+		var orgObj = tblIncome.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/marketer_remove.json",
+							data : {"ids":ids},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("名单删除成功！");
+									tblIncome.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "名单删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+
+	//设置日期的方法
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+	
+	function editCust(){
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+		var startDate = gridDateFormatYMD(value.startDate);
+		var endDate = gridDateFormatYMD(value.endDate);
+		$('#startDate').datebox('setValue',startDate);
+		$('#endDate').datebox('setValue',endDate);
+	}
+	
+	
+	//修改日期格式
+	function myformatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+			}
+		}
+	
+	//工具方法：格式化CST类型时间
+
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+				+ second;
+	};
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	
+	//重置,刷新页面
+	function onReloadQRCode() {
+		location.reload(true);
+	}
+
+	//修改按钮
+	function onUpdate() {
+		//var incomeData = isRequired('addForm');
+		var incomeData = getFormData(editForm.serializeArray());
+		
+
+		var jsondata = getFormData(editForm.serializeArray());
+		
+		$cf.ajax({
+			url : "/opas-naps/marketer_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblIncome.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//添加按钮的窗口方法
+	function onSave() {
+		var incomedata = isRequired('addForm');
+		//更换了取值方法来应对业务字典的取值问题
+		var incomeData = getFormData(addForm.serializeArray());
+		
+		var jsondata = getFormData(addForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/marketer_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblIncome.datagrid("reload");
+						addForm[0].reset();
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	//导入的方法	 
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+			$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+			$('#formFile').submit();
+			
+		}
+
+	}
+	
+	
+	
+	//批量启用
+	function setActiveOk() {
+		var orgObj = tblIncome.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var Status = "1";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要启用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/marketer_setStatusOK.json",
+						data : {"ids":ids,"Status":Status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单启用成功!");
+								tblIncome.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+	//批量禁用
+	function setActiveNo() {
+		var orgObj = tblIncome.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var Status = "0";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要禁用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/marketer_setStatusNO.json",
+						data : {"ids":ids,"Status":Status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单禁用成功!");
+								tblIncome.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+</script>

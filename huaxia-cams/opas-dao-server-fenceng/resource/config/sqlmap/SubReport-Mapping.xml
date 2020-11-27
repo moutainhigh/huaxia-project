@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SubReport">
+
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.sysparm.SubReport">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="SUBMIT_TYPE" property="submitType" jdbcType="VARCHAR" />
+		<result column="SUB_REASON" property="subReason" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="DEL_STATUS" property="delStatus" jdbcType="CHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" /><!-- 创建事件类型有date改为TIMESTAMP -->
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+		<result column="CURR_NODE" property="currNode" jdbcType="CHAR" />
+		<result column="LIMIT_USED_PERCENT" property="percent" jdbcType="VARCHAR" />
+		<result column="C1_CNAME" property="c1Name" jdbcType="VARCHAR" />
+		<result column="c1_idnbr" property="c1Idnbr" jdbcType="VARCHAR" />
+		<result column="PRODUCT1" property="product1" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryCount" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO a,OPAS_INTERFACE_3118 s
+		where a.app_id = s.app_id(+)
+		and a.DEL_STATUS = '0'
+		and	a.SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+	</select>
+	<select id="queryCurrNode" resultType="java.lang.String" parameterType="java.lang.String" >
+		select s.curr_node
+		from opas_allot_apply_allot s
+		where s.app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	<!--  查询未完成的列表 -->
+	<select id="queryUnfinishedList" parameterType="com.huaxia.opas.domain.sysparm.SubReport"
+	 resultMap="BaseResultMap">
+	select a.AUTO_ID,
+	a.APP_ID,
+	a.SUBMIT_TYPE,
+	a.SUB_REASON,
+	a.DEL_STATUS,
+	a.MEMO,
+	a.CRT_DATE,
+	a.CRT_USER,
+	a.LIMIT_USED_PERCENT,
+	b.C1_CNAME,
+	b.c1_idnbr,
+	haveCard(s.category1,
+             s.category2,
+             s.category3,
+             s.category4,
+             s.category5,
+             s.CARDNBR1,
+             s.CARDNBR2,
+             s.CARDNBR3,
+             s.CARDNBR4,
+             s.CARDNBR5) as PRODUCT1
+	from OPAS_SUBMITTYPE_INFO a,OPAS_INTERFACE_3118 s,opas_biz_inp_appl_c1 b
+	where a.app_id= b.app_id
+		and a.app_id = s.app_id(+)
+		and a.DEL_STATUS = '0'
+		and a.SUBMIT_TYPE = #{submitType}
+	order by CRT_DATE desc
+	</select>
+	
+	<select id="queryCount1" parameterType="com.huaxia.opas.domain.sysparm.SubReport"
+	 resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO a,opas_biz_inp_appl_c1 b
+		where a.app_id= b.app_id
+		and a.DEL_STATUS = 2
+		and a.SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+		<if test="appId != null and appId !='' "> 
+			and	a.APP_ID = #{appId,jdbcType=VARCHAR}
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' "> 
+			and	b.c1_idnbr = #{c1Idnbr,jdbcType=VARCHAR}
+		</if>  
+	</select>
+
+	<select id="queryFinishedList" parameterType="com.huaxia.opas.domain.sysparm.SubReport"
+	 resultMap="BaseResultMap">
+	 		select ss.AUTO_ID,
+				       ss.APP_ID,
+				       ss.SUBMIT_TYPE,
+				       ss.SUB_REASON,
+				       ss.DEL_STATUS,
+				       ss.MEMO,
+				       ss.CRT_DATE,
+				       ss.CRT_USER,
+				       ss.LIMIT_USED_PERCENT
+				  from (select o.AUTO_ID,
+				               o.APP_ID,
+				               o.SUBMIT_TYPE,
+				               o.SUB_REASON,
+				               o.DEL_STATUS,
+				               o.MEMO,
+				               o.CRT_DATE,
+				               o.CRT_USER,
+				               o.LIMIT_USED_PERCENT,
+				               row_number() over(partition by o.app_id order by o.crt_date desc) as rn
+				          from OPAS_SUBMITTYPE_INFO o,opas_biz_inp_appl_c1 b
+				         where o.app_id= b.app_id
+				         and o.DEL_STATUS = 2
+				         <if test="appId != null and appId !='' "> 
+							and	b.APP_ID = #{appId,jdbcType=VARCHAR}
+						</if>
+						<if test="c1Idnbr != null and c1Idnbr !='' "> 
+							and	b.c1_idnbr = #{c1Idnbr,jdbcType=VARCHAR}
+						</if>  
+				           and o.SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR} order by CRT_DATE desc) ss
+				 where ss.rn = '1'
+	</select>
+	
+	<update id="toFinished" parameterType="com.huaxia.opas.domain.sysparm.SubReport">
+		update OPAS_SUBMITTYPE_INFO
+		<set>
+			<if test="submitType != null"> 
+				SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+			</if>
+			<if test="subReason != null"> 
+				SUB_REASON = #{subReason,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				MEMO = #{memo,jdbcType=VARCHAR},
+			</if>
+		
+				CRT_DATE = sysdate, 
+			 LIMIT_USED_PERCENT = #{percent,jdbcType=VARCHAR},
+		
+			<if test="crtUser != null">
+				CRT_USER = #{crtUser,jdbcType=VARCHAR}, 
+			</if>
+			DEl_STATUS = '2'
+		</set>		
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="toUnfinished" parameterType="java.lang.String">
+		update
+		OPAS_SUBMITTYPE_INFO 
+        set	DEl_STATUS = '0',
+        CRT_DATE = sysdate
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="toCredit" parameterType="com.huaxia.opas.domain.sysparm.SubReport">
+		update
+		OPAS_SUBMITTYPE_INFO 
+		<set>
+			<if test="submitType != null"> 
+				SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+			</if>
+			<if test="subReason != null"> 
+				SUB_REASON = #{subReason,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				MEMO = #{memo,jdbcType=VARCHAR},
+			</if>
+			
+				CRT_DATE = sysdate, 
+			
+			<if test="crtUser != null">
+				CRT_USER = #{crtUser,jdbcType=VARCHAR}, 
+			</if>
+			DEl_STATUS = '1'
+		</set>		
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateSubReportByAppId" parameterType="com.huaxia.opas.domain.sysparm.SubReport">
+    update OPAS_SUBMITTYPE_INFO
+    <set>
+      <if test="submitType != null and submitType !=''">
+        SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+      </if>
+      <if test="subReason != null and subReason !=''">
+        SUB_REASON = #{subReason,jdbcType=CHAR},
+      </if>
+      <if test="delStatus != null and delStatus !=''">
+        DEL_STATUS = #{delStatus,jdbcType=CHAR},
+      </if>
+      <if test="memo != null and memo !=''">
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+     
+        CRT_DATE = sysdate,
+        LIMIT_USED_PERCENT = #{percent,jdbcType=VARCHAR},
+     
+      <if test="crtUser != null and crtUser !=''">
+        CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null and ydjFlag !=''">
+        YDJ_FLAG = #{ydjFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+	<!-- 单条更新申请件分配表 -->
+	<update id="updateApplyAllot" parameterType="com.huaxia.opas.domain.sysparm.SubReport">
+		update OPAS_ALLOT_APPLY_ALLOT
+		<set>
+			SUBMIT_STATUS = '0',
+			SUBMIT_TYPE = null,
+			LST_TEAM_DATE = sysdate,
+		<if test="crtUser != null and crtUser !=''">
+       		LAST_OPT_USER=#{crtUser,jdbcType=VARCHAR}
+       </if>
+			
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="commitAll" >
+		update
+		OPAS_SUBMITTYPE_INFO 		
+		set	DEl_STATUS = '1'
+		where DEl_STATUS = '2' and SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+	</update>
+	<!-- 查询退回到征信的数据 -->
+	<select id="selectCommitAll"  parameterType="com.huaxia.opas.domain.sysparm.SubReport"
+		resultMap="BaseResultMap">
+		select APP_ID
+		from OPAS_SUBMITTYPE_INFO 		
+		where DEl_STATUS = '2' and SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+	</select>
+	<!-- 批量更新申请件分配表 -->
+	<update id="updateApplyAllotList" parameterType="java.util.List" >
+		update
+		OPAS_ALLOT_APPLY_ALLOT
+		set SUBMIT_STATUS = '0',SUBMIT_TYPE = null,LST_TEAM_DATE = sysdate
+		where APP_ID in
+		<foreach collection="list" open= "(" close=")" item="item" separator=",">
+			#{item.appId,jdbcType=VARCHAR}
+		</foreach> 
+	</update>
+	
+	<select id="querySubReason" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		AUTO_ID,APP_ID,SUBMIT_TYPE,SUB_REASON,DEL_STATUS,MEMO,CRT_DATE,CRT_USER,YDJ_FLAG,LIMIT_USED_PERCENT
+		from OPAS_SUBMITTYPE_INFO
+		where
+		APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- <select id="queryDayWorkload" resultType="java.lang.Integer" >
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO
+		where
+		DEL_STATUS = 0 
+	</select>
+	
+	<select id="queryMonthWorkload" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO
+		where
+		DEL_STATUS = 0
+	</select>
+	
+	<select id="queryDayCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO
+		<where>
+			<if test="START !=null and END != null">
+			 	AND <![CDATA[ AND CRT_DATE BETWEEN #{START} AND #{END} ]]>
+			</if>
+			<if test="submitType != null">
+				AND SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select> -->
+	
+	<select id="queryDayWorkload" resultType="java.lang.Integer" >
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO
+		where
+		DEL_STATUS = 0 
+	</select>
+	<delete id="deleteOpasSubmittypeInfoByAppId" parameterType="java.lang.String" >
+		delete from OPAS_SUBMITTYPE_INFO
+		where app_id = #{appId,jdbcType=VARCHAR} 
+	</delete>
+	<select id="queryMonthWorkload" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO
+		where
+		DEL_STATUS = 0
+	</select>
+	
+	<select id="queryDayCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from OPAS_SUBMITTYPE_INFO_HIS
+		<where>
+			<if test="START !=null and END != null">
+			 	<!-- AND <![CDATA[ AND CRT_DATE BETWEEN #{START} AND #{END} ]]> -->
+			 	CRT_DATE BETWEEN #{START} AND sysdate
+			</if>
+			<if test="submitType != null">
+				AND SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+			</if>
+			and DEL_STATUS='1'
+		</where>
+	</select>
+	<select id="queryMonthCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from OPAS_SUBMITTYPE_INFO_HIS
+		<where>
+			<if test="startTime !=null and endTime != null">
+			 	<!-- AND <![CDATA[ AND CRT_DATE BETWEEN #{START} AND #{END} ]]> -->
+			 	CRT_DATE BETWEEN #{startTime} AND #{endTime}
+			</if>
+			<if test="submitType != null">
+				AND SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR}
+			</if>
+				and DEL_STATUS='1'
+		</where>
+	</select>
+	<select id="queryDate" parameterType="java.util.Date" resultType="java.util.Date">
+		select ADD_MONTHS(#{date},1) from dual
+	</select>
+	
+	<insert id="insertOpasSubmittypeInfo" parameterType="com.huaxia.opas.domain.sysparm.SubReport">
+		INSERT INTO OPAS_SUBMITTYPE_INFO(AUTO_ID,APP_ID,SUBMIT_TYPE,SUB_REASON,DEL_STATUS,MEMO,CRT_DATE,CRT_USER,YDJ_FLAG,LIMIT_USED_PERCENT)
+		values(
+				#{autoId,jdbcType=VARCHAR},
+				#{appId,jdbcType=VARCHAR},
+				#{submitType,jdbcType=VARCHAR},
+				#{subReason,jdbcType=VARCHAR},
+				#{delStatus,jdbcType=VARCHAR},
+				#{memo,jdbcType=VARCHAR},	
+				sysdate,
+				#{crtUser,jdbcType=CHAR},	
+				#{ydjFlag,jdbcType=CHAR},
+				#{percent,jdbcType=VARCHAR}						
+			)
+	</insert>  	
+	<insert id="insertOpasSubmittypeInfoHis" parameterType="com.huaxia.opas.domain.sysparm.SubReport">
+		INSERT INTO OPAS_SUBMITTYPE_INFO_HIS(AUTO_ID,APP_ID,SUBMIT_TYPE,SUB_REASON,DEL_STATUS,MEMO,CRT_DATE,CRT_USER,YDJ_FLAG,LIMIT_USED_PERCENT)
+		values(
+				#{autoId,jdbcType=VARCHAR},
+				#{appId,jdbcType=VARCHAR},
+				#{submitType,jdbcType=VARCHAR},
+				#{subReason,jdbcType=VARCHAR},
+				#{delStatus,jdbcType=VARCHAR},
+				#{memo,jdbcType=VARCHAR},	
+				sysdate,
+				#{crtUser,jdbcType=CHAR},	
+				#{ydjFlag,jdbcType=CHAR},
+				#{percent,jdbcType=VARCHAR}								
+			)
+	</insert>
+	<!-- 根据appId查询记录 -->
+	<select id="querySubReportByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO
+		where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</select>
+	<!-- 根据appId查询记录 -->
+	<select id="queryUnSubReportByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_SUBMITTYPE_INFO
+		where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</select>
+	<!--  -->
+	<select id="queryDelStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select s.del_status
+		from opas_allot_apply_allot s
+		where s.app_id=#{appId,jdbcType=VARCHAR}
+	</select>
+</mapper>

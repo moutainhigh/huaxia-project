@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>表信息修改</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	//更新
+	function onUpdate(){
+		var table = $("#table").val();
+		if (table=="") {
+			alert("请输入表名!");
+			return;
+		}
+		var tableId = $("#tableId").val();
+		if (tableId=="") {
+			alert("请输入需要更新字段!");
+			return;
+		}
+		var tableId2 = $("#tableId2").val();
+		if (tableId2=="") {
+			alert("请输入正确更新字段!");
+			return;
+		}
+		var updateTableFormData = $("#updateTableForm").serializeArray();
+		var jsondata = getFormData(updateTableFormData);
+		
+		$cf.ajax({
+			url : '/opas-naps/updateEveryTable.json', 
+			data : jsondata,
+			onSuccess : function(data) {
+				var msg = data.RSP_BODY.msg;
+				alert(msg);
+			}
+		}); 
+	}
+	
+	
+	//转换数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			if(objValue.indexOf('"') != -1){
+				objValue = objValue.replace(/\"/g,"\\"+"\""); 
+			} 
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">表信息修改</legend>
+	<form id="updateTableForm">
+		<table id="updateTable" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td>表名:</td>
+	  			<td><input id="table" name="table" type="text" style="width:240px"></input></td>
+	  			
+			</tr>
+			<tr>
+	  			<td>需要更新字段:</td>
+	  			<td><input id="tableId" name="tableId" type="text" style="width:240px"></input></td>
+	  			<td>字段值:</td>
+	  			<td><input id="tableValue" name="tableValue" type="text" style="width:240px"></input></td>
+			</tr>
+			<tr>
+				<td>根据哪个字段更新:</td>
+				<td><input id="tableId2" name="tableId2" type="text" style="width:240px"></input></td>
+				<td>字段值:</td>
+				<td><input id="tableValue2" name="tableValue2" type="text" style="width:240px"></input></td>
+			</tr>
+			<tr>
+				<td><input onclick="onUpdate()" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+			</tr>
+		</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

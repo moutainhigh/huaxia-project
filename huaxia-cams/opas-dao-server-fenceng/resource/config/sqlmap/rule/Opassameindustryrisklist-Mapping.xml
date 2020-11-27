@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opassameindustryrisklist">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opassameindustryrisklist">
+    <result column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="CERTIFI_TYPE" jdbcType="VARCHAR" property="certifiType" />
+    <result column="CERTIFI_NO" jdbcType="VARCHAR" property="certifiNo" />
+    <result column="SUBMIT_BANK" jdbcType="VARCHAR" property="submitBank" />
+    <result column="STAR_LEVLE" jdbcType="CHAR" property="starLevle" />
+    <result column="INFO_CHANNEL" jdbcType="CHAR" property="infoChannel" />
+    <result column="FRAUD_TYPE" jdbcType="CHAR" property="fraudType" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+    <result column="INVALID_TIME" jdbcType="DATE" property="invalidTime" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
+    <result column="OPERAT_TIME" jdbcType="DATE" property="operatTime" />
+    <result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+  </resultMap>
+  
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.Opasbizinpapplc1" resultMap="BaseResultMap">
+    select 
+     AUTO_ID, NAME, CERTIFI_TYPE, CERTIFI_NO, SUBMIT_BANK, STAR_LEVLE, INFO_CHANNEL, FRAUD_TYPE, 
+    MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS
+     from OPAS_SAMEINDUSTRY_RISKLIST where CERTIFI_TYPE = #{c1Idtype,jdbcType=VARCHAR} and 
+      CERTIFI_NO = #{c1Idnbr,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opassameindustryrisklist">
+    insert into OPAS_SAMEINDUSTRY_RISKLIST (AUTO_ID, NAME, CERTIFI_TYPE, 
+      CERTIFI_NO, SUBMIT_BANK, STAR_LEVLE, 
+      INFO_CHANNEL, FRAUD_TYPE, MEMO, 
+      INVALID_TIME, CREATE_TIME, OPERATOR, 
+      OPERAT_TIME, CURR_STATUS)
+    values (#{autoId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{certifiType,jdbcType=VARCHAR}, 
+      #{certifiNo,jdbcType=VARCHAR}, #{submitBank,jdbcType=VARCHAR}, #{starLevle,jdbcType=CHAR}, 
+      #{infoChannel,jdbcType=CHAR}, #{fraudType,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{invalidTime,jdbcType=DATE}, #{createTime,jdbcType=DATE}, #{operator,jdbcType=VARCHAR}, 
+      #{operatTime,jdbcType=DATE}, #{currStatus,jdbcType=CHAR})
+  </insert>
+  
+  <select id="selectPhoneNameMatch" parameterType="java.lang.String" resultType="java.lang.String">
+		select mapping from  trd_har_ld00001 
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR} 
+		</where>
+	</select>
+  
+  <select id="selectJdPhoneNameMatch" parameterType="java.lang.String" resultType="java.lang.String">
+		select info_flag from  opas_biz_jd_appln where APP_ID = #{appId,jdbcType=VARCHAR} 
+		union 
+		select info_flag from  ccard_app_ditch_info where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</select>
+  
+</mapper>

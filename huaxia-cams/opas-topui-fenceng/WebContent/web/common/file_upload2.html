@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript">
+        //每个页面所对应唯一的 PAGE_ID
+        window["CF_PAGE_ID"]="×××××";//咨询组长
+    </script>
+<title>数据导入</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+	<style>
+ 		.datagrid-btable tr {height: 32px;}
+    	.datagrid-header-row td {font-weight:bold;}
+    	.l-btn-left {background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); }
+ 	</style>
+</head>
+
+<body style="width:100%;height:100%;">
+    <div  style="background: linear-gradient(rgb(255, 255, 255) 0px, rgb(224, 236, 255) 100%); border: 1px solid rgb(149, 184, 231); border-image: none;width:99%;height:790px;">   
+		<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/SmartUpladServlet.json"> 
+    	<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据导入</h3>
+		<div style="margin: 10px 0 0 30px;width:100%;">
+	        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+			<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+			<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+			<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+			<span class="filebox-label" style="left: 25px;"><font size="2">导入数据</font></span></span>
+		</div>
+		
+		</form>
+    </div> 
+   
+	
+	<script type="text/javascript">
+	
+		var urlPath = "/opas-naps/add_fileupload.json";
+		var uploadFile = "/opas-naps/add_fileupload.json";
+	 
+	$('#fb').filebox({    
+	    buttonText: '选择文件', 
+	    buttonAlign: 'right',
+	    buttonIcon:'icon-search',
+	    onChange: function (newValue, oldValue) {
+	    	excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+	    	if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+				alert("请上传excel格式的文件");
+				$('#fb').filebox('setValue','');
+				return;
+			}
+	    }
+	})
+
+	function resetValue(){
+		$('#fb').filebox('setValue','');
+	}
+	
+	function importExcel() {
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+			$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+			importSave();
+		}
+
+	}
+	
+	
+	//保存数据
+	function importSave() {
+		$('#formFile').submit();
+
+	}
+</script>
+</body>
+</html>

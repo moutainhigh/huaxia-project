@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.unicom.mapper.PhoneBatchDetailMapper">
+
+	<insert id="savePhoneTrnBatchDetail" parameterType="PhoneBatchDetail">
+		INSERT INTO UNICOM_PHONE_TRN_BATCH_DETAIL (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_FILE_ID,
+		TRN_ID,
+		CERT_NO,
+		NAME,
+		MOBILE,
+		QUERY_STATUS,
+		CERT_TYPE
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		#{batchFileId},
+		#{trnId},
+		#{certNo},
+		#{name},
+		#{mobile},
+		#{queryStatus},
+		#{certType}
+		)
+	</insert>
+	
+	<resultMap id="result_detail" type="PhoneBatchDetail">
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="QUERY_TIME" property="queryTime" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_ID" property="batchFileId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 批次文件明细查询 -->
+	<select id="selectDetail" parameterType="string" resultMap="result_detail">
+		SELECT T.CERT_NO,T.NAME,T.QUERY_STATUS,T.TRN_ID,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		TO_CHAR(T.QUERY_TIME, 'YYYY-MM-DD HH24:MI:SS') QUERY_TIME,T.MOBILE
+		FROM UNICOM_PHONE_TRN_BATCH_DETAIL T
+		WHERE T.BATCH_FILE_ID=#{batchFileId}
+	</select>
+
+	<resultMap id="batch_detail_result" type="UnicomPhoneData">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="ERROR_DESC" property="errorDesc" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getResult" parameterType="string" resultMap="batch_detail_result">
+		SELECT UUID,TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		CRT_TIME,TRN_ID,STATUS,CODE,CERT_NO,ERROR_DESC,CHECK_RESULT
+		FROM unicom_phone_data
+		WHERE TRN_ID=#{trnId}
+		ORDER BY CRT_TIME DESC
+	</select>
+
+<select id="selectBatchCountByParams" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM unicom_phone_trn_batch_detail
+		WHERE (QUERY_STATUS ='1' or QUERY_STATUS ='0')
+	    AND  CRT_TIME 
+	    BETWEEN #{startTime}
+	    AND  #{endTime}
+
+	</select>
+
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BuyPieceSituationStatistics">
+	
+	<resultMap id="EntryStatisticsResultMap" type="com.huaxia.opas.domain.report.EntryStatistics" >
+    	
+		<result column="appcnt" property="appcnt" jdbcType="VARCHAR" />
+		<result column="crtdate" property="crtDate" jdbcType="VARCHAR" />
+		<result column="pass" property="pass" jdbcType="VARCHAR" />
+		<result column="cancel" property="cancel" jdbcType="VARCHAR" />
+		<result column="refuse" property="refuse" jdbcType="VARCHAR" />
+		<result column="nofinish" property="noFinish" jdbcType="VARCHAR" />
+		<result column="refuserate" property="refusuRate" jdbcType="VARCHAR" />
+		<result column="passrate" property="passRate" jdbcType="VARCHAR" />
+		<result column="waitdealrate" property="waitDealRate" jdbcType="VARCHAR" />
+   </resultMap>
+
+  <select id="selectBuyPieceSituationStatisticsDataByDate" parameterType="java.util.Map" resultMap="EntryStatisticsResultMap">
+		select max(c1.crt_time) as crtdate,
+	       count(c1.app_id) as appcnt,
+	       sum(case
+	             when l.app_result = '0' then
+	              1
+	             else
+	              0
+	           end) as pass,
+	       count(r.app_id) as cancel,
+	       sum(case
+	             when l.app_result = '1' then
+	              1
+	             else
+	              0
+	           end) as refuse,
+	        '0',
+	       (count(c1.app_id) - sum(case
+	             when l.app_result in ('0', '1') then
+	              1
+	             else
+	              0
+	           end)) as nofinish,
+	       case when (sum(case when l.app_result = '1' then 1 else 0  end)+
+                     sum(case when l.app_result = '0' then 1 else 0 end))=0 then 0 else    
+         round((sum(case when l.app_result = '1' then  1 else 0 end) / 
+         (sum(case when l.app_result = '1' then 1 else 0  end)+
+         sum(case when l.app_result = '0' then 1 else 0 end))) * 100,2) end
+         as refuserate,
+         case when (sum(case when l.app_result = '1' then 1 else 0  end)+
+                     sum(case when l.app_result = '0' then 1 else 0 end))=0 then 0 else 
+	       round((sum(case when l.app_result = '0' then 1  else 0 end) / 
+         (sum(case when l.app_result = '1' then 1 else 0  end)+
+          sum(case when l.app_result = '0' then 1 else 0 end))) * 100,2) end 
+          as passrate,
+	       round(((count(c1.app_id)- (sum(case
+	                    when l.app_result in ('0', '1') then
+	                     1
+	                    else
+	                     0
+	                  end))) / count(c1.app_id)) * 100,
+	             2) as waitdealrate
+	  from OPAS_BIZ_INP_APPL_C1 c1
+	  left join  OPAS_FILE_APPLICATION_DETAIL l on c1.app_id = l.app_id and  flag in ('0','2')
+	  left join opas_biz_approval r on r.app_id = l.app_id and (
+	  r.refuse_code1 in ('D702', 'YD406') or r.refuse_code2 in ('D702', 'YD406')
+	  or r.refuse_code3 in ('D702', 'YD406'))
+  	  where c1.crt_time &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+  		and c1.crt_time &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+  		and c1.allot_status ='0'
+     <if test="ydjFlag != null and ydjFlag !='' ">
+			 AND c1.YDJ_FLAG = #{ydjFlag}
+	</if>
+     group by to_char(c1.crt_time,'yyyymmdd')
+     order by to_char(c1.crt_time,'yyyymmdd')
+  </select>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.numread.mapper.BatchLogMapper">
+
+
+	<resultMap id="result_log" type="NumReadLog">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="QUERY_MODE" property="queryModel" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 插入记录 -->
+	<insert id="saveBatchLog" parameterType="com.huaxia.plaze.ui.numread.domain.NumReadLog">
+	INSERT INTO
+	PBOC_SZJD_LOG(
+	UUID,
+	CRT_TIME,
+	CRT_USER,
+	TRN_ID,
+	QUERY_MODE,
+	CERT_NO,
+	NAME
+	) VALUES (
+	SYS_GUID(),
+	SYSDATE,
+	#{crtUser},
+	#{trnId},
+	#{queryModel},
+	#{certNo},
+	#{name}
+	)
+	</insert>
+
+	<!-- 分页总数 -->
+	<select id="selectLogCountByPage" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PBOC_SZJD_LOG
+		<where>
+			<if test="name != null and name != ''">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="queryModel != null and queryModel != ''">
+				AND QUERY_MODE=#{queryModel}
+			</if>
+			<if test="crtNo != null and crtNo != ''">
+				AND CERT_NO LIKE '%${crtNo}%'
+			</if>
+			<if test="crtUser != null and crtUser != ''">
+				AND CRT_USER LIKE '%${crtUser}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 分页记录 -->
+	<select id="selectLogListByPage" parameterType="java.util.Map"
+		resultMap="result_log">
+		SELECT CRT_USER,CRT_TIME,NAME,CERT_NO,QUERY_MODE,RN FROM
+		(SELECT
+		CRT_USER,CRT_TIME,NAME,CERT_NO,QUERY_MODE,ROWNUM RN FROM
+		(SELECT
+		CRT_USER,
+		TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		AS CRT_TIME,
+		NAME,
+		CERT_NO,
+		QUERY_MODE
+		FROM
+		PBOC_SZJD_LOG
+		<where>
+			<if test="name != null and name != ''">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="queryModel != null and queryModel != ''">
+				AND QUERY_MODE=#{queryModel}
+			</if>
+			<if test="crtNo != null and crtNo != ''">
+				AND CERT_NO LIKE '%${crtNo}%'
+			</if>
+			<if test="crtUser != null and crtUser != ''">
+				AND CRT_USER LIKE '%${crtUser}%'
+			</if>
+		</where>
+		ORDER BY
+		CRT_TIME DESC
+		) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+
+	</select>
+</mapper>

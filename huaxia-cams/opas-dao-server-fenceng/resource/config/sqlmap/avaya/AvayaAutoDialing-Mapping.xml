@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AutoDialing" >
+  <resultMap id="AutoDialingResult" type="com.huaxia.opas.domain.avaya.Avaya">
+    <id column="ID" jdbcType="VARCHAR" property="Id" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userid" />
+    <result column="IP" jdbcType="VARCHAR" property="Ip" />
+    <result column="AVAYA_LOGIN_ID" jdbcType="VARCHAR" property="avayaLoginId" />
+    <result column="AVAYA_PASSWD" jdbcType="VARCHAR" property="avayaPassWd" />
+    <result column="AVAYA_STATIONID" jdbcType="CHAR" property="avayaStationId" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+	
+  </resultMap>
+    <!-- 更新 -->
+    <update id="updateUser" parameterType="com.huaxia.opas.domain.avaya.Avaya">
+		update USER_AVAYA
+		<set>
+			<if test="userid != null and userid !='' ">
+				USER_ID = #{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="Ip != null and Ip !='' ">
+				IP = #{Ip,jdbcType=VARCHAR},
+			</if>
+			<if test="avayaLoginId != null and avayaLoginId !='' ">
+				AVAYA_LOGIN_ID = #{avayaLoginId,jdbcType=VARCHAR},
+			</if>
+			<if test="avayaPassWd != null and avayaPassWd !='' ">
+				AVAYA_PASSWD = #{avayaPassWd,jdbcType=VARCHAR},
+			</if>
+			<if test="avayaStationId != null and avayaStationId !='' ">
+				AVAYA_STATIONID = #{avayaStationId,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status !='' ">
+				STATUS = #{status,jdbcType=CHAR},
+			</if>
+		</set>
+		where ID = #{Id,jdbcType=VARCHAR}
+	</update>
+  
+   <!-- 插入 -->
+    <insert id="addUser" parameterType="com.huaxia.opas.domain.avaya.Avaya">
+    insert into USER_AVAYA (    ID,USER_ID, IP, 
+      AVAYA_LOGIN_ID, AVAYA_PASSWD, AVAYA_STATIONID, 
+      STATUS, CREATE_TIME)
+      values (
+      		#{Id,jdbcType=VARCHAR}, 
+    	    #{userid,jdbcType=VARCHAR}, 
+    	    #{Ip,jdbcType=VARCHAR}, 
+      		#{avayaLoginId,jdbcType=VARCHAR}, 
+     		#{avayaPassWd,jdbcType=VARCHAR}, 
+      		#{avayaStationId,jdbcType=CHAR}, 
+     		#{status,jdbcType=VARCHAR}, 
+     		CURRENT_TIMESTAMP)
+  </insert>
+  <!-- 删除 -->
+      <update id="delUser" parameterType="java.lang.String">
+		update USER_AVAYA set status = '0' where ID = #{Id}
+	</update>
+	
+	
+ 
+  <!-- 查询全部 -->
+  <select id="findAll" resultMap="AutoDialingResult">
+    select 
+     ID, USER_ID, IP,AVAYA_LOGIN_ID, AVAYA_PASSWD, AVAYA_STATIONID, 
+      STATUS, CREATE_TIME
+     from  USER_AVAYA
+  </select> 
+  
+<!-- 查询数据总数 -->
+	<select id="queryAvayaAutoDialingLimitCount" parameterType="com.huaxia.opas.domain.avaya.Avaya"
+		resultType="java.lang.Integer">
+		select count(1) from  USER_AVAYA
+		<where>
+			status = '1'
+			<if test="Ip != null and Ip !='' ">
+				AND IP = #{Ip,jdbcType=VARCHAR}
+			</if>
+			<if test="avayaLoginId != null and avayaLoginId !='' ">
+				AND AVAYA_LOGIN_ID = #{avayaLoginId,jdbcType=VARCHAR}
+			</if>
+			<if test="avayaStationId != null and avayaStationId !='' ">
+				AND AVAYA_STATIONID = #{avayaStationId,jdbcType=VARCHAR}
+			</if>
+			<if test="userid != null and userid !='' ">
+				AND USER_ID = #{userid,jdbcType=VARCHAR}
+			</if>
+		</where>
+
+	</select>
+<!--分页查询 -->
+	<select id="queryAvayaAutoDialingLimit" parameterType="com.huaxia.opas.domain.avaya.Avaya"
+		resultMap="AutoDialingResult">
+		select
+		ID, USER_ID, IP,AVAYA_LOGIN_ID, AVAYA_PASSWD, AVAYA_STATIONID, STATUS, CREATE_TIME
+		from USER_AVAYA 
+		<where>
+			status = '1'
+			<if test="Ip != null and Ip !='' ">
+				AND IP = #{Ip,jdbcType=VARCHAR}
+			</if>
+			<if test="avayaLoginId != null and avayaLoginId !='' ">
+				AND AVAYA_LOGIN_ID = #{avayaLoginId,jdbcType=VARCHAR}
+			</if>
+			<if test="avayaStationId != null and avayaStationId !='' ">
+				AND AVAYA_STATIONID = #{avayaStationId,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by CREATE_TIME desc 
+	</select>
+
+  
+</mapper>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+<!--<body style="padding: 10px;"> -->
+	<table id="tblFailBack" class="easyui-datagrid" title="归档修改"
+		style="width: 98%;height:100%"
+		data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/failBack_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#arEditCondion'">
+		<thead>
+			<tr>
+				<th field="fileId" width="10%" align="center" checkbox="true">记录Id</th>
+				<th field="operate" width="8%" align="center" data-options="formatter:formatOper">操作</th>
+				<th field="appId" width="12%" align="center">流水号</th>
+				<th field="custName" width="10%" align="center">客户姓名</th>
+				<th field="credNo" width="14%" align="center">证件号</th>
+				<th field="suppCardCustName" width="10%" align="center">附属卡客户姓名</th>
+				<th field="reason" width="15%" hidden="true" align="center"></th>
+				<th field="operator" width="10%" align="center">操作员</th>
+				<th field="operatTime" width="18%" align="center" formatter="gridDateFormat2">最后操作时间</th>	
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="arEditCondion" style="padding: 10px; text-align: left;">
+		<form id="seachForm">
+			<input type="hidden" name="reason" id="reason">
+			
+			流水号: <input class="easyui-textbox" style="width: 160px" name="appId" id="appId"> &nbsp;&nbsp;
+			客户姓名: <input class="easyui-textbox" style="width: 110px" name="custName" id="custName">&nbsp;&nbsp;
+			证件号码: <input  class="easyui-textbox" style="width: 160px" name="credNo" id="credNo">&nbsp;&nbsp;
+			附属卡客户姓名: <input class="easyui-textbox" style="width: 110px" name="suppCardCustName" id="suppCardCustName">&nbsp;&nbsp;
+			<a href="javascript:common.searchTbl('seachForm','tblFailBack');" class="easyui-linkbutton" iconCls="icon-search">查询</a>&nbsp;
+		</form>
+	</div>
+
+</body>
+<script type="text/javascript">
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+	//修改
+	function formatOper(val, row, index) {
+		
+		return "<a href=javascript:ViewPage();>修改</a>";
+	}
+	
+	function ViewPage(){
+		var appId = $("#tblFailBack").datagrid("getSelected").appId;
+		var reason = $("#tblFailBack").datagrid("getSelected").reason;
+		$('#reason').val(reason);
+		 window.open("arEdit_apply_info.html?appId="+appId+"&userCode="+userCode);
+		 //window.open("arEdit_apply_info.html?appid="+appId,"_blank","channelmode=yes",false);
+		
+			
+	}
+	function reloadEditPage(){
+		common.searchTbl('seachForm','tblFailBack');
+	}
+</script>
+</html>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="OpaBzkSysResultInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.decision.OpaBzkSysResultInfo" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="CREDIT_DECISION_RESULT" property="creditDecisionResult" jdbcType="VARCHAR" />
+    <result column="CREDIT_DECISION_LAYER" property="creditDecisionLayer" jdbcType="VARCHAR" />
+    <result column="CREDIT_DECISION_DESC" property="creditDecisionDesc" jdbcType="VARCHAR" />
+    <result column="ADVISE_LIMIT" property="adviseLimit" jdbcType="DECIMAL" />
+    <result column="MACTH_INCOME" property="macthIncome" jdbcType="DECIMAL" />
+    <result column="APPLY_SCORE" property="applyScore" jdbcType="DECIMAL" />
+    <result column="FRAUD_DECISION_RESULT" property="fraudDecisionResult" jdbcType="VARCHAR" />
+    <result column="FRAUD_RESULT_DESC" property="fraudResultDesc" jdbcType="VARCHAR" />
+    <result column="SYS_DECISION_RESULT" property="sysDecisionResult" jdbcType="CHAR" />
+    <result column="SYS_DECISION_RESULT_DESC" property="sysDecisionResultDesc" jdbcType="VARCHAR" />
+    <result column="SYS_CREDIT_PRODUCT" property="sysCreditProduct" jdbcType="VARCHAR" />
+    <result column="ATCH_DECISION_RESULT" property="atchDecisionResult" jdbcType="VARCHAR" />
+    <result column="ATCH_DECISION_RESULT_DESC" property="atchDecisionResultDesc" jdbcType="VARCHAR" />
+    <result column="ATCH_APPLY_RATIO" property="atchApplyRatio" jdbcType="DECIMAL" />
+    <result column="STANDARD_DTI_CHECK" property="standardDtiCheck" jdbcType="DECIMAL" />
+    <result column="STANDARD_DL" property="standardDl" jdbcType="DECIMAL" />
+    <result column="DECISION_SEQ" property="decisionSeq" jdbcType="DECIMAL" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    <result column="DECISION_DATE" jdbcType="TIMESTAMP" property="decisionDate" />
+    <result column="CREDIT_SCORE" jdbcType="DECIMAL" property="creditScore" />
+    <result column="NONMORTGAGE_DTI_AD" jdbcType="DECIMAL" property="nonmortgageDtiAd" />
+    <result column="CMPHSIVE_DTI_AD" jdbcType="DECIMAL" property="cmphsiveDtiAd" />
+    <result column="RISK_OPEN_MUE_AD" jdbcType="DECIMAL" property="riskOpenMueAd" />
+    <result column="NONMORTGAGE_DTI_DOWN" jdbcType="DECIMAL" property="nonmortgageDtiDown" />
+    <result column="CMPHSIVE_DTI_DOWN" jdbcType="DECIMAL" property="cmphsiveDtiDown" />
+    <result column="RISK_OPEN_MUE_DOWN" jdbcType="DECIMAL" property="riskOpenMueDown" />
+    <result column="DEBT_APP_AUTH" jdbcType="DECIMAL" property="debtAppAuth" />
+    <result column="PROD_LIMIT_DOWN" jdbcType="DECIMAL" property="prodLimitDown" />
+    <result column="CUST_LEVEL_TAG_RATE" property="custLevelTagRate" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_LIMIT" property="custLevelTagLimit" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_TERM" property="custLevelTagTerm" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, APP_ID, CREDIT_DECISION_RESULT, CREDIT_DECISION_LAYER, CREDIT_DECISION_DESC, 
+    ADVISE_LIMIT, MACTH_INCOME, APPLY_SCORE, FRAUD_DECISION_RESULT, FRAUD_RESULT_DESC, 
+    SYS_DECISION_RESULT, SYS_DECISION_RESULT_DESC, SYS_CREDIT_PRODUCT, ATCH_DECISION_RESULT, 
+    ATCH_DECISION_RESULT_DESC, ATCH_APPLY_RATIO, STANDARD_DTI_CHECK, STANDARD_DL, DECISION_SEQ, 
+    CRT_DATE, CRT_USER, DECISION_DATE, CREDIT_SCORE, NONMORTGAGE_DTI_AD, CMPHSIVE_DTI_AD, 
+    RISK_OPEN_MUE_AD, NONMORTGAGE_DTI_DOWN, CMPHSIVE_DTI_DOWN, RISK_OPEN_MUE_DOWN, DEBT_APP_AUTH, 
+    PROD_LIMIT_DOWN,CUST_LEVEL_TAG_RATE,CUST_LEVEL_TAG_LIMIT,CUST_LEVEL_TAG_TERM
+    from OPAS_BZK_SYSRESULT_INFO
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectSystemApprovalResult" resultType="java.util.Map" parameterType="java.lang.String" >
+	   select a.app_id,a.cust_name,a.apply_card,c.Pre_Sellimit,
+	       b.PROPOSED_LMT,b.DECISION_RESULT,
+	       b.DECISION_DESP,b.CDT_SCORE,b.VIOL_LMT_UP,b.REALY_M_INCOME,b.UN_PLGE_DTI,
+         b.CP_DTI,b.REF_MUE,b.REF_UN_PLGE_DTI,b.REF_CP_DTI,b.REF_MUE,b.ProductAmtDown
+		  from Opas_Cust_Baseinfo a
+		  left join OPAS_FICO_YDJ_BLAZE b on a.app_id = b.app_id
+		  left join OPAS_PARAM_PRECREDIT c on a.auto_id = c.cust_id
+	   where a.APP_ID = #{appId,jdbcType=VARCHAR}
+   </select>
+   <select id="selectResultByAppId" resultType="java.lang.String" parameterType="java.lang.String" >
+    select 
+   CREDIT_DECISION_RESULT
+    from OPAS_BZK_SYSRESULT_INFO
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <!-- 征信策略 wangdebin -->
+  <insert id="insertBzkResultInfo" parameterType="com.huaxia.opas.domain.decision.OpaBzkSysResultInfo">
+		insert into 
+		OPAS_BZK_SYSRESULT_INFO 
+		( AUTO_ID, APP_ID, CREDIT_DECISION_RESULT, CREDIT_DECISION_LAYER, CREDIT_DECISION_DESC, 
+	    CRT_DATE, CRT_USER) 
+		values (
+			#{autoId,jdbcType=VARCHAR},
+			#{appId,jdbcType=VARCHAR},
+			#{creditDecisionResult,jdbcType=VARCHAR},
+			#{creditDecisionLayer,jdbcType=VARCHAR},
+			#{creditDecisionDesc,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			#{crtUser,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateBzkResultInfo" parameterType="com.huaxia.opas.domain.decision.OpaBzkSysResultInfo" >
+    update OPAS_BZK_SYSRESULT_INFO
+    set 
+      CREDIT_DECISION_RESULT = #{creditDecisionResult,jdbcType=VARCHAR},
+      CREDIT_DECISION_LAYER = #{creditDecisionLayer,jdbcType=VARCHAR},
+      CREDIT_DECISION_DESC = #{creditDecisionDesc,jdbcType=VARCHAR},
+      CRT_DATE=CURRENT_TIMESTAMP,
+      CRT_USER=#{crtUser,jdbcType=VARCHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  	</update>
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select 
+  	count(1)
+    from OPAS_BZK_SYSRESULT_INFO
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  	</select>
+  	<resultMap id="FqzRstDespResultMap" type="java.util.Map" >
+	    <result column="fqz_riskno" property="fqzRiskno" jdbcType="VARCHAR" />
+	    <result column="fqz_risktype" property="fqzRishType" jdbcType="VARCHAR" />
+	    <result column="fqz_riskcategory" property="fqzRishCategory" jdbcType="VARCHAR" />
+	    <result column="fqz_riskdesc" property="fqzRiskdesc" jdbcType="VARCHAR" />
+	    <result column="fqz_risktype1" property="fqzRishType1" jdbcType="VARCHAR" />
+	    <result column="fqz_riskcategory1" property="fqzRishCategory1" jdbcType="VARCHAR" />
+	    <result column="fqz_riskdesc1" property="fqzRiskdesc1" jdbcType="VARCHAR" />
+   </resultMap>
+  	
+   <select id="selectFqzRstDespByAppId" parameterType="java.util.Map" resultMap="FqzRstDespResultMap">
+	  select 
+               APP_ID,
+               fqz_requesttype,
+               (select fqz_desc from opas_fqz_param where fqz_id = fqz_riskno) as fqz_riskno,
+               (select fqz_desc from opas_fqz_param where fqz_id = fqz_risktype) as fqz_risktype,
+               (select fqz_desc from opas_fqz_param where fqz_id = fqz_riskcategory) as fqz_riskcategory,
+               (select fqz_desc from opas_fqz_param where fqz_id = fqz_riskdesc) as fqz_riskdesc,
+               fqz_risktype as fqz_risktype1,
+               fqz_riskcategory as fqz_riskcategory1,
+               fqz_riskdesc as fqz_riskdesc1,
+               fqz_riskno
+        from opas_fqz_result
+ 		<trim  prefix="WHERE" prefixOverrides="AND|OR">
+ 		<if test="appId !=null">
+	    AND APP_ID like '${appId}%'
+	    </if>
+	   	AND fqz_requesttype = #{fqzRequesttype,jdbcType=VARCHAR}
+	   	AND (fqz_riskno like '${fqzRisknoW}%'
+	   	or fqz_riskno like '${fqzRisknoH}%'
+	   	or fqz_riskno like '${fqzRisknoZ}%'
+	   	)
+	  </trim>
+   </select>
+  	
+</mapper>

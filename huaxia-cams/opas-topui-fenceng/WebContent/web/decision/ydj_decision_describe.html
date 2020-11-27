@@ -1,0 +1,64 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>易达金决策结果描述详情</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<!-- 决策描述-->
+		<table id="tb_decisionDescribe" class="easyui-datagrid"
+					style="width: 99%; height: 380px;" 
+					data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,selectOnCheck:false,method:'post',toolbar:'#positionCodeCondion'">
+				<thead>
+					<tr>
+						<th field="autoId" width="10%" align="center" checkbox="true"></th>
+						<th field="ruleDecisionResult" width="30%" align="left" sortable="true" >决策结果</th>
+						<th field="ruleTriggerReason" width="50%" align="left" sortable="true" >决策结果描述</th>
+					</tr>
+				</thead>
+			</table>
+			<!-- <div  style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('decisionDescribe')">取消</a>
+			</div> -->
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var appId;
+	 $(function(){
+		 //获取参数
+		 appId = GetQueryString("appId");
+		 var obj= GetQueryString("obj");
+		 var tbCommonWin = "tb_"+obj;
+		var opts = $("#"+tbCommonWin).datagrid("options");
+		var s = {"appId":appId,"page":opts.pageNumber,"rows":opts.pageSize};
+		$cf.ajax({
+			url : "/opas-naps/queryDecisionDescribe_tab_view.json",
+			data : s,
+			onSuccess : function(dataRes) {
+				var total = dataRes.RSP_BODY.total;
+				if(total=='undefined'||total==''||total==null){
+					total=0;
+				}
+				var dataMap = {
+					"rows" : dataRes.RSP_BODY.rows,
+					"total" : total
+				};
+				showWin(obj);
+				$("#"+tbCommonWin).datagrid("loadData", dataMap);
+				$("#"+tbCommonWin).datagrid('getRows');
+			/* 	if(total>1){
+					showWin(obj);
+					$("#"+tbCommonWin).datagrid("loadData", dataMap);
+					$("#"+tbCommonWin).datagrid('getRows');
+				} */
+			}
+		});
+	 });
+</script>
+</html>

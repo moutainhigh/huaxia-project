@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body style="padding: 10px;">
+	<div id="queryNumLimitSearch_div">
+	
+		<fieldset>
+			<legend>查询数量设置</legend>
+			<div align="center">
+			<form id="queryNumLimitSearch_form">
+			开始时间：<input id="queryNumLimitSearch_beginDate" name="limitStartDate" class="easyui-datebox" style="width:150px;"
+			data-options="required:true,editable:false"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			截止时间：<input id="queryNumLimitSearch_endDate" name="limitEndDate" class="easyui-datebox" style="width:150px;"
+			data-options="required:true,editable:false"/>
+			<br><br><br>
+			<input id="successedSearchNum" type="text" name="successedSearchNum" style="width:310px" readOnly="readonly"/>当前实际查询成功条数
+			<input id="limitQueryCount" type="text"  name="limitQueryCount" style="width:310px" />最大查询条数
+			</form>
+			<br><br><br>
+			<a href="javascript:void(0)"class="easyui-linkbutton" onclick="saveOrUpdateSearchNumControl()">保存</a>
+			</div>
+		</fieldset>
+	</div>
+</body>
+<script type="text/javascript">
+
+var currentType=getCurrentUrlParam(); //0002-FICO  0900-车辆   1000-天御 
+$(function(){
+	querySearchNumControlTimeQuantum();
+});
+//查询 时间段内的 条数限制 和 实际查询成功条数 
+function  querySearchNumControlTimeQuantum(){
+	var param=new Object();
+	param.limitModuleType=currentType;
+	$cf.ajax({
+		url : "/opas-naps/querySearchNumControlTimeQuantum.json",
+		data : param,
+		async:false,
+		onSuccess : function(data) {
+			if(data.RSP_BODY.success){
+				var searchData= eval('(' + data.RSP_BODY.htmlMap + ')');
+				$('#queryNumLimitSearch_form').form("load", searchData);
+			}
+		}
+	});
+}
+
+
+
+//保存查询数量的控制 
+function saveOrUpdateSearchNumControl(){
+	var limitStartDate="";
+	var limitEndDate="";
+	var beginDate=$('#queryNumLimitSearch_beginDate').datebox('getValue');
+	if(beginDate!=null&&beginDate!=""&&beginDate!=undefined){
+		limitStartDate=beginDate;
+	}
+	var endDate=$('#queryNumLimitSearch_endDate').datebox('getValue');
+	if(endDate!=null&&endDate!=""&&endDate!=undefined){
+		limitEndDate=endDate;
+	}
+	if(limitStartDate==""&&limitEndDate==""){
+		$.messager.alert("提示","请选择起止日期。", "warning");
+		return ;
+	}
+	if(endDate<beginDate){
+		$.messager.alert("提示","开始时间不能大于截止时间。", "warning");
+		return ;
+	}
+	var limitQueryCount="";
+	var maxNum=$('#limitQueryCount').val();
+	var re=/^[0-9]+.?[0-9]*$/;  //判断字符串是否为数字 
+	if(!re.test(maxNum)){
+		$.messager.alert("提示","最大查询条数,请输入数字。", "warning");
+		return ;
+	}else{
+		limitQueryCount=maxNum;
+	}
+	var param=new Object();
+	param.limitModuleType=currentType;
+	param.limitStartDate=limitStartDate;
+	param.limitEndDate=limitEndDate;
+	param.limitQueryCount=limitQueryCount;
+	$cf.ajax({
+		url : "/opas-naps/saveOrUpdateSearchNumControl.json",
+		data : param,
+		async:false,
+		onSuccess : function(data) {
+			 if (data.RSP_BODY.success) {
+				 querySearchNumControlTimeQuantum();
+				$.messager.alert("提示", "保存成功。", "warning");
+			} else{
+				$.messager.alert("操作提示", "保存失败。", "warning");
+			}
+		}
+	});
+}
+function getCurrentUrlParam(){
+	var currentUrl=window.location.href;
+	return  currentUrl.split("=")[1];
+}
+
+</script>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>套卡产品定义</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="margin: 5px; width: 96%;">
+<table id="tbl_confCardProduct" class="easyui-datagrid" style="width: 100%;height:500px;" data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,pageList:[20,50,200],pageSize:20,loadMsg:'数据加载中.....',method:'post',toolbar:'#confCardProductSearchCondion'">
+	<thead frozen="true">
+		<tr>
+			<th field="guid" width="5%" align="center" checkbox="true">GUID</th>
+			<th field="cardProdCode" width="5%" align="center" hidden="true" >卡产品编号</th>
+			<th field="cardFaceCode" width="15%" formatter="formatCardFaceCode" hidden="true" >卡版面</th>
+			<th field="cardProdName" width="10%" hidden="true" >卡产品名称</th>
+			<th field="cardFeedProd" width="5%" align="center">套卡产品编号</th>
+			<th field="cardFeedFace" width="15%" formatter="formatCardFaceCode">套卡版面</th>
+			<th field="cardFeedName" width="10%">套卡产品名称</th>
+			<th field="operate" width="10%" align="center" data-options="formatter:formatOperSub">操作</th>
+		</tr>
+	</thead>
+	<thead>
+		<tr>
+			<th field="cardLevel" width="5%" align="center" formatter="formatCardLevel">卡种级别</th>
+			<th field="yearFreeCode" width="20%" align="center" formatter="formatYearFreeCode">年费代码</th>
+			<th field="opencardGiftCode" width="10%" align="center" formatter="formatOpencardGiftCode">开卡礼编号</th>
+			<th field="cashLoanAmt" width="10%" align="center">现金贷款额度(千元)</th>
+			<th field="creditAmt" width="10%" align="center">循环授信额度(千元)</th>
+			<th field="foreignType" width="10%" align="center" formatter="formatForeignType">购汇类型</th>
+			<th field="cardFeedAmtScale" width="10%" align="center">套卡额度比例(%)</th>
+			<th field="cardAmtMin" width="10%" align="center">额度下限(千元)</th>
+			<th field="cardAmtMax" width="10%" align="center">额度上限(千元)</th>
+			<th field="extValidYear" width="10%" align="center">续卡有效期年数</th>
+			<th field="firstValidYear" width="10%" align="center">首次发卡有效期年数</th>
+			<th field="pointPlan" width="10%" align="center" formatter="formatPointPlan">积分计划偏好</th>
+		</tr>
+	</thead>
+</table>
+<div id="confCardProductSearchCondion" style="padding: 2px 5px;">
+	<form id="seachForm">
+		<table cellpadding="10" style="border-collapse:separate; border-spacing:10px;">
+			<tr>
+				<td colspan="6" align="center">
+					<a href="javascript:doAdd();" class="easyui-linkbutton" iconCls="icon-add">新 增</a>
+				</td>
+			</tr>			
+		</table>
+	</form>
+</div>
+</div>
+
+
+<div id="dd" style="display:none;"></div>
+
+<div id="winEdit" class="easyui-window" title="卡产品参数维护" style="display:none; width: 500px; height: 600px" data-options="iconCls:'icon-save',modal:true,closed:true">
+	<form id="editForm" method="post">
+		<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td align="right">套卡产品编号:</td>
+				<td><input class="easyui-validatebox textbox" id="cardFeedProd" type="text" name="cardFeedProd" data-options="required:true,validType:['length[0,4]']"></input></td>
+			</tr>
+			<tr>
+				<td align="right">套卡版面:</td>
+				<td><select class="easyui-combobox" name="cardFeedFace" id="cardFeedFace" style="width: 250px" dict_type="ZDHXKBM" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select></td>
+			</tr>
+			<tr>
+				<td align="right">套卡产品名称:</td>
+				<td><input class="easyui-validatebox textbox" id="cardFeedName" type="text" name="cardFeedName" data-options="required:true"></input></td>
+			</tr>
+			<tr>
+				<td align="right">套卡产品描述:</td>
+				<td><input class="easyui-validatebox textbox" id="cardFeedDesc" type="text" name="cardFeedDesc"></input></td>
+			</tr>
+			<tr>
+				<td align="right">卡种级别:</td>
+				<td><select class="easyui-combobox" name="cardLevel" id="cardLevel" style="width: 250px" dict_type="ZDHXKZJB" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select></td>
+			</tr>
+			<tr>
+				<td align="right">年费代码:</td>
+				<td><select class="easyui-combobox" name="yearFreeCode" id="yearFreeCode" style="width: 250px" dict_type="ZDHXNFDM" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select></td>
+			</tr>
+			<tr>
+				<td align="right">开卡礼编号:</td>
+				<td><select class="easyui-combobox" name="opencardGiftCode" id="opencardGiftCode" style="width: 250px" dict_type="ZDHXKKLBH" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select></td>
+			</tr>
+			<tr>
+				<td align="right">现金贷款额度(千元):</td>
+				<td><input class="easyui-validatebox textbox" id="cashLoanAmt" type="text" name="cashLoanAmt" data-options="validType:'money'" readonly="readonly"></input></td>
+			</tr>
+			<tr>
+				<td align="right">现金贷款比例(%):</td>
+				<td><input class="easyui-validatebox textbox" id="cashLoanScale" type="text" name="cashLoanScale" data-options="validType:'money'"  onkeyup="setCashLoanAmt()"></input></td>
+			</tr>
+			<tr>
+				<td align="right">现金贷款下限(千元):</td>
+				<td><input class="easyui-validatebox textbox" id="cashLoanMin" type="text" name="cashLoanMin" data-options="validType:'money'" onkeyup="setCashLoanAmt()"></input></td>
+			</tr>
+			<tr>
+				<td align="right">现金贷款上限(千元):</td>
+				<td><input class="easyui-validatebox textbox" id="cashLoanMax" type="text" name="cashLoanMax" data-options="validType:'money'" onkeyup="setCashLoanAmt()"></input></td>
+			</tr>
+			<tr>
+				<td align="right">循环授信额度(千元):</td>
+				<td><input class="easyui-validatebox textbox" id="creditAmt" type="text" name="creditAmt" data-options="validType:'money'" onkeyup="setCashLoanAmt()"></input></td>
+			</tr>
+			<tr>
+				<td align="right">购汇类型:</td>
+				<td><select class="easyui-combobox" name="foreignType" id="foreignType" style="width: 250px" dict_type="ZDHXGHLX" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select></td>
+			</tr>
+			<tr>
+				<td align="right">套卡额度比例(%):</td>
+				<td><input class="easyui-validatebox textbox" id="cardFeedAmtScale" type="text" name="cardFeedAmtScale" data-options="validType:'money'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">额度下限(千元):</td>
+				<td><input class="easyui-validatebox textbox" id="cardAmtMin" type="text" name="cardAmtMin" data-options="validType:'money'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">额度上限(千元):</td>
+				<td><input class="easyui-validatebox textbox" id="cardAmtMax" type="text" name="cardAmtMax" data-options="validType:'money'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">续卡有效期年数:</td>
+				<td><input class="easyui-validatebox textbox" id="extValidYear" type="text" name="extValidYear" data-options="validType:'number'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">首次发卡有效期年数:</td>
+				<td><input class="easyui-validatebox textbox" id="firstValidYear" type="text" name="firstValidYear" data-options="validType:'number'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">积分计划偏好:</td>
+				<td><select class="easyui-combobox" name="pointPlan" id="pointPlan" style="width: 250px" dict_type="ZDHXZJJFJHPH" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select></td>
+			</tr>
+		</table>
+		<input type="hidden" name="cardProdCode" id="cardProdCode" />
+		<input type="hidden" name="cardFaceCode" id="cardFaceCode" />
+		<input type="hidden" name="prodType" id="prodType" />
+		<input type="hidden" name="guid" id="guid" />
+	</form>
+	<div style="text-align: center; padding: 5px">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')" iconCls="icon-cancel">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()" iconCls="icon-save">保存</a>
+	</div>
+</div>
+
+</body>
+<script>
+$cf.loadAllDict();//加载数据字典
+
+var urlParam = getURLParam();
+
+//alert($cf.encode(urlParam));
+
+var v_userRelInfo = $cf.getStore("userRelInfo",INDEX_KEY);
+var v_userCode = v_userRelInfo.userInfo.userCode;
+
+// 卡产品参数维护界面
+var datatable = $("#tbl_confCardProduct");
+var editWindow = $("#winEdit");
+var editForm = $("#editForm");
+
+
+searchInfo();
+
+// 查询 卡产品信息
+function searchInfo(){
+	var url = "/opas-manualnode-auth/conf_queryConfCardProduct4TK.json";
+	$("#tbl_confCardProduct").datagrid({
+		url: url,
+		queryParams: urlParam
+	});
+}
+function doEdit() {
+	var selectedData = datatable.datagrid("getSelected");
+	
+	editWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(selectedData)
+	});
+}
+function doAdd() {
+	editForm.form("clear");
+	
+	editWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false
+	});
+}
+function doDelete() {
+	$.messager.confirm(
+		'请您确认',
+		'确定要删除吗?',
+		function(r) {
+			if (r) {
+				var selectedData = datatable.datagrid("getSelected");
+				// 删除
+				$cf.ajax({
+					url : "/opas-manualnode-auth/conf_deleteConfCardProduct.json",
+					data : selectedData,
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							top.$cf.showMsg("删除成功!");
+							
+							searchInfo();
+							
+						} else {
+							$.messager.alert("操作提示", "删除异常，原因:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		}
+	);
+}
+function onUpdate() {
+	var jsondata = getFormData(editForm.serializeArray());
+	
+	jsondata.prodType = "2"; // 2-套卡
+	
+	jsondata.cardProdCode = urlParam.cardProdCode;
+	jsondata.cardFaceCode = urlParam.cardFaceCode;
+	
+
+	jsondata.crtUser = v_userCode;
+	jsondata.lstUpdUser = v_userCode;
+	
+	if (jsondata.guid=="") {
+		// 新增
+		$cf.ajax({
+			url : "/opas-manualnode-auth/conf_addConfCardProduct.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					
+					top.$cf.showMsg("保存成功!");
+					
+					onConcle("winEdit");
+					searchInfo();
+					
+				} else {
+					$.messager.alert("操作提示", "新增异常，原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	} else {
+		// 修改
+		$cf.ajax({
+			url : "/opas-manualnode-auth/conf_updateConfCardProduct.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("保存成功!");
+					
+					onConcle("winEdit");
+					searchInfo();
+					
+				} else {
+					$.messager.alert("操作提示", "修改异常，原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+}
+function setData(data) {
+	editForm.form("load", data);
+}
+
+function close() {
+	$("#dd").window('close');
+}
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window("close");
+}
+// 获取表单数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+
+function setCashLoanAmt(){
+	//var cashLoanAmt  = $("#cashLoanAmt").val();
+	var cashLoanScale = $("#cashLoanScale").val();
+	var cashLoanMax = $("#cashLoanMax").val();
+	var cashLoanMin = $("#cashLoanMin").val();
+	var creditAmt = $("#creditAmt").val();
+	/*
+	if(cashLoanScale==null || cashLoanScale==""){
+		alert("请填写现金贷款比例");
+		return;
+	}
+	if(cashLoanMax==null || cashLoanMax==""){
+		alert("请填写现金贷款上限");
+		return;
+	}
+	if(cashLoanMin==null || cashLoanMin==""){
+		alert("请填写现金贷款下限");
+		return;
+	}
+	*/
+	
+	var cashAmt = creditAmt*(cashLoanScale/100);
+	if(cashAmt>cashLoanMax){
+		cashAmt=cashLoanMax;
+	}else if(cashAmt<cashLoanMin){
+		cashAmt=cashLoanMin;
+	}
+	$("#cashLoanAmt").val(cashAmt);
+}
+
+// 格式化字段
+function formatOperSub(val, row, index) {
+	return "<a href=javascript:doEdit(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:doDelete();>删除</a>";
+}
+
+function formatCardFaceCode(val, row, index) {
+	return $cf.getDictDetailName("ZDHXKBM", val);
+}
+function formatCardLevel(val, row, index) {
+	return $cf.getDictDetailName("ZDHXKZJB", val);
+}
+function formatYearFreeCode(val, row, index) {
+	return $cf.getDictDetailName("ZDHXNFDM", val);
+}
+function formatOpencardGiftCode(val, row, index) {
+	return $cf.getDictDetailName("ZDHXKKLBH", val);
+}
+function formatForeignType(val, row, index) {
+	return $cf.getDictDetailName("ZDHXGHLX", val);
+}
+function formatPointPlan(val, row, index) {
+	return $cf.getDictDetailName("ZDHXZJJFJHPH", val);
+}
+
+
+</script>

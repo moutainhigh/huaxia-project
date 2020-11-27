@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsSignSmryTotalMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsSignSmryTotal">
+		INSERT INTO SP_APS_IFS_SIGN_SMRY_TOTAL (
+			APP_ID,CUSTID,FIXEDDEPSIGN,CURRSIGN,FINSIGN,FUNDSIGN,EBONDSIGN,BONDSIGN,INSSIGN,TPCCSIGN,TRUSTSIGN,GOLDSIGN,
+			WHTRANSSIGN,WYLTSING,INTACCONTSIGN,LNS_SIGN,CR_CARDSIGN,NETBANK_QY_SIGN,NETBANK_ZS_SIGN,POS_SIGN,TPOS_SING,
+			PHONEBANK_SIGN,ATM_IBT_SIGN,MPHONE_SIGN,MESSAGE_SIGN,PAYROLL_SIGN,CON_DEPOSIT_SIGN,TREA_CARD_SIGN,
+			EBUSI_SIGN,CRCARDAUTO_SIGN,NOCARD_PAY_SIGN,UP_NETPAY_SIGN,ELEPAY_SIGN,UP_NOCARDPAY_SIGN,BILLSIGN,ETC_SIGN,
+			DTOL_SIGN,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{fixedDepSign, jdbcType = VARCHAR},
+			#{currSign, jdbcType = VARCHAR},
+			#{finSign, jdbcType = VARCHAR},
+			#{fundSign, jdbcType = VARCHAR},
+			#{eBondSign, jdbcType = VARCHAR},
+			#{bondSign, jdbcType = VARCHAR},
+			#{insSign, jdbcType = VARCHAR},
+			#{tpccSign, jdbcType = INTEGER},
+			#{trustSign, jdbcType = VARCHAR},
+			#{goldSign, jdbcType = INTEGER},
+			#{whTransSign, jdbcType = VARCHAR},
+			#{wyltSign, jdbcType = INTEGER},
+			#{intAccontSign, jdbcType = VARCHAR},
+			#{lnsSign, jdbcType = VARCHAR},
+			#{crCardSign, jdbcType = VARCHAR},
+			#{netBankQySign, jdbcType = VARCHAR},
+			#{netBankZsSign, jdbcType = VARCHAR},
+			#{posSign, jdbcType = VARCHAR},
+			#{tPosSign, jdbcType = VARCHAR},
+			#{phoneBankSign, jdbcType = VARCHAR},
+			#{atmIbtSign, jdbcType = VARCHAR},
+			#{mPhoneSing, jdbcType = VARCHAR},
+			#{messageSign, jdbcType = VARCHAR},
+			#{payRollSign, jdbcType = VARCHAR},
+			#{conDepositSign, jdbcType = VARCHAR},
+			#{treaCardSign, jdbcType = VARCHAR},
+			#{eBusiSign, jdbcType = VARCHAR},
+			#{crCardAutoSign, jdbcType = VARCHAR},
+			#{noCardPaySign, jdbcType = VARCHAR},
+			#{upNetPaySign, jdbcType = VARCHAR},
+			#{elePaySign, jdbcType = VARCHAR},
+			#{upNoCardPaySign, jdbcType = VARCHAR},
+			#{billSign, jdbcType = VARCHAR},
+			#{etcSign, jdbcType = VARCHAR},
+			#{dTolSign, jdbcType = VARCHAR},
+			#{dDate, jdbcType = DATE}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_SIGN_SMRY_TOTAL (
+			APP_ID,CUSTID,FIXEDDEPSIGN,CURRSIGN,FINSIGN,FUNDSIGN,EBONDSIGN,BONDSIGN,INSSIGN,TPCCSIGN,TRUSTSIGN,GOLDSIGN,
+			WHTRANSSIGN,WYLTSING,INTACCONTSIGN,LNS_SIGN,CR_CARDSIGN,NETBANK_QY_SIGN,NETBANK_ZS_SIGN,POS_SIGN,TPOS_SING,
+			PHONEBANK_SIGN,ATM_IBT_SIGN,MPHONE_SIGN,MESSAGE_SIGN,PAYROLL_SIGN,CON_DEPOSIT_SIGN,TREA_CARD_SIGN,
+			EBUSI_SIGN,CRCARDAUTO_SIGN,NOCARD_PAY_SIGN,UP_NETPAY_SIGN,ELEPAY_SIGN,UP_NOCARDPAY_SIGN,BILLSIGN,ETC_SIGN,
+			DTOL_SIGN,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.fixedDepSign, jdbcType = VARCHAR},
+			#{item.currSign, jdbcType = VARCHAR},
+			#{item.finSign, jdbcType = VARCHAR},
+			#{item.fundSign, jdbcType = VARCHAR},
+			#{item.eBondSign, jdbcType = VARCHAR},
+			#{item.bondSign, jdbcType = VARCHAR},
+			#{item.insSign, jdbcType = VARCHAR},
+			#{item.tpccSign, jdbcType = INTEGER},
+			#{item.trustSign, jdbcType = VARCHAR},
+			#{item.goldSign, jdbcType = INTEGER},
+			#{item.whTransSign, jdbcType = VARCHAR},
+			#{item.wyltSign, jdbcType = INTEGER},
+			#{item.intAccontSign, jdbcType = VARCHAR},
+			#{item.lnsSign, jdbcType = VARCHAR},
+			#{item.crCardSign, jdbcType = VARCHAR},
+			#{item.netBankQySign, jdbcType = VARCHAR},
+			#{item.netBankZsSign, jdbcType = VARCHAR},
+			#{item.posSign, jdbcType = VARCHAR},
+			#{item.tPosSign, jdbcType = VARCHAR},
+			#{item.phoneBankSign, jdbcType = VARCHAR},
+			#{item.atmIbtSign, jdbcType = VARCHAR},
+			#{item.mPhoneSing, jdbcType = VARCHAR},
+			#{item.messageSign, jdbcType = VARCHAR},
+			#{item.payRollSign, jdbcType = VARCHAR},
+			#{item.conDepositSign, jdbcType = VARCHAR},
+			#{item.treaCardSign, jdbcType = VARCHAR},
+			#{item.eBusiSign, jdbcType = VARCHAR},
+			#{item.crCardAutoSign, jdbcType = VARCHAR},
+			#{item.noCardPaySign, jdbcType = VARCHAR},
+			#{item.upNetPaySign, jdbcType = VARCHAR},
+			#{item.elePaySign, jdbcType = VARCHAR},
+			#{item.upNoCardPaySign, jdbcType = VARCHAR},
+			#{item.billSign, jdbcType = VARCHAR},
+			#{item.etcSign, jdbcType = VARCHAR},
+			#{item.dTolSign, jdbcType = VARCHAR},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

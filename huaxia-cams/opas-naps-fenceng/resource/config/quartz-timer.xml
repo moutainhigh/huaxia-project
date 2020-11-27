@@ -1,0 +1,65 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/task 
+		http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<bean id="wSPlatformRiskInvestAction" class="com.huaxia.opas.action.riskCheck.WSPlatformRiskInvestAction" />
+	
+	<!-- 定时执行派发协查任务自动执行从预审返回审批操作  调度工厂 -->
+    <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+	     <property name="triggers">  
+	        <list> 
+	        	<ref bean="autoDeleteTempAppIdsMethodBean"/>
+	        	<ref bean="autotest"/>
+	        </list>  
+	     </property>  
+    </bean> 
+   	<!-- 派发协查任务自动执行从预审返回审批 -->
+   	<bean id="autoDeleteTempAppIdsMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+	   	<!--注入目标对象 -->
+	    <property name="targetObject">  
+	        <ref bean="wSPlatformRiskInvestAction"/>  
+	    </property>  
+	    <!--注入目标方法 -->
+	    <property name="targetMethod">
+	        <value>autoDeleteTempAppIds</value>  
+	    </property>  
+	    <!-- 设置为false：当上一个trigger执行完后才会执行下一个job，保证不会并打执行 -->
+		<property name="concurrent" value="false"></property>
+	</bean>  
+	<!--注册触发器，指定触发时间 -->
+	<bean id="autoDeleteTempAppIdsMethodBean" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+	    <property name="jobDetail" ref="autoDeleteTempAppIdsMethod"></property> 
+	    <!--表达式，用于定义触发的时间 --> 
+	    <property name="cronExpression" value="0 0 3 ? * L"></property>  
+	</bean>
+	
+	<!--定时把低风险客户名单库文件入数据库表 -->
+	<bean id="uploadLowRiskCustomersAction" class="com.huaxia.opas.action.sysparm.UploadLowRiskCustomersAction" />
+		
+		<!-- 定时执行派发协查任务自动执行从预审返回审批操作  调度工厂 -->
+	   	<!-- 派发协查任务自动执行从预审返回审批 -->
+	   	<bean id="autoTest2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+		   	<!--注入目标对象 -->
+		    <property name="targetObject">  
+		        <ref bean="uploadLowRiskCustomersAction"/>  
+		    </property>  
+		    <!--注入目标方法 -->
+		    <property name="targetMethod">
+		        <value>executeCheckTime</value>  
+		    </property>  
+		    <!-- 设置为false：当上一个trigger执行完后才会执行下一个job，保证不会并打执行 -->
+			<property name="concurrent" value="false"></property>
+		</bean>  
+		<!--注册触发器，指定触发时间 -->
+		<bean id="autotest" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+		    <property name="jobDetail" ref="autoTest2" />
+		    <!--表达式，用于定义触发的时间 --> 
+	    <property name="cronExpression" value="30 * * * * ?"></property>   
+	</bean>
+</beans>

@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="QiYe">
+	<!-- 查询结果展示 -->
+	<resultMap id="QiYeCodeMap" type="java.util.Map">
+		<!--javaType="java.lang.String",用来接收数据库的integer类型,方便转换成string  -->
+		<result column="CODE" property="code" javaType="java.lang.String" />
+	</resultMap>
+	<select id="queryQiYeCode" parameterType="java.lang.String"
+		resultMap="QiYeCodeMap">
+		select 
+		CODE 
+		from TRD_QYHY_INFO_DATA 
+		where app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	
+
+
+
+	<!-- 查询企业信息 -->
+	<resultMap id="QiYeDatailsMap" type="java.util.Map">
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="DHHM" property="dhhm" jdbcType="VARCHAR" />
+		<result column="REGCAPCUR" property="regcapcur" jdbcType="VARCHAR" />
+		<result column="OPTO" property="opto" jdbcType="VARCHAR" />
+		<result column="ZFRQ" property="zfrq" jdbcType="VARCHAR" />
+		<result column="EMPNUM" property="empnum" jdbcType="VARCHAR" />
+		<result column="ZGRS" property="zgrs" jdbcType="VARCHAR" />
+		<result column="REGCAP" property="regcap" jdbcType="VARCHAR" />
+		<result column="ZCZJ" property="zczj" jdbcType="VARCHAR" />
+		<result column="DOM" property="dom" jdbcType="VARCHAR" />
+		<result column="JGDZ" property="jgdz" jdbcType="VARCHAR" />
+		<result column="ZSOPSCOPE" property="zsopscope" jdbcType="VARCHAR" />
+		<result column="JYFW" property="jyfw" jdbcType="VARCHAR" />
+		<result column="ESDATE" property="esdate" jdbcType="VARCHAR" />
+		<result column="ZCRQ" property="zcrq" jdbcType="VARCHAR" />
+		<result column="INDUSTRYCONAME" property="industryconame"
+			jdbcType="VARCHAR" />
+		<result column="OPFROM" property="opfrom" jdbcType="VARCHAR" />
+		<result column="BZRQ" property="bzrq" jdbcType="VARCHAR" />
+		<result column="ENTTYPE" property="enttype" jdbcType="VARCHAR" />
+		<result column="JJLXDM" property="jjlxdm" jdbcType="VARCHAR" />
+		<result column="FRNAME" property="frname" jdbcType="VARCHAR" />
+		<result column="FDDBR" property="fddbr" jdbcType="VARCHAR" />
+		<result column="ENTSTATUS" property="entstatus" jdbcType="VARCHAR" />
+		<result column="JYZT" property="jyzt" jdbcType="VARCHAR" />
+		<result column="ENTNAME" property="entname" jdbcType="VARCHAR" />
+		<result column="JGMC" property="jgmc" jdbcType="VARCHAR" />
+		<result column="REGORGPROVINCE" property="regorgprovince"
+			jdbcType="VARCHAR" />
+		<result column="ENTNAME_OLD" property="entnameold" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryQiYeDatails" parameterType="java.lang.String"
+		resultMap="QiYeDatailsMap">
+		<!-- select t1.industryconame, t1.opto, t1.opfrom, t1.entname, t1.esdate, 
+			t1.frname, t1.entstatus, t1.regorgprovince, t1.regcapcur, t1.dom, t1.tel, 
+			t1.empnum, t1.entname_old, t1.enttypecode, t2.jyfw, t2.zczj from TRD_QYHY_INFO_BASIC 
+			t1 left join TRD_QYHY_INFO_ORGDETAIL t2 on t1.app_id = t2.app_id where t1.app_id 
+			= #{appId, jdbcType=VARCHAR} -->
+		select
+		t1.TEL||t2.DHHM as TEL,
+		t1.REGCAPCUR ,
+		t1.OPTO||t2.ZFRQ as OPTO,
+		t1.EMPNUM ||t2.ZGRS as EMPNUM,
+		t1.REGCAP||t2.ZCZJ as REGCAP,
+		t1.DOM||t2.JGDZ as DOM,
+		t1.ZSOPSCOPE||t2.JYFW as ZSOPSCOPE,
+		t1.ESDATE||t2.ZCRQ as ESDATE,
+		t1.INDUSTRYCONAME||t2.JJHYDM as INDUSTRYCONAME,
+		t1.OPFROM||t2.BZRQ as OPFROM,
+		t1.ENTTYPE||t2.JJLXDM as ENTTYPE,
+		t1.FRNAME||t2.FDDBR as FRNAME,
+		t1.ENTSTATUS||t2.JYZT as ENTSTATUS,
+		t1.ENTNAME||t2.JGMC as ENTNAME,
+		t1.REGORGPROVINCE ,
+		t1.ENTNAME_OLD
+		from TRD_QYHY_INFO_DATA t left join
+		TRD_QYHY_INFO_BASIC t1 on t.app_id = t1.app_id
+		left join TRD_QYHY_INFO_ORGDETAIL t2 on t.app_id = t2.app_id
+		where t.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	
+		<!-- 概要部分 -->
+	<!-- <resultMap id="QiYeInfoMap" type="java.util.Map">
+		<result column="ENTNAME" property="entName" jdbcType="VARCHAR" />
+		<result column="ZCZJ" property="zCZJ" jdbcType="VARCHAR" />
+		<result column="INDUSTRYCONAME" property="industrycoName"
+			jdbcType="VARCHAR" />
+		<result column="REGCAPCUR" property="regcapcur" jdbcType="VARCHAR" />
+		<result column="FRNAME" property="frName" jdbcType="VARCHAR" />
+		<result column="ENTSTATUS" property="entStatus" jdbcType="VARCHAR" />
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="ENTTYPECODE" property="entTypeCode" jdbcType="VARCHAR" />
+		<result column="EMPNUM" property="empnum" jdbcType="VARCHAR" />
+		<result column="REGORGPROVINCE" property="regorgProvince"
+			jdbcType="VARCHAR" />
+		<result column="ENTNAME_OLD" property="entNameOld" jdbcType="VARCHAR" />
+		<result column="OPFROM" property="opFrom" jdbcType="VARCHAR" />
+		<result column="ESDATE" property="esDate" jdbcType="VARCHAR" />
+		<result column="OPTO" property="opto" jdbcType="VARCHAR" />
+		<result column="DOM" property="dom" jdbcType="VARCHAR" />
+		<result column="JYFW" property="jYFW" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryQiYeInfo" parameterType="java.lang.String"
+		resultMap="QiYeInfoMap">
+		select t1.industryconame,
+		t1.opto,
+		t1.opfrom,
+		t1.entname,
+		t1.esdate,
+		t1.frname,
+		t1.entstatus,
+		t1.regorgprovince,
+		t1.regcapcur,
+		t1.dom,
+		t1.tel,
+		t1.empnum,
+		t1.entname_old,
+		t1.enttypecode,
+		t2.jyfw,
+		t2.zczj
+		from
+		TRD_QYHY_INFO_BASIC t1
+		left join TRD_QYHY_INFO_ORGDETAIL t2 on
+		t1.app_id = t2.app_id
+		where t1.app_id = #{appId, jdbcType=VARCHAR}
+	</select> -->
+
+	<!-- 企业及行业信息    查询条数详细部分 -->
+	<resultMap id="QiYeNumberMap" type="java.util.Map">
+		<result column="JANUARY" property="JAN" jdbcType="VARCHAR" />
+		<result column="FEBRUARY" property="FEB" jdbcType="VARCHAR" />
+		<result column="MARCH" property="MAR" jdbcType="VARCHAR" />
+		<result column="APRIL" property="APR" jdbcType="VARCHAR" />
+		<result column="MAY" property="MAY" jdbcType="VARCHAR" />
+		<result column="JUNE" property="JUN" jdbcType="VARCHAR" />
+		<result column="JULY" property="JUL" jdbcType="VARCHAR" />
+		<result column="AUGUST" property="AUG" jdbcType="VARCHAR" />
+		<result column="SEPTEMBER" property="SEP" jdbcType="VARCHAR" />
+		<result column="OCTOBER" property="OCT" jdbcType="VARCHAR" />
+		<result column="NOVEMBER" property="NOV" jdbcType="VARCHAR" />
+		<result column="DECEMBER" property="DEC" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryQiYeNumber" parameterType="java.lang.String"
+		resultMap="QiYeNumberMap">
+		select a.january,
+		a.february,
+		a.march,
+		a.april,
+		a.may,
+		a.june,
+		a.july,
+		a.august,
+		a.september,
+		a.october,
+		a.november,
+		a.december
+ 		from rpt_month_count a 
+ 		where a.module_code = '1200' 
+ 		and a.report_year = #{yearNumber, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 查询当前的年份时间 -->
+	<resultMap id="YearMap" type="java.util.Map">
+		<result column="YEAR" property="year" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id = "queryYear" resultMap = "YearMap">
+		select to_char (sysdate,'yyyy')from dual;
+	</select>
+	<!-- 查询当前的月份时间 -->
+	<resultMap id="MonthMap" type="java.util.Map">
+		<result column="MONTH" property="month" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id = "queryMonth" resultMap = "MonthMap">
+		select to_char (sysdate,'mm')from dual;
+	</select>
+	<!-- 查询有无当前年份的数据 -->
+	<resultMap id="YearNumberMap" type="java.util.Map">
+		<result column="YEARNUMBER" property="yearnumber" jdbcType="CHAR" />
+	</resultMap>
+	<select id = "queryYearNumber"  parameterType="java.lang.String"
+		resultMap = "YearNumberMap">
+		select 
+		t.report_year 
+		from rpt_month_count t 
+		where t.module_code = '1200'  
+		and t.report_year = #{year, jdbcType=VARCHAR}
+	</select>
+	<!-- 插入新的年份数据 -->
+	<insert id = "insterYear" parameterType = "java.util.Map">
+		insert into rpt_month_count
+		(UUID,
+		 CRT_TIME,
+		 CRT_USER,
+		 MODULE_CODE,
+		 REPORT_YEAR,
+		 JANUARY,
+		 FEBRUARY,
+		 MARCH,
+		 APRIL,
+		 MAY,
+		 JUNE,
+		 JULY,
+		 AUGUST,
+		 SEPTEMBER,
+		 OCTOBER,
+		 NOVEMBER,
+		 DECEMBER)
+		 values
+		 (#{uuid,jdbcType=VARCHAR},
+		  SYSDATE,
+		  system,
+		  1200,
+		  #{year,jdbcType=VARCHAR},
+		  #{number,jdbcType=VARCHAR},
+		  0,
+		  0,		 
+		  0,		 
+		  0,		 
+		  0,		 
+		  0,		 
+		  0,		 
+		  0,		 
+		  0,
+		  0,
+		  0)
+	</insert>
+	<!-- 查询当前月份的查询数量 -->
+	<resultMap id="MonthNumberMap" type="java.util.Map">
+		<result column="NUM" property="num" jdbcType="CHAR" />
+	</resultMap>
+	<select id = "queryMonthNumber"  parameterType="java.lang.String"
+		resultMap = "MonthNumberMap">
+		select sum(case when currmounth = #{selectTime,jdbcType=VARCHAR} then 1 else 0 end) as NUM
+       		   from ( select to_char(crt_time, 'YYYY-MM') as currmounth   
+       		   from TRD_QYHY_INFO_DATA a where  a.code='200' )
+	</select>
+	
+	<!-- 保存查询数据 -->
+	<update id = "updateMonthNumber"  parameterType="java.util.Map">   		   
+        update rpt_month_count 
+        	<set>
+        		<if test = "month == '02'.toString">
+        			FEBRUARY = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '03'.toString">
+        			MARCH = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '04'.toString">
+        			APRIL = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '05'.toString">
+        			MAY = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '06'.toString">
+        			JUNE = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '07'.toString">
+        			JULY = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '08'.toString">
+        			AUGUST = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '09'.toString">
+        			SEPTEMBER = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '10'.toString">
+        			OCTOBER = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '11'.toString">
+        			NOVEMBER = #{num,jdbcType=VARCHAR}
+        		</if>
+        		<if test = "month == '12'.toString">
+        			DECEMBER = #{num,jdbcType=VARCHAR}
+        		</if>     		
+        	</set>  
+        	where module_code = '1200' 
+        		  and report_year = #{year, jdbcType=VARCHAR}
+	</update>
+	
+	
+	
+	
+	<!-- 备用的查询sql -->
+
+	<!-- 照面信息 -->
+	<resultMap id="QiYeBasicMap" type="com.huaxia.opas.domain.thirdparty.QiYeBasic">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="ABUITEM" property="abuitem" jdbcType="VARCHAR" />
+		<result column="ANCHEYEAR" property="ancheyear" jdbcType="VARCHAR" />
+		<result column="APPRDATE" property="apprdate" jdbcType="VARCHAR" />
+		<result column="CANDATE" property="candate" jdbcType="VARCHAR" />
+		<result column="CREDITCODE" property="creditcode" jdbcType="VARCHAR" />
+		<result column="DOM" property="dom" jdbcType="VARCHAR" />
+		<result column="DOMDISTRICT" property="domdistrict" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="ENTNAME" property="entname" jdbcType="VARCHAR" />
+		<result column="ENTNAMEENG" property="entnameeng" jdbcType="VARCHAR" />
+		<result column="ENTNAME_OLD" property="entnameOld" jdbcType="VARCHAR" />
+		<result column="ENTSTATUS" property="entstatus" jdbcType="VARCHAR" />
+		<result column="ENTTYPE" property="enttype" jdbcType="VARCHAR" />
+		<result column="ENTTYPECODE" property="enttypecode" jdbcType="VARCHAR" />
+		<result column="ESDATE" property="esdate" jdbcType="VARCHAR" />
+		<result column="FRNAME" property="frname" jdbcType="VARCHAR" />
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="INDUSTRYCOCODE" property="industrycocode"
+			jdbcType="VARCHAR" />
+		<result column="INDUSTRYCONAME" property="industryconame"
+			jdbcType="VARCHAR" />
+		<result column="OPFROM" property="opfrom" jdbcType="VARCHAR" />
+		<result column="OPTO" property="opto" jdbcType="VARCHAR" />
+		<result column="ORGCODES" property="orgcodes" jdbcType="VARCHAR" />
+		<result column="ORIREGNO" property="oriregno" jdbcType="VARCHAR" />
+		<result column="RECCAP" property="reccap" jdbcType="VARCHAR" />
+		<result column="REGCAP" property="regcap" jdbcType="VARCHAR" />
+		<result column="REGCAPCUR" property="regcapcur" jdbcType="VARCHAR" />
+		<result column="REGNO" property="regno" jdbcType="VARCHAR" />
+		<result column="REGORG" property="regorg" jdbcType="VARCHAR" />
+		<result column="REGORGCITY" property="regorgcity" jdbcType="VARCHAR" />
+		<result column="REGORGCODE" property="regorgcode" jdbcType="VARCHAR" />
+		<result column="REGORGDISTRICT" property="regorgdistrict"
+			jdbcType="VARCHAR" />
+		<result column="REGORGPROVINCE" property="regorgprovince"
+			jdbcType="VARCHAR" />
+		<result column="REVDATE" property="revdate" jdbcType="VARCHAR" />
+		<result column="ZSOPSCOPE" property="zsopscope" jdbcType="VARCHAR" />
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="EMPNUM" property="empnum" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="queryQiYeBasic" parameterType="java.lang.String"
+		resultMap="QiYeBasicMap">
+		select t.uuid,
+		t.app_id,
+		t.abuitem,
+		t.ancheyear,
+		t.apprdate,
+		t.candate,
+		t.creditcode,
+		t.dom,
+		t.domdistrict,
+		t.email,
+		t.entname,
+		t.entnameeng,
+		t.entname_old,
+		t.entstatus,
+		t.enttype,
+		t.enttypecode,
+		t.esdate,
+		t.frname,
+		t.id,
+		t.industrycocode,
+		t.industryconame,
+		t.opfrom,
+		t.opto,
+		t.orgcodes,
+		t.oriregno,
+		t.reccap,
+		t.regcap,
+		t.regcapcur,
+		t.regno,
+		t.regorg,
+		t.regorgcity,
+		t.regorgcode,
+		t.regorgdistrict,
+		t.regorgprovince,
+		t.revdate,
+		t.zsopscope,
+		t.tel,
+		t.empnum,
+		t.crt_time
+		from
+		trd_qyhy_info_basic t
+		where t.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 主要管理人员 -->
+	<resultMap id="QiYePersonMap" type="com.huaxia.opas.domain.thirdparty.QiYePerson">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="ENTNAME" property="entname" jdbcType="VARCHAR" />
+		<result column="PERNAME" property="pername" jdbcType="VARCHAR" />
+		<result column="PERSONAMOUNT" property="personamount" jdbcType="VARCHAR" />
+		<result column="POSITION" property="position" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="queryQiYePerson" parameterType="java.lang.String"
+		resultMap="QiYePersonMap">
+		select e.uuid,
+		e.app_id,
+		e.entname,
+		e.pername,
+		e.personamount,
+		e.position,
+		e.crt_time
+		from TRD_QYHY_INFO_PERSON e
+		where e.app_id =
+		#{appId, jdbcType=VARCHAR}
+	</select>
+
+	<!--失信被执行人 -->
+	<resultMap id="QiYePunishbreakMap"
+		type="com.huaxia.opas.domain.thirdparty.QiYePunishbreak">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="CASESTATE" property="casestate" jdbcType="VARCHAR" />
+		<result column="COURTNAME" property="courtname" jdbcType="VARCHAR" />
+		<result column="DISRUPTTYPENAME" property="disrupttypename"
+			jdbcType="VARCHAR" />
+		<result column="PERFORMANCE" property="performance" jdbcType="VARCHAR" />
+		<result column="PUBLISHDATECLEAN" property="publishdateclean"
+			jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="queryQiYePunishbreak" parameterType="java.lang.String"
+		resultMap="QiYePunishbreakMap">
+		select g.uuid,
+		g.app_id,
+		g.casestate,
+		g.courtname,
+		g.disrupttypename,
+		g.duty,
+		g.performance,
+		g.publishdateclean,
+		g.crt_time
+		from TRD_QYHY_INFO_PUNISHBREAK g
+		where g.app_id = #{appId,
+		jdbcType=VARCHAR}
+	</select>
+
+	<!-- 股东及出资人信息 -->
+	<resultMap id="QiYeShareholderMap"
+		type="com.huaxia.opas.domain.thirdparty.QiYeShareholder">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="CONDATE" property="condate" jdbcType="VARCHAR" />
+		<result column="CONFORM" property="conform" jdbcType="VARCHAR" />
+		<result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+		<result column="FUNDEDRATIO" property="fundedratio" jdbcType="VARCHAR" />
+		<result column="INVTYPE" property="invtype" jdbcType="VARCHAR" />
+		<result column="REGCAPCUR" property="regcapcur" jdbcType="VARCHAR" />
+		<result column="SHANAME" property="shaname" jdbcType="VARCHAR" />
+		<result column="SUBCONAM" property="subconam" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="queryQiYeShareholder" parameterType="java.lang.String"
+		resultMap="QiYeShareholderMap">
+		select h.uuid,
+		h.app_id,
+		h.condate,
+		h.conform,
+		h.country,
+		h.fundedratio,
+		h.invtype,
+		h.regcapcur,
+		h.shaname,
+		h.subconam,
+		h.crt_time
+		from TRD_QYHY_INFO_SHAREHOLDER h
+		where h.app_id = #{appId,
+		jdbcType=VARCHAR}
+	</select>
+
+	<!-- 组织机构列表 -->
+	<resultMap id="QiYeOrgbasicMap"
+		type="com.huaxia.opas.domain.thirdparty.QiYeOrgbasic">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="JGDM" property="jgdm" jdbcType="VARCHAR" />
+		<result column="JGDZ" property="jgdz1" jdbcType="VARCHAR" />
+		<result column="JGMC" property="jgmc" jdbcType="VARCHAR" />
+		<result column="ZYBZ" property="zybz" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="queryQiYeOrgbasic" parameterType="java.lang.String"
+		resultMap="QiYeOrgbasicMap">
+		select i.uuid,
+		i.app_id,
+		i.jgdm,
+		i.jgdz,
+		i.jgmc,
+		i.zybz,
+		i.crt_time
+		from TRD_QYHY_INFO_ORGBASIC i
+		where i.app_id = #{appId,
+		jdbcType=VARCHAR}
+	</select>
+
+
+	<!-- 组织机构详情 -->
+	<resultMap id="QiYeOrgdetailMap"
+		type="com.huaxia.opas.domain.thirdparty.QiYeOrgdetail">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="BZJG" property="bzjg" jdbcType="VARCHAR" />
+		<result column="BZRQ" property="bzrq" jdbcType="VARCHAR" />
+		<result column="FDDBR" property="fddbr" jdbcType="VARCHAR" />
+		<result column="JGDM" property="jgdm" jdbcType="VARCHAR" />
+		<result column="JGDZ" property="jgdz" jdbcType="VARCHAR" />
+		<result column="JGLX" property="jglx" jdbcType="VARCHAR" />
+		<result column="JGMC" property="jgmc" jdbcType="VARCHAR" />
+		<result column="XZQH" property="xzqh" jdbcType="VARCHAR" />
+		<result column="ZCRQ" property="zcrq" jdbcType="VARCHAR" />
+		<result column="ZFRQ" property="zfrq" jdbcType="VARCHAR" />
+		<result column="BGRQ" property="bgrq" jdbcType="VARCHAR" />
+		<result column="CREDITCODE" property="creditcode" jdbcType="VARCHAR" />
+		<result column="DHHM" property="dhhm" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="JHBZ" property="jhbz" jdbcType="VARCHAR" />
+		<result column="JJHYDM" property="jjhydm" jdbcType="VARCHAR" />
+		<result column="JJLXDM" property="jjlxdm" jdbcType="VARCHAR" />
+		<result column="JYFW" property="jyfw" jdbcType="VARCHAR" />
+		<result column="JYDZ" property="jydz" jdbcType="VARCHAR" />
+		<result column="JYZT" property="jyzt" jdbcType="VARCHAR" />
+		<result column="REGNO" property="regno" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="ZCZJ" property="zczj" jdbcType="VARCHAR" />
+		<result column="ZGMC" property="zgmc" jdbcType="VARCHAR" />
+		<result column="ZGRS" property="zgrs" jdbcType="VARCHAR" />
+		<result column="ZYBZ" property="zybz" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="queryQiYeOrgdetail" parameterType="java.lang.String"
+		resultMap="QiYeOrgdetailMap">
+		select l.uuid,
+		l.app_id,
+		l.bzjg,
+		l.bzrq,
+		l.fddbr,
+		l.jglx,
+		l.jgdz,
+		l.xzqh,
+		l.zcrq,
+		l.zfrq,
+		l.bgrq,
+		l.creditcode,
+		l.dhhm,
+		l.email,
+		l.jhbz,
+		l.jjhydm,
+		l.jjlxdm,
+		l.jyfw,
+		l.jydz,
+		l.jyzt,
+		l.regno,
+		l.url,
+		l.zczj,
+		l.zgmc,
+		l.zgrs,
+		l.crt_time
+		from TRD_QYHY_INFO_ORGDETAIL l where l.app_id =
+		#{appId, jdbcType=VARCHAR}
+	</select>
+
+     <select id="queryEetFrnameByAppId" parameterType="java.lang.String" resultType="java.util.Map">
+		select
+		t1.ENTSTATUS||t2.JYZT as ENTSTATUS,
+		t1.FRNAME||t2.FDDBR as FRNAME
+		from TRD_QYHY_INFO_DATA t left join
+		TRD_QYHY_INFO_BASIC t1 on t.app_id = t1.app_id
+		left join TRD_QYHY_INFO_ORGDETAIL t2 on t.app_id = t2.app_id
+		where t.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+</mapper>

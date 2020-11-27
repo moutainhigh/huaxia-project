@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>提报类型选择</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<div>
+			<fieldset style="margin-top:10px;border:0px">
+					<div id="wintype" title="提报类型选择"   >
+					<table style="border-collapse: separate; border-spacing: 10px;width:100%">
+						<tr>
+							<td  align="right">提报类型:</td>
+							<td>
+								<select  style="width:100%"	id="submitType" name="submitType">
+									<option value="2">提报催收</option>
+									<option value="3">提报账户</option>
+									<option value="4">提报授权</option>
+									<option value="5">提报反洗钱</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+					<div style="text-align: center; padding: 5px">
+						<a href="javascript:onSave();" class="easyui-linkbutton">确 认</a>&nbsp;
+						<a href="javascript:onClose();" class="easyui-linkbutton">取 消</a>
+					</div>
+				</div>	
+			</fieldset>  
+	</div>
+
+ 
+<script type="text/javascript">
+function onClose() {
+	 window.close();
+}
+
+function onSave(){
+	var submitType=$("#submitType").val();
+	window.opener.submitType=submitType;
+	window.opener.creditSubmitNewsPaperZx();
+	window.close();
+}
+</script>
+
+</body>
+</html>

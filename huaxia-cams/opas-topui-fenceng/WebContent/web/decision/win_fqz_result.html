@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>反欺诈结果描述</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<style type="text/css">
+input[name="fqzRishCategory"] {
+	width: 350px;
+	text-align: center;
+}
+input[name="fqzRiskdesc"] {
+	width: 400px;
+	text-align: center;
+}
+</style>
+</head>
+<script type="text/javascript">
+
+function GetQueryString(name){
+	 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	 var r = window.location.search.substr(1).match(reg);
+	 if(r!=null) return unescape(r[2]);
+	 return null;
+}
+$(function(){
+	var appId=GetQueryString("appId");
+	var fqzRequesttype=GetQueryString("fqzRequesttype");
+	var fqzRiskno=GetQueryString("fqzRiskno");
+	var fqzRisknoW=GetQueryString("fqzRisknoW");
+	var fqzRisknoH=GetQueryString("fqzRisknoH");
+	var fqzRisknoZ=GetQueryString("fqzRisknoZ");
+
+	$cf.ajax({
+		data : {
+			"appId" : appId,
+			"fqzRequesttype" : fqzRequesttype,
+			"fqzRisknoW" : fqzRisknoW,
+			"fqzRisknoH" : fqzRisknoH,
+			"fqzRisknoZ" : fqzRisknoZ
+		},
+		url : "/opas-naps/queryFqzRstDesp.json",
+		onSuccess : function(res) {
+			var jsonResult = res.RSP_BODY.rows;
+			var fraudScore = res.RSP_BODY.fraudScore;
+			var total = res.RSP_BODY.total;
+			showFqzTableInfo(total,jsonResult,'Z');
+			showFqzTableInfo(total,jsonResult,'H');
+			showFqzTableInfo(total,jsonResult,'W');
+			var ws = appId.substr(6,1);
+			if (ws=='B'){
+				$("#wsfraudScore").val(fraudScore);
+				$('#fraudScoreDiv').show();
+			} else {
+				$("#fwsfraudScore").val(fraudScore);
+				$('#wsfraudScoreDiv').show();
+			}
+	}
+	});
+	
+});
+	//展示 反欺诈结果描述 
+	function showFqzTableInfo(total,jsonResult,flag){
+		var a = 0;
+		for(var i=0;i<total;i++){
+			var fqzRishCat =jsonResult[i].fqzRishCategory1;
+			if(fqzRishCat!=null&&fqzRishCat!=undefined&&fqzRishCat!=''){
+				if ((jsonResult[i].fqzRishCategory1).substring(0,1) == (flag)) {
+					var result="";
+					 a = a+1;
+						result += "<tr>";
+						result += "<td width='15px'>"+a+"</td>";
+						if(jsonResult[i].fqzRishCategory1=='Z01_6'||jsonResult[i].fqzRishCategory1=='Z01_5'||
+								jsonResult[i].fqzRishCategory1=='Z01_4'||jsonResult[i].fqzRishCategory1=='Z01_3'
+								||jsonResult[i].fqzRiskdesc1=='RULE_ID_2|1'||jsonResult[i].fqzRiskdesc1=='RULE_SFYZ_1|1'){
+							result += "<td ><input type='text' style='color:red;border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+						}else if(jsonResult[i].fqzRishCategory1=='Z06_1'){
+							if(jsonResult[i].fqzRiskdesc1=='SNA_D'){
+								result += "<td ><input type='text'  style='color:red;border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+							}else{
+								result += "<td ><input type='text'  style='border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+							}
+						}else{
+							if(jsonResult[i].fqzRishCategory=='undefined'||jsonResult[i].fqzRishCategory==''||jsonResult[i].fqzRishCategory==null){
+								result += "<td ><input type='text' style='border:none;' readonly='readonly'  name='fqzRishCategory' value=''/></td>";
+							}else{
+								result += "<td ><input type='text' style='border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+							}
+						}
+						if(jsonResult[i].fqzRiskdesc=='undefined'||jsonResult[i].fqzRiskdesc==''||jsonResult[i].fqzRiskdesc==null){
+							result += "<td><input type='text' style='border:none;' readonly='readonly'  name='fqzRiskdesc' value=''/></td>";
+						}else{
+							result += "<td ><input type='text' style='border:none;' readonly='readonly'  name='fqzRiskdesc' value='"+jsonResult[i].fqzRiskdesc+"'/></td>";
+						}
+						result += "</tr>";
+						$('#fqzRiskno'+flag).append(result);
+				} 
+			}
+			
+		}
+		if(a>0){
+			$('#fqzRiskno'+flag+'div').show();
+		}
+	}
+	
+	
+</script>
+<body >
+
+
+<div id="fqzRisknoZdiv" style="display:none">
+<fieldset>
+	<legend>真实性排查</legend>
+	<form id="">
+		<table  id="fqzRisknoZ" class="area-list area-list-style-1">
+		<thead>
+			<tr>
+			<th width="15px"></th>
+			<th >校验规则</th>
+			<th >详情描述</th>
+			</tr>
+		</thead>
+		</table>
+	</form>	
+</fieldset>	
+</div>
+<div id="fqzRisknoWdiv" style="display:none">
+<fieldset  >
+	<legend>完整性排查</legend>
+	<form id="">
+		<table  id="fqzRisknoW" class="area-list area-list-style-1">
+		<thead>
+			<tr>
+			<th width="15px"></th>
+			<th >校验规则</th>
+			<th >详情描述</th>
+			</tr>
+		</thead>
+		</table>
+	</form>	
+</fieldset>	
+</div>
+<div  id="fqzRisknoHdiv" style="display:none">
+<fieldset>
+	<legend>合规性排查</legend>
+	<form id="">
+		<table  id="fqzRisknoH" class="area-list area-list-style-1">
+		<thead>
+			<tr>
+			<th width="15px"></th>
+			<th >校验规则</th>
+			<th >详情描述</th>
+			</tr>
+		</thead>
+		</table>
+	</form>	
+</fieldset>	
+</div>
+<div id="fraudScoreDiv" style="display:none">
+	<fieldset>
+	<legend><span id="E">网申欺诈模型评分</span></legend>
+	<table>
+		<tr>
+		<td>网申欺诈模型评分:</td>
+		<td ><input  id="wsfraudScore" name="wsfraudScore" type="text" readonly=readonly style="width:200px"></input></td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+
+<div id="wsfraudScoreDiv" style="display:none">
+	<fieldset>
+	<legend><span id="E">非网申欺诈模型评分</span></legend>
+	<table>
+		<tr>
+		<td>非网申欺诈模型评分:</td>
+		<td ><input  id="fwsfraudScore" name="fwsfraudScore" type="text" readonly=readonly style="width:200px"></input></td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+
+		
+</body>
+</html>

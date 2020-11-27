@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="XmPersonal">
+  <resultMap id="XmPersonalInfoMap" type="java.util.Map" >
+    <result column="dwmc" property="dwmc" jdbcType="VARCHAR" />
+    <result column="grzhzt" property="grzhzt" jdbcType="VARCHAR" />
+    <result column="cjrq" property="cjrq" jdbcType="VARCHAR" />
+    <result column="yjce" property="yjce" jdbcType="VARCHAR" />
+    <result column="grjcbl" property="grjcbl" jdbcType="VARCHAR" />
+    <result column="dwjcbl" property="dwjcbl" jdbcType="VARCHAR" />
+    <result column="jzrq" property="jzrq" jdbcType="VARCHAR" />
+    <result column="zjjjrq" property="zjjjrq" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="HzGjjxxInfoMap" type="java.util.Map" >
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="pay_ym" property="payYm" jdbcType="VARCHAR" />
+    <result column="pay_base" property="payBase" jdbcType="VARCHAR" />
+    <result column="xm" property="xm" jdbcType="VARCHAR" />
+    <result column="businesstype" property="businesstype" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="queryXMPersonal" parameterType="java.lang.String" resultMap="XmPersonalInfoMap">
+		SELECT dwmc, grzhzt, cjrq,yjce,
+		grjcbl, dwjcbl,jzrq,zjjjrq
+		FROM xm_gjj_jcxx  WHERE APP_ID = #{appId}
+  </select>
+  <select id="selectCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+  		SELECT count(1) from YLZ_REP_DATA WHERE APP_ID = #{appId}
+  </select>
+  
+  <select id="queryHzGjjxxInfo" parameterType="java.lang.String" resultMap="HzGjjxxInfoMap">
+		select x.dept_name, x.status, x.pay_ym, x.pay_base, o.businesstype
+		    from hz_gjjxx x
+		    left join hz_marry_info o on x.app_id = o.app_id WHERE x.APP_ID = #{appId}
+  </select>
+</mapper>

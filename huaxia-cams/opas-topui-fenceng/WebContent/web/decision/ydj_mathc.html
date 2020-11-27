@@ -1,0 +1,84 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>团办号名单详情</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<!-- 团办号名单 -->
+			<table id="tb_isMathcWin" class="easyui-datagrid" iconCls="icon-save"
+			style="width: 99%; height: 99%" 
+					data-options="fit:false,nowrap:false,rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,selectOnCheck:false,method:'post',toolbar:'#isMathcWinCondion'">
+				<thead>
+					<tr>
+						<th field="teamdealType"  width="10%" align="left" >团办类型</th>
+						<th field="teamdealCode"  width="15%" align="left"  >团办码</th>
+						<th field="approveDate"  width="10%" align="left" >批复日期</th>
+						<th field="reportingOrg"  width="13%" align="left"  >申报机构</th>
+						<th field="companyName"  width="12%" align="left" >企业名称</th>
+						<th field="companyType"  width="10%" align="left" >企业类型</th>
+						<th field="applyRequest"  width="20%" align="left"  data-options="formatter:valSplit">进件要求</th>
+					</tr>
+				</thead>
+			</table>
+			<div id="isMathcWinCondion" style="padding: 10px; text-align: center;">
+				<form id="seachDictForm">
+					团办码:<input class="easyui-textbox" style="width: 110px" name="teamdealCode" id="isMathcWin_teamdealCode" > 
+					企业名称:<input class="easyui-textbox" style="width: 110px" name="companyName" id="isMathcWin_companyName" > 
+					<a href="javascript:isMathcWin('isMathcWin')"
+					      class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</form>
+			</div>
+			<!-- <div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('isMathcWin')">取消</a>
+			</div> -->
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var appId;
+	 $(function(){
+		 //获取参数
+		 appId = GetQueryString("appId");
+		 var obj= GetQueryString("obj");
+		 var param= GetQueryString("param");
+		 if(param=='yes'){
+			 openIsMathcWin(obj);
+		 }else if(param=='no'){
+			 showOpenWin(obj,'teamnoIsmatch');
+		 }
+	 });
+	//团办号是否匹配
+	function openIsMathcWin(obj){
+		var urljson = 'queryTeamList_tab_view';
+		openCommonWinYjd(obj,urljson,appId);
+	}
+	//团办号是否匹配
+	function isMathcWin(obj){	
+		var urljson = 'queryTeamList_tab_view';
+		var paramMap = {
+				teamdealCode:$("#isMathcWin_teamdealCode").textbox('getValue'),
+				companyName:$("#isMathcWin_companyName").textbox('getValue').toUpperCase()
+		};
+		commonWinYjd(obj,urljson,appId,paramMap);
+	}
+	function valSplit(val, row, index){
+		if(val!=null&&val!=undefined&&val!=""){
+	    var resSplit = val.split(";");
+		var finalRes = "";
+		for(var i = 0 ; i < resSplit.length ; i++){
+			var resSplit_2 = resSplit[i].split("；");
+			for(var k = 0 ;k < resSplit_2.length ; k++){
+				finalRes = finalRes + resSplit_2[k]+" \n " +"</br>"
+			}
+		} 
+		return finalRes;
+		}else{
+			return "";
+		}
+	}
+</script>

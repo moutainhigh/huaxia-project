@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>平台调查结果查看队列</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.searchdiv {
+	font-size: 10px;
+}
+</style>
+</head>
+<body style="font-size: 12px;">
+	<div style="width: 100%; font-size: 12px; overflow-y: scroll;">
+		<form id="seachForm">
+			<div
+				style="border: 1px solid rgb(149, 184, 231); border-image: none; width: 1364px; height: 30%; margin: 0px 0px 0px 10px">
+				<fieldset class="textbox combo"
+					style="left: 30px; margin: 5px 0 10px; width: 90%; height: 90px; padding: 0px 30px 10px 20px;">
+					<legend align="left">
+						<font size="2">查询选项</font>
+					</legend>
+					<div style="padding: 10px">
+						申请流水号:<input class="easyui-textbox" style="width: 180px" name="appId" id="appId">&nbsp;
+						公司编码:<input class="easyui-textbox" style="width: 180px" name="businessNumber" id="businessNumber">&nbsp; 
+						模块编码:<input class="easyui-textbox" style="width: 180px" name="moduleNumber" id="moduleNumber">&nbsp;  
+						风险类别: <select class="easyui-combobox" style="width: 150px" id="riskType" name="riskType"  editable="false">
+									<option value="">--请选择--</option>
+									<option value="1">命中反链接校验的进件</option>
+									<option value="2">命中阈值阻断拦截的进件</option>
+									<option value="3">因阻断开关开启的进件</option>
+							    </select><br/>
+						开始时间: <input class="easyui-datebox" name="startDate" id="startDate" style="width: 100px;" editable="false"/>&nbsp;
+						结束时间: <input class="easyui-datebox" name="endDate" id="endDate" style="width: 100px;" editable="false"/>&nbsp;<br/>
+						反链接人-工调查结果:	<select class="easyui-combobox" name="alInvestResult" id="alInvestResult"
+											dict_type="AL_INVEST_RESULT" editable="false" style="width: 150px;"
+											data-options="valueField:'dictDetailCode',textField:'dictDetailName'">
+									    </select>&nbsp;
+						实时阻断-人工调查结果: <select class="easyui-combobox" name="misszdResult" id="misszdResult"
+											dict_type="MISSZD_RESULT" editable="false" style="width: 150px;"
+											data-options="valueField:'dictDetailCode',textField:'dictDetailName'">
+										 </select>&nbsp;
+						申请件最终核拒结果: <select class="easyui-combobox" style="width: 150px" id="finalAuditResult" name="finalAuditResult"  editable="false">
+										<option value="">--请选择--</option>
+										<option value="0">否</option>
+										<option value="1">是</option>
+								      </select>&nbsp;
+						<a href="javascript:checkAndSearchTab('seachForm','tblSeach');" class="easyui-linkbutton" iconCls="icon-search">查询</a>&nbsp;
+						<a href="javascript:reset();" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">重置</a>&nbsp;
+					</div>
+				</fieldset>
+			</div>
+		</form>
+		<div style="margin: 0px 0px 0px 10px; width: 1365px;">
+			<table id="tblSeach" class="easyui-datagrid"
+				style="width: 100%;overflow-y: auto;"
+				data-options="remoteSort:false,rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15,20,50],fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#seachCondion'">
+				<thead>
+					<tr>
+						<th field="appId"			align="center"	sortable="true" data-options="formatter:formatRemarkInfo">申请条形码</th>
+						<th field="crtDate"			align="center"	sortable="true" data-options="formatter:formatDate">进入队列时间</th>
+						<th field="businessNumber"	align="center"	sortable="true">公司编码</th>
+						<th field="moduleNumber"	align="center"	sortable="true">模块编码</th>
+						<th field="sceneDNLinkPart" align="center"	sortable="true">场景链接域名部分</th>
+						<th field="ptfljResult" 	align="center" 	width="50px" data-options="formatter:formatPtfljResultFlag">场景链接域名部分判断结果</th>
+						<th field="ptsszdResult" 	align="center" 	width="50px" data-options="formatter:formatIsNotFlag">是否为超出阈值进件</th>
+						<th field="isBSOpen" 		align="center" 	width="50px" data-options="formatter:formatIsNotFlag">是否因阻断开关开启的进件</th>
+						<th field="alInvestResult" 	align="center" 	width="50px" data-options="formatter:formatAlInvestResultFlag">反链接-人工调查结果</th>
+						<th field="misszdResult" 	align="center" 	width="50px" data-options="formatter:formatMisszdResultFlag">实时阻断-人工调查结果</th>
+						<th field="alreadySendFlag"	align="center" data-options="formatter:formatIsNotFlag">是否已发卡</th>
+						<th field="refuseReason"	align="center">未发卡原因</th>
+						<th field="autoId"			align="center"	hidden="true"></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	
+	<div id="checkRemarkInfo" class="easyui-window" title="查看备注信息"
+		style="text-align: center; width: 800px; height: 300px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="remarkForm" method="post" accept-charset="UTF-8">
+			<table cellpadding="5" style="border-collapse: separate; border-spacing: 10px; margin: auto;">
+				<tr>
+					<td>备注内容：</td>
+					<td colspan="3">
+						<textarea id="remarkInfo" name="remarkInfo" class="easyui-validatebox" disabled="disabled" style="width: 350px; height: 100px;">
+						</textarea>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+	$cf.loadAllDict();//加载数据字典
+	var checkRemarkInfoWindow = $("#checkRemarkInfo");
+	var tblObj = $("#tblSeach");
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+	var userUuid = $cf.getStore("userRelInfo", "index").userInfo.userId;//当前用户的 uuid
+	var appId = $("#appId").val();
+	var businessNumber = $("#businessNumber").val();
+	var moduleNumber = $("#moduleNumber").val();
+	$(function() {
+ 		initTableHeight('#tblSeach','1');//页面大小初始化
+		var url = location.href;
+		var opts = tblObj.datagrid("options");
+		var s = {"userCode":userCode,"userUuid":userUuid,"appId":appId,"businessNumber":businessNumber,"moduleNumber":moduleNumber};
+		opts.url = "/opas-naps/queryWSPlatformInvestResultList.json";
+		tblObj.datagrid("reload", s);
+	}); 
+	
+	function formatRemarkInfo(val, row, index) {
+		var appId = row.appId;
+		return  "<a href='javascript:checkRemarkInfo(\""+appId+"\")' >"+appId+"</a>";
+	}
+	function checkRemarkInfo(appId){
+		checkRemarkInfoWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setCheckRemarkInfoData(appId)
+		});
+	}
+	//根据appId查询出备注信息方法
+	function setCheckRemarkInfoData(appId){
+		$cf.ajax({
+			url : "/opas-naps/checkRemarkInfoByAppId.json",
+			data : {'appId':appId
+				},
+			onSuccess : function(data) {
+				var remarkInfo = data.RSP_BODY.remarkInfo;
+				$("#remarkInfo").val(remarkInfo);
+			}
+		});
+	}
+	
+	function formatIsNotFlag(val, row, index) {
+		if(val == 1){
+			return "是";
+		}else{
+			return "否";
+		}
+	}
+	//未发卡原因反显方法
+	function formatRefuseReasonFlag(val, row, index) {
+		if(val == 'WS101'){
+			return $cf.getDictDetailName("REFUSE_REASON", val);
+		}else{
+			return $cf.getDictDetailName("ZDREFUSECODE1", val);
+		}
+	}
+	//场景链接域名部分判断结果标识反显方法
+	function formatPtfljResultFlag(val, row, index) {
+		if(val == 0){
+			return "不一致";
+		}else if(val == 1){
+			return "一致";
+		}else if(val == -1){
+			return "空";
+		}else if(val == -2){
+			return "疑似原生态";
+		}else if(val == -3){
+			return "其他";
+		}
+	}
+	//反链接-人工调查结果标识反显方法
+	function formatAlInvestResultFlag(val, row, index) {
+		return $cf.getDictDetailName("AL_INVEST_RESULT", val);
+	}
+	//实时阻断-人工调查结果标识反显方法
+	function formatMisszdResultFlag(val, row, index) {
+		return $cf.getDictDetailName("MISSZD_RESULT", val);
+	}
+	//条件查询列表数据方法
+	function checkAndSearchTab(formName, tblName) {
+		//本方法自己拼装json串传给后台，注意前台多选框取值以及下拉框取值写法以及后台接收的写法
+		var appId = $("#appId").val();
+		var businessNumber = $("#businessNumber").val();
+		var moduleNumber = $("#moduleNumber").val();
+		var riskType = $("#riskType").combobox("getValue");
+		var startDate = $("#startDate").datebox('getValue');
+		var endDate = $("#endDate").datebox('getValue');
+		var alInvestResult = $("#alInvestResult").combobox("getValue");
+		var misszdResult = $("#misszdResult").combobox("getValue");
+		var finalAuditResult = $("#finalAuditResult").combobox("getValue");
+		var tblObj = $("#" + tblName + "");
+		var formObj = $("#" + formName + "");
+		var data = formObj.serializeArray();
+		var jsonData = common.formToJson(data);
+		var s = {
+			"appId" : appId,
+			"businessNumber" : businessNumber,
+			"moduleNumber" : moduleNumber,
+			"riskType" : riskType,
+			"startDate" : startDate,
+			"endDate" : endDate,
+			"alInvestResult" : alInvestResult,
+			"misszdResult" : misszdResult,
+			"finalAuditResult" : finalAuditResult
+		};
+		var opts = $("#tblSeach").datagrid("options");
+		opts.url = "/opas-naps/queryWSPlatformInvestResultList.json";
+		tblObj.datagrid("reload", s);
+	}
+
+	function reload() {
+		tblObj.datagrid("reload");
+	}
+	
+	//日期格式转换
+	 function formatDate(value) {
+		var str = getTaskTime(value);
+		if (str.indexOf('1970') >= 0) {
+			return '';
+		} else {
+			return str;
+		}
+	} 
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+				+ second;
+	};
+	
+	function fnShowWinRemark() {
+		var orgObj = $("#tblSeach").datagrid("getChecked");
+		if (orgObj == null||orgObj.length==0) {
+			  $.messager.alert("操作提示","请勾选申请件！","error");
+			  return;
+			}
+		remarkWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(orgObj)
+		});
+	}
+	function setData(data) {
+		remarkForm.form("load", data);
+	}
+	// [功能] 校验（设置为必填项）
+	function fnValid() {
+		var remarkInfo = $('#remark').val().trim();
+		if (remarkInfo == '') {
+			required('remark'); // 控件校验
+			return false;
+		}
+		return true;
+	}
+	
+	// [按钮]备注保存
+	function remark() {
+		//if (fnValid()) {
+			//var jsondata = getFormData(remarkForm.serializeArray());
+			var orgObj = $("#tblSeach").datagrid("getChecked");
+			var list = new Array();
+			for(var i = 0; i < orgObj.length;i++){
+				list.push(orgObj[i].appId);
+			}
+			var alInvestResult = $("#alInvestResult").combobox("getValue");
+			var misszdResult = $("#misszdResult").combobox("getValue");
+			var remark = $("#remark").val();
+			if (remark.trim().length > 100) {
+				$.messager.alert("操作提示", "保存失败,备注不能超过100字！");
+				return;
+			}
+			$cf.ajax({
+				url : "/opas-naps/remark.json",
+				data : {'list':list,
+						'userCode':userCode,
+						'alInvestResult':alInvestResult,
+						'misszdResult':misszdResult,
+						'remark':remark
+					},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						$.messager.alert("操作提示", "备注成功 !", "info", function() {
+							remarkWindow.window('close');
+							tblObj.datagrid("reload");
+							tblObj.datagrid("unselectAll");
+							
+						});
+					} else {
+						$.messager.alert("操作提示", "备注异常" + data.RSP_BODY.exMsg, "error");
+						remarkWindow.window('close');
+						tblObj.datagrid("reload");
+						return;
+					}
+				}
+			});
+		//}
+	}
+	
+	// [按钮] 重置
+	function reset() {
+		$("#appId").textbox('setValue','');
+		$("#riskType").combobox('setValue','');
+		$('#startDate').datebox('setValue','');
+		$('#endDate').datebox('setValue','');
+		$("#alInvestResult").combobox('setValue','');
+		$("#misszdResult").combobox('setValue','');
+		$("#finalAuditResult").combobox('setValue','');
+		checkAndSearchTab('seachForm','tblSeach');
+	}
+	
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+</script>
+</html>

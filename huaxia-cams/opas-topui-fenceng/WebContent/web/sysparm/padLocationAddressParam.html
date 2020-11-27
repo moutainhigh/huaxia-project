@@ -1,0 +1,552 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>PAD定位地址维护</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblPadLocationAddress" class="easyui-datagrid"  style="width: 98%;height:100%"
+		data-options="rownumbers:true,animate:true,singleSelect:false,selectOnCheck:false,checkOnSelect:false,pageSize:20,pageList:[15, 20, 50],pagination:true,fitColumns:true,url:'/opas-naps/padLocationAddressList.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#padLocationAddress'">
+		<thead  frozen="true">
+			<tr>
+				<th field="autoID" width="5%" align="center" name="autoID" checkbox="true">全选</th>
+				<!-- <th field="importDate" width="12%" align="center" formatter="formatDate">导入日期</th> -->
+				<th field="cityID" width="5%">城市</th>
+				<th field="padLocationAddress" width="40%" align="center">现有PAD端传输的定位地址</th>
+				<th field="status" width="5%" align="center" data-options="formatter:formatStatus">当前状态</th>
+			</tr>
+		</thead>
+		<thead>
+			<tr>
+				<th field="beginDate" width="12%" align="center" formatter="formatDate">启用日期</th>
+				<th field="stopDate" width="12%" align="center" formatter="formatDate">停用日期</th>
+				<th field="crtDate" width="12%" align="center" formatter="formatDate">创建日期</th>
+				<th field="crtUser" width="8%" align="center">创建人</th>
+				<th field="lstUpdUser" width="8%" align="center" >最后操作人</th>
+				<th field="lstUpdDate" width="15%" align="center" formatter="formatDate">最后操作日期</th>
+				<th field="operate" width="8%" align="center" data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="padLocationAddress" style="padding: 12px;">
+		<form id="searchData">
+			城市:<input class="easyui-textbox" name="cityID" id="cityID">&nbsp;
+			现有PAD端传输的定位地址:<input class="easyui-textbox" name="padLocationAddress" id="padLocationAddress">&nbsp;
+			当前状态:<select class="easyui-combobox" name="status" editable="false"
+					style="width: 150px;">
+						<option value="">---请选择---</option>
+						<option value="1">启用</option>
+						<option value="0">停用</option>
+				</select>
+			<a href="javascript:common.searchTbl('searchData','tblPadLocationAddress');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+			</br>
+			<a href="javascript:myOpenWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">新增 </a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onClick="onStart()">批量启用 </a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" onClick="onStop()">批量停用 </a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-no" onClick="onBatchDelete()">删除 </a>
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/PadLocationAddressUploadServlet.json" target="tartIframe"> 
+				<div style="margin: 10px 0 0 30px;width:100%;">
+			        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+					<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+					<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+					<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+					<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+					<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+					<span class="filebox-label" style="left: 20px;"><font size="2" >导入数据</font></span></span>&nbsp;
+					<span><font color="blue" size="2">批量导入格式：城市(条形码的第九位和第十位) 现有PAD端传输的定位地址</font></span>
+				</div>
+			</form>	
+			<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+	</div>
+	</div>	
+		
+	<div id="winAdd" class="easyui-window" title="PAD定位地址信息添加" style="width: 450px; height: 400px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">城市：</td>
+					<td><input class="easyui-validatebox" id="cityID" type="text" name="cityID" data-options="required:true,validType:'maxLength[32]'"></td>
+				</tr>
+				<tr>
+					<td align="right">PAD端定位地址:</td>
+					<td><input class="easyui-validatebox" name="padLocationAddress" id="padLocationAddress" type="text" data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td>用户状态:</td>
+					<td>
+						<select class="easyui-combobox" name="status" editable="false" id="status1"
+							style="width: 150px;">
+								<option value="1" selected="selected">启用</option>
+								<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onSave()">保存</a>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="PAD定位地址信息修改" style="width: 450px; height: 500px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input type="hidden" name="autoID" id="autoID" /></td>
+				</tr>
+				<tr>
+					<td align="right">城市：</td>
+					<td><input class="easyui-validatebox" id="cityID" type="text" name="cityID" data-options="required:true,validType:'maxLength[32]'"></td>
+				</tr>
+				<tr>
+					<td align="right">PAD端定位地址:</td>
+					<td><input class="easyui-validatebox" name="padLocationAddress" id="padLocationAddress" type="text" data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td>用户状态:</td>
+					<td>
+						<select class="easyui-combobox" name="status" editable="false" id="status1"
+							style="width: 150px;">
+								<option value="1" selected="selected">启用</option>
+								<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')" iconCls="icon-cancel">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()" iconCls="icon-save">保存</a>
+		</div>
+	</div>
+	
+</body>
+<script>
+
+var tblPadLocationAddress = $("#tblPadLocationAddress");
+var addForm = $("#addForm");
+var editForm = $("#editForm");
+var editWindow = $("#winEdit");
+
+var value;
+//取消所有行选中状态，选中的同时将所属行的数据保存至value
+tblPadLocationAddress.datagrid({
+	onSelect : function(rowIndex,rowData){
+		$(this).datagrid("unselectAll");
+		value = rowData;
+	}	
+})	 
+
+function formatOper(val, row, index) {
+	return "<a href=javascript:editCust(); >修改</a>&nbsp;";
+}
+
+function formatStatus(val, row, index) {
+	if (val == "0") {
+		return "停用";
+	} else if (val == "1") {
+		return "启用";
+	}
+}
+
+myOpenWin = function(winName) {
+	winObj = $("#" + winName + "");
+	winObj.form('clear');
+	$('#status1').combobox('select','1');
+	winObj.window({
+		closed : false
+	});
+}
+
+function editCust(){
+	editWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(value)
+	});
+}
+
+function onStart(){
+ 	var padLocationAddressObj = tblPadLocationAddress.datagrid("getChecked");
+	if(padLocationAddressObj.length<= 0){
+		$.messager.alert("操作提示", "请勾选要启用的信息!");
+		return;
+	}
+	for(var i=0;i<padLocationAddressObj.length;i++){
+		if(padLocationAddressObj[i].status == "1"){
+			$.messager.alert("操作提示", "当前选中的行中已有行处于启用状态!");
+			return;
+		}
+	}
+	$.messager.confirm(
+		'请您确认',
+		'确定要启用该名单吗?',
+		function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/batchStartPadLocationAddress.json",
+					data :{"padLocationAddressObj":padLocationAddressObj},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							
+							top.$cf.showMsg("批量启用成功!");
+							
+							tblPadLocationAddress.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "批量启用异常，原因:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});	
+}
+
+function onStop(){
+	var padLocationAddressObj = tblPadLocationAddress.datagrid("getChecked");
+	if(padLocationAddressObj.length <= 0){
+		$.messager.alert("操作提示", "请勾选要停用的信息!");
+		return;
+	}
+	for(var i=0;i<padLocationAddressObj.length;i++){
+		if(padLocationAddressObj[i].status == "0"){
+			$.messager.alert("操作提示", "当前选中的行中已有行处于停用状态!");
+			return;
+		}
+	}
+	$.messager.confirm(
+			'请您确认',
+			'确定要停用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/batchStopPadLocationAddress.json",
+						data :{"padLocationAddressObj":padLocationAddressObj},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								
+								top.$cf.showMsg("批量停用成功!");
+								
+								tblPadLocationAddress.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "批量停用异常，原因:" + data.exMsg, "error");
+								return;
+							}
+						}
+					});
+				}
+			});
+}
+
+function onBatchDelete(){
+	var padLocationAddressObj = tblPadLocationAddress.datagrid("getChecked");
+	if(padLocationAddressObj.length <= 0){
+		$.messager.alert("操作提示", "请勾选要删除的信息!");
+		return;
+	}
+	var autoIds=[];
+	for(var i=0;i<padLocationAddressObj.length;i++){
+		var autoId = padLocationAddressObj[i].autoID;
+		autoIds.push(autoId);
+	}	
+	$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+		if (r) {
+			$cf.ajax({
+				url : "/opas-naps/batchDeletePadLocationAddress.json",
+				data : {"autoIds":autoIds},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						
+						top.$cf.showMsg("删除成功！");
+						
+						tblPadLocationAddress.datagrid("reload");
+					}else{
+						$.messager.alert("操作提示", "删除失败，原因:" + data.exMsg, "error");
+						return;
+					}
+				}
+			});
+		}
+	});
+}
+
+function onUpdate() {
+	var jsondata = getFormData(editForm.serializeArray());
+	if (jsondata.cityID == null || jsondata.cityID.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请添加城市ID!");
+		return;
+	}
+	if (jsondata.cityID.trim().length > 32) {
+		$.messager.alert("操作提示", "修改失败,城市ID长度不能超过32位！");
+		return;
+	}
+	if (jsondata.padLocationAddress == null || jsondata.padLocationAddress.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请添加现有PAD端传输的定位地址!");
+		return;
+	}
+	if (jsondata.padLocationAddress.trim().length > 50) {
+		$.messager.alert("操作提示", "修改失败,现有PAD端传输的定位地址不能超过50位！");
+		return;
+	}
+	if (jsondata.status == null || jsondata.status.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请设置启停状态!");
+		return;
+	}
+
+	$cf.ajax({
+		url : "/opas-naps/updatePadLocationAddress.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				
+				top.$cf.showMsg("修改成功!");
+				
+				onConcle("winEdit");
+			
+				tblPadLocationAddress.datagrid("reload");
+			} else {
+				$.messager.alert("操作提示", "修改异常，原因:" + data.exMsg, "error");
+				onConcle("winEdit");
+				return;
+			}
+		}
+	});
+}
+function showHistory(winName, tblName, tarTblName, tarUrl, tarParam) {
+	var tblObj = $("#" + tblName + "");
+	var tblDict = $("#" + tarTblName + "");
+	winObj = $("#" + winName + "");
+	var padLocationAddressObj = tblObj.datagrid("getChecked");
+	var id = value.autoID;
+	var paramObj = document.getElementsByName(tarParam);
+	for (var i = 0; i < paramObj.length; i++) {
+		paramObj[i].value = id;
+	}
+	winObj.window({
+		closed : false
+	});
+	var quryParam = {};
+	quryParam[tarParam] = id;
+	tblDict.datagrid({
+		url : tarUrl,
+		queryParams : quryParam
+	});
+}
+
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window("close");
+}
+
+function onSave() {
+	var jsondata = getFormData(addForm.serializeArray());
+	
+	if (jsondata.cityID == null || jsondata.cityID.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加城市!");
+		return;
+	}
+	if (jsondata.cityID.trim().length > 32) {
+		$.messager.alert("操作提示", "添加失败,城市长度不能超过32位！");
+		return;
+	}
+	if (jsondata.padLocationAddress == null || jsondata.padLocationAddress.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加PAD端传输的定位地址!");
+		return;
+	}
+	if (jsondata.padLocationAddress.trim().length > 50) {
+		$.messager.alert("操作提示", "添加失败,PAD端传输的定位地址长度不能超过50位！");
+		return;
+	}
+	if (jsondata.status == null || jsondata.status.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请设置启停状态!");
+		return;
+	}
+	
+	$cf.ajax({
+		url : "/opas-naps/insertPadLocationAddress.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			
+			if (data.RSP_BODY.isSuccess) {
+
+				top.$cf.showMsg("添加成功！");
+
+				onConcle('winAdd');
+				tblPadLocationAddress.datagrid("reload");
+				addForm[0].reset();
+
+			} else {
+				$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+				onConcle("winAdd");
+				return;
+			}
+		}
+
+	});
+}
+
+function setData(data) {
+	editForm.form("load", data);
+	$("#id").attr("readonly", "readonly");
+	$("#id").attr("disabled", "disabled");
+}
+
+//获取表单数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+
+
+//日期格式转换
+ function formatDate(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+ function formatDate1(value) {
+		var str = getTaskTime1(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+};  
+
+function getTaskTime1(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	return y+"-"+m+"-"+d;  
+};  
+
+
+<!-- 批量导入EXCEL文件相关js -->
+$('#fb').filebox({    
+buttonText: '选择文件', 
+buttonAlign: 'right',
+buttonIcon:'icon-search',
+onChange: function (newValue, oldValue) {
+		excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+		if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+			alert("请上传excel格式的文件");
+			$('#fb').filebox('setValue','');
+			return;
+		}
+	}
+})
+
+function resetValue(){
+$('#fb').filebox('setValue','');
+}
+
+function importExcel() {
+	var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+	$('#userName').textbox('setValue',userName);
+	$('#userCode').textbox('setValue',userCode);
+	var fileValue = $('#fb').filebox('getValue');
+	if(fileValue != ""){
+		if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+			alert("请选择正确的excel格式的文件！");
+			return;
+		}
+	}
+	if (fileValue == "") {
+			$.messager.alert('提示', '请选择需要上传的文件！');
+	} else {
+			importSave();
+	}
+}
+
+//保存数据
+function importSave() {
+	$('#formFile').submit();
+		$.messager.progress(); 
+}
+
+
+var tartIframe = document.getElementById("tartIframe");
+tartIframe.src = "/opas-naps/PadLocationAddressUploadServlet.json";
+if(tartIframe.attachEvent){
+	tartIframe.attachEvent("onload",function(){
+		responPage();
+	});
+}else{
+	tartIframe.onload = function(){
+		responPage();			
+	}
+}
+
+function responPage(){
+	$.messager.progress('close'); 
+	var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+	if(value[0] == "success"){
+		tblPadLocationAddress.datagrid("reload");
+		top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+	}
+	if(value[0] == "false"){
+		$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+	}
+	
+}	
+</script>

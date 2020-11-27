@@ -1,0 +1,1352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AutoApply" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.allot.AutoApply" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+    <result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+     AUTO_ID, APP_ID, CURR_NODE, YDJ_FLAG, CRT_DATE
+    from OPAS_AUTO_APPLY
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_AUTO_APPLY
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.allot.AutoApply" >
+    insert into OPAS_AUTO_APPLY (AUTO_ID, APP_ID, CURR_NODE, 
+      YDJ_FLAG, CRT_DATE)
+    values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{currNode,jdbcType=VARCHAR}, 
+      #{ydjFlag,jdbcType=VARCHAR}, #{crtDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.allot.AutoApply" >
+    insert into OPAS_AUTO_APPLY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="currNode != null" >
+        CURR_NODE,
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG,
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="currNode != null" >
+        #{currNode,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        #{ydjFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null" >
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.allot.AutoApply" >
+    update OPAS_AUTO_APPLY
+    <set >
+      <if test="appId != null" >
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="currNode != null" >
+        CURR_NODE = #{currNode,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.allot.AutoApply" >
+    update OPAS_AUTO_APPLY
+    set APP_ID = #{appId,jdbcType=VARCHAR},
+      CURR_NODE = #{currNode,jdbcType=VARCHAR},
+      YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR},
+      CRT_DATE = #{crtDate,jdbcType=TIMESTAMP}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectBzkAuto" parameterType="java.util.Map" resultType="java.lang.Integer" >
+		select count(1) from 
+		(
+			select ac.C4_ABUSER,ac.APP_ID,ac.APP_PROD,ac.ALLOT_STATUS from OPAS_BIZ_INP_APPL_C1 ac 
+			where exists (
+				select allot.APP_ID from OPAS_AUTO_APPLY allot
+				where 
+				 ac.APP_ID=allot.APP_ID
+		    	<if test="selectTime1 !=null and selectTime1 !='' ">
+		    		AND to_char(allot.crt_date,'yyyy-mm-dd hh24:mi') &gt;= #{selectTime1}
+		    	</if>
+		    	<if test="selectTime2 !=null and selectTime2 !='' ">
+		    		AND to_char(allot.crt_date,'yyyy-mm-dd hh24:mi') &lt;= #{selectTime2}
+		    	</if>
+				<if test="serialNumList != null and serialNumList.size()>0 ">
+					AND substr(allot.APP_ID,11,1) in 
+					<foreach item="item" index="index" collection="serialNumList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+				</if>
+				<if test="appRegionList != null and appRegionList.size()>0 ">
+					AND substr(allot.APP_ID,9,2) in 
+						<foreach item="item" index="index" collection="appRegionList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+				</if>
+				<if test="appChannelList != null and appChannelList.size()>0 ">
+					AND substr(allot.APP_ID,8,1) in 
+						<foreach item="item" index="index" collection="appChannelList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+				</if>
+				<if test="inputStr != null and inputStr !='' ">
+					${inputStr}
+				</if>
+				<!-- <if test="appTime != null and appTime !='' ">
+					AND substr(allot.APP_ID,1,6) = #{appTime}
+				</if> -->
+				<if test="appTimeStart != null and appTimeStart !='' and appTimeEnd != null and appTimeEnd !='' ">
+				    AND (substr(allot.APP_ID,1,6) &gt;= #{appTimeStart} and substr(allot.APP_ID,1,6) &lt;= #{appTimeEnd})
+			    </if>
+				<if test='batchLabel != null and batchLabel !="" '>
+					${batchStr}
+				</if>
+				<if test="currNode != null and currNode !='' ">
+					AND allot.CURR_NODE = #{currNode}
+				</if>
+				<if test="ydjFlag != null and ydjFlag !='' ">
+					AND allot.YDJ_FLAG = #{ydjFlag}
+				</if>
+			) 
+			<if test="appProdList != null and appProdList.size()>0 ">
+				AND ac.APP_PROD in 
+				<foreach item="item" index="index" collection="appProdList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+			</if>
+			<if test="quickStr != null and quickStr !=''  ">
+				${quickStr}
+			</if>
+			<if test='c1CoName != null and c1CoName !="" '>
+				AND ac.C1_CONAME LIKE concat(concat('%',#{c1CoName}),'%')
+			</if>
+			<!-- <if test="crtTime != null and crtTime !='' ">
+				AND to_char(ac.CRT_TIME,'yyyy-mm-dd')= #{crtTime}
+			</if> -->
+			<if test="crtTimeStart != null and crtTimeStart !='' and crtTimeEnd != null and crtTimeEnd !='' ">
+				AND (to_char(ac.CRT_TIME,'yyyy-mm-dd') BETWEEN #{crtTimeStart} AND #{crtTimeEnd})
+		    </if>
+			<if test="c4ApBatchList != null and c4ApBatchList.size()>0 ">
+				AND ac.C4_APBATCH in 
+					<foreach item="item" index="index" collection="c4ApBatchList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c5AbCodeList != null and c5AbCodeList.size()>0 ">
+				AND ac.C5_ABCODE in 
+					<foreach item="item" index="index" collection="c5AbCodeList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c4AbUserList != null and c4AbUserList.size()>0 ">
+				AND ac.C4_ABUSER in 
+				<foreach item="item" index="index" collection="c4AbUserList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+			</if>
+			<if test="c4CyCadd1 != null and c4CyCadd1 !='' ">
+				AND ac.C4_CYCADD1 = #{c4CyCadd1}
+			</if>
+			<if test='cardStr != null and cardStr !="" '>
+				${cardStr}
+			</if>
+		) allot
+		<if test="safeStr !=null and safeStr !='' ">
+		left join (select rn,PROMOTER_NO,CURR_STATUS from (select row_number() over(partition by PROMOTER_NO order by create_time desc) as rn,PROMOTER_NO,CURR_STATUS from OPAS_PROMOTER_RISKLIST) 
+        where  rn = 1) promoter on  allot.C4_ABUSER=promoter.PROMOTER_NO
+        </if>
+        left join POLICE_SIMPLIFY_INFO compare on allot.APP_ID=compare.APP_ID AND compare.card_flag = '0'
+        left join SFRZ_BASE_DATA sfrz on allot.app_id=sfrz.app_id AND sfrz.card_flag = '0' <!-- 可信身份认证-wenyh -->
+        left join OPAS_PBOC_CREDIT_CUE cue on allot.APP_ID=cue.APP_ID
+        left join OPAS_FICO_SD_BLAZE sdBlaze on allot.APP_ID=sdBlaze.APP_ID<!-- 标准卡次策略捞回wenyh20200807 -->
+        left join OPAS_BZK_SYSRESULT_INFO bzk on allot.APP_ID=bzk.APP_ID
+ 	    left join OPAS_TIANYU_ANTIFRAUD_DATA t on allot.APP_ID=t.APP_ID
+ 	    left join TRD_HAR_LD00001 l on allot.APP_ID=l.APP_ID
+ 	    <if test="fqzValue !=null and fqzValue !='' ">
+ 	    left join (select rn,FQZ_VALUE,app_id from (select row_number() over (partition by app_id order by crt_time desc) as rn,FQZ_VALUE,app_id from OPAS_FQZ_BIG_RESPONSE  where fqz_type='AF_ALL')
+ 	     where rn=1 ) big on allot.APP_ID=big.APP_ID
+ 	     </if>
+ 	     left join opas_telcheck_result r  on allot.APP_ID=r.APP_ID
+ 	     left join police_xp_info a1 on allot.APP_ID=a1.APP_ID 
+ 	     left join ccard_app_ditch_info cad on  allot.APP_ID=cad.app_id
+ 	     left join TRD_OPERATOR_ONLINE ton on allot.APP_ID=ton.app_id
+ 	     left join opas_biz_jd_appln jd on allot.APP_ID=jd.APP_ID
+ 	    where allot.ALLOT_STATUS='0'
+ 	     <if test="policeRxbd =='1'.toString() ">
+			 AND a1.RESULT_GMSFHM='一致' AND a1.RESULT_XM='一致' AND a1.RESULT_FX='系统判断为同一人'
+		 </if>
+		 <if test="policeRxbd =='2'.toString() ">
+			 AND (a1.RESULT_GMSFHM!='一致' OR a1.RESULT_XM!='一致' OR a1.RESULT_FX!='系统判断为同一人')
+		 </if>
+		 <if test="policeRxbd =='3'.toString() ">
+			 AND (a1.APP_ID is null OR a1.ERROR_MESSAGE is not null)
+		 </if>
+ 	     <if test="YsjlStr != null and YsjlStr !='' ">
+				AND exists (
+				    select 1 from YS_RESULT_INFO rs
+				    where rs.APP_ID=allot.APP_ID 
+			    	<if test="approveResult != null and approveResult !='' ">
+						AND rs.APPROVE_RESULT=#{approveResult}
+					</if>
+			    	<if test="resultInfoList != null and resultInfoList.size()>0 ">
+						AND rs.APPROVE_CODE in 
+						<foreach item="item" index="index" collection="resultInfoList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+				)
+			</if> 
+ 	    <if test="onlineTimeStr =='1'.toString() ">
+			AND (ton.RESULT_DATA in 
+			<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+ 					#{item}  
+				</foreach>
+				OR ton.RESULT_DATA is null
+			)
+		</if>
+		<if test="onlineTimeStr =='2'.toString() ">
+			AND ton.RESULT_DATA in 
+			<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+ 					#{item}  
+				</foreach>
+		</if>
+ 	    <if test="triggerType == '1'.toString() ">
+			AND (to_char(sdBlaze.TRIGGER_TYPE) is null  )
+	    </if>
+	    <if test="triggerType == '2'.toString() ">
+		   AND ( (sdBlaze.TRIGGER_TYPE &gt;=  #{triggerType1}) and (sdBlaze.TRIGGER_TYPE &lt;= #{triggerType2}) )
+	    </if> 
+	     <if test="triggerType == '3'.toString() ">
+		     AND ( sdBlaze.TRIGGER_TYPE &lt;= #{triggerType2})
+	    </if> 
+	     <if test="triggerType == '4'.toString() ">
+		      AND ( sdBlaze.TRIGGER_TYPE &gt;=  #{triggerType1} )
+	    </if> 
+	    <if test='secondDecisionLH != null and secondDecisionLH !="" '>
+			${secondDecisionLHStr}
+		</if>
+	    <if test="waiBao != null and waiBao !='' ">
+			 AND r.CURR_OPT_GROUP = #{waiBao}
+		</if>
+		<if test="blockList != null and blockList.size()>0 ">
+			AND r.BLOCK_CODE in 
+				<foreach item="item" index="index" collection="blockList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+		</if>     
+		<if test="creditList != null and creditList.size()>0 ">
+			AND bzk.CREDIT_DECISION_RESULT in 
+				<foreach item="item" index="index" collection="creditList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+		</if> 
+		<if test="tianyu != null and tianyu !='' ">
+			AND exists (
+			    select 1 from opas_tianyu_antifraud_riskinfo r
+			    where r.APP_ID=allot.APP_ID 
+		    	<if test="riskcodeList != null and riskcodeList.size()>0 ">
+					AND r.riskcode in 
+					<foreach item="item" index="index" collection="riskcodeList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+				</if>
+				<if test="riskValueList != null and riskValueList.size()>0 ">
+					AND r.RISKCODEVALUE in 
+					<foreach item="item" index="index" collection="riskValueList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+				</if>
+			)
+		</if>  
+		<if test="fqzValueList != null and fqzValueList.size()>0 ">
+			AND big.FQZ_VALUE in 
+				<foreach item="item" index="index" collection="fqzValueList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+		</if>
+		<if test="phoneList != null and phoneList.size()>0  ">
+				AND (l.MAPPING in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(cad.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(jd.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				)
+			</if>
+		<if test="riskScore == '1'.toString() ">
+			AND (to_char(t.RISKSCORE) is null or to_char(t.RISKSCORE)='-1' )
+	    </if>
+	    <if test="riskScore == '2'.toString() ">
+		   AND ( (t.RISKSCORE &gt;=  #{minRiskScore}) and (t.RISKSCORE &lt;= #{maxRiskScore}) )
+	    </if> 
+	     <if test="riskScore == '3'.toString() ">
+		     AND ( t.RISKSCORE &lt;= #{maxRiskScore})
+	    </if> 
+	     <if test="riskScore == '4'.toString() ">
+		      AND ( t.RISKSCORE &gt;=  #{minRiskScore} )
+	    </if> 
+		<if test="minNumberRead != null and minNumberRead !='' and minNumberRead !='-2' ">
+			AND isnumber2(trimorre(cue.NUMBER_READ)) &gt;=#{minNumberRead}
+		</if>
+		<if test="maxNumberRead != null and maxNumberRead !='' and maxNumberRead !='-2' ">
+			AND  isnumber2(trimorre(cue.NUMBER_READ)) &lt;=#{maxNumberRead}
+		</if> 
+		<if test=" minNumberRead =='-2' and maxNumberRead =='-2' ">
+			AND (cue.NUMBER_READ is null  or cue.NUMBER_READ='')
+		</if>  
+		<if test="wsCode != null and wsCode !='' ">
+			AND exists (
+			    select 1 from ccard_app_ditch_info h
+			    left join OPAS_NET_COOPERATIVE n on h.company_id=n.business_number
+			    where h.APP_ID=allot.APP_ID 
+		    	<if test="wsCodeList != null and wsCodeList.size()>0 ">
+					AND n.business_number in 
+					<foreach item="item" index="index" collection="wsCodeList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+				</if>
+			)
+		</if> 
+		<if test="decisionResultList != null and decisionResultList.size()>0 ">
+			AND sdBlaze.DECISION_RESULT in 
+				<foreach item="item" index="index" collection="decisionResultList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+		</if>
+		<if test="custFlag != null and custFlag!='' ">
+			AND  regexp_like(sdBlaze.rz_lable_code,'('||#{custFlagInfo}||')')
+		</if>
+		<if test="proposedLmtStr != null and proposedLmtStr !='' ">
+			${proposedLmtStr}
+		</if>
+		<if test="pbocRstFinDesp != null and pbocRstFinDesp !='' ">
+			AND sdBlaze.PBOC_RST_FIN_DESP is not null
+		</if> 
+		<if test="creditResultList != null and creditResultList.size()>0 ">
+			AND bzk.CREDIT_DECISION_RESULT in 
+				<foreach item="item" index="index" collection="creditResultList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+		</if>
+		<if test="creditLayerList != null and creditLayerList.size()>0 ">
+			AND bzk.CREDIT_DECISION_LAYER in 
+				<foreach item="item" index="index" collection="creditLayerList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+		</if> 
+		<if test='safeStr != null and safeStr !="" '>
+			${safeStr}
+		</if>
+		<if test=" pubStr != null and pubStr !=''  ">
+			${pubStr}
+		</if>
+	</select>
+	<select id="selectYdjAuto" parameterType="java.util.Map" resultType="java.lang.Integer">
+			select count(1) from (
+			select  distinct substr(allot.APP_ID,1,15) from  OPAS_AUTO_APPLY  allot
+			join OPAS_BIZ_INP_APPL_C1 ac on ac.APP_ID=allot.APP_ID
+			<if test="safeStr !=null and safeStr !='' ">
+			left join (select rn,PROMOTER_NO,CURR_STATUS from (select row_number() over(partition by PROMOTER_NO order by create_time desc) as rn,PROMOTER_NO,CURR_STATUS from OPAS_PROMOTER_RISKLIST) 
+             where  rn = 1) promoter on  ac.C4_ABUSER=promoter.PROMOTER_NO
+             </if>
+            left join POLICE_SIMPLIFY_INFO compare on allot.APP_ID=compare.APP_ID AND compare.card_flag = '0'
+            left join SFRZ_BASE_DATA sfrz on allot.app_id=sfrz.app_id AND sfrz.card_flag = '0' <!-- 可信身份认证-wenyh -->
+            left join OPAS_PBOC_CREDIT_CUE cue on allot.APP_ID=cue.APP_ID
+            left join OPAS_FICO_YDJ_BLAZE ydjBlaze on allot.APP_ID=ydjBlaze.APP_ID<!-- 易达金次策略捞回wenyh20200807 -->
+            left join OPAS_YDJ_SYSRESULT_INFO ydj on allot.APP_ID=ydj.APP_ID
+	 	    left join OPAS_TIANYU_ANTIFRAUD_DATA t on allot.APP_ID=t.APP_ID
+	 	    left join TRD_HAR_LD00001 l on allot.APP_ID=l.APP_ID
+	 	    <if test="fqzValue !=null and fqzValue !='' ">
+	 	    left join (select rn,FQZ_VALUE,app_id from (select row_number() over (partition by app_id order by crt_time desc) as rn,FQZ_VALUE,app_id from OPAS_FQZ_BIG_RESPONSE  where fqz_type='AF_ALL')
+	 	    where rn=1 ) big on allot.APP_ID=big.APP_ID
+	 	    </if>
+	 	    left join opas_telcheck_result r  on allot.APP_ID=r.APP_ID
+	 	    left join police_xp_info a1 on allot.APP_ID=a1.APP_ID 
+	 	    left join ccard_app_ditch_info cad on  allot.APP_ID=cad.app_id
+	 	    left join TRD_OPERATOR_ONLINE ton on allot.APP_ID=ton.app_id
+			left join opas_biz_jd_appln jd on allot.APP_ID=jd.APP_ID
+			where 
+			     ac.ALLOT_STATUS='0'
+			 <if test="policeRxbd =='1'.toString() ">
+				AND a1.RESULT_GMSFHM='一致' AND a1.RESULT_XM='一致' AND a1.RESULT_FX='系统判断为同一人'
+			 </if>
+			 <if test="policeRxbd =='2'.toString() ">
+				AND (a1.RESULT_GMSFHM!='一致' OR a1.RESULT_XM!='一致' OR a1.RESULT_FX!='系统判断为同一人')
+			 </if>
+			 <if test="policeRxbd =='3'.toString() ">
+				AND (a1.APP_ID is null OR a1.ERROR_MESSAGE is not null)
+			 </if>
+			 <if test="onlineTimeStr =='1'.toString() ">
+				AND (ton.RESULT_DATA in 
+				<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+ 				OR ton.RESULT_DATA is null
+				)
+			</if>
+			<if test="onlineTimeStr =='2'.toString() ">
+				AND ton.RESULT_DATA in 
+				<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+			</if>
+			 <if test="selectTime1 !=null and selectTime1 !='' ">
+		    	AND to_char(allot.crt_date,'yyyy-mm-dd hh24:mi') &gt;= #{selectTime1}
+	    	</if>
+	    	<if test="selectTime2 !=null and selectTime2 !='' ">
+	    		AND to_char(allot.crt_date,'yyyy-mm-dd hh24:mi') &lt;= #{selectTime2}
+	    	</if>
+			 <if test="triggerType == '1'.toString() ">
+				AND (to_char(sdBlaze.TRIGGER_TYPE) is null  )
+		    </if>
+		    <if test="triggerType == '2'.toString() ">
+			   AND ( (sdBlaze.TRIGGER_TYPE &gt;=  #{triggerType1}) and (sdBlaze.TRIGGER_TYPE &lt;= #{triggerType2}) )
+		    </if> 
+		     <if test="triggerType == '3'.toString() ">
+			     AND ( sdBlaze.TRIGGER_TYPE &lt;= #{triggerType2})
+		    </if> 
+		     <if test="triggerType == '4'.toString() ">
+			      AND ( sdBlaze.TRIGGER_TYPE &gt;=  #{triggerType1} )
+		    </if> 
+		    <if test='secondDecisionLH != null and secondDecisionLH !="" '>
+				${secondDecisionLHStr}
+			</if>
+		    <if test="waiBao != null and waiBao !='' ">
+				 AND r.CURR_OPT_GROUP = #{waiBao}
+			</if>
+			<if test="blockList != null and blockList.size()>0 ">
+				AND r.BLOCK_CODE in 
+					<foreach item="item" index="index" collection="blockList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>     
+			<if test="creditList != null and creditList.size()>0 ">
+				AND bzk.CREDIT_DECISION_RESULT in 
+					<foreach item="item" index="index" collection="creditList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if> 
+			<if test="tianyu != null and tianyu !='' ">
+				AND exists (
+				    select 1 from opas_tianyu_antifraud_riskinfo r
+				    where r.APP_ID=allot.APP_ID 
+			    	<if test="riskcodeList != null and riskcodeList.size()>0 ">
+						AND r.riskcode in 
+						<foreach item="item" index="index" collection="riskcodeList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+					<if test="riskValueList != null and riskValueList.size()>0 ">
+						AND r.RISKCODEVALUE in 
+						<foreach item="item" index="index" collection="riskValueList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+				)
+			</if>  
+			<if test="fqzValueList != null and fqzValueList.size()>0 ">
+				AND big.FQZ_VALUE in 
+					<foreach item="item" index="index" collection="fqzValueList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="phoneList != null and phoneList.size()>0  ">
+				AND (l.MAPPING in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(cad.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(jd.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				)
+			</if>
+			<if test="riskScore == '1'.toString() ">
+				AND (to_char(t.RISKSCORE) is null or to_char(t.RISKSCORE)='-1' )
+		    </if>
+		    <if test="riskScore == '2'.toString() ">
+			   AND ( (t.RISKSCORE &gt;=  #{minRiskScore}) and (t.RISKSCORE &lt;= #{maxRiskScore}) )
+		    </if> 
+		     <if test="riskScore == '3'.toString() ">
+			     AND ( t.RISKSCORE &lt;= #{maxRiskScore})
+		    </if> 
+		     <if test="riskScore == '4'.toString() ">
+			      AND ( t.RISKSCORE &gt;=  #{minRiskScore} )
+		    </if> 
+			<if test="minNumberRead != null and minNumberRead !='' and minNumberRead !='-2' ">
+				AND isnumber2(trimorre(cue.NUMBER_READ)) &gt;=#{minNumberRead}
+			</if>
+			<if test="maxNumberRead != null and maxNumberRead !='' and maxNumberRead !='-2' ">
+				AND  isnumber2(trimorre(cue.NUMBER_READ)) &lt;=#{maxNumberRead}
+			</if> 
+			<if test=" minNumberRead =='-2' and maxNumberRead =='-2' ">
+				AND (cue.NUMBER_READ is null  or cue.NUMBER_READ='')
+			</if>  
+			<if test="proposedLmtStr != null and proposedLmtStr !='' ">
+				${proposedLmtStr}
+			</if>
+			<if test="pbocRstFinDesp != null and pbocRstFinDesp !='' ">
+					AND ydjBlaze.CDT_SCORE  IN ('2.01','2.041','2.061','2.071','2.08','2.161','2.80','2.81')
+			</if> 
+			<if test="creditResultList != null and creditResultList.size()>0 ">
+				AND bzk.CREDIT_DECISION_RESULT in 
+					<foreach item="item" index="index" collection="creditResultList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="creditLayerList != null and creditLayerList.size()>0 ">
+				AND bzk.CREDIT_DECISION_LAYER in 
+					<foreach item="item" index="index" collection="creditLayerList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="serialNumList != null and serialNumList.size()>0 ">
+				AND substr(allot.APP_ID,11,1) in 
+					<foreach item="item" index="index" collection="serialNumList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="appRegionList != null and appRegionList.size()>0 ">
+				AND substr(allot.APP_ID,9,2) in 
+					<foreach item="item" index="index" collection="appRegionList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="appChannelList != null and appChannelList.size()>0 ">
+				AND substr(allot.APP_ID,8,1) in 
+					<foreach item="item" index="index" collection="appChannelList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="inputStr != null and inputStr !='' ">
+				${inputStr}
+			</if>
+		    <!-- <if test="appTime != null and appTime !='' ">
+				AND substr(allot.APP_ID,1,6) = #{appTime}
+			</if> -->
+			<if test="appTimeStart != null and appTimeStart !='' and appTimeEnd != null and appTimeEnd !='' ">
+			    AND (substr(allot.APP_ID,1,6) &gt;= #{appTimeStart} and substr(allot.APP_ID,1,6) &lt;= #{appTimeEnd})
+		    </if>
+			<if test="appProdList != null and appProdList.size()>0 ">
+				AND ac.APP_PROD in 
+					<foreach item="item" index="index" collection="appProdList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="quickStr != null and quickStr !=''  ">
+				${quickStr}
+			</if>
+			<if test='c1CoName != null and c1CoName !="" '>
+				AND ac.C1_CONAME LIKE concat(concat('%',#{c1CoName}),'%')
+			</if>
+			<!-- <if test="crtTime != null and crtTime !='' ">
+				AND to_char(ac.CRT_TIME,'yyyy-mm-dd')= #{crtTime}
+			</if> -->
+			<if test="crtTimeStart != null and crtTimeStart !='' and crtTimeEnd != null and crtTimeEnd !='' ">
+				AND (to_char(ac.CRT_TIME,'yyyy-mm-dd') BETWEEN #{crtTimeStart} AND #{crtTimeEnd})
+		    </if>
+			<if test="c4ApBatchList != null and c4ApBatchList.size()>0 ">
+				AND ac.C4_APBATCH in 
+					<foreach item="item" index="index" collection="c4ApBatchList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c5AbCodeList != null and c5AbCodeList.size()>0 ">
+				AND ac.C5_ABCODE in 
+					<foreach item="item" index="index" collection="c5AbCodeList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c4AbUserList != null and c4AbUserList.size()>0 ">
+				AND ac.C4_ABUSER in 
+					<foreach item="item" index="index" collection="c4AbUserList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c4CyCadd1 != null and c4CyCadd1 !='' ">
+				AND ac.C4_CYCADD1 = #{c4CyCadd1}
+			</if>
+			<if test='cardStr != null and cardStr !="" '>
+				${cardStr}
+			</if>
+			<if test='safeStr != null and safeStr !="" '>
+				${safeStr}
+			</if>
+			<if test=" pubStr != null and pubStr !=''  ">
+				${pubStr}
+			</if>
+			<if test='batchLabel != null and batchLabel !="" '>
+				${batchStr}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND allot.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND allot.YDJ_FLAG = #{ydjFlag}
+			</if>)
+	</select>
+	<resultMap id="AutoResultMap" type="com.huaxia.opas.domain.allot.AllotApply">
+		<!-- 申请件分配表 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+		<result column="appNo" property="appNo" jdbcType="VARCHAR"/>
+		<result column="CURR_OPT_QUEUE" property="currQueue" jdbcType="VARCHAR"/>
+		<result column="LAST_OPT_QUEUE" property="lastQueue" jdbcType="VARCHAR"/>
+		<result column="CURR_OPT_GROUP" property="currGroup" jdbcType="VARCHAR"/>
+		<result column="LAST_OPT_GROUP" property="lastGroup" jdbcType="VARCHAR"/>
+		<result column="CURR_OPT_USER" property="currUser" jdbcType="VARCHAR"/>
+		<result column="LAST_OPT_USER" property="lastUser" jdbcType="VARCHAR"/>
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR"/>
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR"/>
+		<result column="DEL_STATUS" property="delStatus" jdbcType="CHAR"/>
+		<result column="CRT_TEAM_DATE" property="crtTeamDate" jdbcType="TIMESTAMP"/>
+		<result column="LST_TEAM_DATE" property="lstTeamDate" jdbcType="TIMESTAMP"/>
+		<result column="SUBMIT_TYPE" property="submitType" jdbcType="VARCHAR"/>
+		<result column="REVIEW_STATUS" property="reviewStatus" jdbcType="CHAR"/>
+		<result column="SUBMIT_STATUS" property="submitStatus" jdbcType="CHAR"/>
+		<result column="SUBMIT_MEMO" property="submitMemo" jdbcType="VARCHAR"/>
+		<result column="QUEUE_DATE" property="queueDate" jdbcType="TIMESTAMP"/>
+		<result column="GROUP_DATE" property="groupDate" jdbcType="TIMESTAMP"/>
+		<result column="USER_DATE" property="userDate" jdbcType="TIMESTAMP"/>
+		<result column="PROCESS_ID" property="processId" jdbcType="VARCHAR"/>
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR"/>
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="CHAR"/>
+		<result column="SYN_FLAG" property="synFlag" jdbcType="VARCHAR" />
+		<result column="BACK_FLAG" property="backFlag" jdbcType="VARCHAR" />
+		<result column="LAOJIANFLAG" property="laoJianFlag" jdbcType="VARCHAR" />
+		<result column="CURR_USER_NAME" property="currUserName" jdbcType="VARCHAR" />
+		<result column="GROUP_TEAM_DATE" property="groupTeamDate" jdbcType="TIMESTAMP"/>
+		<result column="FRAUD_DATE" property="fraudDate" jdbcType="TIMESTAMP"/>
+		<result column="CHECK_MEUOFLAG" property="check_meuoFlag" jdbcType="CHAR"/>
+		<result column="BATCH_OPERATE_FLAG" property="batchOperateFlag" jdbcType="VARCHAR"/>
+		<result column="BATCH_CREDIT_FLAG" property="batchCreditFlag" jdbcType="CHAR"/>
+		<result column="BATCH_APPROVAL_FLAG" property="batchApprovalFlag" jdbcType="CHAR"/>
+		<result column="ZSHY_INNER_CHECK" property="zshyInnerCheck" jdbcType="CHAR"/>
+		<result column="ALLOT_VERSION" property="allotVersion" jdbcType="NUMERIC"/>
+		<!-- 申请件信息表 -->
+		<result column="APP_PROD" property="appProd" jdbcType="VARCHAR"/>
+		<result column="C1_CNAME" property="c1Cname" jdbcType="VARCHAR"/>
+		<result column="C1_CONAME" property="c1CoName" jdbcType="VARCHAR"/>
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP"/>
+		<result column="C4_APBATCH" property="c4ApBatch" jdbcType="VARCHAR"/>
+		<result column="C4_CYCADD1" property="c4CyCadd1" jdbcType="VARCHAR"/>
+		<result column="C4_CYCADD2" property="c4CyCadd2" jdbcType="VARCHAR"/>
+		<result column="ALLOT_STATUS" property="allotStatus" jdbcType="VARCHAR"/>
+		<result column="C4_ABUSER" property="c4AbUser" jdbcType="VARCHAR"/>
+		<result column="C5_ABCODE" property="c5AbCode" jdbcType="VARCHAR"/>
+		<result column="QUICK_CARD_FLAG" property="quickCardFlag" jdbcType="VARCHAR"/>
+		<result column="EXIST_CARD_FLAG" property="existCardFlag" jdbcType="VARCHAR"/> 
+	</resultMap>
+	<select id="selectBzkAutoList" parameterType="java.util.Map" resultMap="AutoResultMap">
+			select 
+			allot.APP_ID,
+			allot.CURR_OPT_QUEUE,allot.LAST_OPT_QUEUE,
+			allot.CURR_OPT_GROUP,allot.LAST_OPT_GROUP,
+			allot.CURR_OPT_USER,allot.CURR_USER_NAME,allot.LAST_OPT_USER,
+			allot.CURR_STATUS,allot.DEL_STATUS,allot.CURR_NODE,
+			allot.CRT_TEAM_DATE,allot.LST_TEAM_DATE,
+			allot.QUEUE_DATE,allot.GROUP_DATE,allot.USER_DATE,
+			allot.YDJ_FLAG,allot.MATCHING_CARD_FLAG,
+			allot.BACK_FLAG,allot.LAOJIANFLAG,
+			allot.BATCH_OPERATE_FLAG,allot.BATCH_CREDIT_FLAG,allot.BATCH_APPROVAL_FLAG,
+			allot.GROUP_TEAM_DATE,allot.FRAUD_DATE,allot.CHECK_MEUOFLAG,allot.ZSHY_INNER_CHECK,
+			allot.ALLOT_VERSION,
+			ac.C1_CONAME,ac.APP_PROD,ac.C1_CNAME,ac.CRT_TIME
+			from
+			(
+			select 
+			ac.C1_CONAME,ac.APP_PROD,ac.C1_CNAME,ac.CRT_TIME,ac.C4_ABUSER,ac.APP_ID
+			from OPAS_BIZ_INP_APPL_C1 ac
+			where exists (
+				select allot.APP_ID from OPAS_ALLOT_APPLY_ALLOT allot
+				join OPAS_AUTO_APPLY a on allot.APP_ID=a.APP_ID 
+				where  ac.APP_ID=allot.APP_ID
+				AND  allot.SYN_FLAG='0' 
+			    AND allot.DEL_STATUS in ('0','2','3') 
+			    <if test=" nowStr != null and nowStr !=''  ">
+					${nowStr}
+				</if> 
+				<if test="fraudStr != null and fraudStr !=''  ">
+			    	${fraudStr}
+				</if>
+				<if test="serialNumList != null and serialNumList.size()>0 ">
+					AND substr(allot.APP_ID,11,1) in 
+					<foreach item="item" index="index" collection="serialNumList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+				</if>
+				<if test="appRegionList != null and appRegionList.size()>0 ">
+					AND substr(allot.APP_ID,9,2) in 
+						<foreach item="item" index="index" collection="appRegionList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+				</if>
+				<if test="appChannelList != null and appChannelList.size()>0 ">
+					AND substr(allot.APP_ID,8,1) in 
+						<foreach item="item" index="index" collection="appChannelList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+				</if>
+				<if test="inputStr != null and inputStr !='' ">
+					${inputStr}
+				</if>
+				<!-- <if test="appTime != null and appTime !='' ">
+					AND substr(allot.APP_ID,1,6) = #{appTime}
+				</if> -->
+				<if test="appTimeStart != null and appTimeStart !='' and appTimeEnd != null and appTimeEnd !='' ">
+				    AND (substr(allot.APP_ID,1,6) &gt;= #{appTimeStart} and substr(allot.APP_ID,1,6) &lt;= #{appTimeEnd})
+			    </if>
+				<if test="submitStr != null and submitStr !='' ">
+				 	and (allot.SUBMIT_TYPE is null and (allot.SUBMIT_STATUS='0' or allot.SUBMIT_STATUS is null))
+				</if>
+				<if test="submitStr == null or submitStr =='' ">
+					and allot.SUBMIT_TYPE is not null
+				</if>
+				<if test='batchLabel != null and batchLabel !="" '>
+					${batchStr}
+				</if>
+				<if test="currQueue != null and currQueue !='' ">
+					AND allot.CURR_OPT_QUEUE = #{currQueue}
+				</if>
+				<if test="currGroup != null and currGroup !='' ">
+					AND allot.CURR_OPT_GROUP = #{currGroup}
+				</if>
+				<if test="currStatusList != null and currStatusList.size()>0 ">
+					AND allot.CURR_STATUS in 
+						<foreach item="item" index="index" collection="currStatusList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+				</if>
+				<if test="currNode != null and currNode !='' ">
+					AND allot.CURR_NODE = #{currNode}
+				</if>
+				<if test="ydjStr != null and ydjStr !='' ">
+					${ydjStr}
+				</if>
+				<if test="ydjFlag != null and ydjFlag !='' ">
+					AND allot.YDJ_FLAG = #{ydjFlag}
+				</if>
+				<if test="appId != null and appId !='' ">
+					AND allot.APP_ID  like '${appId}%'
+				</if>
+				<if test="jiuCuoFlag == '1'.toString() ">
+					AND allot.REVIEW_STATUS is null 
+			    </if>
+			    <if test="jiuCuoFlag == '2'.toString() ">
+				    AND allot.REVIEW_STATUS is not null 
+			    </if> 
+			) 
+			<if test="appProdList != null and appProdList.size()>0 ">
+				AND ac.APP_PROD in 
+					<foreach item="item" index="index" collection="appProdList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="quickStr != null and quickStr !=''  ">
+				${quickStr}
+			</if>
+			<if test='c1CoName != null and c1CoName !="" '>
+				AND ac.C1_CONAME LIKE concat(concat('%',#{c1CoName}),'%')
+			</if>
+			<!-- <if test="crtTime != null and crtTime !='' ">
+				AND to_char(ac.CRT_TIME,'yyyy-mm-dd')= #{crtTime}
+			</if> -->
+			<if test="crtTimeStart != null and crtTimeStart !='' and crtTimeEnd != null and crtTimeEnd !='' ">
+				AND (to_char(ac.CRT_TIME,'yyyy-mm-dd') BETWEEN #{crtTimeStart} AND #{crtTimeEnd})
+		    </if>
+			<if test="c4ApBatchList != null and c4ApBatchList.size()>0 ">
+				AND ac.C4_APBATCH in 
+					<foreach item="item" index="index" collection="c4ApBatchList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c5AbCodeList != null and c5AbCodeList.size()>0 ">
+				AND ac.C5_ABCODE in 
+					<foreach item="item" index="index" collection="c5AbCodeList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c4AbUserList != null and c4AbUserList.size()>0 ">
+				AND ac.C4_ABUSER in 
+					<foreach item="item" index="index" collection="c4AbUserList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c4CyCadd1 != null and c4CyCadd1 !='' ">
+				AND ac.C4_CYCADD1 = #{c4CyCadd1}
+			</if>
+			<if test='cardStr != null and cardStr !="" '>
+				${cardStr}
+			</if> ) ac
+			inner join OPAS_ALLOT_APPLY_ALLOT allot on ac.APP_ID=allot.APP_ID
+			<if test="safeStr !=null and safeStr !='' ">
+			left join (select rn,PROMOTER_NO,CURR_STATUS from (select row_number() over(partition by PROMOTER_NO order by create_time desc) as rn,PROMOTER_NO,CURR_STATUS from OPAS_PROMOTER_RISKLIST) 
+             where  rn = 1) promoter on  ac.C4_ABUSER=promoter.PROMOTER_NO
+             </if>
+            left join POLICE_SIMPLIFY_INFO compare on ac.APP_ID=compare.APP_ID AND compare.card_flag = '0'
+            left join SFRZ_BASE_DATA sfrz on allot.app_id=sfrz.app_id AND sfrz.card_flag = '0' <!-- 可信身份认证-wenyh -->
+            left join OPAS_PBOC_CREDIT_CUE cue on ac.APP_ID=cue.APP_ID
+            left join OPAS_FICO_SD_BLAZE sdBlaze on ac.APP_ID=sdBlaze.APP_ID<!-- 标准卡次策略捞回wenyh20200807 -->
+            left join OPAS_BZK_SYSRESULT_INFO bzk on ac.APP_ID=bzk.APP_ID
+            left join (select rn,APP_ID,STOP_FLAG from (select row_number() over (partition by app_id order by crt_date desc) as rn,APP_ID,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO ) 
+	 	    where rn=1) info on ac.APP_ID=info.APP_ID
+	 	    left join OPAS_TIANYU_ANTIFRAUD_DATA t on ac.APP_ID=t.APP_ID
+	 	    left join TRD_HAR_LD00001 l on ac.APP_ID=l.APP_ID
+	 	    <if test="fqzValue !=null and fqzValue !='' ">
+	 	     left join (select rn,FQZ_VALUE,app_id from (select row_number() over (partition by app_id order by crt_time desc) as rn,FQZ_VALUE,app_id from OPAS_FQZ_BIG_RESPONSE  where fqz_type='AF_ALL'
+	 	     where rn=1 ) big on ac.APP_ID=big.APP_ID
+	 	     </if>
+	 	     left join opas_telcheck_result r  on ac.APP_ID=r.APP_ID
+	 	     left join police_xp_info a1 on ac.APP_ID=a1.APP_ID 
+	 	     left join ccard_app_ditch_info cad on  ac.APP_ID=cad.app_id
+	 	     left join TRD_OPERATOR_ONLINE ton on ac.APP_ID=ton.app_id
+	 	     left join opas_biz_jd_appln jd on allot.APP_ID=jd.APP_ID
+	 	     <!-- 智能语音转人工队列  add intelVoiceToArtQueue by wenyh -->
+		 	 left join CAMS_VOICE_CALL_RECORD znyy on allot.APP_ID=znyy.APP_ID
+			where 
+				allot.SYN_FLAG='0'
+			    AND allot.DEL_STATUS in ('0','2','3') 
+			 <if test="policeRxbd =='1'.toString() ">
+				AND a1.RESULT_GMSFHM='一致' AND a1.RESULT_XM='一致' AND a1.RESULT_FX='系统判断为同一人'
+			 </if>
+			 <if test="policeRxbd =='2'.toString() ">
+				AND (a1.RESULT_GMSFHM!='一致' OR a1.RESULT_XM!='一致' OR a1.RESULT_FX!='系统判断为同一人')
+			 </if>
+			 <if test="policeRxbd =='3'.toString() ">
+				AND (a1.APP_ID is null OR a1.ERROR_MESSAGE is not null)
+			 </if>
+			 <if test="YsjlStr != null and YsjlStr !='' ">
+				AND exists (
+				    select 1 from YS_RESULT_INFO rs
+				    where rs.APP_ID=allot.APP_ID 
+			    	<if test="approveResult != null and approveResult !='' ">
+						AND rs.APPROVE_RESULT=#{approveResult}
+					</if>
+			    	<if test="resultInfoList != null and resultInfoList.size()>0 ">
+						AND rs.APPROVE_CODE in 
+						<foreach item="item" index="index" collection="resultInfoList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+				)
+			</if> 
+			<if test="onlineTimeStr =='1'.toString() ">
+				AND (ton.RESULT_DATA in 
+				<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+ 				OR ton.RESULT_DATA is null
+				)
+			</if>
+			<if test="onlineTimeStr =='2'.toString() ">
+				AND ton.RESULT_DATA in 
+				<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+			</if>
+			<if test="triggerType == '1'.toString() ">
+				AND (to_char(sdBlaze.TRIGGER_TYPE) is null  )
+		    </if>
+		    <if test="triggerType == '2'.toString() ">
+			   AND ( (sdBlaze.TRIGGER_TYPE &gt;=  #{triggerType1}) and (sdBlaze.TRIGGER_TYPE &lt;= #{triggerType2}) )
+		    </if> 
+		     <if test="triggerType == '3'.toString() ">
+			     AND ( sdBlaze.TRIGGER_TYPE &lt;= #{triggerType2})
+		    </if> 
+		     <if test="triggerType == '4'.toString() ">
+			      AND ( sdBlaze.TRIGGER_TYPE &gt;=  #{triggerType1} )
+		    </if> 
+		    <if test='secondDecisionLH != null and secondDecisionLH !="" '>
+				${secondDecisionLHStr}
+			</if>
+		    <if test="waiBao != null and waiBao !='' ">
+				 AND r.CURR_OPT_GROUP = #{waiBao}
+			</if>
+			<!-- 智能语音转人工队列  add intelVoiceToArtQueue by wenyh -->
+			<if test="intelVoiceToArtQueue != null and intelVoiceToArtQueue !='' ">
+			  		  AND znyy.FINISH = #{intelVoiceToArtQueue}
+			</if>
+			<if test="blockList != null and blockList.size()>0 ">
+				AND r.BLOCK_CODE in 
+					<foreach item="item" index="index" collection="blockList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>     
+			<if test="creditList != null and creditList.size()>0 ">
+				AND bzk.CREDIT_DECISION_RESULT in 
+					<foreach item="item" index="index" collection="creditList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="tianyu != null and tianyu !='' ">
+				AND exists (
+				    select 1 from opas_tianyu_antifraud_riskinfo r
+				    where r.APP_ID=allot.APP_ID 
+			    	<if test="riskcodeList != null and riskcodeList.size()>0 ">
+						AND r.riskcode in 
+						<foreach item="item" index="index" collection="riskcodeList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+					<if test="riskValueList != null and riskValueList.size()>0 ">
+						AND r.RISKCODEVALUE in 
+						<foreach item="item" index="index" collection="riskValueList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+				)
+			</if>  
+			<if test="fqzValueList != null and fqzValueList.size()>0 ">
+				AND big.FQZ_VALUE in 
+					<foreach item="item" index="index" collection="fqzValueList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="phoneList != null and phoneList.size()>0  ">
+				AND (l.MAPPING in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(cad.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(jd.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				)
+			</if>
+			<if test="riskScore == '1'.toString() ">
+				AND (to_char(t.RISKSCORE) is null or to_char(t.RISKSCORE)='-1' )
+		    </if>
+		    <if test="riskScore == '2'.toString() ">
+			   AND ( (t.RISKSCORE &gt;=  #{minRiskScore}) and (t.RISKSCORE &lt;= #{maxRiskScore}) )
+		    </if> 
+		     <if test="riskScore == '3'.toString() ">
+			     AND ( t.RISKSCORE &lt;= #{maxRiskScore})
+		    </if> 
+		     <if test="riskScore == '4'.toString() ">
+			      AND ( t.RISKSCORE &gt;=  #{minRiskScore} )
+		    </if> 
+			<if test="minNumberRead != null and minNumberRead !='' and minNumberRead !='-2' ">
+				AND isnumber2(trimorre(cue.NUMBER_READ)) &gt;=#{minNumberRead}
+			</if>
+			<if test="maxNumberRead != null and maxNumberRead !='' and maxNumberRead !='-2' ">
+				AND  isnumber2(trimorre(cue.NUMBER_READ)) &lt;=#{maxNumberRead}
+			</if> 
+			<if test=" minNumberRead =='-2' and maxNumberRead =='-2' ">
+				AND (cue.NUMBER_READ is null  or cue.NUMBER_READ='')
+			</if>  
+			<if test="wsCode != null and wsCode !='' ">
+				AND exists (
+				    select 1 from ccard_app_ditch_info h
+				    left join OPAS_NET_COOPERATIVE n on h.company_id=n.business_number
+				    where h.APP_ID=allot.APP_ID 
+			    	<if test="wsCodeList != null and wsCodeList.size()>0 ">
+						AND n.business_number in 
+						<foreach item="item" index="index" collection="wsCodeList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+				)
+			</if> 
+			<if test="decisionResultList != null and decisionResultList.size()>0 ">
+				AND sdBlaze.DECISION_RESULT in 
+					<foreach item="item" index="index" collection="decisionResultList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="custFlag != null and custFlag!='' ">
+				AND  regexp_like(sdBlaze.rz_lable_code,'('||#{custFlagInfo}||')')
+			</if>
+			<if test="proposedLmtStr != null and proposedLmtStr !='' ">
+				${proposedLmtStr}
+			</if>
+			<if test="pbocRstFinDesp != null and pbocRstFinDesp !='' ">
+				AND sdBlaze.PBOC_RST_FIN_DESP is not null
+			</if> 
+			<if test="creditResultList != null and creditResultList.size()>0 ">
+				AND bzk.CREDIT_DECISION_RESULT in 
+					<foreach item="item" index="index" collection="creditResultList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="creditLayerList != null and creditLayerList.size()>0 ">
+				AND bzk.CREDIT_DECISION_LAYER in 
+					<foreach item="item" index="index" collection="creditLayerList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test='safeStr != null and safeStr !="" '>
+				${safeStr}
+			</if>
+			<if test=" pubStr != null and pubStr !=''  ">
+				${pubStr}
+			</if>
+			<if test=" stopStr != null and stopStr !=''  ">
+				${stopStr}
+			</if>
+			<if test="submitStr != null and submitStr !='' ">
+			 	and (allot.SUBMIT_TYPE is null and (allot.SUBMIT_STATUS='0' or allot.SUBMIT_STATUS is null))
+			</if>
+			<if test="submitStr == null or submitStr =='' ">
+				and allot.SUBMIT_TYPE is not null
+			</if>
+			<if test='batchLabel != null and batchLabel !="" '>
+				${batchStr}
+			</if>
+			<if test="currQueue != null and currQueue !='' ">
+				AND allot.CURR_OPT_QUEUE = #{currQueue}
+			</if>
+			<if test="currGroup != null and currGroup !='' ">
+				AND allot.CURR_OPT_GROUP = #{currGroup}
+			</if>
+			<if test="currStatusList != null and currStatusList.size()>0 ">
+				AND allot.CURR_STATUS in 
+					<foreach item="item" index="index" collection="currStatusList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND allot.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjStr != null and ydjStr !='' ">
+				${ydjStr}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND allot.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				order by ${checkStr}
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+			    order by ac.CRT_TIME asc,allot.APP_ID asc
+		    </if>
+	</select>
+	<select id="selectYdjAutoList" parameterType="java.util.Map" resultMap="AutoResultMap">
+			select  allot.APP_ID,substr(allot.APP_ID,1,15) as appNo,
+			allot.YDJ_FLAG
+			 from  OPAS_AUTO_APPLY a ,OPAS_ALLOT_APPLY_ALLOT allot
+	 	    inner join OPAS_BIZ_INP_APPL_C1 ac  on  ac.APP_ID=allot.APP_ID
+	 	    <if test="safeStr !=null and safeStr !='' ">
+			left join (select rn,PROMOTER_NO,CURR_STATUS from (select row_number() over(partition by PROMOTER_NO order by create_time desc) as rn,PROMOTER_NO,CURR_STATUS from OPAS_PROMOTER_RISKLIST) 
+             where  rn = 1) promoter on  ac.C4_ABUSER=promoter.PROMOTER_NO
+             </if>
+            left join POLICE_SIMPLIFY_INFO compare on allot.APP_ID=compare.APP_ID AND compare.card_flag = '0'
+            left join SFRZ_BASE_DATA sfrz on allot.app_id=sfrz.app_id AND sfrz.card_flag = '0' <!-- 可信身份认证-wenyh -->
+            left join OPAS_PBOC_CREDIT_CUE cue on allot.APP_ID=cue.APP_ID
+            left join OPAS_FICO_YDJ_BLAZE ydjBlaze on allot.APP_ID=ydjBlaze.APP_ID<!-- 易达金次策略捞回wenyh20200807 -->
+            left join OPAS_YDJ_SYSRESULT_INFO ydj on allot.APP_ID=ydj.APP_ID
+            left join (select rn,APP_ID,STOP_FLAG from (select row_number() over (partition by app_id order by crt_date desc) as rn,APP_ID,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO ) 
+	 	    where rn=1) info on allot.APP_ID=info.APP_ID
+	 	    left join OPAS_TIANYU_ANTIFRAUD_DATA t on allot.APP_ID=t.APP_ID
+	 	    left join TRD_HAR_LD00001 l on allot.APP_ID=l.APP_ID
+	 	    <if test="fqzValue !=null and fqzValue !='' ">
+	 	    left join (select rn,FQZ_VALUE,app_id from (select row_number() over (partition by app_id order by crt_time desc) as rn,FQZ_VALUE,app_id from OPAS_FQZ_BIG_RESPONSE  where fqz_type='AF_ALL')
+	 	     where rn=1 ) big on allot.APP_ID=big.APP_ID
+	 	     </if>
+	 	     left join opas_telcheck_result r  on allot.APP_ID=r.APP_ID
+	 	     left join police_xp_info a1 on allot.APP_ID=a1.APP_ID
+	 	     left join ccard_app_ditch_info cad on  ac.APP_ID=cad.app_id
+	 	     left join TRD_OPERATOR_ONLINE ton on ac.APP_ID=ton.app_id
+	 	     left join opas_biz_jd_appln jd on allot.APP_ID=jd.APP_ID
+			where 
+				 allot.APP_ID=a.APP_ID
+			     AND allot.SYN_FLAG='0'
+			     AND allot.DEL_STATUS in ('0','2','3') 
+			<if test="policeRxbd =='1'.toString() ">
+				AND a1.RESULT_GMSFHM='一致' AND a1.RESULT_XM='一致' AND a1.RESULT_FX='系统判断为同一人'
+			</if>
+			<if test="policeRxbd =='2'.toString() ">
+				AND (a1.RESULT_GMSFHM!='一致' OR a1.RESULT_XM!='一致' OR a1.RESULT_FX!='系统判断为同一人')
+			</if>
+			<if test="policeRxbd =='3'.toString() ">
+				AND (a1.APP_ID is null OR a1.ERROR_MESSAGE is not null)
+			</if>
+			<if test="onlineTimeStr =='1'.toString() ">
+				AND (ton.RESULT_DATA in 
+				<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+ 				OR ton.RESULT_DATA is null
+				)
+			</if>
+			<if test="onlineTimeStr =='2'.toString() ">
+				AND ton.RESULT_DATA in 
+				<foreach item="item" index="index" collection="onlineTimeList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+			</if>
+			<if test="triggerType == '1'.toString() ">
+				AND (to_char(ydjBlaze.CDT_SCORE) is null  )
+		    </if>
+		    <if test="triggerType == '2'.toString() ">
+			   AND ( (ydjBlaze.CDT_SCORE &gt;=  #{triggerType1}) and (ydjBlaze.CDT_SCORE &lt;= #{triggerType2}) )
+		    </if> 
+		     <if test="triggerType == '3'.toString() ">
+			     AND ( ydjBlaze.CDT_SCORE &lt;= #{triggerType2})
+		    </if> 
+		     <if test="triggerType == '4'.toString() ">
+			      AND ( ydjBlaze.CDT_SCORE &gt;=  #{triggerType1} )
+		    </if> 
+		    <if test='secondDecisionLH != null and secondDecisionLH !="" '>
+				${secondDecisionLHStr}
+			</if>
+		    <if test="waiBao != null and waiBao !='' ">
+				 AND r.CURR_OPT_GROUP = #{waiBao}
+			</if>
+			<if test="blockList != null and blockList.size()>0 ">
+				AND r.BLOCK_CODE in 
+					<foreach item="item" index="index" collection="blockList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>     
+			<if test="creditList != null and creditList.size()>0 ">
+				AND ydj.CREDIT_DECISION_RESULT in 
+					<foreach item="item" index="index" collection="creditList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="tianyu != null and tianyu !='' ">
+				AND exists (
+				    select 1 from opas_tianyu_antifraud_riskinfo r
+				    where r.APP_ID=allot.APP_ID 
+			    	<if test="riskcodeList != null and riskcodeList.size()>0 ">
+						AND r.riskcode in 
+						<foreach item="item" index="index" collection="riskcodeList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+					<if test="riskValueList != null and riskValueList.size()>0 ">
+						AND r.RISKCODEVALUE in 
+						<foreach item="item" index="index" collection="riskValueList" open="(" separator="," close=")">  
+		  					#{item}  
+		 				</foreach>
+					</if>
+				)
+			</if>  
+			<if test="fqzValueList != null and fqzValueList.size()>0 ">
+				AND big.FQZ_VALUE in 
+					<foreach item="item" index="index" collection="fqzValueList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test=" nowStr != null and nowStr !=''  ">
+				${nowStr}
+			</if> 
+			<if test="fraudStr != null and fraudStr !=''  ">
+		    	${fraudStr}
+			</if>
+			<if test="phoneList != null and phoneList.size()>0  ">
+				AND (l.MAPPING in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(cad.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				OR  substr(jd.info_flag,3,1) in 
+				<foreach item="item" index="index" collection="phoneList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach> 
+ 				)
+			</if>
+			<if test="riskScore == '1'.toString() ">
+				AND (to_char(t.RISKSCORE) is null or to_char(t.RISKSCORE)='-1' )
+		    </if>
+		    <if test="riskScore == '2'.toString() ">
+			   AND ( (t.RISKSCORE &gt;=  #{minRiskScore}) and (t.RISKSCORE &lt;= #{maxRiskScore}) )
+		    </if> 
+		     <if test="riskScore == '3'.toString() ">
+			     AND ( t.RISKSCORE &lt;= #{maxRiskScore})
+		    </if> 
+		     <if test="riskScore == '4'.toString() ">
+			      AND ( t.RISKSCORE &gt;=  #{minRiskScore} )
+		    </if> 
+			<if test="minNumberRead != null and minNumberRead !='' and minNumberRead !='-2' ">
+				AND isnumber2(trimorre(cue.NUMBER_READ)) &gt;=#{minNumberRead}
+			</if>
+			<if test="maxNumberRead != null and maxNumberRead !='' and maxNumberRead !='-2' ">
+				AND  isnumber2(trimorre(cue.NUMBER_READ)) &lt;=#{maxNumberRead}
+			</if> 
+			<if test=" minNumberRead =='-2' and maxNumberRead =='-2' ">
+				AND (cue.NUMBER_READ is null  or cue.NUMBER_READ='')
+			</if>  
+			<if test="proposedLmtStr != null and proposedLmtStr !='' ">
+				${proposedLmtStr}
+			</if>
+			<if test="pbocRstFinDesp != null and pbocRstFinDesp !='' ">
+					AND ydjBlaze.CDT_SCORE  IN ('2.01','2.041','2.061','2.071','2.08','2.161','2.80','2.81')
+			</if> 
+			<if test="creditResultList != null and creditResultList.size()>0 ">
+				AND ydj.CREDIT_DECISION_RESULT in 
+					<foreach item="item" index="index" collection="creditResultList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="creditLayerList != null and creditLayerList.size()>0 ">
+				AND ydj.CREDIT_DECISION_LAYER in 
+					<foreach item="item" index="index" collection="creditLayerList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="serialNumList != null and serialNumList.size()>0 ">
+				AND substr(allot.APP_ID,11,1) in 
+				<foreach item="item" index="index" collection="serialNumList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+			</if>
+			<if test="appRegionList != null and appRegionList.size()>0 ">
+				AND substr(allot.APP_ID,9,2) in 
+					<foreach item="item" index="index" collection="appRegionList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="appChannelList != null and appChannelList.size()>0 ">
+				AND substr(allot.APP_ID,8,1) in 
+					<foreach item="item" index="index" collection="appChannelList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="inputStr != null and inputStr !='' ">
+				${inputStr}
+			</if>
+		    <!-- <if test="appTime != null and appTime !='' ">
+				AND substr(allot.APP_ID,1,6) = #{appTime}
+			</if> -->
+			<if test="appTimeStart != null and appTimeStart !='' and appTimeEnd != null and appTimeEnd !='' ">
+			    AND (substr(allot.APP_ID,1,6) &gt;= #{appTimeStart} and substr(allot.APP_ID,1,6) &lt;= #{appTimeEnd})
+		    </if>
+			<if test="appProdList != null and appProdList.size()>0 ">
+				AND ac.APP_PROD in 
+					<foreach item="item" index="index" collection="appProdList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="quickStr != null and quickStr !=''  ">
+				${quickStr}
+			</if>
+			<if test='c1CoName != null and c1CoName !="" '>
+				AND ac.C1_CONAME LIKE concat(concat('%',#{c1CoName}),'%')
+			</if>
+			<!-- <if test="crtTime != null and crtTime !='' ">
+				AND to_char(ac.CRT_TIME,'yyyy-mm-dd')= #{crtTime}
+			</if> -->
+			<if test="crtTimeStart != null and crtTimeStart !='' and crtTimeEnd != null and crtTimeEnd !='' ">
+				AND (to_char(ac.CRT_TIME,'yyyy-mm-dd') BETWEEN #{crtTimeStart} AND #{crtTimeEnd})
+		    </if>
+			<if test="c4ApBatchList != null and c4ApBatchList.size()>0 ">
+				AND ac.C4_APBATCH in 
+					<foreach item="item" index="index" collection="c4ApBatchList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c5AbCodeList != null and c5AbCodeList.size()>0 ">
+				AND ac.C5_ABCODE in 
+					<foreach item="item" index="index" collection="c5AbCodeList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="c4AbUserList != null and c4AbUserList.size()>0 ">
+				AND ac.C4_ABUSER in 
+				<foreach item="item" index="index" collection="c4AbUserList" open="(" separator="," close=")">  
+  					#{item}  
+ 				</foreach>
+			</if>
+			<if test="c4CyCadd1 != null and c4CyCadd1 !='' ">
+				AND ac.C4_CYCADD1 = #{c4CyCadd1}
+			</if>
+			<if test='cardStr != null and cardStr !="" '>
+				${cardStr}
+			</if>
+			<if test='safeStr != null and safeStr !="" '>
+				${safeStr}
+			</if>
+			<if test=" pubStr != null and pubStr !=''  ">
+				${pubStr}
+			</if>
+			<if test=" stopStr != null and stopStr !=''  ">
+				${stopStr}
+			</if>
+			<if test="submitStr != null and submitStr !='' ">
+				 and (allot.SUBMIT_TYPE is null and (allot.SUBMIT_STATUS='0' or allot.SUBMIT_STATUS is null))
+			</if>
+			<if test="submitStr == null or submitStr =='' ">
+				 and allot.SUBMIT_TYPE is not null
+			</if>
+			<if test='batchLabel != null and batchLabel !="" '>
+				${batchStr}
+			</if>
+			<if test="currQueue != null and currQueue !='' ">
+				AND allot.CURR_OPT_QUEUE = #{currQueue}
+			</if>
+			<if test="currGroup != null and currGroup !='' ">
+				AND allot.CURR_OPT_GROUP = #{currGroup}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND allot.CURR_STATUS  = #{currStatus}
+			</if>
+			<if test="currStatusList != null and currStatusList.size()>0 ">
+				AND allot.CURR_STATUS in 
+					<foreach item="item" index="index" collection="currStatusList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND allot.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjStr != null and ydjStr !='' ">
+				${ydjStr}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND allot.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				order by ${checkStr}
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+			    order by ac.CRT_TIME asc,allot.APP_ID asc
+		    </if>
+	</select>
+</mapper>

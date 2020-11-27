@@ -1,0 +1,73 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean class="com.huateng.neofp.channel.http.ServletURIEndpointMapping">
+		<property name="mapping">
+			<map>
+				<entry key="/**/*.json" value-ref="httpJsonEndpoint" />
+				<entry key="/**/*.ajax" value-ref="httpJsonEndpoint" />
+				<entry key="/**/*.ajaxs" value-ref="httpJsonEndpoint" />
+
+			</map>
+		</property>
+		<property name="default" ref="httpJsonEndpoint" />
+		<property name="handlerInterceptors">
+			<array>
+				<bean
+					class="com.huateng.neofp.channel.http.support.LocaleChangeInterceptor" />
+				<bean
+					class="com.huateng.neofp.channel.http.support.ThemeChangeInterceptor" />
+			</array>
+		</property>
+	</bean>
+
+	<bean id="httpJsonEndpoint" class="com.huateng.neofp.channel.DefaultEndpoint">
+		<property name="interceptors">
+			<array>
+				<!-- <bean class="com.huaxia.opas.authorize.interceptor.HttpLogInterceptor" 
+					/> -->
+				<bean
+					class="com.huateng.neofp.channel.http.interceptors.StreamPayloadChannelInterceptor">
+					<property name="extractIdentityFromURI" value="true" />
+					<property name="streamResolver">
+						<bean
+							class="com.huateng.neofp.channel.http.interceptors.JsonStreamResolver" />
+					</property>
+				</bean>
+				<!-- <bean class="com.huaxia.opas.authorize.interceptor.HttpLogInputInterceptor" 
+					/> -->
+				<bean class="com.huateng.neofp.channel.interceptors.TransformInterceptor">
+					<property name="encodeTransforms">
+						<array>
+							<bean
+								class="com.huateng.neofp.channel.http.interceptors.JsonReportEncoder"></bean>
+							<bean class="com.huateng.neofp.channel.http.interceptors.JsonEncoder"></bean>
+						</array>
+					</property>
+					<property name="decodeTransforms">
+						<array>
+							<bean class="com.huateng.neofp.channel.http.interceptors.JsonDecoder"></bean>
+							<bean
+								class="com.huateng.neofp.channel.http.interceptors.JsonReportDecoder"></bean>
+						</array>
+					</property>
+				</bean>
+
+				<bean class="com.huaxia.opas.interceptor.FileDownloadInterceptor">
+					<property name="fileDownloadPath" value="${PUBLIC_SEARCH_EXPORT_PATH}"></property>
+				</bean>
+				<bean
+					class="com.huateng.neofp.channel.http.interceptors.ServletContextInterceptor"></bean>
+			</array>
+		</property>
+	</bean>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- -1 表示上传文件大小不受限制 -->
+		<property name="maxUploadSize" value="-1" />
+	</bean>
+
+</beans>

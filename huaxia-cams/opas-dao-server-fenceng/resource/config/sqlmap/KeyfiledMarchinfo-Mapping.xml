@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="KeyfiledMarchinfo">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<!-- <result column="MARCH_NODE" property="marchNode" jdbcType="VARCHAR" 
+			/> -->
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="MARCH_RESULT" property="marchResult" jdbcType="CLOB" />
+	</resultMap>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, MARCH_RESULT, CRT_DATE, CRT_USER
+		from OPAS_KEYFILED_MARCHINFO
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByAppId" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		AUTO_ID, APP_ID, CRT_DATE, CRT_USER,MARCH_RESULT
+		from OPAS_KEYFILED_MARCHINFO
+		where substr(APP_ID,0,15) = substr(#{appId,jdbcType=VARCHAR},0,15)
+		<!-- and MARCH_NODE = #{marchNode,jdbcType=VARCHAR} -->
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_KEYFILED_MARCHINFO
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		insert into OPAS_KEYFILED_MARCHINFO (AUTO_ID, APP_ID,
+		CRT_DATE, CRT_USER, MARCH_RESULT
+		)
+		values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR},
+		#{marchNode,jdbcType=VARCHAR},
+		#{crtDate,jdbcType=TIMESTAMP}, #{crtUser,jdbcType=VARCHAR}, #{marchResult,jdbcType=CLOB}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		insert into OPAS_KEYFILED_MARCHINFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<!-- <if test="marchNode != null" > MARCH_NODE, </if> -->
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="crtUser != null">
+				CRT_USER,
+			</if>
+			<if test="marchResult != null">
+				MARCH_RESULT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="marchNode != null" > #{marchNode,jdbcType=VARCHAR}, </if> -->
+			<if test="crtDate != null">
+				#{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				#{crtUser,jdbcType=VARCHAR},
+			</if>
+			<if test="marchResult != null">
+				#{marchResult,jdbcType=CLOB},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		update OPAS_KEYFILED_MARCHINFO
+		<set>
+			<if test="appId != null">
+				APP_ID = #{appId,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="marchNode != null" > MARCH_NODE = #{marchNode,jdbcType=VARCHAR}, 
+				</if> -->
+			<if test="crtDate != null">
+				CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				CRT_USER = #{crtUser,jdbcType=VARCHAR},
+			</if>
+			<if test="marchResult != null">
+				MARCH_RESULT = #{marchResult,jdbcType=CLOB},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		update OPAS_KEYFILED_MARCHINFO
+		set APP_ID = #{appId,jdbcType=VARCHAR},
+		<!-- MARCH_NODE = #{marchNode,jdbcType=VARCHAR}, -->
+		CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+		CRT_USER = #{crtUser,jdbcType=VARCHAR},
+		MARCH_RESULT = #{marchResult,jdbcType=CLOB}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		update OPAS_KEYFILED_MARCHINFO
+		set APP_ID = #{appId,jdbcType=VARCHAR},
+		<!-- MARCH_NODE = #{marchNode,jdbcType=VARCHAR}, -->
+		CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+		CRT_USER = #{crtUser,jdbcType=VARCHAR}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+</mapper>

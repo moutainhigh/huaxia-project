@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApMenu">
+
+	<resultMap id="ApMenuResultMap" type="com.huaxia.opas.domain.system.ApMenu">
+		<result column="MENU_ID" property="menuId" jdbcType="VARCHAR" />
+		<result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+		<result column="MENU_LEVEL" property="menuLevel" jdbcType="CHAR" />
+		<result column="MENU_PARENT_ID" property="menuParentId"
+			jdbcType="VARCHAR" />
+		<result column="MENU_URL" property="menuUrl" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="DATE" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="DATE" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+		<result column="QUEUE_FLAG" property="queueFlag" jdbcType="CHAR" />
+		<result column="NODE_NO" property="nodeNo" jdbcType="VARCHAR" />
+		<result column="SORT_FLAG" property="sortFlag" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insertApMenu" parameterType="com.huaxia.opas.domain.system.ApMenu">
+		insert into OPAS_AP_MENU
+		(MENU_ID,MENU_NAME,MENU_LEVEL,MENU_PARENT_ID,MENU_URL,STATUS,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_USER,LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL,QUEUE_FLAG,NODE_NO)
+		values (
+		#{menuId,jdbcType=VARCHAR},
+		#{menuName,jdbcType=VARCHAR},
+		#{menuLevel,jdbcType=CHAR},
+		#{menuParentId,jdbcType=VARCHAR},
+		#{menuUrl,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{batchDate,jdbcType=DATE},
+		'0',
+		'00',
+		#{queueFlag,jdbcType=CHAR},
+		#{nodeNo,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<insert id="insertApMenuSelective" parameterType="com.huaxia.opas.domain.system.ApMenu">
+		insert into OPAS_AP_MENU
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="menuId != null">MENU_ID,</if>
+			<if test="menuName != null">MENU_NAME,</if>
+			<if test="menuLevel != null">MENU_LEVEL,</if>
+			<if test="menuParentId != null">MENU_PARENT_ID,</if>
+			<if test="menuUrl != null">MENU_URL,</if>
+			<if test="status != null">STATUS,</if>
+			CRT_DATE,
+			CRT_TIME,
+			<if test="crtUser != null">CRT_USER,</if>
+			<if test="lstUpdUser != null">LST_UPD_USER,</if>
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			<if test="batchDate != null">BATCH_DATE,</if>
+			REC_STATUS,
+			SCR_LEVEL,
+			<if test="queueFlag != null">QUEUE_FLAG,</if>
+			<if test="nodeNo != null">NODE_NO</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="menuId != null">#{menuId,jdbcType=VARCHAR},</if>
+			<if test="menuName != null">#{menuName,jdbcType=VARCHAR},</if>
+			<if test="menuLevel != null">#{menuLevel,jdbcType=CHAR},</if>
+			<if test="menuParentId != null">#{menuParentId,jdbcType=VARCHAR},</if>
+			<if test="menuUrl != null">#{menuUrl,jdbcType=VARCHAR},</if>
+			<if test="status != null">#{status,jdbcType=CHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">#{lstUpdUser,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="batchDate != null">#{batchDate,jdbcType=DATE},</if>
+			'0',
+			'00',
+			<if test="queueFlag != null">#{queueFlag,jdbcType=CHAR},</if>
+			<if test="nodeNo != null">#{nodeNojdbcType=VARCHAR}</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteApMenuByMenuId" parameterType="java.lang.String">
+		delete from OPAS_AP_MENU where MENU_ID in
+		<foreach item="menuId" collection="array" open="(" separator=","
+			close=")">
+			#{menuId}
+		</foreach>
+	</delete>
+
+	<delete id="deleteApRoleMenuByMenuId" parameterType="java.lang.String">
+		delete from
+		OPAS_AP_ROLE_MENU
+		where MENU_ID = #{menuId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateApMenu" parameterType="com.huaxia.opas.domain.system.ApMenu">
+		update OPAS_AP_MENU
+		<set>
+			MENU_NAME = #{menuName,jdbcType=VARCHAR},
+			MENU_LEVEL =
+			#{menuLevel,jdbcType=CHAR},
+			MENU_PARENT_ID =
+			#{menuParentId,jdbcType=VARCHAR},
+			MENU_URL =
+			#{menuUrl,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE =
+			CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			BATCH_DATE =
+			#{batchDate,jdbcType=DATE},
+			QUEUE_FLAG = #{queueFlag,jdbcType=CHAR},
+			NODE_NO = #{nodeNo,jdbcType=VARCHAR}
+		</set>
+		where MENU_ID = #{menuId,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateApMenuSelective" parameterType="com.huaxia.opas.domain.system.ApMenu">
+		update OPAS_AP_MENU
+		<set>
+			<if test="menuName != null">MENU_NAME = #{menuName,jdbcType=VARCHAR},</if>
+			<if test="menuLevel != null">MENU_LEVEL = #{menuLevel,jdbcType=CHAR},</if>
+			<if test="menuParentId != null">MENU_PARENT_ID = #{menuParentId,jdbcType=VARCHAR},</if>
+			<if test="menuUrl != null">MENU_URL = #{menuUrl,jdbcType=VARCHAR},</if>
+			<if test="status != null">STATUS = #{status,jdbcType=CHAR},</if>
+			<if test="lstUpdUser != null">LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null">BATCH_DATE = #{batchDate,jdbcType=DATE},</if>
+			<if test="queueFlag != null">QUEUE_FLAG = #{queueFlag,jdbcType=CHAR},</if>
+			<if test="nodeNo != null">NODE_NO = #{nodeNo,jdbcType=VARCHAR}</if>
+		</set>
+		where MENU_ID = #{menuId,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="queryApMenuByMenuId" parameterType="java.lang.String"
+		resultMap="ApMenuResultMap">
+		select * from OPAS_AP_MENU
+		where MENU_ID =
+		#{menuId,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="menuList" parameterType="com.huaxia.opas.domain.system.ApMenu"
+		resultType="com.huaxia.opas.domain.system.ApMenu">
+		select MENU_ID as "menuId",MENU_NAME as "menuName",MENU_URL
+		as "menuUrl",STATUS as "status",MENU_LEVEL as
+		"menuLevel",MENU_PARENT_ID as
+		"menuParentId",QUEUE_FLAG as
+		"queueFlag",
+		NODE_NO as nodeNo FROM
+		OPAS_AP_MENU
+	</select>
+
+	<select id="menuTotal" resultType="java.lang.String">
+		select count(*) from
+		OPAS_AP_MENU
+	</select>
+
+	<select id="userMenu" parameterType="com.huaxia.opas.domain.system.ApUserRole"
+		resultType="com.huaxia.opas.domain.system.ApMenu">
+		select menu.MENU_ID as "menuId",menu.MENU_NAME as
+		"menuName",menu.MENU_URL as "menuUrl",menu.STATUS as
+		"status",menu.MENU_LEVEL as "menuLevel",menu.MENU_PARENT_ID as
+		"menuParentId",menu.QUEUE_FLAG as "queueFlag",menu.NODE_NO as nodeNo,
+		menu.SORT_FLAG as sortFlag
+		FROM OPAS_AP_MENU
+		menu,OPAS_AP_ROLE_MENU roleMenu where
+		roleMenu.ROLE_ID=#{roleId,jdbcType=VARCHAR} and
+		menu.MENU_ID=roleMenu.MENU_ID
+		ORDER BY menu.MENU_LEVEL,menu.SORT_FLAG,menu.MENU_NAME desc
+	</select>
+
+	<!-- 根据userId查询菜单列表   shihuan  全角色登入-->
+	<select id="userMenuByUserId" parameterType="com.huaxia.opas.domain.system.ApUserRole"
+		resultType="com.huaxia.opas.domain.system.ApMenu">
+		select distinct menu.MENU_ID as menuId,menu.MENU_NAME as
+		menuName,menu.MENU_URL as menuUrl,menu.STATUS as
+		status,menu.MENU_LEVEL as menuLevel,menu.MENU_PARENT_ID as
+		menuParentId,menu.QUEUE_FLAG as queueFlag,menu.NODE_NO as nodeNo,menu.sort_flag as sortFlag
+		FROM
+		OPAS_AP_MENU menu,
+		OPAS_AP_ROLE_MENU roleMenu,
+		OPAS_AP_USER_ROLE
+		userRole
+		where
+		userRole.ROLE_ID = roleMenu.ROLE_ID
+		and menu.MENU_ID =
+		roleMenu.MENU_ID
+		and userRole.USER_ID = #{userId,jdbcType=VARCHAR}
+		ORDER BY menu.MENU_LEVEL,menu.sort_flag,menu.MENU_NAME desc
+	</select>
+
+	<select id="menuAll" resultType="com.huaxia.opas.domain.system.ApMenu">
+		select MENU_ID as
+		"menuId",MENU_NAME as "menuName",MENU_URL as "menuUrl",STATUS as
+		"status",MENU_LEVEL as "menuLevel",MENU_PARENT_ID as
+		"menuParentId",QUEUE_FLAG as "queueFlag"
+		FROM OPAS_AP_MENU ORDER BY
+		MENU_LEVEL
+	</select>
+
+	<select id="queryMenuByFlag" parameterType="java.util.Map"
+		resultType="com.huaxia.opas.domain.system.ApMenu">
+		select menu.MENU_ID as "menuId",menu.MENU_NAME as
+		"menuName",menu.MENU_URL as "menuUrl",menu.STATUS as
+		"status",menu.QUEUE_FLAG as "queueFlag" FROM OPAS_AP_MENU
+		menu,OPAS_AP_ROLE_MENU roleMenu where
+		roleMenu.ROLE_ID=#{roleId,jdbcType=VARCHAR} and
+		menu.MENU_ID=roleMenu.MENU_ID
+		<if test="queueFlag != null"> and menu.QUEUE_FLAG = #{queueFlag,jdbcType=CHAR}</if>
+	</select>
+
+	<select id="queryMenuByUserIdAndNodeNo" parameterType="java.util.Map"
+		resultType="com.huaxia.opas.domain.system.ApMenu">
+		select menu.MENU_ID as "menuId",menu.MENU_NAME as
+		"menuName",menu.MENU_URL as "menuUrl",menu.STATUS as
+		"status",menu.MENU_LEVEL as "menuLevel",menu.MENU_PARENT_ID as
+		"menuParentId",menu.QUEUE_FLAG as "queueFlag",menu.NODE_NO as nodeNo
+		FROM OPAS_AP_MENU
+		menu,OPAS_AP_ROLE_MENU roleMenu,OPAS_AP_USER_ROLE
+		userRole
+		where roleMenu.ROLE_ID= userRole.ROLE_ID and
+		menu.MENU_ID=roleMenu.MENU_ID
+		AND userRole.USER_ID =
+		#{userId,jdbcType=VARCHAR}
+		AND menu.NODE_NO =
+		#{nodeNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryMenuUrlByNodeNo" parameterType="java.util.Map"
+		resultMap="ApMenuResultMap">
+		select * FROM OPAS_AP_MENU
+		where NODE_NO =
+		#{nodeNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

@@ -1,0 +1,609 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<script type="text/javascript" src="../../js/credit/credit_investigation_notes.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+<style type="text/css">
+ .tl {width:60px;font-size: 12px } 
+ .ts {width:120px;font-size: 12px }
+ .tls {width:97px;font-size: 12px }
+ .yztb {width:50px;font-size: 12px }
+ .dhtb {width:150px;font-size: 12px }
+</style>
+</head>
+	<body>
+	<div class="easyui-layout" style="width: 100%; height: 1200px;">
+		<!-- 快速定位区 开始 -->
+		<div data-options="region:'north',title:'快速定位'" style="height: 100px; padding:10px;">
+		 <a href="#A"class="easyui-linkbutton">客户基本信息</a>
+		 <a href="#B"class="easyui-linkbutton">联系人信息</a> 
+		 <a href="#C"class="easyui-linkbutton">人行摘要信息</a>
+		 <a href="#D"class="easyui-linkbutton">验证信息</a>
+		 <a href="#E"class="easyui-linkbutton">核实信息</a>
+		 <a href="#F"class="easyui-linkbutton">调查纪要</a>
+		 <a href="#G"class="easyui-linkbutton">过件码</a>
+		</div>
+		<!-- 快速定位区 结束 -->
+		<div data-options="region:'center'" style="padding:10px;">
+		<form  id="custZJInfoForm">
+		<div>
+		<fieldset>
+			<legend><span id="A">客户基本信息</span></legend>
+			
+				<table id="bizInpApplC1"  style="width:100%;" >
+					<tr>
+						<td class="tl" align="left">申请流水号：</td>	<td class="ts" align="left"><input name="insideAppNo" id="insideAppNo" type="hidden" />
+							<input name="appId" id="appId" class="easyui-textbox" readonly="readonly" /></td>
+						<td class="tl" align="left">客户姓名：</td><td class="ts" align="left"><input name="c1Cname" id="c1Cname" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">证件号码：</td><td class="ts" align="left"><input name="c1Idnbr" id="c1Idnbr" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">主卡姓名：</td><td class="ts" align="left"><input name="c1Cname" id="c1Gender" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">国籍：</td><td class="ts" align="left"><input name="c1Nation" id="sex" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">ID有效期：</td><td class="ts" align="left"><input name="c5Idte1" id="c5Idte1" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					
+					<tr>
+						<td class="tl" align="left">拼音/英文姓名：</td><td class="ts" align="left"><input name="c1Ename" id="c1Ename" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">生日：</td><td class="ts" align="left"><input name="c1Birth" id="c1Birth"  class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">申请人手机：</td><td class="ts" align="left"><input name="c1Mobile" id="c1Mobile"  class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">宅电区号：</td><td class="ts" align="left"><input name="c1Hmare" id="c1Hmare" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">宅电：</td><td class="ts" align="left"><input name="c1Hmtel" id="c1Hmtel" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">住宅地址：</td><td class="ts" align="left"><input name="c1HmaddTotal" id="c1HmaddTotal" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称：</td><td class="ts" align="left"><input name="c1Coname" id="c1Coname" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">部门名称：</td><td class="ts" align="left"><input name="c1Codept" id="c1Codept" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">职务：</td><td class="ts" align="left"><input name="c1Coduty" id="c1Coduty" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					
+					<tr>
+						<td class="tl" align="left">单位电话（区号必填）：</td><td class="ts" align="left"><input name="c1Cotel" id="c1Cotel" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">分机：</td><td class="ts" align="left"><input name="c1Coext" id="c1Coext" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">单位地址：</td><td class="ts" align="left"><input name="c1CoaddTotal" id="c1CoaddTotal" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					</tr>
+					<tr>
+						<td class="tl" align="left">现职年限：</td><td class="ts" align="left"><input name="c1Coyr" id="c1Coyr" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">税前收入（万）：</td><td class="ts" align="left"><input name="c1Earn" id="c1Earn" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">账单地址(H宅 B单)：</td><td class="ts" align="left"><input name="c4Cycadd1" id="c4Cycadd1" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">教育程度：</td><td class="ts" align="left"><input  name="c1Educls" id="c1Educls" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">婚姻状况：</td><td class="ts" align="left"><input  name="c1Marst" id="c1Marst" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">生肖：</td><td class="ts" align="left"><input id="shenxiao" value="" class="easyui-textbox" readonly="readonly"/> 
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="B">联系人信息</span></legend>
+				<table  style="width:100%;" >
+					<tr>
+						<td style="font-size: 12px">联系人信息</td>
+						<td style="font-size: 12px">姓名</td>
+						<td style="font-size: 12px">关系</td>
+						<td style="font-size: 12px">区号</td>
+						<td style="font-size: 12px">座机</td>
+						<td style="font-size: 12px">手机</td>
+					</tr>
+					<tr>
+						<td style="font-size: 12px">第一联系人</td>
+						<td><input name="c1Xname1" id="c1Xname1"  class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xship1" id="c1Xship1" class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xtelar1" id="c1Xtelar1"  class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xtel1" id="c1Xtel1"  class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xmobil1" id="c1Xmobil1"  class="easyui-textbox tls" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td style="font-size: 12px">其他联系人</td>
+						<td><input name="c1Xname2" id="c1Xname2"  class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xship2" id="c1Xship2" class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xtelar2" id="c1Xtelar2"  class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xtel2" id="c1Xtel2"  class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Xmobil2" id="c1Xmobil2"  class="easyui-textbox tls" readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>	
+		</form>	
+		<form  id="custProcInfoForm">	
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="C">人行摘要信息</span></legend>
+				<table style="width:100%;text-align:right;">
+					<tr>
+						<td class="tl" align="left">手机号码</td><td class="ts" align="left"><input name="cellPhone" id="cellPhone" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">单位电话</td><td class="ts" align="left"><input name="cCompPhone" id="cCompPhone" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">住宅电话</td><td class="ts" align="left"><input name="resiTel" id="resiTel" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称</td><td class="ts" align="left"><input name="company" id="company" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">单位地址</td><td class="ts" align="left"><input name="compAddr" id="compAddr" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">住址地址</td><td class="ts" align="left"><input name="residentAddr" id="residentAddr" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		</form>
+		<form  id="custBankInfoForm">	
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="C">二代人行摘要信息</span></legend>
+				<table style="width:100%;text-align:right;">
+					<tr>
+						<td class="tl" align="left">手机号码1</td><td class="ts" align="left"><input name="PHONE_NUM1" id="PHONE_NUM1" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">手机号码2</td><td class="ts" align="left"><input name="PHONE_NUM2" id="PHONE_NUM2" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">住宅电话</td><td class="ts" align="left"><input name="HOME_PHONE" id="HOME_PHONE" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称1</td><td class="ts" align="left"><input name="COMPANY1" id="COMPANY1" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">单位电话1</td><td class="ts" align="left"><input name="UNIT_PHONE1" id="UNIT_PHONE1" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td class="tl" align="left">单位地址1</td><td class="ts" align="left"><input name="COMP_ADDR1" id="COMP_ADDR1" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td class="tl" align="left">单位名称2</td><td class="ts" align="left"><input name="COMPANY2" id="COMPANY2" class="easyui-textbox" readonly="readonly"/></td>
+					<td class="tl" align="left">单位电话2</td><td class="ts" align="left"><input name="UNIT_PHONE2" id="UNIT_PHONE2" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td class="tl" align="left">单位地址2</td><td class="ts" align="left"><input name="COMP_ADDR2" id="COMP_ADDR2" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		</form>
+		<form  id="yanzhenForm">
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="D">验证信息</span></legend>
+				<table style="width:100%;text-align:center;">
+					<tr>
+						<td style="width: 50px;font-size: 12px">验证信息</td>
+						<td style="font-size: 12px">征信电话核查白名单</td>
+						<td style="font-size: 12px">蚂蚁</td>
+						<td style="font-size: 12px">人行</td>	
+						<td style="font-size: 12px">二代人行</td>
+						<td style="font-size: 12px">CRM</td>
+						<td style="font-size: 12px">审查</td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">手机号码</td>
+						<td><input name="" id="" class="easyui-linkbutton  yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton  yztb" value="否"/></td>
+						<td><input name="pboc_CELL_PHONE" id="pboc_CELL_PHONE"class="easyui-linkbutton  yztb " value="否"/></td>
+						<td><input name="PHONE_NUM" id="PHONE_NUM"class="easyui-linkbutton  yztb " value="否"/></td>
+						<td><input name="crm_MOBILEPHONE" id="crm_MOBILEPHONE" class="easyui-linkbutton  yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">单位电话</td>
+						<td><input name="credit_COMPANY_TEL" id="credit_COMPANY_TEL" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="pboc_C_COMP_PHONE" id="pboc_C_COMP_PHONE" class="easyui-linkbutton yztb" onclick='showDetail(this)'/></td>
+						<td><input name="crm_BUSPHONE" id="crm_BUSPHONE" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb"/></td>
+					</tr>
+					<tr><td style="width: 50px;font-size: 12px">住宅电话</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="pboc_RESI_TEL" id="pboc_RESI_TEL" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="crm_PHONE" id="crm_PHONE" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">单位名称</td>
+						<td><input name="credit_COMPANY_NAME" id="credit_COMPANY_NAME" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="pboc_COMPANY" id="pboc_COMPANY"  class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="crm_COMPANY" id="crm_COMPANY" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">单位地址</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="pboc_COMP_ADDR" id="pboc_COMP_ADDR" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="crm_BUSADDR" id="crm_BUSADDR" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">账单地址</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="pboc_RESIDENT_ADDR" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="crm_HOMEADDR" id="crm_HOMEADDR" class="easyui-linkbutton yztb" value="否"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		</form>
+		<form  id="diaochajiyaoForm">
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="E">验证信息电话核实</span></legend>
+			<div id="app" style="margin: 20px,20px,0,20px"></div>
+		</fieldset>
+		
+		<fieldset>
+			<legend><span id="F">调查纪要</span></legend>
+				<table  style="width:100%;" id="F_diaocha"
+					data-options="fitColumns:true">
+					<tr>
+						<td class="dhtb" align="right">电话来源：</td>
+						<td align="left">
+							<!--<select class="easyui-combobox" id="F_telSource" >
+								<option value=''>---请选择---</option>
+								<option value="人行单名+单电ok">人行单名+单电ok</option>
+								<option value="网单名+单电ok">网单名+单电ok</option>
+								<option value="114单名+单址ok">114单名+单址ok</option>
+								<option value="社保ok">社保ok</option>
+								<option value="YJ6发卡手机ok">YJ6发卡手机ok</option>
+							</select> -->
+							<select class="easyui-combobox" id="F_telSource" 
+								style="width: 120px;" editable="false" name="telSource" 
+								dict_type="ZDTELSOURCE" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+						</td>
+						<td class="dhtb" align="right">电话类型：</td>
+						<td align="left"><!-- <select class="easyui-combobox" id="F_telType">
+								<option value=''>---请选择---</option>
+								<option value="单位电话">单位电话</option>
+								<option value="手机">手机</option>
+								<option value="人行住宅电话">人行住宅电话</option>
+								<option value="衍生电话">衍生电话</option>
+								<option value="其它">其它</option>
+							</select> -->
+							<select class="easyui-combobox" id="F_telType" 
+								style="width: 120px;" editable="false" name="telType" 
+								dict_type="ZDTELTYPE" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="dhtb" align="right">照会对象：</td>
+						<td align="left"><!-- <select class="easyui-combobox" id="F_noteObject" >
+								<option value=''>---请选择---</option>
+								<option value="同事">同事</option>
+								<option value="总机">总机</option>
+								<option value="财务">财务</option>
+								<option value="其他联系人">其他联系人</option>
+								<option value="推荐人">推荐人</option>
+							</select> -->
+							<select class="easyui-combobox" id="F_noteObject" 
+								style="width: 120px;" editable="false" name="noteObject" 
+								dict_type="ZDNOTEOBJECT" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+						</td>
+						<td class="dhtb" align="right">电核结论：</td>
+						<td align="left">
+							<!-- <select class="easyui-combobox" id="F_telcheckReuslt">
+								<option value=''>---请选择---</option>
+								<option value="申请人信息真实(2)">申请人信息真实(2)</option>
+								<option value="(人信息+人)真实2+3">(人信息+人)真实2+3</option>
+								<option value="开放式问题ok">开放式问题ok</option>
+								<option value="无宅电">无宅电</option>
+								<option value="NA">NA</option>
+							</select> -->
+							<select class="easyui-combobox" id="F_telcheckReuslt" 
+								style="width: 120px;" editable="false" name="telcheckReuslt" 
+								dict_type="ZDTELCHECKREUSLT" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="dhtb" style="font-size: 12px" align="right">请输入电话号码：</td>
+						<td class="dhtb"><input name="telNo" id="F_telNo"  class="easyui-textbox" /></td>
+						<td colspan="3"><input name="" id="" class="easyui-linkbutton  yztb" value="拨号"/></td>
+					</tr>
+					<tr><td style="font-size: 12px" align="right">备注：</td>
+						<td colspan='3'>
+							<input name="memo" id="F_memo" class="easyui-textbox" data-options="mutiline:true" 
+						style="width:99%;hight:300px"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		<fieldset>
+			<legend><span id="G">纪要信息</span></legend>
+			<table class="easyui-datagrid" id="datalist" data-options="rownumbers:true,singleSelect:true,fitColumns:true">
+			<thead>
+					<tr>
+						<th width="5%" field="autoId" checkbox="true">操作</th>
+						<th width="17%" data-options="field:'appId'">申请件编号</th>
+						<th width="58%" data-options="field:'bigMemo'">详情</th>
+						<th width="10%" data-options="field:'crtDate'" formatter="formatDate">创建/修改日期</th>
+						<th  width="10%" field="operate" width="15%" align="center" data-options="formatter:formatOper">操作</th>
+					</tr>
+			</thead>
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend><span id="G">过件码</span></legend>
+						<div id="guojianCode">
+					过件码：<!-- <select id="G_zxCode" name="passCode"  onchange="showGcode()">
+								<option value="">请选择</option>
+								<option value="L">L</option>
+								<option value="L1">L1</option>
+								<option value="L2">L2</option>
+								<option value="M">M</option>
+								<option value="H">H</option>
+								<option value="S100">S100</option>
+							</select>  -->
+							
+					<select class="easyui-combobox" style="width: 110px"
+				name="passCode" id="G_zxCode2" dict_type="ALLOT_BZK_CREDIT" 
+				data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<select id="G_passCode" name="passCode" onchange="showReasion()">
+						<option value="">请选择</option>
+					</select>
+				<div id="tempDiv">
+				</div>		
+			</div>	
+		</fieldset>	
+		</div>
+		</form>
+	</div>
+		<!-- 征信电话核查  详情    查询按钮-->
+		<div id="xiangqing" class="easyui-window" title="征信详情查询"
+		style="width: 610px; height: 400px"
+		data-options="closed:true">
+		<div data-options="fit:true">
+			<table id="tb_xiangqing" class="easyui-datagrid"
+				style="width: 600px; height: 310px" iconCls="icon-save"
+				rownumbers="true">
+			 	<thead>
+					<tr>
+						<th field="autoId" width="10%" align="center" checkbox="true"></th>
+						<th field="teamdealType" width="20%">流水号</th>
+						<th field="teamdealCode" width="10%">单位名称</th>
+						<th field="approveDate" width="16%">单位地址</th>
+						<th field="reportingOrg" width="16%">单位电话</th>
+					</tr>
+				</thead> 
+				<tbody>
+					<tr>
+						<td><input type="checkbox"/></td>
+						<td>154564561</td>
+						<td>华夏银行</td>
+						<td>石景山区</td>
+						<td>010-100000</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="addTo2()">确定</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('xiangqing')">取消</a>
+			</div>
+		</div>
+	</div>
+		<!-- 征信电话核查白名单 查询按钮-->
+		<div id="baimingdan" class="easyui-window" title="征信库查询"
+		style="width: 600px; height: 400px"
+		data-options="closed:true">
+				<table id="tblWhiteList" title="征信白名单列表" class="easyui-datagrid"
+				style="width: 98%"
+				data-options="pageSize:10,pageList:[10,20,50,100,200],rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+				<thead>
+					<tr>
+						<th field="autoId" width="10%" align="center" checkbox="true">id</th>
+						<th field="appId" width="10%" align="center" >申请件流水号</th>
+						<th field="companyName" width="6%" align="center">单位名称</th>
+						<th field="companyTel" width="8%" align="center">单位电话</th>
+						<th field="companyAddr" width="15%" align="center">单位地址</th>
+						<th field="legaler" width="8%" align="center">法人</th>
+						<th field="registerFund" width="8%" align="center">注册资金</th>
+						<th field="registerAddr" width="15%" align="center">注册地址</th>
+						<th field="manageStatus" width="5%" align="center">经营状态</th>
+						<th field="partnerInfo" width="12%" align="center">股东信息</th>
+						<th field="manageExceptionInfo" width="12%" align="center">经营异常信息</th>
+						<th field="operator" width="8%" align="center">操作员系统登录号</th>
+					</tr>
+				</thead>
+			</table>
+			<div id="positionCodeCondion"
+				style="padding: 10px; text-align: center;">
+				<form id="seachPositionCodeForm">
+					<table align="center">
+						<tr align="center">
+							<td>单位名称: <input class="easyui-textbox" style="width: 110px"
+								name="companyName">
+							</td>
+							<td>单位电话: <input class="easyui-textbox" style="width: 110px"
+								name="companyTel">
+							</td>
+							<td>单位地址: <input class="easyui-textbox" style="width: 110px"
+								name="companyAddr">
+							</td>
+							<td>法人: <input class="easyui-textbox" style="width: 110px"
+								name="legaler" >
+							</td>
+							<td>流水号: <input class="easyui-textbox" style="width: 110px"
+								name="appId">
+							</td>
+							<td>操作员: <input class="easyui-textbox" style="width: 110px"
+								name="operator">
+							</td>
+						</tr>
+					</table>
+				</form>
+	</div>
+	</div>
+	<!-- 征信库添加 -->
+	<div id="zhenXinKuAddWin" class="easyui-window" title="征信库添加"
+		style="width: 350px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="zxeditForm">
+			<!-- <table id="tb_zhenXinKuAddWin" style="border-collapse: separate; border-spacing: 10px;"
+				iconCls="icon-save">
+				<tr>
+					<td align="left">来源</td>
+					<td><input class="easyui-textbox" id="Y_appId" name="appId"/></td>
+				</tr>
+				<tr>
+					<td align="left">单位名称</td>
+					<td><input class="easyui-textbox" id="Y_companyName" name="companyName"/></td>
+				</tr>
+				<tr>
+					<td align="left">单位电话</td>
+					<td><input class="easyui-textbox" id="Y_companyTel" name="companyTel"/></td>
+				</tr>
+				<tr>
+					<td align="left">单位地址</td>
+					<td><input class="easyui-textbox" id="Y_companyAddr" name="companyAddr"/></td>
+				</tr>
+				<tr>
+					<td align="left">法人</td>
+					<td><input class="easyui-textbox" id="Y_legaler" name="legaler"/></td>
+				</tr>
+				<tr>
+					<td align="left">注册资金</td>
+					<td><input class="easyui-textbox" id="Y_registerFund" name="registerFund"/></td>
+				</tr>
+				<tr>
+					<td align="left">注册地址</td>
+					<td><input class="easyui-textbox" id="Y_registerAddr" name="registerAddr"/></td>
+				</tr>
+				<tr>
+					<td align="left">经营状态</td>
+					<td><input class="easyui-textbox" id="Y_manageStatus" name="manageStatus"/></td>
+				</tr>
+				<tr>
+					<td align="left">股东信息</td>
+					<td><input class="easyui-textbox" id="Y_partnerInfo" name="partnerInfo"/></td>
+				</tr>
+				<tr>
+					<td align="left">经营异常信息</td>
+					<td><input class="easyui-textbox" id="Y_manageExcetioninfo" name="manageExcetioninfo"/></td>
+				</tr>
+				<tr>
+					<td align="left">操作员工号</td>
+					<td><input class="easyui-textbox" id="Y_operator" name="operator"/></td>
+				</tr>
+			</table> -->
+			<table cellpadding="10" id="tb_zhenXinKuAddWin" 
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">申请件流水号:</td>
+					<td><input class="easyui-validatebox" id="Y_appId" type="text"
+						name="appId" readonly="readonly" /> <input type="hidden"
+						class="easyui-textbox" name="autoId"></td>
+				</tr>
+				<tr>
+					<td align="right">单位名称:</td>
+					<td><input class="easyui-validatebox" id="companyName"
+						type="text" name="companyName" /></td>
+				</tr>
+				
+				<tr>
+					<td align="right">单位电话:</td>
+					<td><input class="easyui-validatebox" id="companyTel"
+						type="text" name="companyTel" /></td>
+
+				</tr>
+				<tr>
+					<td align="right">单位地址:</td>
+					<td><input class="easyui-validatebox" id="companyAddr"
+						type="text" name="companyAddr"  /></td>
+
+				</tr>
+				<tr>
+					<td align="right">法人:</td>
+					<td><input class="easyui-validatebox" id="legaler"
+						type="text" name="legaler" /></td>
+				</tr>
+				<tr>
+					<td align="right">注册资金:</td>
+					<td><input class="easyui-validatebox" id="registerFund"
+						type="text" name="registerFund" /></td>
+				</tr>
+				<tr>
+					<td align="right">注册地址:</td>
+					<td><input class="easyui-validatebox" id="registerAddr"
+						type="text" name="registerAddr"/></td>
+				</tr>
+				<tr>
+					<td align="right">经营状态:</td>
+					<td><input class="easyui-validatebox" id="manageStatus"
+						type="text" name="manageStatus" /></td>
+				</tr>
+				<tr>
+					<td align="right">股东信息:</td>
+					<td><input class="easyui-validatebox" id="partnerInfo"
+						type="text" name="partnerInfo" /></td>
+				</tr>
+				<tr>
+					<td align="right">经营异常信息:</td>
+					<td><input class="easyui-validatebox" id="manageExceptionInfo"
+						type="text" name="manageExceptionInfo"/></td>
+				</tr>
+				<tr>
+					<td align="right">操作员系统登录号:</td>
+					<td><input class="easyui-validatebox" id="operator"
+						type="text" name="operator" readonly="readonly"/></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<!-- 问题库-->
+	<div id="questionWin" class="easyui-window" title="问题库"
+		style="width: 610px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="tb_questionWin" class="easyui-datagrid"
+				style="width: 600px; iconCls="icon-save" rownumbers="true">
+				<thead>
+					<tr>
+						<th field="autoId" width="10%" align="center" checkbox="true"></th>
+						<th field="questionDesc"  align="center" >问题内容</th>
+						<th field="fromTableNo"  align="center">回答情况</th>
+						<th field="testField"  align="center" data-options="formatter:formatOper2">电核结果</th>
+					</tr>
+				</thead>
+			</table>
+			自定义问题：<input class="easyui-textbox" style="width: 110px" id="zidingyi1"/><br>
+			自定义答案：<input class="easyui-textbox" style="width: 110px" id="zidingyi2"/><br>
+			电核结果：<label><input type="radio" name="result" value="一致">一致</label>
+			<label><input type="radio" name="result" value="不一致">不一致</label>
+		</div>
+	</div>
+	
+	<div id="winEdit" class="easyui-window" title="纪要修改" style="width: 600px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>申请件编号:</td>
+					<td><input class="easyui-validatebox textbox" id="appId"
+						type="text" name="appId" data-options="required:true" readonly="readonly"></input>
+						<input type="hidden" name="autoId" id="autoId"/>	
+					</td>
+				</tr>
+				<tr>
+					<td>纪要内容:</td>
+					<td><!-- <input class="easyui-validatebox textbox" id="bigMemo"
+						type="text" name="bigMemo" data-options="required:true"></input> -->
+						<textarea rows="30" cols="150" name="bigMemo"  id="bigMemo"></textarea>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+
+</body>

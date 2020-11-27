@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="CreditTelcheckList">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+		<result column="COMPANY_DEPT" property="companyDept" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+		<result column="TEL_SOURCE" property="telSource" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL, 
+		MEMO, OPERATOR, CREATE_DATE, OPERAT_TIME, CURR_STATUS </sql> -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL, MEMO, OPERATOR, CREATE_DATE,
+		OPERAT_TIME,
+		CURR_STATUS
+		from OPAS_CREDIT_TELCHECK_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<resultMap id="CreditTelcheckResultMap"
+		type="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="COMPANY_DEPT" property="companyDept" jdbcType="VARCHAR" />	
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="TEL_SOURCE" property="telSource" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- autoId 是页面白名单匹配上是 查询，companyName companyTel这两个是白名单库查询匹配-->
+	<select id="queryCreditTelcheckList" resultMap="CreditTelcheckResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		AUTO_ID, APP_ID, COMPANY_NAME,COMPANY_DEPT, COMPANY_TEL, MEMO, OPERATOR,
+		to_char(CREATE_TIME,'yyyyMMdd') as CREATE_DATE,
+		OPERAT_TIME,
+		CURR_STATUS
+		FROM OPAS_CREDIT_TELCHECK_LIST
+		WHERE  CURR_STATUS='1'
+		<if test="companyName != null  and companyName !=''">
+			AND COMPANY_NAME like '%${companyName}%'
+		</if>
+		<if test="companyDept != null  and companyDept !=''">
+			AND COMPANY_DEPT like '%${companyDept}%'
+		</if>
+		<if test="companyTel != null and companyTel !=''">
+			AND COMPANY_TEL like '%${companyTel}%'
+		</if>
+		<if test="autoId != null and autoId !=''">
+			AND AUTO_ID in 
+			<foreach item="item" index="index" collection="listAutoIds" open="(" separator="," close=")">
+	  			#{item.autoId,jdbcType=VARCHAR}
+	  		</foreach>
+		</if>
+		<!-- AND to_char(CREATE_TIME,'yyyy-mm-dd') between (select to_char(sysdate-interval'6'month,'yyyy-mm-dd')from dual) and to_char(sysdate,'yyyy-mm-dd') -->
+	</select>
+	<!-- autoId 是页面白名单匹配上是 查询，companyName companyTel这两个是白名单库查询匹配-->
+	<select id="queryCreditTelcheckListCount" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT
+		count(*)
+		FROM OPAS_CREDIT_TELCHECK_LIST
+		WHERE  CURR_STATUS='1'
+		<if test="companyName != null and companyName !=''">
+			AND COMPANY_NAME like '%${companyName}%'
+		</if>
+		<if test="companyTel != null and companyTel !=''">
+			AND COMPANY_TEL like '%${companyTel}%'
+		</if>
+		
+		<if test="autoId != null and autoId !=''">
+			AND AUTO_ID in 
+			<foreach item="item" index="index" collection="listAutoIds" open="(" separator="," close=")">
+	  			#{item.autoId,jdbcType=VARCHAR}
+	  		</foreach>
+		</if>
+		<!-- AND to_char(CREATE_TIME,'yyyy-mm-dd') between (select to_char(sysdate-interval'6'month,'yyyy-mm-dd')from dual) and to_char(sysdate,'yyyy-mm-dd') -->
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_CREDIT_TELCHECK_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		insert into OPAS_CREDIT_TELCHECK_LIST (AUTO_ID, APP_ID,
+		COMPANY_NAME,
+		COMPANY_TEL, MEMO, OPERATOR,
+		CREATE_DATE, OPERAT_TIME, CURR_STATUS
+		)
+		values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{companyTel,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP}, #{operatTime,jdbcType=TIMESTAMP},
+		#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		insert into OPAS_CREDIT_TELCHECK_LIST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME,
+			</if>
+			<if test="companyDept != null">
+				COMPANY_DEPT,
+			</if>
+			<if test="companyTel != null">
+				COMPANY_TEL,
+			</if>
+			<if test="memo != null">
+				MEMO,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+			<if test="telSource != null">
+				TEL_SOURCE
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="companyDept != null">
+				#{companyDept,jdbcType=VARCHAR},
+			</if>
+			<if test="companyTel != null">
+				#{companyTel,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatTime != null">
+				#{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+			<if test="telSource != null">
+				#{telSource,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		update OPAS_CREDIT_TELCHECK_LIST
+		<set>
+			<if test="appId != null">
+				APP_ID = #{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="companyTel != null">
+				COMPANY_TEL = #{companyTel,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				MEMO = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				OPERATOR = #{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS = #{currStatus,jdbcType=CHAR},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		update OPAS_CREDIT_TELCHECK_LIST
+		set APP_ID = #{appId,jdbcType=VARCHAR},
+		COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+		COMPANY_TEL = #{companyTel,jdbcType=VARCHAR},
+		MEMO = #{memo,jdbcType=VARCHAR},
+		OPERATOR = #{operator,jdbcType=VARCHAR},
+		CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+		OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+		CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryCreditTelcheck"
+		parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList"
+		resultMap="BaseResultMap">
+		select 
+		AUTO_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_DEPT,TEL_SOURCE, APP_ID, MEMO,CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS
+		from OPAS_CREDIT_TELCHECK_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryCreditTelcheckDomainList"
+		parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList"
+		resultMap="BaseResultMap">
+		select 
+		AUTO_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_DEPT,TEL_SOURCE,APP_ID, MEMO,CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS
+		FROM OPAS_CREDIT_TELCHECK_LIST
+		<where>
+			<if test="companyName != null and companyName != ''"> 
+			    AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyDept != null and companyDept != ''"> 
+			    AND COMPANY_DEPT LIKE '%${companyDept}%'
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>
+			<if test="appId != null and appId != ''">
+				AND APP_ID LIKE '%${appId}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+		</where>
+		ORDER BY CREATE_TIME DESC,to_number(ORDERBY_NO)
+	</select>
+	
+	<select id="queryCreditTelcheckCount"
+		parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID) from 
+		OPAS_CREDIT_TELCHECK_LIST
+		<where>
+			<if test="companyName != null and companyName != ''"> 
+			    AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyDept != null and companyDept != ''"> 
+			    AND COMPANY_DEPT LIKE '%${companyDept}%'
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>
+			<if test="appId != null and appId != ''">
+				AND APP_ID LIKE '%${appId}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+		</where>
+		ORDER BY CREATE_TIME DESC	
+	</select>
+	
+	<delete id="deleteCreditTelcheck" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		delete from
+		OPAS_CREDIT_TELCHECK_LIST
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<update id="updateCreditTelcheck" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		update OPAS_CREDIT_TELCHECK_LIST
+		<set>
+			COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+			COMPANY_TEL = #{companyTel,jdbcType=VARCHAR},
+			COMPANY_DEPT = #{companyDept,jdbcType=VARCHAR},
+			TEL_SOURCE = #{telSource,jdbcType=VARCHAR},
+			APP_ID = #{appId,jdbcType=VARCHAR},
+			MEMO = #{memo,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>	
+	
+	<update id="updateCreditTelcheckActive" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		update OPAS_CREDIT_TELCHECK_LIST
+		<set>
+			CURR_STATUS = #{currStatus,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<select id="queryCreditTelcheckHistoryList"
+		parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList"
+		resultMap="BaseResultMap">
+		select 
+		COMPANY_NAME, COMPANY_TEL,COMPANY_DEPT,TEL_SOURCE, APP_ID, MEMO,CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS
+		from OPAS_CREDIT_TELCHECK_LIST_HIS
+		WHERE AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		ORDER BY OPERAT_TIME DESC
+	</select>
+	
+	<select id="queryCreditTelcheckHistoryCount"
+		parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID) from 
+		OPAS_CREDIT_TELCHECK_LIST_HIS
+		where
+		AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	 
+	<insert id="insertCreditTelcheck" parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		insert into OPAS_CREDIT_TELCHECK_LIST
+		(AUTO_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_DEPT,TEL_SOURCE, APP_ID, MEMO,CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{companyTel,jdbcType=VARCHAR},
+		#{companyDept,jdbcType=VARCHAR},
+		#{telSource,jdbcType=VARCHAR},
+		#{appId,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{operator,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+ 	
+	<insert id="insertCreditTelcheckList" parameterType="java.util.List">
+		insert into OPAS_CREDIT_TELCHECK_LIST 
+		(AUTO_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_DEPT,TEL_SOURCE, APP_ID, MEMO,CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS,ORDERBY_NO)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.companyName,jdbcType=VARCHAR},
+			#{item.companyTel,jdbcType=VARCHAR},
+			#{item.companyDept,jdbcType=VARCHAR},
+			#{item.telSource,jdbcType=VARCHAR},
+			#{item.appId,jdbcType=VARCHAR},
+			#{item.memo,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operatTime,jdbcType=TIMESTAMP},
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.orderByNo,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+			
+	<insert id="insertCreditTelcheckHistory"
+			parameterType="com.huaxia.opas.domain.decision.CreditTelcheckList">
+		INSERT INTO OPAS_CREDIT_TELCHECK_LIST_HIS
+		(OPRETION_ID,AUTO_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_DEPT,TEL_SOURCE, APP_ID, MEMO,CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS) 
+	    	values
+		    (
+		 		#{opretionId,jdbcType=VARCHAR},	    
+				#{autoId,jdbcType=VARCHAR},
+				#{companyName,jdbcType=VARCHAR},
+				#{companyTel,jdbcType=VARCHAR},
+				#{companyDept,jdbcType=VARCHAR},
+				#{telSource,jdbcType=VARCHAR},
+				#{appId,jdbcType=VARCHAR},
+				#{memo,jdbcType=VARCHAR},
+				#{createTime,jdbcType=TIMESTAMP},
+				#{operator,jdbcType=VARCHAR},
+				#{operatTime,jdbcType=TIMESTAMP},
+				#{currStatus,jdbcType=CHAR}	    
+			)
+	</insert>	
+ 	
+	<insert id="insertCreditTelcheckHistoryList" parameterType="java.util.List">
+		insert into OPAS_CREDIT_TELCHECK_LIST_HIS
+	 	(OPRETION_ID,AUTO_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_DEPT,TEL_SOURCE, APP_ID, MEMO,CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+				(SELECT
+			 		#{item.opretionId,jdbcType=VARCHAR},	    
+					#{item.autoId,jdbcType=VARCHAR},
+					#{item.companyName,jdbcType=VARCHAR},
+					#{item.companyTel,jdbcType=VARCHAR},
+					#{item.companyDept,jdbcType=VARCHAR},
+					#{item.telSource,jdbcType=VARCHAR},
+					#{item.appId,jdbcType=VARCHAR},
+					#{item.memo,jdbcType=VARCHAR},
+					#{item.createTime,jdbcType=TIMESTAMP},
+					#{item.operator,jdbcType=VARCHAR},
+					#{item.operatTime,jdbcType=TIMESTAMP},
+					#{item.currStatus,jdbcType=CHAR}	  				
+				FROM dual)
+		</foreach>
+	</insert>
+	
+	<select id="selectBZKCreditTelcheckListCount" parameterType="java.util.Map"
+	 resultType="java.lang.Integer">
+		SELECT count(AUTO_ID)
+		FROM OPAS_CREDITINFO_LIST 
+		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+		<if test="listAutoIds != null and listAutoIds !=''">
+			 AUTO_ID IN 
+			<foreach item="item" index="index" collection="listAutoIds" open="(" separator="," close=")">
+	  			#{item.autoId,jdbcType=VARCHAR}
+	  		</foreach>
+  		</if>     
+	  	<if test="currStatus != null and currStatus != ''">
+				AND CURR_STATUS = #{currStatus,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+	
+	<resultMap id="CreditInfoResultMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR"/>
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR"/>
+		<result column="COMPANY_ADDR" property="companyAddr" jdbcType="VARCHAR"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR"/>
+	</resultMap>
+	
+	<select id="selectBZKCreditTelcheckList"
+		parameterType="java.util.Map"
+		resultMap="CreditInfoResultMap">
+		SELECT APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,CREATE_TIME, CURR_STATUS
+		from OPAS_CREDITINFO_LIST
+		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+		<if test="listAutoIds != null and listAutoIds !=''">
+			 AUTO_ID IN 
+			<foreach item="item" index="index" collection="listAutoIds" open="(" separator="," close=")">
+	  			#{item.autoId,jdbcType=VARCHAR}
+	  		</foreach>
+  		</if>
+	  	<if test="currStatus != null and currStatus != ''">
+				AND CURR_STATUS = #{currStatus,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+	
+	
+</mapper>

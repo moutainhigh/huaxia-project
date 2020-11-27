@@ -1,0 +1,54 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}" />
+		<property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+	</bean>
+	
+	<bean id="masterJedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
+		<property name="poolConfig" ref="jedisPoolConfig" />
+		<property name="hostName" value="${redis.hostName}" />
+		<property name="port" value="${redis.port}" />
+		<property name="password" value="${redis.password}" />
+		<property name="timeout" value="${redis.timeout}" />
+		<property name="usePool" value="${redis.usePool}" />
+	</bean>
+	
+	<bean id="slaveJedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
+		<property name="poolConfig" ref="jedisPoolConfig" />
+		<property name="hostName" value="${redis.hostName}" />
+		<property name="port" value="${redis.port}" />
+		<property name="password" value="${redis.password}" />
+		<property name="timeout" value="${redis.timeout}" />
+		<property name="usePool" value="${redis.usePool}" />
+	</bean>
+	
+	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+	
+	<bean id="masterJedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="masterJedisConnectionFactory" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="stringRedisSerializer" />
+	</bean>
+	
+	<bean id="slaveJedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="slaveJedisConnectionFactory" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="stringRedisSerializer" />
+	</bean>
+	
+	<bean class="com.huaxia.util.CacheUtil">
+		<constructor-arg name="masterTemplate" ref="masterJedisTemplate" />
+		<constructor-arg name="slaveTemplate" ref="slaveJedisTemplate" />
+	</bean>
+	
+	<bean class="com.huaxia.plaze.listener.ApplicationCacheListener" />
+
+</beans>

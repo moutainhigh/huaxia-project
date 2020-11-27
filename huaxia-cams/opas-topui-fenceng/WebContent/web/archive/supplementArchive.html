@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblSuppleArch" class="easyui-datagrid" title="归档信息列表"
+		style="width: 98%;height:130%"
+		data-options="rownumbers:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/suppSearch_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#suppArCondion'">
+		<thead>
+			<tr>
+				<th field="fileId" width="10%" align="center" checkbox="true">记录Id</th>
+				<th field="custName" width="25%" align="center">客户姓名</th>
+				<th field="patchCode" width="20%" align="center">补件码</th>
+				<th field="appId" width="15%" align="center">申请流水号</th>
+				<th field="credNo" width="15%" align="center">证件号码</th>
+				<th field="operatTime" width="25%" align="center" formatter="gridDateFormat2">最后操作时间</th>	
+			</tr>
+		</thead>
+	</table>
+	<div id="suppArCondion" style="padding: 10px;font-size: 15px;">
+		<fieldset class="textbox combo" style="left: 30px; margin: 5px 0 10px; width: 90%; height: 40px; padding: 0px 30px 10px 20px;">
+		<legend align="left">
+			<font size="2">扫件选项</font>
+		</legend>
+		<form id="getSuppCodeForm" >	
+			输入补件码: <input type="text" style="width: 160px" name="patchCode_input" id="patchCode_input" 
+			onkeypress="var e=event||arguments.callee.caller.arguments[0];if(event.keyCode==13){getSupp();return false;}else{}"> 
+			<a href="javascript:getSupp()" class="easyui-linkbutton" iconCls="icon-search">获得补件</a>
+		</form>
+		</fieldset>
+		<fieldset class="textbox combo" style="left: 30px; margin: 5px 0 10px; width: 90%; height: 40px; padding: 0px 30px 10px 20px;">
+		<legend align="left">
+			<font size="2">查询选项</font>
+		</legend>
+		<form id="seachSuppForm">
+			补件码: <input class="easyui-textbox" style="width: 160px" name="patchCode" id="patchCode"> &nbsp;&nbsp;
+			客户姓名:<input class="easyui-textbox" style="width: 130px" name="custName" id="custName">&nbsp;&nbsp;
+			证件号: <input class="easyui-textbox" style="width: 160px" name="credNo" id="credNo">&nbsp;&nbsp;
+			<a href="javascript:common.searchTbl('seachSuppForm','tblSuppleArch');" class="easyui-linkbutton" iconCls="icon-search">查询</a>&nbsp;
+		</form>
+		</fieldset>
+	</div>
+	<div style="padding: 10px;" align="center">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="fileSelected()">归档选择的补件</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="fileAll('seachSuppForm')">归档以上所有补件</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="giveUp()">放&nbsp;弃</a>
+	</div>
+	<div style="padding: 10px;" align="right">
+			<a href="javascript:void(0)"  class="easyui-linkbutton" onclick="downLoadFile(0,'')">导出成功归档的补件信息</a>&nbsp;
+	</div>
+	<div  id="winExp" class="easyui-window" title="导出成功归档补件信息"
+		style="width: 400px; height: 150px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+	<form id="exportForm">
+		<table id="tblExpcondition" >
+		<tr align="left" id="data_Time"><td>
+			选择信息时间:<input class="easyui-datebox" style="width: 120px"  name="downTime" id="downTime">
+		</td>
+		<td><input type="hidden" name="sign" id="sign"/></td></tr>
+		<!-- <tr align="left"><td>
+			选择导出目录:<input class="easyui-textbox" id="path"  name="path" required="required" style="width: 210px">
+			<a href="javascript:void(0)"  class="easyui-linkbutton" onclick="browseFolder('path')">选择</a>
+		</td><td><input type="hidden" name="suppFiles" id="suppFiles"/></td></tr> -->
+		</table>
+		<div align="center">
+		<a href="javascript:void(0)"  class="easyui-linkbutton" onclick="exportToExcel()">确定</a>
+		<a href="javascript:void(0)"  class="easyui-linkbutton" onclick="onConcle('winExp')">取消</a>
+		</div>
+	</form>
+	</div>	
+</body>
+<script>
+var tblSuppleArch = $("#tblSuppleArch");
+var getSuppCodeForm = $("#getSuppCodeForm");
+var exportWindow = $("#winExp");
+var exportForm = $("#exportForm");
+
+
+	//取得待归档补件
+	function getSupp(){
+		var suppCodeData = isRequired('getSuppCodeForm');
+		if (suppCodeData.patchCode_input == null || suppCodeData.patchCode_input.trim() == "") {
+			$.messager.show({
+				title:'补件归档提示',
+				msg:'补件码为空,无法获取!',
+				showType:'slide',
+				width:200,
+				height:150,
+				draggable:true,
+				collapsible:true,
+				timeout:2000,
+				style:{
+					top:'',
+					left:'',
+					right:0,
+					bottom:220
+				}
+			});
+			$("#patchCode_input").val('').focus();
+			return;
+		}
+/* 		var paramObj = document.getElementsByName(tarParam);
+		var paramName = 'patchCode';
+		var quryParamValue = paramObj[0].value;
+		var quryParam = {};
+		quryParam[paramName] = quryParamValue;
+		var tarUrl = '/opas-manual-authorize/updateAndSearch.json';
+		tblSuppleArch.datagrid({
+			url : tarUrl,
+			queryParams : quryParam
+			
+		});  */
+		
+		var jsondata = getFormData(getSuppCodeForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/updateAndSearch.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					/* top.$cf.showMsg("添加成功！");
+					tblSuppleArch.datagrid("reload"); */
+					 $.messager.show({
+						title:'补件归档提示',
+						msg:'添加成功！',
+						showType:'slide',
+						width:200,
+						height:150,
+						draggable:true,
+						collapsible:true,
+						timeout:2000,
+						style:{
+							top:'',
+							left:'',
+							right:0,
+							bottom:220
+						}
+					}); 					
+					tblSuppleArch.datagrid("reload");
+					$("#patchCode_input").val('').focus();
+				}else if(data.RSP_BODY.isNull){
+					$.messager.show({
+						title:'补件归档提示',
+						msg:'未在系统中进行补件！',
+						showType:'slide',
+						width:200,
+						height:150,
+						draggable:true,
+						collapsible:true,
+						timeout:2000,
+						style:{
+							top:'',
+							left:'',
+							right:0,
+							bottom:220
+						}
+					});
+					tblSuppleArch.datagrid("reload");
+					$("#patchCode_input").val('').focus();
+				} else {
+					$.messager.alert("操作提示", "添加异常,原因:" + data.exMsg, "error");
+					patchCode_input.val("").focus();
+					return;
+				}
+			}
+		});
+		
+		 /* location.reload(true);  */
+	}
+	
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+		/* location.reload(true); */
+	}
+	
+	function browseFolder(path) {
+	    try {
+	        var Message = "\u8bf7\u9009\u62e9\u6587\u4ef6\u5939"; //选择框提示信息
+	        var Shell = new ActiveXObject("Shell.Application");
+	        var Folder = Shell.BrowseForFolder(0, Message, 64, 17); //起始目录为：我的电脑
+	        //var Folder = Shell.BrowseForFolder(0, Message, 0); //起始目录为：桌面
+	        if (Folder != null) {
+	            Folder = Folder.items(); // 返回 FolderItems 对象
+	            Folder = Folder.item(); // 返回 Folderitem 对象
+	            Folder = Folder.Path; // 返回路径
+	            if (Folder.charAt(Folder.length - 1) != "\\") {
+	                Folder = Folder + "\\";
+	            }
+	            /* document.getElementById(path).value = Folder; */
+	            $("#"+path+"").textbox("setValue",Folder);
+	            return Folder;
+	        }
+	    }
+	    catch (e) {
+	        alert(e.message);
+	    }
+	}
+	
+	//归档已选择的补件
+	function fileSelected(){
+		 var suppFiles = tblSuppleArch.datagrid("getSelections");
+		var patchCodes = [];
+		var suppFilesStr ="";
+		for (i = 0; i < suppFiles.length; i++){
+			patchCodes[i] = suppFiles[i].patchCode;
+			suppFilesStr = suppFilesStr + suppFiles[i].patchCode + "@"; 
+		} 
+		if (patchCodes.length == 0) {
+			$.messager.alert("操作提示", "请勾选待归档补件!");
+			return;
+		}
+		var datas = {
+				"patchCode" : patchCodes
+			};
+		$.messager.confirm('请您确认', '是否归档？', function(r) {
+			if (r) {
+				 downLoadFile(1,suppFilesStr);
+				$cf.ajax({
+					url : "/opas-naps/updateSuppToAr.json",
+					data : datas,
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							top.$cf.showMsg("归档成功！");
+							 tblSuppleArch.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "归档失败:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});
+	}
+	
+	//归档所有补件
+	function fileAll(targetForm){
+	var tarForm = $("#" + targetForm + "");
+	var jsondata = getFormData(tarForm.serializeArray());
+	var conditions = jsondata.patchCode +"@"+jsondata.custName+"@"+jsondata.credNo;
+	$.messager.confirm('请您确认', '是否将列表中补件归档？', function(r) {
+		if (r) {
+	 downLoadFile(2,conditions);
+	$cf.ajax({
+		url : "/opas-naps/updateSuppToArAll.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				$.messager.alert("操作提示", "归档成功!", "info", function() {
+					
+					tblSuppleArch.datagrid("reload");
+				});
+			} else {
+				$.messager.alert("操作提示", "归档异常,原因:" + data.exMsg, "error");
+				return;
+			}
+		}
+	});
+		}
+	});
+	
+	}
+	
+	//导出excl文件
+	function exportToExcel(){
+		var date = $("#downTime").datebox("getValue");
+		 if(date != null && date != ""&&date!=undefined){
+			 location.href ="/opas-naps/archive/SuppArActionDownLoadServlet.json?operatTime="+date;
+		}else{
+			$.messager.alert("提示", "请选择导出文件的日期");
+			return;
+		}
+	}
+	
+	//将选中的补件在列表中取消
+	function giveUp(){
+		var suppFiles = tblSuppleArch.datagrid("getSelections");
+		var patchCodes = [];
+		for (i = 0; i < suppFiles.length; i++){
+			patchCodes[i] = suppFiles[i].patchCode;
+		} 
+		if (patchCodes.length == 0) {
+			$.messager.alert("操作提示", "请勾选待删除补件!");
+			return;
+		}
+		var datas = {
+				"patchCode" : patchCodes
+			};
+		$cf.ajax({
+			url : "/opas-naps/giveUpSupp.json",
+			data : datas,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("放弃成功！");
+					tblSuppleArch.datagrid("reload");
+				} else {
+					$.messager.alert("操作提示", "放弃失败:" + data.exMsg, "error");
+					return;
+				}
+			}
+		});
+	}
+
+	//导出指定日期的所有成功归档的补件信息
+	function downLoadFile(sign,suppFiles){
+			exportWindow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+				onBeforeOpen : setData(sign,suppFiles)
+			});
+	}
+	
+	
+	function setData(sign,suppFiles) {
+		$('#sign').val(sign);
+	 	$('#suppFiles').val(suppFiles); 
+	}
+</script>
+</html>

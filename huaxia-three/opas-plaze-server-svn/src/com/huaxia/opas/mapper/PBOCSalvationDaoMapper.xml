@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCSalvationDaoMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_PUBLIC_SALVATION (
+			APP_ID,PERSONNEL_TYPE,PLACE,COMPANY,HOME_MINCOME,APP_DATE,PASS_DATE,INFO_UPD_TIME,
+			CRT_TIME,CRT_USER
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.personnalType},
+			#{item.area},
+			#{item.organname},
+			#{item.money},
+			#{item.registerDate},
+			#{item.passDate},
+			#{item.getTime},
+			SYSDATE,
+			'SYSTEM'
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+</head>
+<style type="text/css">
+ .tl {width:80px; }
+ 
+*{margin:0px;padding:0px;}
+} 
+
+ html, body {
+	font: normal 12px Arial;
+} 
+
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+table {
+	border-collapse: collapse;
+}
+table.tableTdColor td{
+border: 2px solid #c0c0c0;
+}
+</style>
+<body style="padding: 20px;" >
+	<form id="showForm" style="font-size:12px;">
+	<fieldset>
+	<input id="finish" type="button"  value="重新联机发卡" disabled="disabled" onclick="resend()"/>
+	<legend><span id="H">联机申请卡片信息</span></legend>
+	<div id="cardInfoList" style="width:100%;"></div>
+	</fieldset>
+	</form>
+	<script type="text/javascript">
+	var finish="";
+ 	var showForm=$('#showForm');
+	var ydjFlag = window.parent.ydjFlag;
+	var appId = GetQueryString("appId"); 
+	$(function(){
+	
+		//加载银联发卡信息
+		$cf.ajax({
+			url : '/opas-naps/queryStockCustomerCardInfo.json',
+			data : {"appId":appId},
+			onSuccess : function(response) {
+				var data=response.RSP_BODY.stockCustomerCardList;
+				if(data.length!=0){
+					$('#cardInfoList').show();
+					if(data){
+						finish = "1";
+						var table=document.createElement("table");
+						$("#finish").attr("disabled", "disabled");
+						$(table).addClass("tableTdColor");
+						table.style='width:100%;';
+						var tr1=table.insertRow();
+						var td1=tr1.insertCell();
+						createDivInTd(td1,"序号",'30px',"1");
+						var td2=tr1.insertCell();
+						createDivInTd(td2,"流水号",'165px',"1");
+						var td3=tr1.insertCell();
+						createDivInTd(td3,"核准产品",'258px',"1");
+						var td4=tr1.insertCell();
+						createDivInTd(td4,"联机响应码",'158px',"1");
+						for(var i=0;i<data.length;i++){
+						    var tr2=table.insertRow();
+							var td6=tr2.insertCell();
+							createDivInTd(td6,i+1,'30px',"0");
+							var td7=tr2.insertCell();
+							createDivInTd(td7,data[i]["appId"],'165px',"0");
+							var td8=tr2.insertCell();
+							createDivInTd(td8,data[i]["productName"],'258px',"0");
+							var td9=tr2.insertCell();
+							createDivInTd(td9,data[i]["remark"],'158px',"0");
+							if(data[i]["remark"]!="000000"){
+								finish = "0";
+								$("#finish").removeAttr("disabled", "disabled");
+							}
+						}
+						$('#cardInfoList').html(table); 
+					}
+				}
+			}
+		}); 	
+	}) 
+	
+	//重新联机发卡
+	function resend(){
+		$("#finish").attr("disabled", "disabled");
+		if(finish=="1"){
+			// 不可重新发送
+			return ;
+		}
+		// 重新发送
+		//加载银联发卡信息
+		$cf.ajax({
+			url : '/opas-naps/queryStockCustomerCardResend.json',
+			data : {"appId":appId},
+			onSuccess : function(response) {
+				alert("操作完成");
+				location.reload();
+			}
+		});		
+	}
+	
+	//日期格式转换
+ 	function formatDate(value) {
+		return value.substring(0,19);
+	} 
+
+	function setData(data) {
+		$('#bigMemo1').val(data.bigMemo);
+	} 
+ 	function formatAutoRow(value){
+		var array = value.split("&&&");
+		var length=array.length;
+		var currentData="";
+		if(length>=2){
+			for (var int = 0; int < length; int++) {
+				if(int==0){
+					currentData+=array[int];
+				}else{
+					currentData+="<br>"+ array[int];
+				}
+			}
+			return currentData;
+		}else{
+			return value;
+		}
+	}
+	
+ 	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	} 
+	/*在指定td标签 创建Div标签 并赋值 */
+ 	function createDivInTd(td,value,width,fontType){
+		   td.style.width=width;
+		var div=document.createElement("div");
+		div.style.class="word-wrap:break-word;overflow:hidden;"
+		if(value){
+			var textNode=document.createElement('p');
+			textNode.innerHTML=value;
+			textNode.style.font="20px";
+			div.appendChild(textNode);
+		}else{
+		}
+		if(fontType=="1"){
+			div.style.fontWeight='black';
+		}
+		if(fontType=="0"){
+			//div.style.color='blue';
+		}
+		div.readOnly='readOnly';
+		td.style.height="22px";
+		td.appendChild(div);
+	}
+</script>
+</body>

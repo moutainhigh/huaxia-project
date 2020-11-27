@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCGuaranteeInfoMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_GRURANTEE (
+			APP_ID,GUARANTEE_TYPE,SEC_LOAN_OR_CREDIT_ISS_ORG,LOAN_CON_AMT,GUAR_LOAN_GRANT_DATE,GUAR_LOAN_GRANT_EXP_DT,
+			GUARANTEE_AMT,LOAN_AMT,GUAR_LOAN_SORT5,DUE_PAYMENT_DATE,
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{guaranteeFormat, jdbcType = VARCHAR},
+			#{organname, jdbcType = VARCHAR},
+			#{contractMoney, jdbcType = VARCHAR},
+			#{beginDate, jdbcType = VARCHAR},
+			#{endDate, jdbcType = VARCHAR},
+			#{guaranteeMoney, jdbcType = VARCHAR},
+			#{guaranteeBalance, jdbcType = VARCHAR},
+			#{class5State, jdbcType = VARCHAR},
+			#{billingDate, jdbcType = VARCHAR},
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_GRURANTEE (
+			APP_ID,GUARANTEE_TYPE,SEC_LOAN_OR_CREDIT_ISS_ORG,LOAN_CON_AMT,GUAR_LOAN_GRANT_DATE,GUAR_LOAN_GRANT_EXP_DT,
+			GUARANTEE_AMT,LOAN_AMT,GUAR_LOAN_SORT5,DUE_PAYMENT_DATE,
+			CRT_TIME,CRT_USER
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.guaranteeFormat, jdbcType = VARCHAR},
+			#{item.organname, jdbcType = VARCHAR},
+			#{item.contractMoney, jdbcType = VARCHAR},
+			#{item.beginDate, jdbcType = VARCHAR},
+			#{item.endDate, jdbcType = VARCHAR},
+			#{item.guaranteeMoney, jdbcType = VARCHAR},
+			#{item.guaranteeBalance, jdbcType = VARCHAR},
+			#{item.class5State, jdbcType = VARCHAR},
+			#{item.billingDate, jdbcType = VARCHAR},
+			SYSDATE,
+			'SYSTEM'
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="MappingRule">
+	<resultMap id="MappingRuleResultMap" type="com.huaxia.opas.domain.allot.AllotMappingRule">
+		<result column="MAPPING_ID" property="mappingId" jdbcType="CHAR"/>
+		<result column="RULE_CODE" property="ruleCode" jdbcType="CHAR"/>
+		<result column="LEVEL_TYPE" property="levelType" jdbcType="CHAR"/>
+		<result column="LEVEL_CODE" property="levelCode" jdbcType="CHAR"/>
+		<result column="LEVEL_NAME" property="levelName" jdbcType="VARCHAR"/>
+		<result column="RULE_PROP" property="ruleProp" jdbcType="CHAR"/>
+		<result column="RULE_TIME" property="ruleTime" jdbcType="VARCHAR"/>
+		<!-- 规则 -->
+		<result column="RULE_NAME" property="ruleName" jdbcType="VARCHAR"/>
+		<result column="RULE_SCRIPT" property="ruleScript" jdbcType="VARCHAR"/>
+		<result column="RULE_STATUS" property="ruleStatus" jdbcType="CHAR"/>
+		<result column="RULE_TYPE" property="ruleType" jdbcType="VARCHAR"/>
+		<result column="USER_SCRIPT" property="userScript" jdbcType="VARCHAR"/>
+		<result column="USER_SCRIPT_DESC" property="userScriptDesc" jdbcType="VARCHAR"/>
+		<!-- 队列 -->
+		<result column="QUEUE_ID" property="queueId" jdbcType="CHAR"/>
+		<result column="QUEUE_CODE" property="queueCode" jdbcType="VARCHAR"/>
+		<result column="QUEUE_NAME" property="queueName" jdbcType="VARCHAR"/>
+		<result column="QUEUE_LEVEL" property="queueLevel" jdbcType="CHAR"/>
+		<!-- 组 -->
+		<result column="ORG_ID" property="orgId" jdbcType="CHAR"/>
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR"/>
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR"/>
+		<!--  -->
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<insert id="insertMappingRule" parameterType="com.huaxia.opas.domain.allot.AllotMappingRule">
+		insert into OPAS_ALLOT_MAPPING_RULE 
+		(MAPPING_ID,RULE_CODE,LEVEL_TYPE,LEVEL_CODE,LEVEL_NAME,RULE_PROP,
+		RULE_TIME,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,USER_SCRIPT,USER_SCRIPT_DESC) 
+		values (
+			#{mappingId,jdbcType=CHAR},
+			#{ruleCode,jdbcType=CHAR},
+			#{levelType,jdbcType=CHAR},
+			#{levelCode,jdbcType=CHAR},
+			#{levelName,jdbcType=VARCHAR},
+			#{ruleProp,jdbcType=CHAR},
+			#{ruleTime,jdbcType=VARCHAR},
+			#{crtUser,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			#{lstUpdUser,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			#{userScript,jdbcType=VARCHAR},
+			#{userScriptDesc,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateMappingRule"
+		parameterType="com.huaxia.opas.domain.allot.AllotMappingRule">
+		update OPAS_ALLOT_MAPPING_RULE
+		<set>
+			LEVEL_TYPE = #{levelType,jdbcType=CHAR},
+			LEVEL_CODE = #{levelCode,jdbcType=CHAR},
+			RULE_PROP = #{ruleProp,jdbcType=CHAR},
+			LEVEL_NAME = #{levelName,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			USER_SCRIPT=#{userScript,jdbcType=VARCHAR},
+			USER_SCRIPT_DESC=#{userScriptDesc,jdbcType=VARCHAR}
+		</set>
+		where MAPPING_ID = #{mappingId,jdbcType=CHAR}
+	</update>
+	<delete id="deleteMappingRuleById" parameterType="java.lang.String">
+		delete from OPAS_ALLOT_MAPPING_RULE
+		where MAPPING_ID = #{mappingId,jdbcType=CHAR}
+	</delete>
+	
+	<delete id="deleteMappingRuleByRuleCode" parameterType="java.lang.String">
+		delete from OPAS_ALLOT_MAPPING_RULE
+		where RULE_CODE ='${_parameter}'
+	</delete>
+	<!-- 展示  全部映射 信息 -->
+	<select id="selectMappingRule" parameterType="Map" resultMap="MappingRuleResultMap">
+		select   mr.MAPPING_ID,mr.RULE_CODE,mr.RULE_PROP,
+		mr.LEVEL_TYPE,mr.LEVEL_CODE,mr.LEVEL_NAME,
+		 mr.CRT_USER,mr.LST_UPD_USER,mr.CRT_DATE,mr.LST_UPD_DATE,
+		 mr.USER_SCRIPT,mr.USER_SCRIPT_DESC,
+		ar.RULE_NAME,ar.RULE_SCRIPT,ar.RULE_STATUS,ar.RULE_TYPE 
+		from OPAS_ALLOT_MAPPING_RULE  mr 
+		left join OPAS_ALLOT_RULE ar on  mr.RULE_CODE=ar.RULE_CODE 
+		 <where>
+		 	<if test="statusStr != null and statusStr !='' ">
+				AND  mr.RULE_PROP='1'  AND  ar.RULE_STATUS='1'
+			</if>
+			<if test="crtUser != null and crtUser !='' ">
+				AND mr.CRT_USER LIKE '%${crtUser}%' 
+			</if>
+			<if test="ruleName != null and ruleName !='' ">
+				AND ar.RULE_NAME LIKE '%${ruleName}%' 
+			</if>
+			<if test="levelName != null and levelName !='' ">
+				AND mr.LEVEL_NAME LIKE '%${levelName}%' 
+			</if>
+			<if test="ruleCode != null and ruleCode !='' ">
+				AND mr.RULE_CODE  = #{ruleCode}
+			</if>
+			<if test="levelCode != null and levelCode !='' ">
+				AND mr.LEVEL_CODE = #{levelCode}
+			</if>
+			<if test="levelType != null and levelType !='' ">
+				AND mr.LEVEL_TYPE = #{levelType}
+			</if>
+			<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+					AND ar.RULE_TYPE in
+					<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+					close=")">
+						#{item}
+					</foreach>
+			</if>
+		</where>	
+	</select>
+	<select id="countMappingRule" parameterType="Map" resultType="int">
+		select count(1) from OPAS_ALLOT_MAPPING_RULE mr
+		left join OPAS_ALLOT_RULE ar on mr.RULE_CODE=ar.RULE_CODE 
+		 where 1=1
+		 	<if test="statusStr != null and statusStr !='' ">
+				AND  mr.RULE_PROP='1'  AND  ar.RULE_STATUS='1'
+			</if>
+		 	<if test="ruleName != null and ruleName !='' ">
+				AND ar.RULE_NAME LIKE '%${ruleName}%' 
+			</if>
+			<if test="levelName != null and levelName !='' ">
+				AND mr.LEVEL_NAME LIKE '%${levelName}%' 
+			</if>
+			<if test="ruleCode != null and ruleCode !='' ">
+				AND mr.RULE_CODE  = #{ruleCode}
+			</if>
+			<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+					AND ar.RULE_TYPE in
+					<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+					close=")">
+						#{item}
+					</foreach>
+			</if>
+	</select>
+	<select id="selectNum" parameterType="com.huaxia.opas.domain.allot.AllotMappingRule" resultType="int">
+		select count(1) from OPAS_ALLOT_MAPPING_RULE mr
+		<where>
+			<if test="ruleCode != null and ruleCode !='' ">
+				AND mr.RULE_CODE  = #{ruleCode}
+			</if>
+			<if test="levelCode != null and levelCode !='' ">
+				AND mr.LEVEL_CODE = #{levelCode}
+			</if>
+		</where>
+	</select>
+	<!-- 规则 -->
+	<select id="queryRule" parameterType="java.lang.String" resultMap="MappingRuleResultMap">
+		select a.LEVEL_CODE,b.RULE_SCRIPT,b.RULE_CODE,a.LEVEL_TYPE,a.LEVEL_NAME,a.RULE_PROP,
+		a.USER_SCRIPT,a.USER_SCRIPT_DESC
+		 from OPAS_ALLOT_MAPPING_RULE a, OPAS_ALLOT_RULE b 
+		where  
+		 a.RULE_CODE=b.RULE_CODE
+		 AND  b.RULE_STATUS='1'
+		 AND a.RULE_PROP='1'
+		<if test="_parameter != null">
+			and b.RULE_TYPE=#{ruleType}
+		</if>
+	</select>
+	<select id="selectRuleCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select   b.RULE_CODE
+		 from OPAS_ALLOT_MAPPING_RULE a, OPAS_ALLOT_RULE b 
+		where  
+		 a.RULE_CODE=b.RULE_CODE
+		 AND  b.RULE_STATUS='1'
+		 AND a.RULE_PROP='1'
+		<if test="_parameter != null">
+			and b.RULE_TYPE=#{ruleType}
+		</if>
+		order by b.SORT_FLAG asc
+	</select>
+	<select id="selectRuleCodeByMap" parameterType="java.util.Map" resultType="java.lang.String">
+		select   b.RULE_CODE
+		 from OPAS_ALLOT_MAPPING_RULE a, OPAS_ALLOT_RULE b 
+		where  
+		 a.RULE_CODE=b.RULE_CODE
+		 AND  b.RULE_STATUS='1'
+		 AND a.RULE_PROP='1'
+	    <if test="ruleType != null and ruleType !='' ">
+			AND b.RULE_TYPE  = #{ruleType}
+		</if>
+		<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+			AND b.RULE_TYPE in
+			<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+			close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="levelType != null and levelType !='' ">
+			AND a.LEVEL_TYPE = #{levelType}
+		</if>
+		order by b.SORT_FLAG asc
+	</select>
+</mapper>

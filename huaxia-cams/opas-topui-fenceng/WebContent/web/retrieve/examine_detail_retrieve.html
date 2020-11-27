@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/index/index.css" type="text/css"></link>
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div data-options="region:'west',title:'左区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div id="leftTab1" title="征信信息" style="overflow: hidden"></div>
+			<div id="leftTab2" title="申请表信息" style="overflow: hidden"></div>
+			<!-- <div title="征信详情信息" style="overflow: hidden"><iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/thirdparty_detail_view.html"></iframe></div> -->
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div id="rightTab1" title="录入" style="overflow: hidden"></div>
+			<div id="rightTab2" title="比对" style="overflow: hidden"></div>
+		</div>
+	</div>
+	<div id="dd" data="0" style="left: 534px"></div>
+	<!-- 申请表信息修改查看 -->
+	<div id="dd"></div>
+	<input type="hidden" id="appId" name="appId" value="">
+</body>
+<script type="text/javascript">
+var appId="";
+var userId="";
+var reviewStatus='';  //审查状态  0是未完成  4是挂起 
+$(function() {
+	var url = location.href;
+	appId = url.split("=")[1].split("&")[0];
+	userId = url.split("=")[2];
+	var length=url.split("=")[0].length;
+	reviewStatus=url.split("=")[0].substring(length-1,length);
+	if(reviewStatus==="4"){
+		$('#ti_jiao').hide();
+	}
+	$("#applyId").val(appId);
+	$("#leftTab1").html('<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/thirdparty_summary_view.html?appId='+appId+'"></iframe>');
+	$("#leftTab2").html('<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/apply_info_view.html?appId='+appId+'=lvru"></iframe>');
+	$("#rightTab1").html('<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%" src="../common/info_collect.html?appId='+appId+'"></iframe>');
+	$("#rightTab2").html('<iframe name="iframe4" id="iframe4" style="border: 0; width: 100%; height: 100%" src="../common/info_compare.html?appId='+appId+"&userId="+userId+'"></iframe>');	
+});
+function save(){
+	document.getElementById("iframe2").contentWindow.onUpdate();
+	document.getElementById("iframe3").contentWindow.onSave();
+	document.getElementById("iframe4").contentWindow.onSave();
+}
+function showView(){
+	window.open("../win/image/sign.HTML?appId="+appId+"&userId="+userId,"_blank","征信调查复核详细");	
+}
+function examineSubmit(){
+	var object=new Object();
+	object.name='appId';
+	object.value=appId;//appId
+	var paramArray=new Array();
+	paramArray.push(object);
+	var jsondata =common.formToJson(paramArray);
+	$cf.ajax({
+		url : "/opas-naps/lineNewUrlClient.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				zidonPush(); 
+				alert("提交成功!");
+				
+			} else {
+				alert("提交失败!"+data.RSP_BODY.exMsg);
+			}
+		}
+
+	});
+}
+function zidonPush(){
+	var checkbox = $("#zidongPushCheckbox").prop("checked");
+	if(checkbox==false||checkbox=="false"){
+		window.close();
+		window.opener.$("#tblSeach").datagrid("reload");
+		return;
+	}
+	$cf.ajax({
+		url : "/opas-naps/Examine_Auto_Push.json",
+		data:{"userIdParam":userId},
+		onSuccess : function(resData) {
+			appId = resData.RSP_BODY.appId;
+			if(appId==null||appId==""){
+				alert("已经没有待办的业务了，请获取任务！");
+				return;
+			}
+			
+			var msg = resData.RSP_BODY.msg;
+			alert(msg+",点击可获取下一个待办任务");
+			
+			var urlold = location.href.split("?")[0];
+			location.href = urlold+"?appId="+appId+"&userId="+userId;
+			$("iframe").each(function(){
+				var iframe = $(this).prop("src");
+				var resalert = $(this).prop("src",iframe+"?appId="+appId);
+			});
+		}
+	});
+}
+/*********** 人行摘要手机信息 ***********/
+function getRCellphone(){
+	var txt_ant_mobile = document.getElementById("iframe1").contentWindow.document.getElementById("txt_cellphone").value;
+	return txt_ant_mobile;
+}
+/*********** 申请表手机信息 ***********/
+function getSCellphone(){
+	var c1Mobile = document.getElementById("iframe2").contentWindow.document.getElementById("c1Mobile").value;
+	return c1Mobile;
+}
+function creditControlUpdateMessageRecord(){
+	var opts = $.extend({
+		title : '查看信息修改历史记录',
+		showType : 'show',
+		showSpeed : 400,
+		top : 100,
+		modal : false,
+		onOpen : function() {
+			$.messager.progress('close');
+		},
+		onClose : function() {
+			processInsNo = "";
+			$(this).dialog('destroy');
+			$(this).appendTo($("body"));
+		}
+	}, {});
+ 	opts.content = '<iframe id="" src="../common/info_edit_history.html?appId='+appId+'" allowTransparency="true" scrolling="auto" width="580px" height="500px" frameBorder="0" name=""></iframe>';
+	/* opts.content = '<iframe id="" src="../common/info_edit_history.html?appId=1703171932P05181" allowTransparency="true" scrolling="auto" width="880px" height="500px" frameBorder="0" name=""></iframe>'; */
+	$('#dd').dialog(opts);
+	var src = $('div>iframe').attr("src");
+	$('#dd').dialog('refresh');
+}
+</script>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>申请件信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript">
+
+	//校验申请件数据
+	var url = location.href;
+	var appId = url.split("=")[1];
+	var userCode = url.split("=")[2];
+	$(function() {
+		//fnInitStyle(sid);
+		/* // 获取申请件信息
+		var parent = window.parent;
+		var appId = parent.applyId.value;
+		if (appId != '') {
+			appId = $.trim(appId);
+		} */
+		//var appId = "1601240945P00101";
+		var jsondata = {
+			"appId" : appId
+		};
+		$cf.ajax({
+			url : '/opas-naps/queryInfoKeyMessage.json',
+			data : jsondata,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsonBizInfo1 = ret.RSP_BODY.jsonString;
+				var bizc1andbizc2 = ret.RSP_BODY.bizc1andbizc2;
+				var InfoBizjson = eval('(' + jsonBizInfo1 + ')');
+				var bizc1andbizc2json = eval('(' + bizc1andbizc2 + ')');
+				var size = InfoBizjson.length;
+				var i = 0;
+				//文本框赋值
+				var a = $("input[type='text']");
+				for (i = 0; i < size; i++) {
+					var b = InfoBizjson[i].fieldName;
+					a.each(function() {
+						var s = $(this).attr("name");
+						var id = $(this).attr("id");
+						if (s == b) {
+							if (id == "old") {
+								$(this).val(InfoBizjson[i].currValue);
+							} else {
+								$(this).val(InfoBizjson[i].modifyValue);
+							}
+						}
+					});
+				}
+				//单选框赋值
+				var radios = $("input[type='radio']");
+				for (i = 0; i < size; i++) {
+					var b = InfoBizjson[i].fieldName;
+					radios.each(function() {
+						var s = $(this).attr("name");
+						var val = $(this).val();
+						if (s == b) {
+							if (InfoBizjson[i].currValue == val) {
+								$(this).attr("checked", true);
+							}
+						}
+						if (s == (b + "2")) {
+							if (InfoBizjson[i].modifyValue == val) {
+								$(this).attr("checked", true);
+							}
+						}
+					});
+				}
+				//赋值 原值
+				var  c1Idnbr = bizc1andbizc2json.c1Idnbr;
+				var  c1Cname = bizc1andbizc2json.c1Cname;
+				var  c1Idtype = bizc1andbizc2json.c1Idtype;
+				var  c2Idnbr = bizc1andbizc2json.c2Idnbr;
+				var  c2Cname = bizc1andbizc2json.c2Cname;
+				var  c2Idtype = bizc1andbizc2json.c2Idtype;
+				//新增台胞证
+				/* var  c6Gatnbr1 = bizc1andbizc2json.c6Gatnbr1;
+				var  c6Gatnbr2 = bizc1andbizc2json.c6Gatnbr2; */
+				$("input[name='c1Cname']").filter("#old").val(c1Cname);
+				$("input[name='c1Idnbr']").filter("#old").val(c1Idnbr);
+				var types = $("input[name='c1Idtype']");
+				types.each(function(){
+					if($(this).val() == c1Idtype ){
+						$(this).attr("checked", true);
+					}
+				});
+				$("input[name='c2Cname']").filter("#old").val(c2Cname);
+				$("input[name='c2Idnbr']").filter("#old").val(c2Idnbr);
+				var type2s = $("input[name='c2Idtype']");
+				type2s.each(function(){
+					if($(this).val() == c2Idtype ){
+						$(this).attr("checked", true);
+					}
+				});
+				//新增港澳台通行证号码
+				/* $("input[name='c6Gatnbr1']").filter("#old").val(c6Gatnbr1);
+				$("input[name='c6Gatnbr2']").filter("#old").val(c6Gatnbr2); */
+			}
+		});
+		$(":radio[name='c1Idtype']").attr("disabled", "true");
+		$(":radio[name='c1Idtype2']").attr("disabled", "true");
+		$(":radio[name='c2Idtype']").attr("disabled", "true");
+		$(":radio[name='c2Idtype2']").attr("disabled", "true");
+	});
+
+	function onUpdate() {//复核通过--修改申请件的关键信息
+		$("#btnSub").attr("disabled",true);
+		$("#btnSub").css("pointer-events","none");
+		var c1Cname = $("input[name='c1Cname']").filter("#new").val();
+		var c1Idnbr = $("input[name='c1Idnbr']").filter("#new").val();
+		var c1Idtype = $("input[name='c1Idtype2']:checked").val();
+		var c2Cname = $("input[name='c2Cname']").filter("#new").val();
+		var c2Idnbr = $("input[name='c2Idnbr']").filter("#new").val();
+		var c2Idtype = $("input[name='c2Idtype2']:checked").val();
+		//新增港澳台通行证号码
+		/* var  c6Gatnbr1 = $("input[name='c6Gatnbr1']").filter("#new").val();
+		var  c6Gatnbr2 = $("input[name='c6Gatnbr2']").filter("#new").val(); */
+		var remark = $("#remark").val();
+	/* 	var url = location.href;
+		var appId = url.split("=")[1]; */
+		var jsondata = {
+			"appId" : appId,
+			"c1Cname" : c1Cname,
+			"c1Idnbr" : c1Idnbr,
+			"c1Idtype" : c1Idtype,
+			"c2Cname" : c2Cname,
+			"c2Idnbr" : c2Idnbr,
+			"c2Idtype" : c2Idtype,
+			"userCode" : userCode,
+		/* 	"c6Gatnbr1" : c6Gatnbr1,
+			"c6Gatnbr2" : c6Gatnbr2, */
+			"remark" : remark
+		};
+
+		$cf.ajax({
+			url : "/opas-naps/keyMessageRecheckPass.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					//top.$cf.showMsg("提交成功！");
+					alert("提交成功!");
+					window.close();
+					window.opener.location.reload();
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					//$("#btnSub").removeAttr("disabled");
+					return;
+				}
+			}
+		});
+
+	}
+
+	function onCancel() {
+		var c1Cname = $("input[name='c1Cname']").filter("#new").val();
+		var c1Idnbr = $("input[name='c1Idnbr']").filter("#new").val();
+		var c1Idtype = $("input[name='c1Idtype2']:checked").val();
+		var c2Cname = $("input[name='c2Cname']").filter("#new").val();
+		var c2Idnbr = $("input[name='c2Idnbr']").filter("#new").val();
+		var c2Idtype = $("input[name='c2Idtype2']:checked").val();
+		//新增港澳台通行证号码
+	/* 	var  c6Gatnbr1 = $("input[name='c6Gatnbr1']").filter("#new").val();
+		var  c6Gatnbr2 = $("input[name='c6Gatnbr2']").filter("#new").val(); */
+		var remark = $("#remark").val();
+	/* 	var url = location.href;
+		var appId = url.split("=")[1]; */
+		var jsondata = {
+			"appId" : appId,
+			"c1Cname" : c1Cname,
+			"c1Idnbr" : c1Idnbr,
+			"c1Idtype" : c1Idtype,
+			"c2Cname" : c2Cname,
+			"c2Idnbr" : c2Idnbr,
+			"c2Idtype" : c2Idtype,
+			"userCode" : userCode,
+			/* "c6Gatnbr1" : c6Gatnbr1,
+			"c6Gatnbr2" : c6Gatnbr2, */
+			"remark" : remark
+		};
+		$cf.ajax({
+			url : "/opas-naps/keyMessageRecheckRollBack.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					//top.$cf.showMsg("成功退回！");
+					alert("成功退回！");
+					window.close();
+					window.opener.location.reload();
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					return;
+				}
+			}
+		});
+	}
+	//转换数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	function showViewCreditControl(){
+		window.open("../win/image_new/imgShow.html?appId=" + appId,"newWindow");	
+	}
+
+</script>
+</head>
+<body style="padding: 10px;">
+	<div style="padding: 20px, 0px;">
+		<fieldset style="width: 85%">
+			<legend align="center">
+				<span id="A">主卡申请关键信息</span>
+			</legend>
+			<div id="a_operate_area"
+				style="float: center; dispaly: table-cell; height: 150px">
+				<fieldset>
+					<legend align="center">
+						<span id="A">原申请关键信息</span>
+					</legend>
+					<table>
+						<tr>
+							<td>原主卡姓名</td>
+							<td colspan="3"><label><input type="text" class=""
+									id="old" name="c1Cname" value="" readonly="readonly"/></td>
+						</tr>
+						<tr>
+							<td>原主卡证件类型</td>
+							<td colspan="3"><label><input type="radio"
+									name="c1Idtype" value="01" />居民身份证</label><label><input
+									type="radio" name="c1Idtype" value="03" />外国护照</label><label><input
+									type="radio" name="c1Idtype" value="04" />港澳台居民来往内地通行证台胞证</label> <label><input
+									type="radio" hidden name="c1Idtype" value="02" /></label><label><input
+									type="radio" name="c1Idtype" value="05" />军官证</label>
+									<label><input
+									type="radio" name="c1Idtype" value="90"/>港澳居民居住证</label><label><input
+									type="radio" name="c1Idtype" value="91"/>台湾居民居住证</label><label><input
+									type="radio" name="c1Idtype" value="07" />外国人永久居留身份证</label>
+									<label><input type="radio" name="c1Idtype" value="20" />其他</label>
+							</td>
+						</tr>
+						<tr>
+							<td>原主卡证件号码</td>
+							<td colspan="3"><input type="text" class="" id="old"
+								name="c1Idnbr" value="" readonly="readonly"/></td>
+						</tr>
+						<!-- <tr>
+							<td>原主卡通行证/台胞证号码</td>
+							<td colspan="3"><input type="text" class="" id="old"
+								name="c6Gatnbr1" value="" readonly="readonly"/></td>
+						</tr> -->
+					</table>
+				</fieldset>
+			</div>
+
+			<div id="b_operate_area"
+				style="float: center; dispaly: table-cell; height: 150px">
+				<fieldset>
+					<legend align="center">
+						<span id="A">修改后申请关键信息</span>
+					</legend>
+					<table>
+						<tr>
+							<td>修改后主卡姓名</td>
+							<td colspan="3"><label><input type="text" class=""
+									id="new" name="c1Cname" value="" readonly="readonly"/></td>
+						</tr>
+						<tr>
+							<td>修改后主卡证件类型</td>
+						<!-- 	<td colspan="3"><label><input type="radio"
+									name="c1Idtype2" value="01" />居民身份证</label><label><input
+									type="radio" name="c1Idtype2" value="02" />外国护照</label><label><input
+									type="radio" name="c1Idtype2" value="03" />港澳台居民来往内地通行证、台胞证</label> <label><input
+									type="radio" name="c1Idtype2" value="04" />军官证</label><label><input
+									type="radio" name="c1Idtype2" value="05" />其他</label></td> -->
+							<td colspan="3"><label><input type="radio"
+									name="c1Idtype2" value="01" />居民身份证</label><label><input
+									type="radio" name="c1Idtype2" value="03" />外国护照</label><label><input
+									type="radio" name="c1Idtype2" value="04" />港澳台居民来往内地通行证</label> <label><input
+									type="radio" name="c1Idtype2" hidden value="02" />台胞证</label><label><input
+									type="radio" name="c1Idtype2" value="05" />军官证</label>
+									<label><input
+										type="radio" name="c1Idtype2" value="90"
+										 />港澳居民居住证</label><label><input
+										type="radio" name="c1Idtype2" value="91"
+										 />台湾居民居住证</label>
+									<label><input type="radio" name="c1Idtype2" value="07" />外国人永久居留身份证</label>
+									<label><input type="radio" name="c1Idtype2" value="20" />其他</label>
+							</td>
+						</tr>
+						<tr>
+							<td>修改后主卡证件号码</td>
+							<td colspan="3"><input type="text" class="" id="new"
+								name="c1Idnbr" value="" readonly="readonly"/></td>
+						</tr>
+						<!-- <tr>
+							<td>修改后主卡通行证/台胞证号码</td>
+							<td colspan="3"><input type="text" class="" id="new"
+								name="c6Gatnbr1" value="" readonly="readonly"/></td>
+						</tr> -->
+					</table>
+				</fieldset>
+			</div>
+		</fieldset>
+	</div>
+	<div style="padding: 20px, 0px;">
+		<fieldset style="width: 85%">
+			<legend align="center">
+				<span id="A">附卡申请关键信息</span>
+			</legend>
+			<div id="a_operate_area"
+				style="float: center; dispaly: table-cell; height: 150px">
+				<fieldset>
+					<legend align="center">
+						<span id="A">原申请关键信息</span>
+					</legend>
+					<table>
+						<tr>
+							<td>原附卡姓名</td>
+							<td colspan="3"><label><input type="text" class=""
+									id="old" name="c2Cname" value="" readonly="readonly"/></td>
+						</tr>
+						<tr>
+							<td>原附卡证件类型</td>
+							<td colspan="3"><label><input type="radio"
+									name="c2Idtype" value="01" />居民身份证</label><label><input
+									type="radio" name="c2Idtype" value="03" />外国护照</label><label><input
+									type="radio" name="c2Idtype" value="04" />港澳台居民来往内地通行证台胞证</label> <label><input
+									type="radio" name="c2Idtype" value="02" hidden /></label><label><input
+									type="radio" name="c2Idtype" value="05" />军官证</label>
+									<label><input
+									type="radio" name="c2Idtype" value="90"/>港澳居民居住证</label><label><input
+									type="radio" name="c2Idtype" value="91"/>台湾居民居住证</label><label><input
+									type="radio" name="c2Idtype" value="07"/>外国人永久居留身份证</label>
+									<label><input type="radio" name="c2Idtype" value="20" />其他</label>
+							</td>
+							<!-- <td colspan="3"><label><input type="radio"
+									name="c2Idtype" value="01" />居民身份证</label><label><input
+									type="radio" name="c2Idtype" value="02" />外国护照</label><label><input
+									type="radio" name="c2Idtype" value="03" />港澳台居民来往内地通行证、台胞证</label> <label><input
+									type="radio" name="c2Idtype" value="04" />军官证</label><label><input
+									type="radio" name="c2Idtype" value="05" />其他</label></td> -->
+						</tr>
+						<tr>
+							<td>原附卡证件号码</td>
+							<td colspan="3"><input type="text" class="" id="old"
+								name="c2Idnbr" value="" readonly="readonly"/></td>
+						</tr>
+						<!-- <tr>
+							<td>原附卡通行证/台胞证号码</td>
+							<td colspan="3"><input type="text" class="" id="old"
+								name="c6Gatnbr2" value="" readonly="readonly"/></td>
+						</tr> -->
+					</table>
+				</fieldset>
+			</div>
+
+			<div id="b_operate_area"
+				style="float: center; dispaly: table-cell; height: 150px">
+				<fieldset>
+					<legend align="center">
+						<span id="A">修改后申请关键信息</span>
+					</legend>
+					<table>
+						<tr>
+							<td>修改后附卡姓名</td>
+							<td colspan="3"><label><input type="text" class=""
+									id="new" name="c2Cname" value="" readonly="readonly"/></td>
+						</tr>
+						<tr>
+							<td>修改后附卡证件类型</td>
+							<td colspan="3"><label><input type="radio"
+									name="c2Idtype2" value="01" />居民身份证</label><label><input
+									type="radio" name="c2Idtype2" value="03" />外国护照</label><label><input
+									type="radio" name="c2Idtype2" value="04" />港澳台居民来往内地通行证台胞证</label> <label><input
+									type="radio" name="c2Idtype2" value="02" hidden/></label><label><input
+									type="radio" name="c2Idtype2" value="05" />军官证</label>
+									<label><input
+									type="radio" name="c2Idtype2" value="90"/>港澳居民居住证</label><label><input
+									type="radio" name="c2Idtype2" value="91"/>台湾居民居住证</label><label><input
+									type="radio" name="c2Idtype2" value="07"/>外国人永久居留身份证</label>
+									<label><input type="radio" name="c2Idtype2" value="20" />其他</label>
+							</td>
+							<!-- <td colspan="3"><label><input type="radio"
+									name="c2Idtype2" value="01" />居民身份证</label><label><input
+									type="radio" name="c2Idtype2" value="02" />外国护照</label><label><input
+									type="radio" name="c2Idtype2" value="03" />港澳台居民来往内地通行证、台胞证</label> <label><input
+									type="radio" name="c2Idtype2" value="04" />军官证</label><label><input
+									type="radio" name="c2Idtype2" value="05" />其他</label></td> -->
+						</tr>
+						<tr>
+							<td>修改后附卡证件号码</td>
+							<td colspan="3"><input type="text" class="" id="new"
+								name="c2Idnbr" value="" readonly="readonly"/></td>
+						</tr>
+						<!-- <tr>
+							<td>修改附卡通行证/台胞证号码</td>
+							<td colspan="3"><input type="text" class="" id="new"
+								name="c6Gatnbr2" value="" readonly="readonly"/></td>
+						</tr> -->
+					</table>
+				</fieldset>
+			</div>
+		</fieldset>
+	</div>
+	<div style="padding: 20px, 0px;">
+		<fieldset style="width: 85%">
+			<legend>
+				<span id="A">&nbsp;</span>
+			</legend>
+			<table>
+				<tr>
+					<td>备注</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td colspan="4"><textarea rows="3" cols="150" id="remark" name="remark"></textarea>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+	<div class="area-show" style="padding: 20px, 0px; width: 85%">
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" id="btnSub"
+				onclick="onUpdate()">通过</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onCancel()">退回</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:showViewCreditControl();"
+			class="easyui-linkbutton"
+			style="text-align: center; display: inline-block; width: 93px; height: 30px">影像调阅</a>
+		</div>
+	</div>
+</body>
+
+
+</html>

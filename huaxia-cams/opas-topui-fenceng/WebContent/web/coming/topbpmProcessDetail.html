@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>流程相关表详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding:10px;">
+<div>
+		<form id="seachPositionCodeForm">
+			<table >
+				<tr>		
+							<td>varname_.ruleOpt:</td>
+							<td><input type="text" class="easyui-textbox"
+								id="varname" name="varname" /></td>
+							<td>key_.ruleOpt:</td>
+							<td>
+								<input type="text" class="easyui-textbox"
+								id="key" name="key" />
+							</td>
+							<td>activityname_:</td>
+							<td>
+								<input type="text" class="easyui-textbox"
+								id="activityName" name="activityName" />
+							</td>
+					
+							<td><a  class="easyui-linkbutton" id="updateProcessDetail" onclick="updateProcessDetail();">保存</a>
+						    </td>  
+				</tr>
+			</table>
+		</form>
+		
+</div>
+<table id="activityTblInfo" title="topbpm_j_activity" class="easyui-datagrid"
+		style="width: 1380px;height:300px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[10,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="dbid" width="20%" align="center"  hidden="true" >dbid_</th>
+				<th field="currNode" width="15%"  align="center" >node_name_</th>
+				<th field="activityName" width="15%"  align="center" >activity_name_</th>
+				<th field="crtTime" width="40%"  align="center"  data-options="formatter:formatDate" >start_</th>
+				<th field="status" width="10%"  align="center" >status_</th>
+			</tr>
+		</thead>
+</table>
+<table id="processvariableTblInfo" title="topbpm_j_processvariable" class="easyui-datagrid"
+		style="width: 1380px;height:200px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[10,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="code" width="10%" align="center" checkbox="true">选择</th>
+				<th field="dbid" width="50%" align="center"  hidden="true" >dbid_</th>
+				<th field="varName" width="10%"  align="center" >varname_</th>
+				<th field="value" width="40%"  align="center" >value_</th>
+			</tr>
+		</thead>
+</table>
+<table id="processvariable_tTblInfo" title="topbpm_j_processvariable_t" class="easyui-datagrid"
+		style="width: 1380px;height:200px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[10,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="code" width="10%" align="center" checkbox="true">选择</th>
+				<th field="dbid" width="50%" align="center"  hidden="true" >dbid_</th>
+				<th field="key" width="10%"  align="center" >key_</th>
+				<th field="stringValue" width="40%"  align="center" >string_value_</th>
+			</tr>
+		</thead>
+</table>
+<table id="process_tTblInfo" title="topbpm_j_process_t" class="easyui-datagrid"
+		style="width: 1380px;height:150px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[10,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="code" width="10%" align="center" checkbox="true">选择</th>
+				<th field="dbid" width="50%" align="center"  hidden="true" >dbid_</th>
+				<th field="activityName" width="40%"  align="center" >activityname_</th>
+			</tr>
+		</thead>
+</table>
+	
+
+</body>
+<script type="text/javascript">
+	var tblInfo = $("#tblInfo");
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var dbid = GetQueryString("dbid");
+	var activityTblInfo=$("#activityTblInfo");
+	var processvariableTblInfo=$("#processvariableTblInfo");
+	var processvariable_tTblInfo=$("#processvariable_tTblInfo");
+	var process_tTblInfo=$("#process_tTblInfo");
+	$(function(){
+		//加载topbpm_j_activity表 多条记录
+		var activityTblInfo_opts = activityTblInfo.datagrid("options");
+		activityTblInfo_opts.url = '/opas-naps/queryActivityInfo.json';
+		activityTblInfo.datagrid("reload",{'hproci_':dbid});
+		//加载topbpm_j_processvariable表 多条记录
+		var processvariableTblInfo_opts = processvariableTblInfo.datagrid("options");
+		processvariableTblInfo_opts.url = '/opas-naps/queryProcessvariableInfo.json';
+		processvariableTblInfo.datagrid("reload",{'hproci_':dbid});
+		//加载topbpm_j_processvariable_t表 多条记录
+		var processvariable_tTblInfo_opts = processvariable_tTblInfo.datagrid("options");
+		processvariable_tTblInfo_opts.url = '/opas-naps/queryProcessvariable_tInfo.json';
+		processvariable_tTblInfo.datagrid("reload",{'execution_':dbid});
+		//加载topbpm_j_process_t表 单条记录
+		var process_tTblInfo_opts = process_tTblInfo.datagrid("options");
+		process_tTblInfo_opts.url = '/opas-naps/queryProcess_tDetail.json';
+		process_tTblInfo.datagrid("reload",{'dbid_':dbid});
+		
+		
+		
+		
+		
+	});
+	
+	function overTrim(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value.trim();
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	function formatDate(val, row, index){
+		var date = new Date(val);
+		var year = date.getFullYear().toString();
+		var month = (date.getMonth() + 1);
+		var day = date.getDate().toString();
+		var hour = date.getHours().toString();
+		var minutes = date.getMinutes().toString();
+		var seconds = date.getSeconds().toString();
+		if (hour < 10) {
+			hour = "0" + hour;
+		}
+		if (minutes < 10) {
+			minutes = "0" + minutes;
+		}
+		if (seconds < 10) {
+			seconds = "0" + seconds;
+		}
+		return year+'-'+(month<10?('0'+month):month)+'-'+(day<10?('0'+day):day) + ' '+hour + ":" + minutes + ":" + seconds;
+	}
+	
+	//更改流程变量相关数据 20200903
+	function updateProcessDetail(){
+		var varname = $('#varname').textbox("getValue");
+		var key = $('#key').textbox("getValue");
+		var activityName = $('#activityName').textbox("getValue");
+		if((varname==null||varname.trim()=='')&&(key==null||key.trim()=='')&&(activityName==null||activityName.trim()=='')){
+			alert("请输入正确的值!");
+			return;
+		}
+		var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+		var jsondata =overTrim(jsonFrom);
+		var processvariableTblInfo_sel = processvariableTblInfo.datagrid("getSelections");//选中的记录
+		var processvariable_tTblInfo_sel = processvariable_tTblInfo.datagrid("getSelections");//选中的记录
+		var process_tTblInfo_sel = process_tTblInfo.datagrid("getSelections");//选中的记录
+		if(processvariableTblInfo_sel.length==0&&processvariable_tTblInfo_sel.length==0&&process_tTblInfo_sel.length==0){
+			alert("请至少选中一条记录!");
+			return;
+		}
+		var processDetailMap = {} ;
+		for(var i=0;i<processvariableTblInfo_sel.length;i++){
+			processDetailMap.varname_ruleOpt=processvariableTblInfo_sel[i].varName;
+			processDetailMap.varname_dbid=processvariableTblInfo_sel[i].dbid;
+		}	
+		for(var i=0;i<processvariable_tTblInfo_sel.length;i++){
+			processDetailMap.key_ruleOpt=processvariable_tTblInfo_sel[i].key;
+			processDetailMap.key_dbid=processvariable_tTblInfo_sel[i].dbid;
+		}
+		for(var i=0;i<process_tTblInfo_sel.length;i++){
+			processDetailMap.activityname=process_tTblInfo_sel[i].activityName;
+			processDetailMap.activityname_dbid=process_tTblInfo_sel[i].dbid;
+		}
+		
+		
+		$cf.ajax({
+			url : "/opas-naps/updateProcessDetail.json",
+			data : {
+				"processDetailMap" : processDetailMap,
+				"jsondata":jsondata
+			},
+			onSuccess : function(dataRes) {
+				if (dataRes.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "更改成功!", "info", function() {
+						processvariableTblInfo.datagrid("reload");	
+						processvariable_tTblInfo.datagrid("reload");	
+						process_tTblInfo.datagrid("reload");	
+					});
+
+				} else {
+					$.messager.alert("操作提示", "更改失败!", "error");
+					return;
+				}
+			}
+		});
+	}
+</script>
+</html>

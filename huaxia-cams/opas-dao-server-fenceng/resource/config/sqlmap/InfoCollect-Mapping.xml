@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="InfoCollect">
+
+	<resultMap id="InfoCollectMap" type="com.huaxia.opas.domain.collect.InfoCollect">
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="EDUCATIONDEGREE" jdbcType="VARCHAR" property="educationDegree" />
+		<result column="EDUCATIONAPPROACH" jdbcType="VARCHAR" property="educationApproach" />
+		<result column="OPENDATE" jdbcType="VARCHAR" property="opendate" />
+		<result column="DKDJAMT_M" jdbcType="VARCHAR" property="dkdjamtm" />
+		<result column="USE_AUM" jdbcType="VARCHAR" property="useaum" />
+		<result column="IS_DUE" jdbcType="VARCHAR" property="isdue" />
+		<result column="CREDGD" jdbcType="VARCHAR" property="credgd" />
+		<result column="MONTHLY_DEPOSIT" jdbcType="VARCHAR" property="monthlydeposit" />
+		<result column="PERSON_DEPOSIT_RATE" jdbcType="VARCHAR" property="persondepositrate" />
+		<result column="COMP_DEPOSIT_RATE" jdbcType="VARCHAR" property="compdepositrate" />
+		
+		<result column="PAY_STATUS" jdbcType="VARCHAR" property="paystatus" />
+		<result column="JOIN_SOCL_INSU_DT" jdbcType="VARCHAR" property="joinsoclinsudt" />
+		<result column="PAY_YM" jdbcType="VARCHAR" property="payym" />
+		<result column="hps" jdbcType="VARCHAR" property="hps" />
+		<result column="JOIN_SOCL_INSU_YM" jdbcType="VARCHAR" property="joinsoclinsuym" />
+		<result column="CUR_MPAY_AMT" jdbcType="VARCHAR" property="curmpayamt" />
+		<result column="CUMUL_PAY_MONTHS" jdbcType="VARCHAR" property="cumulpaymonths" />
+		<result column="PERSON_PAY_BASE" jdbcType="VARCHAR" property="personpaybase" />
+		<result column="PAY_COMP" jdbcType="VARCHAR" property="paycomp" />
+	</resultMap>
+
+	<select id="queryInfoCollect" parameterType="java.util.Map"	resultMap="InfoCollectMap">
+		select a.APP_ID,b.EDUCATIONDEGREE,b.EDUCATIONAPPROACH,c.OPENDATE,d.DKDJAMT_M,e.USE_AUM,f.IS_DUE,f.CREDGD,
+		g.MONTHLY_DEPOSIT,g.PERSON_DEPOSIT_RATE,g.COMP_DEPOSIT_RATE,g.PAY_COMP,g.PAY_STATUS,g.JOIN_SOCL_INSU_DT,g.PAY_YM,
+		h.PAY_STATUS hps,h.JOIN_SOCL_INSU_YM,h.CUR_MPAY_AMT,h.CUMUL_PAY_MONTHS,h.PERSON_PAY_BASE,h.PAY_COMP
+ 		from OPAS_ALLOT_APPLY_ALLOT a 
+ 		left join OPAS_BIZ_EDUCATION_DATA b on a.APP_ID=b.APP_id 
+		left join SP_APS_IFS_CUST_INFO c on a.APP_ID=c.APP_id
+		left join SP_APS_IFS_PYRL d on d.APP_ID=d.APP_id
+		left join SP_APS_IFS_CUSTINDEX e on a.APP_ID=e.APP_id
+		left join SP_APS_IFS_LOAN_ACC f on a.APP_ID=f.APP_id
+		left join OPAS_PBOC_PUBLIC_ACCFUND g on a.APP_ID=g.APP_id
+		left join OPAS_PBOC_PUBLIC_ENINSURDEP h on a.APP_ID=h.APP_id
+		<where>	
+			<if test="appId != null and appId !='' ">
+				AND a.APP_ID = #{appId}
+			</if>
+		</where>
+	</select>
+	<select id="selectStandardCardReturnTableDataByAppid" parameterType="java.util.Map" resultType="java.util.Map">
+	select  c1.CUST_TYPE as CUSTTYPE from OPAS_FICO_SD_BLAZE c1
+    where 1=1
+     <if test="appId != null and appId !='' ">
+			 AND c1.APP_ID = #{appId}
+	</if>
+  </select>
+  
+  <resultMap id="InfoCollect" type="com.huaxia.opas.domain.audit.ApprovaInfoSupp">
+    <id column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="INDUSTRY_CODE" property="industryCode" jdbcType="VARCHAR" />
+    <result column="JOB_CODE" property="jobCode" jdbcType="VARCHAR" />
+    <result column="HOUSE_INFO_FROM" property="houseInfoFrom" jdbcType="VARCHAR" />
+    <result column="HOUSE_COST" property="houseCost" jdbcType="DECIMAL" />
+    <result column="HOUSE_AREA" property="houseArea" jdbcType="DECIMAL" />
+    <result column="CAR_COST" property="carCost" jdbcType="VARCHAR" />
+    <result column="CAR_HAND" property="carHand" jdbcType="CHAR" />
+    <result column="CAR_OLD" property="carOld" jdbcType="VARCHAR" />
+    <result column="REGISTER_DATE" property="registerDate" jdbcType="TIMESTAMP" />
+    <result column="ISSUE_DATE" property="issueDate" jdbcType="TIMESTAMP" />
+    <result column="PER_OPENDATE" property="perOpendate" jdbcType="TIMESTAMP" />
+    <result column="PER_PAY_WAGE" property="perPayWage" jdbcType="DECIMAL" />
+    <result column="PER_ASSET_BALANCE" property="perAssetBalance" jdbcType="DECIMAL" />
+    <result column="PER_FIN_ASSET_SUM" property="perFinAssetSum" jdbcType="DECIMAL" />
+    <result column="PER_LOANPRI" property="perLoanpri" jdbcType="DECIMAL" />
+    <result column="PER_LOANSTATUS" property="perLoanstatus" jdbcType="CHAR" />
+    <result column="PUB_OPENDATE" property="pubOpendate" jdbcType="TIMESTAMP" />
+    <result column="PUB_CREDITLIMIT" property="pubCreditlimit" jdbcType="DECIMAL" />
+    <result column="PUB_LOANSTATUS" property="pubLoanstatus" jdbcType="CHAR" />
+    <result column="PUB_SAVEBALANCE" property="pubSavebalance" jdbcType="DECIMAL" />
+    <result column="PUB_SAVE_DAYBALANCE" property="pubSaveDaybalance" jdbcType="DECIMAL" />
+    <result column="HX_CARDCENTRE_STAFF" property="hxCardcentreStaff" jdbcType="CHAR" />
+    <result column="HX_CARDCENTRE_STAFF_LEVEL" property="hxCardcentreStaffLevel" jdbcType="CHAR" />
+    <result column="HX_BANK_STAFF" property="hxBankStaff" jdbcType="CHAR" />
+    <result column="HX_BANK_STAFF_LEVEL" property="hxBankStaffLevel" jdbcType="CHAR" />
+    <result column="REFREE" property="refree" jdbcType="VARCHAR" />
+    <result column="REFREE2" property="refree2" jdbcType="VARCHAR" />
+    <result column="REFREE3" property="refree3" jdbcType="VARCHAR" />
+    <result column="REFREE_LIMIT" property="refreeLimit" jdbcType="DECIMAL" />
+    <result column="REFREE_LIMIT2" property="refreeLimit2" jdbcType="DECIMAL" />
+    <result column="REFREE_LIMIT3" property="refreeLimit3" jdbcType="DECIMAL" />
+    <result column="SB_CURR_PAY_STATUS" property="sbCurrPayStatus" jdbcType="CHAR" />
+    <result column="SB_MONTH_PAYMENT" property="sbMonthPayment" jdbcType="DECIMAL" />
+    <result column="SB_PAY_DATE" property="sbPayDate" jdbcType="TIMESTAMP" />
+    <result column="SB_MONTH_PAYBASE" property="sbMonthPaybase" jdbcType="DECIMAL" />
+    <result column="SB_CURR_PAYCOMPANY" property="sbCurrPaycompany" jdbcType="VARCHAR" />
+    <result column="SB_CURR_COMPANY_MONTH" property="sbCurrCompanyMonth" jdbcType="DECIMAL" />
+    <result column="GJJ_PAY_STATUS" property="gjjPayStatus" jdbcType="CHAR" />
+    <result column="GJJ_MONTH_PAYMENT" property="gjjMonthPayment" jdbcType="DECIMAL" />
+    <result column="GJJ_PER_PAYRATE" property="gjjPerPayrate" jdbcType="DECIMAL" />
+    <result column="GJJ_PAY_DATE" property="gjjPayDate" jdbcType="TIMESTAMP" />
+    <result column="GJJ_END_MONTH" property="gjjEndMonth" jdbcType="TIMESTAMP" />
+    <result column="EDU_MODEL" property="eduModel" jdbcType="CHAR" />
+    <result column="EDU_TYPE" property="eduType" jdbcType="CHAR" />
+    <result column="HIGH_CUST" property="highCust" jdbcType="VARCHAR" />
+    <result column="ELITE_EARNCUST" property="eliteEarncust" jdbcType="VARCHAR" />
+    <result column="YOUNG_HIGHEDUCUST" property="youngHigheducust" jdbcType="VARCHAR" />
+    <result column="NORMALEARNCUST" property="normalearncust" jdbcType="VARCHAR" />
+    <result column="PRESCREEN_CUST" property="prescreenCust" jdbcType="VARCHAR" />
+    <result column="MAJOR_PROJECT" property="majorProject" jdbcType="VARCHAR" />
+    <result column="OTHER_CUST" property="otherCust" jdbcType="VARCHAR" />
+    <result column="HOUSE_INFO" property="houseInfo" jdbcType="VARCHAR" />
+    <result column="DRIVING_LICENSE" property="drivingLicense" jdbcType="VARCHAR" />
+    <result column="CROSS_SALECUST" property="crossSalecust" jdbcType="VARCHAR" />
+    <result column="BANK_STAFF" property="bankStaff" jdbcType="VARCHAR" />
+    <result column="VIP_CUST" property="vipCust" jdbcType="VARCHAR" />
+    <result column="SB_CUST" property="sbCust" jdbcType="VARCHAR" />
+    <result column="GJJ_CUST" property="gjjCust" jdbcType="VARCHAR" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="OPER_TIME" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="CAR_CATEGROY" property="carCategroy" jdbcType="VARCHAR" />  
+    <result column="SALARY_CATEGROY" property="salaryCategroy" jdbcType="VARCHAR" />
+    <result column="YEAR_SALARY" property="yearSalary" jdbcType="VARCHAR" />
+    <result column="BALANCE_CATEGROY" property="balanceCategroy" jdbcType="VARCHAR" />
+    <result column="BALANCE_ACOUNT" property="balanceAcount" jdbcType="VARCHAR" />
+    <result column="SALARY_SIGN_DATE" property="salarySignDate" jdbcType="TIMESTAMP" />
+    <result column="SALARY_SIGN_LATEST_DATE" property="salarySignLatestDate" jdbcType="TIMESTAMP" />
+    <result column="SPECIAL_PROJECT" property="specialProject" jdbcType="VARCHAR" />
+    <result column="PROJECT_CATEGROY" property="projectCategroy" jdbcType="VARCHAR" />
+    <result column="PROJECT_ACOUNT" property="projectAcount" jdbcType="VARCHAR" />
+    <result column="PROJECT_MEMO" property="projectMemo" jdbcType="VARCHAR" />
+    <result column="ISTHIRD_PART_PAY" property="thirdPartPay" jdbcType="VARCHAR" />
+    <result column="ISINDIVIDUAL" property="individual" jdbcType="VARCHAR" />
+     <result column="INDIVIDUAL_MONTH" property="individualMonth" jdbcType="TIMESTAMP" />
+    
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterType="java.util.Map" resultMap="InfoCollect">
+    select APP_ID,INDUSTRY_CODE, JOB_CODE,HOUSE_INFO_FROM,
+	HOUSE_COST,HOUSE_AREA,CAR_COST,CAR_HAND,CAR_OLD,
+	REGISTER_DATE,ISSUE_DATE,PER_OPENDATE,PER_PAY_WAGE,
+	PER_ASSET_BALANCE,	PER_FIN_ASSET_SUM,PER_LOANPRI,
+	PER_LOANSTATUS,	PUB_OPENDATE,PUB_CREDITLIMIT ,PUB_LOANSTATUS,
+	PUB_SAVEBALANCE,PUB_SAVE_DAYBALANCE ,HX_CARDCENTRE_STAFF,
+	HX_CARDCENTRE_STAFF_LEVEL,HX_BANK_STAFF,HX_BANK_STAFF_LEVEL,
+	REFREE,REFREE2,REFREE3,REFREE_LIMIT,REFREE_LIMIT2,REFREE_LIMIT3,
+	SB_CURR_PAY_STATUS,SB_MONTH_PAYMENT ,SB_PAY_DATE,
+	SB_MONTH_PAYBASE,ISTHIRD_PART_PAY,SB_CURR_COMPANY_MONTH,
+	GJJ_PAY_STATUS,GJJ_MONTH_PAYMENT,GJJ_PER_PAYRATE,GJJ_PAY_DATE,GJJ_END_MONTH,
+	EDU_MODEL,EDU_TYPE,HIGH_CUST ,ELITE_EARNCUST,YOUNG_HIGHEDUCUST,NORMALEARNCUST,PRESCREEN_CUST,
+	MAJOR_PROJECT,OTHER_CUST,HOUSE_INFO,DRIVING_LICENSE,CROSS_SALECUST,BANK_STAFF,
+	VIP_CUST ,SB_CUST,GJJ_CUST,USER_CODE ,OPER_TIME,CAR_CATEGROY,SALARY_CATEGROY,YEAR_SALARY,
+	BALANCE_CATEGROY,BALANCE_ACOUNT,ISINDIVIDUAL,INDIVIDUAL_MONTH,
+	SALARY_SIGN_DATE,SALARY_SIGN_LATEST_DATE,SPECIAL_PROJECT,
+	PROJECT_CATEGROY,PROJECT_ACOUNT,PROJECT_MEMO
+    from OPAS_BIZ_APPROVA_INFO_SUPP
+    	<where>	
+			<if test="appId != null and appId !='' ">
+				AND APP_ID = #{appId}
+			</if>
+		</where>
+  </select>
+  <resultMap id="blazeMap" type="java.util.Map">
+    <result column="RETURN_HOUSE_SOURCE" property="houseInfoFrom" jdbcType="VARCHAR" />
+  	<result column="RETURN_HOUSE_AMT" property="houseCost" jdbcType="DECIMAL" />
+  	<result column="RETURN_HOUSE_SIZE" property="houseArea" jdbcType="DECIMAL" />
+  	<result column="RETURN_CAR_AMT" property="carCost" jdbcType="VARCHAR" />
+  	<result column="RETURN_CAR_SECOND_HAND" property="carHand" jdbcType="VARCHAR" />
+  	<result column="RETURN_CAR_AGE" property="carOld" jdbcType="VARCHAR" />
+  	<result column="RETURN_CAR_REGISTER_DATE" property="registerDate" jdbcType="TIMESTAMP" />
+    <result column="RETURN_CAR_ISSUE_DATE" property="issueDate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_OPEN_DT" property="perOpendate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_FIN_DAY_AVERAGE_LMT" property="perAssetBalance" jdbcType="DECIMAL" />
+  	<result column="RETURN_CREDIT_LOAN_LMT" property="perLoanpri" jdbcType="DECIMAL" />
+  	<result column="RETURN_CURR_MONTH_PAYROLL_LMT" property="perPayWage" jdbcType="DECIMAL" />
+  	<result column="RETURN_SAVE_DAY_AVERAGE_LMT" property="perFinAssetSum" jdbcType="DECIMAL" />
+  	<result column="RETURN_FIVE_CLASS_INFO" property="perLoanstatus" jdbcType="CHAR" />
+  	<result column="RETURN_SOC_SAVE_TYPE" property="sbCurrPayStatus" jdbcType="CHAR" />
+    <result column="RETURN_SOC_DT" property="sbPayDate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_SOC_UNIT_SAVE_M" property="sbCurrCompanyMonth" jdbcType="DECIMAL" />
+  	<result column="RETURN_SOC_BASE_LMT" property="sbMonthPaybase" jdbcType="DECIMAL" />
+  	<result column="RETURN_SOC_LMT" property="sbMonthPayment" jdbcType="DECIMAL" />
+  	<result column="RETURN_SOC_UNIT" property="sbCurrPaycompany" jdbcType="VARCHAR" />
+  	<result column="RETURN_GJJ_STATUS" property="gjjPayStatus" jdbcType="CHAR" />
+  	<result column="RETURN_GJJ_PERMONTHAMOUNT" property="gjjMonthPayment" jdbcType="DECIMAL" />
+  	<result column="RETURN_GJJ_OWNPERCENT" property="gjjPerPayrate" jdbcType="DECIMAL" />
+  	<result column="RETURN_GJJ_OPENDATE" property="gjjPayDate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_GJJ_TOMONTH" property="gjjEndMonth" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_EDU_CD" property="eduType" jdbcType="CHAR" />
+  	<result column="RETURN_EDU_TYPE" property="eduModel" jdbcType="CHAR" />
+  	<result column="CUST_TYPE" property="custType" jdbcType="VARCHAR" />
+  	<!-- 添加行职业代码 -->
+  	<result column="POST_CODE_THIRD_RST" property="jobCode" jdbcType="VARCHAR" />
+  	<result column="IND_CODE_THIRD_RST" property="industryCode" jdbcType="VARCHAR" />
+  	<!--添加车产价值,车龄  -->
+  	<result column="CAR_VALUE" property="carCost" jdbcType="DECIMAL" />
+  	<result column="RST_CAR_AGE" property="carOld" jdbcType="DECIMAL" />
+  	<!--车辆性质根据blaze表中的‘是否有车-三方’这个字段进行判断,Y代表‘是’，N代表‘否’，如果是‘是’，那么“车辆性质”反显“非运营”，用‘1’表示，否则不返显 -->
+  	<result column="IS_HAVE_CAR_SF" property="carCategroy" jdbcType="VARCHAR" />
+  	<!-- <result column="IS_ACCFUND_INCOME_XM" property="isaccfundincomexm" jdbcType="VARCHAR" />
+  	<result column="ACCFUND_INCOME_XM" property="accfundincomexm" jdbcType="DECIMAL" /> -->
+  </resultMap>
+  <!-- 根据appId去查标准卡blaze表信息 -->
+  <select id="querySdBlaze" parameterType="java.util.Map" resultMap="blazeMap">
+   select RETURN_HOUSE_SOURCE,RETURN_HOUSE_AMT,RETURN_HOUSE_SIZE,RETURN_CAR_AMT,RETURN_CAR_SECOND_HAND,RETURN_CAR_AGE,
+       RETURN_CAR_REGISTER_DATE, RETURN_CAR_ISSUE_DATE,
+       RETURN_OPEN_DT,RETURN_FIN_DAY_AVERAGE_LMT,RETURN_CREDIT_LOAN_LMT,RETURN_CURR_MONTH_PAYROLL_LMT,
+   			RETURN_SAVE_DAY_AVERAGE_LMT,RETURN_FIVE_CLASS_INFO,RETURN_SOC_SAVE_TYPE,RETURN_SOC_LMT,
+   		RETURN_SOC_DT,RETURN_SOC_UNIT_SAVE_M,RETURN_SOC_BASE_LMT,RETURN_SOC_UNIT,RETURN_GJJ_STATUS,
+  		 RETURN_GJJ_PERMONTHAMOUNT,RETURN_GJJ_OWNPERCENT,RETURN_GJJ_OPENDATE,RETURN_GJJ_TOMONTH,
+  		 RETURN_EDU_CD,RETURN_EDU_TYPE,CUST_TYPE
+  		 ,POST_CODE_THIRD_RST,IND_CODE_THIRD_RST,CAR_VALUE, RST_CAR_AGE,IS_HAVE_CAR_SF
+	    from OPAS_FICO_SD_BLAZE
+    	<where>	
+			<if test="appId != null and appId !='' ">
+				AND APP_ID = #{appId}
+			</if>
+		</where> 
+  </select>
+  
+  <!--根据appid查询基本信息补充表（录入表）中是否已经存在录入信息  -->
+  <select id="queryInfoCollectByAppid" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(1) from OPAS_BIZ_APPROVA_INFO_SUPP
+  	where	APP_ID = #{appId,jdbcType=CHAR}
+  </select>
+  
+  <resultMap id="ydjBlazeMap" type="java.util.Map">
+  	<result column="IS_ACCFUND_INCOME_XM" property="isaccfundincomexm" jdbcType="VARCHAR" />
+  	<result column="ACCFUND_INCOME_XM" property="accfundincomexm" jdbcType="DECIMAL" />
+  	<result column="IS_ACCFUND_INCOME_YC" property="isaccfundincomeyc" jdbcType="VARCHAR" />
+  	<result column="ACCFUND_INCOME_YC" property="accfundincomeyc" jdbcType="DECIMAL" />
+  </resultMap>
+  <!-- 根据appId去查易大金卡blaze表信息 -->
+  <select id="selectRegionalReserveFundByAppid" parameterType="java.lang.String" resultMap="ydjBlazeMap">
+  		select IS_ACCFUND_INCOME_XM,ACCFUND_INCOME_XM,IS_ACCFUND_INCOME_YC,ACCFUND_INCOME_YC
+  		from opas_fico_ydj_blaze
+    	 WHERE app_id = #{appId,jdbcType=CHAR}
+  </select>
+  
+  <resultMap id="blazeMap1" type="com.huaxia.opas.domain.audit.FicoSdBlaze">
+    <result column="RETURN_HOUSE_SOURCE" property="houseInfoFrom" jdbcType="VARCHAR" />
+  	<result column="RETURN_HOUSE_AMT" property="houseCost" jdbcType="DECIMAL" />
+  	<result column="RETURN_HOUSE_SIZE" property="houseArea" jdbcType="DECIMAL" />
+  	<result column="RETURN_CAR_AMT" property="carCost" jdbcType="VARCHAR" />
+  	<result column="RETURN_CAR_SECOND_HAND" property="carHand" jdbcType="VARCHAR" />
+  	<result column="RETURN_CAR_AGE" property="carOld" jdbcType="VARCHAR" />
+  	<result column="RETURN_CAR_REGISTER_DATE" property="registerDate" jdbcType="TIMESTAMP" />
+    <result column="RETURN_CAR_ISSUE_DATE" property="issueDate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_OPEN_DT" property="perOpendate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_FIN_DAY_AVERAGE_LMT" property="perAssetBalance" jdbcType="DECIMAL" />
+  	<result column="RETURN_CREDIT_LOAN_LMT" property="perLoanpri" jdbcType="DECIMAL" />
+  	<result column="RETURN_CURR_MONTH_PAYROLL_LMT" property="perPayWage" jdbcType="DECIMAL" />
+  	<result column="RETURN_SAVE_DAY_AVERAGE_LMT" property="perFinAssetSum" jdbcType="DECIMAL" />
+  	<result column="RETURN_FIVE_CLASS_INFO" property="perLoanstatus" jdbcType="CHAR" />
+  	<result column="RETURN_SOC_SAVE_TYPE" property="sbCurrPayStatus" jdbcType="CHAR" />
+    <result column="RETURN_SOC_DT" property="sbPayDate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_SOC_UNIT_SAVE_M" property="sbCurrCompanyMonth" jdbcType="DECIMAL" />
+  	<result column="RETURN_SOC_BASE_LMT" property="sbMonthPaybase" jdbcType="DECIMAL" />
+  	<result column="RETURN_SOC_LMT" property="sbMonthPayment" jdbcType="DECIMAL" />
+  	<result column="RETURN_SOC_UNIT" property="sbCurrPaycompany" jdbcType="VARCHAR" />
+  	<result column="RETURN_GJJ_STATUS" property="gjjPayStatus" jdbcType="CHAR" />
+  	<result column="RETURN_GJJ_PERMONTHAMOUNT" property="gjjMonthPayment" jdbcType="DECIMAL" />
+  	<result column="RETURN_GJJ_OWNPERCENT" property="gjjPerPayrate" jdbcType="DECIMAL" />
+  	<result column="RETURN_GJJ_OPENDATE" property="gjjPayDate" jdbcType="TIMESTAMP" />
+  	<result column="RETURN_GJJ_TOMONTH" property="gjjEndMonth" jdbcType="VARCHAR" />
+  	<result column="RETURN_EDU_CD" property="eduType" jdbcType="CHAR" />
+  	<result column="RETURN_EDU_TYPE" property="eduModel" jdbcType="CHAR" />
+  	<!-- 添加行职业代码 -->
+  	<result column="POST_CODE_THIRD_RST" property="jobCode" jdbcType="VARCHAR" />
+  	<result column="IND_CODE_THIRD_RST" property="industryCode" jdbcType="VARCHAR" />
+  	<!--添加车产价值,车龄   -->
+  	<result column="CAR_VALUE" property="carCost" jdbcType="DECIMAL" />
+  	<result column="RST_CAR_AGE" property="carOld" jdbcType="DECIMAL" />
+  	<!--车辆性质根据blaze表中的‘是否有车-三方’这个字段进行判断,Y代表‘是’，N代表‘否’，如果是‘是’，那么“车辆性质”反显“非运营”，用‘1’表示，否则不返显 -->
+  	<result column="IS_HAVE_CAR_SF" property="carCategroy" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 根据appId去查标准卡blaze表信息 -->
+  <select id="querySdBlaze1" parameterType="java.util.Map" resultMap="blazeMap1">
+   select RETURN_HOUSE_SOURCE,RETURN_HOUSE_AMT,RETURN_HOUSE_SIZE,RETURN_CAR_AMT,RETURN_CAR_SECOND_HAND,RETURN_CAR_AGE,
+       RETURN_CAR_REGISTER_DATE, RETURN_CAR_ISSUE_DATE,
+       RETURN_OPEN_DT,RETURN_FIN_DAY_AVERAGE_LMT,RETURN_CREDIT_LOAN_LMT,RETURN_CURR_MONTH_PAYROLL_LMT,
+   			RETURN_SAVE_DAY_AVERAGE_LMT,RETURN_FIVE_CLASS_INFO,RETURN_SOC_SAVE_TYPE,RETURN_SOC_LMT,
+   		RETURN_SOC_DT,RETURN_SOC_UNIT_SAVE_M,RETURN_SOC_BASE_LMT,RETURN_SOC_UNIT,RETURN_GJJ_STATUS,
+  		 RETURN_GJJ_PERMONTHAMOUNT,RETURN_GJJ_OWNPERCENT,RETURN_GJJ_OPENDATE,RETURN_GJJ_TOMONTH,
+  		 RETURN_EDU_CD,RETURN_EDU_TYPE
+  		 ,POST_CODE_THIRD_RST,IND_CODE_THIRD_RST,CAR_VALUE, RST_CAR_AGE,IS_HAVE_CAR_SF
+	    from OPAS_FICO_SD_BLAZE
+    	<where>	
+			<if test="appId != null and appId !='' ">
+				AND APP_ID = #{appId}
+			</if>
+		</where> 
+  </select>
+  
+  <resultMap id="carMap" type="java.util.Map">
+  	<result column="PRICE" property="carCost" jdbcType="VARCHAR" />
+  	<result column="MONTHS" property="carOld" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="queryCarMap" parameterType="java.util.Map" resultMap="carMap">
+  	select QUANTITY,PRICE,MONTHS from VEHICLE_INFO where app_id = #{appId}
+  </select>
+  
+   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from OPAS_BIZ_APPROVA_INFO_SUPP
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.audit.ApprovaInfoSupp">
+    insert into OPAS_BIZ_APPROVA_INFO_SUPP (APP_ID, INDUSTRY_CODE, JOB_CODE, 
+      HOUSE_INFO_FROM, HOUSE_COST, HOUSE_AREA, 
+      CAR_COST, CAR_HAND, CAR_OLD, 
+      REGISTER_DATE, ISSUE_DATE, PER_OPENDATE, 
+      PER_PAY_WAGE, PER_ASSET_BALANCE, PER_FIN_ASSET_SUM, 
+      PER_LOANPRI, PER_LOANSTATUS, PUB_OPENDATE, 
+      PUB_CREDITLIMIT, PUB_LOANSTATUS, PUB_SAVEBALANCE, 
+      PUB_SAVE_DAYBALANCE, HX_CARDCENTRE_STAFF, HX_CARDCENTRE_STAFF_LEVEL, 
+      HX_BANK_STAFF, HX_BANK_STAFF_LEVEL, REFREE, REFREE2, REFREE3, 
+      REFREE_LIMIT,REFREE_LIMIT2,REFREE_LIMIT3, SB_CURR_PAY_STATUS, SB_MONTH_PAYMENT, 
+      SB_PAY_DATE, SB_MONTH_PAYBASE, ISTHIRD_PART_PAY, 
+      SB_CURR_COMPANY_MONTH, GJJ_PAY_STATUS, GJJ_MONTH_PAYMENT, 
+      GJJ_PER_PAYRATE, GJJ_PAY_DATE, GJJ_END_MONTH, 
+      EDU_MODEL, EDU_TYPE, HIGH_CUST, 
+      ELITE_EARNCUST, YOUNG_HIGHEDUCUST, NORMALEARNCUST, 
+      PRESCREEN_CUST, MAJOR_PROJECT, OTHER_CUST, 
+      HOUSE_INFO, DRIVING_LICENSE, CROSS_SALECUST, 
+      BANK_STAFF, VIP_CUST, SB_CUST, 
+      GJJ_CUST,CAR_CATEGROY,SALARY_CATEGROY,YEAR_SALARY,
+	  BALANCE_CATEGROY,BALANCE_ACOUNT,ISINDIVIDUAL,INDIVIDUAL_MONTH,
+	  SALARY_SIGN_DATE,SALARY_SIGN_LATEST_DATE,SPECIAL_PROJECT,
+	  PROJECT_CATEGROY,PROJECT_ACOUNT,PROJECT_MEMO)
+    values (#{appId,jdbcType=VARCHAR}, #{industryCode,jdbcType=VARCHAR}, #{jobCode,jdbcType=VARCHAR}, 
+      #{houseInfoFrom,jdbcType=VARCHAR}, #{houseCost,jdbcType=DECIMAL}, #{houseArea,jdbcType=DECIMAL}, 
+      #{carCost,jdbcType=VARCHAR}, #{carHand,jdbcType=CHAR}, #{carOld,jdbcType=VARCHAR}, 
+      #{registerDate,jdbcType=TIMESTAMP}, #{issueDate,jdbcType=TIMESTAMP}, #{perOpendate,jdbcType=TIMESTAMP}, 
+      #{perPayWage,jdbcType=DECIMAL}, #{perAssetBalance,jdbcType=DECIMAL}, #{perFinAssetSum,jdbcType=DECIMAL}, 
+      #{perLoanpri,jdbcType=DECIMAL}, #{perLoanstatus,jdbcType=CHAR}, #{pubOpendate,jdbcType=TIMESTAMP}, 
+      #{pubCreditlimit,jdbcType=DECIMAL}, #{pubLoanstatus,jdbcType=CHAR}, #{pubSavebalance,jdbcType=DECIMAL}, 
+      #{pubSaveDaybalance,jdbcType=DECIMAL}, #{hxCardcentreStaff,jdbcType=CHAR}, #{hxCardcentreStaffLevel,jdbcType=CHAR}, 
+      #{hxBankStaff,jdbcType=CHAR}, #{hxBankStaffLevel,jdbcType=CHAR}, #{refree,jdbcType=VARCHAR},#{refree2,jdbcType=VARCHAR},#{refree3,jdbcType=VARCHAR}, 
+      #{refreeLimit,jdbcType=DECIMAL},#{refreeLimit2,jdbcType=DECIMAL},#{refreeLimit3,jdbcType=DECIMAL}, #{sbCurrPayStatus,jdbcType=CHAR}, #{sbMonthPayment,jdbcType=DECIMAL}, 
+      #{sbPayDate,jdbcType=TIMESTAMP}, #{sbMonthPaybase,jdbcType=DECIMAL}, #{thirdPartPay,jdbcType=VARCHAR}, 
+      #{sbCurrCompanyMonth,jdbcType=DECIMAL}, #{gjjPayStatus,jdbcType=CHAR}, #{gjjMonthPayment,jdbcType=DECIMAL}, 
+      #{gjjPerPayrate,jdbcType=DECIMAL}, #{gjjPayDate,jdbcType=TIMESTAMP}, #{gjjEndMonth,jdbcType=TIMESTAMP}, 
+      #{eduModel,jdbcType=CHAR}, #{eduType,jdbcType=CHAR}, #{highCust,jdbcType=VARCHAR}, 
+      #{eliteEarncust,jdbcType=VARCHAR}, #{youngHigheducust,jdbcType=VARCHAR}, #{normalearncust,jdbcType=VARCHAR}, 
+      #{prescreenCust,jdbcType=VARCHAR}, #{majorProject,jdbcType=VARCHAR}, #{otherCust,jdbcType=VARCHAR}, 
+      #{houseInfo,jdbcType=VARCHAR}, #{drivingLicense,jdbcType=VARCHAR}, #{crossSalecust,jdbcType=VARCHAR}, 
+      #{bankStaff,jdbcType=VARCHAR}, #{vipCust,jdbcType=VARCHAR}, #{sbCust,jdbcType=VARCHAR}, 
+      #{gjjCust,jdbcType=VARCHAR},#{carCategroy,jdbcType=VARCHAR},
+      #{salaryCategroy,jdbcType=VARCHAR},#{yearSalary,jdbcType=VARCHAR},#{balanceCategroy,jdbcType=VARCHAR},
+      #{balanceAcount,jdbcType=VARCHAR},#{individual,jdbcType=VARCHAR},#{individualMonth,jdbcType=TIMESTAMP},
+      #{salarySignDate,jdbcType=TIMESTAMP},#{salarySignLatestDate,jdbcType=TIMESTAMP},
+      #{specialProject,jdbcType=VARCHAR},#{projectCategroy,jdbcType=VARCHAR},#{projectAcount,jdbcType=VARCHAR},
+      #{projectMemo,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.audit.ApprovaInfoSupp">
+    update OPAS_BIZ_APPROVA_INFO_SUPP
+    set INDUSTRY_CODE = #{industryCode,jdbcType=VARCHAR},
+      JOB_CODE = #{jobCode,jdbcType=VARCHAR},
+      HOUSE_INFO_FROM = #{houseInfoFrom,jdbcType=VARCHAR},
+      HOUSE_COST = #{houseCost,jdbcType=DECIMAL},
+      HOUSE_AREA = #{houseArea,jdbcType=DECIMAL},
+      CAR_COST = #{carCost,jdbcType=VARCHAR},
+      CAR_HAND = #{carHand,jdbcType=CHAR},
+      CAR_OLD = #{carOld,jdbcType=VARCHAR},
+      REGISTER_DATE = #{registerDate,jdbcType=TIMESTAMP},
+      ISSUE_DATE = #{issueDate,jdbcType=TIMESTAMP},
+      PER_OPENDATE = #{perOpendate,jdbcType=TIMESTAMP},
+      PER_PAY_WAGE = #{perPayWage,jdbcType=DECIMAL},
+      PER_ASSET_BALANCE = #{perAssetBalance,jdbcType=DECIMAL},
+      PER_FIN_ASSET_SUM = #{perFinAssetSum,jdbcType=DECIMAL},
+      PER_LOANPRI = #{perLoanpri,jdbcType=DECIMAL},
+      PER_LOANSTATUS = #{perLoanstatus,jdbcType=CHAR},
+      PUB_OPENDATE = #{pubOpendate,jdbcType=TIMESTAMP},
+      PUB_CREDITLIMIT = #{pubCreditlimit,jdbcType=DECIMAL},
+      PUB_LOANSTATUS = #{pubLoanstatus,jdbcType=CHAR},
+      PUB_SAVEBALANCE = #{pubSavebalance,jdbcType=DECIMAL},
+      PUB_SAVE_DAYBALANCE = #{pubSaveDaybalance,jdbcType=DECIMAL},
+      HX_CARDCENTRE_STAFF = #{hxCardcentreStaff,jdbcType=CHAR},
+      HX_CARDCENTRE_STAFF_LEVEL = #{hxCardcentreStaffLevel,jdbcType=CHAR},
+      HX_BANK_STAFF = #{hxBankStaff,jdbcType=CHAR},
+      HX_BANK_STAFF_LEVEL = #{hxBankStaffLevel,jdbcType=CHAR},
+      REFREE = #{refree,jdbcType=VARCHAR},
+      REFREE2 = #{refree2,jdbcType=VARCHAR},
+      REFREE3 = #{refree3,jdbcType=VARCHAR},
+      REFREE_LIMIT = #{refreeLimit,jdbcType=DECIMAL},
+      REFREE_LIMIT2 = #{refreeLimit2,jdbcType=DECIMAL},
+      REFREE_LIMIT3 = #{refreeLimit3,jdbcType=DECIMAL},
+      SB_CURR_PAY_STATUS = #{sbCurrPayStatus,jdbcType=CHAR},
+      SB_MONTH_PAYMENT = #{sbMonthPayment,jdbcType=DECIMAL},
+      SB_PAY_DATE = #{sbPayDate,jdbcType=TIMESTAMP},
+      SB_MONTH_PAYBASE = #{sbMonthPaybase,jdbcType=DECIMAL},
+      ISTHIRD_PART_PAY = #{thirdPartPay,jdbcType=VARCHAR},
+      SB_CURR_COMPANY_MONTH = #{sbCurrCompanyMonth,jdbcType=DECIMAL},
+      GJJ_PAY_STATUS = #{gjjPayStatus,jdbcType=CHAR},
+      GJJ_MONTH_PAYMENT = #{gjjMonthPayment,jdbcType=DECIMAL},
+      GJJ_PER_PAYRATE = #{gjjPerPayrate,jdbcType=DECIMAL},
+      GJJ_PAY_DATE = #{gjjPayDate,jdbcType=TIMESTAMP},
+      GJJ_END_MONTH = #{gjjEndMonth,jdbcType=TIMESTAMP},
+      EDU_MODEL = #{eduModel,jdbcType=CHAR},
+      EDU_TYPE = #{eduType,jdbcType=CHAR},
+      HIGH_CUST = #{highCust,jdbcType=VARCHAR},
+      ELITE_EARNCUST = #{eliteEarncust,jdbcType=VARCHAR},
+      YOUNG_HIGHEDUCUST = #{youngHigheducust,jdbcType=VARCHAR},
+      NORMALEARNCUST = #{normalearncust,jdbcType=VARCHAR},
+      PRESCREEN_CUST = #{prescreenCust,jdbcType=VARCHAR},
+      MAJOR_PROJECT = #{majorProject,jdbcType=VARCHAR},
+      OTHER_CUST = #{otherCust,jdbcType=VARCHAR},
+      HOUSE_INFO = #{houseInfo,jdbcType=VARCHAR},
+      DRIVING_LICENSE = #{drivingLicense,jdbcType=VARCHAR},
+      CROSS_SALECUST = #{crossSalecust,jdbcType=VARCHAR},
+      BANK_STAFF = #{bankStaff,jdbcType=VARCHAR},
+      VIP_CUST = #{vipCust,jdbcType=VARCHAR},
+      SB_CUST = #{sbCust,jdbcType=VARCHAR},
+      GJJ_CUST = #{gjjCust,jdbcType=VARCHAR},
+      CAR_CATEGROY = #{carCategroy,jdbcType=VARCHAR},
+      SALARY_CATEGROY = #{salaryCategroy,jdbcType=VARCHAR},
+      YEAR_SALARY = #{yearSalary,jdbcType=VARCHAR},
+      BALANCE_CATEGROY = #{balanceCategroy,jdbcType=VARCHAR},
+      BALANCE_ACOUNT = #{balanceAcount,jdbcType=VARCHAR},
+      ISINDIVIDUAL = #{individual,jdbcType=VARCHAR},
+      INDIVIDUAL_MONTH = #{individualMonth,jdbcType=TIMESTAMP},
+      SALARY_SIGN_DATE = #{salarySignDate,jdbcType=TIMESTAMP},
+      SALARY_SIGN_LATEST_DATE = #{salarySignLatestDate,jdbcType=TIMESTAMP},
+      SPECIAL_PROJECT = #{specialProject,jdbcType=VARCHAR},
+      PROJECT_CATEGROY = #{projectCategroy,jdbcType=VARCHAR},
+      PROJECT_ACOUNT = #{projectAcount,jdbcType=VARCHAR},
+      PROJECT_MEMO = #{projectMemo,jdbcType=VARCHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  <!-- 王德彬 -->
+  <select id="selectCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+			select count(1) from OPAS_BIZ_APPROVA_INFO_SUPP supp
+       		where supp.APP_ID ='${_parameter}'
+	</select>
+   <insert id="insertApprovaInfoSupp" parameterType="java.util.Map">
+    insert into OPAS_BIZ_APPROVA_INFO_SUPP (APP_ID, INDUSTRY_CODE, JOB_CODE )
+    values 
+    (#{appId,jdbcType=VARCHAR}, #{industryCode,jdbcType=VARCHAR}, #{jobCode,jdbcType=VARCHAR}  )
+  </insert>
+   <update id="updateByAppId" parameterType="java.util.Map">
+    update OPAS_BIZ_APPROVA_INFO_SUPP
+    set INDUSTRY_CODE = #{industryCode,jdbcType=VARCHAR},
+      JOB_CODE = #{jobCode,jdbcType=VARCHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询申请表信息的申请人姓名、证件类型、证件号码 -->
+  <select id="selectNameAndCardMap" parameterType="java.lang.String" resultType="java.util.Map">
+  	select C1_CNAME,C1_IDTYPE,C1_IDNBR from OPAS_BIZ_INP_APPL_C1 where app_id = #{appId}
+  </select>
+
+ <!-- 免录入的申请件落审查表的值 -->
+ 	<insert id = "insertInfoCollect" parameterType="java.util.Map">
+ 	 insert into OPAS_BIZ_APPROVA_INFO_SUPP (APP_ID,INDUSTRY_CODE,JOB_CODE) VALUES 
+ 	 (#{appId,jdbcType=VARCHAR}, #{industryCode,jdbcType=VARCHAR}, #{jobCode,jdbcType=VARCHAR})
+ 	</insert>
+ <!-- 免录入的申请件落审查表的值(更新) -->
+ <update id = "updateInfoCollect" parameterType="java.util.Map">
+ 	update OPAS_BIZ_APPROVA_INFO_SUPP
+ 	<set>
+ 		<if test="industryCode != null">
+				INDUSTRY_CODE = #{industryCode,jdbcType=CHAR},
+		</if>
+		<if test="jobCode != null">
+				JOB_CODE = #{jobCode,jdbcType=VARCHAR}
+		</if>
+ 	</set>
+ 	where APP_ID = #{appId,jdbcType=VARCHAR}
+ 	<!-- set INDUSTRY_CODE = #{industryCode,jdbcType=VARCHAR},
+ 		JOB_CODE = #{jobCode,jdbcType=VARCHAR}
+ 	where APP_ID = #{appId,jdbcType=VARCHAR} -->
+ </update>	
+ <!-- 匹配行业代码 -->
+	<select id="queryCountByIndustryCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		<!-- select count(s.industry_code) from opas_bzk_industry_incomemacht s 
+			where s.industry_code= #{industryCode} and rownum=1 -->
+		select count(a.DICT_DETAIL_NAME) from opas_ap_dict_detail a where
+		a.dict_id in (
+		select dict_id from opas_ap_dict a where a.dict_code='HYDM_BANK') and
+		a.DICT_DETAIL_NAME = #{industryCode}
+	</select>
+</mapper>
+  

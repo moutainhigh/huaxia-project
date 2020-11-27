@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--VVIP数据库处理-->
+<!--@author liudi-->
+<mapper namespace="VvipList">
+
+	<resultMap id="VvipListResultMap" type="com.huaxia.opas.domain.sysparm.VvipList">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_NAME" property="appName" jdbcType="VARCHAR" />
+		<result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+	<resultMap id="VvipListHistoryResultMap" type="com.huaxia.opas.domain.sysparm.VvipListHistory">
+		<result column="UUID" property="uuId" jdbcType="VARCHAR" />
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_NAME" property="appName" jdbcType="VARCHAR" />
+		<result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+
+	
+<!--添加状态为Start-->
+	<insert id="insertVvipList1" parameterType="com.huaxia.opas.domain.sysparm.VvipList">
+		insert into
+		OPAS_VVIP_LIST
+		(AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{appName,jdbcType=VARCHAR},
+		#{idNo,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+<!--添加状态为End-->
+	<insert id="insertVvipList2" parameterType="com.huaxia.opas.domain.sysparm.VvipList">
+		insert into
+		OPAS_VVIP_LIST
+		(AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{appName,jdbcType=VARCHAR},
+		#{idNo,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+<!--根据主表主键查询所有项-->
+	<select id="queryByPrimaryKey" parameterType="java.lang.String"
+		resultMap="VvipListResultMap">
+		select
+		AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_VVIP_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+<!--当前数据修改前添加至历史表-->
+	<insert id="insertVvipListHistory" parameterType="com.huaxia.opas.domain.sysparm.VvipListHistory">
+		insert into
+		OPAS_VVIP_LIST_HISTORY
+		(UUID,AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{uuId,jdbcType=VARCHAR},
+		#{autoId,jdbcType=VARCHAR},
+		#{appName,jdbcType=VARCHAR},
+		#{idNo,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		#{startDate,jdbcType=TIMESTAMP},
+		#{stopDate,jdbcType=TIMESTAMP},
+		#{crtUser,jdbcType=VARCHAR},
+		#{crtDate,jdbcType=TIMESTAMP},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		#{lstUpdDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+<!--修改-->
+	<update id="updateVvipList" parameterType="com.huaxia.opas.domain.sysparm.VvipList">
+		update OPAS_VVIP_LIST
+		<set>
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!--删除-->
+	<delete id="deleteVvipListById" parameterType="com.huaxia.opas.domain.sysparm.VvipList">
+		delete from
+		OPAS_VVIP_LIST
+		where AUTO_ID in
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+<!--VVIP件数查询-->
+	<select id="queryVvipListCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_VVIP_LIST
+		<where>
+			<if test="appName != null and appName !='' ">
+				AND APP_NAME LIKE '%${appName}%'
+			</if>
+			<if test="idNo != null and idNo !='' ">
+				AND ID_NO LIKE '%${idNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+
+<!--VVIP详细查询-->
+	<select id="queryVvipList1" parameterType="com.huaxia.opas.domain.sysparm.VvipList"
+		resultMap="VvipListResultMap">
+		select
+		AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_VVIP_LIST
+		<where>
+			<if test="appName != null and appName !='' ">
+				AND APP_NAME LIKE '%${appName}%'
+			</if>
+			<if test="idNo != null and idNo !='' ">
+				AND ID_NO LIKE '%${idNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by CRT_DATE
+	</select>
+
+<!--点击查询后，触发查询和排序功能-->
+	<select id="queryVvipList2" parameterType="java.util.Map"
+		resultMap="VvipListResultMap">
+		select
+		AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_VVIP_LIST
+		<where>
+			<if test="appName != null and appName !='' ">
+				AND APP_NAME LIKE '%${appName}%'
+			</if>
+			<if test="idNo != null and idNo !='' ">
+				AND ID_NO LIKE '%${idNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CRT_DATE
+		</if>
+	</select>
+
+<!--查询证件号是否重复-->
+	<select id="queryVvipList3" parameterType="com.huaxia.opas.domain.sysparm.VvipList"
+		resultMap="VvipListResultMap">
+		select
+		ID_NO
+		from OPAS_VVIP_LIST
+		<where>
+			<if test="idNo != null and idNo !='' ">
+				AND ID_NO LIKE '%${idNo}%'
+			</if>
+		</where>
+	</select>
+
+<!--VVIP历史修改记录件数查询-->
+	<select id="queryVvipListHistoryCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_VVIP_LIST_HISTORY
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+<!--VVIP历史详细查询-->
+	<select id="queryVvipListHistory" parameterType="java.lang.String"
+		resultMap="VvipListHistoryResultMap">
+		select
+		UUID,AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_VVIP_LIST_HISTORY
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+<!-- 批量导入VVIP名单实例Excel -->
+	<insert id="queryVvipInfoList" parameterType="java.util.List">
+		insert into OPAS_VVIP_LIST (AUTO_ID,APP_NAME,ID_NO,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.appName,jdbcType=VARCHAR},
+			#{item.idNo,jdbcType=VARCHAR},
+			#{item.status,jdbcType=CHAR},
+			#{item.startDate,jdbcType=TIMESTAMP},
+			#{item.stopDate,jdbcType=TIMESTAMP},
+			#{item.crtUser,jdbcType=VARCHAR},
+			#{item.crtDate,jdbcType=TIMESTAMP},
+			#{item.lstUpdUser,jdbcType=VARCHAR},
+			#{item.lstUpdDate,jdbcType=TIMESTAMP}
+			from dual)
+		</foreach>
+	</insert>
+</mapper>

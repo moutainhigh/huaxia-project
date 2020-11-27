@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasFqzMsg">
+
+	<resultMap id="FqzResultMap" type="java.util.Map">
+		<result column="FQZ_RISKCATEGORY" jdbcType="VARCHAR" property="fqzRiskGategory" />
+	</resultMap>
+
+	<select id="selectFqzResultByAppId" parameterType="java.lang.String"
+		resultMap="FqzResultMap">
+		select FQZ_RISKCATEGORY from OPAS_FQZ_RESULT
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<select id="selectFqzIdStatusByAppId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select FQZ_RISKDESC from OPAS_FQZ_RESULT
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR} and FQZ_RISKCATEGORY =
+			'H04_2'
+		</where>
+	</select>
+	<select id="selectFqzDecisionLvByAppId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select fqz_value from (select fqz_value from OPAS_FQZ_BIG_RESPONSE
+		where APP_ID = #{appId,jdbcType=VARCHAR} and FQZ_TYPE = 'AF_ALL' order
+		by FQZ_REQUESTTYPE desc ) where rownum = 1
+		<!-- 20190726 修改为取最新一条反欺诈决策等级记录 select FQZ_VALUE from OPAS_FQZ_BIG_RESPONSE 
+			<where> APP_ID = #{appId,jdbcType=VARCHAR} and FQZ_REQUESTTYPE ='AF1005' 
+			and FQZ_TYPE = 'AF_ALL' </where> -->
+	</select>
+	<!-- 2019/1/8 客户洗钱风险等级 -->
+	<select id="selectCustRiskMsg" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select RISK_LEVEL from AML_CUST_RISK_LEVEL
+		<where>
+			CERT_NO = #{certNo,jdbcType=VARCHAR}
+		</where>
+	</select>
+	<!-- 2019/1/9 在网时长信息 -->
+	<select id="selectInNetTimeTypeByAppId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select result_data from trd_operator_online
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		</where>
+	</select>
+	<!-- 20190510 from wjf -->
+	<select id="selectFqzWsScoreByAppId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select FQZ_VALUE from OPAS_FQZ_BIG_RESPONSE
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR} and FQZ_TYPE =
+			'WS_AntiFraud_Score' order by CRT_TIME desc
+		</where>
+	</select>
+	<select id="selectFqzFwsScoreByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+		select FQZ_VALUE from OPAS_FQZ_BIG_RESPONSE
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR} and FQZ_TYPE = 'FWS_AntiFraud_Score' order by CRT_TIME desc
+		</where>
+	</select>
+</mapper>

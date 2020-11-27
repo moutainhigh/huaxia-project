@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:10px
+}
+</style>
+</head>
+<body style="padding: 10px;">
+<div id="positionCodeCondion"
+		style="padding: 10px; text-align: left;">
+		<form id="seachPositionCodeForm">
+			开始时间:<input class="easyui-datebox" name="startTime" id="startTime"
+					style="width: 100px;" editable="false"/>
+			结束时间:<input class="easyui-datebox" name="endTime" id="endTime"
+					style="width: 100px;" editable="false"/>
+			<tr><td><br>		
+				<label class="alsp">用户权限:</label>
+				<input id="userPms" name="userPms" class="easyui-combobox" style="width:150px;" editable="false"
+				dict_type="USER_PERMISSION" data-options="valueField:'dictDetailCode',textField:'dictDetailName',onSelect:function(rec){
+					if(rec.dictDetailCode=='1'){
+					tblInfo.datagrid('showColumn','input');
+					tblInfo.datagrid('hideColumn','search');
+					tblInfo.datagrid('hideColumn','apply');
+					}else if(rec.dictDetailCode=='2'){
+					tblInfo.datagrid('hideColumn','input');
+					tblInfo.datagrid('showColumn','search');
+					tblInfo.datagrid('hideColumn','apply');
+					}else if(rec.dictDetailCode=='3'){
+					tblInfo.datagrid('hideColumn','input');
+					tblInfo.datagrid('hideColumn','search');
+					tblInfo.datagrid('showColumn','apply');
+					}else if(rec.dictDetailCode=='4'){
+					tblInfo.datagrid('showColumn','input');
+					tblInfo.datagrid('showColumn','search');
+					tblInfo.datagrid('showColumn','apply');
+					}
+				}
+				"/>
+				<br>
+				<label class="alsp">用户所在组:</label> 
+				<input id="userOrg"  name="userOrg" class="easyui-combobox"  editable="false"/>   
+				<label class="alsp">录入员:</label> 
+			 	<input id="operator"  name="operator" class="easyui-combobox" data-options="value:'--请选择所在组--'"  editable="false"/>
+	        
+			</td></tr>
+			<a href="javascript:seachPositionCodeForm();" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a id="cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+		</form>
+	</div>
+	<div id="tblInfo"></div>
+
+	
+</body>
+<script type="text/javascript">
+	var input = $('#input');
+	var search = $('search');
+	var apply = $('apply');
+	var userPms = $('userPms');
+	var tblInfo = $('#tblInfo');
+	$cf.loadAllDict();//用于引进    业务字典     //$cf.loadAllDict();//用于引进    业务字典  
+	$(function(){
+		$('#cleanButton').bind('click',function(){
+			buttonClean();
+		});
+		//获取小组名称
+		$cf.ajax({
+			url : '/opas-naps/query_orgName.json',
+			onSuccess : function(response) {
+				var resultList = response.RSP_BODY.resultList;
+				var list = eval('(' +resultList+ ')');
+				//console.log(resultList);
+				$("#userOrg").combobox({
+					data:list,
+					valueField:'orgNo',
+					textField:'orgName',
+					value:"--请选择--",
+					onSelect:function(rec){
+						//获取组员
+						$cf.ajax({
+							url : '/opas-naps/query_operatorName.json',
+							data : {
+								'orgNo' : rec.orgNo
+							},
+							onSuccess : function(response) {
+								var userList = response.RSP_BODY.userList;
+								var operatorList = eval('(' +userList+ ')');
+								$('#operator').combobox({
+									data:operatorList,
+									valueField:'userCode',
+									textField:'userName'
+								});  
+							}
+						});
+					}
+				});
+			}
+		});
+		tblInfo.datagrid({
+			toolbar:'#positionCodeCondion',
+			url:"",////opas-naps/workload_statistics.json
+			border:false,
+			title:'征信员工作量统计表',
+			animate:true,
+			pagination:true,
+			fitColumns:true,
+			singleSelect:false,
+			rownumbers:true,
+			pageSize:15,
+			pageList:[15,20,50],
+			columns:[[{
+				title:'操作员姓名',
+				field:'name',
+				width:"20%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'用户所在组',
+				field:'orgName',
+				width:"20%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'录入完成量',
+				field:'input',
+				width:"20%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'征信调查完成量',
+				field:'search',
+				width:"20%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'审批完成量',
+				field:'apply',
+				width:"20%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			}
+			]]
+		});
+	});
+	function seachPositionCodeForm(){
+		
+		var startDate=$('#startTime').datebox('getValue');
+		var endDate=$('#endTime').datebox('getValue');
+		
+		if((startDate==null||startDate=="")||(endDate==null||endDate=="")){
+			alert("所选时间不能为空！");
+			return;
+		}
+		var day = GetDateDiff(startDate,endDate);
+		if (day>32){
+			alert("区间不能超过31天");
+			return;
+		}
+		
+		var userOrg1 = $("#userOrg").combobox('getText');
+		var userOrg = $("#userOrg").combobox('getValue');
+		var operator1 =  $("#operator").combobox('getText');
+		var operator =  $("#operator").combobox('getValue');
+		tblInfo.datagrid('options').url="/opas-naps/workload_statistics.json";
+		var s={"startTime":startDate,"endTime":endDate,"userOrg":userOrg,"operator":operator};
+		tblInfo.datagrid("reload", s); 
+	}
+	function buttonClean(){
+		//因为 加了 value=-1 属性 以至于   form的reset 对这些input框失效了 所以单独clear
+		//$('#userPms').combobox('clear');
+		//$('#userOrg').combobox('clear');
+		//$('#user').combobox('clear');
+		//$('#card').combobox('clear');
+		$('#seachPositionCodeForm').form('reset');
+		
+	}
+	
+	function GetDateDiff(startDate,endDate) {
+		var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+		var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+		var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+		return dates;
+	}
+</script>

@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="InnerRiskInfo">
+
+	<resultMap id="InnerRiskInfoResultMap" type="com.huaxia.opas.domain.sysparm.InnerRiskInfo">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="HOUSEHOLD" property="houseHold" jdbcType="VARCHAR" />
+		<result column="SPREAD_ORG" property="spreadOrg" jdbcType="VARCHAR" />
+		<result column="SPREAD_PER" property="spreadPer" jdbcType="VARCHAR" />
+		<result column="SPREAD_NO" property="spreadNo" jdbcType="VARCHAR" />
+		<result column="CONTENT_DESC" property="contentDesc" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="INVALID_TIME" property="invalidTime" jdbcType="DATE" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="DATE" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR" />
+		<result column="COMPANY_LEVEL" property="opretionLevel"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryInnerRiskInfo" parameterType="java.lang.String"
+		resultMap="InnerRiskInfoResultMap">
+		select
+		AUTO_ID, COMPANY_NAME, COMPANY_TEL,CERTIFI_NO, HOUSEHOLD, SPREAD_ORG,
+		SPREAD_PER,COMPANY_LEVEL, SPREAD_NO, CONTENT_DESC, OPERATOR,
+		INVALID_TIME, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		from
+		OPAS_INNER_RISKINFO_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryInnerRiskInfoList" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo"
+		resultMap="InnerRiskInfoResultMap">
+		select
+		AUTO_ID, COMPANY_NAME, COMPANY_LEVEL,COMPANY_TEL,CERTIFI_NO, HOUSEHOLD,
+		SPREAD_ORG, SPREAD_PER, SPREAD_NO, CONTENT_DESC, OPERATOR,
+		INVALID_TIME, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		FROM OPAS_INNER_RISKINFO_LIST t
+		<where>
+			<if test="companyName != null and companyName != ''">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				AND COMPANY_TEL LIKE '%-${companyTel}%'
+			</if>
+			<if test="certifiNo != null and certifiNo != ''">
+				AND CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="houseHold != null and houseHold != ''">
+				AND HOUSEHOLD LIKE '%${houseHold}%'
+			</if>
+			<if test="spreadOrg != null and spreadOrg != ''">
+				AND SPREAD_ORG LIKE '%${spreadOrg}%'
+			</if>
+			<if test="opretionLevel != null and opretionLevel != ''">
+				AND upper(COMPANY_LEVEL) LIKE upper('%${opretionLevel}%')
+			</if>
+			<if test="spreadPer != null and spreadPer != ''">
+				AND SPREAD_PER LIKE '%${spreadPer}%'
+			</if>
+			<if test="spreadNo != null and spreadNo != ''">
+				AND upper(SPREAD_NO) LIKE upper('%${spreadNo}%')
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND
+				(t.CREATE_TIME
+				BETWEEN
+				#{createTime}
+				AND
+				(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+			<if test="invalidTime != null and invalidTime != ''">
+				AND
+				(t.INVALID_TIME
+				BETWEEN
+				#{invalidTime}
+				AND
+				(select #{invalidTime} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+			<if test="ids != null and ids != ''">
+				AND AUTO_ID in
+				<foreach collection="ids" open="(" close=")" item="id"
+					separator=",">
+					#{id,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+		order by t.CREATE_TIME DESC,to_number(t.ORDERBY_NO)
+	</select>
+
+	<select id="queryInnerRiskInfoCount" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID)
+		FROM OPAS_INNER_RISKINFO_LIST t
+		<where>
+			<if test="companyName != null and companyName != ''">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				AND COMPANY_TEL LIKE '%-${companyTel}%'
+			</if>
+			<if test="certifiNo != null and certifiNo != ''">
+				AND CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="spreadOrg != null and spreadOrg != ''">
+				AND SPREAD_ORG LIKE '%${spreadOrg}%'
+			</if>
+			<if test="spreadPer != null and spreadPer != ''">
+				AND SPREAD_PER LIKE '%${spreadPer}%'
+			</if>
+			<if test="opretionLevel != null and opretionLevel != ''">
+				AND upper(COMPANY_LEVEL) LIKE upper('%${opretionLevel}%')
+			</if>
+			<if test="spreadNo != null and spreadNo != ''">
+				AND upper(SPREAD_NO) LIKE upper('%${spreadNo}%')
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND
+				(t.CREATE_TIME
+				BETWEEN
+				#{createTime}
+				AND
+				(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+			<if test="invalidTime != null and invalidTime != ''">
+				AND
+				(t.INVALID_TIME
+				BETWEEN
+				#{invalidTime}
+				AND
+				(select #{invalidTime} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+			<if test="ids != null and ids != ''">
+				AND AUTO_ID in
+				<foreach collection="ids" open="(" close=")" item="id"
+					separator=",">
+					#{id,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteInnerRiskInfo" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo">
+		delete from
+		OPAS_INNER_RISKINFO_LIST
+		where AUTO_ID in
+		<foreach collection="ids" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<update id="updateInnerRiskInfo" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo">
+		update OPAS_INNER_RISKINFO_LIST
+		<set>
+			OPERAT_TIME = CURRENT_DATE,
+			<if test="companyName != null">COMPANY_NAME = #{companyName,jdbcType=VARCHAR},</if>
+			<if test="companyTel != null">COMPANY_TEL = #{companyTel,jdbcType=VARCHAR},</if>
+			<if test="certifiNo != null">CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},</if>
+			<if test="houseHold != null">HOUSEHOLD = #{houseHold,jdbcType=VARCHAR},</if>
+			<if test="spreadOrg != null">SPREAD_ORG = #{spreadOrg,jdbcType=VARCHAR},</if>
+			<if test="spreadPer != null">SPREAD_PER = #{spreadPer,jdbcType=VARCHAR},</if>
+			<if test="spreadNo != null">SPREAD_NO = #{spreadNo,jdbcType=VARCHAR},</if>
+			<if test="contentDesc != null">CONTENT_DESC = #{contentDesc,jdbcType=VARCHAR},</if>
+			<if test="operator != null">OPERATOR = #{operator,jdbcType=VARCHAR},</if>
+			<if test="invalidTime != null">INVALID_TIME = #{invalidTime,jdbcType=DATE},</if>
+			<if test="currStatus != null">CURR_STATUS = #{currStatus,jdbcType=CHAR},</if>
+			<if test="opretionLevel != null">COMPANY_LEVEL = #{opretionLevel,jdbcType=CHAR}</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateInnerRiskInfoActive" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo">
+		update OPAS_INNER_RISKINFO_LIST
+		<set>
+			CURR_STATUS = #{currStatus,jdbcType=VARCHAR},
+			OPERAT_TIME =
+			CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID in
+		<foreach collection="ids" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<select id="queryInnerRiskInfoHistoryList" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo"
+		resultMap="InnerRiskInfoResultMap">
+		select
+		AUTO_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_LEVEL,CERTIFI_NO, HOUSEHOLD,
+		SPREAD_ORG, SPREAD_PER, SPREAD_NO, CONTENT_DESC, OPERATOR,
+		INVALID_TIME, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		from
+		OPAS_INNER_RISKINFO_LIST_HIS
+		WHERE AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		ORDER BY OPERAT_TIME DESC
+	</select>
+
+	<select id="queryInnerRiskInfoHistoryCount" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID)
+		from OPAS_INNER_RISKINFO_LIST_HIS
+		where
+		AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		ORDER BY OPERAT_TIME DESC
+	</select>
+	<insert id="insertInnerRiskInfo" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo">
+		insert into OPAS_INNER_RISKINFO_LIST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			CREATE_TIME,
+			OPERAT_TIME,
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME,
+			</if>
+			<if test="companyTel != null">
+				COMPANY_TEL,
+			</if>
+			<if test="certifiNo != null">
+				CERTIFI_NO,
+			</if>
+			<if test="houseHold != null">
+				HOUSEHOLD,
+			</if>
+			<if test="spreadOrg != null">
+				SPREAD_ORG,
+			</if>
+			<if test="spreadPer != null">
+				SPREAD_PER,
+			</if>
+			<if test="spreadNo != null">
+				SPREAD_NO,
+			</if>
+			<if test="contentDesc != null">
+				CONTENT_DESC,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="invalidTime != null">
+				INVALID_TIME,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+			<if test="opretionLevel != null">
+				COMPANY_LEVEL,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			CURRENT_DATE,
+			CURRENT_DATE,
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="companyTel != null">
+				#{companyTel,jdbcType=VARCHAR},
+			</if>
+			<if test="certifiNo != null">
+				#{certifiNo,jdbcType=VARCHAR},
+			</if>
+			<if test="houseHold != null">
+				#{houseHold,jdbcType=VARCHAR},
+			</if>
+			<if test="spreadOrg != null">
+				#{spreadOrg,jdbcType=VARCHAR},
+			</if>
+			<if test="spreadPer != null">
+				#{spreadPer,jdbcType=VARCHAR},
+			</if>
+			<if test="spreadNo != null">
+				#{spreadNo,jdbcType=VARCHAR},
+			</if>
+			<if test="contentDesc != null">
+				#{contentDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="invalidTime != null">
+				#{invalidTime,jdbcType=DATE},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+			<if test="opretionLevel != null">
+				#{opretionLevel,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInnerRiskInfoList" parameterType="java.util.ArrayList">
+		insert into OPAS_INNER_RISKINFO_LIST
+		(AUTO_ID, COMPANY_NAME, COMPANY_TEL,
+		CERTIFI_NO, HOUSEHOLD, SPREAD_ORG,
+		SPREAD_PER,
+		SPREAD_NO, CONTENT_DESC, OPERATOR, INVALID_TIME,
+		OPERAT_TIME, CREATE_TIME,
+		CURR_STATUS,ORDERBY_NO,COMPANY_LEVEL )
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.companyName,jdbcType=VARCHAR},
+			#{item.companyTel,jdbcType=VARCHAR},
+			#{item.certifiNo,jdbcType=VARCHAR},
+			#{item.houseHold,jdbcType=VARCHAR},
+			#{item.spreadOrg,jdbcType=VARCHAR},
+			#{item.spreadPer,jdbcType=VARCHAR},
+			#{item.spreadNo,jdbcType=VARCHAR},
+			#{item.contentDesc,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.invalidTime,jdbcType=DATE},
+			#{item.operatTime,jdbcType=DATE},
+			#{item.createTime,jdbcType=DATE},
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.orderByNo,jdbcType=VARCHAR},
+			#{item.opretionLevel,jdbcType=VARCHAR}
+			from dual
+			)
+		</foreach>
+	</insert>
+
+	<insert id="insertInnerRiskInfoHistory" parameterType="com.huaxia.opas.domain.sysparm.InnerRiskInfo">
+		INSERT INTO OPAS_INNER_RISKINFO_LIST_HIS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			CREATE_TIME,
+			OPERAT_TIME,
+			<if test="opretionId != null">
+				OPRETION_ID,
+			</if>
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME,
+			</if>
+			<if test="companyTel != null">
+				COMPANY_TEL,
+			</if>
+			<if test="certifiNo != null">
+				CERTIFI_NO,
+			</if>
+			<if test="houseHold != null">
+				HOUSEHOLD,
+			</if>
+			<if test="spreadOrg != null">
+				SPREAD_ORG,
+			</if>
+			<if test="spreadPer != null">
+				SPREAD_PER,
+			</if>
+			<if test="spreadNo != null">
+				SPREAD_NO,
+			</if>
+			<if test="contentDesc != null">
+				CONTENT_DESC,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="invalidTime != null">
+				INVALID_TIME,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+			<if test="opretionLevel != null">
+				COMPANY_LEVEL,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			CURRENT_DATE,
+			CURRENT_DATE,
+			<if test="opretionId != null">
+				#{opretionId,jdbcType=VARCHAR},
+			</if>
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="companyTel != null">
+				#{companyTel,jdbcType=VARCHAR},
+			</if>
+			<if test="certifiNo != null">
+				#{certifiNo,jdbcType=VARCHAR},
+			</if>
+			<if test="houseHold != null">
+				#{houseHold,jdbcType=VARCHAR},
+			</if>
+			<if test="spreadOrg != null">
+				#{spreadOrg,jdbcType=VARCHAR},
+			</if>
+			<if test="spreadPer != null">
+				#{spreadPer,jdbcType=VARCHAR},
+			</if>
+			<if test="spreadNo != null">
+				#{spreadNo,jdbcType=VARCHAR},
+			</if>
+			<if test="contentDesc != null">
+				#{contentDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="invalidTime != null">
+				#{invalidTime,jdbcType=DATE},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+			<if test="opretionLevel != null">
+				#{opretionLevel,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInnerRiskInfoHistoryList" parameterType="java.util.List">
+		insert into OPAS_INNER_RISKINFO_LIST_HIS
+		(OPRETION_ID, AUTO_ID, COMPANY_NAME, COMPANY_TEL,CERTIFI_NO, HOUSEHOLD, SPREAD_ORG,
+		SPREAD_PER, SPREAD_NO, CONTENT_DESC, OPERATOR, INVALID_TIME,
+		OPERAT_TIME, CREATE_TIME, CURR_STATUS,COMPANY_LEVEL)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(SELECT
+			#{item.opretionId,jdbcType=VARCHAR},
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.companyName,jdbcType=VARCHAR},
+			#{item.companyTel,jdbcType=VARCHAR},
+			#{item.certifiNo,jdbcType=VARCHAR},
+			#{item.houseHold,jdbcType=VARCHAR},
+			#{item.spreadOrg,jdbcType=VARCHAR},
+			#{item.spreadPer,jdbcType=VARCHAR},
+			#{item.spreadNo,jdbcType=VARCHAR},
+			#{item.contentDesc,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.invalidTime,jdbcType=DATE},
+			#{item.operatTime,jdbcType=DATE},
+			#{item.createTime,jdbcType=DATE},
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.opretionLevel,jdbcType=VARCHAR}
+			FROM dual)
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="opas-dao-server" logger="slf4j" />
+	<dubbo:registry address="${zookeeper_address}" />
+	<dubbo:protocol name="dubbo" port="${dao_dubbo_port}" />
+	<dubbo:provider threads="${dao_dubbo_threads}" timeout="${dubbo_timeout}" retries="${dubbo_retries}"/> 
+
+	<!-- 服务提供者 -->
+	<dubbo:service interface="com.huaxia.opas.service.system.FileUploadService" ref="fileUploadServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.FileUploadLogService" ref="fileUploadLogServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.CustBaseInfoService" ref="custBaseInfoServiceImpl" />
+	
+	<dubbo:service interface="com.huaxia.opas.service.dict.ApDictService" ref="apDictServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.dict.ApDictDetailService" ref="apDictDetailServiceImpl" />
+	
+	<!-- ########## 组长调阅  经理调阅# 开始 ########## -->
+	<dubbo:service interface="com.huaxia.opas.service.retrieve.RetrieveService" ref="retrieveServiceImpl" />
+	<!-- ########## 组长调阅  经理调阅# 结束 ########## -->
+	
+	<!-- ########## 系统管理 # 开始 ########## -->
+	<dubbo:service interface="com.huaxia.opas.service.system.ApOrgService" ref="apOrgServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.ApMenuService" ref="apMenuServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.ApRoleService" ref="apRoleServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.ApRoleMenuService" ref="apRoleMenuServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.ApUserService" ref="apUserServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.ApOnlineService" ref="apOnlineServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.ApUserOrgService" ref="apUserOrgServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.ApUserRoleService" ref="apUserRoleServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.system.OperationLogService" ref="operationLogServiceImpl" />  
+	<!-- ########## 系统管理 # 结束 ########## -->
+
+	<!-- 谢滨旭 start-->
+	<dubbo:service interface="com.huaxia.opas.service.compare.RevCompInfoService" ref="revCompInfoServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.apply.BizInpApplService" ref="bizInpApplServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.apply.ApplyRemarkService" ref="applyRemarkServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.collect.InfoCollectService" ref="infoCollectServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.apply.ApplyLifeCicleService" ref="applyLifeCicleServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.collect.PatchboltSpyInfoService" ref="patchboltSpyInfoServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.compare.TestObjService" ref="testObjServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.archive.FileAppDetService" ref="fileAppDetServiceImpl" />
+	<!-- 谢滨旭 end-->
+	
+	<!-- 增强信息采集 -->
+	<dubbo:service interface="com.huaxia.opas.service.collect.EnhanceCollectService" ref="enhanceCollectServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.collect.SalaryComputeService" ref="salaryComputeServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.collect.SalaryAdoptItemService" ref="salaryAdoptItemServiceImpl" />
+	
+	<!-- ########## 第三方接口 # 开始 ########## -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.PBOCService" ref="pbocServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.BankService" ref="bankServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.PoliceService" ref="policeServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.AntService" ref="antServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.Credit100Service" ref="credit100ServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.EducationService" ref="educationServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.GjjService" ref="gjjServiceImpl" />
+	<!-- ########## 第三方接口 # 结束 ########## -->
+	
+	
+	<!-- ########## 参数管理 # 开始 ########## -->
+	<!-- 预授信 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.PreCreditParamService" ref="preCreditParamServiceImpl" />
+	<!-- PAD定位地址-wenyh -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.PadLocationAddressService" ref="padLocationAddressServiceImpl" />
+	<!-- 简项公安参数匹配 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.MatchIdenityService" ref="matchIdenityServiceImpl" />
+	<!-- MBA院校名单 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.MBASchoolService" ref="MBASchoolServiceImpl" />
+	<!-- 推广员风险名单库 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.PromoterRiskService" ref="promoterRiskServiceImpl" />
+	<!-- 团办名单库 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.TeamService" ref="teamServiceImpl" /> 
+	<!-- 同业关注风险名单库 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SameIndustryRiskService" ref="sameIndustryRiskServiceImpl" />
+	<!-- 用户审批卡种  用于用户添加时勾选审批卡中 shihuan -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.UserCardService" ref="userCardServiceImpl" />
+   	<!-- 地址风险类名单  shihuan-->
+   	<dubbo:service interface="com.huaxia.opas.service.sysparm.AddrRiskListService" ref="addrRiskListServiceImpl" />
+   	<dubbo:service interface="com.huaxia.opas.service.sysparm.AddrRiskListHistroyService" ref="addrRistListHistoryServiceImpl" />
+   	<!-- 电话类风险名单 shihuan-->
+   	<dubbo:service interface="com.huaxia.opas.service.sysparm.TelRiskListService" ref="telRistListServiceImpl" />
+   	<dubbo:service interface="com.huaxia.opas.service.sysparm.TelRiskListHistoryService" ref="telRistListHistoryServiceImpl" />
+	<!-- 单位地址风险类名单 shihuan-->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CompanyRiskService" ref="companyRiskServiceImpl" />
+	<!-- 重点院校名单 shihuan-->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.MajorschoolListService" ref="majorschoolListServiceImpl" />
+	<!-- 特殊项目名单 shihuan-->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SpecialProjectService" ref="specialProjectServiceImpl" />
+	<!-- 优质企业名单 shihuan-->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.GoodCompanyListService" ref="goodCompanyListServiceImpl" />
+	<!-- 目标企业名单 shihuan-->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.TargetCompanyService" ref="targetCompanyServiceImpl" />
+	<!-- 导入查询历史记录 shihuan -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.BatchFileInfoService" ref="batchFileInfoServiceImpl" />
+	<!-- 柳迪 start-->
+	<!-- 欺诈结果原因码 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.FraudCodeService" ref="fraudCodeServiceImpl" />
+	<!-- 电核过件码 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.PhoneChkPassCodeService" ref="phoneChkPassCodeServiceImpl" />
+	<!-- 电话来源维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.TelSourceService" ref="telSourceServiceImpl" />
+	<!-- 电话号码参数维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.TelNoService" ref="telNoServiceImpl" />
+	<!-- 照会对象维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.TelObjectService" ref="telObjectServiceImpl" />
+	<!-- 电核结论维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.TelChkConclusionService" ref="telChkConclusionServiceImpl" />
+	<!-- 审批原因代码维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.ApproveReasonCodeService" ref="approveReasonCodeServiceImpl" />
+	<!-- 政策码维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.PolicyService" ref="policyServiceImpl" />
+	<!-- 配发卡维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.MatchingCardService" ref="matchingCardServiceImpl" />
+	<!-- 卡产品维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CardProductService" ref="cardProductServiceImpl" />
+	<!-- 卡产品降级维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CardDegradeService" ref="cardDegradeServiceImpl" />
+	<!-- 邮编区号维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.ApproveZipcodeService" ref="approveZipcodeServiceImpl" />
+	<!-- 利率差异化维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SysparmRateService" ref="sysparmRateServiceImpl" />
+	<!-- 利率差异化配置 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SysparmRateConfService" ref="sysparmRateConfServiceImpl" />
+	<!-- 最低还款额维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SysparmRepayLimitService" ref="sysparmRepayLimitServiceImpl" />
+	<!-- 最低还款额配置 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SysparmRepayLimitConfService" ref="sysparmRepayLimitConfServiceImpl" />
+	<!-- 免息还款期维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SysparmRepayFreeTermService" ref="sysparmRepayFreeTermServiceImpl" />
+	<!-- 免息还款期配置 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SysparmRepayFreeTermConfService" ref="sysparmRepayFreeTermConfServiceImpl" />
+	<!-- VVIP客户信息维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.VvipListService" ref="vvipListServiceImpl" />
+	<!-- 柳迪 end-->
+	<!-- 李鹏飞 start-->
+	<!-- WarningList -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.WarningService" ref="warningServiceImpl" />
+	<!-- 余额转移 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.BalanceService" ref="balanceServiceImpl" />
+	<!-- 标准卡行职业收入 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.BzkIncomeService" ref="bzkIncomeServiceImpl" />
+	<!-- 易达金卡行职业收入 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.YdjIncomeService" ref="ydjIncomeServiceImpl" />
+	<!-- 征信问题库 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.ConfQuestionService" ref="confQuesionServiceImpl" />
+	<!-- 行员名单库 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.ConfRosterLibraryService" ref="confRosterLibraryServiceImpl" />
+	<!-- 网申合作商户 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.NetCooperativeService" ref="netCooperativeServiceImpl" />
+	<!-- 李鹏飞end -->
+	<!-- 营销员白名单 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.MarketerService" ref="marketerServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.ExcellentService" ref="excellentServiceImpl" /> 
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.MarktQRCodeService" ref="marktQRCodeServiceImpl"/>
+	
+	<!-- ########## 参数管理 # 结束 ########## -->
+	
+	<!-- 申请表信息 -->
+	<dubbo:service interface="com.huaxia.opas.service.apply.ApplyService" ref="applyServiceImpl" />
+	
+	<!-- 提报管理 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.SubReportService" ref="subReportServiceImpl" />
+
+	<!-- 征信电核环节 模块开始 -->
+	<!-- 系统决策（TAB） -->
+	<dubbo:service interface="com.huaxia.opas.service.decision.SysDecisionService" ref="sysDecisionServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.decision.SysDecisionYdjService" ref="sysDecisionYdjServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.decision.SysDecisionCommonService" ref="sysDecisionCommonServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.decision.SysApprovalCommonService" ref="sysApprovalCommonServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.decision.SysButtonCommonService" ref="sysButtonCommonServiceImpl" />
+	<!-- 征信电核环节 模块结束 -->
+	<!-- CRM -->
+	<dubbo:service interface="com.huaxia.opas.service.crm.CRMCommonService" ref="CRMCommonServiceImpl" />
+	<!-- 征信调查查看 -->
+	<dubbo:service interface="com.huaxia.opas.service.credit.CreditCheckSearchService" ref="creditCheckSearchServiceImpl" />
+	<!-- 提报回复查看 -->
+	<dubbo:service interface="com.huaxia.opas.service.credit.SubmitReplyService" ref="submitReplyServiceImpl" />
+	<!-- 提交补件 -->
+	<dubbo:service interface="com.huaxia.opas.service.credit.PatchboltService" ref="patchboltServiceImpl" />
+	
+	<!-- 捞件表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.FishingService" ref="fishingServiceImpl"/>
+	<!-- 关键信息修改表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.KeyMessageModifyService" ref="keyMessageModifyServiceImpl"/>
+   	<!-- 归档申请件明细表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.ArchiveApplicationFileDetailService" ref="archiveApplicationFileDetailServiceImpl"/>
+	<!-- 不同粒度进件情况统计表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.DifferentGrainStatisticsService" ref="differentGrainStatisticsServiceImpl"/>
+	<!-- 进件情况统计表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.BuyPieceSituationStatisticsService" ref="buyPieceSituationStatisticsServiceImpl"/>
+	<!-- 网申合作平台数据统计清单-进件情况统计表-wenyh -->
+	<dubbo:service interface="com.huaxia.opas.service.report.WsPlatformDataStatisticsService" ref="wsPlatformDataStatisticsServiceImpl"/>
+	<!-- 利率差异化分析统计报表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.InterestRateDifferAnalysisStatisticsService" ref="interestRateDifferAnalysisStatisticsServiceImpl"/>
+	
+	<!-- 工作量统计报表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.WorkloadStatisticsService" ref="workloadStatisticsServiceImpl" />
+	<!-- 审批工作量统计表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.ApplyStatisticsService" ref="applyStatisticsServiceImpl" />
+	<!-- 查询人员信息下拉列表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.QueryOperatorMsgService" ref="queryOperatorMsgServiceImpl" />
+	
+	<!-- 归档批次信息 -->
+	<dubbo:service interface="com.huaxia.opas.service.archive.ArBatchService" ref="arBatchServiceImpl" />
+	<!-- 待归档补件信息 -->
+	<dubbo:service interface="com.huaxia.opas.service.archive.SuppArService" ref="suppArServiceImpl" />
+	<!-- 归档队列信息 -->
+	<dubbo:service interface="com.huaxia.opas.service.archive.ArQueueService" ref="arQueueServiceImpl" />
+	<!-- 归档修改 -->
+	<dubbo:service interface="com.huaxia.opas.service.archive.ArEditService" ref="arEditServiceImpl" />
+	<!-- 归档导出 -->
+	<dubbo:service interface="com.huaxia.opas.service.archive.ArExportService" ref="arExportServiceImpl" />
+	<!-- 归档导出_文件导出模板 -->
+	<dubbo:service interface="com.huaxia.opas.service.archive.LoadOutTempltesBeanService" ref="loadOutTempltesBeanServiceImpl" />
+	<!--反欺诈 提报 复核 调查  审批  xiaoJianfeng-->
+	<dubbo:service interface="com.huaxia.opas.service.credit.CreditCheckService" ref="creditCheckServiceImpl"/>
+	<!--人行征信查询匹配设置  xiaoJianfeng-->
+	<dubbo:service interface="com.huaxia.opas.service.credit.CreditMatchingService" ref="creditMatchingServiceImpl"/>
+	<!-- 人行征信查询匹配设置、人行查询管理、学历查询匹配设置、学历查询管理  xiaoJianFeng-->
+	<dubbo:service interface="com.huaxia.opas.service.credit.EducationHumanManagemetService" ref="educationHumanManagemetServiceImpl"/>
+	
+	<!-- 申请件查询 -->
+	<dubbo:service interface="com.huaxia.opas.service.apply.ApplyInfoService" ref="applyInfoServiceImpl" />
+ 	<!--易达金存量客户电销名单库 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.StockcustTelSaleService" ref="stockcustTelSaleServiceImpl"/>
+	<!-- 分件模块 -->
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotApplyService" ref="allotApplyServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotCommonService" ref="allotCommonServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotMappingRuleService" ref="allotMappingRuleServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotQueueService" ref="allotQueueServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotRuleService" ref="allotRuleServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotSwitchService" ref="allotSwitchServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.YsTelcheckAddnoteService" ref="ysTelcheckAddnoteServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotApplyHisService" ref="allotApplyHisServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.ReviewDecisionService" ref="reviewDecisionServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.WorkFlowService" ref="workFlowServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.allot.AllotMethodService" ref="allotMethodServiceImpl" />
+	<!-- 集体电核 -->
+	<dubbo:service interface="com.huaxia.opas.service.credit.TeamPhoneService" ref="teamPhoneServiceImpl" />
+	<!-- 查询去全国地区行政级别 -->
+	<dubbo:service interface="com.huaxia.opas.service.address.QueryAddressListService" ref="queryAddressListServiceImpl" />
+	<!-- 风险检查服务 -->
+	<dubbo:service interface="com.huaxia.opas.service.riskcheck.RiskCheckService" ref="riskCheckServiceImpl" />
+	<!-- 网申平台风险调查-wenyh -->
+	<dubbo:service interface="com.huaxia.opas.service.riskcheck.WSPlatformRiskInvestService" ref="wSPlatformRiskInvestServiceImpl" />
+	<!-- 规则调用dao层服务-->
+	<dubbo:service interface="com.huaxia.opas.service.rule.StatisInfoService" ref="statisInfoService" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.Opasbizinpapplc1Dao" ref="opasbizinpapplc1Dao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.Opasbizinpapplc2Dao" ref="opasbizinpapplc2Dao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasbizapprovainfosuppDao" ref="opasbizapprovainfosuppDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasbizspeciallistiddataDao" ref="opasbizspeciallistiddataDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasbizspeciallistcelldataDao" ref="opasbizspeciallistcelldataDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasbizzmivsdataDao" ref="opasbizzmivsdataDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasbizzmscordataDao" ref="opasbizzmscordataDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasbizzmcreditwatchlistiDao" ref="opasbizzmcreditwatchlistiDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpassameindustryrisklistDao" ref="opassameindustryrisklistDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasrevieentrycompareinfoDao" ref="opasrevieentrycompareinfoDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpaspbocqueryreclmrecsumDao" ref="opaspbocqueryreclmrecsumDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpaspbocoverdueandfellbackDao" ref="opaspbocoverdueandfellbackDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpaspbocgruranteeDao" ref="opaspbocgruranteeDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasPbocCreditCueDao" ref="opasPbocCreditCueDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasPromoterRiskListDao" ref="opasPromoterRiskListDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasBizApprovalDao" ref="opasBizApprovalDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasBizApprovalHisDao" ref="opasBizApprovalHisDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasApproveReasonDao" ref="opasApproveReasonDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasBizPubsecGatherDao" ref="opasBizPubsecGatherDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasPbocLoanCardInfoDao" ref="opasPbocLoanCardInfoDao" />
+	
+	<dubbo:service interface="com.huaxia.opas.service.compare.RevCompInfoService" ref="revCompInfoService" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasFqzResultDao" ref="opasFqzResultDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasThdCarMsgDao" ref="opasThdCarMsgDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasFicoMsgDao" ref="opasFicoMsgDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasLoansMsgDao" ref="opasLoansMsgDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasTyMsgDao" ref="opasTyMsgDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasThdMsgDao" ref="opasThdMsgDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasEnterpriseNetworkDao"  ref="opasEnterpriseNetworkDao"/>
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasYuShenDao"  ref="opasYuShenDao"/>
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasPadDao"  ref="opasPadDao"/>
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasQysjDao"  ref="opasQysjDao"/>
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasUniAddrDao"  ref="opasUniAddrDao"/>
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasWebMessageDao"  ref="opasWebMessageDao"/>
+	<!-- <dubbo:service interface="com.huaxia.opas.dao.decision.FicoSdBlazeDao" ref="ficoSdBlazeDao" /> -->
+	<!-- <dubbo:service interface="com.huaxia.opas.dao.decision.FicoYdjBlazeDao" ref="opasFicoYdjBlazeDao" /> -->
+	<!-- <dubbo:service interface="com.huaxia.opas.dao.decision.YdjSysresultInfoDao" ref="ydjSysresultInfoDao" /> -->
+	
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasFicoSdBlazeDao" ref="opasFicoSdBlazeDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasFicoYdjBlazeDao" ref="opasFicoYdjBlazeDao" />
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasKeyfiledMarchinfoDao" ref="opasKeyfiledMarchinfoDao" />
+
+	<!-- 二代人行 wenyh -->
+	<dubbo:service interface="com.huaxia.opas.dao.rule.OpasErDaiRepInforDao" ref="opasErDaiRepInforDao" />
+	
+	<!-- 系统参数_身份类风险名单  luzhen.ou -->	
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.IdentityRiskService" ref="identityRiskService" />
+	<!-- 名单库管理_征信电话核查白名单  luzhen.ou -->	
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CreditTelcheckService" ref="creditTelcheckService" />
+	<!-- 名单库管理_标准卡征信信息名单  luzhen.ou -->	
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CreditInfoService" ref="creditInfoService" />
+	<!-- 名单库管理_内部风险信息名单  luzhen.ou -->	
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.InnerRiskInfoService" ref="innerRiskInfoService" />
+	<!-- 名单库管理_商户团办名单  luzhen.ou -->	
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.MerchTeamdealService" ref="merchTeamdealService" />
+	<!-- 名单库管理_易达金团办名单  luzhen.ou -->	
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.TeamdealService" ref="teamdealService" />
+	<!-- 征信白名单复核 susha-->
+ 	<dubbo:service interface="com.huaxia.opas.service.credit.CreditWhiteListService" ref="creditWhiteListServiceImpl" />
+ 	<!-- 三方数据异常查询 -->
+ 	<dubbo:service interface="com.huaxia.opas.service.credit.ThdErrDataService" ref="thdErrDataServiceImpl" />
+	<!-- 客户基本信息susha -->
+	<dubbo:service interface="com.huaxia.opas.service.baseinfo.BaseCustInfoService" ref="baseCustInfoServiceImpl"/>
+	<!-- 信审合一个人工作完成量统计 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CreditApplyStatisticService" ref="creditApplyStatisticServiceImpl" />
+	
+	<!-- 质检wangtao -->
+	<dubbo:service interface="com.huaxia.opas.service.checking.QualityCheckingService" ref="qualityCheckingServiceImpl" />
+	<!-- 车辆信息查询结果汇总报表 丁国峰 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.VehicleInfoSearchResultService" ref="vehicleInfoSearchResultServiceImpl"/>
+	<!-- 车辆信息查询结果明细报表 丁国峰 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.VehicleInfoSearchResultDetailService" ref="vehicleInfoSearchResultDetailServiceImpl"/>
+	<!-- FICO大数据查询报表 -->
+	<dubbo:service interface="com.huaxia.opas.service.report.FicoResultService" ref="ficoResultServiceImpl"/>
+	<!-- 三方 查询限制规则  gaohui  -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.ThreeSearchLimitRuleService" ref="threeSearchLimitRuleServiceImpl" />
+	<!-- 三方 monitor 任务监控 丁国峰 -->
+	<dubbo:service interface="com.huaxia.opas.service.monitor.Monitor3rdService" ref="monitor3rdServiceImpl"/>
+	<!-- 三方 monitor 日志监控 丁国峰 -->
+	<dubbo:service interface="com.huaxia.opas.service.monitor.Monitor3rdLogService" ref="monitor3rdLogServiceImpl"/>
+	
+	<!-- 卡版面维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CardLayoutService" ref="cardLayoutServiceImpl" />
+	<!-- 第三方信审交互  Start gaoh-->
+	<!-- 第三方信审交互海航-->
+	<dubbo:service interface="com.huaxia.opas.service.tripartite.SeaAirSfService" ref="seaAirSfServiceImpl" />
+	<!-- 第三方信审交互  End gaoh-->
+	<!-- 腾讯天御分 -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.TianYuService" ref="tianYuServiceImpl" />
+	<!-- 网申短表数字解读 -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.SzjdService" ref="szjdServiceImpl" />
+	<!-- 企业行业信息查询部分 -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.QiYeService" ref="qiYeServiceImpl" />
+	<!-- 厦门易联众社保信息查询部分 -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.YLZService" ref="ylzServiceImpl" />
+	<!-- 深圳鹏元个人社保信息查询部分 -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.PYPCRService" ref="pypcrServiceImpl" />
+	<!-- 深圳鹏元高信分信息查询部分 -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.PYPWSLService" ref="pypwslServiceImpl" />
+	<!-- 通讯运营商 -->
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.TxOperatorService" ref="txOperatorServiceImpl" />
+	<!-- 参数管理  风险联系人信息 wangtao -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.ApplyRiskInfoService" ref="applyRiskInfoServiceImpl" />
+	<!-- 名单库管理  3311企业名单库 chenmeng -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.CompanyInfoService" ref="companyInfoServiceImpl" />
+	<!-- avaya -->
+	<dubbo:service interface="com.huaxia.opas.service.avaya.AvayaAutoDialingService" ref="avayaAutoDialingServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.avaya.AvayaLogService" ref="avayaLogServiceImpl" />
+	<!-- chenmeng etcPad -->
+	<dubbo:service interface="com.huaxia.opas.service.compare.EtcPadService" ref="etcPadServiceImpl" />
+	<!--进件管理  -->
+	<dubbo:service interface="com.huaxia.opas.service.channel.InputChannelService" ref="inputChannelServiceImpl" />
+	<!-- 参数管理 客群 职级替代收入 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.YdjCustomersIncomeService" ref="ydjCustomersIncomeServiceImpl"/>
+	<!--工作流节点查询 jpc0522 -->
+	<dubbo:service interface="com.huaxia.opas.service.workflow.WorkflowQuService" ref="workflowQuServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.thirdparty.HzGjjService" ref="hzGjjServiceImpl" />
+    <!-- 参数管理 二维码名单维护 -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.QRCodeService" ref="qrCodeServiceImpl"/>
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.HospitalService" ref="hospitalServiceImpl"/>
+	<!-- 键值对配置 -->
+	<dubbo:service interface="com.huaxia.opas.service.system.KeyValueConfigureService" ref="keyValueConfigureServiceImpl" /> 
+	<!-- 拒绝码查询 -->
+	<dubbo:service interface="com.huaxia.opas.service.decision.BizApprovalService" ref="bizApprovalServiceImpl" /> 
+	<!-- 操作留痕 -->
+	<dubbo:service interface="com.huaxia.opas.service.record.OperaMarkService" ref="operaMarkServiceImpl" />
+	<!-- 参数管理_低风险客户名单库  liuwei -->	
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.LowRiskCustomersService" ref="lowRiskCustomersService" />
+	<!-- 导入查询低风险客户名单历史记录 liuwei -->
+	<dubbo:service interface="com.huaxia.opas.service.sysparm.BatchFileLowRiskInfoService" ref="batchFileLowRiskInfoServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.service.riskcheck.KeyfiledResultService" ref="keyfiledResultServiceImpl" />
+	
+</beans> 

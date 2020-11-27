@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.pboc.mapper.TaskCallStatusMapper">
+
+	<insert id="insertObject" parameterType="PbocTaskCallStatus">
+		INSERT INTO BANK_TASK_CALL_PLAZE (
+			ID,UNIQUE_RELID,SOURCE_ID,TASK_IP,IDENTITY_TYPE,IDENTITY_NO,NAME,LST_OPT_USER,LST_OPT_TIME,CRT_TIME,QUERY_REASON
+		) VALUES (
+			SYS_GUID(),#{uniqueFlag},#{uniqueFlag},#{taskIp},#{identityType},#{identityNo},#{name},#{lstOptUser},SYSDATE,SYSDATE,#{queryReason}
+		)
+	</insert>
+
+</mapper>

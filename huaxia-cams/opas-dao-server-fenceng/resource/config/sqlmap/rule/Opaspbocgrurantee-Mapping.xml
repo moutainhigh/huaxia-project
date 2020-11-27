@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opaspbocgrurantee">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opaspbocgrurantee">
+    <result column="INSIDE_APP_NO" jdbcType="CHAR" property="insideAppNo" />
+    <result column="GUARANTEE_TYPE" jdbcType="VARCHAR" property="guaranteeType" />
+    <result column="SEC_LOAN_OR_CREDIT_ISS_ORG" jdbcType="VARCHAR" property="secLoanOrCreditIssOrg" />
+    <result column="LOAN_CON_AMT" jdbcType="VARCHAR" property="loanConAmt" />
+    <result column="GUAR_LOAN_GRANT_DATE" jdbcType="VARCHAR" property="guarLoanGrantDate" />
+    <result column="GUAR_LOAN_GRANT_EXP_DT" jdbcType="VARCHAR" property="guarLoanGrantExpDt" />
+    <result column="GUARANTEE_AMT" jdbcType="VARCHAR" property="guaranteeAmt" />
+    <result column="LOAN_AMT" jdbcType="VARCHAR" property="loanAmt" />
+    <result column="GUAR_LOAN_SORT5" jdbcType="VARCHAR" property="guarLoanSort5" />
+    <result column="DUE_PAYMENT_DATE" jdbcType="VARCHAR" property="duePaymentDate" />
+    <result column="CRT_TIME" jdbcType="VARCHAR" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="DATE" property="lstUpdTime" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="CHAR" property="recStatus" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+  </resultMap>
+ 
+  
+  <select id="selectByExample" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    INSIDE_APP_NO, GUARANTEE_TYPE, SEC_LOAN_OR_CREDIT_ISS_ORG, LOAN_CON_AMT, GUAR_LOAN_GRANT_DATE, 
+    GUAR_LOAN_GRANT_EXP_DT, GUARANTEE_AMT, LOAN_AMT, GUAR_LOAN_SORT5, DUE_PAYMENT_DATE, 
+    CRT_TIME, CRT_USER, LST_UPD_TIME, LST_UPD_USER, BATCH_DATE, REC_STATUS, APP_ID 
+     from OPAS_PBOC_GRURANTEE where APP_ID = #{appId,jdbcType=CHAR}
+  </select>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opaspbocgrurantee">
+    insert into OPAS_PBOC_GRURANTEE (INSIDE_APP_NO, GUARANTEE_TYPE, SEC_LOAN_OR_CREDIT_ISS_ORG, 
+      LOAN_CON_AMT, GUAR_LOAN_GRANT_DATE, GUAR_LOAN_GRANT_EXP_DT, 
+      GUARANTEE_AMT, LOAN_AMT, GUAR_LOAN_SORT5, 
+      DUE_PAYMENT_DATE, CRT_TIME, CRT_USER, 
+      LST_UPD_TIME, LST_UPD_USER, BATCH_DATE, 
+      REC_STATUS, APP_ID)
+    values (#{insideAppNo,jdbcType=CHAR}, #{guaranteeType,jdbcType=VARCHAR}, #{secLoanOrCreditIssOrg,jdbcType=VARCHAR}, 
+      #{loanConAmt,jdbcType=VARCHAR}, #{guarLoanGrantDate,jdbcType=VARCHAR}, #{guarLoanGrantExpDt,jdbcType=VARCHAR}, 
+      #{guaranteeAmt,jdbcType=VARCHAR}, #{loanAmt,jdbcType=VARCHAR}, #{guarLoanSort5,jdbcType=VARCHAR}, 
+      #{duePaymentDate,jdbcType=VARCHAR}, #{crtTime,jdbcType=VARCHAR}, #{crtUser,jdbcType=VARCHAR}, 
+      #{lstUpdTime,jdbcType=DATE}, #{lstUpdUser,jdbcType=VARCHAR}, #{batchDate,jdbcType=DATE}, 
+      #{recStatus,jdbcType=CHAR}, #{appId,jdbcType=CHAR})
+  </insert>
+ 
+</mapper>

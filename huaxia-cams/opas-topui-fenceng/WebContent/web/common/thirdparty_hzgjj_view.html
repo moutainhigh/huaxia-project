@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>杭州公积金信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding: 10px;">
+	<fieldset>
+		<legend>杭州公积金信息</legend>
+		<form id="gjjxxInfoForm" style="width: 100%">
+			<div>
+				<fieldset>
+					<legend>
+						<span style="font-weight: bold">个人信息</span>
+					</legend>
+					<table style="width: 100%">
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;姓名：<input name="xm" id="xm" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td>证件号码：<input name="sfzh" id="sfzh" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td>性别：<input name="xb" id="xb" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;出生日期：<input
+								name="csrq" id="csrq" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td>民族：<input name="mz" id="mz" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td>常驻人口住址：<input name="addr" id="addr" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td>流动人口户口省市：<input name="hksx" id="hksx" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;流动人口暂住街巷：<input name="jxdm"
+								id="jxdm" type="text" style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td>流动人口暂住详址：<input name="zzdz" id="zzdz" type="text"
+								style="border: none; text-align: left;" /></td>
+							<td>流动人口登记日期：<input name="djrq" id="djrq" type="text"
+								style="border: none; text-align: left;"  readOnly="readonly"/></td>
+							<td>注销标志：<input name="zxbz" id="zxbz"
+								type="text" style="border: none; text-align: left;" readOnly="readonly" /></td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+		
+		</form>
+		<h5>公积金信息</h5>
+		<div id="gjjxxInfo" ></div>
+		<h5>社保缴费信息</h5>
+		<div id="feeinfogridInfo" ></div>
+		<h5>社保基本信息</h5>
+		<div id="hzRsjZxAc01" ></div>
+		<h5>水务缴费信息</h5>
+		<div id="hzWaterAffairsInfo" ></div>
+		<h5>法院失信</h5>
+		<div id="hzFyNaturalPerson" ></div>
+		<h5>公积金贷款信息</h5>
+		<div id="hzGjjLoanInfo" ></div>
+		<h5>车辆信息</h5>
+		<div id="hzVehicleInfo" ></div>
+		<h5>车辆处罚信息</h5>
+		<div id="hzVehiclePenaltyInfo" ></div>
+		
+		
+
+	</fieldset>
+</body>
+<script>
+	function GetQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+	//var gjjxxInfoForm = $("#gjjxxInfoForm");
+	var appId = GetQueryString("appId");
+	//var appId = "9999911811P00091";
+	$(function() {
+		$cf.ajax({
+			data : {
+				"appId" : appId
+			},
+			url : "/opas-naps/queryGrxxInfo.json",
+			onSuccess : function(res) {
+				var jsongjjxxInfo = res.RSP_BODY.gjjxxInfo;
+				var gjjxxInfo = eval('(' + jsongjjxxInfo + ')');
+				$('#gjjxxInfoForm').form("load", gjjxxInfo);
+			}
+		});
+		
+		
+		/**
+		 *杭州区域数据公积金信息表 HZ_GJJXX 
+		 */
+		$cf.ajax({
+			url : '/opas-naps/queryGjjxxInfo.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "公积金缴存单位", '20%', "1");
+					createInputInTd(td, "公积金缴存状态", '7%', "1");
+					createInputInTd(td, "公积金开户日期", '7%', "1");
+					createInputInTd(td, "最近缴存年月", '7%', "1");
+					createInputInTd(td, "连续缴存月数", '7%', "1");
+					createInputInTd(td, "累计缴存月数", '7%', "1");
+					createInputInTd(td, "公积金个人缴存基数", '7%', "1");
+					createInputInTd(td, "公积金个人每月缴存金额", '7%', "1");
+					createInputInTd(td, "公积金单位每月缴存金额", '7%', "1");
+					createInputInTd(td, "每月缴存总额", '7%', "1");
+					createInputInTd(td, "公积金缴存均值", '11%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["deptName"],'20%', "0");
+						createInputInTd(td,needDataInt2["status"], '7%',"0");
+						createInputInTd(td,needDataInt2["setDate"], '7%',"0");
+						createInputInTd(td,needDataInt2["payYm"],'7%', "0");
+						createInputInTd(td,needDataInt2["lxys"], '7%',"0");
+						createInputInTd(td,needDataInt2["ljys"],'7%', "0");
+						createInputInTd(td,needDataInt2["payBase"],'7%', "0");
+						createInputInTd(td,needDataInt2["ppayAmt"],'7%', "0");
+						createInputInTd(td,needDataInt2["cpayAmt"],'7%', "0");
+						createInputInTd(td,needDataInt2["payAmt"],'7%', "0");
+						createInputInTd(td,needDataInt2["grjcjz"],'11%', "0");
+					}
+					$('#gjjxxInfo').html(table); // 
+				}
+			}
+		});
+		
+		/**
+		 *杭州区域数据社保缴费信息 --HZ_SB_FEEINFOGRID
+		 */
+		$cf.ajax({
+			url : '/opas-naps/querySBfeeinfogridInfo.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "缴存年月", '15%', "1");
+					createInputInTd(td, "缴存金额", '15%', "1");
+					createInputInTd(td, "基数", '15%', "1");
+					createInputInTd(td, "单位名称", '36%', "1");
+					createInputInTd(td, "缴费类型", '15%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["aae003"], '15%', "0");
+						createInputInTd(td, needDataInt2["aae020_100"], '15%', "0");
+						createInputInTd(td, needDataInt2["aae180_100"], '15%', "0");
+						createInputInTd(td, needDataInt2["aab004"], '36%', "0");
+						createInputInTd(td, needDataInt2["aaa115"], '15%', "0");
+					}
+					$('#feeinfogridInfo').html(table); //
+				}
+			}
+		}); 
+		/**
+		 *杭州区域数据社保基本信息表 HZ_RSJ_ZX_AC01 
+		 */
+		$cf.ajax({
+			url : '/opas-naps/queryHzRsjZxAc01.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "单位名称", '20%', "1");
+					createInputInTd(td, "社保障号", '7%', "1");
+					createInputInTd(td, "最近缴存年月", '7%', "1");
+					createInputInTd(td, "连续缴存月数", '7%', "1");
+					createInputInTd(td, "累计缴存月数", '7%', "1");
+					createInputInTd(td, "是否参加养老", '7%', "1");
+					createInputInTd(td, "是否参加医疗", '7%', "1");
+					createInputInTd(td, "是否参加失业", '7%', "1");
+					createInputInTd(td, "是否参加工伤", '7%', "1");
+					createInputInTd(td, "是否参加生育", '7%', "1");
+					createInputInTd(td, "是否领取养老金", '11%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["aab004"],'20%', "0");
+						createInputInTd(td,needDataInt2["aac002"], '7%',"0");
+						createInputInTd(td,needDataInt2["aae002"], '7%',"0");
+						createInputInTd(td,needDataInt2["lxys"],'7%', "0");
+						createInputInTd(td,needDataInt2["ljys"], '7%',"0");
+						createInputInTd(td,needDataInt2["bac601"],'7%', "0");
+						createInputInTd(td,needDataInt2["bac603"],'7%', "0");
+						createInputInTd(td,needDataInt2["bad006"],'7%', "0");
+						createInputInTd(td,needDataInt2["bad007"],'7%', "0");
+						createInputInTd(td,needDataInt2["bad008"],'7%', "0");
+						createInputInTd(td,needDataInt2["bad009"],'11%', "0");
+					}
+					$('#hzRsjZxAc01').html(table); // 
+				}
+			}
+		});
+		
+		/**
+		 *杭州区域数据水务缴费信息  HZ_WATER_AFFAIRS_INFO
+		 */
+	 	$cf.ajax({
+			url : '/opas-naps/queryHzWaterAffairsInfo.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "户号", '35%', "1");
+					createInputInTd(td, "抄表日期", '35%', "1");
+					createInputInTd(td, "费用状态", '26%', "1");
+					
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["servCode"],'35%', "0");
+						createInputInTd(td, needDataInt2["collectionDt"],'35%', "0");
+						createInputInTd(td,needDataInt2["paymentStatus"], '26%', "0");
+					
+					}
+					$('#hzWaterAffairsInfo').html(table); // 
+				}
+			}
+		});
+		
+	 	/**
+		 *杭州区域数据法院失信表  HZ_FY_NATURAL_PERSON
+		 */
+	 	$cf.ajax({
+			url : '/opas-naps/queryHzFyNaturalPerson.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "申请执行标的", '12%', "1");
+					createInputInTd(td, "被执行案号", '20%', "1");
+					createInputInTd(td, "被执行案由", '24%', "1");
+					createInputInTd(td, "执行法院名称", '20%', "1");
+					createInputInTd(td, "案件状态", '20%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["sqzxbd"],'12%', "0");
+						createInputInTd(td, needDataInt2["ah"],'20%', "0");
+						createInputInTd(td,needDataInt2["ay"], '24%', "0");
+						createInputInTd(td, needDataInt2["zxfymc"],'20%', "0");
+						createInputInTd(td,needDataInt2["ajzt"], '20%', "0");
+					
+					}
+					$('#hzFyNaturalPerson').html(table); // 
+				}
+			}
+		});
+	 	
+	 	/**
+		 *杭州区域数据公积金贷款信息表  HZ_GJJ_LOAN_INFO
+		 */
+	 	$cf.ajax({
+			url : '/opas-naps/queryHzGjjLoanInfo.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "公积金贷款总额", '12%', "1");
+					createInputInTd(td, "公积金贷款余额", '20%', "1");
+					createInputInTd(td, "公积金贷款总期限", '24%', "1");
+					createInputInTd(td, "公积金贷款剩余期限", '20%', "1");
+					createInputInTd(td, "当前逾期天数", '20%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["lnAmt"],'12%', "0");
+						createInputInTd(td, needDataInt2["lnBal"],'20%', "0");
+						createInputInTd(td,needDataInt2["lnTerm"], '24%', "0");
+						createInputInTd(td, needDataInt2["remTerm"],'20%', "0");
+						createInputInTd(td,needDataInt2["sumOvlDay"], '20%', "0");
+					}
+					$('#hzGjjLoanInfo').html(table); // 
+				}
+			}
+		});
+	 	
+	 	/**
+		 *杭州区域数据车辆信息表  HZ_VEHICLE_INFO
+		 */
+	 	$cf.ajax({
+			url : '/opas-naps/queryHzVehicleInfo.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "车辆是否抵押", '30%', "1");
+					createInputInTd(td, "车辆号牌种类", '33%', "1");
+					createInputInTd(td, "车辆定检日期", '33%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["dybj"],'30%', "0");
+						createInputInTd(td, needDataInt2["hpzl"],'33%', "0");
+						createInputInTd(td,needDataInt2["djrq"], '33%', "0");
+					}
+					$('#hzVehicleInfo').html(table); // 
+				}
+			}
+		});
+		
+	 	/**
+		 *杭州区域数据车辆信息表  hz_vehicle_penalty_info
+		 */
+	 	$cf.ajax({
+			url : '/opas-naps/queryHzVehiclePenaltyInfo.json',
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.gjjxxInfo;
+				var data = JSON.parse(result);
+				var table = document.createElement("table");
+				table.style = 'width:100%;';
+				if (data) {
+					var tr = table.insertRow();
+					var td = tr.insertCell();
+					createInputInTd(td, "编号", '2%', "1");
+					createInputInTd(td, "车辆违法时间", '30%', "1");
+					createInputInTd(td, "车辆扣分记录(一次扣满12分)", '33%', "1");
+					createInputInTd(td, "当事人", '33%', "1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2 = data[int2];
+						createInputInTd(td, int2 + 1 + "", '2%', "1");
+						createInputInTd(td, needDataInt2["wfsj"],'30%', "0");
+						createInputInTd(td, needDataInt2["wfjfs"],'33%', "0");
+						createInputInTd(td,needDataInt2["dsr"], '33%', "0");
+					}
+					$('#hzVehiclePenaltyInfo').html(table); // 
+				}
+			}
+		});
+		
+	});
+	
+	
+	
+	
+
+	/*在指定td标签 创建input标签 并赋值 */
+	function createInputInTd(td, value, width, fontType) {
+		td.style.width = width;
+		var input = document.createElement("input");
+		input.type = 'text';
+		if (value) {
+			var val = value.toString().split("|");
+			input.value = val[val.length - 1];
+		} else {
+			input.value = "";
+		}
+		input.style.width = width;
+		input.style.fontSize = '12px';
+		input.style.textAlign = 'center';
+		if (fontType == "1") {
+			input.style.fontWeight = 'bold';
+		}
+		if (fontType == "0") {
+			input.style.color = 'blue';
+		}
+		input.readOnly = 'readOnly';
+		td.appendChild(input);
+	}
+	/*在指定td标签 创建Div标签 并赋值 */
+	function createDivInTd(td, value, width, fontType) {
+		td.style.width = width;
+		var div = document.createElement("div");
+		div.style.class = "word-wrap:break-word;overflow:hidden;"
+		div.style.fontSize = '12px';
+		if (value) {
+			var textNode = document.createElement('p');
+			textNode.innerHTML = value;
+			div.appendChild(textNode);
+		} else {
+		}
+		if (fontType == "1") {
+			div.style.fontWeight = 'bold';
+			div.style.color = 'black';
+		}
+		if (fontType == "0") {
+			div.style.color = 'blue';
+		}
+		div.readOnly = 'readOnly';
+		td.appendChild(div);
+	}
+	
+</script>
+</html>

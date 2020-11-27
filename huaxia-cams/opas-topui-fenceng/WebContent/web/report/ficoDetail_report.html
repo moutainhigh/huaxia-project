@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp {
+	font-family: "宋体";
+	font-size: 10px
+}
+</style>
+</head>
+<body>
+	<div id="report_vehicleInfoSearchResultDetail_center"
+		data-options="fit:true,boder:true">
+		<div data-options="region='north',border:true,fit:true"
+			style="overflow: auto;">
+			<form id="report_vehicleInfoSearchResultDetail_form">
+				<table
+					class="report_vehicleInfoSearchResultDetail_tableForm datagrid-toolbar"
+					style="width: 100%; height: 100%">
+					<tr>
+						<td><label class="alsp">开始时间</label><input
+							id="report_vehicleInfoSearchResultDetail_beginDate"
+							name="beginDate" class="easyui-datebox" style="width: 150px;"
+							data-options="required:true,onSelect:function(date){
+  var beginDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',beginDate);
+   $('#report_vehicleInfoSearchResultDetail_table_beginDate').html($(this).datebox('getValue'));
+   }" />&nbsp;&nbsp;<label
+							class="alsp">截止时间</label><input
+							id="report_vehicleInfoSearchResultDetail_endDate" name="endDate"
+							class="easyui-datebox" style="width: 150px;"
+							data-options="required:true,onSelect:function(date){
+   var endDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',endDate);
+   $('#report_vehicleInfoSearchResultDetail_table_endDate').html($(this).datebox('getValue'));
+   }" />&nbsp;&nbsp;<label
+							class="alsp">查询分类</label><select
+							id="report_vehicleInfoSearchResultDetail_choseClass_id"
+							name="choseClass" class="easyui-combobox" style="width: 150px;"
+							data-options="
+        onSelect: function(rec){
+            report_vehicleInfoSearchResultDetail_choseClassIsWhat=rec.value;
+        }">
+								<option value="SELECT">--请选择--</option>
+								<option value="SELECTSUCCESS">查询成功</option>
+								<option value="SELECTBAD">查询失败</option>
+								<!-- <option value="SELECT">查询总量</option> -->
+						</select>&nbsp;&nbsp;&nbsp; <a
+							id="report_vehicleInfoSearchResultDetail_searchButton"
+							class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>&nbsp;
+							<a id="report_vehicleInfoSearchResultDetail_cleanButton"
+							class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+
+		<br>
+		<table>
+			<tr>
+				<td id="report_vehicleInfoSearchResultDetail_table_beginDate"
+					style="width: 80px;"></td>
+				<td>至</td>
+				<td id="report_vehicleInfoSearchResultDetail_table_endDate"
+					style="width: 80px;"></td>
+			</tr>
+		</table>
+		<h4 align="center">FICO大数据评分查询结果明细报表</h4>
+		<br>
+		<div data-options="region:'center',border:true,fit:true">
+			<table id="report_vehicleInfoSearchResultDetail_datagrid"></table>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var report_vehicleInfoSearchResultDetail_form = undefined;
+	var report_vehicleInfoSearchResultDetail_datagrid = undefined;
+	$(function() {
+		report_vehicleInfoSearchResultDetail_form = $('#report_vehicleInfoSearchResultDetail_form');
+		$('#report_vehicleInfoSearchResultDetail_searchButton').bind('click',
+				function() {
+					report_vehicleInfoSearchResultDetail_search();
+				});
+		$('#report_vehicleInfoSearchResultDetail_cleanButton').bind('click',
+				function() {
+					report_vehicleInfoSearchResultDetail_clean();
+				});
+		report_vehicleInfoSearchResultDetail_datagrid = $(
+				'#report_vehicleInfoSearchResultDetail_datagrid').datagrid({
+			url : "/opas-naps/queryFicoDetailReportDataByDate.json",
+			border : false,
+			animate : true,
+			pagination : true,
+			fitColumns : true,
+			singleSelect : false,
+			rownumbers : true,
+			pageSize : 15,
+			pageList : [ 15, 20, 50 ],
+			columns : [ [ {
+				title : '条形码',
+				field : 'APP_ID',
+				width : "30%",
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, {
+				title : '查询手机号',
+				field : 'C1_MOBILE',
+				width : "30%",
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			}, {
+				title : '查询结果',
+				field : 'RESULT',
+				width : "30%",
+				halign : 'center',
+				editor : {
+					type : 'validatebox',
+					options : {
+						required : true
+					}
+				}
+			} ] ]
+		});
+	});
+
+	function showWaringBox(message) {
+		$.messager.alert('提示', message, 'warning');
+	}
+
+	function report_vehicleInfoSearchResultDetail_search() {
+		var beginDate = $('#report_vehicleInfoSearchResultDetail_beginDate')
+				.datebox('getValue');
+		var endDate = $('#report_vehicleInfoSearchResultDetail_endDate')
+				.datebox('getValue');
+		var day = GetDateDiff(beginDate, endDate);
+		if (day > 367) {
+			alert("区间不能超过1年");
+			return;
+		}
+
+		if (beginDate == "" || endDate == "") {//没有选择起止时间
+			showWaringBox('请选择起止时间.');
+			return null;
+		} else {
+			var paramArray = report_vehicleInfoSearchResultDetail_form
+					.serializeArray();//new Array();
+			var jsondata = common.formToJson(paramArray);
+			report_vehicleInfoSearchResultDetail_datagrid.datagrid('load',
+					jsondata);
+		}
+	}
+	function report_vehicleInfoSearchResultDetail_clean() {
+		report_vehicleInfoSearchResultDetail_datagrid.datagrid('load', {});
+		//因为 加了 value=-1 属性 以至于   form的reset 对这些input框失效了 所以单独clear
+		//$('#report_vehicleInfoSearchResultDetail_choseClass_id').combobox('clear');
+		//$('#report_vehicleInfoSearchResultDetail_table_beginDate').html('');
+		//$('#report_vehicleInfoSearchResultDetail_table_endDate').html('');
+		report_vehicleInfoSearchResultDetail_form.form('reset');
+	}
+
+	function GetDateDiff(startDate, endDate) {
+		var startTime = new Date(Date.parse(startDate.replace(/-/g, "/")))
+				.getTime();
+		var endTime = new Date(Date.parse(endDate.replace(/-/g, "/")))
+				.getTime();
+		var dates = Math.abs((startTime - endTime)) / (1000 * 60 * 60 * 24);
+		return dates;
+	}
+</script>
+</html>

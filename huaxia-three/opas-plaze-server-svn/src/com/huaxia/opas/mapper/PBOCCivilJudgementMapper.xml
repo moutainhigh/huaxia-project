@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCCivilJudgementMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_PUBLIC_CIVJUDGE (
+			APP_ID,REG_COURT,CASE_REASON,REG_DATE,CLOSE_CASE_WAY,JUDG_MEDIATE_RST,JUDG_MEDIATE_EFFCT_DT,LAW_OBJECT,
+			LAW_OBJECT_AMT,
+			CRT_TIME,CRT_USER
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.court},
+			#{item.caseReason},
+			#{item.registerDate},
+			#{item.closedType},
+			#{item.caseResult},
+			#{item.caseValidatedate},
+			#{item.suitObject},
+			#{item.suitObjectMoney},
+			SYSDATE,
+			'SYSTEM'
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

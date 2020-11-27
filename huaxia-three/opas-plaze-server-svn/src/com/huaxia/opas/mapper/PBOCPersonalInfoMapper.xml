@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCPersonalInfoMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_PERSONAL_INFO (
+			APP_ID,REPORT_NO,QUERY_REQ_TIME,REPORT_TIME,PRODUCT_TYPE,PRODUCT_FORMAT,PRODUCT_VERSION,QUERYED_NAME,
+			QUERYED_CERT_TYPE,QUERYED_CERT_NO,QRY_REASON,QUERY_ORG,QRY_OPERATOR,QUERY_RESULT_PROMPT,GENDER,BIRTH_DAY,
+			MARITAL_STATUS,CELL_PHONE,C_COMP_PHONE,RESI_TEL,RESIDENCY_STATUS,DEGREE,COMMUNICATION_ADDR,DOMICILE_ADDR,
+			MATE_NAME,MATE_CERT_TYPE,MATE_CERT_NO,MATE_COMPANY,MATE_CONTACT_TEL,
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{reportSN, jdbcType = VARCHAR},
+			#{queryTime, jdbcType = VARCHAR},
+			#{reportCreateTime, jdbcType = VARCHAR},
+			#{productType, jdbcType = VARCHAR},
+			#{format, jdbcType = VARCHAR},
+			#{formatVersion, jdbcType = VARCHAR},
+			#{name, jdbcType = VARCHAR},
+			#{certtype, jdbcType = VARCHAR},
+			#{certno, jdbcType = VARCHAR},
+			#{queryReason, jdbcType = VARCHAR},
+			#{queryOrg, jdbcType = VARCHAR},
+			#{userCode, jdbcType = VARCHAR},
+			#{queryResultCue, jdbcType = VARCHAR},
+			
+			#{gender, jdbcType = VARCHAR},
+			#{birthday, jdbcType = VARCHAR},
+			#{maritalState, jdbcType = VARCHAR},
+			#{mobile, jdbcType = VARCHAR},
+			#{officeTelephoneNo, jdbcType = VARCHAR},
+			#{homeTelephoneNo, jdbcType = VARCHAR},
+			#{eduLevel, jdbcType = VARCHAR},
+			#{eduDegree, jdbcType = VARCHAR},
+			#{postAddress, jdbcType = VARCHAR},
+			#{registeredAddress, jdbcType = VARCHAR},
+			
+			#{spouseName, jdbcType = VARCHAR},
+			#{spouseCerttype, jdbcType = VARCHAR},
+			#{spouseCertno, jdbcType = VARCHAR},
+			#{spouseEmployer, jdbcType = VARCHAR},
+			#{spouseTelephoneNo, jdbcType = VARCHAR},
+			
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+
+	<select id="selectCountPbocByAppId" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM OPAS_PBOC_PERSONAL_INFO WHERE APP_ID = #{appId, jdbcType = CHAR}
+	</select>
+	
+	<select id="selectLateAppIdByDayNameIdNo" parameterType="java.util.Map" resultType="java.lang.String">
+	SELECT APP_ID FROM 
+    (SELECT APP_ID,CRT_TIME,QUERYED_CERT_NO,QUERYED_NAME,
+    ROW_NUMBER() OVER( ORDER BY CRT_TIME DESC) AS RN 
+	FROM OPAS_PBOC_PERSONAL_INFO 
+    WHERE QUERYED_CERT_NO=#{idNo} AND QUERYED_NAME=#{name} 
+    AND CRT_TIME &gt;= (SYSDATE-TO_NUMBER(#{dayControl}))
+    AND CRT_TIME IS NOT NULL AND APP_ID IS NOT NULL
+    and substr(app_id,16,1) &lt;&gt; '9'
+    )
+    WHERE RN =1
+	</select>
+	
+	<select id="saveClonePbocData" parameterType="java.util.Map" statementType="CALLABLE">
+		<![CDATA[
+		        {CALL PROC_FN_CLONEPBOC(#{appId,mode=IN,jdbcType=CHAR},
+		        #{lateAppId,mode=IN,jdbcType=CHAR},
+		        #{callResult,mode=OUT,jdbcType=INTEGER},
+		        #{callMsg,mode=OUT,jdbcType=VARCHAR})}
+		]]> 
+	</select>
+	
+</mapper>

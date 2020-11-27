@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<div>
+		<form id="seachPositionCodeForm">
+			<table >
+				<tr>		
+							<td>appid:</td>
+							<td><input type="text" 
+								id="appid_" name="appid_" /></td>
+							<td>任务类型:</td>
+							<td>
+								<select id="taskType_" name="taskType_" onChange="chan(this);" >
+									<option value="">--请选择--</option>
+									<option value="AF">反欺诈</option>
+									<option value="FICO">决策</option>
+								</select>
+							</td>
+					<td>请求节点参数:</td>
+							<td>
+								<select id="requestType_" name="requestType_"  >
+									<option value="">--请选择--</option>
+									
+								</select>
+							</td>
+							<td>状态:</td>
+							<td>
+								<select id="status_" name="status_" >
+									<option value="">--请选择--</option>
+									<option value="0">初始化</option>
+									<option value="1">请求开始</option>
+									<option value="2">响应成功</option>
+									<option value="3">反调工作流开始</option>
+									<option value="7">请求异常</option>
+									<option value="8">响应报文解析异常</option>
+									<option value="9">响应报文入库异常</option>
+									<option value="10">调流异常</option>
+								</select>
+							</td>
+							<td>是否快速件:</td>
+							<td><select id="quickFlag_" name="quickFlag_" >
+									<option value="">--请选择--</option>
+									<option value="0">否</option>
+									<option value="1">是</option>
+								</select></td>
+				</tr>
+				<tr>
+				             <td>工作流进程id:</td>
+							<td><input type="text" id="processid_" name="processid_" /></td>
+							<td>工作流节点id:</td>
+							<td><input type="text" id="nodeid_" name="nodeid_" /></td>
+				</tr>
+				<tr>
+							<td><a  class="easyui-linkbutton" id="btnCurrQuery">查询 </a>
+						    </td>  
+							<td><a  class="easyui-linkbutton" id="updateTmpSingleOrBatch" onclick="updateTmpSingleOrBatch();">批量更改</a>
+						    </td>  
+						    <td><a  class="easyui-linkbutton" id="InsertTask">插入</a>
+						    </td>
+				
+				</tr>
+			</table>
+		</form>
+		
+	</div>
+	<table id="tblInfo" title="" class="easyui-datagrid"
+		style="width: 98%;height:670px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[10,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="app_id" width="5%" align="center" checkbox="true">选择</th>
+				<th field="appid" width="10%" align="center">appId</th>
+				<th field="taskType" width="10%"  align="center" data-options="formatter:tasktypeformat">任务类型</th>
+				<th field="requestType" width="10%"  align="center" >请求参数节点</th>
+				<th field="status" width="10%"  align="center" data-options="formatter:statusformat">状态</th>
+				<th field="nodeid" width="14%"  align="center" >工作流节点ID</th>
+				<th field="processid" width="14%"  align="center">工作流进程ID</th>
+				<th field="quickFlag" width="7%"  align="center" data-options="formatter:quickformat">是否快速件</th> 
+				<th field="requestNum" width="5%"  align="center">重试次数</th>
+				<th field="failureNum" width="5%"  align="center">失败次数</th>
+				<th field="updTime" width="10%"  align="center">更新时间</th>
+				<th field="expMessage" width="10%"  align="center" data-options="formatter:queryDetail">异常状态</th>  
+			</tr>
+		</thead>
+	</table>
+	
+</body>
+<script>
+		var tblInfo = $("#tblInfo");
+		var url = location.href;
+		$(function(){
+			var opts = tblInfo.datagrid("options");
+			opts.url = '/opas-naps/queryTaskFicoFraudAppid.json';
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			tblInfo.datagrid("reload",jsondata);
+			
+			  /* $("#taskType_").combobox({
+				onChange:function(n,o){
+					var obj = $("#taskType_").combobox('getValue');
+					if(obj != null && obj == "AF"){
+						var req_af = '<option value="">--请选择--</option>' +
+						             '<option value="AF1001">--AF1001--</option>' +
+						             '<option value="AF1002">--AF1002--</option>' +
+						             '<option value="AF1003">--AF1003--</option>' +
+						             '<option value="AF1004">--AF1004--</option>' +
+						             '<option value="AF1005">--AF1005--</option>';
+						$("#requestType_").html("--请选择--")
+						$("#requestType_").html(req_af); */
+					/* }else if(obj != null && obj == "FICO"){
+						var req_fico = '<option value="">--请选择--</option>' +
+						               '<option value="SD0100">SD0100</option>' +
+						               '<option value="SD0200">SD0200</option>' +
+						               '<option value="SD0300">SD0300</option>' +
+						               '<option value="SD0400">SD0400</option>' +
+						               '<option value="SD0500">SD0500</option>' +
+						               '<option value="SD0600">SD0600</option>' +
+						               '<option value="SD0700">SD0700</option>' +
+						               '<option value="SD0800">SD0800</option>' +
+						               '<option value="YDJ0100">YDJ0100</option>' +
+						               '<option value="YDJ0200">YDJ0200</option>' +
+						               '<option value="YDJ0300">YDJ0300</option>' +
+						               '<option value="YDJ0400">YDJ0400</option>' +
+						               '<option value="YDJ0500">YDJ0500</option>' +
+						               '<option value="YDJ0600">YDJ0600</option>' +
+						               '<option value="YDJ0700">YDJ0700</option>' +
+						               '<option value="YDJ0800">YDJ0800</option>';
+						$("#requestType_").html("");
+						$("#requestType_").html(req_fico);
+					}else{
+						$("#requestType_").html("");
+						$("#requestType_").html('<option value="">--请选择--</option>');
+					}
+					
+				}
+			});   */
+		});
+		
+		$('#btnCurrQuery').click(function() {
+			var appIds = tblInfo.datagrid("getSelections");//选中的记录
+			//表单序列化
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			//动态加载url
+			$("#tblInfo").datagrid('options').url='/opas-naps/queryTaskFicoFraudAppid.json';
+			$("#tblInfo").datagrid('load', jsondata);
+			
+		});
+		
+		$('#InsertTask').click(function() {
+			$.messager.confirm('请您确认', '是否插入？', function(r) {
+				if (r) {
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			var appid = checkParm($('#appid_').val());
+			var taskType = checkParm($('#taskType_').val()); 
+			var status = checkParm($('#status_').val());
+			var requestType = checkParm($('#requestType_').val());
+			var quickFlag = checkParm($('#quickFlag_').val());
+			var processid = checkParm($('#processid_').val());
+			var nodeid = checkParm($('#nodeid_').val());
+			if(appid == "0"){
+				alert("插入失败，条码不能为空");
+				return;
+			}
+			if(taskType == "0"){
+				alert("插入失败，任务类型不能为空");
+				return;
+			}
+			if(status == "0"){
+				alert("插入失败，状态不能为空");
+				return;
+			}
+			if(requestType == "0"){
+				alert("插入失败，请求参数节点不能为空");
+				return;
+			}
+			if(quickFlag == "0"){
+				alert("插入失败，快速发卡标识不能为空");
+				return;
+			}
+			if(processid == "0"){
+				alert("插入失败，工作流进程id不能为空");
+				return;
+			}
+			if(nodeid == "0"){
+				alert("插入失败，工作流节点不能为空");
+				return;
+			}
+			$cf.ajax({
+				url : "/opas-naps/insertTaskFicoFraudAppid.json",
+				data : {"jsondata":jsondata},
+				onSuccess : function(dataRes) {
+					if (dataRes.RSP_BODY.success) {
+						$.messager.alert("操作提示", "插入成功!", "info", function() {
+							tblInfo.datagrid("reload");	
+						});
+
+					} else {
+						$.messager.alert("操作提示", "插入失败!", "error");
+						return;
+					}
+				}
+			});
+				}});
+		});
+		function chan(t){
+			obj = t.value;
+			if(obj != null && obj == "AF"){
+				var req_af = '<option value="">--请选择--</option>' +
+				             '<option value="AF1001">AF1001</option>' +
+				             '<option value="AF1002">AF1002</option>' +
+				             '<option value="AF1003">AF1003</option>' +
+				             '<option value="AF1004">AF1004</option>' +
+				             '<option value="AF1005">AF1005</option>';
+				$("#requestType_").html("--请选择--")
+				$("#requestType_").html(req_af); 
+			 }else if(obj != null && obj == "FICO"){
+				var req_fico = '<option value="">--请选择--</option>' +
+				               '<option value="SD0100">SD0100</option>' +
+				               '<option value="SD0200">SD0200</option>' +
+				               '<option value="SD0300">SD0300</option>' +
+				               '<option value="SD0400">SD0400</option>' +
+				               '<option value="SD0500">SD0500</option>' +
+				               '<option value="SD0600">SD0600</option>' +
+				               '<option value="SD0700">SD0700</option>' +
+				               '<option value="SD0800">SD0800</option>' +
+				               '<option value="YDJ0100">YDJ0100</option>' +
+				               '<option value="YDJ0200">YDJ0200</option>' +
+				               '<option value="YDJ0300">YDJ0300</option>' +
+				               '<option value="YDJ0400">YDJ0400</option>' +
+				               '<option value="YDJ0500">YDJ0500</option>' +
+				               '<option value="YDJ0600">YDJ0600</option>' +
+				               '<option value="YDJ0700">YDJ0700</option>' +
+				               '<option value="YDJ0800">YDJ0800</option>';
+				$("#requestType_").html("");
+				$("#requestType_").html(req_fico);
+			}else{
+				$("#requestType_").html("");
+				$("#requestType_").html('<option value="">--请选择--</option>');
+			}
+			
+		}
+		//异常信息详情查看
+		function queryDetail(val, row, index) {
+			var dbid = val+"";
+			return "<a href=javascript:getInfo();>"+dbid+"</a>";
+		}
+		function tasktypeformat(val, row, index) {
+			var value = val;
+			if(value == "AF"){
+				return "反欺诈";
+			}else if(value == "FICO"){
+				return "决策";
+			}else{
+				return val;
+			}
+		}
+		function quickformat(val, row, index) {
+			var value = val;
+			if(value == "1"){
+				return "是";
+			}else if(value == "0"){
+				return "否";
+			}else{
+				return val;
+			}
+		}
+		function statusformat(val, row, index) {
+			var value = val;
+			if(value == "0"){
+				return "初始化";
+			}else if(value == "1"){
+				return "请求开始";
+			}else if(value == "2"){
+				return "响应成功";
+			}else if(value == "7"){
+				return "请求异常";
+			}else if(value == "8"){
+				return "响应报文解析异常";
+			}else if(value == "9"){
+				return "响应报文入库异常";
+			}else if(value == "10"){
+				return "调流异常";
+			}else{
+				return val;
+			}
+		}
+		function getInfo(){
+			var infoObj = tblInfo.datagrid("getSelected");
+			var appid = infoObj["appid"]; //动态传参数 
+			window.open("fqzFicoExpMessageDetail.html?app_id="+appid,
+					"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-67));
+			
+		}
+		function overTrim(dataObject) {
+				var jsonObject = '{';
+				var k = 0;
+				$.each(dataObject, function() {
+					k++;
+					var objName = this.name;
+					var objValue = this.value.trim();
+					jsonObject += '"' + objName + '":';
+					jsonObject += '"' + objValue + '"';
+					if (k < dataObject.length) {
+						jsonObject += ",";
+					}
+				});
+				jsonObject += '}';
+				return eval("(" + jsonObject + ")");
+		}
+		
+		function checkParm(obj) {
+         if(obj != null && obj != "" && obj.trim!= "" && obj != undefined){
+        	 return "1";
+         }else{
+        	 return "0";
+         }
+
+	}
+		//
+		function updateTmpSingleOrBatch(){
+			$.messager.confirm('请您确认', '是否更改？', function(r) {
+				if (r) {   
+			var jsonFrom=$('#seachPositionCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			var executionIds = tblInfo.datagrid("getSelections");//选中的记录
+			if(executionIds.length==0){
+				alert("请至少选中一条记录!");
+				return;
+			}
+			
+			var executionIdList = new Array();
+			for(var i=0;i<executionIds.length;i++){
+				var executionId = executionIds[i].appid;
+				executionIdList.push(executionId);
+				
+			}	
+			$cf.ajax({
+				url : "/opas-naps/updatefqzficoSingleOrBatch.json",
+				data : {
+					"executionIdList" : executionIdList
+				},
+				onSuccess : function(dataRes) {
+					if (dataRes.RSP_BODY.isSuccess) {
+						$.messager.alert("操作提示", "更改成功!", "info", function() {
+							tblInfo.datagrid("reload");	
+						});
+
+					} else {
+						$.messager.alert("操作提示", "更改失败!", "error");
+						return;
+					}
+				}
+			});
+				}});
+		}
+		
+</script>

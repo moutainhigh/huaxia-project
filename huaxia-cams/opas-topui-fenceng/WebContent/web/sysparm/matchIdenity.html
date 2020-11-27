@@ -1,0 +1,559 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblIdenity" title="简项公安参数配置" class="easyui-datagrid"
+			style="width: 98%; height: 100%"
+			data-options="selectOnCheck:false,checkOnSelect:false,pageSize:20,pageList:[15,20,50],
+			rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,
+			url:'/opas-naps/matchIdenityList.json',loadMsg:'数据加载中.....',
+			method:'post',toolbar:'#idenity'">
+		<thead frozen="true">
+			<tr>
+				<th field="id" width="2%" align="center" name="id" checkbox="true">全选</th>
+				<th field="cityName" width="8%" align="center">城市名称</th>
+				<th field="idNo" width="6%" align="center" >证件号</th>
+				<th field="telArea" width="6%" align="center">电话区号</th>
+				<th field="inputChannel" width="6%" align="center">进件渠道</th>
+				<th field="extensionAgency" width="10%" align="center" >推广机构单位</th>
+		</thead>
+		<thead>
+				<th field="status" width="4%" align="center" formatter="formatStatus">状态</th>
+				<th field="startTime" width="10%" align="center" formatter="formatDate">启用时间</th>
+				<th field="stopTime" width="10%" align="center" formatter="formatDate">停用时间</th>
+				<th field="updTime" width="10%" align="center" formatter="formatDate">修改时间</th>
+				<th field="lstUpdUser" width="10%" align="center" >最后操作人</th>
+				<th field="operate" width="14%" align="center" formatter="formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="idenity" style="padding: 12px; text-align: laft;">
+		<form id="searchData">
+			城市名称:<input class="easyui-textbox" name="cityName" id="cityName">&nbsp;
+			证件号:<input class="easyui-textbox" name="idNo" id="idNo">&nbsp;
+			电话区号:<input class="easyui-textbox" name="telArea" id="telArea">&nbsp;
+			进件渠道:<input class="easyui-textbox" name="inputChannel" id="inputChannel">&nbsp;
+			<br>
+			推广机构单位:<input class="easyui-textbox" name="extensionAgency" id="extensionAgency">&nbsp;
+			当前状态:<select class="easyui-combobox" name="status" editable="false"
+					style="width: 150px;">
+						<option value="">---请选择---</option>
+						<option value="1">启用</option>
+						<option value="0">停用</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:common.searchTbl('searchData','tblIdenity');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+			<a href="javascript:myOpenWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">新增 </a>
+			<a href="javascript:delMatchIdenitys();"   class="easyui-linkbutton" iconCls="icon-remove">批量删除</a>
+			<a href="javascript:delAll();"            class="easyui-linkbutton" iconCls="icon-remove">全部删除</a>	
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post"
+				ACTION="/opas-naps/common/MatchIdenityServlet.json"
+				target="tartIframe">
+				<div style="margin: 10px 0 0 0px; width: 100%;">
+					<label for="impFileNamelb"><font size="2">选择导入文件:</font></label> <input
+						id="fb" name="file1" class="easyui-filebox"
+						data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'"
+						style="width: 400px"> <input type="hidden" id="userCode"
+						class="easyui-textbox" name="userCode"> <input
+						type="hidden" id="userName" class="easyui-textbox" name="userName">
+					<span class="textbox"
+						style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;"
+						onclick="importExcel()"> <span
+						class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span> <span
+						class="filebox-label" style="left: 25px;"><font size="2">导入数据</font></span></span>
+						<span>&nbsp;&nbsp;<font color="blue" size="2">批量导入格式：城市名称  证件号  电话区号  进件渠道  推广机构代码</font></span>
+				</div>
+			</form>
+			<iframe frameborder="0" height="0" width="0" name="tartIframe"
+				id="tartIframe"></iframe>
+	</div>
+	</div>	
+		
+	<div id="winAdd" class="easyui-window" title="新增" style="width: 350px; height: 300px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">城市名称：</td>
+					<td><input class="easyui-validatebox" id="cityName" type="text" name="cityName" data-options="required:true,validType:'maxLength[25]'"></td>
+				</tr>
+				<tr>
+					<td align="right">证件号:</td>
+					<td><input class="easyui-numberbox" id="idNo" type="text" name="idNo" data-options="required:true,validType:'maxLength[4]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">电话区号:</td>
+					<td><input class="easyui-validatebox" id="telArea" type="text" name="telArea" data-options="required:true,validType:'maxLength[4]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">进件渠道:</td>
+					<td><input class="easyui-validatebox"  name="inputChannel" data-options="required:true,validType:'maxLength[2]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">推广机构单位:</td>
+					<td><input class="easyui-validatebox" name="extensionAgency" type="text" data-options="required:true,validType:'maxLength[10]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">状态:</td>
+					<td>
+						<select class="easyui-combobox" name="status" editable="false" id="status1"
+							style="width: 150px;">
+								<option value="">---请选择---</option>
+								<option value="1" selected="selected">启用</option>
+								<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onSave()">保存</a>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="修改" style="width: 350px; height: 300px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input type="hidden" class="easyui-validatebox" name="id" id="id" /></td>
+				</tr>
+				<tr>
+					<td align="right">城市名称:</td>
+					<td><input class="easyui-validatebox" id="cityName" type="text" name="cityName" data-options="required:true,validType:'maxLength[25]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">证件号:</td>
+					<td><input class="easyui-numberbox" id="idNo" type="text" name="idNo" data-options="required:true,validType:'maxLength[4]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">电话区号:</td>
+					<td><input class="easyui-validatebox" style="width: 180px;" id="telArea" type="text" name="telArea" data-options="required:true,validType:'maxLength[4]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">进件渠道:</td>
+					<td><input class="easyui-validatebox" style="width: 180px;" name="inputChannel" id="inputChannel" type="text" data-options="required:true,validType:'maxLength[2]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">推广机构单位:</td>
+					<td><input class="easyui-validatebox" name="extensionAgency" id="extensionAgency" type="text" data-options="required:true,validType:'maxLength[10]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">状态:</td>
+					<td>
+						<select class="easyui-combobox" name="status" editable="false"
+							style="width: 150px;">
+								<option value="">---请选择---</option>
+								<option value="1">启用</option>
+								<option value="0">停用</option>
+						</select></td>
+				</tr>
+			</table>
+			
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')" iconCls="icon-cancel">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()" iconCls="icon-save">保存</a>
+		</div>
+	</div>
+
+</body>
+<script>
+
+var tblIdenity = $("#tblIdenity");
+var addForm = $("#addForm");
+var editForm = $("#editForm");
+var editWindow = $("#winEdit");
+
+var value;
+//取消所有行选中状态，选中的同时将所属行的数据保存至value
+tblIdenity.datagrid({
+	onSelect : function(rowIndex,rowData){
+		$(this).datagrid("unselectAll");
+		value = rowData;
+	}	
+})	 
+
+function formatOper(val, row, index) {
+	return "<a href=javascript:onStart(); >启用</a>&nbsp;<a href=javascript:onStop(); >停用</a>&nbsp;<a href=javascript:editCust(); >修改</a>&nbsp;<a href=javascript:onDelete();>删除</a>&nbsp;";
+}
+
+function formatStatus(val, row, index) {
+	if (val == "0") {
+		return "停用";
+	} else if (val == "1") {
+		return "启用";
+	}
+}
+
+
+myOpenWin = function(winName) {
+	winObj = $("#" + winName + "");
+	winObj.form('clear');
+	$('#status1').combobox('select','1');
+	winObj.window({
+		closed : false
+	});
+}
+
+function editCust(){
+	editWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(value)
+	});
+	var startDate = gridDateFormatYMD(value.startDate);
+	var endDate = gridDateFormatYMD(value.endDate);
+	$('#startDate').datebox('setValue',startDate);
+	$('#endDate').datebox('setValue',endDate);
+}
+
+function onStart(){
+	var id = value.id;
+	if(value.status=='1'){
+		alert("该条记录已经处于启用状态");
+		return;
+	}
+	$.messager.confirm(
+		'请您确认',
+		'确定要启用该条记录吗?',
+		function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/startMatchIdenity.json",
+					data :{"id":id},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							
+							top.$cf.showMsg("启用成功!");
+							
+							tblIdenity.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "启用异常，原因:" + data.RSP_BODY.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});	
+}
+
+function onStop(){
+	var id = value.id;
+	if(value.status=='0'){
+		alert("该条记录已经处于停用状态");
+		return;
+	}
+	$.messager.confirm(
+			'请您确认',
+			'确定要停用该条记录吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/stopMatchIdenity.json",
+						data :{"id":id},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								
+								top.$cf.showMsg("停用成功!");
+								
+								tblIdenity.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "停用异常，原因:" + data.RSP_BODY.exMsg, "error");
+								return;
+							}
+						}
+					});
+				}
+	});
+}
+
+
+function onUpdate() {
+	var jsondata = getFormData(editForm.serializeArray());
+	$cf.ajax({
+		url : "/opas-naps/updateMatchIdenity.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				
+				top.$cf.showMsg("修改成功!");
+				
+				onConcle("winEdit");
+			
+				tblIdenity.datagrid("reload");
+			} else {
+				$.messager.alert("操作提示", "修改异常，原因:" + data.RSP_BODY.exMsg, "error");
+				onConcle("winEdit");
+				return;
+			}
+		}
+	});
+}
+
+
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window("close");
+}
+
+function onSave() {
+	var jsondata = getFormData(addForm.serializeArray());
+	$cf.ajax({
+		url : "/opas-naps/insertMatchIdenity.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				top.$cf.showMsg("添加成功！");
+				onConcle('winAdd');
+				tblIdenity.datagrid("reload");
+				addForm[0].reset();
+			} else {
+				$.messager.alert("操作提示", "添加失败:" + data.RSP_BODY.exMsg, "error");
+				onConcle("winAdd");
+				return;
+			}
+		}
+
+	});
+}
+
+function onDelete(){
+	var id = value.id;
+	$.messager.confirm(
+			'请您确认',
+			'确定要删除该条记录吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/deleteMatchIdenity.json",
+						data :{"id":id},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								
+								top.$cf.showMsg("删除成功!");
+								
+								tblIdenity.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "删除异常，原因:" + data.RSP_BODY.exMsg, "error");
+								return;
+							}
+						}
+					});
+				}
+	});
+}
+
+function setData(data) {
+	editForm.form("load", data);
+	$("#id").attr("readonly", "readonly");
+}
+
+//获取表单数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+
+
+//日期格式转换
+ function formatDate(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+};  
+ 
+	<!-- 批量导入EXCEL文件相关js -->
+	var trigger = true;
+	$('#fb').filebox({    
+		buttonText: '选择文件', 
+		buttonAlign: 'right',
+		buttonIcon:'icon-search',
+		onChange: function (newValue, oldValue) {
+		excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+		if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+			alert("请上传excel格式的文件");
+			$('#fb').filebox('setValue','');
+			return;
+		}
+		if (trigger) {
+			$.messager.confirm({
+				width : 1000,
+				height : 200,
+				title : '请确认文件格式',
+				msg : "请确认导入的表格格式为：<br><br><br>城市名称  证件号  电话区号  进件渠道  推广机构代码",
+				fn : function(r) {
+					if (!r) {
+						trigger = false;
+						$('#fb').filebox("reset");
+						$('#fb').filebox('setValue','');
+					}
+				}
+			})
+		}
+	}
+})
+
+	function resetValue(){
+		$('#fb').filebox('setValue','');
+		}
+
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+			return;
+				}
+			}
+	if (fileValue == "") {
+				$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+				importSave();
+		}
+	}
+	//保存上传数据
+	function importSave() {
+		$('#formFile').submit();
+ 		$.messager.progress(); 
+	}
+	
+	var tartIframe = document.getElementById("tartIframe");
+		tartIframe.src = "/opas-naps/common/MatchIdenityServlet.json";
+		if(tartIframe.attachEvent){
+			tartIframe.attachEvent("onload",function(){
+				responPage();
+			});
+		}else{
+			tartIframe.onload = function(){
+				responPage();			
+			}
+		} 
+	function responPage(){
+	 	$.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+				tblIdenity.datagrid("reload");
+				top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+			}
+		if(value[0] == "false"){
+				$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+			} 
+		if(value[0] == "error"){
+				$.messager.alert("操作提示",value[1], "error");
+			} 
+		}	
+
+	//批量删除
+	function delMatchIdenitys() {
+		var orgObj = tblIdenity.datagrid("getChecked");
+		if (orgObj.length <= 0) {
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;
+		}
+		var ids = new Array();
+		for (var i = 0; i < orgObj.length; i++) {
+			ids.push(orgObj[i].id);
+		}
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/delMatchIdenitys.json",
+							data : {"ids":ids},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("删除成功！");
+									tblIdenity.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+	
+	//全部删除
+	function delAll() {
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/deleteAllmatchIdenity.json",
+							data : {},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("删除成功！");
+									tblIdenity.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+
+
+
+</script>

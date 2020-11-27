@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;" >
+	<form id="showForm">
+		<table cellpadding="10"	style="border-collapse: separate; border-spacing: 10px;"> 
+			<tr>
+				<td>流水号:</td>
+				<td><input class="easyui-textbox" id="appId" name="appId" type="text" readonly="true"></input></td>
+				<td>客户姓名:</td>
+				<td><input class="easyui-textbox" id="custName" name="custName" type="text" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>证件号码:</td>
+				<td><input class="easyui-textbox" id="certifiNo" name="certifiNo" type="text" readonly="true"></input></td>
+				<td>手机号:</td>
+				<td><input class="easyui-textbox" id="mobileNo" name="mobileNo" type="text" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>办公电话:</td>
+				<td><input class="easyui-textbox" id="officeTel" name="officeTel" type="text" readonly="true"></input></td>
+				<td>家庭电话:</td>
+				<td><input class="easyui-textbox" id="housePhone" name="housePhone" type="text" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>过件码:</td>
+				<td><input class="easyui-textbox" id="passCode" name="passCode" type="text" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>退回征信备注:</td>
+				<td><input class="easyui-textbox" id="denyMemo" name="denyMemo" type="text" readonly="true" mutiline="true"></input></td>
+			</tr>
+			<tr>
+				<td>授信人员:</td>
+				<td><input class="easyui-textbox" id="approverName" name="approverName" type="text" readonly="true"></input></td>
+				<td>时间:</td>
+				<td><input class="easyui-textbox" id="approveTime" name="approveTime" type="text" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>质检结果:</td>
+				<td><input class="easyui-textbox" id="checkResult" name="checkResult" type="text" mutiline="true" readonly="true"></input></td>
+				<td>质检备注:</td>
+				<td><input class="easyui-textbox" id="checkCondition" name="checkCondition" type="text" mutiline="true" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>操作员:</td>
+				<td><input class="easyui-textbox" id="crtUser" name="crtUser" type="text" readonly="true"></input></td>
+				<td>操作时间:</td>
+				<td><input class="easyui-textbox" id="crtDate" name="crtDate" type="text" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>批量处理标记:</td>
+				<td><input class="easyui-textbox" id="batchCode" name="batchCode" type="text" readonly="true"></input></td>
+			</tr>
+			<tr>
+				<td>调查纪要:</td>
+				<td><input class="easyui-textbox" id="memo" name="memo" type="text" data-options="multiline:true" style="width:300px;height:100px" readonly="true"></input></td>
+			</tr>
+		</table>
+	</form>
+	<script type="text/javascript">
+	var showForm=$('#showForm');
+	var ydjFlag = window.parent.opener.ydjFlag;
+	$(function(){
+		var url = location.href;
+		var appId = url.split("=")[1];
+		$cf.ajax({
+			url : '/opas-naps/credit_check_query.json',
+			data : {
+				'appId' : appId,
+				'ydjFlag' : ydjFlag
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.resultMap;
+				var o = eval('(' +result+ ')');
+				showForm.form("load", o);
+			}
+		});
+	});
+</script>
+</body>
+

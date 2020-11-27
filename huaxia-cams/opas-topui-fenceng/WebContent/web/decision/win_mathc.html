@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>团办名单</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId = GetQueryString("appId");
+		$cf.ajax({
+			data : {
+				"appId" : appId,
+				"page":"0",
+				"rows":"300",
+				"flag":"queryBzkTeamList_tab_view"
+			},
+			url : "/opas-naps/querySystemDecision_tab_view.json",
+			onSuccess : function(res) {
+				var result="";
+				var jsonResult = res.RSP_BODY.rows;
+				var total = res.RSP_BODY.total;
+				for(var i=0;i<total;i++){
+					result += "<tr>";
+					result += "<td>"+(i+1)+"</td>";
+					result += "<td>"+jsonResult[i].teamId+"</td>";
+					result += "<td>"+jsonResult[i].company+"</td>";
+					result += "<td>"+jsonResult[i].authCriterion+"</td>";
+					result += "<td>"+jsonResult[i].approveContent+"</td>";
+					result += "<td>"+formatDate(jsonResult[i].approveVailudDate)+"</td>";
+					result += "</tr>";
+				}
+				$('#template').append(result);
+			}
+		});
+
+	});
+	//日期格式转换
+	 function formatDate(value) {
+		var str = getTaskTime(value);
+		if (str.indexOf('1970') >= 0) {
+			return '';
+		} else {
+			return str;
+		}
+	} 
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+				+ second;
+	};
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">团办名单</legend>
+	<form id="mathcForm">
+		<table id="template" class="area-list area-list-style-1">
+ 				<thead>
+					<tr>
+						<th  width="5%" align="center" ></th>
+						<th  width="15%">团办号</th>
+						<th  width="20%">单位名称</th>
+						<th  width="20%">授信标准</th>
+						<th  width="20%">批复内容</th>
+						<th  width="20%" >有效期</th>
+					</tr>
+				</thead>
+			</table>
+	</form>	
+</fieldset>	
+</body>
+</html>

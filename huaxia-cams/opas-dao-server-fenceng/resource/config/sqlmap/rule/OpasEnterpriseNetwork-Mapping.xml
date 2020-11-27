@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasEnterpriseNetwork">
+
+
+	
+	<resultMap id="enterpriseNetworkMap" type="java.util.Map">
+	   <result column="ENTSTATUS" jdbcType="VARCHAR" property="entstatus" />
+	</resultMap>
+	
+	
+	<!-- 企业网经营状态查询 -->
+	<select id="queryEpStatus"  parameterType="java.lang.String" resultMap="enterpriseNetworkMap">
+  	   select
+		
+		t1.ENTSTATUS||t2.JYZT as ENTSTATUS
+		from TRD_QYHY_INFO_DATA t left join
+		TRD_QYHY_INFO_BASIC t1 on t.app_id = t1.app_id
+		left join TRD_QYHY_INFO_ORGDETAIL t2 on t.app_id = t2.app_id  and t.code='200'
+  	  <where>
+		t.app_id = #{appId, jdbcType=VARCHAR}
+	  </where>
+	</select>
+	
+
+	
+</mapper>

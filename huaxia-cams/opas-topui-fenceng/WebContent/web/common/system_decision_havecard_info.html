@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>已持卡客户信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+<style type="text/css">
+tr{
+	width:832px;
+	height:25px;
+}
+#baseTable input{
+	width:350px;
+}
+</style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId = GetQueryString("appId");
+		var flag = GetQueryString("flag");
+	/* 	var c = new Array("0:非失信被执行人","1:失信被执行人");// */
+		var haveCardcustInfoForm=$("#haveCardcustInfoForm");
+		var cardInfoForm=$("#cardInfoForm");
+		var huiForm=$("#huiForm");
+		var applyCard= GetQueryString("applyCards");//申请卡产品编号4位
+		var c1c2Flag= GetQueryString("c1c2Flag");//申请卡主附卡标识  1主附同申  2 单办附卡  3单办主卡
+		$cf.ajax({
+			data : {
+				"appId" : appId,
+				"flag" : flag,
+				"applyCard":applyCard,
+				"c1c2Flag":c1c2Flag
+			},
+			url : "/opas-naps/systemDecision_havaCardCustInfo.json",
+			onSuccess : function(res) {
+				var jsonHaveCardCustInfo = res.RSP_BODY.summaryInfo;
+				var haveCardCustInfojson = eval('(' +jsonHaveCardCustInfo+ ')');
+				haveCardcustInfoForm.form("load", haveCardCustInfojson);
+				//var c1c2_flag=haveCardCustInfojson.c1c2_flag;
+				var cardInfo = res.RSP_BODY.detail;
+				var cardInfojson = eval('(' +cardInfo+ ')');
+				cardInfoForm.form("load", cardInfojson);
+				huiForm.form("load", cardInfojson);
+				//判断数量是否为空,空变为零
+				if($("#bzkCardNum").val()==null||$("#bzkCardNum").val()==""){
+					$("#bzkCardNum").val("0");
+				}
+				if($("#ydjCardNum").val()==null||$("#ydjCardNum").val()==""){
+					$("#ydjCardNum").val("0");
+				}
+				if($("#bzkTCardNum").val()==null||$("#bzkTCardNum").val()==""){
+					$("#bzkTCardNum").val("0");
+				}
+				if($("#ydjTCardNum").val()==null||$("#ydjTCardNum").val()==""){
+					$("#ydjTCardNum").val("0");
+				}
+				 /* var cardStat = haveCardCustInfojson.CARD_STAT;
+				if(flag=="1"){
+					$("#cardStat_ydj").val(cardStat);
+				}else{
+					$("#cardStat_bzk").val(cardStat);
+				}  */
+			}
+		});
+		//设置有值的输入框只读
+		$("input[type='text']").each(function(){
+			var val=$(this).val();
+			if(val!==null&&val!==undefined&&val!==""){
+				$(this).attr("readonly","readonly");
+			}
+		});
+	});
+	
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend  align="center" style="font-size:20px;font-weight:bolder">已持卡客户信息</legend>
+	<form id="haveCardcustInfoForm">
+		<table cellpadding="10" id="baseTable"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>手机号:</td>
+					<td><input type="text" name="mobilephone" id="mobilephone" disabled="true"> </td>
+					<td>单位名称:</td>
+					<td><input type="text" name="businame" id="businame" disabled="true"></td>
+				</tr>
+				<tr>
+					<td>标准卡账户状态:</td>
+					<td><input type="text" name="cardStat_bzk" id="cardStat_bzk" disabled="true"></td>
+					<td>易达金账户状态:</td>
+					<td><input type="text" name="cardStat_ydj" id="cardStat_ydj" disabled="true"></td>
+				</tr>
+				<tr>
+					<td>标准卡账户额度:</td>
+					<td><input type="text" name="limit_bzk" id="limit_bzk" disabled="true"></td>
+					<td>易达金账户额度:</td>
+					<td><input type="text" name="limit_ydj" id="limit_ydj" disabled="true"></td>
+				</tr>
+				<tr>
+					<td>单位电话:</td>
+					<td><input type="text" name="busiphone" id="busiphone" disabled="true"></td>
+					<td>住宅电话:</td>
+					<td><input type="text" name="homephone" id="homephone" disabled="true"></td>
+				</tr><tr>
+					<td>联系人电话:</td>
+					<td><input type="text"name="conTel1" id="conTel1" disabled="true"></td>
+					<td>联系人姓名:</td>
+					<td><input type="text" name="conName1" id="conName1" disabled="true"></td>
+				</tr><tr>
+					<td>账单地址:</td>
+					<td><input type="text" name="billAddr" id="billAddr" disabled="true"></td>
+					<td>账单地址类型:</td>
+					<td><input type="text" name="addType" id="addType" disabled="true"></td>
+				</tr>
+				<tr>
+					<td>逾期金额（当前）：</td>
+					<td><input type="text" name="AGE_AMT" id="AGE_AMT" disabled="true"></td>
+					<td>逾期期数（当前）：</td>
+					<td><input type="text" name="AGE_DAYS" id="AGE_DAYS" disabled="true"></td>
+				</tr>
+				<!-- <tr>
+					<td>首张已持卡开户日期：</td>
+					<td><input type="text" name="openDate1" id="openDate1" disabled="true"></td>
+				</tr> -->
+			</table>
+	</form>	
+</fieldset>	
+<fieldset>
+	<legend>已持卡信息</legend>
+	<form id="cardInfoForm">
+	<table 	style="border-collapse: separate; border-spacing: 10px;" id="datalist">
+		<tr>
+			<td>已持卡卡种：</td>
+			<td><input type="text" name="product1" id="product1" disabled="true"/></td>
+			<td><input type="text" name="product2" id="product2" disabled="true"/></td>
+			<td><input type="text" name="product3" id="product3" disabled="true"/></td>
+			<td><input type="text" name="product4" id="product4" disabled="true"/></td>
+			<td><input type="text" name="product5" id="product5" disabled="true"/></td>
+			<td><input type="text" name="product6" id="product5" disabled="true"/></td>
+			<td><input type="text" name="product7" id="product7" disabled="true"/></td>
+			<td><input type="text" name="product8" id="product8" disabled="true"/></td>
+			<td><input type="text" name="product9" id="product9" disabled="true"/></td>
+			<td><input type="text" name="product10" id="product10" disabled="true"/></td>
+		</tr>
+		<tr>
+			<td>卡片对应额度：</td>
+			<td><input type="text" name="credLmt1" id="credLmt1" disabled="true"></td>
+			<td><input type="text" name="credLmt2" id="credLmt2" disabled="true"></td>
+			<td><input type="text" name="credLmt3" id="credLmt3" disabled="true"></td>
+			<td><input type="text" name="credLmt4" id="credLmt4" disabled="true"></td>
+			<td><input type="text" name="credLmt5" id="credLmt5" disabled="true"></td>
+			<td><input type="text" name="credLmt6" id="credLmt6" disabled="true"></td>
+			<td><input type="text" name="credLmt7" id="credLmt7" disabled="true"></td>
+			<td><input type="text" name="credLmt8" id="credLmt8" disabled="true"></td>
+			<td><input type="text" name="credLmt9" id="credLmt9" disabled="true"></td>
+			<td><input type="text" name="credLmt10" id="credLmt10" disabled="true"></td>
+		</tr>
+		<tr>
+			<td>卡片状态：</td>
+			<td><input type="text" name="cardstat1" id="cardstat1" disabled="true"></td>
+			<td><input type="text" name="cardstat2" id="cardstat2" disabled="true"></td>
+			<td><input type="text" name="cardstat3" id="cardstat3" disabled="true"></td>
+			<td><input type="text" name="cardstat4" id="cardstat4" disabled="true"></td>
+			<td><input type="text" name="cardstat5" id="cardstat5" disabled="true"></td>
+			<td><input type="text" name="cardstat6" id="cardstat6" disabled="true"></td>
+			<td><input type="text" name="cardstat7" id="cardstat7" disabled="true"></td>
+			<td><input type="text" name="cardstat8" id="cardstat8" disabled="true"></td>
+			<td><input type="text" name="cardstat9" id="cardstat9" disabled="true"></td>
+			<td><input type="text" name="cardstat10" id="cardstat10" disabled="true"></td>
+		</tr>
+		<tr>
+			<td>主附卡标识:</td>
+			<td><input type="text" name="maflag1" id="maflag1" disabled="true"></td>
+			<td><input type="text" name="maflag2" id="maflag2" disabled="true"></td>
+			<td><input type="text" name="maflag3" id="maflag3" disabled="true"></td>
+			<td><input type="text" name="maflag4" id="maflag4" disabled="true"></td>
+			<td><input type="text" name="maflag5" id="maflag5" disabled="true"></td>
+			<td><input type="text" name="maflag6" id="maflag6" disabled="true"></td>
+			<td><input type="text" name="maflag7" id="maflag7" disabled="true"></td>
+			<td><input type="text" name="maflag8" id="maflag8" disabled="true"></td>
+			<td><input type="text" name="maflag9" id="maflag9" disabled="true"></td>
+			<td><input type="text" name="maflag10" id="maflag10" disabled="true"></td>
+		</tr>
+	</table>
+	</form>
+</fieldset>	
+<fieldset>
+	<form id="huiForm">
+		<table>
+			<thead>
+				<tr>
+					<th>已持卡信息汇总</th>
+					<th>标准卡</th>
+					<th>易达金</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>非销户类主卡数量:</td>
+					<td><input type="text" name="bzkCardNum" id="bzkCardNum" disabled="disabled"></td>
+					<td><input type="text" name="ydjCardNum" id="ydjCardNum" disabled="disabled"></td>
+				</tr>
+				<tr>
+					<td>销户类主卡数量:</td>
+					<td><input type="text" name="bzkTCardNum" id="bzkTCardNum" disabled="disabled"></td>
+					<td><input type="text" name="ydjTCardNum" id="ydjTCardNum" disabled="disabled"></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</fieldset>		
+</body>
+</html>

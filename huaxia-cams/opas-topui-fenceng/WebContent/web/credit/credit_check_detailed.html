@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+</head>
+<style type="text/css">
+ .tl {width:80px; }
+ 
+*{margin:0px;padding:0px;}
+} 
+
+ html, body {
+	font: normal 12px Arial;
+} 
+
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+table {
+	border-collapse: collapse;
+}
+table.tableTdColor td{
+border: 2px solid #c0c0c0;
+}
+</style>
+<body style="padding: 20px;" >
+	<form id="showForm" style="font-size:12px;">
+	<fieldset>
+		<legend><span id="D"></span></legend>
+		<table cellpadding="15"	style="border-collapse: separate; border-spacing: 15px;"> 
+			<tr>
+				<td>流水号:</td>
+				<td ><input  id="appId" name="appId" type="text" readonly=readonly style="width:200px"></input></td>
+				<td>客户姓名:</td>
+				<td><input  id="custName" name="custName" type="text" readonly=readonly style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td>证件号码:</td>
+				<td><input  id="certifiNo" name="certifiNo" type="text" readonly=readonly style="width:200px"></input></td>
+				<td>手机号:</td>
+				<td><input  id="mobileNo" name="mobileNo" type="text" readonly=readonly style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td>办公电话:</td>
+				<td><input  id="officeTel" name="officeTel" type="text" readonly=readonly style="width:200px"></input></td>
+				<td>家庭电话:</td>
+				<td><input  id="housePhone" name="housePhone" type="text" readonly=readonly style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td>过件码:</td>
+				<td><input  id="blockCode" name="blockCode" type="text" readonly=readonly style="width:200px"></input></td>
+				<td><!-- <label id="verifyinfoFlagName">款项用途是否合规:</label> --></td>
+				<td><!-- <label id="verifyinfoFlagInput"><input  id="verifyinfoFlag" name="verifyinfoFlag" type="text" readonly=readonly style="width:200px"></input></label> --></td>
+			</tr>
+		</table>
+	</fieldset>
+	
+    <div id="svoiceBack" style="display:none">
+	<fieldset>
+	<legend><span id="H">智能语音退回</span></legend>
+	<div  id="svoicelist" style="width:100%;"></div>
+	</fieldset>
+	</div>
+	
+	<div id="approvalBack" style="display:none">
+	<fieldset>
+	<legend><span id="E">审批退件</span></legend>
+	<div  id="approvedatalist" style="width:100%;"></div>
+	</fieldset>
+	</div>
+	
+	<div id="checking" style="display:none">
+	<fieldset>
+	<legend><span id="E">质检结果</span></legend>
+	<div  id="checkdatalist" style="width:100%;"></div>
+	</fieldset>
+	</div>
+	
+	<fieldset>
+	<legend><span id="G">调查纪要</span></legend>
+	<div  id="datalist" style="width:100%;"></div>
+	</fieldset>
+	<fieldset>
+	<legend><span id="H">智能语音结论</span></legend>
+	<textarea name="svoiceConclusion" id="F_svoiceConclusion" readonly = "readonly" style="height: 60px;width: 625px"></textarea>
+	</fieldset>
+	</form>
+	<script type="text/javascript">
+	var showForm=$('#showForm');
+	var datalist = $('#datalist');
+	var approvedatalist = $('#approvedatalist');
+	var checkdatalist = $('#checkdatalist');
+	var ydjFlag = window.parent.ydjFlag;
+	var appId = GetQueryString("appId");
+	$(function(){
+		$cf.ajax({
+			url : '/opas-naps/creditCheckQuery.json',
+			data : {
+				'appId' : appId,
+				'ydjFlag' : ydjFlag 
+				
+			},
+			onSuccess : function(response) {
+				var resultMap = response.RSP_BODY.resultMap;
+				var o = eval('(' +resultMap+ ')');
+				showForm.form("load", o);
+				//过件码为YY100的时候标红
+				if(o.blockCode=="YY100"){
+				$("#blockCode").attr("style","color:red");
+				}
+			}
+		});
+	
+		//加载 纪要信息 
+		 $cf.ajax({
+			url : '/opas-naps/queryCreditNotes.json',
+			data : {"appId":appId},
+			onSuccess : function(response) {
+				var data=response.RSP_BODY.rows;
+				if(data){
+					var table=document.createElement("table");
+					$(table).addClass("tableTdColor");
+					table.style='width:100%;';
+					var tr1=table.insertRow();
+					var td1=tr1.insertCell();
+					createDivInTd(td1,"序号",'30px',"1");
+					var td2=tr1.insertCell();
+					createDivInTd(td2,"详情",'470px',"1");
+					var td3=tr1.insertCell();
+					createDivInTd(td3,"创建/修改日期",'126px',"1");
+					for(var i=0;i<data.length;i++){
+						if(data[i]["bigMemo"]==null||data[i]["bigMemo"]==''){
+							continue;
+						}
+						var tr2=table.insertRow();
+						if(data[i]["colorFlag"]=="1"){
+							tr2.style.backgroundColor='pink';
+						}
+						var td4=tr2.insertCell();
+						createDivInTd(td4,i+1,'30px',"0");
+						var td5=tr2.insertCell();
+						createDivInTd(td5,formatMesAutoRow(data[i]["bigMemo"]),'470px',"0");
+						var td6=tr2.insertCell();
+						createDivInTd(td6,formatDate(data[i]["crtTime"]),'126px',"0");
+					}
+					$('#datalist').html(table); 
+				}
+			}
+		});
+		
+		//加载 智能语音退回
+		$cf.ajax({
+			url : '/opas-naps/svoiceBackQuery.json',
+			data : {"appId":appId},
+			onSuccess : function(response) {
+				var data=response.RSP_BODY.rows;
+				var conclusion=response.RSP_BODY.conclusion;
+				var svoiceMark=response.RSP_BODY.svoiceMark;
+				if(conclusion!=null&&conclusion!=""){
+					if(conclusion == "1"){
+				 		$("#F_svoiceConclusion").text("通过; "+svoiceMark);
+				 	}else if(conclusion == "2"){
+				 		$("#F_svoiceConclusion").text("未通过; "+svoiceMark);
+				 	}else if(conclusion == "3"){
+				 		$("#F_svoiceConclusion").text("转人工; "+svoiceMark);
+				 	}else {
+				 		$("#F_svoiceConclusion").text("未知; "+svoiceMark);
+				 	}
+				}
+				if(data.length!=0){
+					$('#svoiceBack').show();
+					if(data){
+						var table=document.createElement("table");
+						$(table).addClass("tableTdColor");
+						table.style='width:100%;';
+						var tr1=table.insertRow();
+						var td1=tr1.insertCell();
+						createDivInTd(td1,"序号",'30px',"1");
+						var td2=tr1.insertCell();
+						createDivInTd(td2,"备注",'365px',"1");
+						var td3=tr1.insertCell();
+						createDivInTd(td3,"操作员",'58px',"1");
+						var td4=tr1.insertCell();
+						createDivInTd(td4,"接收员",'58px',"1");
+						var td5=tr1.insertCell();
+						createDivInTd(td5,"操作时间",'126px',"1");
+						for(var i=0;i<data.length;i++){
+							var tr2=table.insertRow();
+							var td6=tr2.insertCell();
+							createDivInTd(td6,i+1,'30px',"0");
+							var td7=tr2.insertCell();
+							createDivInTd(td7,formatMesAutoRow(data[i]["memo"]),'365px',"0");
+							var td8=tr2.insertCell();
+							createDivInTd(td8,data[i]["lastOptUser"],'58px',"0");
+							var td9=tr2.insertCell();
+							createDivInTd(td9,data[i]["currOptUser"],'58px',"0");
+							var td10=tr2.insertCell();
+							createDivInTd(td10,formatDate(data[i]["queueDate"]),'126px',"0");
+						}
+						$('#svoicelist').html(table); 
+					}
+				}
+			}
+		});		
+		//加载 审批退回
+		$cf.ajax({
+			url : '/opas-naps/approvalBackQuery.json',
+			data : {"appId":appId},
+			onSuccess : function(response) {
+				var data=response.RSP_BODY.rows;
+				if(data.length!=0){
+					//div显示
+					//$('#approvalBack').style.display="";
+					$('#approvalBack').show();
+					if(data){
+						var table=document.createElement("table");
+						$(table).addClass("tableTdColor");
+						table.style='width:100%;';
+						var tr1=table.insertRow();
+						var td1=tr1.insertCell();
+						createDivInTd(td1,"序号",'30px',"1");
+						var td2=tr1.insertCell();
+						createDivInTd(td2,"备注",'365px',"1");
+						var td3=tr1.insertCell();
+						createDivInTd(td3,"操作员",'58px',"1");
+						var td4=tr1.insertCell();
+						createDivInTd(td4,"接收员",'58px',"1");
+						var td5=tr1.insertCell();
+						createDivInTd(td5,"操作时间",'126px',"1");
+						for(var i=0;i<data.length;i++){
+							var tr2=table.insertRow();
+							var td6=tr2.insertCell();
+							createDivInTd(td6,i+1,'30px',"0");
+							var td7=tr2.insertCell();
+							createDivInTd(td7,formatMesAutoRow(data[i]["memo"]),'365px',"0");
+							var td8=tr2.insertCell();
+							createDivInTd(td8,data[i]["lastOptUser"],'58px',"0");
+							var td9=tr2.insertCell();
+							createDivInTd(td9,data[i]["currOptUser"],'58px',"0");
+							var td10=tr2.insertCell();
+							createDivInTd(td10,formatDate(data[i]["queueDate"]),'126px',"0");
+						}
+						$('#approvedatalist').html(table); 
+					}
+				}
+			}
+		});
+		
+		//加载 质检
+		$cf.ajax({
+			url : '/opas-naps/queryCheckingDetailed.json',
+			data : {"appId":appId},
+			onSuccess : function(response) {
+				var data=response.RSP_BODY.rows;
+				if(data.length!=0){
+					//div显示
+					//$('#checking').style.display="";
+					$('#checking').show();
+					if(data){
+						var table=document.createElement("table");
+						$(table).addClass("tableTdColor");
+						table.style='width:100%;';
+						var tr1=table.insertRow();
+						var td1=tr1.insertCell();
+						createDivInTd(td1,"序号",'30px',"1");
+						var td2=tr1.insertCell();
+						createDivInTd(td2,"备注",'429px',"1");
+						var td3=tr1.insertCell();
+						createDivInTd(td3,"质检人员",'55px',"1");
+						var td4=tr1.insertCell();
+						createDivInTd(td4,"操作时间",'126px',"1");
+						for(var i=0;i<data.length;i++){
+							var tr2=table.insertRow();
+							var td5=tr2.insertCell();
+							createDivInTd(td5,i+1,'30px',"0");
+							var td6=tr2.insertCell();
+							createDivInTd(td6,formatMesAutoRow(data[i]["bigMemo"]),'429px',"0");
+							var td7=tr2.insertCell();
+							createDivInTd(td7,data[i]["userName"],'55px',"0");
+							var td8=tr2.insertCell();
+							createDivInTd(td8,formatDate(data[i]["lstDate"]),'126px',"0");
+						}
+						$('#checkdatalist').html(table); 
+					}
+				}
+			}
+		});
+		
+	});
+	
+	//日期格式转换
+	function formatDate(value) {
+		return value.substring(0,19);
+	}
+
+	function setData(data) {
+		$('#bigMemo1').val(data.bigMemo);
+	}
+	function formatAutoRow(value){
+		var array = value.split("&&&");
+		var length=array.length;
+		var currentData="";
+		if(length>=2){
+			for (var int = 0; int < length; int++) {
+				if(int==0){
+					currentData+=array[int];
+				}else{
+					currentData+="<br>"+ array[int];
+				}
+			}
+			return currentData;
+		}else{
+			return value;
+		}
+	}
+	//纪要信息换行
+	function formatMesAutoRow(value){
+		if(value == null){
+			return null;
+		}
+		var array = value.split("&&&");
+		var length=array.length;
+		var currentData="";
+		var str="";
+		if(length>=2){
+			for (var int = 0; int < length; int++) {
+				if(int==0){
+					currentData+=array[int];
+				}else{
+					currentData+="<br>"+ array[int];
+				}
+			}
+			str=currentData;
+		}else{
+			str=value;
+		}
+		str=str.replace(/电话来源：/,"<font color='green' size='2' >电话来源：</font>");
+		str=str.replace(/电话类型：/,"<font color='green' size='2' >电话类型：</font>");
+		str=str.replace(/电话号码：/,"<font color='green' size='2' >电话号码：</font>");
+		str=str.replace(/照会对象：/,"<font color='green' size='2' >照会对象：</font>");
+		str=str.replace(/电核结论：/,"<font color='green' size='2' >电核结论：</font>");
+		str=str.replace(/备注：/,"<font color='green' size='2' >备注：</font>");
+		str=str.replace(/电话来源:/,"<font color='green' size='2' >电话来源：</font>");
+		str=str.replace(/电话类型:/,"<font color='green' size='2' >电话类型：</font>");
+		str=str.replace(/电话号码:/,"<font color='green' size='2' >电话号码：</font>");
+		str=str.replace(/照会对象:/,"<font color='green' size='2' >照会对象：</font>");
+		str=str.replace(/电核结论:/,"<font color='green' size='2' >电核结论：</font>");
+		str=str.replace(/备注:/,"<font color='green' size='2' >备注:</font>");
+		str=str.replace(/申请件：/,"<font color='green' size='2' >申请件：</font>");
+		str=str.replace(/单位名称：/,"<font color='green' size='2' >单位名称：</font>");
+		str=str.replace(/单位电话：/,"<font color='green' size='2' >单位电话：</font>");
+		str=str.replace(/单位地址：/,"<font color='green' size='2' >单位地址：</font>");
+		str=str.replace(/法人：/,"<font color='green' size='2' >法人：</font>");
+		str=str.replace(/注册资金：/,"<font color='green' size='2' >注册资金：</font>");
+		str=str.replace(/注册地址：/,"<font color='green' size='2' >注册地址：</font>");
+		str=str.replace(/经营状态：/,"<font color='green' size='2' >经营状态：</font>");
+		str=str.replace(/股东信息：/,"<font color='green' size='2' >股东信息：</font>");
+		str=str.replace(/经营异常信息：/,"<font color='green' size='2' >经营异常信息：</font>");
+		str=str.replace(/操作员：/,"<font color='green' size='2' >操作员：</font>");
+		str=str.replace(/生成日期：/,"<font color='green' size='2' >生成日期：</font>");
+		str=str.replace(/当前状态：/,"<font color='green' size='2' >当前状态：</font>");
+		str=str.replace(/问题描述：/,"<font color='green' size='2' >问题描述：</font>");
+		str=str.replace(/问题答案：/,"<font color='green' size='2' >问题答案：</font>");
+		str=str.replace(/电核结果：/,"<font color='green' size='2' >电核结果：</font>");
+		str=str.replace(/自定义问题：/,"<font color='green' size='2' >自定义问题：</font>");
+		str=str.replace(/自定义答案：/,"<font color='green' size='2' >自定义答案：</font>");
+		str=str.replace(/补件材料:/,"<font color='green' size='2' >补件材料:</font>");
+		str=str.replace(/操作人：/,"<font color='green' size='2' >操作人：</font>");
+		str=str.replace(/操作时间:/,"<font color='green' size='2' >操作时间:</font>");
+		str=str.replace(/补件结果：/,"<font color='green' size='2' >补件结果：</font>");
+		str=str.replace(/操作日期：/,"<font color='green' size='2' >操作日期：</font>");
+		str=str.replace(/集体电核--操作者：/,"<font color='green' size='2' >集体电核--操作者：</font>");
+		return str;
+	}
+	
+	
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	/*在指定td标签 创建Div标签 并赋值 */
+	function createDivInTd(td,value,width,fontType){
+		   td.style.width=width;
+		var div=document.createElement("div");
+		div.style.class="word-wrap:break-word;overflow:hidden;"
+		if(value){
+			var textNode=document.createElement('p');
+			textNode.innerHTML=value;
+			textNode.style.font="20px";
+			div.appendChild(textNode);
+		}else{
+			//div.appendChild(document.createTextNode(""+typeValue));
+		}
+		/* input.style.width=width;
+		input.style.fontSize='12px';
+		input.style.textAlign='center'; */
+		if(fontType=="1"){
+			div.style.fontWeight='black';
+		}
+		if(fontType=="0"){
+			//div.style.color='blue';
+		}
+		div.readOnly='readOnly';
+		td.style.height="22px";
+		td.appendChild(div);
+	}
+</script>
+</body>
+

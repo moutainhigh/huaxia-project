@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblCardProd" title="卡产品列表" class="easyui-datagrid" style="width: 98%"
+		       data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-manualnode-auth/queryCardProdList.json',loadMsg:'数据加载中.....',method:'get',toolbar:'#cardProdCondion'">
+			<thead>
+				<tr>
+					<th field="prodId" width="5%" align="center" checkbox="true">卡产品ID</th>
+					<th field="prodNo" width="8%" align="center">产品编号</th>		
+					<th field="prodDes" width="10%" align="center">产品说明</th>
+					<th field="prodBinId" width="8%" align="center">产品BIN号</th>
+					<th field="prodMinCardNo" width="8%" align="center">产品最低卡号</th>
+					<th field="prodMaxCardNo" width="8%" align="center">产品最高卡号段</th>
+					<th field="cardType" width="5%" align="center">卡种类</th>
+					<th field="cardLev" width="5%" align="center">卡种级别</th>
+					<th field="cntuVldYs" width="8%" align="center">续卡有效期年数</th>
+					<th field="firstVldYs" width="8%" align="center">首次发卡有效年数</th>
+					<th field="prodTmFds" width="8%" align="center">产品组的字段</th>
+					<th field="flowCtrlProdTm" width="10%" align="center">流量控制产品组</th>	
+					<th field="operate" width="8%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="cardProdCondion" style="padding: 2px 5px;">
+			<form id="seachCardProdForm">
+				<a href="javascript:common.openWin('winAdd');"
+					class="easyui-linkbutton" iconCls="icon-add">新增
+				</a> 
+					产品编号: 
+					<input class="easyui-textbox" style="width: 110px" name="prodNo"
+					id="prodNo">
+					产品BIN号: 
+					<input class="easyui-textbox" style="width: 110px" name="prodBinId"
+					id="prodBinId">
+					产品最低卡号: 
+					<input class="easyui-textbox" style="width: 110px" name="prodMinCardNo"
+					id="prodMinCardNo">
+					产品最高卡号段: 
+					<input class="easyui-textbox" style="width: 110px" name="prodMaxCardNo"
+					id="prodMaxCardNo">
+					产品组的字段: 
+					<input class="easyui-textbox" style="width: 110px" name="prodTmFds"
+					id="prodTmFds">				 
+				<a
+					href="javascript:common.searchTbl('seachCardProdForm','tblCardProd');"
+					class="easyui-linkbutton" iconCls="icon-search">查询
+				</a>
+			</form>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="卡产品修改"
+		style="width: 400px; height: 500px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="editForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">				
+						<tr>
+							<td align="right">产品编号:</td>
+							<td><input class="easyui-validatebox textbox" id="prodNo" 
+								type="text" name="prodNo" ></input>
+							<input type="hidden" name="prodId" id="prodId" />
+						</tr>
+						<tr>
+							<td align="right">产品说明:</td>
+							<td><textarea class="easyui-validatebox textbox" id="prodDes" style="width: 150px; height: 50px"
+								type="text" name="prodDes" ></textarea>
+						</tr>
+						<tr>
+							<td align="right">产品BIN号:</td>
+							<td><input class="easyui-validatebox textbox" id="prodBinId" 
+								type="text" name="prodBinId" ></input>
+						</tr>
+						<tr>
+							<td align="right">产品最低卡号:</td>
+							<td><input class="easyui-validatebox textbox" id="prodMinCardNo" 
+								type="text" name="prodMinCardNo" ></input>
+						</tr>
+						<tr>
+							<td align="right">产品最高卡号段:</td>
+							<td><input class="easyui-validatebox textbox" id="prodMaxCardNo" 
+								type="text" name="prodMaxCardNo" ></input>
+						</tr>
+						<tr>
+							<td align="right">卡种类:</td>
+							<td><input class="easyui-validatebox textbox" id="cardType" 
+								type="text" name="cardType" ></input>
+						</tr>
+						<tr>
+							<td align="right">卡种级别:</td>
+							<td><input class="easyui-validatebox textbox" id="cardLev" 
+								type="text" name="cardLev" ></input>
+						</tr>
+						<tr>
+							<td align="right">续卡有效期年数:</td>
+							<td><input class="easyui-validatebox textbox" id="cntuVldYs" 
+								type="text" name="cntuVldYs" ></input>
+						</tr>
+						<tr>
+							<td align="right">首次发卡有效年数:</td>
+							<td><input class="easyui-validatebox textbox" id="firstVldYs" 
+								type="text" name="firstVldYs" ></input>
+						</tr>
+						<tr>
+							<td align="right">产品组的字段:</td>
+							<td><input class="easyui-validatebox textbox" id="prodTmFds" 
+								type="text" name="prodTmFds" ></input>
+						</tr>
+						<tr>
+							<td align="right">流量控制产品组:</td>
+							<td><input class="easyui-validatebox textbox" id="flowCtrlProdTm" 
+								type="text" name="flowCtrlProdTm" ></input>
+						</tr>
+						
+					</table>
+					
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="卡产品信息添加"
+		style="width: 400px; height: 500px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="addForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">产品编号:</td>
+							<td><input class="easyui-validatebox textbox" id="prodNo" 
+								type="text" name="prodNo" ></input>
+						</tr>
+						<tr>
+							<td align="right">产品说明:</td>
+							<td><textarea class="easyui-validatebox textbox" id="prodDes"  style="width: 150px; height: 50px"
+								type="text" name="prodDes" ></textarea>
+						</tr>
+						<tr>
+							<td align="right">产品BIN号:</td>
+							<td><input class="easyui-validatebox textbox" id="prodBinId" 
+								type="text" name="prodBinId" ></input>
+						</tr>
+						<tr>
+							<td align="right">产品最低卡号:</td>
+							<td><input class="easyui-validatebox textbox" id="prodMinCardNo" 
+								type="text" name="prodMinCardNo" ></input>
+						</tr>
+						<tr>
+							<td align="right">产品最高卡号段:</td>
+							<td><input class="easyui-validatebox textbox" id="prodMaxCardNo" 
+								type="text" name="prodMaxCardNo" ></input>
+						</tr>
+						<tr>
+							<td align="right">卡种类:</td>
+							<td><input class="easyui-validatebox textbox" id="cardType" 
+								type="text" name="cardType" ></input>
+						</tr>
+						<tr>
+							<td align="right">卡种级别:</td>
+							<td><input class="easyui-validatebox textbox" id="cardLev" 
+								type="text" name="cardLev" ></input>
+						</tr>
+						<tr>
+							<td align="right">续卡有效期年数:</td>
+							<td><input class="easyui-validatebox textbox" id="cntuVldYs" 
+								type="text" name="cntuVldYs" ></input>
+						</tr>
+						<tr>
+							<td align="right">首次发卡有效年数:</td>
+							<td><input class="easyui-validatebox textbox" id="firstVldYs" 
+								type="text" name="firstVldYs" ></input>
+						</tr>
+						<tr>
+							<td align="right">产品组的字段:</td>
+							<td><input class="easyui-validatebox textbox" id="prodTmFds" 
+								type="text" name="prodTmFds" ></input>
+						</tr>
+						<tr>
+							<td align="right">流量控制产品组:</td>
+							<td><input class="easyui-validatebox textbox" id="flowCtrlProdTm" 
+								type="text" name="flowCtrlProdTm" ></input>
+						</tr>
+					</table>
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>
+		        </div>
+				
+	</div>	
+
+</body>
+<script>
+	//$.parser.parse();
+	var tblCardProd = $("#tblCardProd");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editCardProd(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:deleteCardProd();>删除</a>";
+	}
+
+	function editCardProd() {
+		var orgObj = tblCardProd.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(orgObj)
+		});
+	}
+
+	function deleteCardProd() {
+		var orgObj = tblCardProd.datagrid("getSelected");
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-manualnode-auth/deleteCardProdParam.json",
+						data : orgObj,
+						onSuccess : function(orgObj) {
+							onConcle("save");
+							tblCardProd.datagrid("reload");
+						}
+					});
+				}
+			});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-manualnode-auth/updateCardProdParam.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblCardProd.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		var paramData = isRequired('addForm');
+		$cf.ajax({
+			url : "/opas-manualnode-auth/addCardProdParam.json",
+			data : paramData,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblCardProd.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+	
+
+</script>

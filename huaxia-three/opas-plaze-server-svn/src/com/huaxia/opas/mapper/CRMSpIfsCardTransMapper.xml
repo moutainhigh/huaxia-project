@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCardTransMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCardTrans">
+		INSERT INTO SP_APS_IFS_CARD_TRANS (
+			APP_ID,CUSTID,CUSTCODE,SEQ_NO,CURRENCY,COM_TYPE,COM_TYPE_NAME,MCC_NO,COM_NAME,CARD_TYPE,CARD_NO,TRANS_TYPE,
+			BRANCH,TXN_TERMINAL,CHANNEL,TRANS_CURRENCY,TRANS_AMT,RMB_AMT,TRANS_DATE,FEE_RATE,TRANS_STATUS,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{seqNo, jdbcType = VARCHAR},
+			#{currency, jdbcType = VARCHAR},
+			#{comType, jdbcType = VARCHAR},
+			#{comTypeName, jdbcType = VARCHAR},
+			#{mccNo, jdbcType = VARCHAR},
+			#{comName, jdbcType = VARCHAR},
+			#{cardType, jdbcType = VARCHAR},
+			#{cardNo, jdbcType = VARCHAR},
+			#{transType, jdbcType = VARCHAR},
+			#{branch, jdbcType = VARCHAR},
+			#{txnTerminal, jdbcType = VARCHAR},
+			#{channel, jdbcType = VARCHAR},
+			#{transCurrency, jdbcType = VARCHAR},
+			#{transAmt, jdbcType = NUMERIC},
+			#{rmbAmt, jdbcType = NUMERIC},
+			#{transDate, jdbcType = VARCHAR},
+			#{feeRate, jdbcType = VARCHAR},
+			#{transStatus, jdbcType = VARCHAR},
+			#{dDate, jdbcType = DATE}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CARD_TRANS (
+			APP_ID,CUSTID,CUSTCODE,SEQ_NO,CURRENCY,COM_TYPE,COM_TYPE_NAME,MCC_NO,COM_NAME,CARD_TYPE,CARD_NO,TRANS_TYPE,
+			BRANCH,TXN_TERMINAL,CHANNEL,TRANS_CURRENCY,TRANS_AMT,RMB_AMT,TRANS_DATE,FEE_RATE,TRANS_STATUS,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.seqNo, jdbcType = VARCHAR},
+			#{item.currency, jdbcType = VARCHAR},
+			#{item.comType, jdbcType = VARCHAR},
+			#{item.comTypeName, jdbcType = VARCHAR},
+			#{item.mccNo, jdbcType = VARCHAR},
+			#{item.comName, jdbcType = VARCHAR},
+			#{item.cardType, jdbcType = VARCHAR},
+			#{item.cardNo, jdbcType = VARCHAR},
+			#{item.transType, jdbcType = VARCHAR},
+			#{item.branch, jdbcType = VARCHAR},
+			#{item.txnTerminal, jdbcType = VARCHAR},
+			#{item.channel, jdbcType = VARCHAR},
+			#{item.transCurrency, jdbcType = VARCHAR},
+			#{item.transAmt, jdbcType = NUMERIC},
+			#{item.rmbAmt, jdbcType = NUMERIC},
+			TO_DATE(#{item.transDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.feeRate, jdbcType = VARCHAR},
+			#{item.transStatus, jdbcType = VARCHAR},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

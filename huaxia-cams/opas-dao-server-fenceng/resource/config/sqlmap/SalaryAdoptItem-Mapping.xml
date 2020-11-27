@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SalaryAdoptItem">
+
+	<resultMap id="result_SalaryAdoptItem" type="com.huaxia.opas.domain.collect.SalaryAdoptItem">
+		<result column="ADOPT_ITEM_ID" jdbcType="CHAR" property="adoptItemId" />
+		<result column="ITEM_SALARY" jdbcType="CHAR" property="itemSalary" />
+		<result column="ITEM_TAXRECORD" jdbcType="CHAR" property="itemTaxRecord" />
+		<result column="ITEM_WORK_CERTIF" jdbcType="CHAR" property="itemWorkCertif" />
+		<result column="WORK_PRETAX" jdbcType="NUMERIC" property="workPreTax" />
+		<result column="WORK_AFTERTAX" jdbcType="NUMERIC" property="workAfterTax" />
+		<result column="ITEM_SOCIAL_SECURITY_BASE" jdbcType="CHAR" property="itemSocialSecurityBase" />
+		<result column="SOCIAL_SECURITY_BASE" jdbcType="NUMERIC" property="socialSecurityBase" />
+		<result column="ITEM_FUND" jdbcType="CHAR" property="itemFund" />
+		<result column="FUND_BASE" jdbcType="NUMERIC" property="fundBase" />
+		<result column="FUND_MONTH_PAY" jdbcType="NUMERIC" property="fundMonthPay" />
+		<result column="ITEM_HOUSE_RENT" jdbcType="CHAR" property="itemHouseRent" />
+		<result column="HOUSE_MONTH_RENTAL" jdbcType="NUMERIC" property="houseMonthRental" />
+		<result column="ITEM_SPOUSE_PRETAX" jdbcType="CHAR" property="itemSpousePreTax" />
+		<result column="SPOUSE_PRETAX_INCOME" jdbcType="NUMERIC" property="spousePreTaxIncome" />
+		<result column="ITEM_FINANCES_CUST" jdbcType="CHAR" property="itemFinancesCust" />
+		<result column="FINANCES_CUST_AVG_DAY" jdbcType="NUMERIC" property="financesCustAvgDay" />
+		<result column="CRT_DATE" jdbcType="DATE" property="createDate" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="createUser" />
+		<result column="LST_UPD_DATE" jdbcType="DATE" property="lastUpdateDate" />
+		<result column="LST_UPD_USER" jdbcType="VARCHAR" property="lastUpdateUser" />
+		<result column="ACCFUND_INCOME_XM" jdbcType="NUMERIC" property="accfundincomexm" />
+	</resultMap>
+
+	<insert id="insertSalaryAdoptItem" parameterType="com.huaxia.opas.domain.collect.SalaryAdoptItem">
+		INSERT INTO OPAS_YDJ_ADOPT_ITEM_SALARY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="adoptItemId != null">ADOPT_ITEM_ID,</if>            
+			<if test="itemSalary != null">ITEM_SALARY,</if>
+			<if test="itemTaxRecord != null">ITEM_TAXRECORD,</if>
+			<if test="itemWorkCertif != null">ITEM_WORK_CERTIF,</if>
+			<if test="workPreTax != null">WORK_PRETAX,</if>            
+			<if test="workAfterTax != null">WORK_AFTERTAX,</if>
+			<if test="itemSocialSecurityBase != null">ITEM_SOCIAL_SECURITY_BASE,</if>
+			<if test="socialSecurityBase != null">SOCIAL_SECURITY_BASE,</if>
+			<if test="itemFund != null">ITEM_FUND,</if>            
+			<if test="fundBase != null">FUND_BASE,</if>
+			<if test="fundMonthPay != null">FUND_MONTH_PAY,</if>
+			<if test="itemHouseRent != null">ITEM_HOUSE_RENT,</if>
+			<if test="houseMonthRental != null">HOUSE_MONTH_RENTAL,</if>
+			<if test="itemSpousePreTax != null">ITEM_SPOUSE_PRETAX,</if>
+			<if test="spousePreTaxIncome != null">SPOUSE_PRETAX_INCOME,</if>
+			<if test="itemFinancesCust != null">ITEM_FINANCES_CUST,</if>
+			<if test="financesCustAvgDay != null">FINANCES_CUST_AVG_DAY,</if>
+			<if test="accfundincomexm != null">ACCFUND_INCOME_XM,</if>
+			CRT_DATE,
+			<if test="createUser != null">CRT_USER,</if>
+			LST_UPD_DATE,
+			<if test="lastUpdateUser != null">LST_UPD_USER,</if>
+		</trim>
+		<trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
+			<if test="adoptItemId != null">#{adoptItemId,jdbcType=CHAR},</if>
+			<if test="itemSalary != null">#{itemSalary,jdbcType=CHAR},</if>
+			<if test="itemTaxRecord != null">#{itemTaxRecord,jdbcType=CHAR},</if>
+			<if test="itemWorkCertif != null">#{itemWorkCertif,jdbcType=CHAR},</if>
+			<if test="workPreTax != null">#{workPreTax,jdbcType=NUMERIC},</if>
+			<if test="workAfterTax != null">#{workAfterTax,jdbcType=NUMERIC},</if>
+			<if test="itemSocialSecurityBase != null">#{itemSocialSecurityBase,jdbcType=CHAR},</if>
+			<if test="socialSecurityBase != null">#{socialSecurityBase,jdbcType=NUMERIC},</if>
+			<if test="itemFund != null">#{itemFund,jdbcType=CHAR},</if>
+			<if test="fundBase != null">#{fundBase,jdbcType=NUMERIC},</if>
+			<if test="fundMonthPay != null">#{fundMonthPay,jdbcType=NUMERIC},</if>
+			<if test="itemHouseRent != null">#{itemHouseRent,jdbcType=CHAR},</if>
+			<if test="houseMonthRental != null">#{houseMonthRental,jdbcType=NUMERIC},</if>
+			<if test="itemSpousePreTax != null">#{itemSpousePreTax,jdbcType=CHAR},</if>
+			<if test="spousePreTaxIncome != null">#{spousePreTaxIncome,jdbcType=NUMERIC},</if>
+			<if test="itemFinancesCust != null">#{itemFinancesCust,jdbcType=CHAR},</if>
+			<if test="financesCustAvgDay != null">#{financesCustAvgDay,jdbcType=NUMERIC},</if>
+			<if test="accfundincomexm != null">#{accfundincomexm,jdbcType=NUMERIC},</if>
+			SYSDATE,
+			<if test="createUser != null">#{createUser,jdbcType=VARCHAR},</if>
+			SYSDATE,
+			<if test="lastUpdateUser != null">#{lastUpdateUser,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSalaryAdoptItem" parameterType="com.huaxia.opas.domain.collect.SalaryAdoptItem">
+		UPDATE OPAS_YDJ_ADOPT_ITEM_SALARY
+		   SET ITEM_SALARY = #{itemSalary,jdbcType=CHAR},
+		       ITEM_TAXRECORD = #{itemTaxRecord,jdbcType=CHAR},
+		       ITEM_WORK_CERTIF = #{itemWorkCertif,jdbcType=CHAR},
+		       WORK_PRETAX = #{workPreTax,jdbcType=NUMERIC},
+		       WORK_AFTERTAX = #{workAfterTax,jdbcType=NUMERIC},
+		       ITEM_SOCIAL_SECURITY_BASE = #{itemSocialSecurityBase,jdbcType=CHAR},
+		       SOCIAL_SECURITY_BASE = #{socialSecurityBase,jdbcType=NUMERIC},
+		       ITEM_FUND = #{itemFund,jdbcType=CHAR},
+		       FUND_BASE = #{fundBase,jdbcType=NUMERIC},
+			   FUND_MONTH_PAY = #{fundMonthPay,jdbcType=NUMERIC},
+			   ITEM_HOUSE_RENT = #{itemHouseRent,jdbcType=CHAR},
+			   HOUSE_MONTH_RENTAL = #{houseMonthRental,jdbcType=NUMERIC},
+			   ITEM_SPOUSE_PRETAX = #{itemSpousePreTax,jdbcType=CHAR},
+			   SPOUSE_PRETAX_INCOME = #{spousePreTaxIncome,jdbcType=NUMERIC},
+			   ITEM_FINANCES_CUST = #{itemFinancesCust,jdbcType=CHAR},
+			   FINANCES_CUST_AVG_DAY = #{financesCustAvgDay,jdbcType=NUMERIC},
+			   ACCFUND_INCOME_XM = #{accfundincomexm,jdbcType=NUMERIC},
+			   LST_UPD_DATE = SYSDATE, 
+			   LST_UPD_USER=#{lastUpdateUser,jdbcType=VARCHAR}
+		 WHERE ADOPT_ITEM_ID = #{adoptItemId,jdbcType=CHAR}
+	</update>
+	
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM OPAS_YDJ_ADOPT_ITEM_SALARY
+		 WHERE ADOPT_ITEM_ID = #{adoptItemId,jdbcType=CHAR}
+	</delete>
+	
+	<delete id="deleteByAppId" parameterType="java.lang.String">
+		DELETE FROM OPAS_YDJ_ADOPT_ITEM_SALARY
+		 WHERE ADOPT_ITEM_ID = (
+           SELECT ADOPT_ITEM_ID FROM OPAS_YDJ_ENHANCE_COLLECT WHERE APP_ID = #{appId,jdbcType=CHAR}
+     	)
+	</delete>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_SalaryAdoptItem">
+		SELECT ADOPT_ITEM_ID,ITEM_SALARY,ITEM_TAXRECORD,ITEM_WORK_CERTIF,WORK_PRETAX,WORK_AFTERTAX,ITEM_SOCIAL_SECURITY_BASE,
+		       SOCIAL_SECURITY_BASE,ITEM_FUND,FUND_BASE,FUND_MONTH_PAY,ITEM_HOUSE_RENT,HOUSE_MONTH_RENTAL,ITEM_SPOUSE_PRETAX,
+		       SPOUSE_PRETAX_INCOME,ITEM_FINANCES_CUST,FINANCES_CUST_AVG_DAY,CRT_DATE,CRT_USER,LST_UPD_DATE,LST_UPD_USER,
+		       ACCFUND_INCOME_XM
+		  FROM OPAS_YDJ_ADOPT_ITEM_SALARY
+		 WHERE ADOPT_ITEM_ID = #{adoptItemId,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectByAppId" parameterType="java.lang.String" resultMap="result_SalaryAdoptItem">
+		SELECT ADOPT_ITEM_ID,ITEM_SALARY,ITEM_TAXRECORD,ITEM_WORK_CERTIF,WORK_PRETAX,WORK_AFTERTAX,ITEM_SOCIAL_SECURITY_BASE,
+		       SOCIAL_SECURITY_BASE,ITEM_FUND,FUND_BASE,FUND_MONTH_PAY,ITEM_HOUSE_RENT,HOUSE_MONTH_RENTAL,ITEM_SPOUSE_PRETAX,
+		       SPOUSE_PRETAX_INCOME,ITEM_FINANCES_CUST,FINANCES_CUST_AVG_DAY,CRT_DATE,CRT_USER,LST_UPD_DATE,LST_UPD_USER
+		  FROM OPAS_YDJ_ADOPT_ITEM_SALARY
+		 WHERE ADOPT_ITEM_ID = (
+           SELECT ADOPT_ITEM_ID FROM OPAS_YDJ_ENHANCE_COLLECT WHERE APP_ID = #{appId,jdbcType=CHAR}
+     	)
+	</select>
+	<select  id="selectDepositBaseByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+		select decode(deposit_base,null,(select deposit_base_analysis from JIANBING_GJJ_BRIEF_ANALYSIS where app_id=#{appId,jdbcType=CHAR}),deposit_base) 
+		from JIANBING_GJJ_BRIEF s where s.app_id=#{appId,jdbcType=CHAR}
+	</select>
+	<select  id="selectDepositAmountByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+		select decode(deposit_amount,null,(select deposit_amount_analysis from JIANBING_GJJ_BRIEF_ANALYSIS where app_id=#{appId,jdbcType=CHAR}),deposit_amount) 
+		from JIANBING_GJJ_BRIEF s where s.app_id=#{appId,jdbcType=CHAR}
+	</select>
+	
+
+</mapper>

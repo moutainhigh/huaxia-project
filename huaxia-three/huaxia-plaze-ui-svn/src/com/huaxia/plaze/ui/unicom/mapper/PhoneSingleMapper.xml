@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.unicom.mapper.PhoneSingleMapper">
+
+	<insert id="insert" parameterType="PhoneSingle">
+		INSERT INTO
+		UNICOM_PHONE_TRN_SINGLE (
+		UUID,CRT_TIME,CRT_USER,STAFF_ID,TRN_ID,CERT_TYPE,CERT_NO,NAME,MOBILE,QUERY_TYPE,QUERY_STATUS
+		) VALUES(
+		SYS_GUID(),SYSDATE,#{crtUser},#{staffId},#{trnId},#{certType},#{certNo},#{name},#{mobile},#{queryType},#{queryStatus}
+		)
+	</insert>
+
+	<update id="updateStatusById" parameterType="java.util.Map">
+		UPDATE UNICOM_PHONE_TRN_SINGLE
+		<set>
+			<if test="status != null">
+				QUERY_STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE TRN_ID = #{id, jdbcType=CHAR}
+	</update>
+
+	<select id="selectCountByParams" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM UNICOM_PHONE_DATA WHERE
+		cert_no=#{certNo}
+		AND CRT_TIME
+		BETWEEN sysdate-1
+		AND sysdate
+	</select>
+	
+	<resultMap id="single_detail_result" type="UnicomPhoneData">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="ERROR_DESC" property="errorDesc" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectSingleResultByTrnid" parameterType="string" resultMap="single_detail_result">
+		SELECT UUID,TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		CRT_TIME,TRN_ID,STATUS,CODE,ERROR_DESC,CHECK_RESULT,CERT_NO
+		FROM unicom_phone_data
+		WHERE TRN_ID=#{trnId} AND CRT_USER='SINGLE'
+		ORDER BY CRT_TIME DESC
+	</select>
+
+</mapper>

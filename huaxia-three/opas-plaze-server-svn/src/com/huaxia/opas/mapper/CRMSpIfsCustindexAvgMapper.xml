@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCustindexAvgMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCustindexAvg">
+		INSERT INTO SP_APS_IFS_CUSTINDEX_AVG (
+			APP_ID,CUSTID,DEPT_MAVG,DEPT_QAVG,DEPT_YAVG,TD_MAVG,TD_QAVG,TD_YAVG,CURT_MAVG,CURT_QAVG,CURT_YAVG,FIN_MAVG,
+			FIN_QAVG,FIN_YAVG,FUND_MAVG,FUND_QAVG,FUND_YAVG,DEBT_MAVG,DEBT_QAVG,DEBT_YAVG,INSUR_MAVG,INSUR_QAVG,
+			INSUR_YAVG,GOLD_MAVG,GOLD_QAVG,GOLD_YAVG,STOCK_MAVG,STOCK_QAVG,STOCK_YAVG,TRUST_MAVG,TRUST_QAVG,TRUST_YAVG,
+			PAS_MAVG,PAS_QAVG,PAS_YAVG,AUM_MAVG,AUM_QAVG,AUM_YAVG,USE_AUM_MAVG,USE_AUM_QAVG,USE_AUM_YAVG,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{deptMavg, jdbcType = NUMERIC},
+			#{deptQavg, jdbcType = NUMERIC},
+			#{deptYavg, jdbcType = NUMERIC},
+			#{tdMavg, jdbcType = NUMERIC},
+			#{tdQavg, jdbcType = NUMERIC},
+			#{tdYavg, jdbcType = NUMERIC},
+			#{curtMavg, jdbcType = NUMERIC},
+			#{curtQavg, jdbcType = NUMERIC},
+			#{curtYavg, jdbcType = NUMERIC},
+			#{finMavg, jdbcType = NUMERIC},
+			#{finQavg, jdbcType = NUMERIC},
+			#{finYavg, jdbcType = NUMERIC},
+			#{fundMavg, jdbcType = NUMERIC},
+			#{fundQavg, jdbcType = NUMERIC},
+			#{fundYavg, jdbcType = NUMERIC},
+			#{debtMavg, jdbcType = NUMERIC},
+			#{debtQavg, jdbcType = NUMERIC},
+			#{debtYavg, jdbcType = NUMERIC},
+			#{insurMavg, jdbcType = NUMERIC},
+			#{insurQavg, jdbcType = NUMERIC},
+			#{insurYavg, jdbcType = NUMERIC},
+			#{goldMavg, jdbcType = NUMERIC},
+			#{goldQavg, jdbcType = NUMERIC},
+			#{goldYavg, jdbcType = NUMERIC},
+			#{stockMavg, jdbcType = NUMERIC},
+			#{stockQavg, jdbcType = NUMERIC},
+			#{stockYavg, jdbcType = NUMERIC},
+			#{trustMavg, jdbcType = NUMERIC},
+			#{trustQavg, jdbcType = NUMERIC},
+			#{trustYavg, jdbcType = NUMERIC},
+			#{pasMavg, jdbcType = NUMERIC},
+			#{pasQavg, jdbcType = NUMERIC},
+			#{pasYavg, jdbcType = NUMERIC},
+			#{aumMavg, jdbcType = NUMERIC},
+			#{aumQavg, jdbcType = NUMERIC},
+			#{aumYavg, jdbcType = NUMERIC},
+			#{useAumMavg, jdbcType = NUMERIC},
+			#{useAumQavg, jdbcType = NUMERIC},
+			#{useAumYavg, jdbcType = NUMERIC},
+			#{dDate, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CUSTINDEX_AVG (
+			APP_ID,CUSTID,DEPT_MAVG,DEPT_QAVG,DEPT_YAVG,TD_MAVG,TD_QAVG,TD_YAVG,CURT_MAVG,CURT_QAVG,CURT_YAVG,FIN_MAVG,
+			FIN_QAVG,FIN_YAVG,FUND_MAVG,FUND_QAVG,FUND_YAVG,DEBT_MAVG,DEBT_QAVG,DEBT_YAVG,INSUR_MAVG,INSUR_QAVG,
+			INSUR_YAVG,GOLD_MAVG,GOLD_QAVG,GOLD_YAVG,STOCK_MAVG,STOCK_QAVG,STOCK_YAVG,TRUST_MAVG,TRUST_QAVG,TRUST_YAVG,
+			PAS_MAVG,PAS_QAVG,PAS_YAVG,AUM_MAVG,AUM_QAVG,AUM_YAVG,USE_AUM_MAVG,USE_AUM_QAVG,USE_AUM_YAVG,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.deptMavg, jdbcType = NUMERIC},
+			#{item.deptQavg, jdbcType = NUMERIC},
+			#{item.deptYavg, jdbcType = NUMERIC},
+			#{item.tdMavg, jdbcType = NUMERIC},
+			#{item.tdQavg, jdbcType = NUMERIC},
+			#{item.tdYavg, jdbcType = NUMERIC},
+			#{item.curtMavg, jdbcType = NUMERIC},
+			#{item.curtQavg, jdbcType = NUMERIC},
+			#{item.curtYavg, jdbcType = NUMERIC},
+			#{item.finMavg, jdbcType = NUMERIC},
+			#{item.finQavg, jdbcType = NUMERIC},
+			#{item.finYavg, jdbcType = NUMERIC},
+			#{item.fundMavg, jdbcType = NUMERIC},
+			#{item.fundQavg, jdbcType = NUMERIC},
+			#{item.fundYavg, jdbcType = NUMERIC},
+			#{item.debtMavg, jdbcType = NUMERIC},
+			#{item.debtQavg, jdbcType = NUMERIC},
+			#{item.debtYavg, jdbcType = NUMERIC},
+			#{item.insurMavg, jdbcType = NUMERIC},
+			#{item.insurQavg, jdbcType = NUMERIC},
+			#{item.insurYavg, jdbcType = NUMERIC},
+			#{item.goldMavg, jdbcType = NUMERIC},
+			#{item.goldQavg, jdbcType = NUMERIC},
+			#{item.goldYavg, jdbcType = NUMERIC},
+			#{item.stockMavg, jdbcType = NUMERIC},
+			#{item.stockQavg, jdbcType = NUMERIC},
+			#{item.stockYavg, jdbcType = NUMERIC},
+			#{item.trustMavg, jdbcType = NUMERIC},
+			#{item.trustQavg, jdbcType = NUMERIC},
+			#{item.trustYavg, jdbcType = NUMERIC},
+			#{item.pasMavg, jdbcType = NUMERIC},
+			#{item.pasQavg, jdbcType = NUMERIC},
+			#{item.pasYavg, jdbcType = NUMERIC},
+			#{item.aumMavg, jdbcType = NUMERIC},
+			#{item.aumQavg, jdbcType = NUMERIC},
+			#{item.aumYavg, jdbcType = NUMERIC},
+			#{item.useAumMavg, jdbcType = NUMERIC},
+			#{item.useAumQavg, jdbcType = NUMERIC},
+			#{item.useAumYavg, jdbcType = NUMERIC},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

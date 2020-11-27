@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankRelateRepayDutyDao">
+   <!-- 保存相关还款责任信息段  PD03A  -->
+	<insert id="insertRelateRepayDutyInfo" parameterType="com.huaxia.opas.domain.pboc.pcr.PD03A" >
+    INSERT INTO PBOC_RELATE_REPAY_DUTY_INFO (UUID, APP_ID, MAIN_BORROWER_IDENTITY_TYPE, 
+      SERV_MANAGE_ORGAN_TYPE, SERV_MANAGE_ORGAN, SERV_TYPE, 
+      OPEN_DATE, EXPIRE_DATE, REPAY_DUTY_MAN_TYPE, 
+      GUARANTEE_PACT_SERIAL, REPAY_DUTY_MONEY, CURRENCY, 
+      BALANCE, FIVE_CLASSIFY, ACCOUNT_TYPE, 
+      REPAY_STATUS, OVERDUE_MONTH_NUM, INFO_REPORT_DATE, 
+      RELATE_ID, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PD03AD08,jdbcType=VARCHAR}, 
+      #{PD03AD01,jdbcType=VARCHAR}, #{PD03AQ01,jdbcType=VARCHAR}, #{PD03AD02,jdbcType=VARCHAR}, 
+      #{PD03AR01,jdbcType=VARCHAR}, #{PD03AR02,jdbcType=VARCHAR}, #{PD03AD03,jdbcType=VARCHAR}, 
+      #{PD03AQ02,jdbcType=VARCHAR}, #{PD03AJ01,jdbcType=VARCHAR}, #{PD03AD04,jdbcType=VARCHAR}, 
+      #{PD03AJ02,jdbcType=VARCHAR}, #{PD03AD05,jdbcType=VARCHAR}, #{PD03AD06,jdbcType=VARCHAR}, 
+      #{PD03AD07,jdbcType=VARCHAR}, #{PD03AS01,jdbcType=VARCHAR}, #{PD03AR03,jdbcType=VARCHAR}, 
+      #{relateId,jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	<!-- 保存相关还款责任信息的标注及声明信息 PD03ZH/PD03Zdata -->
+	<insert id="insertRelateRepayDutyPcrLabelState" parameterType="com.huaxia.opas.domain.pboc.pcr.PD03Zdata" >
+    INSERT INTO PBOC_PCR_LABEL_STATE (UUID, APP_ID, COUNT, 
+      RELATE_ID, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PD03ZS01,jdbcType=VARCHAR}, 
+      #{relateId,jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	<!-- 保存相关还款责任信息的标注及声明信息 PD03Z/PD03ZH 集合 -->
+	<insert id="insertRelateRepayDutyPcrLabelStateInfoList" parameterType="java.util.List" >
+	INSERT INTO PBOC_PCR_LABEL_STATE_INFO (UUID, APP_ID, TYPE, 
+      CONTENT, ADD_DATE, RELATE_ID, 
+      CRT_TIME)
+	<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT
+	  SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.PD03ZD01,jdbcType=VARCHAR}, 
+      #{item.PD03ZQ01,jdbcType=VARCHAR}, #{item.PD03ZR01,jdbcType=VARCHAR}, #{item.relateId,jdbcType=VARCHAR}, 
+      SYSDATE
+	  FROM DUAL
+	 </foreach>
+	</insert>
+</mapper>

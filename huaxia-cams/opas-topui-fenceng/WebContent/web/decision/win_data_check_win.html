@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>是否命中内部风险信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+<style type="text/css">
+input{
+	border:none;
+	width:100%;
+}
+</style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId=GetQueryString("appId");
+		var flag=GetQueryString("flag");
+		var ishaveInriskInfo_column=GetQueryString("ishaveInriskInfo_column");
+		var ss=location.href.split("&");
+		var autoId=decodeURI(ss[3]).split("=")[1];
+		$cf.ajax({
+			url : "/opas-naps/inDataChecK.json",
+			data : {
+				"appId" : appId,
+				"flag" : flag,
+				"autoId" : autoId
+			},
+			onSuccess : function(dataRes) {
+				var res = dataRes.RSP_BODY.specilMap;
+				var result="";
+				if("applyinfoBuscheck"==flag){
+					result+='<tr><th>申请信息逻辑检查</th></tr>';
+					for(var i=0;i<res.length;i++){
+						result+"<tr>";
+						result+="<td>"+ res[i].data_applyinfoBuscheck+"</td>";
+						result+="</tr>";
+					}
+				}else if("ishaveInriskInfo"==flag){
+					result+='<tr><th>单位名称</th>';
+					result+='<th>单位电话</th>';
+					result+='<th>推广人员</th>';
+					result+='<th>推广机构</th>';
+					result+='<th>推广人工号</th>';
+					result+='<th>户籍</th>';
+					result+='<th>身份证号</th></tr>';
+					result += "<tr>";
+					if(res.data_COMPANY_NAME==null){
+						result += "<td><input type='text' readonly='readonly' id='data_COMPANY_NAME'  name='data_COMPANY_NAME' value=''/></td>";
+					}else{
+						if(ishaveInriskInfo_column!=null && ishaveInriskInfo_column!=""&&ishaveInriskInfo_column.indexOf("1")>-1){
+							result += "<td style='background-color:pink;color:red'>"+res.data_COMPANY_NAME+"</td>";
+						}else{
+							result += "<td>"+res.data_COMPANY_NAME+"</td>";
+						}
+						//result += "<td><input type='text' readonly='readonly' id='data_COMPANY_NAME'  name='data_COMPANY_NAME' value='"+res.data_COMPANY_NAME+"'/></td>"; 
+					}
+					if(res.data_COMPANY_TEL==null){
+						result += "<td><input type='text' readonly='readonly' id='data_COMPANY_TEL'  name='data_COMPANY_TEL' value=''/></td>";
+					}else{
+						result += "<td><input type='text' readonly='readonly'  id='data_COMPANY_TEL'  name='data_COMPANY_TEL' value='"+res.data_COMPANY_TEL+"'/></td>";
+					}
+					if(res.data_SPREAD_PER==null){
+						result += "<td><input type='text' readonly='readonly' id='data_SPREAD_PER'  name='data_SPREAD_PER' value=''/></td>";
+					}else{
+						result += "<td><input type='text' readonly='readonly' id='data_SPREAD_PER'  name='data_SPREAD_PER' value='"+res.data_SPREAD_PER+"'/></td>";
+					}
+					if(res.data_SPREAD_ORG==null){
+						result += "<td><input type='text' readonly='readonly' id='data_SPREAD_ORG'  name='data_SPREAD_ORG' value=''/></td>";
+					}else{
+						result += "<td><input type='text' readonly='readonly' id='data_SPREAD_ORG'  name='data_SPREAD_ORG' value='"+res.data_SPREAD_ORG+"'/></td>";
+					}
+					if(res.data_SPREAD_NO==null){
+						result += "<td><input type='text' readonly='readonly' id='data_SPREAD_NO'  name='data_SPREAD_NO' value=''/></td>";
+					}else{
+						result += "<td><input type='text' readonly='readonly' id='data_SPREAD_NO'  name='data_SPREAD_NO' value='"+res.data_SPREAD_NO+"'/></td>";
+					}
+					if(res.data_HOUSEHOLD==null){
+						result += "<td><input type='text' readonly='readonly' id='data_HOUSEHOLD'  name='data_HOUSEHOLD' value=''/></td>";
+					}else{
+						result += "<td><input type='text' readonly='readonly' id='data_HOUSEHOLD'  name='data_HOUSEHOLD' value='"+res.data_HOUSEHOLD+"'/></td>";
+					}
+					if(res.data_CERTIFI_NO==null){
+						result += "<td><input type='text' readonly='readonly' id='data_CERTIFI_NO'  name='data_CERTIFI_NO' value=''/></td>";
+					}else{
+						result += "<td><input type='text' readonly='readonly' id='data_CERTIFI_NO'  name='data_CERTIFI_NO' value='"+res.data_CERTIFI_NO+"'/></td>";
+					}
+					result += "</tr>";
+				}
+				$("#baseTable").append(result); 
+				if("ishaveInriskInfo"==flag && ishaveInriskInfo_column!=null && ishaveInriskInfo_column!=""){
+					/* if(ishaveInriskInfo_column.indexOf("1")>-1){
+						$("#data_COMPANY_NAME").attr("style","background-color:pink;color:red");
+					} */
+					if(ishaveInriskInfo_column.indexOf("2")>-1){
+						$("#data_COMPANY_TEL").attr("style","background-color:pink;color:red");
+					}
+					if(ishaveInriskInfo_column.indexOf("3")>-1){
+						$("#data_SPREAD_ORG").attr("style","background-color:pink;color:red");
+					}
+					if(ishaveInriskInfo_column.indexOf("4")>-1){
+						$("#data_SPREAD_PER").attr("style","background-color:pink;color:red");
+					}
+					if(ishaveInriskInfo_column.indexOf("5")>-1){
+						$("#data_SPREAD_NO").attr("style","background-color:pink;color:red");
+					}
+					if(ishaveInriskInfo_column.indexOf("6")>-1){
+						$("#data_CERTIFI_NO").attr("style","background-color:pink;color:red");
+					}
+				}
+			}
+		});
+	});
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">内部数据检查2</legend>
+	<div style="width:100%;height:100%;overflow:auto;">
+		<form >
+		<table id="baseTable" class="area-list area-list-style-1" style='white-space:nowrap;font-size:5px;width:auto'>
+		</table>
+	    </form>	
+	</div>
+</fieldset>	
+</body>
+</html>

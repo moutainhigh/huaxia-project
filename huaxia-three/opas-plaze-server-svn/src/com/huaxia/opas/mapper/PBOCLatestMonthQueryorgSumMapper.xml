@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCLatestMonthQueryorgSumMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_QUERYREC_LM_ORGSUM (
+			APP_ID,QRY_REASON,SUM, 
+			CRT_TIME,CRT_USER)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.queryReason},
+			#{item.sum},
+			SYSDATE,
+			'SYSTEM'
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

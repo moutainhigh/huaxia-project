@@ -1,0 +1,2194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BizInpAppl">
+
+	<resultMap id="BizInpApplMap" type="com.huaxia.opas.domain.input.BizInpAppl">
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="C1_CNAME" jdbcType="VARCHAR" property="c1Cname" />
+		<result column="C1_IDNBR" jdbcType="VARCHAR" property="c1Idnbr" />
+		<result column="C1_CONAME" jdbcType="VARCHAR" property="c1Coname" />
+		<result column="LAST_OPT_USER" jdbcType="VARCHAR" property="lastOptUser" />
+		<result column="QUICK_CARD_FLAG" jdbcType="VARCHAR" property="quickCardFlag" />
+		<result column="PATCH_STATUS" jdbcType="VARCHAR" property="patchStatus" />
+		<result column="TELCHECK_RESULT" jdbcType="VARCHAR" property="telcheckResult" />
+		<result column="TEAM_TELCHECK_STATUS" jdbcType="VARCHAR" property="teamTelcheckStatus" />
+		<result column="C4_RUSHFLG" jdbcType="NUMERIC" property="c4RushFlg" />
+		<result column="remark" jdbcType="NUMERIC" property="remark" />
+		<result column="PATCHSTATUSR" jdbcType="NUMERIC" property="patchStatusR" />
+		<result column="PATCHSTATUSP" jdbcType="NUMERIC" property="patchStatusP" />
+		<result column="PATCHSTATUSPP" jdbcType="NUMERIC" property="patchStatusPP" />
+		<result column="IS_HAVECARD_CUST" jdbcType="CHAR" property="isHavecardCust" />
+		<result column="TELCHECK_REUSLTGD" jdbcType="VARCHAR" property="telcheckResultGD" />
+		<result column="TELCHECK_RESULTTJ" jdbcType="VARCHAR" property="telcheckResultTJ" />
+		<result column="TELCHECK_RESULTGZ" jdbcType="VARCHAR" property="telcheckResultGZ" />
+
+		<result column="CRTDATE" jdbcType="NUMERIC" property="crtDate" />
+		<result column="QUEDATE" jdbcType="NUMERIC" property="queDate" />
+		<result column="GRODATE" jdbcType="NUMERIC" property="groDate" />
+		<result column="LST_TEAM_DATE" jdbcType="DATE"  property="lastOptTime"></result>
+
+		<!-- 集体电核  -->
+		<result column="C4_APBATCH" jdbcType="VARCHAR" property="c4ApBatch" />
+		<result column="C1_COTEL" jdbcType="VARCHAR" property="c1Cotel" />
+		<result column="CURR_OPT_USER" jdbcType="VARCHAR" property="currUser" />
+		<result column="CURR_NODE" jdbcType="CHAR" property="currNode" />
+		<result column="DEL_STATUS" jdbcType="CHAR" property="delStatus" />
+		<result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+		<result column="createDate" jdbcType="VARCHAR" property="createDate" />
+		<result column="lstDate" jdbcType="VARCHAR" property="lstDate" />
+		<result column="USER_DATES" jdbcType="VARCHAR" property="userDates" />
+		<result column="USER_DATE"  jdbcType="VARCHAR" property="userDate"/>
+		<result column="SUBMIT_STATUS" jdbcType="CHAR" property="submitStatus" />
+		<result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+		<result column="APP_PROD" jdbcType="VARCHAR" property="appProd" />
+		<result column="MATCHING_CARD_FLAG" jdbcType="CHAR" property="matchingCardFlag" />
+		<result column="SYN_FLAG" property="synFlag" jdbcType="CHAR" />
+		<result column="patch_over_time_ydj" jdbcType="VARCHAR" property="patchOverTimeYdj" />
+		<result column="patch_over_time_bzk" jdbcType="VARCHAR" property="patchOverTimeBzk" />
+		<result column="STOP_FLAG" jdbcType="CHAR" property="stopFlag" />
+		<result column="COMPLETED_FLAG" jdbcType="CHAR" property="completedFlag"/>
+		<result column="COMPLETED_FLAG_YDJ" jdbcType="VARCHAR" property="completedFlagYdj" />
+		<result column="COMPLETED_FLAG_BZK" jdbcType="VARCHAR" property="completedFlagBzk" />
+		<result column="BATCH_CREDIT_FLAG" jdbcType="VARCHAR" property="batchCreditFlag" />
+	</resultMap>
+	<select id="queryBizInpApplSPList" parameterType="java.util.Map" resultMap="BizInpApplMap">
+			select distinct a.APP_ID,
+		       a.APP_PROD,
+		       a.C1_CNAME,
+		       a.C1_IDNBR,
+		       a.C1_CONAME,
+		       a.C4_RUSHFLG,
+		       b.matching_card_flag,
+		       ap.user_name as lastOptUser,
+		       PATCH_STATUS(b.app_id,b.YDJ_FLAG,b.MATCHING_CARD_FLAG) as PATCH_STATUS,
+		       a.QUICK_CARD_FLAG,
+		       b.YDJ_FLAG,
+		       b.LST_TEAM_DATE,
+		       to_char(b.LST_TEAM_DATE, 'yyyy-mm-dd hh24:mi:ss') USER_DATES,
+		      (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+			( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as remark,
+		       (trunc(sysdate) - trunc(b.LST_TEAM_DATE) + 1) as QUEDATE,
+		       workday(trunc(b.group_date),trunc(sysdate)) as GRODATE,
+		   <!--     isexist(t1.app_id) as PATCHSTATUSR, -->
+		   <!-- e.PATCHSTATUSR as PATCHSTATUSR, -->
+		      <!--  g.PATCHSTATUSP, -->
+		       a.exist_card_flag as IS_HAVECARD_CUST,
+		       credit_tel_result(a.APP_ID,b.YDJ_FLAG,b.matching_card_flag,b.curr_node) as TELCHECK_RESULT,
+		      (select x.stop_flag
+                   from (select stop_flag, app_id
+                           from OPAS_CHECKINGR_RESULTINFO
+                          order by crt_date desc) x
+                  where x.app_id = b.APP_ID
+                    and rownum = 1) as STOP_FLAG,
+			   k.PATCHOVERTIMEYDJ as patch_over_time_ydj,
+    		   l.PATCHOVERTIMEBZK as patch_over_time_bzk,
+    		   b.BATCH_CREDIT_FLAG, get_leadnum(b.app_id) as leadNum
+		  from OPAS_ALLOT_APPLY_ALLOT b
+  			  left join opas_ap_user ap on b.last_opt_user = ap.user_code,
+  			  OPAS_BIZ_INP_APPL_C1 a
+			  left join OPAS_FILE_PATCHBOLT c on c.APP_ID = a.APP_ID
+			 <!--  left join (SELECT t1.QUERYED_CERT_NO,count(t1.QUERYED_CERT_NO)as PATCHSTATUSR  FROM opas_pboc_personal_info t1 group by t1.QUERYED_CERT_NO)e on e.QUERYED_CERT_NO=a.C1_IDNBR
+         left join (select f.GMSFHM,count(f.GMSFHM)as PATCHSTATUSP from police_simplify_info f group by f.GMSFHM)g on g.GMSFHM = a.C1_IDNBR
+	--> 		  left join (select rn,
+			                    app_id,
+			                    (trunc(due_date) - trunc(sysdate)) as PATCHOVERTIMEYDJ
+			               from (select row_number() over(partition by APP_ID order by due_date, crt_date desc) as rn,
+			                            t5.app_id,
+			                            t5.due_date
+			                       from OPAS_PATCHBOLT_YDJ_INFO t5
+			                      where t5.due_date is not null)
+			              where rn = 1) k on a.app_id = k.app_id
+			  left join (select rn,
+			                    app_id,
+			                    (trunc(due_date) - trunc(sysdate)) as PATCHOVERTIMEBZK
+			               from (select row_number() over(partition by APP_ID order by due_date, crt_date desc) as rn,
+			                            t6.app_id,
+			                            t6.due_date
+			                       from OPAS_PATCHBOLT_INFO t6
+			                      where t6.due_date is not null)
+			              where rn = 1) l on a.app_id = l.app_id
+  		  where a.APP_ID = b.APP_ID
+			   AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+			   AND b.SYN_FLAG = '0'
+	   		<if test="check_meuoFlag != null and check_meuoFlag !='' ">
+				AND b.check_meuoFlag = #{check_meuoFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND a.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="telNet != null and telNet !='' "><!-- 网申查询 -->
+				AND substr(a.APP_ID,7,1)='B'
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(a.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				order by ${checkStr} 
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+				order by QUICK_CARD_FLAG desc,GRODATE desc,trunc(b.LST_TEAM_DATE,'MI') asc,substr(APP_ID,1,6) asc,substr(APP_ID,8,3) asc,substr(APP_ID,7,1) desc,substr(APP_ID,11,6) desc
+			</if>
+		
+	</select>
+		<!-- 搜索查询分页，模糊查询 --><!-- 忽略大小写 -->
+	<select id="queryBizInpApplSPCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b  
+		left join OPAS_FILE_PATCHBOLT c on c.APP_ID=b.APP_ID 
+		where a.APP_ID=b.APP_ID 
+			and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0')
+			and b.syn_flag = '0'
+			<if test="check_meuoFlag != null and check_meuoFlag !='' ">
+				AND b.check_meuoFlag = #{check_meuoFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' "><!-- 流水号模糊查询 -->
+				AND a.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' "><!-- 客户姓名 -->
+				AND UPPER(a.C1_CNAME) LIKE UPPER('%${khxm}%') 
+			</if>
+			<if test="zjhm != null and zjhm !='' "><!-- 证件号码 -->
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' "><!-- 单位名称 -->
+				AND UPPER(a.C1_CONAME) LIKE UPPER('%${dwmc}%')
+			</if>
+			<if test="telNet != null and telNet !='' "><!-- 网申查询 -->
+				AND substr(a.APP_ID,7,1)='B'
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(a.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+	</select>
+		<!-- 审批未完成补件挂机 查appId前15位 工作量统计易达金套卡算一件 -->
+	<select id="selectBizInpApplApproveCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct substr(b.APP_ID,0,15)) 		 
+		from  OPAS_ALLOT_APPLY_ALLOT b  
+		left join OPAS_FILE_PATCHBOLT c on c.APP_ID=b.APP_ID 
+		where b.syn_flag = '0'
+			and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0')
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="checkMeuoflag != null and checkMeuoflag !='' ">
+				AND b.check_meuoflag = #{checkMeuoflag:CHAR}
+			</if>
+	</select>
+	<!--审批-->
+	<select id="selectGroupLeaderBizInpApplApproveCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct substr(a.APP_ID,0,15)) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b
+		left join OPAS_FILE_PATCHBOLT c on c.APP_ID=b.APP_ID 
+		where a.APP_ID=b.APP_ID 
+			and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0')
+			and b.syn_flag = '0'
+		<if test="delStatus != null and delStatus =='01' ">
+              AND (del_status = '0' and curr_status='3' and curr_node='03' and CURR_OPT_USER =#{userId})
+        	</if>
+        <if test="delStatus != null and delStatus =='03' ">
+              AND (del_status = '2' and curr_status='3' and curr_node='03' and CURR_OPT_USER =#{userId})
+         	</if>
+        <if test="delStatus != null and delStatus =='04' ">
+              AND (curr_status='4' and curr_node='03' and CURR_OPT_USER =#{userId})
+         	</if>
+	</select>
+	
+	<select id="queryBizInpApplList" parameterType="java.util.Map" resultMap="BizInpApplMap">
+		SELECT a.APP_ID,a.APP_PROD,a.C1_CNAME,a.C1_IDNBR,a.C1_CONAME,a.C4_RUSHFLG,
+		b.CURR_OPT_USER as lastOptUser,c.PATCH_STATUS,a.QUICK_CARD_FLAG 
+		,d.TELCHECK_RESULT,d.TEAM_TELCHECK_STATUS,b.YDJ_FLAG,b.MATCHING_CARD_FLAG,b.LST_TEAM_DATE
+ 		, (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+		( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as remark
+ 		,(select workday(b.crt_team_date,sysdate) from dual) as crtDate 
+		,(select workday(b.user_date,sysdate) from dual) as queDate
+		,(select workday(b.group_date,sysdate) from dual) as groDate 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b  
+		left join OPAS_FILE_PATCHBOLT c on c.APP_ID=b.APP_ID 
+		left join 
+		(select  max(t1.APP_ID) as APP_ID,max(t1.TELCHECK_RESULT)as TELCHECK_RESULT , 
+		max(t1.TEAM_TELCHECK_STATUS) as TEAM_TELCHECK_STATUS ,
+		max(t1.crt_date)from OPAS_TELCHECK_ADDNOTE  t1 group by t1.app_id)   
+        d on d.APP_ID=b.APP_ID 
+		WHERE b.SYN_FLAG='0' AND a.APP_ID=b.APP_ID AND (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND a.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				order by a.APP_ID asc,${checkStr}
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+				order by a.APP_ID asc
+			</if>
+		
+	</select>
+		<!-- 搜索查询分页，模糊查询 --><!-- 忽略大小写 -->
+	<select id="queryBizInpApplCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b where b.SYN_FLAG='0' AND a.APP_ID=b.APP_ID 
+			and (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' "><!-- 流水号模糊查询 -->
+				AND a.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' "><!-- 客户姓名 -->
+				AND a.C1_CNAME LIKE UPPER('%${khxm}%') or a.C1_CNAME LIKE LOWER('%${khxm}%')
+			</if>
+			<if test="zjhm != null and zjhm !='' "><!-- 证件号码 -->
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' "><!-- 单位名称 -->
+				AND a.C1_CONAME LIKE UPPER('%${dwmc}%') or a.C1_CONAME LIKE LOWER('%${dwmc}%')
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+	</select>
+	<!-- 征信查询  以前的 queryBizInpApplCount 给反欺诈用    gaohui -->
+	<select id="selectZxIndividualQueueDataCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b where a.APP_ID=b.APP_ID 
+			and (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null AND  b.SYN_FLAG='0'
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ws != null and ws !=''">
+				AND SUBSTR(a.APP_ID,7,1) = 'B'
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+	</select>
+	<!-- 征信查询  未完成补件退回 易达金卡算一件-->
+	<select id="selectZxMemerJobCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct substr(b.APP_ID,0,15)) 		 
+		from  OPAS_ALLOT_APPLY_ALLOT b where b.SYN_FLAG='0' 
+			and (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+	</select>
+	<!-- 征信查询返显时用  gaohui -->
+	<resultMap id="BizInpApplMapZxFind" type="java.util.Map">
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="C1_CNAME" jdbcType="VARCHAR" property="c1Cname" />
+		<result column="C1_IDNBR" jdbcType="VARCHAR" property="c1Idnbr" />
+		<result column="C1_CONAME" jdbcType="VARCHAR" property="c1Coname" />
+		<result column="LAST_OPT_USER" jdbcType="VARCHAR" property="lastOptUser" />
+		<result column="QUICK_CARD_FLAG" jdbcType="VARCHAR" property="quickCardFlag" />
+		<result column="PATCH_STATUS" jdbcType="VARCHAR" property="patchStatus" />
+		<result column="TELCHECK_RESULT" jdbcType="VARCHAR" property="telcheckResult" />
+		<result column="TEAM_TELCHECK_STATUS" jdbcType="VARCHAR" property="teamTelcheckStatus" />
+		<result column="C4_RUSHFLG" jdbcType="NUMERIC" property="c4RushFlg" />
+		<result column="REMARK" jdbcType="NUMERIC" property="remark" />
+		<result column="PATCHSTATUSR" jdbcType="NUMERIC" property="patchStatusR" />
+		<result column="PATCHSTATUSP" jdbcType="NUMERIC" property="patchStatusP" />
+		<result column="PATCHSTATUSPP" jdbcType="NUMERIC" property="patchStatusPP" />
+		<result column="IS_HAVECARD_CUST" jdbcType="CHAR" property="isHavecardCust" />
+		<result column="TELCHECK_REUSLTGD" jdbcType="VARCHAR" property="telcheckResultGD" />
+		<result column="TELCHECK_RESULTTJ" jdbcType="VARCHAR" property="telcheckResultTJ" />
+		<result column="TELCHECK_RESULTGZ" jdbcType="VARCHAR" property="telcheckResultGZ" />
+		<result column="CRTDATE" jdbcType="NUMERIC" property="crtDate" />
+		<result column="QUEDATE" jdbcType="NUMERIC" property="queDate" />
+		<result column="GRODATE" jdbcType="NUMERIC" property="groDate" />
+		<result column="LST_TEAM_DATE" jdbcType="VARCHAR"  property="lastOptTime"></result>
+		<!-- 集体电核  -->
+		<result column="C4_APBATCH" jdbcType="VARCHAR" property="c4ApBatch" />
+		<result column="C1_COTEL" jdbcType="VARCHAR" property="c1Cotel" />
+		<result column="CURR_OPT_USER" jdbcType="VARCHAR" property="currOptUser" />
+		<result column="CURR_NODE" jdbcType="CHAR" property="currNode" />
+		<result column="DEL_STATUS" jdbcType="CHAR" property="delStatus" />
+		<result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+		<result column="USER_DATE" jdbcType="VARCHAR" property="userDate" />
+		<result column="SUBMIT_STATUS" jdbcType="CHAR" property="submitStatus" />
+		<result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+		<result column="APP_PROD" jdbcType="VARCHAR" property="appProd" />
+		<result column="MATCHING_CARD_FLAG" jdbcType="CHAR" property="matchingCardFlag" />
+		<result column="SYN_FLAG" property="synFlag" jdbcType="CHAR" />
+		<result column="PATCHOVERTIMEYDJ" property="patchOverTimeYdj" jdbcType="VARCHAR" />
+		<result column="PATCHOVERTIMEBZK" property="patchOverTimeBzk" jdbcType="VARCHAR" />
+		<result column="STOP_FLAG" property="stopFlag" jdbcType="VARCHAR" />
+		<result column="BACK_FLAG" jdbcType="VARCHAR" property="backFlag" />
+		<result column="COMPLETED_FLAG_YDJ" jdbcType="VARCHAR" property="completedFlagYdj" />
+		<result column="COMPLETED_FLAG_BZK" jdbcType="VARCHAR" property="completedFlagBzk" />
+	</resultMap>
+	<!-- 征信查询  以前的 queryBizInpApplList 给反欺诈用    gaohui -->
+	<select id="selectZxIndividualQueueDataList" parameterType="java.util.Map" resultMap="BizInpApplMapZxFind">
+		SELECT a.APP_ID,a.APP_PROD,a.C1_CNAME,a.C1_IDNBR,a.C1_CONAME,a.C4_RUSHFLG,
+		b.CURR_OPT_USER,b.LAST_OPT_USER,a.QUICK_CARD_FLAG,b.USER_DATE
+		,trim(d.TELCHECK_RESULT) as TELCHECK_RESULT,m.TEAM_TELCHECK_STATUS,b.YDJ_FLAG,b.MATCHING_CARD_FLAG,b.LST_TEAM_DATE
+ 		, (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+		( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as REMARK  
+		,(trunc(sysdate)-trunc(b.LST_TEAM_DATE)+1) as QUEDATE
+		,(select workday(trunc(b.group_date),trunc(sysdate)) from dual) as GRODATE 
+        ,a.EXIST_CARD_FLAG as IS_HAVECARD_CUST
+        ,(case when k.PATCHOVERTIMEYDJ >= 0 then '1' else '0' end)as PATCHOVERTIMEYDJ
+        ,(case when l.PATCHOVERTIMEBZK >= 0 then '1' else '0' end) as PATCHOVERTIMEBZK
+        ,n.STOP_FLAG,b.BACK_FLAG
+        ,k.completed_flag as COMPLETED_FLAG_YDJ
+        ,l.completed_flag as COMPLETED_FLAG_BZK
+        ,(case when  (k.completed_flag || l.completed_flag) is not null then to_number(k.completed_flag || l.completed_flag)
+         else 0 end ) as PATCHORDER
+		from  OPAS_ALLOT_APPLY_ALLOT b 
+		left join  OPAS_BIZ_INP_APPL_C1 a on b.app_id=a.app_id 
+		left join (select APP_ID,TELCHECK_RESULT,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TELCHECK_RESULT from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='6') 
+        where  rn = 1) d on d.APP_ID=b.APP_ID 
+        left join(select APP_ID,TEAM_TELCHECK_STATUS,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TEAM_TELCHECK_STATUS from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='4') 
+        where  rn = 1) m on m.APP_ID=b.APP_ID 
+        left join (select app_id,(trunc(due_date)-trunc(sysdate))as PATCHOVERTIMEYDJ,completed_flag from  OPAS_PATCHBOLT_YDJ_INFO)k  on b.app_id=k.app_id 
+        left join (select app_id,(trunc(due_date)-trunc(sysdate))as PATCHOVERTIMEBZK,completed_flag from  OPAS_PATCHBOLT_INFO)l on b.app_id=l.app_id
+        left join (select rn,app_id,STOP_FLAG from (select row_number() over(partition by APP_ID order by crt_date desc) as rn,app_id,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO) 
+        where  rn = 1) n on b.APP_ID=n.APP_ID 
+		WHERE a.APP_ID=b.APP_ID AND (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null AND b.SYN_FLAG='0'
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ws != null and ws !=''">
+				AND SUBSTR(a.APP_ID,7,1) = 'B'
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				ORDER BY ${checkStr}
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+				ORDER BY b.APP_ID desc
+			</if>
+	</select>
+	<!-- 录入审查未完成队列显示查询分页显示 -->
+	<select id="queryCountForExamine" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+	select count(1)
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b  
+		left join OPAS_PATCHBOLT_INFO c on c.APP_ID=b.APP_ID 
+		where a.APP_ID=b.APP_ID 
+			and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0') 
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' "><!-- 流水号模糊查询 -->
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' "><!-- 客户姓名 -->
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' "><!-- 证件号码 -->
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' "><!-- 单位名称 -->
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+	</select>
+	<!-- 录入审查未完成 挂起    易达金套卡算一件-->
+	<select id="selectCountCheckup" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+	select count(distinct substr(b.APP_ID,0,15))	 
+		from  OPAS_ALLOT_APPLY_ALLOT b  
+		left join OPAS_FILE_PATCHBOLT c on c.APP_ID=b.APP_ID 
+		where (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0') 
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId}
+			</if>
+			
+	</select>
+	<!-- 审查录入未完成队列显示列表 -->
+	<select id="queryBizInpApplListForExamine" parameterType="java.util.Map" resultMap="BizInpApplMap">
+		select a.APP_ID,
+       a.C1_CNAME,
+       a.C1_IDNBR,
+       a.C1_CONAME,
+       a.C4_RUSHFLG,
+       b.LAST_OPT_USER as lastOptUser,
+       b.curr_opt_user as currUser,
+       c.COMPLETED_FLAG,
+       a.QUICK_CARD_FLAG,
+       b.YDJ_FLAG,
+       a.APP_PROD,
+       b.USER_DATE,
+       d.STOP_FLAG,
+       (select count(c.REMARK_ID)
+          from OPAS_ALLOT_APPLY_REMARK c
+         where b.APP_ID = c.APP_ID) as remark,
+       (trunc(sysdate) - trunc(b.LST_TEAM_DATE) + 1) as queDate,
+       (SELECT count(0)
+                  FROM opas_pboc_personal_info t1
+                  where t1.APP_ID = b.APP_ID) as PATCHSTATUSR,
+       (SELECT count(1)
+          FROM police_simplify_info t
+          where  t.app_id = a.app_id) as PATCHSTATUSP,
+       (SELECT count(1)
+          FROM sfrz_base_data t2
+          where  t2.app_id = a.app_id) as PATCHSTATUSPP,
+      	a.EXIST_CARD_FLAG as IS_HAVECARD_CUST
+		  from OPAS_ALLOT_APPLY_ALLOT b
+		  join OPAS_BIZ_INP_APPL_C1 a on a.app_id = b.app_id
+		  left join OPAS_PATCHBOLT_INFO c on c.APP_ID = b.APP_ID 
+		  left join ( 
+		  		select rn,app_id,STOP_FLAG from (
+		  			select row_number() over (partition by APP_ID order by crt_date desc) as rn,app_id,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO
+		  			) where  rn = 1
+		  ) d on d.APP_ID = b.APP_ID
+		  where  (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				order by ${checkStr}
+			</if>
+	</select>
+
+	
+	<select id="selectBizInpApplZxListFinishedCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b where  a.APP_ID=b.APP_ID 
+			and (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null AND  b.SYN_FLAG='0' and (b.CURR_STATUS ='0' or b.CURR_STATUS ='1')
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currOptUser != null and currOptUser !='' ">
+				AND b.CURR_OPT_USER = #{currOptUser}
+			</if>
+			<if test="lastOptUser != null and lastOptUser !='' ">
+				AND b.LAST_OPT_USER = #{lastOptUser}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+	</select>
+	<select id="selectZxMemerJobFinishedCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct substr(b.APP_ID,0,15)) 		 
+		from  OPAS_ALLOT_APPLY_ALLOT b where b.SYN_FLAG='0' 
+			and (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null and (b.CURR_STATUS='0' or b.CURR_STATUS='1')
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currOptUser != null and currOptUser !='' ">
+				AND b.CURR_OPT_USER = #{currOptUser}
+			</if>
+			<if test="lastOptUser != null and lastOptUser !='' ">
+				AND b.LAST_OPT_USER = #{lastOptUser}
+			</if>
+	</select>
+	
+	<select id="selectBizInpApplZxListFinishedList" parameterType="java.util.Map" resultMap="BizInpApplMapZxFind">
+		select a.APP_ID,a.APP_PROD,a.C1_CNAME,a.C1_IDNBR,a.C1_CONAME,a.C4_RUSHFLG,b.CURR_OPT_USER,b.LAST_OPT_USER,a.QUICK_CARD_FLAG 
+		,trim(d.TELCHECK_RESULT) as TELCHECK_RESULT,m.TEAM_TELCHECK_STATUS,b.YDJ_FLAG,b.MATCHING_CARD_FLAG,b.LST_TEAM_DATE,b.USER_DATE
+ 		, (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+		( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as REMARK          
+		,(trunc(sysdate)-trunc(b.LST_TEAM_DATE)+1) as QUEDATE
+		,(select workday(trunc(b.group_date),trunc(sysdate)) from dual) as GRODATE 
+        ,a.EXIST_CARD_FLAG as IS_HAVECARD_CUST
+        ,n.STOP_FLAG,b.BACK_FLAG
+        ,k.completed_flag as COMPLETED_FLAG_YDJ
+        ,l.completed_flag as COMPLETED_FLAG_BZK
+        ,(case when  (k.completed_flag || l.completed_flag) is not null then to_number(k.completed_flag || l.completed_flag)
+         else 0 end ) as PATCHORDER
+		from OPAS_ALLOT_APPLY_ALLOT b left join  OPAS_BIZ_INP_APPL_C1 a on b.app_id=a.app_id 
+		left join (select APP_ID,TELCHECK_RESULT,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TELCHECK_RESULT from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='6') 
+        where  rn = 1) d on d.APP_ID=b.APP_ID left join(select APP_ID,TEAM_TELCHECK_STATUS,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TEAM_TELCHECK_STATUS from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='4') 
+        where  rn = 1) m on m.APP_ID=b.APP_ID 
+        left join (select rn,app_id,STOP_FLAG from (select row_number() over(partition by APP_ID order by crt_date desc) as rn,app_id,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO) 
+        where  rn = 1) n on b.APP_ID=n.APP_ID left join OPAS_PATCHBOLT_YDJ_INFO k on b.APP_ID=k.APP_ID left join OPAS_PATCHBOLT_INFO l on b.APP_ID=l.APP_ID
+		where  a.APP_ID=b.APP_ID AND (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null  AND b.SYN_FLAG='0' and (b.CURR_STATUS ='0' or b.CURR_STATUS ='1')
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currOptUser != null and currOptUser !='' ">
+				AND b.CURR_OPT_USER = #{currOptUser}
+			</if>
+			<if test="lastOptUser != null and lastOptUser !='' ">
+				AND b.LAST_OPT_USER = #{lastOptUser}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				ORDER BY ${checkStr}
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+				ORDER BY b.APP_ID desc
+			</if>
+	</select>
+	<!-- 集体电核 -->
+	<select id="selectAppCount" parameterType="com.huaxia.opas.domain.input.BizInpAppl"
+		resultType="java.lang.Integer">
+		select count(1) 		 
+		from OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b 
+		<!-- left join 
+		(select max(t1.APP_ID) as APP_ID,max(t1.TELCHECK_RESULT)as TELCHECK_RESULT , 
+		max(t1.TEAM_TELCHECK_STATUS) as TEAM_TELCHECK_STATUS ,
+		max(t1.crt_date)from OPAS_TELCHECK_ADDNOTE t1 group by t1.app_id)d
+		on d.APP_ID=b.APP_ID 
+		left join OPAS_FILE_PATCHBOLT patch on patch.APP_ID=b.APP_ID  -->
+		where a.APP_ID=b.APP_ID And  b.CURR_NODE='02'
+			and b.DEL_STATUS in ('0','2','3')
+			<if test="c1Coname != null and c1Coname !='' ">
+				AND a.C1_CONAME LIKE '%${c1Coname}%'
+			</if>
+			<if test="c4ApBatch != null and c4ApBatch !='' ">
+				AND a.C4_APBATCH LIKE '%${c4ApBatch}%'
+			</if>
+			<if test="c1Cotel != null and c1Cotel !='' ">
+				AND a.C1_COTEL LIKE '%${c1Cotel}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+	</select>
+	<select id="selectAppList" parameterType="com.huaxia.opas.domain.input.BizInpAppl"
+		resultMap="BizInpApplMap">
+		select a.APP_ID,a.APP_PROD,a.C1_CNAME,a.C1_IDNBR,a.C1_CONAME,a.QUICK_CARD_FLAG,
+		a.C4_APBATCH,a.C1_COTEL,a.APP_PROD ,  a.EXIST_CARD_FLAG as IS_HAVECARD_CUST ,
+		b.LAST_OPT_USER ,b.CURR_OPT_USER,b.CURR_NODE,b.YDJ_FLAG,b.MATCHING_CARD_FLAG ,
+		to_char(b.CRT_TEAM_DATE,'yyyy-mm-dd hh24:mi:ss') as createDate ,
+		to_char(b.LST_TEAM_DATE,'yyyy-mm-dd hh24:mi:ss') as lstDate ,
+		(select workday(trunc(b.group_date),trunc(sysdate)) from dual) as groDate ,
+		(trunc(sysdate)-trunc(b.user_date)+1) as userDate ,
+	    (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+		( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as remark,
+		trim(d.TELCHECK_RESULT) as TELCHECK_RESULT,m.TEAM_TELCHECK_STATUS,
+        <!-- g.PATCHSTATUSP as PATCHSTATUSP, -->
+        k.completed_flag as COMPLETED_FLAG_YDJ,
+        l.completed_flag as COMPLETED_FLAG_BZK,
+        (case when  (k.completed_flag || l.completed_flag) is not null then to_number(k.completed_flag || l.completed_flag)
+         else 0 end ) as PATCHORDER,
+         n.STOP_FLAG,
+		patch.PATCH_STATUS
+		from OPAS_ALLOT_APPLY_ALLOT b
+		 join OPAS_BIZ_INP_APPL_C1 a on  a.APP_ID=b.APP_ID 
+		left join (select APP_ID,TELCHECK_RESULT,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TELCHECK_RESULT from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='6') 
+        where  rn = 1) d on d.APP_ID=b.APP_ID 
+        left join(select APP_ID,TEAM_TELCHECK_STATUS,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TEAM_TELCHECK_STATUS from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='4') 
+        where  rn = 1) m on m.APP_ID=b.APP_ID 
+<!--         left join (select f.GMSFHM,count(f.GMSFHM)as PATCHSTATUSP from POLICE_SIMPLIFY_INFO f group by f.GMSFHM)g on g.GMSFHM = a.C1_IDNBR  -->
+		left join (select app_id,(trunc(due_date)-trunc(sysdate))as PATCHOVERTIMEYDJ,completed_flag from  OPAS_PATCHBOLT_YDJ_INFO)k  on b.app_id=k.app_id 
+        left join (select app_id,(trunc(due_date)-trunc(sysdate))as PATCHOVERTIMEBZK,completed_flag from  OPAS_PATCHBOLT_INFO)l on b.app_id=l.app_id
+		left join OPAS_FILE_PATCHBOLT patch on patch.APP_ID=b.APP_ID 
+	    left join (select rn,app_id,STOP_FLAG from (select row_number() over(partition by APP_ID order by crt_date desc) as rn,app_id,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO) 
+        where  rn = 1) n on b.APP_ID=n.APP_ID  
+		where  b.CURR_NODE='02' and b.DEL_STATUS in ('0','2','3')
+			<if test="c1Coname != null and c1Coname !='' ">
+				AND a.C1_CONAME LIKE '%${c1Coname}%'
+			</if>
+			<if test="c4ApBatch != null and c4ApBatch !='' ">
+				AND a.C4_APBATCH LIKE '%${c4ApBatch}%'
+			</if>
+			<if test="c1Cotel != null and c1Cotel !='' ">
+				AND a.C1_COTEL LIKE '%${c1Cotel}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			ORDER BY a.APP_ID DESC
+	</select>
+	<!-- zhanglibo 征信  组长调阅  根据user_code 查询 DEL_STATUS = 0未完成-->
+	<select id="queryBizInpApplCountStatusZero" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(distinct substr(APP_ID,0,15)) 		 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where CURR_OPT_USER =#{userCode}
+		and CURR_NODE ='02' and DEL_STATUS='0' and CURR_STATUS = '3'
+		and syn_flag ='0' AND SUBMIT_TYPE is null
+	</select>
+	<!-- shixiaoting 征信  组长调阅  根据user_code 已完成   相当于审批未完成 操作人查上个环节的操作者LAST_OPT_USER-->
+	<select id="queryBizInpApplCountStatusFinised" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(distinct substr(APP_ID,0,15))  		 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where LAST_OPT_USER =#{userCode}
+		and CURR_NODE ='03' and DEL_STATUS='0' and (CURR_STATUS = '0' or CURR_STATUS = '1')
+		AND SUBMIT_TYPE is null AND syn_flag ='0'
+	</select>
+	<!-- zhanglibo 征信  组长调阅  根据user_code 查询 DEL_STATUS = 2补件-->
+	<select id="queryBizInpApplCountStatusTwo" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(distinct substr(APP_ID,0,15))  		 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where CURR_OPT_USER =#{userCode}
+		and CURR_NODE ='02' and DEL_STATUS='2'
+		and curr_status = '3' and syn_flag ='0' AND SUBMIT_TYPE is null
+	</select>
+	
+	<!-- zhanglibo 征信  组长调阅  根据user_code 查询 DEL_STATUS = 3退回-->
+	<select id="queryBizInpApplCountStatusThree" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(distinct substr(APP_ID,0,15)) 		 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where CURR_OPT_USER =#{userCode}
+		and CURR_NODE ='02' and DEL_STATUS='3' 
+		and curr_status = '3' and syn_flag ='0' AND SUBMIT_TYPE is null
+	</select>
+	<!-- zhanglibo 征信  组长调阅  根据user_code 查询 DEL_STATUS = 4挂起-->
+	<select id="queryBizInpApplCountStatusFour" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(distinct substr(APP_ID,0,15)) 		 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where CURR_OPT_USER =#{userCode}
+		and CURR_NODE ='02' and syn_flag ='0'
+		AND CURR_STATUS = '4' AND SUBMIT_TYPE is null
+	</select>
+	
+	<!-- 审批审查环节工作量统计 -->
+	<select id="queryFinishedCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(s.app_id,0,15)))
+		from opas_allot_apply_allot s
+		left join OPAS_FILE_APPLICATION_DETAIL o on s.app_id=o.app_Id 
+		<where>
+			s.curr_opt_user = #{crediter}	
+			<if test="ydjFlag != null">
+				AND s.ydj_Flag = #{ydjFlag}
+			</if>	
+			and o.flag in ('4','0','2','1')
+			and s.curr_node='04'
+			 <if test="check_meuoflag != null and check_meuoflag !='' ">
+				and s.check_meuoflag = #{check_meuoflag}
+			</if>
+			
+			<if test="start != null and end != null ">
+				AND (s.LST_TEAM_DATE
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>	
+		</where>
+	</select>
+	<!-- 审批转上级工作量统计 -->
+	<select id="queryToHighlevelCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from opas_allot_apply_allot_his
+		<where>
+			last_opt_user = #{crediter}
+			and curr_node='03'
+			and back_flag='2'
+			<if test="ydjFlag != null">
+				AND ydj_Flag = #{ydjFlag}
+			</if>	
+			<if test="start != null and end != null ">
+				AND (record_team_date 
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>	
+		</where>
+	</select>
+	<!--完成归档量  -->
+	<select id="queryToFileCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(s.app_id,0,15)))
+		from opas_allot_apply_allot s
+		left join OPAS_FILE_APPLICATION_DETAIL o on s.app_id=o.app_Id 
+		<where>
+			s.curr_opt_user = #{crediter}
+			<if test="ydjFlag != null">
+				AND s.ydj_Flag = #{ydjFlag}
+			</if>	
+			and o.flag in('0','2')
+			 <if test="check_meuoflag != null and check_meuoflag !='' ">
+				and s.check_meuoflag = #{check_meuoflag}
+			</if>
+			and s.curr_node='04'
+			<if test="start != null and end != null ">
+				AND (s.LST_TEAM_DATE
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>	
+		</where>
+	</select>
+	<select id="queryFinishedCount1" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from OPAS_REVIEW_DECISION_RESULT
+		<where>
+			CRT_USER = #{crediter}
+			<if test="start != null and end != null ">
+				AND (CRT_DATE  
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>
+		</where>
+	</select>
+	<select id="queryUnfinishedCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from OPAS_ALLOT_APPLY_ALLOT
+		<where>
+			CURR_OPT_USER = #{crediter}
+			and CURR_STATUS = '3'
+			and CURR_NODE='01'
+			and DEL_STATUS='0'
+		</where>
+	</select>
+	<select id="selectProcessIdByAppId" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.PROCESS_ID as processid from opas_allot_apply_allot t
+ 		where  t.APP_ID = #{appId}
+	</select>
+	<!-- zlb 根据userCode 查询件  征信 这个已经不用了 -->
+	<select id="queryBizInpApplByCurrOptUser" parameterType="java.lang.String"
+		resultMap="BizInpApplMap">
+		select
+		APP_ID, CURR_OPT_QUEUE,LAST_OPT_QUEUE,CURR_OPT_GROUP,LAST_OPT_GROUP,CURR_OPT_USER,LAST_OPT_USER,MATCHING_CARD_FLAG,CURR_STATUS,DEL_STATUS,CURR_NODE,CRT_TEAM_DATE,QUEUE_DATE,GROUP_DATE,SUBMIT_STATUS,SUBMIT_TYPE,to_char(LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,SUBMIT_MEMO,YDJ_FLAG,REVIEW_STATUS,PROCESS_ID,trunc(sysdate)-trunc(USER_DATE) as  groDate 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where CURR_OPT_USER =#{currOptUser} and CURR_NODE ='02'  and (DEL_STATUS='0' or DEL_STATUS='2' or DEL_STATUS='3' or DEL_STATUS='4')
+		order by DEL_STATUS
+	</select>
+	<!-- ad 根据userCode 查询件  征信 -->
+	<select id="selectBizInpApplByUserCode" parameterType="java.util.Map"
+		resultMap="BizInpApplMap">
+		select 
+		t.APP_ID, t.CURR_OPT_QUEUE,t.LAST_OPT_QUEUE,t.CURR_OPT_GROUP,t.LAST_OPT_GROUP,t.CURR_OPT_USER,
+		r.user_name as LAST_OPT_USER,t.CURR_STATUS,t.DEL_STATUS,t.CURR_NODE,t.CRT_TEAM_DATE,
+		t.QUEUE_DATE,t.GROUP_DATE,t.SUBMIT_STATUS,t.SUBMIT_TYPE,to_char(t.LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,
+		t.SUBMIT_MEMO,t.YDJ_FLAG,t.REVIEW_STATUS,t.PROCESS_ID,trunc(sysdate)-trunc(t.LST_TEAM_DATE) as  queDate 
+		from OPAS_ALLOT_APPLY_ALLOT t left join opas_ap_user r on r.user_code = t.LAST_OPT_USER
+		where SYN_FLAG='0' and (SUBMIT_STATUS is null OR SUBMIT_STATUS !='1')  and SUBMIT_TYPE is null
+		<if test="delStatus != null and delStatus =='01' ">
+              AND ( del_status = '0' and curr_status='3' and curr_node='02' and CURR_OPT_USER =#{userCode})
+        	</if>
+        <if test="delStatus != null and delStatus =='02' ">
+              AND (del_status='0' and (curr_status='0' or curr_status='1')and curr_node='03' and Last_opt_user =#{userCode})
+         	</if>
+        <if test="delStatus != null and delStatus =='03' ">
+              AND (del_status = '2' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+         	</if>
+        <if test="delStatus != null and delStatus =='04' ">
+              AND (del_status = '3' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+         	</if>
+        <if test="delStatus != null and delStatus =='05' ">
+              AND (curr_status='4' and curr_node='02' and CURR_OPT_USER =#{userCode})
+         	</if>
+       <if test="delStatus != null and delStatus =='08' ">
+             and((del_status = '0' and curr_status='3' and curr_node='02' and CURR_OPT_USER =#{userCode})  
+		     OR (del_status = '2' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+		     OR (del_status = '3' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+		     OR (curr_status='4' and curr_node='02' and CURR_OPT_USER =#{userCode})
+		     OR (del_status='0' and (curr_status='0' or curr_status='1')and curr_node='03' and Last_opt_user =#{userCode}))
+         </if>
+        <if test="appId != null and appId !='' ">
+              AND APP_ID LIKE '${appId}%'
+         	</if>
+       order by app_id desc
+		
+	</select>
+	<!-- 根据userCode 查询件  审查   此方法已经不用-->
+	<select id="queryBizInpApplByCurrOptUserCheckup" parameterType="java.lang.String"
+		resultMap="BizInpApplMap">
+		select
+		APP_ID, CURR_OPT_QUEUE,LAST_OPT_QUEUE,CURR_OPT_GROUP,LAST_OPT_GROUP,CURR_OPT_USER,LAST_OPT_USER,
+		MATCHING_CARD_FLAG,CURR_STATUS,DEL_STATUS,CURR_NODE,CRT_TEAM_DATE,QUEUE_DATE,GROUP_DATE,SUBMIT_STATUS,
+		SUBMIT_TYPE,to_char(LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,SUBMIT_MEMO,YDJ_FLAG,REVIEW_STATUS,
+		PROCESS_ID,trunc(sysdate)-trunc(USER_DATE) as  groDate 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where  SYN_FLAG='0' and (SUBMIT_STATUS is null OR SUBMIT_STATUS !='1')  and SUBMIT_TYPE is null
+		and CURR_OPT_USER =#{currOptUser}
+	</select>
+	<!--ad 根据userCode 查询件  审查 -->
+	<select id="selectBizInpApplByUserCodeCheckup" parameterType="java.lang.String"
+		resultMap="BizInpApplMap">
+		select 
+		t.APP_ID, t.CURR_OPT_QUEUE,t.LAST_OPT_QUEUE,t.CURR_OPT_GROUP,t.LAST_OPT_GROUP,t.CURR_OPT_USER,
+		r.user_name as LAST_OPT_USER,t.CURR_STATUS,t.DEL_STATUS,t.CURR_NODE,t.CRT_TEAM_DATE,
+		t.QUEUE_DATE,t.GROUP_DATE,t.SUBMIT_STATUS,t.SUBMIT_TYPE,to_char(t.LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,
+		t.SUBMIT_MEMO,t.YDJ_FLAG,t.REVIEW_STATUS,t.PROCESS_ID,trunc(sysdate)-trunc(t.LST_TEAM_DATE) as  queDate 
+		from OPAS_ALLOT_APPLY_ALLOT t left join opas_ap_user r on r.user_code = t.CURR_OPT_USER
+		where t.CURR_OPT_USER =#{userCode} and t.CURR_NODE ='01' and t.DEL_STATUS='0' 
+		<if test="delStatus != null and delStatus =='01' ">
+              AND (t.del_status = '0' and t.curr_status='3' and t.curr_node='01')
+        	</if>
+        <if test="delStatus != null and delStatus =='02' ">
+               AND (t.curr_status = '4' and t.curr_node='01')
+         	</if>
+        <if test="delStatus != null and delStatus =='08' ">
+              AND ((t.del_status = '0' and t.curr_status='3' and t.curr_node='01')
+              OR (t.curr_status = '4' and t.curr_node='01'))
+         	</if>
+        <if test="appId != null and appId !='' ">
+              AND APP_ID LIKE '${appId}%'
+         	</if>
+		order by t.app_id desc
+	</select>
+	<!-- zlb  -->
+	<select id="queryCountStatusAndUserCodeAnddelStatus" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) 		 
+		from OPAS_ALLOT_APPLY_ALLOT 
+		where CURR_OPT_USER =#{userCode}
+		AND (SUBMIT_STATUS is null or SUBMIT_STATUS='0')
+		<if test="currNode != null and currNode !='' ">
+				AND CURR_NODE = #{currNode:CHAR}
+		</if>
+		<if test="currStatus != null and currStatus !='' ">
+				AND curr_Status = #{currStatus:CHAR}
+		</if>
+		<if test="delStatus != null and delStatus !='' ">
+				AND DEL_STATUS = #{delStatus:CHAR}
+		</if>
+		AND SUBMIT_TYPE is null
+	</select>
+	<!-- 根据userCode 查询件  审批  已完成 -->
+	<select id="queryFinisedApp" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) 		 
+		from OPAS_FILE_APPLICATION_DETAIL s,OPAS_ALLOT_APPLY_ALLOT b
+		where 													
+		   	s.APP_ID = b.APP_ID 													
+		    AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0')
+		    and b.syn_flag = '0'
+		    and s.flag = '4'
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+	</select>
+	<!-- 根据userCode 查询件  审批  此方法不用 -->
+	<select id="queryBizInpApplByCurrOptUserApprove" parameterType="java.lang.String"
+		resultMap="BizInpApplMap">
+		select
+			b.APP_PROD,
+			a.YDJ_FLAG,
+			a.MATCHING_CARD_FLAG,
+			a.APP_ID, a.CURR_OPT_QUEUE,a.LAST_OPT_QUEUE,a.CURR_OPT_GROUP,a.LAST_OPT_GROUP,
+			a.CURR_OPT_USER,a.LAST_OPT_USER,a.CURR_STATUS,a.DEL_STATUS,a.CURR_NODE,a.CRT_TEAM_DATE,
+			a.QUEUE_DATE,a.GROUP_DATE,a.SUBMIT_STATUS,a.SUBMIT_TYPE,
+			to_char(a.LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,
+			a.SUBMIT_MEMO,a.REVIEW_STATUS,
+			a.PROCESS_ID,trunc(sysdate)-trunc(a.USER_DATE) as  groDate 
+		from OPAS_ALLOT_APPLY_ALLOT a join OPAS_BIZ_INP_APPL_C1 b  on a.APP_ID = b.APP_ID
+		where CURR_OPT_USER =#{currOptUser} and CURR_NODE ='03' and (DEL_STATUS='0' or DEL_STATUS='2' or DEL_STATUS='4')
+		order by DEL_STATUS
+	</select>
+	<!--ad 根据userCode 查询件  审批 -->
+	<select id="selectBizInpApplByUserCodeApprove" parameterType="java.util.Map"
+		resultMap="BizInpApplMap">
+		select 
+		t.APP_ID, t.CURR_OPT_QUEUE,t.LAST_OPT_QUEUE,t.CURR_OPT_GROUP,t.LAST_OPT_GROUP,t.CURR_OPT_USER,
+		r.user_name as LAST_OPT_USER,t.CURR_STATUS,t.DEL_STATUS,t.CURR_NODE,t.CRT_TEAM_DATE,
+		t.QUEUE_DATE,t.GROUP_DATE,t.SUBMIT_STATUS,t.SUBMIT_TYPE,to_char(t.LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,
+		t.SUBMIT_MEMO,t.YDJ_FLAG,t.REVIEW_STATUS,t.PROCESS_ID,trunc(sysdate)-trunc(t.LST_TEAM_DATE) as  queDate 
+		from OPAS_ALLOT_APPLY_ALLOT t left join opas_ap_user r on r.user_code = t.LAST_OPT_USER
+		where SYN_FLAG='0' and (SUBMIT_STATUS is null OR SUBMIT_STATUS !='1')  and SUBMIT_TYPE is null
+		and CURR_OPT_USER =#{userCode} and check_meuoflag ='1'
+		<if test="delStatus != null and delStatus =='01' ">
+              AND (del_status = '0' and curr_status='3' and curr_node='03' )
+        	</if>
+        <if test="delStatus != null and delStatus =='03' ">
+              AND (del_status = '2' and curr_status='3' and curr_node='03')
+         	</if>
+        <if test="delStatus != null and delStatus =='04' ">
+              AND (curr_status='4' and curr_node='03')
+         	</if>
+       <if test="delStatus != null and delStatus =='08' ">
+             and((del_status = '0' and curr_status='3' and curr_node='03')  
+		     OR (del_status = '2' and curr_status='3' and curr_node='03')
+		     OR (curr_status='4' and curr_node='03'))
+         </if>
+        <if test="appId != null and appId !='' ">
+              AND APP_ID LIKE '${appId}%'
+         	</if>
+        order by app_id desc
+	</select>
+	
+	<select id="selectBizInpApplApprove" parameterType="java.util.Map"
+		resultMap="BizInpApplMap">
+	select 
+		t.APP_ID, t.CURR_OPT_QUEUE,t.LAST_OPT_QUEUE,t.CURR_OPT_GROUP,t.LAST_OPT_GROUP,t.CURR_OPT_USER,
+		r.user_name as LAST_OPT_USER,t.CURR_STATUS,t.DEL_STATUS,t.CURR_NODE,t.CRT_TEAM_DATE,
+		t.QUEUE_DATE,t.GROUP_DATE,t.SUBMIT_STATUS,t.SUBMIT_TYPE,to_char(t.LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,
+		t.SUBMIT_MEMO,t.YDJ_FLAG,t.REVIEW_STATUS,t.PROCESS_ID,(trunc(sysdate) - trunc(t.LST_TEAM_DATE)) as  queDate
+		from OPAS_ALLOT_APPLY_ALLOT t left join opas_ap_user r on r.user_code = t.LAST_OPT_USER
+		where SYN_FLAG='0' and (SUBMIT_STATUS is null OR SUBMIT_STATUS !='1')  and SUBMIT_TYPE is null
+		<if test="delStatus != null and delStatus =='01' ">
+              AND (del_status = '0' and curr_status='3' and curr_node='03' and check_meuoflag ='2' and CURR_OPT_USER =#{userCode}) 
+        	</if>
+        <if test="delStatus != null and delStatus =='02' ">
+              AND  (del_status = '2' and curr_status='3' and curr_node='03' and check_meuoflag ='2' and CURR_OPT_USER =#{userCode})
+         	</if>
+       <if test="delStatus != null and delStatus =='04' ">
+              AND ( del_status = '0' and curr_status='3' and curr_node='02' and CURR_OPT_USER =#{userCode})
+        	</if>
+	   <if test="delStatus != null and delStatus =='05' ">
+	         AND (del_status = '2' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+         	</if>
+	   <if test="delStatus != null and delStatus =='06' ">
+             AND (del_status = '3' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+         	</if>
+       <if test="delStatus != null and delStatus =='07' ">
+              AND ((curr_status='4' and curr_node='03' and check_meuoflag ='2' and CURR_OPT_USER =#{userCode})
+              or(curr_status='4' and curr_node='02' and check_meuoflag ='1' and CURR_OPT_USER =#{userCode}))
+         	</if>
+       <if test="delStatus != null and delStatus =='08' ">
+             and((del_status = '0' and curr_status='3' and curr_node='03' and check_meuoflag ='2' and CURR_OPT_USER =#{userCode})  
+		     OR (del_status = '2' and curr_status='3' and curr_node='03' and check_meuoflag ='2' and CURR_OPT_USER =#{userCode})
+		     OR ( del_status = '0' and curr_status='3' and curr_node='02' and CURR_OPT_USER =#{userCode})
+		     OR (del_status = '2' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+		     OR (del_status = '3' and curr_status='3' and curr_node='02'and CURR_OPT_USER =#{userCode})
+		     OR ((curr_status='4' and curr_node='03' and check_meuoflag ='2' and CURR_OPT_USER =#{userCode}) OR
+              (curr_status='4' and curr_node='02' and check_meuoflag ='1' and CURR_OPT_USER =#{userCode})))
+         </if>
+        <if test="appId != null and appId !='' ">
+              AND APP_ID LIKE '${appId}%'
+         	</if>
+        order by app_id desc
+		
+	</select>
+	<select id="selectAllotApplyCurrStatusByMap" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.APP_ID as APPID,t.CURR_STATUS as CURRSTATUS ,CURR_OPT_USER as CURRUSER,LAST_OPT_USER as LASTUSER ,t.LAOJIANFLAG as LAOJIANFLAG ,t.ALLOT_VERSION as ALLOTVERSION from opas_allot_apply_allot t
+ 		where (t.SUBMIT_STATUS is null OR t.SUBMIT_STATUS !='1') AND t.SUBMIT_TYPE is null
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID = #{appId}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND t.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND t.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND t.CURR_OPT_USER = #{userId}
+			</if>
+	</select>
+	<select id="selectAllotApplyCurrStatusByGroupMap" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.APP_ID as APPID,t.CURR_STATUS as CURRSTATUS ,CURR_OPT_USER as CURRUSER,LAST_OPT_USER as LASTUSER ,t.LAOJIANFLAG as LAOJIANFLAG ,t.ALLOT_VERSION as ALLOTVERSION from opas_allot_apply_allot t
+ 		where (t.SUBMIT_STATUS is null OR t.SUBMIT_STATUS !='1') AND t.SUBMIT_TYPE is null
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID = #{appId}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND t.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND t.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="orgNo != null and orgNo !='' ">
+				AND t.CURR_OPT_GROUP = #{orgNo}
+			</if>
+	</select>
+	<select id="selectAllotApplyCurrStatusByMapForExamine" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.APP_ID as APPID,t.CURR_STATUS as CURRSTATUS ,CURR_OPT_USER as CURRUSER,LAST_OPT_USER as LASTUSER ,t.LAOJIANFLAG as LAOJIANFLAG from opas_allot_apply_allot t
+ 		where (t.SUBMIT_STATUS is null OR t.SUBMIT_STATUS !='1') AND t.SUBMIT_TYPE is null
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID = #{appId}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND t.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND t.YDJ_FLAG = #{ydjFlag}
+			</if>
+	</select>
+	
+	<select id="selectAllotApplyByMapLikeAppId" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.APP_ID as APPID,t.CURR_STATUS as CURRSTATUS,t.DEL_STATUS as DELSTATUS,t.CURR_OPT_USER as CURRUSER,t.LAST_OPT_USER as LASTUSER,t.GROUP_DATE as GROUPDATE,t.ALLOT_VERSION as ALLOTVERSION from opas_allot_apply_allot t
+ 		where (t.SUBMIT_STATUS is null OR t.SUBMIT_STATUS !='1') AND t.SUBMIT_TYPE is null
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID LIKE '${appId}%'
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND t.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND t.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND t.CURR_STATUS = #{currStatus}
+			</if>
+	</select>
+	<select id="selectAllotApplyByMapLikeCurrstatusAppId" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.APP_ID as APPID,t.CURR_STATUS as CURRSTATUS,t.DEL_STATUS as DELSTATUS ,CURR_OPT_USER as CURRUSER,LAST_OPT_USER as LASTUSER from opas_allot_apply_allot t
+ 		where (t.SUBMIT_STATUS is null OR t.SUBMIT_STATUS !='1') AND t.SUBMIT_TYPE is null AND (t.CURR_STATUS='1' OR t.CURR_STATUS='0') 
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID LIKE '${appId}%'
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND t.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND t.YDJ_FLAG = #{ydjFlag}
+			</if>
+	</select>
+	<resultMap id="BizInpApplMapLikeListAppId" type="java.util.Map">
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="CURR_OPT_USER" jdbcType="VARCHAR" property="currOptUser" />
+		<result column="LAST_OPT_USER" jdbcType="VARCHAR" property="lastOptUser" />
+		<result column="CURR_NODE" jdbcType="CHAR" property="currNode" />
+		<result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+		<result column="DEL_STATUS" jdbcType="CHAR" property="delStatus" />
+		<result column="FRONTAPPID" jdbcType="VARCHAR"  property="FRONTAPPID"></result>
+	</resultMap>
+	<select id="selectAllotApplyByMapLikeListAppId" parameterType="java.util.Map"
+		resultMap="BizInpApplMapLikeListAppId">
+		SELECT e.* FROM ( SELECT t.APP_ID,t.CURR_STATUS ,t.CURR_OPT_USER ,t.LAST_OPT_USER,t.DEL_STATUS,
+        substr(t.APP_ID,0,15) as FRONTAPPID from opas_allot_apply_allot t
+ 		WHERE (t.SUBMIT_STATUS is null OR t.SUBMIT_STATUS !='1') 
+        AND t.SUBMIT_TYPE is null AND (t.CURR_STATUS!='0' AND t.CURR_STATUS!='1' AND t.CURR_STATUS!='6')
+        <if test="currNode != null and currNode !='' ">
+			AND t.CURR_NODE = #{currNode}
+		</if>
+        )e  where e.FRONTAPPID IN
+        <foreach item="item" index="index" collection="listAppId" open="(" separator=","
+		    close=")">
+			#{item.appId}
+		</foreach>
+	</select>
+	<insert id="insertCopyOpasAllotToAllotHis"  parameterType="java.util.Map">
+	  insert into OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG, 
+      PROCESS_ID, RECORD_TEAM_DATE, USER_DATE,BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME) 
+      select (select sys_guid() from dual),APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG,
+      PROCESS_ID,sysdate,USER_DATE,BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME from OPAS_ALLOT_APPLY_ALLOT where APP_ID=#{appId}
+	</insert>
+	<insert id="insertCopyOpasAllotToAllotHisByListAppId" parameterType="java.util.Map">
+	  insert into OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE,  QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG, 
+      PROCESS_ID, RECORD_TEAM_DATE, USER_DATE,BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME) 
+	<foreach item="item" index="index" collection="listAppId" open="(" separator=","
+		close=")">
+	 select (select sys_guid() from dual),APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS,
+	 DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG,
+	  PROCESS_ID,sysdate,USER_DATE,BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME from OPAS_ALLOT_APPLY_ALLOT WHERE  APP_ID=#{item.appId}
+    </foreach>    
+	</insert>
+	<select id="selectCreditDecisionResultByAppId" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT t.CREDIT_DECISION_RESULT as DECISIONRESULT from OPAS_BZK_SYSRESULT_INFO t
+ 		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID = #{appId}
+			</if>
+		</trim>
+	</select>
+	<select id="selectUserOrgOrgIdByUserUuid" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT t.ORG_ID as ORGID from OPAS_AP_USER_ORG t
+ 		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="userUuid != null and userUuid !='' ">
+				AND t.USER_ID = #{userUuid}
+			</if>
+		</trim>
+	</select>
+	<select id="selectApOrgOrgNoByOrgId" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.ORG_NO as ORGNO,t.org_name as ORGNAME from OPAS_AP_ORG t
+ 		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="orgId != null and orgId !='' ">
+				AND t.ORG_ID = #{orgId}
+			</if>
+		</trim>
+	</select>
+	<update id="updateAllotApplyAllotByAppId" parameterType="java.util.Map">
+		update OPAS_ALLOT_APPLY_ALLOT
+		<set>
+		    <if test="currUserName != null">CURR_USER_NAME=#{currUserName,jdbcType=VARCHAR},</if>
+		    <if test="synFlag != null">SYN_FLAG=#{synFlag,jdbcType=CHAR},</if> 
+			<if test="delStatus != null">DEL_STATUS=#{delStatus,jdbcType=CHAR},</if> 
+			<if test="batchCreditFlag != null">BATCH_CREDIT_FLAG=#{batchCreditFlag,jdbcType=CHAR},</if> 
+			<if test="submitStatus != null">SUBMIT_STATUS=#{submitStatus,jdbcType=CHAR},</if> 
+			<if test="currNode != null">CURR_NODE=#{currNode,jdbcType=VARCHAR},</if>
+			<if test="currStatus != null ">CURR_STATUS=#{currStatus,jdbcType=CHAR},</if>
+			<if test="userDate != null ">USER_DATE=#{userDate,jdbcType=TIMESTAMP},</if>
+			<if test="queueDate != null ">QUEUE_DATE=#{queueDate,jdbcType=TIMESTAMP},</if>
+			<if test="groupDate != null ">GROUP_DATE=#{groupDate,jdbcType=TIMESTAMP},</if>
+			<if test="lstTeamDate != null ">LST_TEAM_DATE=#{lstTeamDate,jdbcType=TIMESTAMP},</if>
+			<if test="currOptGroup != null">CURR_OPT_GROUP=#{currOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="lastOptGroup != null">LAST_OPT_GROUP=#{lastOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="currOptQueue != null">CURR_OPT_QUEUE=#{currOptQueue,jdbcType=VARCHAR},</if>
+			<if test="lastOptQueue != null">LAST_OPT_QUEUE=#{lastOptQueue,jdbcType=VARCHAR},</if>
+			<if test="currOptUser != null">CURR_OPT_USER=#{currOptUser,jdbcType=VARCHAR},</if>
+			<if test="lastOptUser != null">LAST_OPT_USER=#{lastOptUser,jdbcType=VARCHAR},</if>
+			<if test="groupTeamDate != null ">GROUP_TEAM_DATE=#{groupTeamDate,jdbcType=TIMESTAMP}</if>
+		</set> 
+		where APP_ID = #{appId}
+	</update>
+	<update id="updateAllotByMapLikeAppId" parameterType="java.util.Map">
+		UPDATE OPAS_ALLOT_APPLY_ALLOT
+		<trim prefix="SET" suffixOverrides=",">
+		    <if test="currUserName != null">CURR_USER_NAME=#{currUserName,jdbcType=VARCHAR},</if>
+		    <if test="synFlag != null">SYN_FLAG=#{synFlag,jdbcType=CHAR},</if> 
+			<if test="delStatus != null">DEL_STATUS=#{delStatus,jdbcType=CHAR},</if> 
+			<if test="batchCreditFlag != null">BATCH_CREDIT_FLAG=#{batchCreditFlag,jdbcType=CHAR},</if> 
+			<if test="submitStatus != null">SUBMIT_STATUS=#{submitStatus,jdbcType=CHAR},</if> 
+			<if test="currNode != null">CURR_NODE=#{currNode,jdbcType=VARCHAR},</if>
+			<if test="currStatus != null ">CURR_STATUS=#{currStatus,jdbcType=CHAR},</if>
+			<if test="userDate != null ">USER_DATE=#{userDate,jdbcType=TIMESTAMP},</if>
+			<if test="queueDate != null ">QUEUE_DATE=#{queueDate,jdbcType=TIMESTAMP},</if>
+			<if test="groupDate != null ">GROUP_DATE=#{groupDate,jdbcType=TIMESTAMP},</if>
+			<if test="lstTeamDate != null ">LST_TEAM_DATE=#{lstTeamDate,jdbcType=TIMESTAMP},</if>
+			<if test="currOptGroup != null">CURR_OPT_GROUP=#{currOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="lastOptGroup != null">LAST_OPT_GROUP=#{lastOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="currOptQueue != null">CURR_OPT_QUEUE=#{currOptQueue,jdbcType=VARCHAR},</if>
+			<if test="lastOptQueue != null">LAST_OPT_QUEUE=#{lastOptQueue,jdbcType=VARCHAR},</if>
+			<if test="currOptUser != null">CURR_OPT_USER=#{currOptUser,jdbcType=VARCHAR},</if>
+			<if test="lastOptUser != null">LAST_OPT_USER=#{lastOptUser,jdbcType=VARCHAR},</if>
+			<if test="groupTeamDate != null ">GROUP_TEAM_DATE=#{groupTeamDate,jdbcType=TIMESTAMP},</if>
+			<if test="allotVersion !=null and allotVersion !=''">ALLOT_VERSION = (#{allotVersion}+1)</if>
+		</trim> 
+		WHERE APP_ID LIKE '${appId}%' 
+		<if test="judgeCurrNode != null and judgeCurrNode !='' ">
+		AND  CURR_NODE=#{judgeCurrNode}
+        </if>
+        <if test="allotVersion !=null and allotVersion !=''">
+        AND　ALLOT_VERSION =#{allotVersion}
+        </if>
+	</update>
+	<select id="selectListAllotApplyZxRobByMap" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select APPID,CURRUSER,crt_date,ALLOT_VERSION as ALLOTVERSION  from (select row_number() over(partition by substr(b.APP_ID,1,15) order by b.APP_ID ) as rn,
+		substr(b.APP_ID,1,15) as APPID,b.CURR_OPT_USER as CURRUSER,a.crt_date,b.ALLOT_VERSION from opas_allot_apply_allot b, OPAS_BIZ_INP_APPL_C1 a
+		where b.app_id=a.app_id AND (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null AND b.DEL_STATUS!='1'
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="currOptGroup != null and currOptGroup !='' ">
+				AND b.CURR_OPT_GROUP = #{currOptGroup}
+			</if>
+			) where rn =1 AND rownum&lt;10  order by crt_date,APPID
+	</select>
+	<select id="selectApRoleListRoleIdByRoleCode" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT ROLE_ID as ROLEID FROM OPAS_AP_ROLE  
+		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+ 		   <if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+			<if test="roleCode != null and roleCode !='' ">
+				AND ROLE_CODE = #{roleCode}
+			</if>
+		</trim>
+	</select>
+	<select id="selectApUserRoleListUserIdBylistRoleId" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		 SELECT t.USER_ID as USERID FROM OPAS_AP_USER_ROLE t 
+		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+ 		     <if test="listRoleId != null and listRoleId.size() != 0 ">
+				AND t.ROLE_ID in
+				<foreach item="item" index="index" collection="listRoleId" open="(" separator=","
+				close=")">
+					#{item.ROLEID}
+				</foreach>
+			</if> 
+		</trim>
+	</select>
+	<resultMap id="ApUserMap" type="java.util.Map" >
+     <result column="USER_CODE" property="dictDetailCode" jdbcType="VARCHAR" />
+     <result column="USER_NAME" property="dictDetailName" jdbcType="VARCHAR" />
+   </resultMap>
+	<select id="selectListApUserByListUserId" parameterType="java.util.Map"
+		resultMap="ApUserMap">
+		select DISTINCT t.USER_CODE, t.USER_NAME,a.ORG_LEVEL
+  		from OPAS_AP_USER t 
+		left join OPAS_AP_USER_ORG g on  g.user_id  = t.user_id
+     	left join OPAS_AP_ORG a on a.org_id = g.org_id
+      	left join OPAS_AP_USER_ROLE e  on e.user_id = t.user_id
+        left join OPAS_AP_ROLE o on o.role_id=e.role_id 
+       <trim   prefix="WHERE" prefixOverrides="AND | OR">
+	   	<if test="status != null and status !='' ">
+			AND o.STATUS = #{status}
+		</if>
+		<if test="orgLevel != null and orgLevel !='' ">
+			AND a.ORG_LEVEL = #{orgLevel}
+		</if>
+		<if test="roleCodes != null and roleCodes !='' ">
+			and o.role_code in 
+		<foreach item="item" index="index" collection="roleCodes" open="(" separator="," close=")">
+		  	#{item}
+		</foreach>
+	  	</if>
+	  	</trim>
+	</select>
+	<resultMap id="ApUserObjectMap" type="java.util.Map" >
+	 <result column="USER_ID"   property="userId" jdbcType="VARCHAR" />
+     <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+     <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+   </resultMap>
+	<select id="selectApUserByUuIdUserCode" parameterType="java.util.Map"  resultMap="ApUserObjectMap">
+		select u.USER_NAME,u.USER_ID,u.USER_CODE  FROM OPAS_AP_USER u   
+		 <trim   prefix="WHERE" prefixOverrides="AND | OR">
+		    <if test="status !=null and status !=''">
+				AND u.STATUS=#{status,jdbcType=CHAR}
+			</if>
+			<if test="userCode !=null and userCode !=''">
+				AND u.USER_CODE = #{userCode,jdbcType=VARCHAR}
+			</if>
+			<if test="userId !=null and userId !=''">
+				AND u.USER_ID = #{userId,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+	<!-- 已完成审批队列 andong -->
+	<select id="selectBizInpApplListWc" parameterType="java.util.Map" resultMap="BizInpApplMap">
+		select distinct a.APP_ID,
+		       a.APP_PROD,
+		       a.C1_CNAME,
+		       a.C1_IDNBR,
+		       a.C1_CONAME,
+		       b.matching_card_flag,
+		       ap.user_name as lastOptUser,
+		       b.YDJ_FLAG,
+		       (select count(c.REMARK_ID)
+		          from OPAS_ALLOT_APPLY_REMARK c
+		         where a.APP_ID = c.APP_ID) as remark,
+		         b.LST_TEAM_DATE,
+		       to_char(b.LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,
+		       (trunc(sysdate) - trunc(b.LST_TEAM_DATE)) as queDate,
+		       b.CURR_NODE,
+		       b.CURR_STATUS,b.DEL_STATUS
+		  from OPAS_ALLOT_APPLY_ALLOT b left join opas_ap_user ap on b.last_opt_user = ap.user_code, 
+		  	   OPAS_FILE_APPLICATION_DETAIL s,
+		       OPAS_BIZ_INP_APPL_C1         a
+		  left join OPAS_FILE_PATCHBOLT c on c.APP_ID = a.APP_ID
+		 where a.APP_ID = b.APP_ID
+		   and a.app_id = s.app_id
+		   AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+		   and b.syn_flag = '0' 
+		   and s.flag = '4'
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="checkMeuoflag != null and checkMeuoflag !='' ">
+				AND b.check_meuoflag = #{checkMeuoflag}
+			</if>
+			<if test="appId != null and appId !='' ">
+                AND a.APP_ID LIKE '${appId}%'
+         	</if>
+			order by a.APP_ID desc
+	</select>
+	<!-- 已完成审批队列 xuzhiguo -->
+	<select id="queryBizInpApplListWc" parameterType="java.util.Map" resultMap="BizInpApplMap">
+		select distinct a.APP_ID,
+		       a.APP_PROD,
+		       a.C1_CNAME,
+		       a.C1_IDNBR,
+		       a.C1_CONAME,
+		       a.C4_RUSHFLG,
+		       b.matching_card_flag,
+		       ap.user_name as lastOptUser,
+		       PATCH_STATUS(b.app_id,b.YDJ_FLAG,b.MATCHING_CARD_FLAG) as PATCH_STATUS,
+		       a.QUICK_CARD_FLAG,
+		       b.YDJ_FLAG,
+		       b.LST_TEAM_DATE,
+		       to_char(b.LST_TEAM_DATE, 'yyyy-mm-dd hh24:mi:ss') USER_DATES,
+		        (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+		      ( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as remark,
+		       (trunc(sysdate) - trunc(b.LST_TEAM_DATE) + 1) as QUEDATE,
+		       (workday(trunc(b.group_date),trunc(sysdate))) as GRODATE,
+		      <!--  isexist(t1.app_id) as PATCHSTATUSR, -->
+		     <!--  e.PATCHSTATUSR as PATCHSTATUSR, -->
+		       <!-- isexist(t.identity_no) as PATCHSTATUSP, -->
+		      <!--  g.PATCHSTATUSP, -->
+		       a.exist_card_flag as IS_HAVECARD_CUST,
+		       (select x.stop_flag
+                   from (select stop_flag, app_id
+                           from OPAS_CHECKINGR_RESULTINFO
+                          order by crt_date desc) x
+                  where x.app_id = b.APP_ID
+                    and rownum = 1) as STOP_FLAG,
+		       credit_tel_result(a.APP_ID,b.YDJ_FLAG,b.matching_card_flag,b.curr_node) as TELCHECK_RESULT
+		  from OPAS_ALLOT_APPLY_ALLOT b left join opas_ap_user ap on b.last_opt_user = ap.user_code, 
+		  	   OPAS_FILE_APPLICATION_DETAIL s,
+		       OPAS_BIZ_INP_APPL_C1 a
+		  left join OPAS_FILE_PATCHBOLT c on c.APP_ID = a.APP_ID
+		  left join OPAS_CHECKINGR_RESULTINFO x on x.app_id = a.app_id
+		  <!-- left join (SELECT t1.QUERYED_CERT_NO,count(t1.QUERYED_CERT_NO)as PATCHSTATUSR  FROM opas_pboc_personal_info t1 group by t1.QUERYED_CERT_NO)e on e.QUERYED_CERT_NO=a.C1_IDNBR -->
+<!-- 		  left join (select f.GMSFHM,count(f.GMSFHM)as PATCHSTATUSP from police_simplify_info f group by f.GMSFHM)g on g.GMSFHM = a.C1_IDNBR
+ -->		 where a.APP_ID = b.APP_ID
+		   and a.app_id = s.app_id
+		   and ceil((sysdate-to_date(to_char(s.to_archive_time,'yyyymmdd hh24:mi:ss'),'yyyymmdd hh24:mi:ss'))*24*60 ) &lt;121
+		   AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+		   and b.syn_flag = '0'
+		   and s.flag = '4'
+		   <if test="check_meuoFlag != null and check_meuoFlag !='' ">
+				AND b.check_meuoFlag = #{check_meuoFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND a.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				order by ${checkStr}
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+				order by QUICK_CARD_FLAG desc,GRODATE desc,trunc(b.LST_TEAM_DATE,'MI') asc,substr(APP_ID,1,6) asc,substr(APP_ID,8,3) asc,substr(APP_ID,7,1) desc,substr(APP_ID,11,6) desc
+			</if>
+	</select>
+	<!-- 搜索查询分页，模糊查询 --><!-- 忽略大小写 -->
+	<select id="queryBizInpApplCountWc" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_FILE_APPLICATION_DETAIL s,OPAS_ALLOT_APPLY_ALLOT b
+		where a.APP_ID=b.APP_ID 
+		    and a.app_id = s.app_id
+		    and ceil((sysdate-to_date(to_char(s.to_archive_time,'yyyymmdd hh24:mi:ss'),'yyyymmdd hh24:mi:ss'))*24*60 ) &lt;121
+		    AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0')
+		    and s.flag = '4'
+		    and b.syn_flag = '0'
+		    <if test="check_meuoFlag != null and check_meuoFlag !='' ">
+				AND b.check_meuoFlag = #{check_meuoFlag}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="lsh != null and lsh !='' "><!-- 流水号模糊查询 -->
+				AND a.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' "><!-- 客户姓名 -->
+				AND UPPER(a.C1_CNAME) LIKE UPPER('%${khxm}%')
+			</if>
+			<if test="zjhm != null and zjhm !='' "><!-- 证件号码 -->
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' "><!-- 单位名称 -->
+				AND UPPER(a.C1_CONAME) LIKE UPPER('%${dwmc}%')
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			
+	</select>
+	<!-- 审批已完成  易达金卡套卡算一件 -->
+	<select id="selectApprovefinishedCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct(substr(s.app_id,0,15)))		 
+		from OPAS_ALLOT_APPLY_ALLOT b,OPAS_FILE_APPLICATION_DETAIL s
+		where b.APP_ID = s.app_id
+		    AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0')
+		    and s.flag = '4' and b.syn_flag = '0'
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="checkMeuoflag != null and checkMeuoflag !='' ">
+				AND b.check_meuoflag = #{checkMeuoflag:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus:CHAR}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+	</select>
+	<!-- 征审合一之挂起队列by xzg 20170614 -->
+	<select id="queryGtCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b
+		where a.APP_ID=b.APP_ID 
+		    and a.app_id = b.app_id
+		    AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS='0')
+		    and b.syn_flag = '0'
+	        and (b.curr_node = '02' or (b.curr_node = '03' and b.check_meuoflag = '2'))
+	        and b.curr_status = '4'
+		<if test="lsh != null and lsh !='' "><!-- 流水号模糊查询 -->
+			AND a.APP_ID LIKE '%${lsh}%'
+		</if>
+		<if test="khxm != null and khxm !='' "><!-- 客户姓名 -->
+			AND UPPER(a.C1_CNAME) LIKE UPPER('%${khxm}%')
+		</if>
+		<if test="zjhm != null and zjhm !='' "><!-- 证件号码 -->
+			AND a.C1_IDNBR LIKE '%${zjhm}%'
+		</if>
+		<if test="dwmc != null and dwmc !='' "><!-- 单位名称 -->
+			AND UPPER(a.C1_CONAME) LIKE UPPER('%${dwmc}%')
+		</if>
+		<if test="userId != null and userId !='' ">
+			AND b.CURR_OPT_USER = #{userId}
+		</if>
+		<if test="quickCardFlag != null and quickCardFlag !='' ">
+			AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			AND a.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+		</if>	
+	</select>
+	<select id="queryGtList" parameterType="java.util.Map" resultMap="BizInpApplMap">
+		select distinct a.APP_ID,
+		       a.APP_PROD,
+		       a.C1_CNAME,
+		       a.C1_IDNBR,
+		       a.C1_CONAME,
+		       a.C4_RUSHFLG,
+		       b.matching_card_flag,
+		       ap.user_name as lastOptUser,
+		       PATCH_STATUS(b.app_id,b.YDJ_FLAG,b.MATCHING_CARD_FLAG) as PATCH_STATUS,
+		       a.QUICK_CARD_FLAG,
+		       b.YDJ_FLAG,
+		       b.LST_TEAM_DATE,
+		       m.TEAM_TELCHECK_STATUS,
+		       to_char(b.LST_TEAM_DATE, 'yyyy-mm-dd hh24:mi:ss') USER_DATES,
+		        (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+		( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as remark,
+		       (trunc(sysdate) - trunc(b.LST_TEAM_DATE) + 1) as QUEDATE,
+		       workday(trunc(b.group_date),trunc(sysdate)) as GRODATE,
+		       <!-- isexist(t1.app_id) as PATCHSTATUSR, -->
+		      <!--  g.PATCHSTATUSP, -->
+		      <!--  isexist(t.identity_no) as PATCHSTATUSP, -->
+		       a.exist_card_flag as IS_HAVECARD_CUST,
+		       b.curr_node,
+		       (select x.stop_flag
+                   from (select stop_flag, app_id
+                           from OPAS_CHECKINGR_RESULTINFO
+                          order by crt_date desc) x
+                  where x.app_id = b.APP_ID
+                    and rownum = 1) as STOP_FLAG,
+		       credit_tel_result(a.APP_ID,b.YDJ_FLAG,b.matching_card_flag,b.curr_node) as TELCHECK_RESULT
+		  from OPAS_ALLOT_APPLY_ALLOT b
+  			   left join opas_ap_user ap on b.last_opt_user = ap.user_code,
+  			  OPAS_BIZ_INP_APPL_C1 a
+			  left join OPAS_FILE_PATCHBOLT c on c.APP_ID = a.APP_ID
+			  left join opas_pboc_personal_info t1 on t1.app_id = a.app_id
+<!-- 			  left join (select f.GMSFHM,count(f.GMSFHM)as PATCHSTATUSP from police_simplify_info f group by f.GMSFHM)g on g.GMSFHM = a.C1_IDNBR
+ -->			  left join (select APP_ID, TEAM_TELCHECK_STATUS, crt_date
+               from (select row_number() over(partition by APP_ID order by crt_date desc) rn,
+                            t.APP_ID,
+                            t.crt_date,
+                            t.TEAM_TELCHECK_STATUS
+                       from OPAS_TELCHECK_ADDNOTE t
+                      where TYPE_FLAG = '4')
+              where rn = 1) m on m.APP_ID = a.APP_ID
+  		  where a.APP_ID = b.APP_ID
+  			   AND (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+  			   AND b.SYN_FLAG = '0'
+	           and (b.curr_node = '02' or (b.curr_node = '03' and b.check_meuoflag = '2'))
+	  	       and b.curr_status = '4'
+	  	       <!-- and b.DEL_STATUS = '0' -->
+			<if test="lsh != null and lsh !='' ">
+				AND a.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND UPPER(a.C1_CNAME) LIKE UPPER('%${khxm}%')
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND UPPER(a.C1_CONAME) LIKE UPPER('%${dwmc}%')
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND a.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				order by ${checkStr} 
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+				order by QUICK_CARD_FLAG desc,GRODATE desc,trunc(b.LST_TEAM_DATE,'MI') asc,substr(APP_ID,1,6) asc,substr(APP_ID,8,3) asc,substr(APP_ID,7,1) desc,substr(APP_ID,11,6) desc
+			</if>
+	</select>
+	<update id="updateZxApplyYdjHangUpByAppIds" parameterType="java.util.Map">
+		UPDATE OPAS_ALLOT_APPLY_ALLOT
+		<set>
+		    <if test="currUserName != null">CURR_USER_NAME=#{currUserName,jdbcType=VARCHAR},</if>
+		    <if test="synFlag != null">SYN_FLAG=#{synFlag,jdbcType=CHAR},</if> 
+			<if test="delStatus != null">DEL_STATUS=#{delStatus,jdbcType=CHAR},</if> 
+			<if test="batchCreditFlag != null">BATCH_CREDIT_FLAG=#{batchCreditFlag,jdbcType=CHAR},</if> 
+			<if test="submitStatus != null">SUBMIT_STATUS=#{submitStatus,jdbcType=CHAR},</if> 
+			<if test="currNode != null">CURR_NODE=#{currNode,jdbcType=VARCHAR},</if>
+			<if test="userDate != null ">USER_DATE=#{userDate,jdbcType=TIMESTAMP},</if>
+			<if test="queueDate != null ">QUEUE_DATE=#{queueDate,jdbcType=TIMESTAMP},</if>
+			<if test="groupDate != null ">GROUP_DATE=#{groupDate,jdbcType=TIMESTAMP},</if>
+			<if test="lstTeamDate != null ">LST_TEAM_DATE=#{lstTeamDate,jdbcType=TIMESTAMP},</if>
+			<if test="currStatus != null ">CURR_STATUS=#{currStatus,jdbcType=CHAR},</if>
+			<if test="currOptGroup != null">CURR_OPT_GROUP=#{currOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="lastOptGroup != null">LAST_OPT_GROUP=#{lastOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="currOptQueue != null">CURR_OPT_QUEUE=#{currOptQueue,jdbcType=VARCHAR},</if>
+			<if test="lastOptQueue != null">LAST_OPT_QUEUE=#{lastOptQueue,jdbcType=VARCHAR},</if>
+			<if test="currOptUser != null">CURR_OPT_USER=#{currOptUser,jdbcType=VARCHAR},</if>
+			<if test="lastOptUser != null">LAST_OPT_USER=#{lastOptUser,jdbcType=VARCHAR},</if>
+			<if test="groupTeamDate != null ">GROUP_TEAM_DATE=#{groupTeamDate,jdbcType=TIMESTAMP}</if>
+		</set> 
+		WHERE APP_ID IN 
+		<foreach item="item" index="index" collection="listAppId" open="(" separator=","
+		close=")">
+			#{item.appId}
+		</foreach>
+	</update>
+	<update id="updateZxApplyFinishedTakeBackByListAppId" parameterType="java.util.Map">
+		UPDATE OPAS_ALLOT_APPLY_ALLOT
+		<set>
+		    <if test="currUserName != null">CURR_USER_NAME=#{currUserName,jdbcType=VARCHAR},</if>
+		    <if test="synFlag != null">SYN_FLAG=#{synFlag,jdbcType=CHAR},</if> 
+			<if test="delStatus != null">DEL_STATUS=#{delStatus},</if> 
+			<if test="submitStatus != null">SUBMIT_STATUS=#{submitStatus},</if> 
+			<if test="currNode != null">CURR_NODE=#{currNode},</if>
+			<if test="currStatus != null ">CURR_STATUS=#{currStatus},</if>
+			<if test="crtTeamDate != null ">CRT_TEAM_DATE=#{crtTeamDate},</if>
+			<if test="lstTeamDate != null ">LST_TEAM_DATE=#{lstTeamDate},</if>
+			<if test="userDate != null ">USER_DATE=#{userDate},</if>
+			<if test="currOptGroup != null">CURR_OPT_GROUP=#{currOptGroup},</if> 
+			<if test="lastOptGroup != null">LAST_OPT_GROUP=#{lastOptGroup},</if> 
+			<if test="currOptQueue != null">CURR_OPT_QUEUE=#{currOptQueue},</if>
+			<if test="lastOptQueue != null">LAST_OPT_QUEUE=#{lastOptQueue},</if>
+			<if test="currOptUser != null">CURR_OPT_USER=#{currOptUser},</if>
+			<if test="lastOptUser != null">LAST_OPT_USER=#{lastOptUser},</if>
+			<if test="groupTeamDate != null ">GROUP_TEAM_DATE=#{groupTeamDate,jdbcType=TIMESTAMP}</if>
+		</set> 
+		WHERE APP_ID IN 
+		<foreach item="item" index="index" collection="listAppId" open="(" separator=","
+		close=")">
+			#{item.appId}
+		</foreach>
+	</update>
+	<select id="selectBizInpApplZxListHangUpCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) 		 
+		from  OPAS_BIZ_INP_APPL_C1 a,OPAS_ALLOT_APPLY_ALLOT b where  a.APP_ID=b.APP_ID 
+			 AND (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null AND b.SYN_FLAG='0' 
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+	</select>
+	<select id="selectBizInpApplZxListHangUpList" parameterType="java.util.Map" resultMap="BizInpApplMapZxFind">
+		select a.APP_ID,a.APP_PROD,a.C1_CNAME,a.C1_IDNBR,a.C1_CONAME,a.C4_RUSHFLG,b.CURR_OPT_USER,b.LAST_OPT_USER,a.QUICK_CARD_FLAG 
+		,trim(d.TELCHECK_RESULT) as TELCHECK_RESULT,m.TEAM_TELCHECK_STATUS,b.YDJ_FLAG,b.MATCHING_CARD_FLAG,b.LST_TEAM_DATE,b.USER_DATE
+ 		, (select count(c.REMARK_ID) from OPAS_ALLOT_APPLY_REMARK c  where a.APP_ID = c.APP_ID) +
+		( select count(1) from YS_RESULT_INFO y where  y.APPROVE_CODE is not null  AND y.APPROVE_RESULT='2' and a.APP_ID = y.APP_ID) as REMARK
+		,(trunc(sysdate)-trunc(b.LST_TEAM_DATE)+1) as QUEDATE
+		,(select workday(trunc(b.group_date),trunc(sysdate)) from dual) as GRODATE 
+        ,a.EXIST_CARD_FLAG as IS_HAVECARD_CUST
+        ,n.STOP_FLAG,b.BACK_FLAG
+        ,k.completed_flag as COMPLETED_FLAG_YDJ
+        ,l.completed_flag as COMPLETED_FLAG_BZK
+        ,(case when  (k.completed_flag || l.completed_flag) is not null then to_number(k.completed_flag || l.completed_flag)
+         else 0 end ) as PATCHORDER
+		from OPAS_ALLOT_APPLY_ALLOT b left join  OPAS_BIZ_INP_APPL_C1 a on b.app_id=a.app_id 
+		left join (select APP_ID,TELCHECK_RESULT,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TELCHECK_RESULT from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='6') 
+        where  rn = 1) d on d.APP_ID=b.APP_ID left join(select APP_ID,TEAM_TELCHECK_STATUS,crt_date       
+        from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,t.APP_ID,t.crt_date,t.TEAM_TELCHECK_STATUS from OPAS_TELCHECK_ADDNOTE t where TYPE_FLAG='4') 
+        where  rn = 1) m on m.APP_ID=b.APP_ID 
+        left join (select rn,app_id,STOP_FLAG from (select row_number() over(partition by APP_ID order by crt_date desc) as rn,app_id,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO) 
+        where  rn = 1) n on b.APP_ID=n.APP_ID left join OPAS_PATCHBOLT_YDJ_INFO k on b.APP_ID=k.APP_ID left join OPAS_PATCHBOLT_INFO l on b.APP_ID=l.APP_ID
+		where  a.APP_ID=b.APP_ID AND (b.SUBMIT_STATUS is null OR b.SUBMIT_STATUS !='1') AND b.SUBMIT_TYPE is null  AND  b.SYN_FLAG='0'
+			<if test="quickCardFlag != null and quickCardFlag !='' ">
+				AND a.QUICK_CARD_FLAG = #{quickCardFlag}
+			</if>
+			<if test="lsh != null and lsh !='' ">
+				AND b.APP_ID LIKE '%${lsh}%'
+			</if>
+			<if test="khxm != null and khxm !='' ">
+				AND a.C1_CNAME LIKE '%${khxm}%'
+			</if>
+			<if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+			<if test="dwmc != null and dwmc !='' ">
+				AND a.C1_CONAME LIKE '%${dwmc}%'
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND b.YDJ_FLAG = #{ydjFlag}
+			</if>
+			 <if test="currStatus != null and currStatus !='' ">
+				AND b.CURR_STATUS = #{currStatus}
+			</if>
+			<if test="delStatus != null and delStatus !='' ">
+				AND b.DEL_STATUS = #{delStatus:CHAR}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND b.CURR_NODE = #{currNode}
+			</if>
+			<if test="userId != null and userId !='' ">
+				AND b.CURR_OPT_USER = #{userId:CHAR}
+			</if>
+			<if test='zxzc=="1"'>
+			    AND SUBSTR(A.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			<if test="checkStr != null and checkStr !='' ">
+				ORDER BY ${checkStr}
+			</if>
+			<if test="checkStr == null or checkStr =='' ">
+				ORDER BY b.APP_ID desc
+			</if>
+	</select>
+	<!-- 易达金征信电核环节完成量统计 -->
+	<select id="queryYDJFinishedCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(o.app_id,0,15)))
+		from OPAS_ALLOT_APPLY_ALLOT_HIS  s 
+		left join opas_allot_apply_allot o on s.app_id=o.app_id
+         where 
+        <if test="crediter != null">
+			 s.CURR_OPT_USER = #{crediter}
+			</if>	
+			<if test="ydjFlag != null">
+				AND s.YDJ_FLAG = #{ydjFlag}
+			</if>	
+			and s.CURR_NODE='02' and o.curr_node in ('03','04','05')
+			<if test="start != null and end != null ">
+				AND (s.RECORD_TEAM_DATE  
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>
+			 
+	</select>
+	<select id="queryFicoYdjCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(s.app_id,0,15)))
+		from OPAS_ALLOT_APPLY_ALLOT_HIS s
+		left join opas_fico_ydj_blaze a on a.app_id=s.app_id
+		left join OPAS_FILE_APPLICATION_DETAIL o on s.app_id=o.app_Id  
+		<where>
+			s.CURR_OPT_USER = #{crediter}
+			and a.wf_result='自动拒绝'	
+			and o.flag in('0','2')
+			and s.curr_node='02'
+			<if test="start != null and end != null ">
+				AND (s.RECORD_TEAM_DATE  
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>
+		</where>
+	</select>
+	<select id="queryFicoBzkCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(s.app_id,0,15)))
+		from OPAS_ALLOT_APPLY_ALLOT_HIS s
+		left join opas_fico_sd_blaze a on a.app_id=s.app_id
+		left join OPAS_FILE_APPLICATION_DETAIL o on s.app_id=o.app_Id  
+		<where>
+			s.CURR_OPT_USER = #{crediter}
+			and a.wf_result='自动拒绝'	
+			and o.flag in('0','2')
+			and s.curr_node='02'
+			<if test="start != null and end != null ">
+				AND (s.RECORD_TEAM_DATE  
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>
+		</where>
+	</select>
+	<!-- 征信电核环节易达金未完成量统计 -->
+	<select id="queryYDJUnfinishedCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from OPAS_ALLOT_APPLY_ALLOT
+		<where>
+			CURR_OPT_USER = #{crediter}
+			<if test="ydjFlag != null">
+				AND YDJ_FLAG = #{ydjFlag}
+			</if>
+			<!-- <if test="start != null and end != null ">
+				AND (RECORD_TEAM_DATE  
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if> -->
+			and CURR_NODE = '02' and  CURR_STATUS  in (3,4) and submit_type is null
+			and (submit_status='0' or submit_status is null)
+			and del_status in ('0','2','3')
+		</where>
+	</select>
+	<!-- 征信电核环节易达金提交到其他环节工作量统计 -->
+	<select id="queryYDJSub2Other" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from OPAS_ALLOT_APPLY_ALLOT
+		<where>
+			CURR_NODE = '02' 
+			AND LAST_OPT_USER = #{crediter}
+			<if test="ydjFlag != null">
+				AND YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="start != null and end != null ">
+				AND (LST_TEAM_DATE   
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>
+			and SUBMIT_TYPE is not null 
+		</where>
+	</select>
+	
+	<!--根据allId查询YDJ_FLAG-->
+	<select id="queryYdjFlag" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.YDJ_FLAG as ydjflag from opas_allot_apply_allot t
+ 		where t.APP_ID = #{appId}
+	</select>
+	<resultMap id="examineLibraryCheckMap" type="java.util.Map">
+		<result column="APPLY_INPUTFULL" property="applyInputFull" jdbcType="VARCHAR" />
+		<result column="SIGN_FULL" property="signFull" jdbcType="VARCHAR" />
+		<result column="NATIONAL_INUTFULL" property="nationalInutfull" jdbcType="VARCHAR" />
+   		<result column="CERTIFI_PERIODFULL" property="certifiPeriodfull" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectExamineLibraryCheckMessage" parameterType="java.util.Map"
+		resultMap="examineLibraryCheckMap">
+		select APPLY_INPUTFULL, SIGN_FULL, NATIONAL_INUTFULL, CERTIFI_PERIODFULL from OPAS_REVIEENTRY_COMPARE_INFO 
+ 		where  APP_ID = #{appId}		
+	</select>
+	
+	<!-- 审批未完成量统计 -->
+	<select id="countUnFinishByCondition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct(substr(app_id,0,15)))
+		from OPAS_ALLOT_APPLY_ALLOT
+		<where>
+			CURR_OPT_USER = #{userCode}
+			<if test="ydjFlag != null">
+				AND YDJ_FLAG = #{ydjFlag}
+			</if>
+			and CURR_NODE = '03' and  CURR_STATUS = '3'and submit_type is null
+			and (submit_status='0' or submit_status is null)
+			and del_status = '0'
+		</where>
+	</select>
+	<select id="selectApplyCurrentLinkCountByMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from OPAS_ALLOT_APPLY_ALLOT
+		<trim prefix="WHERE" prefixOverrides="AND">
+		   <if test="appId != null and appId !='' ">
+				AND APP_ID = #{appId}
+		   </if>
+		        AND (SUBMIT_STATUS is null OR SUBMIT_STATUS !='1') AND SUBMIT_TYPE is null  
+	            AND  (CURR_STATUS ='0' or CURR_STATUS ='1')
+			<if test="delStatus != null and delStatus !='' ">
+				AND DEL_STATUS = #{delStatus}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND CURR_NODE = #{currNode}
+			</if>
+		</trim>
+	</select>
+	<!-- 查询matchingCardFlag -->
+	<select id="selectMatchingCardFlag" parameterType="java.lang.String" resultType="java.lang.String">
+		select a.MATCHING_CARD_FLAG from OPAS_BIZ_INP_APPL_C1 a
+		where a.APP_ID='${_parameter}'
+	</select>
+	
+	<!-- 查询matchingCardFlag -->
+	<select id="selectQrcodeList" parameterType="java.lang.String" resultType="java.lang.String">
+		select distinct(c.company_name)
+		   from Opas_Biz_Inp_Appl_C1 a
+		   left join ccard_app_ditch_info b on a.app_id = b.app_id
+		   left join opas_qrcode_list c on c.company_code = b.company_id
+		                               and c.module_code = b.module_id
+		                               and c.status = '1'
+		  where a.app_id = #{appId} and
+		        IS_MATCH_QRCODE_LIST(#{appId}) = '2' and ((c.extension_code = a.c4_abuser and a.c4_abuser is not null )
+		        or a.c4_abuser is null)
+		        
+	</select>
+	<select id="selectQrcode" parameterType="java.lang.String" resultType="java.lang.String">
+		select IS_MATCH_QRCODE_LIST(#{appId}) from dual
+	</select>
+	
+</mapper>

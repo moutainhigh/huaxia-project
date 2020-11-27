@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SpecialprojectList" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.sysparm.SpecialprojectList" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+    <result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+  </resultMap>
+  <!-- <sql id="Base_Column_List" >
+    AUTO_ID, PROJECT_CODE, COMPANY_NAME, START_DATE, END_DATE, OPERATOR, OPERAT_TIME, 
+    CURR_STATUS
+  </sql> -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, PROJECT_CODE, COMPANY_NAME, START_DATE, END_DATE, OPERATOR, OPERAT_TIME, 
+    CURR_STATUS,CREATE_TIME
+    from OPAS_SPECIALPROJECT_LIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByCondtion" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	     select 
+	    AUTO_ID, PROJECT_CODE, COMPANY_NAME, START_DATE, END_DATE, OPERATOR, OPERAT_TIME, 
+	    CURR_STATUS,CREATE_TIME
+	    from OPAS_SPECIALPROJECT_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="projectCode != null and projectCode != ''" >
+	      and upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+	    </if>
+	    <if test="companyName != null and companyName != ''" >
+	      and  upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	    </if>
+  	</select>
+  	<select id="queryCountList" resultType="java.lang.Integer" parameterType="java.util.Map" >
+	     select count(1)  from OPAS_SPECIALPROJECT_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="projectCode != null and projectCode != ''" >
+	      and  upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+	    </if>
+	    <if test="companyName != null and companyName != ''" >
+	      and  upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	    </if>
+  	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_SPECIALPROJECT_LIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.sysparm.SpecialprojectList" >
+    insert into OPAS_SPECIALPROJECT_LIST (AUTO_ID, PROJECT_CODE, COMPANY_NAME, 
+      START_DATE, END_DATE, OPERATOR, 
+      OPERAT_TIME, CURR_STATUS,CREATE_TIME)
+    values (#{autoId,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
+      #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, 
+      #{operatTime,jdbcType=TIMESTAMP}, #{currStatus,jdbcType=CHAR},#{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.sysparm.SpecialprojectList" >
+    insert into OPAS_SPECIALPROJECT_LIST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="projectCode != null" >
+        PROJECT_CODE,
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME,
+      </if>
+      <if test="startDate != null" >
+        START_DATE,
+      </if>
+      <if test="endDate != null" >
+        END_DATE,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="operatTime != null" >
+        OPERAT_TIME,
+      </if>
+      <if test="currStatus != null" >
+        CURR_STATUS,
+      </if>
+      CREATE_TIME,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCode != null" >
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null" >
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null" >
+        #{currStatus,jdbcType=CHAR},
+      </if>
+      CURRENT_DATE,
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.sysparm.SpecialprojectList" >
+    update OPAS_SPECIALPROJECT_LIST
+    <set >
+      <if test="projectCode != null" >
+        PROJECT_CODE = #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        START_DATE = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        END_DATE = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+        OPERAT_TIME = CURRENT_DATE,
+      <if test="currStatus != null" >
+        CURR_STATUS = #{currStatus,jdbcType=CHAR},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.sysparm.SpecialprojectList" >
+    update OPAS_SPECIALPROJECT_LIST
+    set PROJECT_CODE = #{projectCode,jdbcType=VARCHAR},
+      COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+      START_DATE = #{startDate,jdbcType=TIMESTAMP},
+      END_DATE = #{endDate,jdbcType=TIMESTAMP},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      OPERAT_TIME = CURRENT_DATE,
+      CURR_STATUS = #{currStatus,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=CHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+  <!--shihuan 2017-03-16 特殊项目列表查询条数 -->
+	<select id="querySpecialprojectList" parameterType="com.huaxia.opas.domain.sysparm.SpecialprojectList"
+		resultMap="BaseResultMap">
+		select 
+			AUTO_ID,
+			PROJECT_CODE, 
+			COMPANY_NAME, 
+			START_DATE, 
+			END_DATE, 
+			OPERATOR, 
+			OPERAT_TIME, 
+    		CURR_STATUS,
+    		CREATE_TIME
+		from OPAS_SPECIALPROJECT_LIST
+		where
+		   1=1
+		   <if test="projectCode != null and projectCode !='' " >
+		        AND upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+	       </if>
+	       <if test="companyName != null and companyName !='' " >
+	        AND upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	       </if>
+		   <if test="createTime != null and createTime !='' " >
+       			AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+      		</if>
+      		order by CREATE_TIME desc,to_number(ORDERBY_NO)
+	</select>
+	
+	<!--shihuan 2017-03-16 特殊项目列表查询条数 -->
+	<select id="querySpecialprojectCount" parameterType="com.huaxia.opas.domain.sysparm.SpecialprojectList"
+		resultType="java.lang.Integer">
+		select  count(1) from OPAS_SPECIALPROJECT_LIST
+		where
+		1=1
+			 <if test="projectCode != null and projectCode !='' " >
+		        AND upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+	       </if>
+	       <if test="companyName != null and companyName !='' " >
+	        AND upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	       </if>
+		   <if test="createTime != null and createTime !='' " >
+       			AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+      		</if>
+	</select>
+	<!--shihuan 2017-03-16    特殊项目批量启动修改状态 1:启用 0:停用 -->
+	<update id="updateStartStatus"  parameterType="java.lang.String" >
+	    update OPAS_SPECIALPROJECT_LIST
+	    set  CURR_STATUS = '1'
+	    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+ 	 </update>
+  
+ 	 <!--shihuan 2017-03-16   特殊项目批量停用修改状态 1:启用 0:停用 -->
+	<update id="updateStopStatus" parameterType="java.lang.String" >
+	    update OPAS_SPECIALPROJECT_LIST
+	    set  CURR_STATUS = '0'
+	    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  	</update>
+  	
+	<!-- shihuan 2017-03-16  添加历史修改记录表 -->
+	<insert id="insertHisSelective"
+	parameterType="com.huaxia.opas.domain.sysparm.SpecialprojectListHis">
+	insert into OPAS_SPEPRO_LIST_HISTORY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     <if test="Id != null" >
+        ID,
+      </if>
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="projectCode != null" >
+        PROJECT_CODE,
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME,
+      </if>
+      <if test="startDate != null" >
+        START_DATE,
+      </if>
+      <if test="endDate != null" >
+        END_DATE,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="operatTime != null" >
+        OPERAT_TIME,
+      </if>
+      <if test="currStatus != null" >
+        CURR_STATUS,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    <if test="Id != null" >
+        #{Id,jdbcType=VARCHAR},
+      </if>
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCode != null" >
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null" >
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null" >
+        #{currStatus,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+       sysdate,
+      </if>
+    </trim>
+  </insert>
+  
+  <!--shihuan 2017-03-16 特殊项目历史记录列表查询-->
+	<select id="querySpecialprojectHistory" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select 
+			ID,
+			AUTO_ID,
+			PROJECT_CODE, 
+			COMPANY_NAME, 
+			START_DATE, 
+			END_DATE, 
+			OPERATOR, 
+			OPERAT_TIME, 
+    		CURR_STATUS,
+    		CREATE_TIME
+		from OPAS_SPEPRO_LIST_HISTORY
+        where AUTO_ID = #{autoId,jdbcType=CHAR}
+        order by OPERAT_TIME desc
+	</select>
+	
+	<!--shihuan 2017-03-16 特殊项目名单历史记录列表查询条数 -->
+	<select id="queryHistoryCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select  count(1) from OPAS_SPEPRO_LIST_HISTORY where AUTO_ID = #{autoId,jdbcType=CHAR}
+	</select>
+	
+	<insert id="insertSpecProUpload" parameterType="java.util.List">
+		insert into OPAS_SPECIALPROJECT_LIST (AUTO_ID,PROJECT_CODE,COMPANY_NAME,START_DATE,END_DATE,OPERATOR,OPERAT_TIME, 
+    CURR_STATUS,CREATE_TIME,ORDERBY_NO) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR}, 
+			#{item.projectCode,jdbcType=VARCHAR}, 
+			#{item.companyName,jdbcType=VARCHAR}, 
+      		#{item.startDate,jdbcType=TIMESTAMP}, 
+      		#{item.endDate,jdbcType=TIMESTAMP}, 
+      		#{item.operator,jdbcType=VARCHAR}, 
+      		#{item.operatTime,jdbcType=TIMESTAMP}, 
+      		#{item.currStatus,jdbcType=CHAR},
+      		#{item.createTime,jdbcType=TIMESTAMP},
+      		#{item.orderByNo,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+	
+	<!--shihuan 2017-04-24  校验项目代码不能重复 -->
+	<select id="queryProjectCode" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select  count(1) from OPAS_SPECIALPROJECT_LIST where PROJECT_CODE = #{projectCode,jdbcType=VARCHAR}
+	</select>
+</mapper>

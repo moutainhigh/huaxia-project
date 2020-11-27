@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.pboc.mapper.CreditReportMapper">
+
+	<resultMap id="resultBaseInfo" type="java.util.Map">
+		<result column="REPORT_NO" property="reportNo" jdbcType="VARCHAR" />
+		<result column="REPORT_TIME" property="reportTime" />
+		<result column="QUERYED_NAME" property="queryedName" jdbcType="VARCHAR" />
+		<result column="QUERYED_CERT_TYPE" property="queryedCertType" jdbcType="VARCHAR" />
+		<result column="QUERYED_CERT_NO" property="queryedCertNo" jdbcType="VARCHAR" />
+		<result column="QUERY_ORG" property="queryOrg" jdbcType="VARCHAR" />
+		<result column="QRY_REASON" property="qryReason" jdbcType="VARCHAR" />
+		<result column="DISSENT_COUNT" property="dissentCount" jdbcType="VARCHAR" />
+		<result column="GENDER" property="gender" jdbcType="VARCHAR" />
+		<result column="BIRTH_DAY" property="birthDay" jdbcType="VARCHAR" />
+		<result column="MARITAL_STATUS" property="maritalStatus" jdbcType="VARCHAR" />
+		<result column="RESIDENCY_STATUS" property="residencyStatus" jdbcType="VARCHAR" />
+		<result column="DEGREE" property="degree" jdbcType="VARCHAR" />
+		<result column="WORK_STATUS" property="workStatus" jdbcType="VARCHAR" />
+		<result column="NATIONALITY" property="nationality" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="COMMUNICATION_ADDR" property="communicationAddr" jdbcType="VARCHAR" />
+		<result column="DOMICILE_ADDR" property="domicileAddr" jdbcType="VARCHAR" />
+		<result column="PHONE_NUM" property="phoneNum" jdbcType="VARCHAR" />
+		<result column="UPDATED_DATE" property="updatedDate" jdbcType="VARCHAR" />
+		<result column="MATE_NAME" property="mateName" jdbcType="VARCHAR" />
+		<result column="MATE_CERT_TYPE" property="mateCertType" jdbcType="VARCHAR" />
+		<result column="MATE_CERT_NO" property="mateCertNo" jdbcType="VARCHAR" />
+		<result column="MATE_COMPANY" property="mateCompany" jdbcType="VARCHAR" />
+		<result column="MATE_CONTACT_TEL" property="mateContactTel" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="EFFECTIVE_DATE" property="effectiveDate" jdbcType="VARCHAR" />
+		<result column="DEADLINE" property="deadLine" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectBaseInfo" parameterType="java.lang.String" resultMap="resultBaseInfo">
+		 SELECT * FROM (
+		SELECT B.REPORT_NO,B.REPORT_TIME, BC.QUERYED_NAME ,
+		BC.QUERYED_CERT_TYPE,BC.QUERYED_CERT_NO,BC.QUERY_ORG,
+		BC.QRY_REASON,BD.DISSENT_COUNT,
+		BI.GENDER,BI.BIRTH_DAY,BM.MARITAL_STATUS,BI.RESIDENCY_STATUS,BI.DEGREE,
+		BI.WORK_STATUS,BI.NATIONALITY,BI.EMAIL,BI.COMMUNICATION_ADDR,BI.DOMICILE_ADDR,
+		BM.MATE_NAME,BM.MATE_CERT_TYPE,BM.MATE_CERT_NO,BM.MATE_COMPANY,BM.MATE_CONTACT_TEL,
+		BCP.PHONE,BCP.EFFECTIVE_DATE,BCP.DEADLINE
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_CUR_QUERY_REQUEST BC ON B.UNIQUE_RELID = BC.UNIQUE_RELID
+		LEFT JOIN
+		BANK_DISSENT_HINT BD ON B.UNIQUE_RELID = BD.UNIQUE_RELID
+		LEFT JOIN
+		BANK_IDENTITY_PROFILE BI ON B.UNIQUE_RELID = BI.UNIQUE_RELID
+		LEFT JOIN
+		BANK_MARITAL_INFO BM ON B.UNIQUE_RELID = BM.UNIQUE_RELID
+		LEFT JOIN
+		BANK_CHEAT_PROOF_CAUTION BCP ON B.UNIQUE_RELID = BCP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+		 ) WHERE ROWNUM = 1
+	</select>
+
+	<resultMap id="resultNumberRead" type="java.util.Map">
+		<result column="NUMBER_READ" property="numberRead" jdbcType="VARCHAR" />
+		<result column="OPPOSITE_POSITION" property="oppositePosition"
+			jdbcType="VARCHAR" />
+		<result column="DESC_CONTENT" property="descContent" javaType="string" />
+	</resultMap>
+
+	<select id="selectNumberRead" parameterType="java.lang.String"
+		resultMap="resultNumberRead">
+	SELECT * FROM (
+		SELECT
+		BC.NUMBER_READ,BC.OPPOSITE_POSITION,
+		LISTAGG(BCS.DESC_CONTENT,',') within group (order by DESC_CONTENT) AS DESC_CONTENT
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_CREDIT_CUE BC ON B.UNIQUE_RELID = BC.UNIQUE_RELID
+		LEFT JOIN
+		BANK_CREDITSCORE_SCOREELE BCS ON B.UNIQUE_RELID = BCS.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+		GROUP BY BC.NUMBER_READ,BC.OPPOSITE_POSITION,BC.SCORE_EXPLAIN_COUNT
+	    ) WHERE ROWNUM = 1
+	</select>
+	
+	<resultMap id="resultCreditCard" type="java.util.Map">
+		<result column="FK_ORGAN_COUNT" property="fkOrganCount"
+			jdbcType="VARCHAR" />
+		<result column="ACCOUNT_COUNT" property="accountCount"
+			jdbcType="VARCHAR" />
+		<result column="CREDIT_TOTAL_AMOUNT" property="creditTotalAmount"
+			jdbcType="VARCHAR" />
+		<result column="SINGLE_BANK_MAX_CREDIT" property="singleBankMax"
+			jdbcType="VARCHAR" />
+		<result column="SINGLE_BANK_MIN_CREDIT" property="singleBankMin"
+			jdbcType="VARCHAR" />
+		<result column="USED_LIMIT" property="usedLimit" jdbcType="VARCHAR" />
+		<result column="RECENT_6MS_AVG_SYED" property="recent6msAvg"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectCreditCard" parameterType="java.lang.String"
+		resultMap="resultCreditCard">
+		SELECT * FROM (
+		SELECT
+		BC.FK_ORGAN_COUNT,BC.ACCOUNT_COUNT,BC.CREDIT_TOTAL_AMOUNT,
+		BC.SINGLE_BANK_MAX_CREDIT,BC.SINGLE_BANK_MIN_CREDIT,BC.USED_LIMIT,
+		BC.RECENT_6MS_AVG_SYED
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_CREDIT_CARD_ACCOSUM BC ON B.UNIQUE_RELID = BC.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId} 
+	 ) WHERE ROWNUM = 1
+	</select>
+	
+	<resultMap id="resultRecoveried" type="java.util.Map">
+		<result column="SERVICE_TYPE" property="serviceType" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_COUNT" property="accountCount"
+			jdbcType="VARCHAR" />
+		<result column="BALANCE" property="balance" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectRecoveried" parameterType="java.lang.String"
+		resultMap="resultRecoveried">
+		SELECT
+		BB.SERVICE_TYPE,BB.ACCOUNT_COUNT,BB.BALANCE
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_BE_RECOVERIED_SUM_DEL BB ON B.UNIQUE_RELID = BB.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<select id="selectBadDebts" parameterType="java.lang.String"
+		resultMap="resultRecoveried">
+	SELECT * FROM (
+		SELECT
+		BB.ACCOUNT_COUNT,BB.BALANCE
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_BAD_DEBTS_SUM BB ON B.UNIQUE_RELID = BB.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId} 
+	 ) WHERE ROWNUM = 1
+	</select>
+	
+	<select id="selectCycleCreditCard" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT * FROM (
+		SELECT
+		BN.MANAGE_ORGAN_COUNT AS "noCycleManageOrganCount",BN.ACCOUNT_COUNT AS
+		"noCycleAccountCount",
+		BN.CREDIT_TOTAL_AMOUNT AS "noCycleCreditTotalAmount",BN.BALANCE AS
+		"noCycleBalance",BN.RECENT_6MS_AVG_YHK AS "noCycle6MsAvg",
+		BR.MANAGE_ORGAN_COUNT AS "cycleLveManageOrganCount",BR.ACCOUNT_COUNT
+		AS "cycleLveAccountCount",
+		BR.CREDIT_TOTAL_AMOUNT AS "cycleLveCreditTotalAmount",BR.BALANCE AS
+		"cycleLveBalance",BR.RECENT_6MS_AVG_YHK AS "cycleLve6MsAvg",
+		BRL.MANAGE_ORGAN_COUNT AS "cycleManageOrganCount",BRL.ACCOUNT_COUNT AS
+		"cycleAccountCount",
+		BRL.CREDIT_TOTAL_AMOUNT AS "cycleCreditTotalAmount",BRL.BALANCE AS
+		"cycleBalance",BRL.RECENT_6MS_AVG_YHK AS "cycle6MsAvg"
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_NOREVOLVE_LOAN_ACCOSUM BN ON B.UNIQUE_RELID = BN.UNIQUE_RELID
+		LEFT JOIN
+		BANK_REVOLVELIM_SUBACCOSUM BR ON B.UNIQUE_RELID = BR.UNIQUE_RELID
+		LEFT JOIN
+		BANK_REVOLVE_LOAN_ACCOSUM BRL ON B.UNIQUE_RELID = BRL.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId} 
+		 ) WHERE ROWNUM = 1
+	</select>
+	
+	<resultMap id="resultQueryRecords" type="java.util.Map">
+		<result column="LAST_QUERY_DATE" property="lastQueryDate"
+			jdbcType="VARCHAR" />
+		<result column="LAST_QUERY_ORGAN_CODE" property="lastQueryOrganCode"
+			jdbcType="VARCHAR" />
+		<result column="LAST_QUERY_REASON" property="lastQueryReason"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_ORG_1M_SUM2" property="queryOrg1mSum2"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_ORG_1M_SUM3" property="queryOrg1mSum3"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_REC_1M_SUM2" property="queryRec1mSum2"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_REC_1M_SUM3" property="queryRec1mSum3"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_REC_1M_SUM4" property="queryRec1mSum4"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_REC_2Y_SUM1" property="queryRec2ySum1"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_REC_2Y_SUM5" property="queryRec2ySum5"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_REC_2Y_SUM6" property="queryRec2ySum6"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectRecords" parameterType="java.lang.String"
+		resultMap="resultQueryRecords">
+	SELECT * FROM (
+		SELECT BL.LAST_QUERY_DATE,BL.LAST_QUERY_ORGAN_CODE,BL.LAST_QUERY_REASON,
+		BQ.QUERY_ORG_1M_SUM2,BQ.QUERY_ORG_1M_SUM3,BQ.QUERY_REC_1M_SUM2,BQ.QUERY_REC_1M_SUM3,
+		BQ.QUERY_REC_1M_SUM4,BQ.QUERY_REC_2Y_SUM1,BQ.QUERY_REC_2Y_SUM5,BQ.QUERY_REC_2Y_SUM6
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_LAST_QUERY_RECORD BL ON B.UNIQUE_RELID = BL.UNIQUE_RELID
+		LEFT JOIN
+		BANK_QUERYINFO_NEW BQ ON B.UNIQUE_RELID = BQ.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId} 
+		 ) WHERE ROWNUM = 1
+	</select>
+	<!-- 最近一次月度信息段 -->
+	<select id="selectNearMonthMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+	SELECT * FROM (
+		SELECT BM.MONTH,BM.ACCOUNT_STATUS AS MACCOUNT_STATUS, BM.FIVE_CLASSIFY AS
+		MFIVE_CLASSIFY,BM.BALANCE AS MBALANCE
+		,BM.REMANENT_REPAY_PERIODS,BM.THIS_MONTH_DUE,BM.SETTLE_DUE_DATE,BM.THIS_MONTH_ACTUAL_PAY,
+		BM.NEAREST_REPAY_DATE,BM.CUR_OVERDUE_PERIODS,BM.CUR_OVERDUE_TOTAL,BM.OVERDUE3160_NREPAY_CAPITAL,
+		BM.OVERDUE6190_NREPAY_CAPITAL,BM.OVERDUE91180_NREPAY_CAPITAL,BM.OVERDUE180ADD_NREPAY_CAPITAL,
+		BM.USED_LIMIT,BM.UNISSU_DEZX_FQYE,BM.OVERDRAFT180ADD_NPAY_BALAN,BM.MAX_OVERDRAFT_BALANCE,BM.RECENT6M_AVG_OVERBALANCE,
+		BM.MAX_USE_LIMIT,BM.INFO_REPORT_DATE,BM.RECENT6M_AVG_USE_LIMIT
+		FROM BANK_DEBIT_CREDIT_NEAREST_M BM WHERE BM.RELATE_ID = #{relateId}
+ ) WHERE ROWNUM = 1
+	</select>
+	
+	<!-- 最近24个月表现信息段 -->
+	<select id="select24MonthMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT * FROM (
+		SELECT BN.START_YEAR_MONTH AS START_YEAR_24MONTH,BN.END_YEAR_MONTH AS
+		END_YEAR_24MONTH,
+		TO_CHAR((SELECT LISTAGG(BRS.MONTH ||'-'|| BRS.REPAY_STATUS,',') within group (order by BRS.MONTH ||'-'|| BRS.REPAY_STATUS)FROM
+		BANK_REPAY_STATUS_INFO BRS WHERE BRS.RELATE_ID = BN.RELATE_ID)) AS
+		MONTH24
+		from BANK_NEAREST24M_REPAY_RECORD BN WHERE BN.RELATE_ID = #{relateId}
+	) WHERE ROWNUM = 1
+	</select>
+	
+	<!-- 最近五年信息表现段 -->
+	<select id="select5YearsMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+	SELECT * FROM (
+		SELECT BNH.START_YEAR_MONTH,BNH.END_YEAR_MONTH,
+		TO_CHAR((SELECT LISTAGG(BH.MONTH ||'_'|| BH.REPAY_STATUS || '*'||BH.OVERDUE_TOTAL,',') within group (order by BH.MONTH ||'_'|| BH.REPAY_STATUS || '*'||BH.OVERDUE_TOTAL)
+		FROM BANK_HISTORY_EXPRESS_INFO BH WHERE BNH.RELATE_ID = BH.RELATE_ID))
+		AS YEAR5
+		FROM BANK_NEAREST5Y_HIS_EXPRESS BNH WHERE BNH.RELATE_ID = #{relateId}
+) WHERE ROWNUM = 1
+	</select>
+		<resultMap id="resultStaCreditCard" type="java.util.Map">
+		<result column="FK_ORGAN_COUNT" property="staFkOrganCount"
+			jdbcType="VARCHAR" />
+		<result column="ACCOUNT_COUNT" property="staAccountCount"
+			jdbcType="VARCHAR" />
+		<result column="CREDIT_TOTAL_AMOUNT" property="staCreditTotalAmount"
+			jdbcType="VARCHAR" />
+		<result column="SINGLE_BANK_MAX_CREDIT" property="staSingleBankMax"
+			jdbcType="VARCHAR" />
+		<result column="SINGLE_BANK_MIN_CREDIT" property="staSingleBankMin"
+			jdbcType="VARCHAR" />
+		<result column="OVERDUE_BALANCE" property="staOverDueBal"
+			jdbcType="VARCHAR" />
+		<result column="RECENT_6MS_AVG_TZYE" property="recent6msAvgTzye"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectStaCreditCard" parameterType="java.lang.String"
+		resultMap="resultStaCreditCard">
+		SELECT * FROM (
+		SELECT
+		BC.FK_ORGAN_COUNT,BC.ACCOUNT_COUNT,BC.CREDIT_TOTAL_AMOUNT,
+		BC.SINGLE_BANK_MAX_CREDIT,BC.SINGLE_BANK_MIN_CREDIT,BC.OVERDUE_BALANCE,
+		BC.RECENT_6MS_AVG_TZYE
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_SEMICREDIT_CARD_ACCOSUM BC ON B.UNIQUE_RELID = BC.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+		) WHERE ROWNUM = 1 
+	</select>
+	
+	<resultMap id="resultBaseInfoPhone" type="java.util.Map">
+		<result column="PHONE_NUM" property="phoneNum" jdbcType="VARCHAR" />
+		<result column="UPDATED_DATE" property="updatedDate" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectBaseInfoPhone" parameterType="java.lang.String"
+		resultMap="resultBaseInfoPhone">
+		SELECT
+		BP.PHONE_NUM,BP.UPDATED_DATE
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_PHONE_NUMBER_DETAIL BP ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<resultMap id="resultOtherIdCard" type="java.util.Map">
+		<result column="IDENTITY_TYPE" property="identityType"
+			jdbcType="VARCHAR" />
+		<result column="IDENTITY_NUM" property="identityNum" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectOtherIdCard" parameterType="java.lang.String"
+		resultMap="resultOtherIdCard">
+		SELECT
+		BI.IDENTITY_TYPE,BI.IDENTITY_NUM
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_IDENTITY_DATA BI ON B.UNIQUE_RELID = BI.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<resultMap id="resultResidenceInfo" type="java.util.Map">
+		<result column="RESIDENT_ADDR" property="residentAddr"
+			jdbcType="VARCHAR" />
+		<result column="HOME_PHONE" property="homePhone" jdbcType="VARCHAR" />
+		<result column="RESIDE_STATE" property="resideState" jdbcType="VARCHAR" />
+		<result column="INFO_UPD_TIME" property="infoUpdTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectResidenceInfo" parameterType="java.lang.String"
+		resultMap="resultResidenceInfo">
+		SELECT
+		BR.RESIDENT_ADDR,BR.HOME_PHONE,
+		BR.RESIDE_STATE,BR.INFO_UPD_TIME
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_RESIDENCE_INFO BR ON B.UNIQUE_RELID = BR.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<resultMap id="resultProessionInfo" type="java.util.Map">
+		<result column="COMPANY" property="company" jdbcType="VARCHAR" />
+		<result column="UNIT_CHARACTER" property="unitCharacter"
+			jdbcType="VARCHAR" />
+		<result column="COMP_ADDR" property="compAddr" jdbcType="VARCHAR" />
+		<result column="UNIT_PHONE" property="unitPhone" jdbcType="VARCHAR" />
+		<result column="JOB" property="job" jdbcType="VARCHAR" />
+		<result column="INDUSTRY_TYPE" property="industryType"
+			jdbcType="VARCHAR" />
+		<result column="OCCUPATION_CODE" property="occupationCode"
+			jdbcType="VARCHAR" />
+		<result column="TECHNICAL_TITLE" property="technicalTitle"
+			jdbcType="VARCHAR" />
+		<result column="CUR_COMP_WORK_STAT_Y" property="curCompWorkStatY"
+			jdbcType="VARCHAR" />
+		<result column="INFO_UPD_TIME" property="infoUpdTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectProessionInfo" parameterType="java.lang.String"
+		resultMap="resultProessionInfo">
+		SELECT
+		BP.COMPANY,BP.UNIT_CHARACTER,BP.COMP_ADDR,BP.UNIT_PHONE,
+		BP.JOB,BP.INDUSTRY_TYPE,BP.OCCUPATION_CODE,BP.TECHNICAL_TITLE,
+		BP.CUR_COMP_WORK_STAT_Y,BP.INFO_UPD_TIME
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_PROFESSION_INFO BP ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+
+	<resultMap id="resultCreditTransaction" type="java.util.Map">
+		<result column="SERVICE_TYPE" property="serviceType" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_COUNT" property="accountCount"
+			jdbcType="VARCHAR" />
+		<result column="FIRST_YW_GRANT_MONTH" property="firstYwGrantMonth"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectCreditTransaction" parameterType="java.lang.String"
+		resultMap="resultCreditTransaction">
+		SELECT
+		BC.SERVICE_TYPE,BC.ACCOUNT_COUNT,
+		BC.FIRST_YW_GRANT_MONTH
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_CREDIT_TRANSACTION_DEL BC ON B.UNIQUE_RELID = BC.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<resultMap id="resultOverDue" type="java.util.Map">
+		<result column="ACCOUNT_TYPE" property="accountType" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_COUNT" property="accountCount"
+			jdbcType="VARCHAR" />
+		<result column="MONTH_COUNT" property="monthCount" jdbcType="VARCHAR" />
+		<result column="SINGLEM_MAX_OVERDUE_SUM" property="maxOverdue"
+			jdbcType="VARCHAR" />
+		<result column="MAX_OVERDUE_MONTH_COUNT" property="maxOverdueMonth"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectOverDue" parameterType="java.lang.String"
+		resultMap="resultOverDue">
+		SELECT
+		BO.ACCOUNT_TYPE, BO.ACCOUNT_COUNT,BO.MONTH_COUNT,
+		BO.SINGLEM_MAX_OVERDUE_SUM,BO.MAX_OVERDUE_MONTH_COUNT
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_OVERDUE_DRAFT_SUM_DEL BO ON B.UNIQUE_RELID = BO.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	
+	<resultMap id="resultRelateRepay" type="java.util.Map">
+		<result column="BOEEOWER_IDENTITY_TYPE" property="identityType"
+			jdbcType="VARCHAR" />
+		<result column="REPAY_DUTY_TYPE" property="dutyType" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_COUNT" property="accountCount"
+			jdbcType="VARCHAR" />
+		<result column="REPAY_DUTY_MONEY" property="repayDutyMoney"
+			jdbcType="VARCHAR" />
+		<result column="BALANCE" property="balance" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectRelateRepay" parameterType="java.lang.String"
+		resultMap="resultRelateRepay">
+		SELECT
+		BR.BOEEOWER_IDENTITY_TYPE,BR.REPAY_DUTY_TYPE,BR.ACCOUNT_COUNT,BR.REPAY_DUTY_MONEY,BR.BALANCE
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_RELATED_REPAY_ZRXI_DEL BR ON B.UNIQUE_RELID = BR.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+
+	<resultMap id="resultNoCreditLoanSummary" type="java.util.Map">
+		<result column="HFF_SERV_TYPE" property="hffServType" jdbcType="VARCHAR" />
+		<result column="ARREARAGE_COUNT" property="arrearageCount"
+			jdbcType="VARCHAR" />
+		<result column="ARREARAGE_MONEY" property="arrearageMoney"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectNoCreditLoanSummary" parameterType="java.lang.String"
+		resultMap="resultNoCreditLoanSummary">
+		SELECT BP.HFF_SERV_TYPE,BP.ARREARAGE_COUNT,BP.ARREARAGE_MONEY
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_POST_PAY_ARRGE_SUM_DEL BP ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<resultMap id="resultPublicMesCollect" type="java.util.Map">
+		<result column="GGXN_TYPE" property="ggxnType" jdbcType="VARCHAR" />
+		<result column="RECORD_COUNT" property="recordCount" jdbcType="VARCHAR" />
+		<result column="INVOLVE_MONEY" property="involveMoney"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectPublicMesCollect" parameterType="java.lang.String"
+		resultMap="resultPublicMesCollect">
+		SELECT BP.GGXN_TYPE,BP.RECORD_COUNT,BP.INVOLVE_MONEY
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_PUBLIC_INFO_DEL BP ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+
+	<resultMap id="resultUrgeGet" type="java.util.Map">
+		<result column="SERV_MANAGE_ORGAN_CODE" property="creditServManageOrgan"
+			jdbcType="VARCHAR" />
+		<result column="SERV_TYPE" property="creditServType" jdbcType="VARCHAR" />
+		<result column="KL_DATE" property="creditKlDate" jdbcType="VARCHAR" />
+		<result column="BORROW_MONEY" property="creditBorrowMoney"
+			jdbcType="VARCHAR" />
+		<result column="ASSIGN_DEBT_REPAY_STATUS" property="creditAssignDebt"
+			jdbcType="VARCHAR" />
+		<result column="ACCOUNT_STATUS" property="creditAccountStatus"
+			jdbcType="VARCHAR" />
+		<result column="BALANCE" property="creditBalance" jdbcType="VARCHAR" />
+		<result column="NEAREST_REPAY_DATE" property="creditNearestRepay"
+			jdbcType="VARCHAR" />
+		<result column="CLOSE_DATE" property="creditCloseDate"
+			jdbcType="VARCHAR" />
+		<result column="TYPE" property="creditType" jdbcType="VARCHAR" />
+		<result column="OCCUR_DATE" property="creditOccurDate"
+			jdbcType="VARCHAR" />
+		<result column="CHANGING_MONTHS" property="creditChangingMonths"
+			jdbcType="VARCHAR" />
+		<result column="OCCUR_AMT" property="creditOccurAmt" jdbcType="VARCHAR" />
+		<result column="DETAIL_REC" property="creditDetailRec"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUrgeGet" parameterType="java.util.Map"
+		resultMap="resultUrgeGet">
+		SELECT
+		BD.SERV_MANAGE_ORGAN_CODE,BD.SERV_TYPE,BD.KL_DATE,
+		BD.BORROW_MONEY,BD.ASSIGN_DEBT_REPAY_STATUS,
+		BDC.ACCOUNT_STATUS,BDC.BALANCE,BDC.NEAREST_REPAY_DATE,BDC.CLOSE_DATE,
+		BL.TYPE,BL.OCCUR_DATE,BL.CHANGING_MONTHS,BL.OCCUR_AMT,BL.DETAIL_REC
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_DEBIT_CREDIT_BASIC_INFO BD ON B.UNIQUE_RELID = BD.UNIQUE_RELID
+		LEFT JOIN
+		BANK_DEBIT_CREDIT_NEWST_SHOW BDC ON BDC.RELATE_ID = BD.RELATE_ID
+		LEFT JOIN
+		BANK_LOAN_CARD_SPETRAD BL ON BL.RELATE_ID = BD.RELATE_ID
+		WHERE B.UNIQUE_RELID = #{uniqueId} AND BD.ACCOUNT_TYPE = '1'
+	</select>
+	<select id="selectNoCycle" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		BD.SERV_MANAGE_ORGAN_CODE,BD.ACCOUNT_MARK,BD.KL_DATE,BD.DUE_DATE,BD.BORROW_MONEY,
+		BD.CURRENCY,BD.SERV_TYPE,BD.GUARANTY_TYPE,BD.REPAYMENT_PERIODS,BD.REPAYMENT_FREQUENCY,
+		BD.MODE_OF_REPAYMENT,BD.COMMON_DEBIT_CREDIT_MARK,
+		BDC.ACCOUNT_STATUS,BDC.BALANCE,BDC.CLOSE_DATE,BDC.FIVE_CLASSIFY,
+		BDC.NEAREST_REPAY_DATE,BDC.NEAREST_REPAY_MONEY,BDC.REPAY_STATUS,
+		BM.FIVE_CLASSIFY AS MFIVE_CLASSIFY,BM.BALANCE AS MBALANCE
+		,BM.REMANENT_REPAY_PERIODS,BM.THIS_MONTH_DUE,BM.SETTLE_DUE_DATE,BM.THIS_MONTH_ACTUAL_PAY,
+		BM.NEAREST_REPAY_DATE,BM.CUR_OVERDUE_PERIODS,BM.CUR_OVERDUE_TOTAL,BM.OVERDUE3160_NREPAY_CAPITAL,
+		BM.OVERDUE6190_NREPAY_CAPITAL,BM.OVERDUE91180_NREPAY_CAPITAL,BM.OVERDUE180ADD_NREPAY_CAPITAL,
+		BN.START_YEAR_MONTH AS START_YEAR_24MONTH,BN.END_YEAR_MONTH AS
+		END_YEAR_24MONTH,
+		TO_CHAR((SELECT LISTAGG(BRS.MONTH ||'||'|| BRS.REPAY_STATUS,',')  within group (order by BRS.MONTH ||'||'|| BRS.REPAY_STATUS) FROM
+		BANK_REPAY_STATUS_INFO BRS WHERE BRS.RELATE_ID = BD.RELATE_ID)) AS
+		MONTH24,
+		BNH.START_YEAR_MONTH,BNH.END_YEAR_MONTH,
+		TO_CHAR((SELECT LISTAGG(BH.MONTH ||'||'|| BH.REPAY_STATUS,',')within group (order by BH.MONTH ||'||'|| BH.REPAY_STATUS) FROM
+		BANK_HISTORY_EXPRESS_INFO BH WHERE BH.RELATE_ID = BD.RELATE_ID)) AS
+		YEAR5,
+		BD.BORROW_MONEY,BD.ASSIGN_DEBT_REPAY_STATUS,
+		BDC.ACCOUNT_STATUS,BDC.BALANCE,BDC.NEAREST_REPAY_DATE,BDC.CLOSE_DATE,
+		BL.TYPE,BL.OCCUR_DATE,BL.CHANGING_MONTHS,BL.OCCUR_AMT,BL.DETAIL_REC
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_DEBIT_CREDIT_BASIC_INFO BD ON B.UNIQUE_RELID = BD.UNIQUE_RELID
+		LEFT JOIN
+		BANK_DEBIT_CREDIT_NEWST_SHOW BDC ON BDC.RELATE_ID = BD.RELATE_ID
+		LEFT JOIN
+		BANK_DEBIT_CREDIT_NEAREST_M BM ON BM.RELATE_ID = BD.RELATE_ID
+		LEFT JOIN
+		BANK_NEAREST24M_REPAY_RECORD BN ON BN.RELATE_ID = BD.RELATE_ID
+		LEFT JOIN
+		BANK_NEAREST5Y_HIS_EXPRESS BNH ON BNH.RELATE_ID = BD.RELATE_ID
+		LEFT JOIN
+		BANK_LOAN_CARD_SPETRAD BL ON BL.RELATE_ID = BD.RELATE_ID
+		WHERE B.UNIQUE_RELID = #{uniqueId} AND BD.ACCOUNT_TYPE='2'
+	</select>
+	<!--基本信息段 最新表现信息段 -->
+	<select id="selectBaseAndNewstMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BD.RELATE_ID,
+		BD.SERV_MANAGE_ORGAN_CODE,BD.SERV_MANAGE_ORGAN_TYPE,BD.ACCOUNT_MARK,BD.KL_DATE,BD.DUE_DATE,BD.BORROW_MONEY,BD.ASSIGN_DEBT_REPAY_STATUS,
+		BD.CURRENCY,BD.SERV_TYPE,BD.GUARANTY_TYPE,BD.REPAYMENT_PERIODS,BD.REPAYMENT_FREQUENCY,
+		BD.CREDIT_XY_SERIAL,BD.LOAN_DISTRIBUTE_FORM,
+		BD.MODE_OF_REPAYMENT,BD.COMMON_DEBIT_CREDIT_MARK,BD.ACCO_CREDIT_LIMIT,BD.SHARE_CREDIT_LIMIT,
+		BDC.ACCOUNT_STATUS,BDC.BALANCE,BDC.CLOSE_DATE,BDC.FIVE_CLASSIFY,
+		BDC.NEAREST_REPAY_DATE,BDC.NEAREST_REPAY_MONEY,BDC.REPAY_STATUS,BDC.INFO_REPORT_DATE,
+		BDC.ZC_MONTH,BP.CREDIT_PROTOCOL_MARK
+		FROM BANK_REPORT_MARK_INFO B
+		LEFT JOIN
+		BANK_DEBIT_CREDIT_BASIC_INFO BD ON B.UNIQUE_RELID = BD.UNIQUE_RELID
+		LEFT JOIN
+		BANK_DEBIT_CREDIT_NEWST_SHOW BDC ON BDC.RELATE_ID = BD.RELATE_ID
+		LEFT JOIN
+		BANK_PCA_BASIC_INFO BP ON BD.CREDIT_XY_SERIAL = BP.CREDIT_PROTOCOL_SERIAL AND
+		BD.UNIQUE_RELID = BP.UNIQUE_RELID
+		LEFT JOIN BANK_DEBIT_CREDIT_NEAREST_M BDM ON BDM.RELATE_ID=BD.RELATE_ID
+		WHERE B.UNIQUE_RELID = #{uniqueId} AND BD.ACCOUNT_TYPE= #{accountType} 
+		<if test="accountType == 'C1'">
+			order by instr('1,2',rtrim(cast(BDC.ACCOUNT_STATUS as nchar))), BD.KL_DATE
+			ASC
+		</if>
+		<if test="accountType == 'D1'">
+			order by instr('7,4,8,2,6,1,5,3',rtrim(cast(BDM.ACCOUNT_STATUS as
+			nchar))), instr('7,4,8,2,6,1,5,3',rtrim(cast(BDC.ACCOUNT_STATUS as
+			nchar))), BD.KL_DATE ASC,
+			DECODE(BD.SERV_MANAGE_ORGAN_CODE,'B10811000H0001','1',
+			BD.SERV_MANAGE_ORGAN_CODE)
+		</if>
+		<if test="accountType == 'R4'">
+			order by instr('8,6,4,2,1,3',rtrim(cast(BDM.ACCOUNT_STATUS as nchar))),
+			instr('8,6,4,2,1,3',rtrim(cast(BDC.ACCOUNT_STATUS as nchar))),
+			BD.KL_DATE ASC,
+			DECODE(BD.SERV_MANAGE_ORGAN_CODE,'B10811000H0001','1',
+			BD.SERV_MANAGE_ORGAN_CODE)
+		</if>
+		<if test="accountType == 'R1'">
+			order by instr('6,4,8,2,1,5,3',rtrim(cast(BDM.ACCOUNT_STATUS as nchar))),
+			instr('6,4,8,2,1,5,3',rtrim(cast(BDC.ACCOUNT_STATUS as nchar))),
+			BD.KL_DATE ASC,
+			DECODE(BD.SERV_MANAGE_ORGAN_CODE,'B10811000H0001','1',
+			BD.SERV_MANAGE_ORGAN_CODE)
+		</if>
+		<if test="accountType == 'R2'">
+			order by instr('2,6,8,3,31,5,1,4',rtrim(cast(BDM.ACCOUNT_STATUS as
+			nchar))), instr('2,6,8,3,31,5,1,4',rtrim(cast(BDC.ACCOUNT_STATUS as
+			nchar))), BD.KL_DATE ASC,
+			DECODE(BD.SERV_MANAGE_ORGAN_CODE,'B10811000H0001','1',
+			BD.SERV_MANAGE_ORGAN_CODE)
+		</if>
+		<if test="accountType == 'R3'">
+			order by instr('2,6,8,3,31,5,1,4',rtrim(cast(BDM.ACCOUNT_STATUS as
+			nchar))), instr('2,6,8,3,31,5,1,4',rtrim(cast(BDC.ACCOUNT_STATUS as
+			nchar))), BD.KL_DATE ASC,
+			DECODE(BD.SERV_MANAGE_ORGAN_CODE,'B10811000H0001','1',
+			BD.SERV_MANAGE_ORGAN_CODE)
+		</if>
+
+	</select>
+	
+	<!---特殊事件表现信息段 -->
+	<select id="selectSpecialEventMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT BS.TYPE FROM BANK_SPECIAL_EVENTEXPS_INFO BS WHERE BS.RELATE_ID
+		=#{relateId}
+	</select>
+	<!---特殊交易表现信息段 -->
+	<select id="selectSpecialTrnMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT BL.TYPE,BL.OCCUR_DATE,BL.CHANGING_MONTHS,BL.OCCUR_AMT,BL.DETAIL_REC
+		FROM BANK_LOAN_CARD_SPETRAD BL WHERE BL.RELATE_ID =#{relateId}
+	</select>
+	<select id="selectDezxMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT BD.FQED,BD.FQED_EFFECT_DATE,BD.FQED_EXPIRE_DATE,USED_FQ_MONEY
+		FROM BANK_DEZX_FQ_INFO BD WHERE BD.RELATE_ID =#{relateId}
+	</select>
+	<!-- 标注及声明信息段 -->
+	<select id="selectLableMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT BP.TYPE, BP.ADD_DATE,BP.CONTENT FROM BANK_PDA_LABEL_STATE_INFO BP
+		WHERE BP.RELATE_ID =#{relateId}
+	</select>
+	<!-- 相关还款责任人信息 -->
+	<select id="selectRelateRepayMessage" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		BR.RELATE_ID,
+		BR.SERV_MANAGE_ORGAN,BR.SERV_MANAGE_ORGAN_TYPE,BR.SERV_TYPE,BR.OPEN_DATE,BR.EXPIRE_DATE,BR.REPAY_DUTY_MAN_TYPE,BR.REPAY_DUTY_MONEY,
+		BR.CURRENCY,BR.GUARANTEE_PACT_SERIAL,BR.BALANCE,BR.FIVE_CLASSIFY,BR.OVERDUE_MONTH_NUM,BR.INFO_REPORT_DATE,BR.REPAY_STATUS
+		FROM BANK_RELATE_REPAY_DUTY_INFO BR
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BR.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId} AND BR.MAIN_BORROWER_IDENTITY_TYPE =
+		#{identityType}
+	</select>
+	<!-- 授信协议信息 -->
+	<select id="selectPcaMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.SERV_MANAGE_ORGAN,BP.SERV_MANAGE_ORGAN_TYPE,BP.CREDIT_PROTOCOL_MARK,BP.EFFECT_DATE,BP.EXPIRE_DATE,BP.CREDIT_LIMIT_PURPOSE,BP.CREDIT_LIMIT,
+		BP.CREDIT_QUOTA,BP.CREDIT_QUOTA_SERIAL,BP.USED_LIMIT,BP.CURRENCY
+		FROM BANK_PCA_BASIC_INFO BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<!--后付费业务 -->
+	<select id="selectTelpaymentMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.TELECOM_FACILITATOR,BP.BUSI_TYPE,BP.BUSI_OPN_DATE,BP.CUR_PAY_STAT,BP.CUR_DEBT_AMT,BP.TALLY_YM,
+		BP.PREST24MPAY_STAT
+		FROM BANK_PUBLIC_TELPAYMENT BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<!-- 欠税业务 -->
+	<select id="selectTaxarrearMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.TAX_ORG_NAME,BP.OUTSTD_TAXES_AMT_SUM,BP.OUTSTD_TAX_STAT_DT
+		FROM BANK_PUBLIC_TAXARREAR BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+
+	</select>
+	<!-- 民事判决记录 -->
+	<select id="selectCivjudgeMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.REG_COURT,BP.CASE_REASON,BP.REG_DATE，BP.CLOSE_CASE_WAY,
+		BP.JUDG_MEDIATE_RST,BP.JUDG_MEDIATE_EFFCT_DT,BP.LAW_OBJECT,BP.LAW_OBJECT_AMT
+		FROM BANK_PUBLIC_CIVJUDGE BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+
+	</select>
+	<!-- 强制执行记录 -->
+	<select id="selectForceexeMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.EXECUTE_COURT,BP.EXECUTE_CASE_RSN,BP.REG_DATE，BP.CLOSE_CASE_WAY,
+		BP.CASE_STATUS,BP.CLOSE_CASE_DATE,BP.APPLY_EXE_OBJ,BP.APPLY_EXE_OBJ_AMT,
+		BP.ALREADY_EXE_OBJ,BP.ALREADY_EXE_OBJ_AMT
+		FROM BANK_PUBLIC_FORCEEXE BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+
+	</select>
+	<!-- 行政处罚记录 -->
+	<select id="selectAdminPunishMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.PUNISH_ORGANIZ,BP.PUNISH_CONTENT,BP.PUNISH_AMT,
+		BP.EFFECT_DATE,BP.END_DATE,BP.AD_REVIEW_RESULT
+		FROM BANK_PUBLIC_ADMINPUNISH BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+
+	</select>
+	<!-- 住房公积金参缴记录 -->
+	<select id="selectAccfundMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.JOIN_SOCL_INSU_PL,BP.JOIN_SOCL_INSU_DT,BP.FIRST_DEPOSIT_YM,
+		BP.PAY_YM,BP.PAY_STATUS,BP.MONTHLY_DEPOSIT, BP.PERSON_DEPOSIT_RATE,BP.COMP_DEPOSIT_RATE,
+		BP.PAY_COMP,BP.INFO_UPD_TIME
+		FROM BANK_PUBLIC_ACCFUND BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+
+	</select>
+	<!-- 低保救助记录 -->
+	<select id="selectAalvationMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.PERSONNEL_TYPE,BP.PLACE,BP.COMPANY,BP.HOME_MINCOME,
+		BP.APP_DATE,BP.PASS_DATE,BP.INFO_UPD_TIME
+		FROM BANK_PUBLIC_SALVATION BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<!-- 执业资格记录 -->
+	<select id="selectCompetenceMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.COMPETENCY_NAME,BP.RANK,BP.AWARD_DATE,BP.EXP_DATE,
+		BP.REVOKE_DATE,BP.AWARD_ORG,BP.ORG_PLACE
+		FROM BANK_PUBLIC_COMPETENCE BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<!-- 行政奖励记录 -->
+	<select id="selectAdminawardMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT
+		BP.RELATE_ID,
+		BP.REWARD_ORG,BP.REWARD_CONTENT,BP.EFFECT_DATE,BP.END_DATE
+		FROM BANK_PUBLIC_ADMINAWARD BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+	</select>
+	<select id="selectPosLabelMessage" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT BP.CONTENT,BP.ADD_DATE
+		FROM BANK_POS_LABEL_STATE_INFO BP
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BP.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+		AND BP.TYPE = #{type}
+
+	</select>
+	<select id="selectQueryRecMessage" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT BQ.QRY_DATE,BQ.QUERY_ORG,BQ.QUERY_ORG_TYPE,BQ.QRY_REASON
+		FROM BANK_QUERYREC_RECDETAIL BQ
+		INNER JOIN BANK_REPORT_MARK_INFO B
+		ON B.UNIQUE_RELID = BQ.UNIQUE_RELID
+		WHERE B.UNIQUE_RELID = #{uniqueId}
+
+	</select>
+</mapper>

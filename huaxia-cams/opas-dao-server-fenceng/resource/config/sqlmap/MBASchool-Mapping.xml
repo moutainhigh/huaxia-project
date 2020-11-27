@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MBASchool">
+ <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.sysparm.MBASchool">
+ 	<result column="OPERATION_ID" jdbcType="CHAR" property="operationId" />
+    <result column="AUTO_ID" jdbcType="CHAR" property="autoId" />
+    <result column="SCHOOL_TYPE" jdbcType="CHAR" property="schoolType" />
+    <result column="SCHOOL_NAME" jdbcType="VARCHAR" property="schoolName" />
+    <result column="SCHOOL_AREA" jdbcType="VARCHAR" property="schoolArea" />
+    <result column="UPPER" jdbcType="DECIMAL" property="upper" />
+    <result column="OPERAT_CODE" jdbcType="VARCHAR" property="operatCode" />
+    <result column="OPERAT_TIME" jdbcType="TIMESTAMP" property="operatTime" />
+    <result column="CURR_STATUS" jdbcType="VARCHAR" property="currStatus" />
+    <result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <select id="queryAllMBASchool" resultType="java.util.Map">
+	 SELECT GETHZPY.GETHZPYCAPSUBSTR(SCHOOL_NAME, 0, 1) FIRST_CHAR,
+	        SCHOOL_NAME
+	   FROM OPAS_MBA_SCHOOLLIST
+	  WHERE CURR_STATUS = '1'
+	  ORDER BY FIRST_CHAR
+  </select>
+  
+  <!-- 根据条件查询名单库 -->
+  <select id="queryMBASchoolList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select  
+  		m.AUTO_ID, m.SCHOOL_TYPE, m.SCHOOL_NAME, 
+      	m.SCHOOL_AREA, m.UPPER, m.OPERAT_CODE, 
+     	m.OPERAT_TIME, m.CURR_STATUS, m.CRT_DATE, 
+      	m.CRT_USER
+	  	from OPAS_MBA_SCHOOLLIST m
+	  	where
+		   1=1
+		   <if test="schoolArea != null and schoolArea !='' ">
+				AND m.SCHOOL_AREA = #{schoolArea}
+			</if>
+			<if test="schoolName != null and schoolName !='' ">
+				AND m.SCHOOL_NAME LIKE '%${schoolName}%'
+			</if>
+			<if test="crtDate != null and crtDate !='' ">
+				AND 
+				(m.CRT_DATE 
+					BETWEEN 
+					#{crtDate}
+					AND
+					(select #{crtDate} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+		ORDER BY CRT_DATE DESC,to_number(ORDERBY_NO)
+  </select>
+  <!--名单库列表查询条数 -->
+  <select id="queryMBASchoolListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(1) from (
+  		select distinct 
+  		m.AUTO_ID, m.SCHOOL_TYPE, m.SCHOOL_NAME, 
+      	m.SCHOOL_AREA, m.UPPER, m.OPERAT_CODE, 
+     	m.OPERAT_TIME, m.CURR_STATUS, m.CRT_DATE, 
+      	m.CRT_USER
+	  	from OPAS_MBA_SCHOOLLIST m
+	  	where
+		   1=1
+		   <if test="schoolArea != null and schoolArea !='' ">
+				AND m.SCHOOL_AREA = #{schoolArea}
+			</if>
+			<if test="schoolName != null and schoolName !='' ">
+				AND m.SCHOOL_NAME LIKE '%${schoolName}%'
+			</if>
+			<if test="crtDate != null and crtDate !='' ">
+				AND 
+				(m.CRT_DATE 
+					BETWEEN 
+					#{crtDate}
+					AND
+					(select #{crtDate} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+  		)
+  		ORDER BY CRT_DATE DESC
+  </select>
+ <!--  查询历史记录列表 -->
+  <select id="queryMBASchoolHistoryList" parameterType="com.huaxia.opas.domain.sysparm.MBASchool" resultMap="BaseResultMap">
+  	select distinct 
+  		m.OPERATION_ID,m.AUTO_ID, m.SCHOOL_TYPE, m.SCHOOL_NAME, 
+      	m.SCHOOL_AREA, m.UPPER, m.OPERAT_CODE, 
+     	m.OPERAT_TIME, m.CURR_STATUS, m.CRT_DATE, 
+      	m.CRT_USER
+	  	from OPAS_MBA_SCHOOLLIST_HISTORY m
+	  	where 
+	  	AUTO_ID = #{autoId,jdbcType=CHAR}
+	  	ORDER BY OPERAT_TIME DESC
+  </select>
+  <!--历史信息列表查询条数 -->
+  <select id="queryMBASchoolHistoryListCount" parameterType="com.huaxia.opas.domain.sysparm.MBASchool" resultType="java.lang.Integer">
+  	select count(1) from (
+  		select distinct 
+  		m.OPERATION_ID,m.AUTO_ID, m.SCHOOL_TYPE, m.SCHOOL_NAME, 
+      	m.SCHOOL_AREA, m.UPPER, m.OPERAT_CODE, 
+     	m.OPERAT_TIME, m.CURR_STATUS, m.CRT_DATE, 
+      	m.CRT_USER
+	  	from OPAS_MBA_SCHOOLLIST_HISTORY m
+	  	where 
+	  	AUTO_ID = #{autoId,jdbcType=CHAR}
+  	)
+  	ORDER BY OPERAT_TIME DESC
+  </select>
+  
+  <select id="queryMBASchoolByAutoId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select m.AUTO_ID, m.SCHOOL_TYPE, m.SCHOOL_NAME, 
+      	m.SCHOOL_AREA, m.UPPER, m.OPERAT_CODE, 
+     	m.OPERAT_TIME, m.CURR_STATUS, m.CRT_DATE, 
+      	m.CRT_USER
+	  	from OPAS_MBA_SCHOOLLIST m
+  	where  m.AUTO_ID = #{autoId,jdbcType=CHAR}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.sysparm.MBASchool">
+    insert into OPAS_MBA_SCHOOLLIST
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="autoId != null">
+        AUTO_ID,
+      </if>
+      <if test="schoolType != null">
+        SCHOOL_TYPE,
+      </if>
+      <if test="schoolName != null">
+        SCHOOL_NAME,
+      </if>
+      <if test="schoolArea != null">
+        SCHOOL_AREA,
+      </if>
+      <if test="upper != null">
+        UPPER,
+      </if>
+      <if test="operatCode != null">
+        OPERAT_CODE,
+      </if>
+      <if test="operatTime != null">
+        OPERAT_TIME,
+      </if>
+      <if test="currStatus != null">
+        CURR_STATUS,
+      </if>
+      <if test="crtDate != null">
+        CRT_DATE,
+      </if>
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="autoId != null">
+        #{autoId,jdbcType=CHAR},
+      </if>
+      <if test="schoolType != null">
+        #{schoolType,jdbcType=CHAR},
+      </if>
+      <if test="schoolName != null">
+        #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolArea != null">
+        #{schoolArea,jdbcType=VARCHAR},
+      </if>
+      <if test="upper != null">
+        #{upper,jdbcType=DECIMAL},
+      </if>
+      <if test="operatCode != null">
+        #{operatCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null">
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null">
+        #{currStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null">
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null">
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="insert" parameterType="com.huaxia.opas.domain.sysparm.MBASchool">
+    insert into OPAS_MBA_SCHOOLLIST (AUTO_ID, SCHOOL_TYPE, SCHOOL_NAME, 
+      SCHOOL_AREA, UPPER, OPERAT_CODE, 
+      OPERAT_TIME, CURR_STATUS, CRT_DATE, 
+      CRT_USER
+      )
+    values (#{autoId,jdbcType=CHAR}, #{schoolType,jdbcType=CHAR}, #{schoolName,jdbcType=VARCHAR}, 
+      #{schoolArea,jdbcType=VARCHAR}, #{upper,jdbcType=DECIMAL}, #{operatCode,jdbcType=VARCHAR}, 
+      #{operatTime,jdbcType=TIMESTAMP}, #{currStatus,jdbcType=VARCHAR}, #{crtDate,jdbcType=TIMESTAMP}, 
+      #{crtUser,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <delete id="deleteMBASchoolById" parameterType="java.lang.String">
+		delete from
+		OPAS_MBA_SCHOOLLIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  
+  <update id="updateMBASchoolSelective" parameterType="com.huaxia.opas.domain.sysparm.MBASchool">
+		update OPAS_MBA_SCHOOLLIST
+		<set>
+			<if test="schoolType != null">SCHOOL_TYPE = #{schoolType,jdbcType=VARCHAR},</if>
+			<if test="schoolName != null">SCHOOL_NAME = #{schoolName,jdbcType=VARCHAR},</if>
+			<if test="schoolArea != null">SCHOOL_AREA = #{schoolArea,jdbcType=VARCHAR},</if>
+			<if test="upper != null">UPPER = #{upper,jdbcType=DECIMAL},</if>
+			<if test="operatCode != null">OPERAT_CODE = #{operatCode,jdbcType=VARCHAR},</if>
+			<if test="operatTime != null">OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},</if>
+			<if test="currStatus != null">CURR_STATUS = #{currStatus,jdbcType=CHAR},</if>
+			<if test="crtDate != null">CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},</if>
+			<if test="crtUser != null">CRT_USER = #{crtUser,jdbcType=VARCHAR}</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=CHAR}
+  </update>
+  <!--  根据id修改status状态 -->
+  <update id="updateStatusById" parameterType="com.huaxia.opas.domain.sysparm.MBASchool">
+  	update OPAS_MBA_SCHOOLLIST
+  	<set>
+  		<if test="currStatus != null">CURR_STATUS = #{currStatus,jdbcType=CHAR}</if>
+  	</set>
+  	where AUTO_ID = #{autoId,jdbcType=CHAR}
+  </update>
+ 
+  <!-- 将历史记录添加到历史表 -->
+  <insert id="insertMBASchoolHistory" parameterType="com.huaxia.opas.domain.sysparm.MBASchool">
+    insert into OPAS_MBA_SCHOOLLIST_HISTORY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="operationId != null">
+        OPERATION_ID,
+      </if>
+      <if test="autoId != null">
+        AUTO_ID,
+      </if>
+      <if test="schoolType != null">
+        SCHOOL_TYPE,
+      </if>
+      <if test="schoolName != null">
+        SCHOOL_NAME,
+      </if>
+      <if test="schoolArea != null">
+        SCHOOL_AREA,
+      </if>
+      <if test="upper != null">
+        UPPER,
+      </if>
+      <if test="operatCode != null">
+        OPERAT_CODE,
+      </if>
+      <if test="operatTime != null">
+        OPERAT_TIME,
+      </if>
+      <if test="currStatus != null">
+        CURR_STATUS,
+      </if>
+      <if test="crtDate != null">
+        CRT_DATE,
+      </if>
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="operationId != null">
+        #{operationId,jdbcType=CHAR},
+      </if>
+      <if test="autoId != null">
+        #{autoId,jdbcType=CHAR},
+      </if>
+      <if test="schoolType != null">
+        #{schoolType,jdbcType=CHAR},
+      </if>
+      <if test="schoolName != null">
+        #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolArea != null">
+        #{schoolArea,jdbcType=VARCHAR},
+      </if>
+      <if test="upper != null">
+        #{upper,jdbcType=DECIMAL},
+      </if>
+      <if test="operatCode != null">
+        #{operatCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null">
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null">
+        #{currStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null">
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null">
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+    <insert id="insertinsertMBASchoolHistory" parameterType="com.huaxia.opas.domain.sysparm.MBASchool">
+    insert into OPAS_MBA_SCHOOLLIST_HISTORY (OPERATION_ID,AUTO_ID, SCHOOL_TYPE, SCHOOL_NAME, 
+      SCHOOL_AREA, UPPER, OPERAT_CODE, 
+      OPERAT_TIME, CURR_STATUS, CRT_DATE, 
+      CRT_USER
+      )
+    values (#{operationId,jdbcType=CHAR},#{autoId,jdbcType=CHAR}, #{schoolType,jdbcType=CHAR}, #{schoolName,jdbcType=VARCHAR}, 
+      #{schoolArea,jdbcType=VARCHAR}, #{upper,jdbcType=DECIMAL}, #{operatCode,jdbcType=VARCHAR}, 
+      #{operatTime,jdbcType=TIMESTAMP}, #{currStatus,jdbcType=VARCHAR}, #{crtDate,jdbcType=TIMESTAMP}, 
+      #{crtUser,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+	<insert id="saveBatchMBASchool" parameterType="java.util.ArrayList">
+		insert into OPAS_MBA_SCHOOLLIST
+		(AUTO_ID, SCHOOL_TYPE, SCHOOL_NAME, 
+      SCHOOL_AREA, UPPER, OPERAT_CODE, 
+      OPERAT_TIME, CURR_STATUS, CRT_DATE, 
+      CRT_USER,ORDERBY_NO)
+      <foreach collection="list" item="mbaSchool" index="index"  separator="union all" >
+      (select
+      	 #{mbaSchool.autoId,jdbcType=VARCHAR},
+	     #{mbaSchool.schoolType,jdbcType=VARCHAR}, 
+	     #{mbaSchool.schoolName,jdbcType=VARCHAR}, 
+	     #{mbaSchool.schoolArea,jdbcType=VARCHAR}, 
+	     #{mbaSchool.upper,jdbcType=VARCHAR},
+	     #{mbaSchool.operatCode,jdbcType=VARCHAR}, 
+	     #{mbaSchool.operatTime,jdbcType=TIMESTAMP},
+	     #{mbaSchool.currStatus,jdbcType=VARCHAR},
+	     #{mbaSchool.crtDate,jdbcType=TIMESTAMP},
+	     #{mbaSchool.crtUser,jdbcType=VARCHAR},
+	     #{mbaSchool.orderByNo,jdbcType=VARCHAR}
+		from dual
+      )
+      </foreach>
+	</insert>
+</mapper>

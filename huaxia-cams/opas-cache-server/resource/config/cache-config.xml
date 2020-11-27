@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:component-scan base-package="com.huaxia.opas" />
+	<!-- <context:property-placeholder location="file:D:/HUAXIA/huaxia-configuration/host.properties" /> -->
+	<context:property-placeholder location="file:/app/opas/conf/host.properties" />
+	
+	<!-- redis不需要密码配置 -->
+	<!-- <bean id="jedisFactory" class="com.huaxia.opas.cache.util.jedis.JedisFactory">
+		<constructor-arg index="0">
+			<map>
+				<entry key="common" value="${jedisUri}"></entry>
+			</map>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<map>
+				<entry key="common" value="${sentinelMode}"></entry>
+			</map>
+		</constructor-arg>
+	</bean> -->
+	
+	<!-- redis需要登录密码配置 -->
+	<bean id="jedisFactory" class="com.huaxia.cams.cache.util.jedis.JedisFactory">
+		<constructor-arg index="0">
+			<map>
+				<entry key="cache" value="${jedisUri}"></entry>
+			</map>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<map>
+				<entry key="cache" value="${sentinelMode}"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+</beans>

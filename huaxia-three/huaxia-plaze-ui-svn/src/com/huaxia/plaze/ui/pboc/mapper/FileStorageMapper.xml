@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.pboc.mapper.FileStorageMapper">
+
+	<resultMap id="result_Base" type="FileStorageInfo">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="SOURCE_ID" property="sourceId" jdbcType="VARCHAR" />
+		<result column="SOURCE_NAME" property="sourceName" jdbcType="VARCHAR" />
+		<result column="SOURCE_TYPE" property="sourceType" jdbcType="VARCHAR" />
+		<result column="SOURCE_PATH" property="sourcePath" jdbcType="VARCHAR" />
+		<result column="SOURCE_TOKEN" property="sourceToken" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insert" parameterType="FileStorageInfo">
+		INSERT INTO FILE_SERVER_INFO (
+			UUID,CRT_TIME,CRT_USER,SOURCE_ID,SOURCE_NAME,SOURCE_TYPE,SOURCE_PATH,SOURCE_TOKEN
+		) VALUES (
+			SYS_GUID(),SYSDATE,#{crtUser},#{sourceId},#{sourceName},#{sourceType},#{sourcePath},#{sourceToken}
+		)
+	</insert>
+	
+	<select id="selectBySourceId" parameterType="java.lang.String" resultMap="result_Base">
+		SELECT UUID,SOURCE_NAME,SOURCE_PATH,SOURCE_TYPE
+		  FROM FILE_SERVER_INFO 
+		 WHERE SOURCE_ID = #{sourceId}
+	</select>
+	
+	<select id="selectFilePathById" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT SOURCE_PATH FROM FILE_SERVER_INFO WHERE UUID = #{id}
+	</select>
+	
+</mapper>

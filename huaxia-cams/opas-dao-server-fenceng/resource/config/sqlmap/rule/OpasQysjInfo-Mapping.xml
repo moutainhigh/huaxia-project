@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasQysjInfo">
+
+	<!-- 区域数据深圳高信分信息查询 --><!--  from wjf 20190531 -->
+	<resultMap id="szScoreInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="SCORE" jdbcType="VARCHAR" property="score" />
+	</resultMap>
+	
+	<select id="querySzScoreInfoByAppId"  parameterType="java.lang.String" resultMap="szScoreInfoMap">
+   	   select t1.APP_ID APP_ID,t1.SCORE SCORE
+			from PY_PWSL_CRS_CRT_PWLS_ITM t1
+ 	   where t1.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	<!-- 区域数据深圳个人信用报告信息查询 --><!--  from wjf 20190531 -->
+	<resultMap id="szReportInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="CURRENT_STATUS" jdbcType="VARCHAR" property="currentStatus" />
+	   <result column="INFO_DATE" jdbcType="VARCHAR" property="infoDate" />
+	</resultMap>
+	
+	<select id="querySzReportInfoByAppId"  parameterType="java.lang.String" resultMap="szReportInfoMap">
+    	select t2.APP_ID APP_ID,t2.CURRENT_STATUS CURRENT_STATUS,t2.INFO_DATE INFO_DATE 
+			from PY_PCR_CRS_CRT_SISZ2_BI t2
+   		where t2.app_id = #{appId, jdbcType=VARCHAR}
+	</select>
+	
+	<resultMap id="xmInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="IS_ON_JOB" jdbcType="VARCHAR" property="isOnJob" />
+	   <result column="INSURED_STATUS" jdbcType="VARCHAR" property="insuredSatus" />
+	   <result column="LATEST_PAYMENT_DATE" jdbcType="VARCHAR" property="latestPaymentDate" />
+	</resultMap>
+	
+	<!-- 区域数据厦门信息查询 --><!--  from wjf 20190531 -->
+	<select id="queryXmInfoByAppId"  parameterType="java.lang.String" resultMap="xmInfoMap">
+  	   select APP_ID,IS_ON_JOB,INSURED_STATUS,LATEST_PAYMENT_DATE from YLZ_REP_DATA
+  	  <where>
+		app_id = #{appId, jdbcType=VARCHAR}  ORDER BY CRT_TIME desc
+	  </where>
+	</select>
+	<resultMap id="xmGjjInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="GRZHZT" jdbcType="VARCHAR" property="grzhzt" />
+	   <result column="ZJJJRQ" jdbcType="VARCHAR" property="zjjjrq" />
+	</resultMap>
+	
+	<!-- 区域数据厦门信息查询 --><!--  from wjf 20190531 -->
+	<select id="queryXmGjjInfoByAppId"  parameterType="java.lang.String" resultMap="xmGjjInfoMap">
+  	   select APP_ID,GRZHZT,ZJJJRQ from XM_GJJ_JCXX 
+  	  <where>
+		app_id = #{appId, jdbcType=VARCHAR}  ORDER BY CRT_TIME desc
+	  </where>
+	</select>
+	<!-- 区域数据杭州信息查询 -->
+	<resultMap id="hzInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="PAY_YM" jdbcType="VARCHAR" property="payYM" />
+	   <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	
+	<select id="queryHzInfoByAppId"  parameterType="java.lang.String" resultMap="hzInfoMap">
+  	   select a.APP_ID, a.STATUS, a.PAY_YM
+		  from HZ_GJJXX a
+  	  <where>
+		a.app_id = #{appId, jdbcType=VARCHAR} 
+	  </where>
+	   ORDER BY a.CRT_TIME DESC
+	</select>
+
+	<!-- 区域数据温州信息查询 -->
+	<resultMap id="wzInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="SSNY" jdbcType="VARCHAR" property="payYM" />
+	   <result column="ZT" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	
+	<select id="queryWzInfoByAppId"  parameterType="java.lang.String" resultMap="wzInfoMap">
+  	   select a.APP_ID, a.ZT, a.SSNY
+		  from WZ_GR_GJJZL a
+  	  <where>
+		a.app_id = #{appId, jdbcType=VARCHAR} 
+	  </where>
+	   ORDER BY a.CRT_TIME DESC
+	</select>
+	<!-- 区域数据银川信息查询 -->
+	<resultMap id="ycInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="STDGJJLTDT" jdbcType="VARCHAR" property="payYM" />
+	   <result column="STDCMPJCZT" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	
+	<select id="queryYcInfoByAppId"  parameterType="java.lang.String" resultMap="ycInfoMap">
+  	   select a.APP_ID, a.STDGJJLTDT, a.STDCMPJCZT
+		  from YC_INFO a
+  	  <where>
+		a.app_id = #{appId, jdbcType=VARCHAR} 
+	  </where>
+	   ORDER BY a.CRT_TIME DESC
+	</select>
+	<!-- 区域数据宁波信息查询 -->
+	<resultMap id="nbInfoMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="CHAR" property="appId" />
+	   <result column="YBZT" jdbcType="VARCHAR" property="ybzt" />
+	   <result column="YLZT" jdbcType="VARCHAR" property="ylzt" />
+	   <result column="ZHYCJJSJ" jdbcType="VARCHAR" property="zhycjjsj" />
+	</resultMap>
+	
+	<select id="queryNbInfoByAppId"  parameterType="java.lang.String" resultMap="nbInfoMap">
+  	   select a.APP_ID, a.YBZT, a.YLZT, a.ZHYCJJSJ
+		  from NB_BASE a
+  	  <where>
+		a.app_id = #{appId, jdbcType=VARCHAR} 
+	  </where>
+	   ORDER BY a.CRT_TIME DESC
+	</select>
+
+</mapper>

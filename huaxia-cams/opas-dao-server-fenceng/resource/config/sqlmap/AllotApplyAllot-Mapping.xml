@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AllotApplyAllot">
+
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.allot.AllotApplyAllot">
+		<id column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	    <result column="CURR_OPT_QUEUE" property="currOptQueue" jdbcType="VARCHAR" />
+	    <result column="LAST_OPT_QUEUE" property="lastOptQueue" jdbcType="VARCHAR" />
+	    <result column="CURR_OPT_GROUP" property="currOptGroup" jdbcType="VARCHAR" />
+	    <result column="LAST_OPT_GROUP" property="lastOptGroup" jdbcType="VARCHAR" />
+	    <result column="CURR_OPT_USER" property="currOptUser" jdbcType="VARCHAR" />
+	    <result column="LAST_OPT_USER" property="lastOptUser" jdbcType="VARCHAR" />
+	    <result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+	    <result column="DEL_STATUS" property="delStatus" jdbcType="CHAR" />
+	    <result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+	    <result column="CRT_TEAM_DATE" property="crtTeamDate" jdbcType="TIMESTAMP" />
+	    <result column="QUEUE_DATE" property="queueDate" jdbcType="TIMESTAMP" />
+	    <result column="GROUP_DATE" property="groupDate" jdbcType="TIMESTAMP" />
+	    <result column="SUBMIT_STATUS" property="submitStatus" jdbcType="CHAR" />
+	    <result column="SUBMIT_TYPE" property="submitType" jdbcType="VARCHAR" />
+	    <result column="LST_TEAM_DATE" property="lstTeamDate" jdbcType="TIMESTAMP" />
+	    <result column="SUBMIT_MEMO" property="submitMemo" jdbcType="VARCHAR" />
+	    <result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+	    <result column="REVIEW_STATUS" property="reviewStatus" jdbcType="CHAR" />
+	    <result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="CHAR" />
+	    <result column="PROCESS_ID" property="processId" jdbcType="VARCHAR" />
+	    <result column="USER_DATE" property="userDate" jdbcType="TIMESTAMP" />
+	    <result column="SYN_FLAG" property="synFlag" jdbcType="CHAR" />
+	    <result column="BACK_FLAG" property="backFlag" jdbcType="VARCHAR" />
+	    <result column="LAOJIANFLAG" property="laojianflag" jdbcType="VARCHAR" />
+	    <result column="APP_PROD" property="appProd" jdbcType="VARCHAR" />
+	    <result column="CHECK_MEUOFLAG" property="check_meuoFlag" jdbcType="CHAR"/>
+	    <result column="BATCH_OPERATE_FLAG" property="batchOperateFlag" jdbcType="CHAR"/>
+	    <result column="BATCH_CREDIT_FLAG" property="batchCreditFlag" jdbcType="CHAR"/>
+	    <result column="BATCH_APPROVAL_FLAG" property="batchApprovalFlag" jdbcType="CHAR"/>
+	    <result column="ALLOT_VERSION" property="allotVersion" jdbcType="NUMERIC"/>
+	    <result column="GROUP_TEAM_DATE" property="groupTeamDate" jdbcType="TIMESTAMP"/>
+	    <result column="FRAUD_DATE" property="groupTeamDate" jdbcType="TIMESTAMP"/>
+	    <result column="ZSHY_INNER_CHECK" property="zshyInnerCheck" jdbcType="CHAR"/>
+	    <result column="SEC_DECISION_FLAG" property="secDecisionFlag" jdbcType="CHAR"/>
+	    <result column="APPROVE_RETURN" property="approveReturn" jdbcType="CHAR"/>
+	</resultMap>
+
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+			APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, 
+		    LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+		    SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, 
+		    MATCHING_CARD_FLAG, PROCESS_ID, USER_DATE, SYN_FLAG, BACK_FLAG, LAOJIANFLAG,CHECK_MEUOFLAG,
+		    BATCH_OPERATE_FLAG,BATCH_CREDIT_FLAG,BATCH_APPROVAL_FLAG,GROUP_TEAM_DATE,FRAUD_DATE,ZSHY_INNER_CHECK,
+		    ALLOT_VERSION,SEC_DECISION_FLAG
+		from OPAS_ALLOT_APPLY_ALLOT
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByAppId_15" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+			APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, 
+		    LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+		    SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, 
+		    MATCHING_CARD_FLAG, PROCESS_ID, USER_DATE, SYN_FLAG, BACK_FLAG, LAOJIANFLAG,CHECK_MEUOFLAG,ZSHY_INNER_CHECK,
+		    ALLOT_VERSION
+		from OPAS_ALLOT_APPLY_ALLOT
+		where substr(APP_ID, 0, 15) in (${appId})
+	</select>
+	<select id="selectAllotAndAppProdByAppId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+			a.APP_ID, a.CURR_OPT_QUEUE, a.LAST_OPT_QUEUE, a.CURR_OPT_GROUP, a.LAST_OPT_GROUP, a.CURR_OPT_USER, 
+		    a.LAST_OPT_USER, a.CURR_STATUS, a.DEL_STATUS, a.CURR_NODE, a.CRT_TEAM_DATE, a.QUEUE_DATE, a.GROUP_DATE, 
+		    a.SUBMIT_STATUS, a.SUBMIT_TYPE, a.LST_TEAM_DATE, a.SUBMIT_MEMO, a.YDJ_FLAG, a.REVIEW_STATUS, 
+		    a.MATCHING_CARD_FLAG, a.PROCESS_ID, a.USER_DATE, a.SYN_FLAG, a.BACK_FLAG, a.LAOJIANFLAG,a.CHECK_MEUOFLAG,
+		    b.app_prod,a.BATCH_CREDIT_FLAG,a.BATCH_APPROVAL_FLAG,a.ZSHY_INNER_CHECK,a.ALLOT_VERSION,c.APPROVE_RETURN
+		from OPAS_ALLOT_APPLY_ALLOT a,opas_biz_inp_appl_c1 b
+		left join CAMS_VOICE_CALL_RECORD c on b.app_id=c.app_id and c.CONCLUSION='1' and c.SOURCE_TYPE='0'
+    	where a.app_id = b.app_id
+			and a.APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<update id="updateSpFlagByAppId" parameterType="java.util.Map">
+		update CAMS_VOICE_CALL_RECORD c
+		set c.APPROVE_RETURN=#{approveReturn,jdbcType=CHAR}
+		where c.APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	<!-- 录入审查环节根据流水号15位模糊查询申请件 -->
+	<select id="selectAllotListByAppId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE,
+		CURR_OPT_GROUP, LAST_OPT_GROUP,
+		CURR_OPT_USER,
+		LAST_OPT_USER,
+		CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE,
+		GROUP_DATE,
+		SUBMIT_STATUS, REVIEW_STATUS, SUBMIT_TYPE, LST_TEAM_DATE,
+		SUBMIT_MEMO,YDJ_FLAG,MATCHING_CARD_FLAG,SYN_FLAG,CHECK_MEUOFLAG,ZSHY_INNER_CHECK,ALLOT_VERSION
+		from OPAS_ALLOT_APPLY_ALLOT
+		where APP_ID LIKE '%${_parameter}%'
+	</select>
+	<select id="selectOneByUserId" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select * from (select
+			b.APP_ID, b.CURR_OPT_QUEUE, b.LAST_OPT_QUEUE, b.CURR_OPT_GROUP,
+			b.LAST_OPT_GROUP,
+			b.CURR_OPT_USER,
+			b.LAST_OPT_USER, b.CURR_STATUS, b.DEL_STATUS,
+			b.CURR_NODE, b.CRT_TEAM_DATE, b.QUEUE_DATE,
+			b.GROUP_DATE,
+			b.SUBMIT_STATUS,
+			workday(trunc(b.group_date), trunc(sysdate)) as GRODATE,
+			b.REVIEW_STATUS, b.SUBMIT_TYPE, b.LST_TEAM_DATE,
+			b.SUBMIT_MEMO,b.YDJ_FLAG,b.MATCHING_CARD_FLAG,b.BATCH_CREDIT_FLAG,b.ALLOT_VERSION
+		
+		from OPAS_BIZ_INP_APPL_C1 a, OPAS_ALLOT_APPLY_ALLOT b
+		where a.APP_ID = b.APP_ID
+		   and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+		   AND b.CURR_NODE = '03'
+		   AND b.CURR_STATUS = '3'
+		   AND b.DEL_STATUS =  #{delStatus:CHAR}
+		   AND b.CHECK_MEUOFLAG = '1'
+		   AND b.CURR_OPT_USER =  #{currOptUser,jdbcType=VARCHAR}
+		   AND a.YDJ_FLAG =  #{ydjFlag,jdbcType=VARCHAR}
+		   AND b.SYN_FLAG = '0'
+		   <!-- 20201016 添加筛选条件 -->
+		   <if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+		   <if test="telNet != null and telNet !='' "><!-- 网申查询 -->
+				AND substr(a.APP_ID,7,1)='B'
+			</if>
+		   <if test='zxzc=="1"'>
+			    AND SUBSTR(a.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+		 order by a.QUICK_CARD_FLAG desc,GRODATE desc,b.LST_TEAM_DATE asc,substr(APP_ID,1,6) asc,substr(APP_ID,8,3) asc,substr(APP_ID,7,1) desc,substr(APP_ID,11,5) asc,substr(APP_ID,16,1) desc
+		) where rownum = '1'
+	</select>
+	<select id="selectZSOneByUserId" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select * from (select
+		b.APP_ID, b.CURR_OPT_QUEUE, b.LAST_OPT_QUEUE, b.CURR_OPT_GROUP,
+		b.LAST_OPT_GROUP,
+		b.CURR_OPT_USER,
+		b.LAST_OPT_USER, b.CURR_STATUS, b.DEL_STATUS,
+		b.CURR_NODE, b.CRT_TEAM_DATE, b.QUEUE_DATE,
+		b.GROUP_DATE,
+		b.SUBMIT_STATUS,
+		b.REVIEW_STATUS, b.SUBMIT_TYPE, b.LST_TEAM_DATE,
+		b.SUBMIT_MEMO,b.YDJ_FLAG,b.MATCHING_CARD_FLAG,b.BATCH_CREDIT_FLAG,
+		a.app_prod,b.ALLOT_VERSION
+		from OPAS_BIZ_INP_APPL_C1 a, OPAS_ALLOT_APPLY_ALLOT b
+		where a.APP_ID = b.APP_ID
+		   and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+		   AND b.CURR_NODE = #{currNode}
+		   AND b.CURR_STATUS = '3'
+		   AND b.CURR_OPT_USER =  #{currOptUser,jdbcType=VARCHAR}
+		   AND b.DEL_STATUS =  #{delStatus:CHAR}
+		   AND a.YDJ_FLAG =  #{ydjFlag,jdbcType=VARCHAR}
+		   AND b.SYN_FLAG = '0'
+		   <!-- 20201016 添加筛选条件 -->
+		   <if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+		   <if test="telNet != null and telNet !='' "><!-- 网申查询 -->
+				AND substr(a.APP_ID,7,1)='B'
+			</if>
+		   <if test='zxzc=="1"'>
+			    AND SUBSTR(a.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+		   ORDER BY a.QUICK_CARD_FLAG desc,b.GROUP_DATE asc,b.LST_TEAM_DATE asc,substr(APP_ID,8,3) asc,substr(APP_ID,7,1) desc,substr(APP_ID,1,6) asc,substr(APP_ID,11,5) asc,substr(APP_ID,16,1) desc
+		) where rownum = '1'
+	</select>
+	<!-- 征审合一 标准卡自动推送规则，推送下一条 -->
+	<select id="selectZSNextOneByUserId" resultMap="BaseResultMap" parameterType="java.util.Map">
+		 select * from (select rownum as num,s.* from (select
+			b.APP_ID, b.CURR_OPT_QUEUE, b.LAST_OPT_QUEUE, b.CURR_OPT_GROUP,
+			b.LAST_OPT_GROUP,
+			b.CURR_OPT_USER,
+			b.LAST_OPT_USER, b.CURR_STATUS, b.DEL_STATUS,
+			b.CURR_NODE, b.CRT_TEAM_DATE, b.QUEUE_DATE,
+			b.GROUP_DATE,
+			b.SUBMIT_STATUS,
+			b.REVIEW_STATUS, b.SUBMIT_TYPE, b.LST_TEAM_DATE,
+			b.SUBMIT_MEMO,b.YDJ_FLAG,b.MATCHING_CARD_FLAG,b.BATCH_CREDIT_FLAG,
+			a.app_prod,b.ALLOT_VERSION
+			from OPAS_BIZ_INP_APPL_C1 a, OPAS_ALLOT_APPLY_ALLOT b
+			where a.APP_ID = b.APP_ID
+			   and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+			   AND b.CURR_NODE = #{currNode}
+	  	   AND b.CURR_STATUS = '3'
+	  	   AND b.CURR_OPT_USER =  #{currOptUser,jdbcType=VARCHAR}
+	  	   AND b.DEL_STATUS =  #{delStatus:CHAR}
+	  	   AND a.YDJ_FLAG =  #{ydjFlag,jdbcType=VARCHAR}
+	  	   <!-- 20201016 添加筛选条件 -->
+		   <if test="zjhm != null and zjhm !='' ">
+				AND a.C1_IDNBR LIKE '%${zjhm}%'
+			</if>
+		   <if test="telNet != null and telNet !='' "><!-- 网申查询 -->
+				AND substr(a.APP_ID,7,1)='B'
+			</if>
+		   <if test='zxzc=="1"'>
+			    AND SUBSTR(a.C5_ABCODE,1,3) IN(
+					SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+					WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+			</if>
+			   ORDER BY a.QUICK_CARD_FLAG desc,b.GROUP_DATE asc,b.LST_TEAM_DATE asc,substr(APP_ID,8,3) asc,substr(APP_ID,7,1) desc,substr(APP_ID,1,6) asc,substr(APP_ID,11,5) asc,substr(APP_ID,16,1) desc
+		 ) s) w where num = #{num,jdbcType=VARCHAR}
+	</select>
+	<!-- 查询当前这一条是第几条 -->
+	<select id="selectZSCurrentNumByUserId" resultType="java.lang.String" parameterType="java.util.Map">
+		select 
+			to_char(count(1)) as num
+			from OPAS_BIZ_INP_APPL_C1 a, OPAS_ALLOT_APPLY_ALLOT b
+			where a.APP_ID = b.APP_ID
+			   and (b.SUBMIT_STATUS is null or b.SUBMIT_STATUS = '0')
+			   AND b.CURR_NODE = #{currNode}
+			   AND b.CURR_STATUS = '3'
+			   AND b.CURR_OPT_USER =  #{currOptUser,jdbcType=VARCHAR}
+			   AND b.DEL_STATUS =  #{delStatus:CHAR}
+			   AND a.YDJ_FLAG =  #{ydjFlag,jdbcType=VARCHAR}
+			   <!-- 20201016 添加筛选条件 -->
+			   <if test="zjhm != null and zjhm !='' ">
+					AND a.C1_IDNBR LIKE '%${zjhm}%'
+				</if>
+			   <if test="telNet != null and telNet !='' "><!-- 网申查询 -->
+					AND substr(a.APP_ID,7,1)='B'
+				</if>
+			   <if test='zxzc=="1"'>
+				    AND SUBSTR(a.C5_ABCODE,1,3) IN(
+						SELECT D.DICT_DETAIL_CODE FROM OPAS_AP_DICT_DETAIL D
+						WHERE D.DICT_ID = (SELECT DX.DICT_ID FROM OPAS_AP_DICT DX WHERE DX.DICT_CODE = 'TGDWDM'))
+				</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		OPAS_ALLOT_APPLY_ALLOT
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllot">
+		insert into OPAS_ALLOT_APPLY_ALLOT (APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, 
+	      CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, 
+	      LAST_OPT_USER, CURR_STATUS, DEL_STATUS, 
+	      CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, 
+	      GROUP_DATE, SUBMIT_STATUS, SUBMIT_TYPE, 
+	      LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, 
+	      REVIEW_STATUS, MATCHING_CARD_FLAG, PROCESS_ID, 
+	      USER_DATE, SYN_FLAG, BACK_FLAG, 
+	      LAOJIANFLAG,CHECK_MEUOFLAG,GROUP_TEAM_DATE,FRAUD_DATE)
+	    values (#{appId,jdbcType=VARCHAR}, #{currOptQueue,jdbcType=VARCHAR}, #{lastOptQueue,jdbcType=VARCHAR}, 
+	      #{currOptGroup,jdbcType=VARCHAR}, #{lastOptGroup,jdbcType=VARCHAR}, #{currOptUser,jdbcType=VARCHAR}, 
+	      #{lastOptUser,jdbcType=VARCHAR}, #{currStatus,jdbcType=CHAR}, #{delStatus,jdbcType=CHAR}, 
+	      #{currNode,jdbcType=VARCHAR}, #{crtTeamDate,jdbcType=TIMESTAMP}, #{queueDate,jdbcType=TIMESTAMP}, 
+	      #{groupDate,jdbcType=TIMESTAMP}, #{submitStatus,jdbcType=CHAR}, #{submitType,jdbcType=VARCHAR}, 
+	      #{lstTeamDate,jdbcType=TIMESTAMP}, #{submitMemo,jdbcType=VARCHAR}, #{ydjFlag,jdbcType=CHAR}, 
+	      #{reviewStatus,jdbcType=CHAR}, #{matchingCardFlag,jdbcType=CHAR}, #{processId,jdbcType=VARCHAR}, 
+	      #{userDate,jdbcType=TIMESTAMP}, #{synFlag,jdbcType=CHAR}, #{backFlag,jdbcType=VARCHAR}, 
+	      #{laojianflag,jdbcType=VARCHAR},#{check_meuoFlag,jdbcType=CHAR},
+	      #{groupTeamDate,jdbcType=TIMESTAMP},#{fraudDate,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllot">
+		insert into OPAS_ALLOT_APPLY_ALLOT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="currOptQueue != null">
+				CURR_OPT_QUEUE,
+			</if>
+			<if test="lastOptQueue != null">
+				LAST_OPT_QUEUE,
+			</if>
+			<if test="currOptGroup != null">
+				CURR_OPT_GROUP,
+			</if>
+			<if test="lastOptGroup != null">
+				LAST_OPT_GROUP,
+			</if>
+			<if test="currOptUser != null">
+				CURR_OPT_USER,
+			</if>
+			<if test="lastOptUser != null">
+				LAST_OPT_USER,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+			<if test="delStatus != null">
+				DEL_STATUS,
+			</if>
+			<if test="currNode != null">
+				CURR_NODE,
+			</if>
+			<if test="crtTeamDate != null">
+				CRT_TEAM_DATE,
+			</if>
+			<if test="queueDate != null">
+				QUEUE_DATE,
+			</if>
+			<if test="groupDate != null">
+				GROUP_DATE,
+			</if>
+			<if test="submitStatus != null">
+				SUBMIT_STATUS,
+			</if>
+			<if test="reviewStatus != null">
+				REVIEW_STATUS,
+			</if>
+			<if test="submitType != null">
+				SUBMIT_TYPE,
+			</if>
+			<if test="lstTeamDate != null">
+				LST_TEAM_DATE,
+			</if>
+			<if test="submitMemo != null">
+				SUBMIT_MEMO,
+			</if>
+			<if test="synFlag != null">
+				SYN_FLAG,
+			</if>
+			<if test="check_meuoFlag != null">
+				CHECK_MEUOFLAG,
+			</if>
+			 <if test="groupTeamDate !=null">
+	           GROUP_TEAM_DATE,
+	        </if>
+           <if test="fraudDate !=null">
+              FRAUD_DATE,
+           </if>
+           <if test="zshyInnerCheck !=null">
+              ZSHY_INNER_CHECK,
+           </if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="currOptQueue != null">
+				#{currOptQueue,jdbcType=VARCHAR},
+			</if>
+			<if test="lastOptQueue != null">
+				#{lastOptQueue,jdbcType=VARCHAR},
+			</if>
+			<if test="currOptGroup != null">
+				#{currOptGroup,jdbcType=VARCHAR},
+			</if>
+			<if test="lastOptGroup != null">
+				#{lastOptGroup,jdbcType=VARCHAR},
+			</if>
+			<if test="currOptUser != null">
+				#{currOptUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lastOptUser != null">
+				#{lastOptUser,jdbcType=VARCHAR},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+			<if test="delStatus != null">
+				#{delStatus,jdbcType=CHAR},
+			</if>
+			<if test="currNode != null">
+				#{currNode,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTeamDate != null">
+				#{crtTeamDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="queueDate != null">
+				#{queueDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="groupDate != null">
+				#{groupDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="submitStatus != null">
+				#{submitStatus,jdbcType=CHAR},
+			</if>
+			<if test="reviewStatus != null">
+				#{reviewStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="submitType != null">
+				#{submitType,jdbcType=VARCHAR},
+			</if>
+			<if test="lstTeamDate != null">
+				#{lstTeamDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="submitMemo != null">
+				#{submitMemo,jdbcType=VARCHAR},
+			</if>
+			<if test="synFlag != null">
+				#{synFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="check_meuoFlag != null">
+				#{check_meuoFlag,jdbcType=CHAR},
+			</if>
+			 <if test="groupTeamDate !=null and groupTeamDate !=''">
+	           GROUP_TEAM_DATE = #{groupTeamDate},
+	        </if>
+            <if test="fraudDate !=null and fraudDate !=''">
+               FRAUD_DATE = #{fraudDate},
+            </if>
+            <if test="zshyInnerCheck !=null and zshyInnerCheck !=''">
+              ZSHY_INNER_CHECK = #{zshyInnerCheck},
+           </if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllot">
+		update OPAS_ALLOT_APPLY_ALLOT
+	    <set >
+	      <if test="currOptQueue != null" >
+	        CURR_OPT_QUEUE = #{currOptQueue,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptQueue != null" >
+	        LAST_OPT_QUEUE = #{lastOptQueue,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptGroup != null" >
+	        CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptGroup != null" >
+	        LAST_OPT_GROUP = #{lastOptGroup,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptUser != null" >
+	        CURR_OPT_USER = #{currOptUser,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptUser != null" >
+	        LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currStatus != null" >
+	        CURR_STATUS = #{currStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="delStatus != null" >
+	        DEL_STATUS = #{delStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="currNode != null" >
+	        CURR_NODE = #{currNode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="crtTeamDate != null" >
+	        CRT_TEAM_DATE = #{crtTeamDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="queueDate != null" >
+	        QUEUE_DATE = #{queueDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="groupDate != null" >
+	        GROUP_DATE = #{groupDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="submitStatus != null" >
+	        SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="submitType != null" >
+	        SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lstTeamDate != null" >
+	        LST_TEAM_DATE = #{lstTeamDate,jdbcType=VARCHAR},
+	      </if>
+	      <if test="submitMemo != null" >
+	        SUBMIT_MEMO = #{submitMemo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="ydjFlag != null" >
+	        YDJ_FLAG = #{ydjFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="reviewStatus != null" >
+	        REVIEW_STATUS = #{reviewStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="matchingCardFlag != null" >
+	        MATCHING_CARD_FLAG = #{matchingCardFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="processId != null" >
+	        PROCESS_ID = #{processId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="userDate != null" >
+	        USER_DATE = #{userDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="synFlag != null" >
+	        SYN_FLAG = #{synFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="backFlag != null" >
+	        BACK_FLAG = #{backFlag,jdbcType=VARCHAR},
+	      </if>
+	      <if test="laojianflag != null" >
+	        LAOJIANFLAG = #{laojianflag,jdbcType=VARCHAR},
+	      </if>
+	      <if test="check_meuoFlag != null">
+			CHECK_MEUOFLAG = #{check_meuoFlag,jdbcType=CHAR},
+		  </if>
+		  
+		  <if test="batchOperateFlag != null">
+			BATCH_OPERATE_FLAG = #{batchOperateFlag,jdbcType=CHAR},
+		  </if>
+		  <if test="batchCreditFlag != null">
+			BATCH_CREDIT_FLAG = #{batchCreditFlag,jdbcType=CHAR},
+		  </if>
+		  <if test="batchApprovalFlag != null">
+			BATCH_APPROVAL_FLAG = #{batchApprovalFlag,jdbcType=CHAR},
+		  </if>
+		  <if test="groupTeamDate !=null and groupTeamDate !=''">
+	           GROUP_TEAM_DATE = #{groupTeamDate},
+	        </if>
+            <if test="fraudDate !=null and fraudDate !=''">
+               FRAUD_DATE = #{fraudDate},
+            </if>
+            <if test="zshyInnerCheck !=null and zshyInnerCheck !=''">
+              ZSHY_INNER_CHECK = #{zshyInnerCheck},
+           </if>
+           <if test="allotVersion !=null and allotVersion !=''">
+            	ALLOT_VERSION=#{allotVersion}+1
+           </if>
+	    </set>
+	    where APP_ID = #{appId,jdbcType=VARCHAR} and ALLOT_VERSION = #{allotVersion}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllot">
+		update OPAS_ALLOT_APPLY_ALLOT
+		    set CURR_OPT_QUEUE = #{currOptQueue,jdbcType=VARCHAR},
+		      LAST_OPT_QUEUE = #{lastOptQueue,jdbcType=VARCHAR},
+		      CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+		      LAST_OPT_GROUP = #{lastOptGroup,jdbcType=VARCHAR},
+		      CURR_OPT_USER = #{currOptUser,jdbcType=VARCHAR},
+		      LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR},
+		      CURR_STATUS = #{currStatus,jdbcType=CHAR},
+		      DEL_STATUS = #{delStatus,jdbcType=CHAR},
+		      CURR_NODE = #{currNode,jdbcType=VARCHAR},
+		      CRT_TEAM_DATE = #{crtTeamDate,jdbcType=TIMESTAMP},
+		      QUEUE_DATE = #{queueDate,jdbcType=TIMESTAMP},
+		      GROUP_DATE = #{groupDate,jdbcType=TIMESTAMP},
+		      SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+		      SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+		      LST_TEAM_DATE = #{lstTeamDate,jdbcType=TIMESTAMP},
+		      SUBMIT_MEMO = #{submitMemo,jdbcType=VARCHAR},
+		      YDJ_FLAG = #{ydjFlag,jdbcType=CHAR},
+		      REVIEW_STATUS = #{reviewStatus,jdbcType=CHAR},
+		      MATCHING_CARD_FLAG = #{matchingCardFlag,jdbcType=CHAR},
+		      PROCESS_ID = #{processId,jdbcType=VARCHAR},
+		      USER_DATE = #{userDate,jdbcType=TIMESTAMP},
+		      SYN_FLAG = #{synFlag,jdbcType=CHAR},
+		      BACK_FLAG = #{backFlag,jdbcType=VARCHAR},
+		      LAOJIANFLAG = #{laojianflag,jdbcType=VARCHAR},
+		      CHECK_MEUOFLAG = #{check_meuoFlag,jdbcType=VARCHAR},
+		      BATCH_OPERATE_FLAG = #{batchOperateFlag,jdbcType=CHAR},
+		      BATCH_CREDIT_FLAG = #{batchCreditFlag,jdbcType=CHAR},
+		      BATCH_APPROVAL_FLAG = #{batchApprovalFlag,jdbcType=CHAR},
+		      GROUP_TEAM_DATE = #{groupTeamDate},
+		      FRAUD_DATE = #{fraudDate},
+		      ZSHY_INNER_CHECK = #{zshyInnerCheck}
+		    where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectAllotByCondition" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select APP_ID
+		  from (select distinct substr(d.APP_ID, 0, 15) as APP_ID, e.crt_time
+		          from camsonline.opas_ap_user           a,
+		               camsonline.opas_ap_user_org       b,
+		               camsonline.OPAS_AP_ORG            c,
+		               camsonline.opas_allot_apply_allot d,
+		               opas_biz_inp_appl_c1 e
+		         where a.user_id = b.user_id
+		           and b.org_id = c.org_id
+		           and e.app_id = d.app_id
+		           and c.org_no = d.curr_opt_group
+		           and d.CURR_OPT_USER is null
+		           and d.syn_flag = '0'
+		           and d.BATCH_APPROVAL_FLAG = '0'
+				<if test="userCode != null and userCode !='' ">
+					and a.user_code = #{userCode}
+				</if>
+				<if test="currNode != null and currNode !='' ">
+					AND d.CURR_NODE = #{currNode}
+				</if>
+				<if test="currStatus != null and currStatus !='' ">
+					AND d.CURR_STATUS = #{currStatus}
+				</if>
+				<if test="ydjFlag != null and ydjFlag !='' ">
+					AND d.YDJ_FLAG = #{ydjFlag}
+				</if>
+				<if test="appId != null and appId !='' ">
+					AND d.APP_ID LIKE '${appId}%'
+				</if>
+				order by e.crt_time,APP_ID)  where ROWNUM &lt; #{moRenFiveApply} + #{moRenFiveApply} +1
+	</select>
+	<!-- 审批申请件获取 -->
+	<select id="getSpAllotByCondition" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+			select
+			d.APP_ID, d.CURR_OPT_QUEUE, d.LAST_OPT_QUEUE, d.CURR_OPT_GROUP,
+			d.LAST_OPT_GROUP,
+			d.CURR_OPT_USER,
+			d.LAST_OPT_USER, d.CURR_STATUS, d.DEL_STATUS,
+			d.CURR_NODE, d.CRT_TEAM_DATE, d.QUEUE_DATE,
+			d.GROUP_DATE,
+			d.SUBMIT_STATUS,
+			d.REVIEW_STATUS, d.SUBMIT_TYPE, d.LST_TEAM_DATE,
+			d.SUBMIT_MEMO,d.YDJ_FLAG,d.MATCHING_CARD_FLAG,d.ALLOT_VERSION
+			from opas_allot_apply_allot d
+			where d.CURR_OPT_USER is null
+			and d.syn_flag = '0'
+			and d.CURR_STATUS in ('0','1')
+			and d.BATCH_APPROVAL_FLAG = '0'
+			<if test="currNode != null and currNode !='' ">
+				AND d.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND d.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="appId != null and appId !='' ">
+				AND d.APP_ID LIKE '${appId}%'
+			</if>
+	</select>
+	
+	<select id="querySingleInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select  APP_ID, CURR_OPT_QUEUE, 
+     		LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, 
+     		CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+    	 	DEL_STATUS, CURR_NODE, 
+     		QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+     		REVIEW_STATUS, SUBMIT_TYPE, CRT_TEAM_DATE, 
+     		LST_TEAM_DATE,SUBMIT_MEMO,trunc(sysdate)-trunc(USER_DATE) as  subDate,ALLOT_VERSION  from OPAS_ALLOT_APPLY_ALLOT
+     	where APP_ID LIKE '%${_parameter}%'
+	</select>
+	 <select id="queryStaffJobDetailByCurrNode" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select  APP_ID, CURR_OPT_QUEUE, 
+     		LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, 
+     		CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+    	 	DEL_STATUS, CURR_NODE, 
+     		QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+     		REVIEW_STATUS, SUBMIT_TYPE, CRT_TEAM_DATE, 
+     		LST_TEAM_DATE,SUBMIT_MEMO,trunc(sysdate)-trunc(USER_DATE) as  subDate,ALLOT_VERSION  from OPAS_ALLOT_APPLY_ALLOT
+     	where CURR_NODE =#{currNode}
+	</select>
+	<!-- 录入审查未完成队列抢件功能 -->
+	<select id="selectAllotForExamineByRob" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select * from (
+			select
+			d.APP_ID, d.CURR_OPT_QUEUE, d.LAST_OPT_QUEUE, d.CURR_OPT_GROUP,
+			d.LAST_OPT_GROUP,
+			d.CURR_OPT_USER,
+			d.LAST_OPT_USER, d.CURR_STATUS, d.DEL_STATUS,
+			d.CURR_NODE, d.CRT_TEAM_DATE, d.QUEUE_DATE,
+			d.GROUP_DATE,
+			d.SUBMIT_STATUS,
+			d.REVIEW_STATUS, d.SUBMIT_TYPE, d.LST_TEAM_DATE,
+			d.SUBMIT_MEMO,d.YDJ_FLAG,d.MATCHING_CARD_FLAG,d.ALLOT_VERSION
+			from opas_ap_user a,opas_ap_user_org b,OPAS_AP_ORG c,opas_allot_apply_allot d
+			where a.user_id = b.user_id
+				and b.org_id = c.org_id
+				and c.org_no = d.curr_opt_group
+				and d.CURR_OPT_USER is null and  d.DEL_STATUS !='1'
+			<if test="userId != null and userId !='' ">
+				and a.user_code = #{userId}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND d.CURR_NODE = #{currNode}
+			</if>
+			<if test="userUuid != null and userUuid !='' ">
+				AND a.user_id = #{userUuid}
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND d.CURR_STATUS = #{currStatus}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND d.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="appId != null and appId !='' ">
+				AND d.APP_ID = #{appId}
+			</if>
+		) where ROWNUM &lt; #{moRenFiveApply}+1
+	</select>
+	<!-- 录入审查未完成队列根据appId获取申请件 -->
+	<select id="selectAllotApplyCurrStatus" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select t.CURR_STATUS as CURRSTATUS from opas_allot_apply_allot t
+ 		where (t.SUBMIT_STATUS is null OR t.SUBMIT_STATUS !='1') AND t.SUBMIT_TYPE is null
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID = #{appId}
+			</if>
+			<if test="currNode != null and currNode !='' ">
+				AND t.CURR_NODE = #{currNode}
+			</if>
+			<if test="ydjFlag != null and ydjFlag !='' ">
+				AND t.YDJ_FLAG = #{ydjFlag}
+			</if>
+	</select>
+	
+	<!-- 录入审查环节未完成队列申请件获取及抢件更新申请件分配表状态 -->
+	<update id="updateAllotForExamine" parameterType="java.util.Map">
+		update OPAS_ALLOT_APPLY_ALLOT
+		<set>
+			<if test="delStatus != null">DEL_STATUS=#{delStatus,jdbcType=CHAR},</if> 
+			<if test="submitStatus != null">SUBMIT_STATUS=#{submitStatus,jdbcType=CHAR},</if> 
+			<if test="currNode != null">CURR_NODE=#{currNode,jdbcType=VARCHAR},</if>
+			<if test="currStatus != null ">CURR_STATUS=#{currStatus,jdbcType=CHAR},</if>
+			<if test="userDate != null ">USER_DATE=#{userDate,jdbcType=TIMESTAMP},</if>
+			<if test="currOptGroup != null">CURR_OPT_GROUP=#{currOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="lastOptGroup != null">LAST_OPT_GROUP=#{lastOptGroup,jdbcType=VARCHAR},</if> 
+			<if test="currOptUser != null">CURR_OPT_USER=#{currOptUser,jdbcType=VARCHAR},</if>
+			<if test="lastOptUser != null">LAST_OPT_USER=#{lastOptUser,jdbcType=VARCHAR},</if>
+			<if test="lstTeamDate != null">LST_TEAM_DATE=#{lstTeamDate,jdbcType=TIMESTAMP},</if>
+			<if test="groupDate != null">GROUP_DATE=#{groupDate,jdbcType=TIMESTAMP}</if>
+		</set> 
+		where APP_ID = #{appId}
+	</update>
+	
+	<update id="updateSecDecisionFlag1" parameterType="java.lang.String">
+		update OPAS_ALLOT_APPLY_ALLOT
+		<set>
+			SEC_DECISION_FLAG = '1'
+		</set> 
+		where APP_ID = #{appId}
+	</update>
+	
+	<update id="updateSecDecisionFlag0" parameterType="java.lang.String">
+		update OPAS_ALLOT_APPLY_ALLOT
+		<set>
+			SEC_DECISION_FLAG = '0'
+		</set> 
+		where APP_ID = #{appId}
+	</update>
+	
+	<select id="selectSecDecisionFlag" parameterType="java.lang.String" resultType= "java.lang.String">
+		select t.SEC_DECISION_FLAG as CURRSTATUS from OPAS_ALLOT_APPLY_ALLOT t 
+		where t.app_id = #{appId}
+	</select>
+	
+	<select id="selectDelStatusByAppId" parameterType="java.lang.String" resultType="java.util.Map">
+		select DEL_STATUS from OPAS_ALLOT_APPLY_ALLOT where app_id = #{appId}
+	</select>
+	<select id="selectApplyByUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+			APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, 
+		    LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+		    SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, 
+		    MATCHING_CARD_FLAG, PROCESS_ID, USER_DATE, SYN_FLAG, BACK_FLAG, LAOJIANFLAG,CHECK_MEUOFLAG,
+		    BATCH_OPERATE_FLAG,BATCH_CREDIT_FLAG,BATCH_APPROVAL_FLAG,GROUP_TEAM_DATE,FRAUD_DATE,ALLOT_VERSION
+		from OPAS_ALLOT_APPLY_ALLOT
+		where DEL_STATUS in ('0','2','3') and CURR_STATUS in ('3','4') 
+		and CURR_NODE in ('01','02','03','05','06') 
+		 and CURR_OPT_USER=(select USER_CODE from OPAS_AP_USER where USER_ID=#{userIId,jdbcType=CHAR})
+	</select>
+	
+	<resultMap id="foreignMsgMap" type="java.util.Map">
+	    <result column="C1_IDTYPE" jdbcType="VARCHAR" property="c1Idtype" />
+	    <result column="C2_IDTYPE" jdbcType="VARCHAR" property="c2Idtype" />
+	    <result column="RESULT_CODE" jdbcType="VARCHAR" property="idCheckRst" />
+	    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	    <result column="CARD_FLAG" jdbcType="VARCHAR" property="cardFlag" />
+  	</resultMap>
+	<select id="queryForeignCheckByAppId" parameterType="java.lang.String" resultMap="foreignMsgMap">
+		select c1.c1_idtype,c2.c2_idtype,n.result_code,n.app_id,n.card_flag from opas_biz_inp_appl_c1 c1
+	    left join opas_biz_inp_appl_c2 c2 on c1.app_id = c2.app_id
+	    left join nciic_foreigner_info n on n.app_id = c1.app_id
+	    where c1.app_id = #{appId} order by n.card_flag
+  	</select>
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ArEdit">
+
+	<resultMap id="FailBackResultMap" type="com.huaxia.opas.domain.archive.ArFailBack">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="C1_CNAME" property="custName" jdbcType="VARCHAR" />
+		<result column="CRED_NO" property="credNo" jdbcType="VARCHAR" />
+		<result column="C2_CNAME" property="suppCardCustName" jdbcType="VARCHAR" />
+		<result column="REASON" property="reason" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="queryFailBackList" parameterType="com.huaxia.opas.domain.archive.ArFailBack"
+		resultMap="FailBackResultMap">
+		<!-- select d.APP_ID, c.c1_cname, d.CRED_NO, c2.C2_CNAME, d.REASON, d.OPERATOR, 
+			d.OPERAT_TIME from OPAS_FILE_FAILED d inner join opas_biz_inp_appl_c1 c on 
+			c.app_id = d.app_id left join opas_biz_inp_appl_c2 c2 on c2.app_id = d.app_id 
+			<where>1=1 and d.correct_flag = '0' -->
+		select e.APP_ID,
+		e.c1_cname,
+		e.CRED_NO,
+		e.C2_CNAME,
+		e.REASON,
+		e.OPERATOR,
+		e.OPERAT_TIME,
+		e.correct_flag
+		from (
+		select d.APP_ID,
+		c.c1_cname,
+		d.CRED_NO,
+		c2.C2_CNAME,
+		d.REASON,
+		d.OPERATOR,
+		d.OPERAT_TIME,
+		d.correct_flag
+		from (OPAS_FILE_FAILED d inner join opas_biz_inp_appl_c1
+		c on
+		c.app_id = d.app_id left join opas_biz_inp_appl_c2 c2 on
+		c2.app_id
+		= d.app_id)) e
+		<where>
+			e.app_id not in (select app_id from opas_file_success) and
+			e.correct_flag = '0'
+			<if test="appId != null and appId !='' ">
+				AND e.APP_ID LIKE '${appId}%'
+			</if>
+			<if test="custName != null and custName !='' ">
+				AND e.c1_cname LIKE '${custName}%'
+			</if>
+			<if test="credNo != null and credNo !='' ">
+				AND e.CRED_NO LIKE '${credNo}%'
+			</if>
+			<if test="suppCardCustName != null and suppCardCustName !='' ">
+				AND e.C2_CNAME LIKE '${suppCardCustName}%'
+			</if>
+		</where>
+		order by e.operat_time desc
+	</select>
+
+	<select id="queryFailBackCount" parameterType="com.huaxia.opas.domain.archive.ArFailBack"
+		resultType="java.lang.Integer">
+		<!-- select count(1) from OPAS_FILE_FAILED d inner join opas_biz_inp_appl_c1 
+			c on c.app_id = d.app_id left join opas_biz_inp_appl_c2 c2 on c2.app_id = 
+			d.app_id -->
+		select count(1)
+		from (
+		select d.APP_ID,
+		c.c1_cname,
+		d.CRED_NO,
+		c2.C2_CNAME,
+		d.REASON,
+		d.OPERATOR,
+		d.OPERAT_TIME,
+		d.correct_flag
+		from
+		(OPAS_FILE_FAILED d inner join opas_biz_inp_appl_c1 c on
+		c.app_id =
+		d.app_id left join opas_biz_inp_appl_c2 c2 on
+		c2.app_id = d.app_id)) e
+		<where>
+			e.app_id not in (select app_id from opas_file_success) and
+			e.correct_flag = '0'
+			<if test="appId != null and appId !='' ">
+				AND e.APP_ID LIKE '${appId}%'
+			</if>
+			<if test="custName != null and custName !='' ">
+				AND e.c1_cname LIKE '${custName}%'
+			</if>
+			<if test="credNo != null and credNo !='' ">
+				AND e.CRED_NO LIKE '${credNo}%'
+			</if>
+			<if test="suppCardCustName != null and suppCardCustName !='' ">
+				AND e.C2_CNAME LIKE '${suppCardCustName}%'
+			</if>
+		</where>
+		order by e.operat_time desc
+	</select>
+
+	<update id="updateArDetail" parameterType="com.huaxia.opas.domain.archive.ArDetail">
+		update OPAS_FILE_APPLICATION_DETAIL
+		<set>
+			ALREADY_SEND_FLAG = '1',
+			<!-- OPERATOR = #{operator}, -->
+			operat_time = sysdate
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateArFailBack" parameterType="com.huaxia.opas.domain.archive.ArFailBack">
+		update OPAS_FILE_FAILED
+		<set>
+			correct_flag = '1',
+			<!-- OPERATOR = #{operator}, -->
+			operat_time = sysdate
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

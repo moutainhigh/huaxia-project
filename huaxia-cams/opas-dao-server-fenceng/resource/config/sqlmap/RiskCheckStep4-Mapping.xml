@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="riskcheck_step4">
+
+	<resultMap id="keyfiledResultMap" type="com.huaxia.opas.domain.riskcheck.KeyfiledResultInfo">
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="yz_bmd" property="yzBmd" jdbcType="VARCHAR" />
+		<result column="stakeholder_type" property="stakeholderType" jdbcType="VARCHAR" />
+		<result column="TJ_MATCH" property="tjMatch" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="Query_OPAS_KEYFILED_RESULTINFO" resultType="java.lang.Integer"
+		parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledResultInfo">
+		select
+		count(1)
+		from opas_keyfiled_resultinfo
+		where APP_ID like '${appId}%'
+	</select>
+
+	<insert id="save_KEYFILED_RESULTINFO" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledResultInfo">
+		insert into opas_keyfiled_resultinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="yzBmd != null">
+				yz_bmd,
+			</if>
+			<if test="stakeholderType != null">
+				stakeholder_type,
+			</if>
+			<if test="tjMatch != null">
+				tj_match,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId},
+			</if>
+			<if test="appId != null">
+				#{appId},
+			</if>
+			<if test="crtDate != null">
+				#{crtDate},
+			</if>
+			<if test="yzBmd != null">
+				#{yzBmd},
+			</if>
+			<if test="stakeholderType != null">
+				#{stakeholderType},
+			</if>
+			<if test="tjMatch != null">
+				#{tjMatch},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update_KEYFILED_RESULTINFO" parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledResultInfo">
+		update opas_keyfiled_resultinfo
+		<set>
+			<if test="yzBmd != null and yzBmd !='' ">
+				yz_bmd = #{yzBmd,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null and crtDate !='' ">
+				CRT_DATE = #{crtDate},
+			</if>
+			<if test="stakeholderType != null and stakeholderType !='' ">
+				stakeholder_type = #{stakeholderType},
+			</if>
+			<if test="tjMatch != null and tjMatch !='' ">
+				TJ_MATCH = #{tjMatch},
+			</if>
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</update>
+	
+	<resultMap id="OPAS_EXCELLENT_COMPANYMap" type="com.huaxia.opas.domain.decision.ExcellentCompanyList">
+		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+	</resultMap>
+	<!--  优质企业名单-->
+  	<select id="Query_OPAS_EXCELLENT_COMPANY_LIST" resultMap="OPAS_EXCELLENT_COMPANYMap" parameterType="java.lang.String">
+	    select company_name,phone from OPAS_EXCELLENT_COMPANY_LIST where CURR_STATUS = '1'  
+	    and name = #{name,jdbcType=VARCHAR} and certifi_no = #{idnbr,jdbcType=VARCHAR} 
+	    and STOP_TIME &gt;= sysdate and rownum =1  order by crt_time desc
+	</select>
+	
+	<select id="Query_KEYFILED_RESULTINFO" resultMap="keyfiledResultMap"
+		parameterType="com.huaxia.opas.domain.riskcheck.KeyfiledResultInfo">
+		select stakeholder_type,stakeholder_type,app_id,TJ_MATCH
+		from opas_keyfiled_resultinfo
+		where APP_ID like '${appId}%'
+	</select>
+  	
+</mapper>

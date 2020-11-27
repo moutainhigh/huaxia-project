@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.setting.mapper.PbocQueryMapper">
+
+	<select id="selectCountByParams" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT '00010000' TASK_TYPE, COUNT(1) TASK_COUNT
+		  FROM BANK_REPORT_MARK_INFO
+		 WHERE SOURCE = '0'
+		   <if test="startTime != null and endTime != null">
+		   AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+	       AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+           </if>
+		UNION
+		SELECT '00010001' TASK_TYPE, COUNT(1) TASK_COUNT
+		  FROM BANK_REPORT_MARK_INFO
+		 WHERE SOURCE = '2'
+		   <if test="startTime != null and endTime != null">
+		   AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+	       AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+	       </if>
+		UNION
+		SELECT '00010010' TASK_TYPE, COUNT(1) TASK_COUNT
+		  FROM BANK_REPORT_MARK_INFO
+		 WHERE SOURCE = '1'
+		   <if test="startTime != null and endTime != null">
+		   AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+	       AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+	       </if>
+	</select>
+	
+	<insert id="insertCountReport">
+		INSERT INTO RPT_QUERY_COUNT(UUID,CRT_TIME,RPT_ID,RPT_MONTH,RPT_SOURCE,MNL_QUERY_SINGLE,MNL_QUERY_BATCH,CNL_QUERY_CAMS)
+		SELECT SYS_GUID(),SYSDATE,SYS_GUID(),TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM'),'0001',(SELECT COUNT(1)
+		          FROM PBOC_TRN_SINGLE_REVIEW
+		         WHERE REVIEW_STATUS = '3'
+		           AND QUERY_FROM = '0'
+		           AND CRT_TIME BETWEEN
+		               TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM') || '-01 00:00:01','YYYY-MM-DD HH24:MI:SS') AND
+		               TO_DATE(TO_CHAR(LAST_DAY(ADD_MONTHS(SYSDATE, -1)),'YYYY-MM-DD') || ' 23:59:59','YYYY-MM-DD HH24:MI:SS')) MNL_SINGLE,
+		        (SELECT COUNT(1)
+				  FROM PBOC_TRN_SINGLE_REVIEW
+				 WHERE REVIEW_STATUS = '3'
+				   AND QUERY_FROM = '1'
+				   AND CRT_TIME BETWEEN 
+		           TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM') || '-01 00:00:01','YYYY-MM-DD HH24:MI:SS') AND
+		           TO_DATE(TO_CHAR(LAST_DAY(ADD_MONTHS(SYSDATE, -1)),'YYYY-MM-DD') || ' 23:59:59','YYYY-MM-DD HH24:MI:SS')) MNL_BATCH,
+		        (SELECT COUNT(1)
+				  FROM BANK_REPORT_MARK_INFO
+				 WHERE SOURCE = '1'
+				   AND CRT_TIME BETWEEN 
+		           TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM') || '-01 00:00:01','YYYY-MM-DD HH24:MI:SS') AND
+		           TO_DATE(TO_CHAR(LAST_DAY(ADD_MONTHS(SYSDATE, -1)),'YYYY-MM-DD') || ' 23:59:59','YYYY-MM-DD HH24:MI:SS')) CNL_CAMS
+		  FROM DUAL
+	</insert>
+	
+	<select id="selectListCountReportByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		  select count(*) from (
+		  select dd.query_date_mon  RPT_MONTH,
+		        sum(decode(channel_code, '00', con)) as QUERY_SINGLE,
+		        sum(decode(channel_code, '01', con)) as QUERY_BATCH,
+		        sum(decode(channel_code, '10', con)) as QUERY_CAMS
+		   from (select to_char(query_date, 'yyyymm') query_date_mon,
+		                channel_code,
+		                sum(query_count) con
+		           from rpt_query_count_day 
+		          where source_code = '000100' 
+		          group by to_char(query_date, 'yyyymm'), channel_code) dd
+		  group by query_date_mon
+		  order by dd.query_date_mon desc )
+	</select>
+	
+	<select id="selectListReportByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		 select * from (
+   select dd.query_date_mon  RPT_MONTH,
+        sum(decode(channel_code, '00', con)) as QUERY_SINGLE,
+        sum(decode(channel_code, '01', con)) as QUERY_BATCH,
+        sum(decode(channel_code, '10', con)) as QUERY_CAMS
+   from (select to_char(query_date, 'yyyymm') query_date_mon,
+                channel_code,
+                sum(query_count) con
+           from rpt_query_count_day 
+          where source_code = '000100' 
+          group by to_char(query_date, 'yyyymm'), channel_code) dd
+  group by query_date_mon
+  order by dd.query_date_mon desc 
+  )    WHERE ROWNUM <![CDATA[ <= ]]> (#{pageNo} * #{pageSize})
+		 AND ROWNUM <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	</select>
+</mapper>

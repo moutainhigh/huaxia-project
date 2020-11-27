@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InterestRateDifferAnalysisStatistics">
+  <select id="selectInterestRateDifferAnalysisStatisticsDataByDate" parameterType="java.util.Map" resultType="java.util.Map">
+	select c1.C1C2_FLAG as type,
+       max(o.exist_card_flag) as newoldcust,
+       p.prod_name as cardproduct,
+       o.cif_label as leveltag,
+       b.rate_value  as ratecode,  
+       count(t.APP_ID)  as passcount,
+       count(l.APP_ID) as allcount,
+       round(count(t.APP_ID)/count(l.APP_ID),4)*100 as passrate
+  from OPAS_FILE_APPLICATION_DETAIL l 
+   left join OPAS_BIZ_APPROVAL b on l.app_id=b.app_id
+   left join  (select app_id from OPAS_FILE_APPLICATION_DETAIL where app_result = '0'
+   and TO_ARCHIVE_TIME &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+  and TO_ARCHIVE_TIME &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)) t on t.app_id =l.app_id 
+  left join OPAS_BIZ_INP_APPL_C1 c1 on l.app_id = c1.app_id
+  left join  OPAS_PARAM_CARD_PRODUCT p on b.approve_credit_product = p.card_code
+  left join  (SELECT distinct (d.cif_label||e.cif_label) as cif_label,(case when trim(c1.exist_card_flag) ='1' then '旧户' else '新户' end) as exist_card_flag,c1.app_id FROM OPAS_BIZ_INP_APPL_C1 c1 
+       left join OPAS_FICO_SD_BLAZE e on e.app_id = c1.app_id 
+       left join OPAS_FICO_ydj_BLAZE d on d.app_id = c1.app_id)o on o.app_id = c1.app_id
+  where l.TO_ARCHIVE_TIME &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+  and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+  and l.flag='2' and l.status='0'
+  group by c1.C1C2_FLAG,o.exist_card_flag,p.prod_name,o.cif_label,b.rate_value
+  having count(t.APP_ID)>0
+  order by c1.C1C2_FLAG desc,o.exist_card_flag desc, p.prod_name desc,o.cif_label asc
+  </select> 
+  
+  <resultMap id="ReportRatediffDetail" type="com.huaxia.opas.domain.report.ReportRatediffDetail">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+		<result column="CUST_LEVEL_TAG" property="custLevelTag" jdbcType="VARCHAR" />
+		<result column="RATE_CODE" property="rateCode" jdbcType="VARCHAR" />
+		<result column="LOWPAY_CUST_LEVEL_TAG" property="lowpayCustLevelTag" jdbcType="VARCHAR" />
+		<result column="REPAY_RATIO_VALUE" property="repayRatioValue" jdbcType="VARCHAR" />
+		<result column="FREE_CUST_LEVEL_TAG" property="freeCustLevelTag" jdbcType="VARCHAR" />
+		<result column="REPAY_FREE_CODE" property="repayFreeCode" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" />
+		<result column="TO_ARCHIVE_TIME" property="toArchiveTime" jdbcType="VARCHAR" />
+	</resultMap>
+  	
+   <select id="selectInterestRateCountByDate" parameterType="java.util.Map" resultType="java.lang.Integer">
+	select count(l.app_id)
+	  from  OPAS_FILE_APPLICATION_DETAIL l
+	  left join  OPAS_BIZ_APPROVAL b on  l.app_id = b.app_id
+	  left join  OPAS_PARAM_CARD_PRODUCT p on p.card_code = b.approve_credit_product
+	  left join  OPAS_FICO_SD_BLAZE e on e.app_id = l.app_id
+	  left join  OPAS_FICO_ydj_BLAZE d on d.app_id = l.app_id
+	  left join  OPAS_SYSPARM_RATE_CONF f on f.cust_level_tag = e.cif_label or f.cust_level_tag = d.cif_label
+	  left join  OPAS_SYSPARM_REPAY_LIMIT_CONF f1 on f1.cust_level_tag =
+	                                                e.LOWEST_PAY_AMT_LABEL
+	                                                or 
+	                                                f1.cust_level_tag = d.lowest_pay_amt_label
+	  left join  OPAS_SYSPARM_REPAY_TERM_CONF f2 on f2.cust_level_tag =
+	                                               e.FREE_PAY_TERM_LABEL
+	                                               or 
+	                                               f2.cust_level_tag = d.free_pay_term_label
+	   where l.TO_ARCHIVE_TIME &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+	   and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+   	   and l.app_result='0' and l.flag='2' and l.status='0'
+   </select>	
+  	
+   <select id="selectInterestRateListByDate" parameterType="java.util.Map" resultMap="ReportRatediffDetail">
+	 select tab.app_id,tab.PROD_NAME,tab.CUST_LEVEL_TAG,tab.RATE_CODE,tab.LOWPAY_CUST_LEVEL_TAG,tab.REPAY_RATIO_VALUE,
+       		tab.FREE_CUST_LEVEL_TAG,tab.REPAY_FREE_CODE,tab.TO_ARCHIVE_TIME
+ 			from ( select rownum as rm,
+			sys_guid(),
+	       l.app_id APP_ID,
+	       p.prod_name PROD_NAME,
+           case when  d.cif_label is not null then   d.cif_label else  e.cif_label end as  CUST_LEVEL_TAG,
+	       b.rate_value RATE_CODE,
+	       case when  d.lowest_pay_amt_label is not null then d.lowest_pay_amt_label else e.LOWEST_PAY_AMT_LABEL end as LOWPAY_CUST_LEVEL_TAG,
+	       b.repay_ration_value REPAY_RATIO_VALUE,
+           case when  d.free_pay_term_label is not null then d.free_pay_term_label else e.FREE_PAY_TERM_LABEL end as FREE_CUST_LEVEL_TAG,
+	       b.repay_free_value REPAY_FREE_CODE,
+	       to_char(l.TO_ARCHIVE_TIME,'yyyy/mm/dd hh24:mi:ss') TO_ARCHIVE_TIME
+	  from  OPAS_FILE_APPLICATION_DETAIL l
+	  left join  OPAS_BIZ_APPROVAL b on  l.app_id = b.app_id
+	  left join  OPAS_PARAM_CARD_PRODUCT p on p.card_code = b.approve_credit_product
+	  left join  OPAS_FICO_SD_BLAZE e on e.app_id = l.app_id
+	  left join  OPAS_FICO_ydj_BLAZE d on d.app_id = l.app_id
+	  left join  OPAS_SYSPARM_RATE_CONF f on f.cust_level_tag = e.cif_label or f.cust_level_tag = d.cif_label
+	  left join  OPAS_SYSPARM_REPAY_LIMIT_CONF f1 on f1.cust_level_tag =
+	                                                e.LOWEST_PAY_AMT_LABEL
+	                                                or 
+	                                                f1.cust_level_tag = d.lowest_pay_amt_label
+	  left join  OPAS_SYSPARM_REPAY_TERM_CONF f2 on f2.cust_level_tag =
+	                                               e.FREE_PAY_TERM_LABEL
+	                                               or 
+	                                               f2.cust_level_tag = d.free_pay_term_label
+	   where l.TO_ARCHIVE_TIME &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+	   and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+   	   and l.app_result='0' and l.flag='2' and l.status='0') tab where tab.rm &gt; #{start,jdbcType=NUMERIC} and tab.rm &lt;= #{end,jdbcType=NUMERIC}
+   </select>
+    
+    <resultMap id="WorkloadDetailResultMap" type="com.huaxia.opas.domain.report.WorkloadDetail">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="APPID_LETTER" property="appIdLetter" jdbcType="VARCHAR" />
+		<result column="ENTRY_CLERK" property="entryClerk" jdbcType="VARCHAR" />
+		<result column="CHANNEL" property="channel" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="C1_NAME" property="c1Cname" jdbcType="VARCHAR" />
+		<result column="C1_IDTYPE" property="c1Idtype" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" />
+		<result column="AUDITOR_NAME" property="auditorName" jdbcType="VARCHAR" />
+		<result column="INPUT_GROUP" property="inputGroup" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CREDIT_GROUP" property="creditGroup" jdbcType="VARCHAR" />
+		<result column="APPROVER" property="approver" jdbcType="VARCHAR" />
+		<result column="APPROVER_GROUP" property="approverGroup" jdbcType="VARCHAR" />
+		<result column="POLICY_CODE1" property="policyCode1" jdbcType="VARCHAR" />
+		<result column="POLICY_CODE2" property="policyCode2" jdbcType="VARCHAR" />
+		<result column="POLICY_CODE3" property="policyCode3" jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE1" property="violateCode1" jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE2" property="violateCode2" jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE3" property="violateCode3" jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE1" property="refuseCode1" jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE2" property="refuseCode2" jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE3" property="refuseCode3" jdbcType="VARCHAR" />
+		<result column="MASTERCARD_DECRESULT" property="mastercardDecresult" jdbcType="VARCHAR" />
+		<result column="TO_ARCHIVE_TIME" property="toArchiveTime" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="APP_PROD" property="appProd" jdbcType="VARCHAR" />
+		<result column="APPROVE_CREDIT_PRODUCT" property="approveCreditProduct" jdbcType="VARCHAR" />
+		<result column="APPROVE_CREDIT_LIMIT" property="approveCreditLimit" jdbcType="VARCHAR" />
+		<result column="app_result" property="appResult" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	 <select id="selectWorkloadBreakdownListCountByDate" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select  count(l.app_id)
+	      from OPAS_FILE_APPLICATION_DETAIL l
+	      left join OPAS_BIZ_INP_APPL_C1 c1 on c1.app_id = l.app_id
+	      left join OPAS_BIZ_INP_APPL_C2 c2 on c2.app_id = l.app_id
+	      left join OPAS_REVIEW_DECISION_RESULT t on t.app_id = l.app_id
+	      left join OPAS_TELCHECK_RESULT t1 on t1.app_id = l.app_id
+	      left join OPAS_BIZ_APPROVAL t3 on t3.app_id = l.app_id
+	      where l.TO_ARCHIVE_TIME &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+	   	  and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+	      and l.flag in ('0','2') and l.status='0'
+	</select>
+	
+    <select id="selectWorkloadBreakdownListByDate" parameterType="java.util.Map" resultMap="WorkloadDetailResultMap">
+		select tab.app_id,tab.APPID_LETTER,tab.ENTRY_CLERK,tab.CHANNEL,tab.AREA,
+		       tab.C1_NAME,tab.C1_IDTYPE,tab.CRT_DATE,tab.AUDITOR_NAME,tab.INPUT_GROUP,
+		       tab.CRT_USER,tab.CREDIT_GROUP,tab.APPROVER, tab.APPROVER_GROUP,tab.POLICY_CODE1,
+		       tab.POLICY_CODE2,tab.POLICY_CODE3,tab.VIOLATE_CODE1,tab.VIOLATE_CODE2,tab.VIOLATE_CODE3,
+		       tab.REFUSE_CODE1,tab.REFUSE_CODE2,tab.REFUSE_CODE3,tab.MASTERCARD_DECRESULT,tab.to_archive_time,
+		       tab.OPERATOR,tab.app_prod,tab.approve_credit_product,tab.APPROVE_CREDIT_LIMIT,tab.app_result
+		        from (select rownum as rm,l.app_id as APP_ID,
+		       (select l.dict_detail_name
+		          from opas_ap_dict t, opas_ap_dict_detail l
+		         where t.dict_id = l.dict_id
+		           and t.dict_code = 'ALLOT_SERIALNUM'
+		           and l.dict_detail_code = substr(l.app_id, 11, 1)) as APPID_LETTER,
+		       (select l.dict_detail_name
+		          from opas_ap_dict t, opas_ap_dict_detail l
+		         where t.dict_id = l.dict_id
+		           and t.dict_code = 'ALLOT_APPINPUT'
+		           and l.dict_detail_code = substr(l.app_id, 7, 1)) as ENTRY_CLERK,
+		       (select l.dict_detail_name
+		          from opas_ap_dict t, opas_ap_dict_detail l
+		         where t.dict_id = l.dict_id
+		           and t.dict_code = 'ALLOT_APPCHANNEL'
+		           and l.dict_detail_code = substr(l.app_id, 8, 1)) as CHANNEL,
+		       (select l.dict_detail_name
+		          from opas_ap_dict t, opas_ap_dict_detail l
+		         where t.dict_id = l.dict_id
+		           and t.dict_code = 'ALLOT_APPREGION'
+		           and l.dict_detail_code = substr(l.app_id, 9, 2)) as AREA,
+		       (case
+		         when c1.c1c2_flag = '2' then
+		          c2.c2_cname
+		         else
+		          c1.c1_cname
+		       end) as C1_NAME,
+		       (select l.dict_detail_name
+		          from opas_ap_dict t, opas_ap_dict_detail l
+		         where t.dict_id = l.dict_id
+		           and t.dict_code = 'ZDSQRZJLX'
+		           and l.dict_detail_code = (case when c1.c1c2_flag = '2' then
+		                c2.c2_idtype else c1.c1_idtype end)) as C1_IDTYPE,
+		       to_char(c1.CRT_DATE, 'yyyy-mm-dd hh24:mi:ss') as CRT_DATE,
+		       t.AUDITOR_name as AUDITOR_NAME,
+		       (select u.org_name
+		          from opas_ap_org u
+		         where u.org_no = t.curr_opt_group
+		           and u.org_level in ('4', '5')) as INPUT_GROUP,
+		       (select r.user_name
+		          from opas_ap_user r
+		         where r.user_code = t1.crediter) as CRT_USER,
+		       (select u.org_name
+		          from opas_ap_org u
+		         where u.org_no = t1.curr_opt_group
+		           and u.org_level in ('4', '5')) as CREDIT_GROUP,
+		       (select r.user_name
+		          from opas_ap_user r
+		         where r.user_code = t3.approver) as APPROVER,
+		       (select u.org_name
+		          from opas_ap_org u
+		         where u.org_no = t3.curr_opt_group
+		           and u.org_level in ('4', '5')) as APPROVER_GROUP,
+		       t3.POLICY_CODE1 as POLICY_CODE1,
+		       t3.POLICY_CODE2 as POLICY_CODE2,
+		       t3.POLICY_CODE3 as POLICY_CODE3,
+		       t3.VIOLATE_CODE1 as VIOLATE_CODE1,
+		       t3.VIOLATE_CODE2 as VIOLATE_CODE2,
+		       t3.VIOLATE_CODE3 as VIOLATE_CODE3,
+		       t3.REFUSE_CODE1 as REFUSE_CODE1,
+		       t3.REFUSE_CODE2 as REFUSE_CODE2,
+		       t3.REFUSE_CODE3 as REFUSE_CODE3,
+		       (case c1.c1c2_flag
+		         when '2' then
+		          t3.MASTERCARD_DECRESULT
+		         when '3' then
+		          t3.MASTERCARD_DECRESULT
+		         when '1' then
+		          t3.MASTERCARD_DECRESULT || '::' || t3.CHILDCARD_DECRESULT
+		       end) as MASTERCARD_DECRESULT,
+		       to_char(l.to_archive_time, 'yyyy-mm-dd hh24:mi:ss') as to_archive_time,
+		       l.OPERATOR as OPERATOR,
+		       (select p.prod_name
+		          from OPAS_PARAM_CARD_PRODUCT p
+		         where c1.app_prod = p.card_code) as app_prod,
+		       (select p.prod_name
+		          from OPAS_PARAM_CARD_PRODUCT p
+		         where t3.approve_credit_product = p.card_code) as approve_credit_product,
+		       t3.APPROVE_CREDIT_LIMIT as APPROVE_CREDIT_LIMIT,
+		       l.app_result
+		  from OPAS_FILE_APPLICATION_DETAIL l
+		  left join OPAS_BIZ_INP_APPL_C1 c1 on c1.app_id = l.app_id
+		  left join OPAS_BIZ_INP_APPL_C2 c2 on c2.app_id = l.app_id
+		  left join OPAS_REVIEW_DECISION_RESULT t on t.app_id = l.app_id
+		  left join OPAS_TELCHECK_RESULT t1 on t1.app_id = l.app_id
+		  left join OPAS_BIZ_APPROVAL t3 on t3.app_id = l.app_id
+		 where l.TO_ARCHIVE_TIME &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+		 and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endDate}, 'yyyy-mm-dd') + 1)
+		 and l.flag in ('0','2') and l.status='0') tab where tab.rm &gt; #{start,jdbcType=NUMERIC} and tab.rm &lt;= #{end,jdbcType=NUMERIC}
+	</select>
+ 
+   <resultMap id="SubreportDetailMap" type="com.huaxia.opas.domain.report.SubreportDetail">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+		<result column="SUBMIT_TYPE" property="submitType" jdbcType="VARCHAR" />
+		<result column="CURR_OPT_USER" property="currOptUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="VDEL_STATUS" property="vdelStatus" jdbcType="VARCHAR" />
+		<result column="OPERATE_DESC" property="operateDesc" jdbcType="VARCHAR" />
+	</resultMap>
+
+  
+   <select id="selectSubreportListByDate" parameterType="java.util.Map" resultMap="SubreportDetailMap">
+		select tab1.app_id,
+		       p.prod_name,
+		       tab1.submit_type,
+		       (select user_name from opas_ap_user where user_code=tab1.crt_user) as CURR_OPT_USER,
+		       tab1.crt_date,
+		        (select user_name from opas_ap_user where user_code=tab.crt_user) as crt_user,
+		       t.del_status as VDEL_STATUS,
+		       tab2.operate_desc
+		  from (select row_number() over(partition by app_id order by crt_date desc) as rn,
+		               app_id,
+		               submit_type,
+		               crt_user,
+		               crt_date
+		          from OPAS_SUBMITTYPE_INFO_HIS w
+		         where w.del_status = '0') tab1
+		  left join (select row_number() over(partition by app_id order by crt_date desc) as rn,
+		                    app_id,
+		                    del_status,
+		                    crt_user
+		               from OPAS_SUBMITTYPE_INFO_HIS t where t.del_status='2') tab on tab.app_id =
+		                                                       tab1.app_id
+		                                                   and tab.rn = 1  
+		  		  left join (select row_number() over(partition by app_id order by crt_date desc) as rn,
+		                    app_id,
+		                    del_status,
+		                    crt_user
+		               from OPAS_SUBMITTYPE_INFO_HIS ) t on t.app_id =
+		                                                       tab1.app_id
+		                                                   and t.rn = 1                                              
+		  left join opas_biz_inp_appl_c1 c on c.app_id = tab1.app_id
+		  left join OPAS_PARAM_CARD_PRODUCT p on p.card_code = c.app_prod
+		  left join (select row_number() over(partition by app_id order by crt_date desc) as rn,
+		                    operate_desc,
+		                    APP_ID
+		               from OPAS_APPLY_LIFE_CICLE) tab2 on tab2.app_id =
+		                                                   tab1.app_id
+		                                               and tab2.rn = '1'
+		 where tab1.rn = 1
+		and tab1.crt_date &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+   		and tab1.crt_date &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+   </select>
+   
+   <select id="selectSubmitFraudListByDate" parameterType="java.util.Map" resultMap="SubreportDetailMap">
+		select o.app_id as app_id,
+	         o.crt_date as timess,
+	         p.prod_name as prod_name,
+	         (select user_name from opas_ap_user where user_code = s.curr_opt_user) as CURR_OPT_USER,
+	         s.lst_team_date as crt_date,
+	         (select user_name from opas_ap_user where user_code = h.crt_user) as crt_user,
+	         o.vdel_status as vdel_status,
+	         tab2.operate_desc as operate_desc
+	    from OPAS_SUBMITFRAUD_INFO o
+        left join (select row_number() over(partition by app_Id order by lst_team_date desc) as rn,
+	    		  app_id,curr_opt_user,lst_team_date from opas_allot_apply_allot_his where submit_status = '1')s on s.app_id = o.app_id
+            and s.rn='1'
+	    left join (select row_number() over(partition by app_Id order by crt_date desc) as rn,
+	    		  app_id,crt_user from OPAS_SUBMITFRAUD_INFO_HIS )h on h.app_id = o.app_id
+            and h.rn='1'
+	    left join opas_biz_inp_appl_c1 c on c.app_id = o.app_id
+	    left join OPAS_PARAM_CARD_PRODUCT p on p.card_code = c.app_prod
+	    left join (select row_number() over(partition by app_id order by crt_date desc) as rn,
+                      operate_desc,
+                      APP_ID
+                 from OPAS_APPLY_LIFE_CICLE) tab2 on tab2.app_id = o.app_id
+                                                 and tab2.rn = '1'
+		 where  o.crt_date &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+   		 and o.crt_date &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+   </select>
+</mapper>

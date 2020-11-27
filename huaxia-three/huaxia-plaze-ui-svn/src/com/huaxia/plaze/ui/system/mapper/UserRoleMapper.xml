@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.UserRoleMapper">
+
+	<resultMap id="result_SelectAllUsers" type="User">
+		<result column="USER_ID" property="userId" jdbcType="CHAR" />
+		<result column="USER_ACCT" property="account" jdbcType="VARCHAR" />
+		<result column="USER_PASS" property="password" jdbcType="VARCHAR" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="FIRST_LOGIN" property="firstLogin" jdbcType="CHAR" />
+	</resultMap>
+
+	<resultMap id="result_SelectAllRoles" type="Role">
+		<result column="ROLE_ID" property="roleId" jdbcType="CHAR" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="ROLE_DESC" property="roleDesc" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="result_SelectAllUserRoleMapping" type="java.util.Map">
+		<result column="USER_ID" property="USER_ID" jdbcType="CHAR" />
+		<result column="USER_ACCT" property="USER_ACCT" jdbcType="VARCHAR" />
+		<result column="ROLE_ID" property="ROLE_ID" jdbcType="CHAR" />
+	</resultMap>
+	
+	<resultMap id="result_SelectListMapping" type="java.util.Map">
+		<result column="USER_ID" property="USER_ID" jdbcType="CHAR" />
+		<result column="ROLE_ID" property="ROLE_ID" jdbcType="CHAR" />
+	</resultMap>
+	
+	<select id="selectAllUsers" resultMap="result_SelectAllUsers">
+		SELECT USER_ID,USER_ACCT,USER_PASS,IP,STATUS,FIRST_LOGIN FROM SYS_USER
+	</select>
+
+	<select id="selectAllRoles" resultMap="result_SelectAllRoles">
+		SELECT ROLE_ID,ROLE_NAME,ROLE_DESC FROM SYS_ROLE
+	</select>
+	
+	<select id="selectAllUserRoleMapping" resultMap="result_SelectAllUserRoleMapping">
+		SELECT U.USER_ID, U.USER_ACCT, UR.ROLE_ID
+		  FROM SYS_USER U, SYS_USER_ROLE UR
+		 WHERE U.USER_ID = UR.USER_ID
+		   AND U.STATUS IN ('1', '2', '3', '5')
+	</select>
+	
+	<delete id="deleteListMappingById" parameterType="java.lang.String">
+		DELETE FROM SYS_USER_ROLE WHERE USER_ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertListMapping" parameterType="java.util.Map">
+		INSERT INTO SYS_USER_ROLE (UUID,USER_ID,ROLE_ID)
+		<foreach collection="array" item="item" index="index" open="(" close=")" separator="UNION ALL">
+			 SELECT SYS_GUID(),#{id},#{item} FROM DUAL
+		</foreach>
+	</insert>
+	
+	<select id="selectAllListMappingById" parameterType="java.lang.String" resultMap="result_SelectListMapping">
+		SELECT USER_ID,ROLE_ID FROM SYS_USER_ROLE WHERE USER_ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

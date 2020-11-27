@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>授信审批</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.min.js"></script>
+<style type="text/css">
+input[type="button"] {
+	width: 150px;
+}
+
+button {
+	width: 102px;
+	height: 20px;
+}
+
+textarea {
+	border: 1px solid #C0C0C0;
+	outline: none;
+	-webkit-transition: .1s ease-in-out;
+	-moz-transition: .1s ease-in-out;
+	-o-transition: .1s ease-in-out;
+	background-color: #fff;
+}
+/** 快速定位导航区 */
+#ksdw_nav {
+	top: 0;
+	text-align: center;
+	width: 100%;
+	background: #EFEFEF;
+}
+
+#ksdw_nav ul:after {
+	content: '';
+	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+}
+
+#ksdw_nav ul {
+	width: 100%;
+	background: #EFEFEF;
+	border-bottom: 1px solid #C0C0C0;
+}
+
+#ksdw_nav ul li {
+	float: left;
+	padding: 5px;
+}
+
+#ksdw_nav ul li a {
+	display: block;
+	padding: 1px;
+	border: 1px solid #EFEFEF;
+	text-decoration: none;
+	color: #696969;
+}
+
+#ksdw_nav ul li a:hover {
+	color: #FF0000;
+	border-color: #FF0000;
+}
+
+;
+#ksdw_area {
+	width: 100%;
+	height: 700px;
+	overflow-y: auto;
+	position: absolute;
+}
+
+/** 快速定位内容区 */
+fieldset {
+	margin: 10px;
+}
+
+.wrapper {
+	position: relative;
+}
+
+.area-view {
+	text-align: right;
+}
+
+.area-view caption {
+	padding: 5px 0;
+	text-align: center;
+	padding-left: 10px;
+	background: #ECECEC;
+}
+
+.area-option {
+	padding: 0 10px;
+	text-align: center;
+}
+
+.select-css{
+	width:465px;
+}
+
+</style>
+</head>
+<body>
+	<div class="wrapper">
+		<!-- 快速定位区 开始 -->
+		<div id="ksdw_nav">
+			<ul>
+				<li><a href="#A">客户基本信息</a></li>
+				<li><a href="#B">系统决策结果</a></li>
+				<li><a href="#C">参考数据</a></li>
+				<li><a href="#D">WARNING LIST</a></li>
+				<li><a href="#E">人工干预额度与参考信息</a></li>
+				<li><a href="#G">审批操作</a></li>
+			</ul>
+		</div>
+		
+		<div >
+		<form id="custBaseInfoForm">
+			<!-- 客户基本信息 -->
+			<fieldset>
+				<legend>
+					<label id="A">客户基本信息</label>
+				</legend>
+				<table class="area-view">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>申请流水号：</label></td>
+							<td><input type="text" id="appId" name="appId"
+								disabled="true" /></td>
+							<td><label>客户姓名：</label></td>
+							<td><input type="text" id="custName" name="custName"
+								disabled="true" /></td>
+						</tr>
+						<tr>
+							<td><label>申请卡种：</label></td>
+							<td colspan="5"><input type="text" id="prodName" name="prodName"
+							style="width: 478px;" disabled="true" />
+							<input 	name="applyCard" id="applyCard" type="hidden" disabled="true" />
+							</td>
+						</tr>
+						<tr>
+							<td><label>建议额度：</label></td>
+							<td><input type="text" id="preSellimit" name="preSellimit"
+								disabled="true" /></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</fieldset>
+			
+			<!-- 系统决策结果 -->
+			<fieldset>
+				<legend>
+					<label id="B">系统决策结果</label>
+				</legend>
+				<table class="area-view">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>决策结果：</label></td>
+							<td><input type="text" id="decisionResult" name="decisionResult"   disabled="true" /></td>
+							<td><label>中征信“信用1000”评分：</label></td>
+							<td><input type="text" id="zcredit" name="zcredit" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td><label>征信过件码：</label></td>
+							<td><input type="text" id="creditResult" name="creditResult" disabled="true" /></td>
+							<td><label>征信评分：</label></td>
+							<td><input type="text" id="cdtScore" name="cdtScore" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td><label>审批结果描述:</label></td>
+							<td colspan="3"><input type="text" name="decisionDesp" id="decisionDesp" style="width: 477px"  disabled="true"/></td>
+					    </tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</fieldset>
+			<fieldset>
+			<!--参考数据  -->
+			<legend>
+			     <label id="C">参考数据</label>
+			</legend>
+				<table class="area-view">
+					<tr>
+						<td><label>违例额度上限参考</label></td>
+						<td><input type="text" name="violLmtUp" id="violLmtUp"  disabled="true"/></td>
+						<td><label>税前月收入</label></td>
+						<td><input type="text" name="sampMIncome" id="sampMIncome"  disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>无抵押DTI</label></td>
+						<td><input type="text" name="unPlgeDti" id="unPlgeDti"  disabled="true"/></td>
+						<td><label>综合DTI</label></td>
+						<td><input type="text" name="cpDti" id="cpDti"  disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>风险敞口MUE</label></td>
+						<td><input type="text" name="mue" id="mue"  disabled="true"/></td>
+						<td><label>违例额度参考</label></td>
+						<td><input type="text" name="violRefLmt" id="violRefLmt"  disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>DL_AMT</label></td>
+						<td><input type="text" name="dlAmt" id="dlAmt"  disabled="true"/></td>
+					</tr>
+				</table>
+		    </fieldset>
+			<!-- WARNING LIST -->
+			<fieldset id="layout_warning_list" style="display:none;">
+				<legend>
+					<label id="D">WARNING LIST</label>
+				</legend>
+				<table class="area-view">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>WARNING LIST：</label></td>
+							<td><textarea id="warningList" name="warningList" rows="5" readonly="readonly"
+									style="width: 468px"></textarea></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</fieldset>
+			<fieldset>
+			<legend><span id="E">人工干预额度与参考信息</span></legend>
+				<table class="area-view">
+					<tr>
+					<td colspan="2"><b>人工干预额度:</b></td>
+					<td colspan="2"><b>参考信息:</b></td>
+					</tr>	
+					<tr>
+						<td><label>调整额度</label></td>
+						<td><input type="text" name="manualLimit" id = "manualLimit"  ></input></td>
+						<td align="left"> <input type="button" name="" value="计算" style="width:50px;" onclick="onManualLimit()" /></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><label>无抵押DTI</label></td>
+						<td><input type="text" name="spRefUnPlgeDti" id="spRefUnPlgeDti"  disabled="disabled"/></td>
+						<td><label>无抵押DTI</label></td>
+						<td><input type="text" name="refUnPlgeDti" id="refUnPlgeDti" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>综合DTI</label></td>
+						<td><input type="text" name="spRefCpDti" id="spRefCpDti"   disabled="disabled"/></td>
+						<td><label>综合DTI</label></td>
+						<td><input type="text" name="refCpDti" id="refCpDti" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>风险敞口MUE</label></td>
+						<td><input type="text" name="spRefMue" id="spRefMue"  disabled="disabled"/></td>
+						<td><label>风险敞口MUE</label></td>
+						<td><input type="text" name="refMue" id="refMue"  disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>负债审批权限</label></td>
+						<td><input type="text" name="spDebtAppAuth" id="spDebtAppAuth" class="easyui-textbox" readonly="true"/></td>
+						<td><label>产品额度下限</label></td>
+						<td><!-- <input name="sampMIncome" id="sampMIncome" type="hidden" disabled="true"/> -->
+							<input type="text" name="productamtdown" id="productamtdown"  disabled="true"/>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			</form>
+			<!-- 审批操作 -->
+			<form id="bizApprovalHisForm">
+			<fieldset>
+				<legend>
+					<label id="F">审批操作</label>
+				</legend>
+				<div>
+						<input id="radio_approveResult" type="hidden" />
+					    <label for="radio_pizhun">
+					    <input type="radio" id="radio_pizhun"
+						name="approveResult" value="1" checked="checked" onclick="fnApproveOrRefuse('radio_pizhun')">批准
+						</label>&nbsp;
+						<label	for="radio_jujue"><input type="radio" id="radio_jujue"
+						name="approveResult" value="0" onclick="fnApproveOrRefuse('radio_jujue')">拒绝</label>
+				</div>
+				<table id="area_approve" class="area-view">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>授信产品：</label></td>
+							<td colspan="5"><select class="select-css" id="approveCreditProduct" name="approveCreditProduct" onclick="fnLianDong('approveCreditProduct')"></select></td>
+						</tr>
+						<tr>
+							<td><label>授信额度：</label></td>
+							<td><input id="approveCreditLimit" name="approveCreditLimit" style="width:100px"/>（千元）</td>
+						</tr>
+						<tr>
+							<td><label><em>*</em>政策码1：</label></td>
+							<td colspan="5"><select class="select-css" id="policyCode1" name="policyCode1"></select></td>
+						</tr>
+						<tr>
+							<td><label>政策码2：</label></td>
+							<td colspan="5"><select class="select-css" id="policyCode2" name="policyCode2"></select></td>
+						</tr>
+						<tr>
+							<td><label>政策码3：</label></td>
+							<td colspan="5"><select class="select-css" id="policyCode3" name="policyCode3"></select></td>
+						</tr>
+						<tr>
+							<td><label>违例码1：</label></td>
+							<td colspan="5"><select class="select-css" id="violateCode1" name="violateCode1"></select></td>
+						</tr>
+						<tr>
+							<td><label>违例码2：</label></td>
+							<td colspan="5"><select class="select-css" id="violateCode2" name="violateCode2"></select></td>
+						</tr>
+						<tr>
+							<td><label>违例码3：</label></td>
+							<td colspan="5"><select class="select-css" id="violateCode3" name="violateCode3"></select></td>
+						</tr>
+						<tr >
+							<td><label>卡版面：</label></td>
+							<td><select id="cardFaceCode" name="cardFaceCode"></select></td>
+							<td><label>年费类型：</label></td>
+							<td><select id="yearFeeDerateType" name="yearFeeDerateType"></select></td>
+						</tr>
+						<tr>
+							<td><label>备注：</label></td>
+							<td colspan="3"><textarea id="pizhun_memo" name="memo"  
+							style="height: 100px; width: 457px" maxlength="200"></textarea></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+				<table id="area_refuse" class="area-view" style="display:none">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label><em>*</em>拒绝码1:</label></td>
+							<td colspan="5"><select class="select-css"  id="refuseCode1" name="refuseCode1"></select></td>
+						</tr>
+						<tr>
+							<td><label>拒绝码2：</label></td>
+							<td colspan="5" ><select class="select-css"  id="refuseCode2" name="refuseCode2"></select></td>
+						</tr>
+						<tr>
+							<td><label>拒绝码3：</label></td>
+							<td colspan="5"><select class="select-css" id="refuseCode3" name="refuseCode3"></select></td>
+						</tr>
+						<tr>
+							<td><label>备注：</label></td>
+							<td colspan="3"><textarea id="jujue_memo" name="memo"  
+							style="height: 100px; width: 457px" maxlength="200"></textarea></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</fieldset>
+			</form>
+			<!-- 按钮 -->
+			<div class="area-option" id='saveDiv'><input type="button" name="" value="保存"  onclick="queryGlResult('0')" /></div>
+		</div>
+		
+	</div>
+</body>
+<script type="text/javascript">
+	/**
+	 * 功能：固定顶端导航栏
+	 * @param id 对象ID
+	 * @param top 距离顶端距离
+	 */
+	function fnFixed(id, top) {
+		var o = $('#' + id);
+		if (o.length != 1)
+			return false;
+		var offsetTop = arguments[1] ? arguments[1] : 0;
+		$(document).scroll(function() {
+			o.css({
+				'position' : 'relative',
+				'top' : 0
+			});
+			timer = setInterval(function() {
+				if ($(document).scrollTop() <= offsetTop) {
+					o.css({
+						'position' : 'relative',
+						'top' : 0
+					});
+				} else {
+					o.css({
+						'position' : 'fixed',
+						'top' : 0 + offsetTop + 'px',
+						'z-index' : 1
+					});
+					clearInterval(timer);
+				}
+			}, 100);
+		});
+	}
+	
+	/** 
+	 * 公用：批准/拒绝样式
+	 * @param v 组件值
+	 */
+	function fnApproveOrRefuse(obj) {
+		if (obj == 'radio_pizhun') { // 批准
+			$("#radio_approveResult").val("1");
+			$('#area_approve').attr('style', 'display:block');
+			$('#area_refuse').attr('style', 'display:none');
+		} else if (obj == 'radio_jujue') { // 拒绝
+			$("#radio_approveResult").val("0");
+			$('#area_approve').attr('style', 'display:none');
+			$('#area_refuse').attr('style', 'display:block');
+		}
+	}
+	
+	/** 功能：初始化样式设置 */
+	function fnLayoutUI() {
+		// WARNING LIST
+		var show = false;
+		if (show) {
+			$('#layout_warning_list').attr('style', 'display:block');
+		}
+	}
+	
+	/** 功能：初始化事件设置 */
+	function fnEventUI() {
+		$('input[name="approveResult_fk"]').click(function() {
+			fnApproveOrRefuse($(this).val());
+		});
+	}
+
+	//是否愿意降级格式化
+	function fnIsAgreeDegrade(value) {
+		if(value=="1"){
+			return "是";
+		}else if(value=='0'){
+			return "否";
+		}else{
+			return "";
+		}
+	}
+	//日期格式转换
+	function formatDateNoSFM(value) {
+		var str = getTaskTimeNoSFM(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	//工具方法：格式化CST类型时间
+	function getTaskTimeNoSFM(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;    
+		return y+"-"+m+"-"+d;  
+	};
+	/** 功能：初始化审批卡产品 卡版面 年费类型 设置
+	//dataList 参数集合   obj 赋值下拉框   
+	//fkFlag  true 主卡  false 附属卡
+	//selectData 被选中的值
+	//cardFace 卡版面
+	//yearFree 年费类型
+	//var json = '{"json":[{"key":0,"value":"张三"},{"key":0,"value":"李四"},{"key":0,"value":"李四"}],"selected":true,"key":"0"}';
+	*/
+	
+	function fnProductList(dataList,obj,fkFlag,selectData,cardFace,yearFree){
+		var jsonDataStr = {"json":[]};
+		if (dataList.length > 0) {
+			for(var i=0;i<dataList.length;i++){
+				var code = dataList[i].productCode;
+				var name = dataList[i].productName;
+				//默认选中值 为空时  第一个值为默认值
+				if(dataList.length>1){
+					if(i==dataList.length-1){
+						if(selectData!=null && selectData!="" ){
+							$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+							$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + selectData + '"}');
+						}else{
+							$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+						}
+					}else{
+						if(i==0){
+							//默认值为空 第一个值为默认值 
+							if(selectData==null||selectData==""){
+								selectData=code;
+							}
+						}
+						$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+					}
+				}else if(dataList.length==1){
+					$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+					$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + code + '"}');
+				}
+			}
+		}
+		$('#'+obj).fnLoadComponent($u.stringify(jsonDataStr));
+		
+	 	if(cardFace==null || cardFace ==""){
+			cardFace = c4VerCode;
+		}
+		if(yearFree==null || yearFree ==""){
+			yearFree = appAcctyp;
+		}
+		//卡版面  年费类型下拉框赋值 
+		if (dataList.length > 0) {
+			for (var i = 0; i < dataList.length; i++) {
+				if (dataList[i].productCode == $('#'+obj).val()) {
+					if (fkFlag) {//主卡
+ 						cardFaceAndYear(dataList[i].productFace,
+ 								dataList[i].productFaceName,
+								"cardFaceCode",i,"1",cardFace,yearFree,dataList[i].productCode,dataList[i].productFaceDefault);
+						cardFaceAndYear(
+								dataList[i].yearFeeDerateType,
+								dataList[i].yearFeeDerateTypeName,
+								"yearFeeDerateType",i,"2",cardFace,yearFree,dataList[i].productCode,dataList[i].yearFeeDerateTypeDefault);
+					} else {//附属卡
+						cardFaceAndYear(dataList[i].productFace,
+								dataList[i].productFaceName,
+								"cardFaceCode_fk",i,"1",cardFace,yearFree,dataList[i].productCode,dataList[i].productFaceDefault);
+						cardFaceAndYear(
+								dataList[i].yearFeeDerateType,
+								dataList[i].yearFeeDerateTypeName,
+								"yearFeeDerateType_fk",i,"2",cardFace,yearFree,dataList[i].productCode,dataList[i].yearFeeDerateTypeDefault);
+					}
+				}
+			}
+		}   
+	}
+	 
+	function  fnLianDong(obj){ 
+		
+		var cardFace=bizApproval.cardFaceCode;
+		var yearFree=bizApproval.yearFeeDerateType;
+		if(cardFace==null || cardFace ==""){
+			cardFace = c4VerCode;
+		}
+		if(yearFree==null || yearFree ==""){
+			yearFree = appAcctyp;
+		}
+		//卡版面  年费类型下拉框赋值 
+		if (cardlist.length > 0) {
+			for (var i = 0; i < cardlist.length; i++) {
+				if (cardlist[i].productCode == $('#'+obj).val()) {
+					cardFaceAndYear(cardlist[i].productFace,
+							cardlist[i].productFaceName,
+							"cardFaceCode",i,"1",cardFace,yearFree,cardlist[i].productCode,cardlist[i].productFaceDefault);
+					cardFaceAndYear(
+							cardlist[i].yearFeeDerateType,
+							cardlist[i].yearFeeDerateTypeName,
+							"yearFeeDerateType",i,"2",cardFace,yearFree,cardlist[i].productCode,cardlist[i].yearFeeDerateTypeDefault);
+				}
+			}
+		} 
+	}
+	/** 功能：审批卡版面  年费类型  与卡产品联动设置 */
+	function cardFaceAndYear(productFace,productFaceName,obj,num,flag,cardFace,yearFree,finalCardProduct,_default){
+		var cardlist = productFace.split(",");
+		var cardlistName = productFaceName.split(",");
+		var selectedFlag = false;
+		var fastData;
+		var jsonDataStr = {"json":[]};
+		for(var i = 0;i<cardlist.length;i++){
+			var code = cardlist[i];
+			var name = cardlistName[i];
+			if(num == 0 && ((flag=="1" && cardFace!=null && cardFace!="")||
+					(flag=="2" && yearFree!=null && yearFree!=""))){
+				if(i==cardlist.length-1){
+					if((flag=="1"&&cardFace!=null && cardFace!="")||(flag=="2"&&yearFree!=null && yearFree!="")){
+						$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+						//存在申请卡版面、申请年费类型与卡版面  年费类型 相等的情况
+						if(selectedFlag){//在最后一次之前相同
+							if(flag=="1"){
+								$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + cardFace + '"}');
+							}else if(flag=="2"){
+								$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + yearFree + '"}');
+							}
+						}else{//在最后一次之前不相同
+							$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + code + '"}');
+						}
+					}else{//申请卡版面  、年费类型为空
+						$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+						$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + code + '"}');
+					}
+				}else{
+					$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+					//存在申请卡版面、申请年费类型与卡版面  年费类型 相等的情况
+					if((flag=="1" && cardFace == code)||(flag=="2" && yearFree==code)){
+						selectedFlag = true;
+					}
+				}
+			}else{
+					if(i < cardlist.length-1){
+						if(_default != null && _default != ""){//默认值不为空
+							//在最后一次之前存在 默认值与值 相同情况
+							if(code == _default){
+								selectedFlag = true;
+							}
+							$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+						}else{//默认值为空
+							$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+							selectedFlag = true;
+							//不存在默认值  设置默认值
+							fastData=code;
+						}
+					}else if(i==cardlist.length-1){
+						$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+						if(selectedFlag){//最后一次之前已确定默认值
+							if(_default != null && _default != ""){
+								$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + _default + '"}');
+							}else{
+								$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + fastData + '"}');
+							}
+							
+						}else{//未确定默认值 取最后值
+							$u.push(jsonDataStr, '{"selected":true,"ignore":true,"key":"' + code + '"}');
+						}
+					}
+			}
+		}
+		$('#'+obj).fnLoadComponent($u.stringify(jsonDataStr));
+		//特殊卡版面和年费类型 
+		if(isAgreeDegrade=="1"){
+			var appCard =  $("#applyCard").val();
+			//若当前卡产品为0020或银联普卡（）并且是可以降级的标准卡，则其默认的年费类型为14
+			if(((appCard=="0025" && finalCardProduct=="0020")||(appCard=="0041" && finalCardProduct=="0040")) && flag=="2"){
+				if(obj=="yearFeeDerateType_fk"){
+					$("#yearFeeDerateType_fk").val("14");
+				}else{
+					$("#yearFeeDerateType").val("14");
+				}
+			}
+			if(flag=="1"){
+				if(appCard=="0088" && finalCardProduct=="0087"){
+					if(obj=="cardFaceCode_fk"){
+						$("#cardFaceCode_fk").val(cardFace);
+					}else{
+						$("#cardFaceCode").val(cardFace);
+					}
+				}
+				//若当前卡产品为0073并且是 可以降级的标准卡，则其默认的卡版面为SM01
+				if(appCard=="0092" && finalCardProduct=="0073"){
+					if(obj=="cardFaceCode_fk"){
+						$("#cardFaceCode_fk").val("SM01");
+					}else{
+						$("#cardFaceCode").val("SM01");
+					}
+				}
+			}
+		}
+		
+}
+	/** 功能：初始化审批政策码设置 */
+	function fnPolicyList(dataList,obj,selectData){
+		var jsonDataStr = {"json":[]};
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var code = dataList[i].policyCode;
+				var name = code +"~"+dataList[i].policyName;
+				if(dataList.length>1){
+					if(i==dataList.length-1){
+						if(selectData!=null && selectData!="" ){
+							$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+							$u.push(jsonDataStr, '{"selected":true,"key":"' + selectData + '"}');
+						}else{
+							$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+						}
+					}else{
+						$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+					}
+				}else if(dataList.length==1){
+					$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+					$u.push(jsonDataStr, '{"selected":true,"key":"' + code + '"}');
+				}
+			}
+		}
+		$('#'+obj).fnLoadComponent($u.stringify(jsonDataStr));
+	}
+	/** 功能：初始化审批拒绝码违例码设置 */
+	function fnCommon(dataList,obj,noselect){
+		var jsonDataStr = {"json":[]};
+		if (dataList.length > 0) {
+			for(var i=0;i<dataList.length;i++){
+				var code = dataList[i].reasonCode;
+				var name = code +"~"+dataList[i].reasonDesc;
+				if(i==dataList.length-1){
+					if(noselect!=null && noselect!="" ){
+						$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+						$u.push(jsonDataStr, '{"selected":true,"key":"' + noselect + '"}');
+					}else{
+						$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+					}
+				}else{
+					$u.push(jsonDataStr.json, '{"key":"' + code + '","value":"' + name + '"}');
+				}
+			}
+		}
+		$('#'+obj).fnLoadComponent($u.stringify(jsonDataStr));
+	}
+	var appId = $.fnGetAppId("appId");
+	var isWuWangDian;
+	var appAcctyp;
+	var c4VerCode;
+	var isAgreeDegrade;
+	//卡产品  卡版面  年费类型  需要参数
+	var cardlist;
+	var bizApproval ;
+	var C6RESITAXID;//2019.11.11CRS改造项目 新增“国家/证件信息与税收居民逻辑检查”结果
+	$(function() {
+		var timer = null;
+		fnFixed('ksdw_nav ul', 0);
+
+		/** 快速定位 */
+		$('#ksdw_nav ul li a').on('click', function() {
+			var href = $(this).attr('href');
+			var position = parseInt($(href).offset().top);
+			if (position > 40) {
+				$('html,body').animate({
+					scrollTop : position - 40 - $('#ksdw_nav').height()
+				}, 100);
+			} else {
+				$('html,body').animate({
+					scrollTop : 0
+				}, 100);
+			}
+			return false;
+		});
+
+		/** 初始化样式设置 */
+		//fnLayoutUI();
+		
+		/** 初始化事件设置 */
+		//fnEventUI();
+
+		$cf.ajax({
+			url : "/opas-naps/querySystemApprovalResult.json",
+			data : {
+				"appId" : appId,
+				"flag" : "1"
+			},
+			onSuccess : function(dataRes) {
+				var cus = dataRes.RSP_BODY.custInfo;
+				var obj = dataRes.RSP_BODY.object;
+				bizApproval = dataRes.RSP_BODY.bizApproval;
+				var warning = dataRes.RSP_BODY.bizApproval.warninglistResult;
+				var zcredit = dataRes.RSP_BODY.zcredit;
+				 cardlist = dataRes.RSP_BODY.cardlist;
+				var policyList1 = dataRes.RSP_BODY.policyList1;
+				var policyList2 = dataRes.RSP_BODY.policyList2;
+				var policyList3 = dataRes.RSP_BODY.policyList3;
+				var resfueCode = dataRes.RSP_BODY.resfueCode;
+				var wlmCode = dataRes.RSP_BODY.wlmCode;
+				isWuWangDian = dataRes.RSP_BODY.isWuWangDian;
+				appAcctyp = cus.appAcctyp;
+				c4VerCode = cus.c4VerCode;
+				C6RESITAXID=dataRes.RSP_BODY.C6RESITAXID;
+				//客户基本信息
+				$("#appId").val(cus.appId);//申请流水号
+				$("#custName").val(cus.custName);//客户姓名
+				$("#prodName").val(cus.prodName);//申请卡种
+				$("#applyCard").val(cus.applyCard);//申请卡种码
+				$("#preSellimit").val(cus.preSellimit);//建议额度
+				//系统决策结果
+				$("#decisionResult").val(obj.decisionResult);//决策结果
+				$("#zcredit").val(zcredit);//中征信“信用1000”评分
+				$("#creditResult").val(bizApproval.creditResult);//征信过件码
+				$("#cdtScore").val(obj.cdtScore);//征信评分
+				$("#decisionDesp").val(obj.decisionDesp);//审批结果描述
+				//参考数据
+				$("#violLmtUp").val(obj.violLmtUp);//违例额度上限
+				$("#sampMIncome").val(obj.sampMIncome);//税前月收入
+				$("#unPlgeDti").val(obj.unPlgeDti);//无抵押DTI
+				$("#cpDti").val(obj.cpDti);//综合DTI
+				$("#mue").val(obj.mue);//风险敞口MUE
+				$("#violRefLmt").val(obj.violRefLmt);//违例额度参考
+				$("#dlAmt").val(obj.dlAmt);//刚性扣减额度 20200927新增
+				//若当前waring提示内容为null,则隐藏
+				if ( warning == "" || warning == undefined) {
+					$('#layout_warning_list').attr('style', 'display:none');
+				} else {
+					$('#layout_warning_list').attr('style', 'display:block');
+					$("#warningList").val(warning);
+				}
+				//人工干预额度与参考信息
+				$("#manualLimit").val(bizApproval.manualLimit);//调整额度
+				$("#spRefUnPlgeDti").val(bizApproval.spRefUnPlgeDti);//无抵押DTI
+				$("#refUnPlgeDti").val(obj.refUnPlgeDti);//无抵押DTI
+				$("#spRefCpDti").val(bizApproval.spRefCpDti);//综合DTI
+				$("#refCpDti").val(obj.refCpDti);//综合DTI
+				$("#spRefMue").val(bizApproval.spRefMue);//风险敞口MUE
+				$("#refMue").val(obj.refMue);//风险敞口MUE
+				$("#spDebtAppAuth").val(bizApproval.spDebtAppAuth);//负债审批权限
+				$("#productamtdown").val(obj.productamtdown);//产品额度下限
+				//审批操作
+				 if (bizApproval.approveResult == '0') {
+					fnApproveOrRefuse('radio_jujue');
+					$("#radio_pizhun").prop("checked", false);
+					$("#radio_jujue").prop("checked", true);
+				} else {
+					fnApproveOrRefuse('radio_pizhun');
+					$("#radio_pizhun").prop("checked", true);
+					$("#radio_jujue").prop("checked", false);
+				} 
+				
+				//授信产品下拉框特殊显示
+				fnProductList(cardlist, "approveCreditProduct", true,bizApproval.approveCreditProduct,bizApproval.cardFaceCode,bizApproval.yearFeeDerateType);
+				$("#approveCreditLimit").val(bizApproval.approveCreditLimit / 1000);//授信额度
+				//政策码
+				fnPolicyList(policyList1, "policyCode1",bizApproval.policyCode1);
+				fnPolicyList(policyList2, "policyCode2",bizApproval.policyCode2);
+				fnPolicyList(policyList3, "policyCode3",bizApproval.policyCode3);
+				//违例码
+				fnCommon(wlmCode, "violateCode1",bizApproval.violateCode1);
+				fnCommon(wlmCode, "violateCode2",bizApproval.violateCode2);
+				fnCommon(wlmCode, "violateCode3",bizApproval.violateCode3);
+				//拒绝码
+				fnCommon(resfueCode, "refuseCode1",bizApproval.refuseCode1);
+				fnCommon(resfueCode, "refuseCode2",bizApproval.refuseCode2);
+				fnCommon(resfueCode, "refuseCode3",bizApproval.refuseCode3);
+				//备注显示
+				$("#pizhun_memo").val(bizApproval.memo);
+				$("#jujue_memo").val(bizApproval.memo);
+			}
+		});
+		//审批结论是否可选，页面是否只读控制
+		var node = parent.getCurrNode();
+		if(node=="04"){
+			$("#saveDiv").hide();
+			$('#approveCreditLimit').attr("disabled",true);
+			$('#jujue_memo').prop("disabled",true);
+			$('#pizhun_memo').prop("disabled",true);
+			$('#refuseCode3').attr("disabled",true);
+			$('#refuseCode2').attr("disabled",true);
+			$('#refuseCode1').attr("disabled",true);
+			$('#violateCode3').attr("disabled",true);
+			$('#policyCode3').attr("disabled",true);
+			$('#violateCode2').attr("disabled",true);
+			$('#policyCode2').attr("disabled",true);
+			$('#violateCode1').attr("disabled",true);
+			$('#policyCode1').attr("disabled",true);
+			$('#approveCreditProduct').attr("disabled",true);
+			$('input:radio[name="approveResult"]').prop('disabled',true);
+			$("#cardFaceCode").attr("disabled",true);
+			$("#yearFeeDerateType").attr("disabled",true);
+		}
+	});
+	var waringMessage = "";
+	var tsWaringMessage = "";
+	var resultOK=false;
+	function queryGlResultQT(){
+		resultOK=false;
+		queryGl = "-1";
+		waringMessage = "";
+		tsWaringMessage = "";
+		//用于主键区判断是否还需要再次纠错
+		var pz = $("input[name='approveResult']:checked").val();
+		if(pz=="1"){
+			var policyCode1  = $("#policyCode1").val();
+			if(policyCode1==null||policyCode1==""){
+				waringMessage = waringMessage + "【选择批准时，政策码1必须填写】";
+			}
+			//特殊违例码需要提交备注
+			var violateCode1 = $("#violateCode1").val();
+			var violateCode2 = $("#violateCode2").val();
+			var violateCode3 = $("#violateCode3").val();
+			var str = "|YA701|YA801|YA901";
+			var pizhunMemo = $("#pizhun_memo").val();
+			if(pizhunMemo!=null&&pizhunMemo!=''){
+				pizhunMemo = $("#pizhun_memo").val().trim();
+			}
+			if((pizhunMemo==""||pizhunMemo==null)&&(str.indexOf(violateCode1)>0||str.indexOf(violateCode2)>0||str.indexOf(violateCode3)>0)){
+				waringMessage = waringMessage + "【未提交备注信息】";
+			}
+			var cardFaceCode = $("#cardFaceCode").val();
+			var yearFeeDerateType = $("#yearFeeDerateType").val();
+			if(cardFaceCode==null ||cardFaceCode==""){
+				waringMessage = waringMessage + "【卡版面不许为空】";
+			}
+			if(yearFeeDerateType==null ||yearFeeDerateType==""){
+				waringMessage = waringMessage + "【年费类型不许为空】";
+			}
+			//2019.11.11CRS改造项目 新增“国家/证件信息与税收居民逻辑检查”结果不一致时
+			if((C6RESITAXID=="1"||C6RESITAXID=="2"||C6RESITAXID=="12")&&(violateCode1==null || violateCode1=="")){
+				waringMessage = waringMessage + "【国家/证件信息与税收居民逻辑检查不一致】";
+			}
+		}else{//拒绝码为YD207 YD301，同时备注栏位为空的，提示未提交备注
+			var refuseCode1  = $("#refuseCode1").val();
+			if(refuseCode1==null||refuseCode1==""){
+				waringMessage = waringMessage + "【选择拒绝时，拒绝码1必须填写】";
+			}
+			var refuseCode1 = $("#refuseCode1").val();
+			var refuseCode2 = $("#refuseCode2").val();
+			var refuseCode3 = $("#refuseCode3").val();
+			var str = "|YD207|YD301";
+			var jujueMemo = $("#jujue_memo").val();
+			if(jujueMemo!=null&&jujueMemo!=''){
+				jujueMemo =jujueMemo.trim();
+			}
+			if((jujueMemo==""||jujueMemo==null)&&(str.indexOf(refuseCode1)>0||str.indexOf(refuseCode2)>0||str.indexOf(refuseCode3)>0)){
+				waringMessage = waringMessage + "【未提交备注信息】";
+			}
+		}
+		
+		var reqestData = {
+				"applyCard":$("#applyCard").val(),
+				"isWuWangDian":isWuWangDian,
+				"wlm":$("#violateCode1").val(),
+				"approveCreditLimit":$("#approveCreditLimit").val(),
+				"approveCreditProduct":$("#approveCreditProduct").val(),
+				"refuseCode1":$("#refuseCode1").val(),
+				"certifinoVailud":parent.getCertifinoVailud(),//ID有效期
+				"approveResult":pz,
+				"yearFeeDerateType" : $("#yearFeeDerateType").val(),//新增校验 wdb
+				"cardFaceCode" : $("#cardFaceCode").val(),
+				"bcFlag":parent.bcFlag
+		};
+		$cf.ajax({
+			url : "/opas-naps/queryGlResult.json",
+			data : {
+				"appId":appId,
+				"userIdParam":parent.getUserId(),
+				"flag":"1",
+				reqestData:reqestData
+			},
+			onSuccess : function(dataRes) {
+				var isSuccess = dataRes.RSP_BODY.isSuccess;
+				if(isSuccess==true){
+					var msg = dataRes.RSP_BODY.msg;
+					//var msg = map.msg;
+					var yes = dataRes.RSP_BODY.yes;
+					if(yes=="0"){
+						waringMessage = waringMessage + msg;
+					}else if(yes=="1"){
+						tsWaringMessage = tsWaringMessage +msg;
+					}else{
+						if(waringMessage =="" && tsWaringMessage ==""){
+							saveOrUpdateApprovalResult('1');
+						}
+					}
+				}else{
+					if(waringMessage =="" && tsWaringMessage =="" && parent.applyTable){
+						saveOrUpdateApprovalResult('1');
+					}
+				}
+				resultOK = true;
+			},
+			onError:function(dataErr){
+				var err = dataRes.RSP_BODY.error;
+				alert("错误提示:"+err);
+			}
+		});
+	}
+	/* 保存前纠错功能 */
+	var queryGl = "0";
+	function queryGlResult(obj){
+		queryGl = obj;
+		//用于主键区判断是否还需要再次纠错
+		var pz = $("input[name='approveResult']:checked").val();
+		if(pz=="1"){
+			var policyCode1  = $("#policyCode1").val();
+			if(policyCode1==null||policyCode1==""){
+				alert("选择批准时，政策码1必须填写");
+				return;
+			}
+			//特殊违例码需要提交备注
+			var violateCode1 = $("#violateCode1").val();
+			var violateCode2 = $("#violateCode2").val();
+			var violateCode3 = $("#violateCode3").val();
+			var str = "|YA701|YA801|YA901";
+			var pizhunMemo = $("#pizhun_memo").val();
+			if(pizhunMemo!=null&&pizhunMemo!=''){
+				pizhunMemo = $("#pizhun_memo").val().trim();
+			}
+			if((pizhunMemo==""||pizhunMemo==null)&&(str.indexOf(violateCode1)>0||str.indexOf(violateCode2)>0||str.indexOf(violateCode3)>0)){
+				alert("未提交备注信息");
+				return;
+			}
+			var cardFaceCode = $("#cardFaceCode").val();
+			var yearFeeDerateType = $("#yearFeeDerateType").val();
+			if(cardFaceCode==null ||cardFaceCode==""){
+				alert("卡版面不许为空");
+				return;
+			}
+			if(yearFeeDerateType==null ||yearFeeDerateType==""){
+				alert("年费类型不许为空");
+				return;
+			}
+			//2019.11.11CRS改造项目 新增“国家/证件信息与税收居民逻辑检查”结果不一致时
+			if((C6RESITAXID=="1"||C6RESITAXID=="2"||C6RESITAXID=="12")&&(violateCode1==null || violateCode1=="")){
+				alert("国家/证件信息与税收居民逻辑检查不一致");
+				return;
+			}
+		}else{//拒绝码为YD207 YD301，同时备注栏位为空的，提示未提交备注
+			var refuseCode1  = $("#refuseCode1").val();
+			if(refuseCode1==null||refuseCode1==""){
+				alert("选择拒绝时，拒绝码1必须填写");
+				return;
+			}
+			var refuseCode1 = $("#refuseCode1").val();
+			var refuseCode2 = $("#refuseCode2").val();
+			var refuseCode3 = $("#refuseCode3").val();
+			var str = "|YD207|YD301";
+			var jujueMemo = $("#jujue_memo").val();
+			if(jujueMemo!=null&&jujueMemo!=''){
+				jujueMemo = $("#jujue_memo").val().trim();
+			}
+			if((jujueMemo==""||jujueMemo==null)&&(str.indexOf(refuseCode1)>0||str.indexOf(refuseCode2)>0||str.indexOf(refuseCode3)>0)){
+				alert("未提交备注信息");
+				return;
+			}
+		}
+		
+		var reqestData = {
+				"applyCard":$("#applyCard").val(),
+				"isWuWangDian":isWuWangDian,
+				"wlm":$("#violateCode1").val(),
+				"approveCreditLimit":$("#approveCreditLimit").val(),
+				"approveCreditProduct":$("#approveCreditProduct").val(),
+				"refuseCode1":$("#refuseCode1").val(),
+				"certifinoVailud":parent.getCertifinoVailud(),//ID有效期
+				"caozuoFlag":obj,
+				"approveResult":pz,
+				"yearFeeDerateType" : $("#yearFeeDerateType").val(),//新增校验 wdb
+				"cardFaceCode" : $("#cardFaceCode").val(),
+				"bcFlag":parent.bcFlag
+		};
+		$cf.ajax({
+			url : "/opas-naps/queryGlResult.json",
+			data : {
+				"appId":appId,
+				"userIdParam":parent.getUserId(),
+				"flag":"1",
+				reqestData:reqestData
+			},
+			onSuccess : function(dataRes) {
+				var isSuccess = dataRes.RSP_BODY.isSuccess;
+				if (isSuccess == true) {
+					var msg = dataRes.RSP_BODY.msg;
+					var yes = dataRes.RSP_BODY.yes;
+					if (yes == "0") {
+						alert(msg);
+						return;
+					} else if (yes == "1") {
+						if(obj=="2"){
+							if (confirm(msg+'【是否依然选择保存提交】'))
+								parent.otherSp('0');
+						}else{
+							if (confirm(msg+'【是否依然选择保存提交】'))
+								saveOrUpdateApprovalResult('2');
+						}
+					} else{
+						if(obj=="2"){
+							parent.otherSp('0');
+						}else{
+							saveOrUpdateApprovalResult('2');
+						}
+					}
+				} else if(obj=="2"){
+					parent.otherSp('0');
+				} else {
+					saveOrUpdateApprovalResult('2');
+				}
+			},
+			onError:function(dataErr){
+				var err = dataRes.RSP_BODY.error;
+				alert("错误提示:"+err);
+			}
+		});
+	}
+	/* 保存提交 */
+	function saveOrUpdateApprovalResult(obj){
+		var backFlag = parent.caozuoFlag;
+		if(queryGl=="0"){
+			backFlag = "0";
+		}
+		//若审批结果为拒绝，则选择申请件中默认的值
+		var yearFee = $("#yearFeeDerateType").val();
+		var cardFace = $("#cardFaceCode").val();
+		if($("input[name='approveResult']:checked").val()=="0"){
+			yearFee = appAcctyp;
+			cardFace = c4VerCode;
+		}
+		var reqestData = {
+				"creditResult":$("#creditResult").val(),
+				"warningList":$("#warningList").val(),
+				"manualLimit":$("#manualLimit").val(),
+				"spRefUnPlgeDti":$("#spRefUnPlgeDti").val(),
+				"spRefCpDti":$("#spRefCpDti").val(),
+				"spRefMue":$("#spRefMue").val(),
+				"spDebtAppAuth":$("#spDebtAppAuth").val(),
+				"preSellimit":$("#preSellimit").val(),
+				"isAgreeDegrade":"",
+				"refuseChildcard":"",
+				"decisionResult":$("#decisionResult").val(),
+				"decisionDesp":$("#decisionDesp").val(),
+				"backFlag":backFlag,
+				"approveCreditProduct":$("#approveCreditProduct").val(),
+				"approveCreditLimit":$("#approveCreditLimit").val(),
+				"approveResult":$("input[name='approveResult']:checked").val(),
+				"policyCode1":$("#policyCode1").val(),
+				"violateCode1":$("#violateCode1").val(),
+				"policyCode2":$("#policyCode2").val(),
+				"violateCode2":$("#violateCode2").val(),
+				"policyCode3":$("#policyCode3").val(),
+				"violateCode3":$("#violateCode3").val(),
+				"pizhun_memo":$("#pizhun_memo").val(),
+				"refuseCode1":$("#refuseCode1").val(),
+				"refuseCode2":$("#refuseCode2").val(),
+				"refuseCode3":$("#refuseCode3").val(),
+				"jujue_memo":$("#jujue_memo").val(),
+				"yearFeeDerateType" :yearFee,
+				"cardFaceCode" : cardFace,
+				"rateValue" : parent.getRateValue(),
+				"repayRationValue" : parent.getRepayRationValue(),
+				"repayFreeValue" : parent.getRepayFreeValue()
+			};
+			$cf.ajax({
+				url : "/opas-naps/saveOrUpdateApprovalResult.json",
+				data : {
+					"appId" : appId,
+					"userIdParam":parent.getUserId(),
+					"flag" : "1",
+					"reqestData" : reqestData
+				},
+				async:false,
+				onSuccess : function(dataRes) {
+					var isSuccess = dataRes.RSP_BODY.isSuccess;
+					if(obj=="2"){
+						//触发大提交
+						/* if (isSuccess && queryGl == "1") {
+							parent.submit('0');
+						} else if (isSuccess && queryGl == "2") {
+							parent.otherSp('0');
+						}  else*/ if (isSuccess) {
+							alert("审批数据保存成功!");
+						} else if (!isSuccess) {
+							if(dataRes.RSP_BODY.sqlUnique){
+								alert("审批数据保存失败!");
+							}else{
+								alert("当前操作有误，请重新点击保存!");
+							}
+						}
+					}else if(obj=="1" && isSuccess && backFlag=="3"){
+						parent.subimtWait();
+					}else{
+						if (!isSuccess) {
+							if(dataRes.RSP_BODY.sqlUnique){
+								alert("审批数据保存失败!");
+							}else{
+								alert("当前操作有误，请重新点击保存!");
+							}
+						}
+					}
+				}
+			});
+	}
+	//调整额度
+	function onManualLimit(){
+		var reqMap = {
+				ADJ_LMT:$("#manualLimit").val(),
+				SH_REF_UN_PLGE_DTI:$("#refUnPlgeDti").val(),
+				SH_REF_CP_DTI:$("#refCpDti").val(),
+				SH_REF_MUE:$("#refMue").val(),
+				SH_SAMP_M_INCOME:$("#sampMIncome").val()
+		};
+		$cf.ajax({
+			url : "/opas-naps/queryManualLimitAfterResult.json",
+			data : {
+				"appId" : appId,
+				"flag" : "1",
+				"reqMap" :reqMap
+			},
+			onSuccess : function(dataRes) {
+				var isSusscess = dataRes.RSP_BODY.isSusscess;
+				if(isSusscess=="true"||isSusscess==true){
+					$("#spRefUnPlgeDti").val(valChange(dataRes.RSP_BODY.REF_UN_PLGE_DTI));
+					$("#spRefCpDti").val(valChange(dataRes.RSP_BODY.REF_CP_DTI));
+					$("#spRefMue").val(valChange(dataRes.RSP_BODY.REF_MUE));
+					$("#spDebtAppAuth").val(dataRes.RSP_BODY.DEBT_APP_AUTH);
+				}
+			}
+		});
+	}
+	/*****************小数点处理********************/
+	function valChange(obj) {
+		return (obj*1).toFixed(4);
+	}
+	//获取电核结论过件码为通过的100、101、400A等
+	function getZxjlGjmPass4Ydj(){
+		var creditResult=$("#creditResult").val();
+		if(creditResult.indexOf("400A") > -1){
+			return "1";
+		}
+		return "0";
+	}
+</script>
+</html>

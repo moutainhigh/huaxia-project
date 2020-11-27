@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>已持卡客户信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+<style type="text/css">
+tr{
+	width:832px;
+	height:25px;
+}
+#baseTable input{
+	width:350px;
+}
+</style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId = GetQueryString("appId");
+		var flag = GetQueryString("flag");
+	/* 	var c = new Array("0:非失信被执行人","1:失信被执行人");// */
+		var haveCardcustInfoForm=$("#haveCardcustInfoForm");
+		var cardInfoForm=$("#cardInfoForm");
+		var applyCard= GetQueryString("applyCards");//申请卡产品编号4位
+		var c1c2Flag= GetQueryString("c1c2Flag");//申请卡主附卡标识  1主附同申  2 单办附卡  3单办主卡
+		$cf.ajax({
+			data : {
+				"appId" : appId,
+				"flag" : flag,
+				"applyCard":applyCard,
+				"c1c2Flag":c1c2Flag
+			},
+			url : "/opas-naps/systemDecision_havaCardCustInfo.json",
+			onSuccess : function(res) {
+				var jsonHaveCardCustInfo = res.RSP_BODY.summaryInfo;
+				var haveCardCustInfojson = eval('(' +jsonHaveCardCustInfo+ ')');
+				haveCardcustInfoForm.form("load", haveCardCustInfojson);
+				//var c1c2_flag=haveCardCustInfojson.c1c2_flag;
+				var cardInfo = res.RSP_BODY.detail;
+				var cardInfojson = eval('(' +cardInfo+ ')');
+				cardInfoForm.form("load", cardInfojson);
+				if($("#fkNum").val()==null||$("#fkNum").val()==""){
+					$("#fkNum").val("0");
+				}
+				if($("#fkNum2").val()==null||$("#fkNum2").val()==""){
+					$("#fkNum2").val("0");
+				}
+			}
+		});
+		//设置有值的输入框只读
+		$("input[type='text']").each(function(){
+			var val=$(this).val();
+			if(val!==null&&val!==undefined&&val!==""){
+				$(this).attr("readonly","readonly");
+			}
+		});
+	});
+	
+	function valueChange(oldVal,arr){
+		var len = arr.length;
+		if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal==temp[0]){
+					return temp[1];
+				}
+			}
+		}
+		return oldVal;
+	}
+	function valueTo(oldVal,flagStr){
+		var arr="";
+		if(flagStr=='2'){
+			if(oldVal=="1"||oldVal=="2"){
+				arr="是";
+			}else if(oldVal=="3"){
+				arr="否";
+			}
+		}else{
+			if(oldVal=='1'){
+				arr="主附同申";
+			}else if(oldVal=='2'){
+				arr="单办附属卡";
+			}else if(oldVal=='3'){
+				arr="单办主卡";
+			}
+		}
+		return arr;
+	}
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend  align="center" style="font-size:20px;font-weight:bolder">已持卡客户信息</legend>
+	<form id="haveCardcustInfoForm">
+		<table cellpadding="10" id="baseTable"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>手机号:</td>
+					<td><input type="text" name="mobilephone" id="mobilephone" disabled="true"> </td>
+					<td>单位名称:</td>
+					<td><input type="text" name="businame" id="businame" disabled="true"></td>
+				</tr>
+				<tr>
+					<td>标准卡账户状态:</td>
+					<td><input type="text" name="cardStat_bzk" id="cardStat_bzk" disabled="true"></td>
+					<td>易达金账户状态:</td>
+					<td><input type="text" name="cardStat_ydj" id="cardStat_ydj" disabled="true"></td>
+				</tr>
+				<tr>
+					<td>标准卡账户额度:</td>
+					<td><input type="text" name="limit_bzk" id="limit_bzk" disabled="true"></td>
+					<td>易达金账户额度:</td>
+					<td><input type="text" name="limit_ydj" id="limit_ydj" disabled="true"></td>
+				</tr>
+				<!-- <tr>
+					<td>单位电话:</td>
+					<td><input type="text" name="busiphone" id="busiphone" disabled="true"></td>
+					<td>住宅电话:</td>
+					<td><input type="text" name="homephone" id="homephone" disabled="true"></td>
+				</tr><tr>
+					<td>联系人电话:</td>
+					<td><input type="text"name="conTel1" id="conTel1" disabled="true"></td>
+					<td>联系人姓名:</td>
+					<td><input type="text" name="conName1" id="conName1" disabled="true"></td>
+				</tr><tr>
+					<td>账单地址:</td>
+					<td><input type="text" name="billAddr" id="billAddr" disabled="true"></td>
+					<td>账单地址类型:</td>
+					<td><input type="text" name="addType" id="addType" disabled="true"></td>
+				</tr>
+				<tr>
+					<td>逾期金额（当前）：</td>
+					<td><input type="text" name="AGE_AMT" id="AGE_AMT" disabled="true"></td>
+					<td>逾期期数（当前）：</td>
+					<td><input type="text" name="AGE_DAYS" id="AGE_DAYS" disabled="true"></td>
+				</tr> -->
+			</table>
+	</form>	
+</fieldset>	
+<fieldset>
+	<legend>已持卡信息</legend>
+	<form id="cardInfoForm">
+	<table 	style="border-collapse: separate; border-spacing: 10px;" id="datalist">
+		<tr >
+			<td>已持卡卡种：</td>
+			<td ><input type="text" name="product1" id="product1"  style="width:385px;" disabled="true"></td>
+		</tr>
+	<!-- 	<tr>
+			<td>卡片对应额度：</td>
+			<td ><input type="text" name="credLmt1" id="credLmt1" style="width:385px;"  disabled="true"></td>
+		</tr> -->
+		<tr>
+			<td>卡片状态：</td>
+			<td ><input type="text" name="cardstat1" id="cardstat1" style="width:385px;"  disabled="true"></td>
+		</tr>
+		<tr>
+			<td>是否有附属卡:</td>
+			<td ><input type="text" name="haveflag1" id="haveflag1" style="width:385px;"  disabled="true"></td>
+		</tr>
+		<tr id="c">
+			<td>已有附属卡数量:</td>
+			<td colspan="2">非T状态:<input type="text" name="fkNum" id="fkNum" disabled="true">
+			T状态:<input type="text" name="fkNum2" id="fkNum2" disabled="true">
+			</td>
+		</tr>
+	</table>
+	</form>
+</fieldset>	
+</body>
+</html>

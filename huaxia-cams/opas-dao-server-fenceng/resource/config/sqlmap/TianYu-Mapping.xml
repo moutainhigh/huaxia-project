@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TianYu">
+ <resultMap id="SummaryInfoMap" type="java.util.Map">
+    <result column="FOUND" jdbcType="VARCHAR" property="found" />
+    <result column="RISKSCORE" jdbcType="VARCHAR" property="riskScore" />
+    <result column="RISKCODE" jdbcType="VARCHAR" property="riskCode" />
+    <result column="RISKCODEVALUE" jdbcType="VARCHAR" property="riskCodeValue" />
+  </resultMap>
+	
+  <select id="selectTianYuScoreInfoByAppId" parameterType="java.lang.String" resultMap="SummaryInfoMap">
+		SELECT to_char(FOUND) AS FOUND,to_char(RISKSCORE) AS RISKSCORE FROM OPAS_TIANYU_ANTIFRAUD_DATA  WHERE APP_ID = #{appId}
+  </select>
+  <select id="selectTianYuRiskCodeByAppId" parameterType="java.lang.String" resultMap="SummaryInfoMap">
+		SELECT RISKCODE,RISKCODEVALUE FROM OPAS_TIANYU_ANTIFRAUD_RISKINFO  WHERE APP_ID = #{appId} AND RISKCODE IS NOT NULL
+  </select>
+</mapper>

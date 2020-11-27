@@ -1,0 +1,8 @@
+package ThinkInJava;
+
+public class MainThread {
+	public static void main(String args[]){
+		LiftOff lanuch = new LiftOff();
+		lanuch.run();
+	}
+}

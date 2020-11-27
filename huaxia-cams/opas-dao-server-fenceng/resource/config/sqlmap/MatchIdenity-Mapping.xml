@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="MatchIdenity" >
+
+	<resultMap id="MatchIdenityResultMap" type="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CITY_NAME" property="cityName" jdbcType="VARCHAR" />
+		<result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+		<result column="TEL_AREA" property="telArea" jdbcType="VARCHAR" />
+		<result column="INPUT_CHANNEL" property="inputChannel" jdbcType="VARCHAR" />
+		<result column="EXTENSION_AGENCY" property="extensionAgency" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="STOP_TIME" property="stopTime" jdbcType="TIMESTAMP" />
+		<result column="UPD_TIME" property="updTime" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="VIEW_FLAG" property="viewFlag" jdbcType="CHAR"/>
+	</resultMap>
+  
+  
+  <select id="queryMatchIdenityCount" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity" resultType="java.lang.Integer">
+		select count(1) from OPAS_SYSPARM_MATCHID 
+		<where>		   
+				AND VIEW_FLAG <![CDATA[<>]]> '1' or VIEW_FLAG is null
+			<if test="cityName != null and cityName !='' ">
+				AND CITY_NAME LIKE '%${cityName}%'
+			</if>
+			<if test="idNo != null and idNo !='' ">
+				AND ID_NO LIKE '%${idNo}%'
+			</if>
+			<if test="telArea != null and telArea !='' ">
+				AND TEL_AREA LIKE '%${telArea}%'
+			</if>
+				<if test="inputChannel != null and inputChannel !='' ">
+				AND INPUT_CHANNEL LIKE '%${inputChannel}%'
+			</if>
+				<if test="extensionAgency != null and extensionAgency !='' ">
+				AND EXTENSION_AGENCY LIKE '%${extensionAgency}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS LIKE '%${status}%'
+			</if>
+		</where>
+	</select>
+
+	<select id="queryMatchIdenityList" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity" resultMap="MatchIdenityResultMap">
+		select ID,CITY_NAME,ID_NO,TEL_AREA,INPUT_CHANNEL,EXTENSION_AGENCY,STATUS,START_TIME,STOP_TIME,UPD_TIME,LST_UPD_USER
+		 from OPAS_SYSPARM_MATCHID
+		<where>		   
+			AND VIEW_FLAG <![CDATA[<>]]> '1' or VIEW_FLAG is null
+			<if test="cityName != null and cityName !='' ">
+				AND CITY_NAME LIKE '%${cityName}%'
+			</if>
+			<if test="idNo != null and idNo !='' ">
+				AND ID_NO LIKE '%${idNo}%'
+			</if>
+			<if test="telArea != null and telArea !='' ">
+				AND TEL_AREA LIKE '%${telArea}%'
+			</if>
+				<if test="inputChannel != null and inputChannel !='' ">
+				AND INPUT_CHANNEL LIKE '%${inputChannel}%'
+			</if>
+				<if test="extensionAgency != null and extensionAgency !='' ">
+				AND EXTENSION_AGENCY LIKE '%${extensionAgency}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS LIKE '%${status}%'
+			</if>
+		</where>
+		ORDER BY CITY_NAME
+	</select>
+	
+	<insert id="insertMatchIdenityStart" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		insert into
+		OPAS_SYSPARM_MATCHID
+		(ID,CITY_NAME,ID_NO,TEL_AREA,INPUT_CHANNEL,
+		EXTENSION_AGENCY,STATUS,START_TIME,STOP_TIME,UPD_TIME,LST_UPD_USER)
+		values (
+		#{id,jdbcType=VARCHAR},
+		#{cityName,jdbcType=VARCHAR},
+		#{idNo,jdbcType=VARCHAR},
+		#{telArea,jdbcType=VARCHAR},
+		#{inputChannel,jdbcType=VARCHAR},
+		#{extensionAgency,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertMatchIdenityEnd" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		insert into
+		OPAS_SYSPARM_MATCHID
+		(ID,CITY_NAME,ID_NO,TEL_AREA,INPUT_CHANNEL,
+		EXTENSION_AGENCY,STATUS,START_TIME,STOP_TIME,UPD_TIME,LST_UPD_USER)
+		values (
+		#{id,jdbcType=VARCHAR},
+		#{cityName,jdbcType=VARCHAR},
+		#{idNo,jdbcType=VARCHAR},
+		#{telArea,jdbcType=VARCHAR},
+		#{inputChannel,jdbcType=VARCHAR},
+		#{extensionAgency,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="queryMatchIdenityStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_SYSPARM_MATCHID where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateMatchIdenityWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		update OPAS_SYSPARM_MATCHID
+		<set>
+			CITY_NAME = #{cityName,jdbcType=VARCHAR},
+			ID_NO = #{idNo,jdbcType=VARCHAR},
+			TEL_AREA = #{telArea,jdbcType=VARCHAR},
+			INPUT_CHANNEL = #{inputChannel,jdbcType=VARCHAR},
+			EXTENSION_AGENCY = #{extensionAgency,jdbcType=VARCHAR},
+			UPD_TIME = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateMatchIdenity" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		update OPAS_SYSPARM_MATCHID
+		<set>
+			CITY_NAME = #{cityName,jdbcType=VARCHAR},
+			ID_NO = #{idNo,jdbcType=VARCHAR},
+			TEL_AREA = #{telArea,jdbcType=VARCHAR},
+			INPUT_CHANNEL = #{inputChannel,jdbcType=VARCHAR},
+			EXTENSION_AGENCY = #{extensionAgency,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=VARCHAR},
+			<if test="status == '1'.toString() ">START_TIME = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_TIME = SYSDATE,</if>
+			UPD_TIME = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateStartStatusMatchIdenity" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		update OPAS_SYSPARM_MATCHID
+		<set>
+			STATUS = #{status,jdbcType=VARCHAR},
+			START_TIME = SYSDATE,
+			UPD_TIME = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateStopStatusMatchIdenity" parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		update OPAS_SYSPARM_MATCHID
+		<set>
+			STATUS = #{status,jdbcType=VARCHAR},
+			STOP_TIME = SYSDATE,
+			UPD_TIME = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateMatchIdenityWithViewFlag"	parameterType="com.huaxia.opas.domain.sysparm.MatchIdenity">
+		update OPAS_SYSPARM_MATCHID
+		<set>
+			STATUS = #{status,jdbcType=VARCHAR},
+			STOP_TIME = SYSDATE,
+			UPD_TIME = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			VIEW_FLAG = #{viewFlag,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 批量删除 -->
+	<update id = "deleteMatchIdenitys" parameterType="java.util.List">
+		update OPAS_SYSPARM_MATCHID
+			set VIEW_FLAG = '1',
+			    STATUS = '0'
+			where ID in
+			<foreach collection="list" open="(" close=")" item="id" separator=",">
+				#{id,jdbcType=VARCHAR}
+			</foreach> 
+	</update>
+	
+	<!-- 全部删除 -->
+	<update id = "deleteAll">
+		update OPAS_SYSPARM_MATCHID
+			set VIEW_FLAG = '1',STATUS = '0' 
+	</update>
+	
+	<!-- 上传 -->
+	<insert id = "inputMatchIdenityFile" parameterType="java.util.List">
+		insert into OPAS_SYSPARM_MATCHID(
+			ID,
+			CITY_NAME,
+			ID_NO,
+			TEL_AREA,
+			INPUT_CHANNEL,
+			EXTENSION_AGENCY,
+			STATUS,
+			START_TIME,
+			LST_UPD_USER)
+		<foreach collection="list"  item="item" index="index" separator="union all">
+			(select #{item.id,jdbcType=VARCHAR},
+					#{item.cityName,jdbcType=VARCHAR},
+					#{item.idNo,jdbcType=VARCHAR},
+					#{item.telArea,jdbcType=VARCHAR},
+					#{item.inputChannel,jdbcType=VARCHAR},
+					#{item.extensionAgency,jdbcType=VARCHAR},
+					'1',
+					SYSDATE,
+					#{item.lstUpdUser,jdbcType=VARCHAR}
+			 from dual)
+		</foreach>
+	
+	</insert>
+</mapper>

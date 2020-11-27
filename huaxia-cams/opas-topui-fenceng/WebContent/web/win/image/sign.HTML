@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<META charset="utf-8"/>
+<script type="text/javascript" src="../../../topui/topui.js"></script>
+<script type="text/javascript" >
+var url=location.search;
+var theRequest=new Object();
+var start = url.indexOf("?");
+if(start!=-1){
+	var str=url.substr(start+1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+}
+var appId=theRequest.appId.substring(0,15)+"1";
+var userId=theRequest.userId;
+function showimg1(){
+	var ret = ocx.IMGCInitial("","11","");
+	if(ret!=0){
+		alert("Initial Control Error!");
+		return ;
+	}
+	ocx.IMGCDownloadByCode("aps|"+appId+"|||1|aps|"+userId+"|");	
+	
+// 	ocx.IMGCDownloadByCode("aps|150507A611P07891||孙小丽|1|aps|aps001|");
+}
+</script>
+</head>
+<body onLoad="javascript:showimg1();">
+<OBJECT ID="ocx" style="LEFT: 0px; WIDTH: 100%; TOP: 0px; HEIGHT: 100%" CLASSID="clsid:997E83A8-2A26-4F86-AF9A-10CC467195FE" codebase="LcImage4Hx.cab">
+</OBJECT>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>反欺诈调查控制页面</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<link rel="stylesheet" href="../../css/shouye_style1.css"
+	type="text/css"></link>
+<link rel="stylesheet" href="../../css/index/index.css" type="text/css"></link>
+<link type="text/css" rel="stylesheet"
+	href="../../css/common/layout.css" />
+<script type="text/javascript" src="../../js/common/win.js"></script>
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<div data-options="region:'west',title:'左区域',split:true,noheader:true,border:false" style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="系统决策" style="overflow: hidden" id="div1"></div>
+			<div title="征信信息" style="overflow: hidden" id="div2"></div>
+			<div title="申请表信息" style="overflow: hidden" id="div3"></div>
+			<div title="征信调查查看" style="overflow: hidden" id="div4"></div>
+			<div title="征信调查" style="overflow: hidden" id="div6"></div>
+			<div title="提报回复" style="overflow: hidden" id="div7"></div>
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:true,noheader:true,border:false" style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="欺诈调查" style="overflow: hidden">
+				<iframe name="iframe5" id="iframe5"
+					style="border: 0; width: 100%; height: 100%"
+					src="credit_cheat_Investigation_edit.html"></iframe>
+			</div>
+		</div>
+	</div>
+	<!-- 按钮区 -->
+	<div id="n09000_tool" data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="height:100px;text-align:center;">
+		<a herf="#" class="bt_public_107" id="zi"><input type="checkbox" id="zidongPushCheckbox"/>自动推送</a>
+		<!-- <a herf="#" class="bt_public_107" id="applyDealViewButton" onclick="openApplyDealView();">申请修改查看</a> -->
+		<a herf="#"  class="bt_public_107" onclick="showViewCreditControl();">影像显示</a>
+	</div>
+	
+	<div>
+		<input type="hidden" id="applyId" name="applyId"> <input
+			type="hidden" id="autoId" name="autoId" value="">
+	</div>
+
+</body>
+<script>
+	var appId = "";
+	var param;
+	var autoId;
+	var ydjFlag;
+	var userCode;
+	var userUuid=window.opener.userUuid;
+	var matchingCardFlag;
+	var delStatus = window.opener.delStatus;
+	var zidongSubmit;
+	/***********页面初始化***********/
+	$(function() {
+		var url = location.href;
+		appIdParam = url.split("=")[1];
+		appId = appIdParam.split("&")[0];
+		$("#applyId").val(appId);
+		autoId = url.split("=")[2].split("&")[0];
+		$("#autoId").val(autoId);
+		ydjFlag = url.split("=")[4].split("&")[0].split("?")[0];
+		userCode = url.split("=")[5].split("&")[0].split("?")[0];
+		matchingCardFlag = url.split("=")[6].split("&")[0].split("?")[0];
+		zidongSubmit = url.split("=")[7].split("&")[0].split("?")[0];
+		if(zidongSubmit == '1'){
+			$("#zidongPushCheckbox").attr('checked',true);
+		}
+		var aid = 1;
+		$("li a").each(function(){
+			$(this).attr("onclick","addIframe("+aid+")");
+			aid = aid +1;
+		}); 
+		addIframe("1");
+		var iframe5 = $("#iframe5").prop("src");
+		$("#iframe5").prop("src", iframe5 + "?appId=" + appId);
+		window.setTimeout(jTime, 3000);
+	})
+	/*********** 计时器定时触发 ***********/
+	function jTime() {
+		for (var i = 2; i <= 7; i++) {
+			addIframe(i);
+		}
+	}
+	function openWin() {
+		window
+				.open(
+						'../credit/creditSubmitNewspaper.html',
+						"newWindow",
+						'height=150,width=300,toolbar=0,menubar=0,scrollbars=0,resizable=0,location=0,status=0,top=400,left=400');
+	}
+	var submitType = "";
+
+	function addIframe(obj) {
+		var divId = $("#div" + obj);
+		if ($("#iframe" + obj).prop("name") == "iframe" + obj) {
+			return false;
+		}
+		if(obj == 1){
+			if(matchingCardFlag=="1"||matchingCardFlag=="0"){
+				divId.append('<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%"'+
+					'src="../common/bzk_system_decision_view.html?appId='+appId+'"></iframe>'); 
+			}
+			else if(matchingCardFlag=="2"){
+				divId.append('<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%"'+
+					'src="../common/ydj_system_decision_view.html?appId='+appId+'"></iframe>'); 
+			}
+		}
+		if (obj == 2) {//第三方征信
+			if(ydjFlag==2){
+				divId.append('<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%"'+
+					'src="../common/thirdparty_summary_zxspbzk_view.html?appId='+appId+'"></iframe>'); 
+			}
+			if(ydjFlag==1){
+				divId.append('<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%"'+
+					'src="../common/thirdparty_summary_ydj_view.html?appId='+appId+'"></iframe>'); 
+			}
+		} else if (obj == 3) {//申请表信息
+			divId/*申请表只读页面 没有保存按钮 */
+					.append('<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%"'
+							+ 'src="../common/apply_info_view_readonly.html?appId='
+							+ appId + '"></iframe>');
+		} else if (obj == 4) {//征信调查查看.
+			divId
+					.append('<iframe name="iframe4" id="iframe4" style="border: 0; width: 100%; height: 100%"'
+							+ 'src="../credit/credit_check_detailed.html?appId='
+							+ appId + '"></iframe>');
+		} else if(obj == 6){
+			if(matchingCardFlag=="1"||matchingCardFlag=="0"){
+				divId.append('<iframe name="iframe6" id="iframe6" style="border: 0; width: 100%; height: 100%"'+
+					'src="../credit/credit_investigation_zxBzk_readOnly.html?appId='+appId+'"></iframe>'); 
+			}
+			else if(matchingCardFlag=="2"){
+				divId.append('<iframe name="iframe6" id="iframe6" style="border: 0; width: 100%; height: 100%"'+
+					'src="../credit/credit_investigation_zxYdj_readOnly.html?appId='+appId+'"></iframe>'); 
+			}
+		}else if(obj == 7){//提报回复查看
+			divId.append('<iframe name="iframe7" id="iframe7" style="border: 0; width: 100%; height: 100%"'+
+					'src="../credit/submit_reply.html?appId='+appId+'"></iframe>');
+		}
+	}
+
+	/***********自动获得下一个推送的业务件***********/
+	function zidonPush(){
+	var checkbox = $("#zidongPushCheckbox").prop("checked");
+	if(checkbox==false||checkbox=="false"){
+		window_close();
+		return;
+	}
+	window.opener.reload();
+	$cf.ajax({
+		url : "/opas-naps/selfPush.json",
+		data:{"userIdParam":userCode,"ydjFlag":ydjFlag,"appId":appId,"delStatus":delStatus},
+		onSuccess : function(resData) {
+			var res = resData.RSP_BODY.credit;
+			if(res.check_number==null||res.check_number==""){
+				alert("已经没有待办的业务了，请获取任务！");
+				window_close();
+				return;
+			}
+			var appId = res.check_number;
+			var autoId = res.invest_autoId;
+			var flag = res.check_ydjFlag;
+			var matchingCardFlag = res.matchingCardFlag;
+			var msg = resData.RSP_BODY.msg;
+			//alert(msg+",点击可获取下一个待办任务");
+			var box = $("#zidongPushCheckbox").prop("checked");
+			 if(box){
+				zidongSubmit = "1";
+			} 
+			
+			location.href = "../credit/credit_cheat_Investigation_control1.html?appId="+appId+"&autoId="+autoId+"&node=5&ydjFlag="+flag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&zidongSubmit="+zidongSubmit;
+		}
+	});
+}
+	 function window_close(){
+			window.opener.reload();
+			window.opener=null;
+			window.open('','_self');
+			window.close();
+			window.top.close();
+		}
+
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	/* //关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : true
+		});
+	}
+	/* 关闭窗口 */
+	/* function window_close() {
+		window.opener = null;
+		window.open('', '_self');
+		window.close();
+		window.top.close();
+	}  */
+	function showViewCreditControl() {
+		window.open("../win/image_new/imgShow.html?appId=" + appId,"newWindow");
+	}
+
+</script>
+</html>

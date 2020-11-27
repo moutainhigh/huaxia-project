@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="authPro" class="com.huaxia.opas.util.PublicSearchExport"
+		init-method="init">
+		<property name="property">
+			<props>
+				<prop key="PUBLIC_SEARCH_EXPORT_PATH">${PUBLIC_SEARCH_EXPORT_PATH}</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="commonUtil" class="com.huaxia.opas.util.FileUploadProperties" init-method="init">
+		<property name="property">
+			<props>
+			<!-- 	<prop key="Pdf2swfPath">${PDF2SWF_PATH}</prop>
+				<prop key="FirstSwfPath">${FIRST_SWF_PATH}</prop>
+				<prop key="ProjWorkSpace">${PROJ_WORK_SPACE}</prop> -->
+				 <prop key="SavePath">${SAVE_PATH}</prop>
+				 <prop key="photo_path_police">${photo_path_police}</prop>
+				 <prop key="photo_path_education">${photo_path_education}</prop> 
+				 <prop key="report_path">${report_path}</prop> 
+			</props>
+		</property>
+	</bean>
+	<!-- 流程节点 -->
+	<bean id="commonProperties" class="com.huaxia.opas.util.CommonProperties" init-method="init">
+		<property name="property">
+			<props>
+				<prop key="nodeId_lr_ydj">${nodeId_lr_ydj}</prop>
+				<prop key="nodeId_sc_ydj">${nodeId_sc_ydj}</prop>
+				<prop key="nodeId_sp_ydj">${nodeId_sp_ydj}</prop>
+				<prop key="nodeId_gd_ydj">${nodeId_gd_ydj}</prop>
+				<prop key="nodeId_lr_bzk">${nodeId_lr_bzk}</prop>
+				<prop key="nodeId_sc_bzk">${nodeId_sc_bzk}</prop>
+				<prop key="nodeId_sp_bzk">${nodeId_sp_bzk}</prop>
+				<prop key="process_IP">${process_IP}</prop> 
+				<prop key="nodeId_gd_bzk">${nodeId_gd_bzk}</prop>
+				<prop key="process_IP">${process_IP}</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="padProperties" class="com.huaxia.opas.util.PadProperties" init-method="init">
+		<property name="property">
+			<props>
+				<prop key="PAD_URL">${PAD_URL}</prop>
+				<prop key="STOCK_UPLOAD">${STOCK_UPLOAD}</prop>
+				<prop key="IMAGE_URL">${IMAGE_URL}</prop>
+				<prop key="IMAGE_PORT">${IMAGE_PORT}</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

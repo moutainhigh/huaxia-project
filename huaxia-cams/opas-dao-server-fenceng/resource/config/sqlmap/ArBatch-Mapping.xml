@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ArBatch">
+
+	<resultMap id="ArBatchResultMap" type="com.huaxia.opas.domain.archive.ArBatch">
+		<result column="FILE_NO" property="fileNo" jdbcType="VARCHAR" />
+		<result column="FILE_APP" property="fileApp" jdbcType="VARCHAR" />
+		<result column="FILE_OPERATOR" property="fileOperator"
+			jdbcType="VARCHAR" />
+		<result column="FILE_TIME" property="fileTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="ArDetailResultMap" type="com.huaxia.opas.domain.archive.ArDetail">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+		<result column="CRED_NO" property="credNo" jdbcType="VARCHAR" />
+		<result column="SPREADORGAN_CODE" property="spreadorganCode"
+			jdbcType="VARCHAR" />
+		<result column="APP_RESULT" property="appResult" jdbcType="VARCHAR" />
+		<result column="FILE_NO" property="fileNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryArchiveList" parameterType="com.huaxia.opas.domain.archive.ArBatch"
+		resultMap="ArBatchResultMap">
+		select FILE_NO,FILE_APP,FILE_OPERATOR,FILE_TIME from
+		OPAS_FILE_BATCH_INFO
+		<where>
+			<if test="fileNo != null and fileNo !='' ">
+				AND FILE_NO LIKE '%${fileNo}%'
+			</if>
+			<if test="fileTime != null and fileTime !='' ">
+				AND
+				(FILE_TIME
+				BETWEEN
+				#{fileTime}
+				AND
+				(select #{fileTime} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+		</where>
+		order by FILE_TIME desc
+	</select>
+
+	<select id="queryArchiveCount" parameterType="com.huaxia.opas.domain.archive.ArBatch"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_FILE_BATCH_INFO
+		<where>
+			<if test="fileNo != null and fileNo !='' ">
+				AND FILE_NO LIKE '%${fileNo}%'
+			</if>
+			<if test="fileTime != null and fileTime !='' ">
+				AND
+				(FILE_TIME
+				BETWEEN
+				#{fileTime}
+				AND
+				(select #{fileTime} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+		</where>
+		order by FILE_TIME desc
+	</select>
+
+	<select id="queryArDetailsCount" parameterType="com.huaxia.opas.domain.archive.ArDetail"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_FILE_APPLICATION_DETAIL
+		where FILE_NO = #{fileNo}
+		<if test="appId != null and appId !='' ">
+			AND APP_ID LIKE '%${appId}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+		<if test="spreadorganCode != null and spreadorganCode !='' ">
+			AND SPREADORGAN_CODE LIKE '%${spreadorganCode}%'
+		</if>
+		<if test="appResult != null and appResult !='' ">
+			AND APP_RESULT LIKE '%${appResult}%'
+		</if>
+		order by APP_ID
+	</select>
+
+	<select id="queryArDetailsList" parameterType="com.huaxia.opas.domain.archive.ArDetail"
+		resultMap="ArDetailResultMap">
+		select APP_ID,CUST_NAME,CRED_NO,SPREADORGAN_CODE,APP_RESULT from
+		OPAS_FILE_APPLICATION_DETAIL
+		where FILE_NO = #{fileNo}
+		<if test="appId != null and appId !='' ">
+			AND APP_ID LIKE '%${appId}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+		<if test="spreadorganCode != null and spreadorganCode !='' ">
+			AND SPREADORGAN_CODE LIKE '%${spreadorganCode}%'
+		</if>
+		<if test="appResult != null and appResult !='' ">
+			AND APP_RESULT LIKE '%${appResult}%'
+		</if>
+		order by APP_ID
+	</select>
+</mapper>

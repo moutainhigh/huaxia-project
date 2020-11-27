@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="EnhanceCollect">
+
+	<resultMap id="result_EnhanceCollect" type="com.huaxia.opas.domain.collect.EnhanceInfo">
+		<result column="INSIDE_APP_NO" jdbcType="CHAR" property="insideAppNo" />
+		<result column="APP_ID" jdbcType="CHAR" property="appId" />
+		<result column="STAFF_NATURE" jdbcType="CHAR" property="staffNature" />
+		<result column="EXECUTIVE_LEVEL" jdbcType="CHAR" property="executiveLevel" />
+		<result column="UNIT_NATURE" jdbcType="CHAR" property="unitNature" />
+		<result column="ORG_AUTH_STRENGTH" jdbcType="CHAR" property="orgAuthStrength" />
+		<result column="ORG_LEVEL" jdbcType="CHAR" property="orgLevel" />
+		<result column="INSTITUTION_AUTH_STRENGTH" jdbcType="CHAR" property="institutionAuthStrength" />
+		<result column="INSTITUTION_LEVEL" jdbcType="CHAR" property="institutionLevel" />
+		<result column="SCHOOL_NATURE" jdbcType="CHAR" property="schoolNature" />
+		<result column="SCHOOL_TYPE" jdbcType="CHAR" property="schoolType" />
+		<result column="SCHOOL_POSITION_LEVEL" jdbcType="CHAR" property="schoolPositionLevel" />
+		<result column="HOSPITAL_NATURE" jdbcType="CHAR" property="hospitalNature" />
+		<result column="HOSPITAL_LEVEL" jdbcType="CHAR" property="hospitalLevel" />
+		<result column="HOSPITAL_GRADE" jdbcType="CHAR" property="hospitalGrade" />
+		<result column="DOCTOR_LEVEL" jdbcType="CHAR" property="doctorLevel" />
+		<result column="INDUSTRY_TYPE" jdbcType="CHAR" property="industryType" />
+		<result column="IS_AFFILIATES" jdbcType="CHAR" property="affiliates" />
+		<result column="BANK_STAFF_TYPE" jdbcType="CHAR" property="bankStaffType" />
+		<result column="BANK_STAFF_LEVEL" jdbcType="CHAR" property="bankStaffLevel" />
+		<result column="PRIVATE_BUSINESS_TYPE" jdbcType="CHAR" property="privateBusinessType" />
+		<result column="FINANCES_CUST" jdbcType="CHAR" property="financesCust" />
+		<result column="WUHANCZ_TYPE" jdbcType="CHAR" property="wuHanCzType" />
+		<result column="SPECIAL_CUST" jdbcType="CHAR" property="specialCust" />
+		<result column="MBA_SCHOOL_NAME" jdbcType="VARCHAR" property="mbaSchoolName" />
+		<result column="EDU_CERTIF_TYPE" jdbcType="CHAR" property="eduCertifType" />
+		<result column="EDU_BACK_TYPE" jdbcType="CHAR" property="eduBackType" />
+		<result column="EDU_BACK" jdbcType="CHAR" property="eduBack" />
+		<result column="HOUSE_PROVE_TYPE" jdbcType="CHAR" property="houseProveType" />
+		<result column="HOUSE_PROVE_NUM" jdbcType="INTEGER" property="houseProveNum" />
+		<result column="HOUSE_AREA" jdbcType="NUMERIC" property="houseArea" />
+		<result column="HOUSE_TOTLE_PRICE" jdbcType="NUMERIC" property="houseTotalPrice" />
+		<result column="HOUSE_LOCATION" jdbcType="CHAR" property="houseLocation" />
+		<result column="HOUSE_REPAY_TIME" jdbcType="NUMERIC" property="houseRepayTime" />
+		<result column="VEHICLE_PROVE_TYPE" jdbcType="CHAR" property="vehicleProveType" />
+		<result column="VEHICLE_HAND_TYPE" jdbcType="CHAR" property="vehicleHandType" />
+		<result column="VEHICLE_TOTAL_PRICE" jdbcType="NUMERIC" property="vehicleTotalPrice" />
+		<result column="VEHICLE_AGE" jdbcType="NUMERIC" property="vehicleAge" />
+		<result column="INDUSTRY_CODE" jdbcType="VARCHAR" property="industryCode" />
+		<result column="POSITION_CODE" jdbcType="VARCHAR" property="positionCode" />
+		<result column="COMPANY_ESTABLISH_DATE" jdbcType="DATE" property="companyEstablishDate" />
+		<result column="REGISTERED_CAPITAL" jdbcType="INTEGER" property="registeredCapital" />
+		<result column="COMPANY_ENTRY_DATE" jdbcType="DATE" property="companyEntryDate" />
+		<result column="REAL_MONTH_INCOME" jdbcType="NUMERIC" property="realMonthIncome" />
+		<result column="ADOPT_MONTH_INCOME" jdbcType="NUMERIC" property="adoptMonthIncome" />
+		<result column="ADOPT_ITEM_ID" jdbcType="CHAR" property="adoptItemId" />
+		<result column="PBOC_MONTGAGE_DEBT" jdbcType="NUMERIC" property="pbocMontgageDebt" />
+		<result column="PBOC_UNMONTGAGE_DEBT" jdbcType="NUMERIC" property="pbocUnMontgageDebt" />
+		<result column="PBOC_CREDIT_DEBT" jdbcType="NUMERIC" property="pbocCreditDebt" />
+		<result column="PBOC_UNMONTGAGE_OPEN" jdbcType="NUMERIC" property="pbocUnmontgageOpen" />
+		<result column="CREDIT_OPEN" jdbcType="NUMERIC" property="creditOpen" />
+		<result column="VERIFRY_CLEAN_LOAN_DEBT" jdbcType="NUMERIC" property="verifryCleanLoanDebt" />
+		<result column="VERIFY_MORTGAGE_DEBT" jdbcType="NUMERIC" property="verifryMortgageDebt" />
+		<result column="VERIFY_CLEAN_LOAN_OPEN" jdbcType="NUMERIC" property="verifryCleanLoanOpen" />
+		<result column="CUST_EXPECT_CREDIT" jdbcType="NUMERIC" property="custExpectCredit" />
+		<result column="APPLY_TERM" jdbcType="INTEGER" property="applyTerm" />
+		<result column="RATE" jdbcType="NUMERIC" property="rate" />
+		<result column="CERTIFI_MATERIAL" jdbcType="VARCHAR" property="certifiMaterial" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="CUST_GROUP_TYPE" jdbcType="VARCHAR" property="custGroupType" />
+		<result column="REAL_GROUP" jdbcType="VARCHAR" property="realGroup" />
+		<result column="SALARY_MONTH_INCOME" jdbcType="NUMERIC" property="salaryMonthIncome" />
+		<result column="TAX_MONTH_INCOME" jdbcType="NUMERIC" property="taxMonthIncome" />
+		<result column="WORK_MONTH_INCOME" jdbcType="NUMERIC" property="workMonthIncome" />
+		<result column="SOCIAL_SECURITY_MONTH_INCOME" jdbcType="NUMERIC" property="socialSecurityMonthIncome" />
+		<result column="FUND_MONTH_INCOME" jdbcType="NUMERIC" property="fundMonthIncome" />
+		<result column="SPOUSE_MONTH_INCOME" jdbcType="NUMERIC" property="spouseMonthIncome" />
+		<result column="HOUSE_MONTH_INCOME" jdbcType="NUMERIC" property="houseMonthIncome" />
+		<result column="SYS_ADOPT_MONTH_INCOME" jdbcType="NUMERIC" property="sysAdoptMonthIncome" />
+		<result column="RANK_MONTH_INCOME" jdbcType="NUMERIC" property="rankMonthIncome" />
+		<result column="CRT_DATE" jdbcType="DATE" property="createDate" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="createUser" />
+		<result column="LST_UPD_DATE" jdbcType="DATE" property="lastUpdateDate" />
+		<result column="LST_UPD_USER" jdbcType="VARCHAR" property="lastUpdateUser" />
+		
+		<result column="DTI_UNMONTGAGE" jdbcType="NUMERIC" property="dtiUnMontgage" />
+		<result column="DTI_SYNTHETICAL" jdbcType="NUMERIC" property="dtiSynthetical" />
+		<result column="MUE_RISK_OPEN" jdbcType="NUMERIC" property="mueRiskOpen" />
+		<result column="SYS_ADVISE_LIMIT" jdbcType="NUMERIC" property="sysAdviseLimit" />
+	</resultMap>
+
+	<insert id="insertEnhanceInfo" parameterType="com.huaxia.opas.domain.collect.EnhanceInfo">
+		INSERT INTO OPAS_YDJ_ENHANCE_COLLECT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="insideAppNo != null">INSIDE_APP_NO,</if>            
+			<if test="appId != null">APP_ID,</if>
+			<if test="staffNature != null">STAFF_NATURE,</if>
+			<if test="executiveLevel != null">EXECUTIVE_LEVEL,</if>
+			<if test="unitNature != null">UNIT_NATURE,</if>
+			<if test="orgAuthStrength != null">ORG_AUTH_STRENGTH,</if>
+			<if test="orgLevel != null">ORG_LEVEL,</if>
+			<if test="institutionAuthStrength != null">INSTITUTION_AUTH_STRENGTH,</if>
+			<if test="institutionLevel != null">INSTITUTION_LEVEL,</if>
+			<if test="schoolNature != null">SCHOOL_NATURE,</if>
+			<if test="schoolType != null">SCHOOL_TYPE,</if>
+			<if test="schoolPositionLevel != null">SCHOOL_POSITION_LEVEL,</if>
+			<if test="hospitalNature != null">HOSPITAL_NATURE,</if>
+			<if test="hospitalLevel != null">HOSPITAL_LEVEL,</if>
+			<if test="hospitalGrade != null">HOSPITAL_GRADE,</if>
+			<if test="doctorLevel != null">DOCTOR_LEVEL,</if>
+			<if test="industryType != null">INDUSTRY_TYPE,</if>
+			<if test="affiliates != null">IS_AFFILIATES,</if>
+			<if test="bankStaffType != null">BANK_STAFF_TYPE,</if>
+			<if test="bankStaffLevel != null">BANK_STAFF_LEVEL,</if>
+			<if test="privateBusinessType != null">PRIVATE_BUSINESS_TYPE,</if>
+			<if test="financesCust != null">FINANCES_CUST,</if>
+			<if test="wuHanCzType != null">WUHANCZ_TYPE,</if>
+			
+			<if test="specialCust != null">SPECIAL_CUST,</if>
+			<if test="mbaSchoolName != null">MBA_SCHOOL_NAME,</if>
+			<if test="eduCertifType != null">EDU_CERTIF_TYPE,</if>
+			<if test="eduBackType != null">EDU_BACK_TYPE,</if>
+			<if test="eduBack != null">EDU_BACK,</if>
+			<if test="houseProveType != null">HOUSE_PROVE_TYPE,</if>
+			<if test="houseProveNum != null">HOUSE_PROVE_NUM,</if>
+			<if test="houseArea != null">HOUSE_AREA,</if>
+			<if test="houseTotalPrice != null">HOUSE_TOTLE_PRICE,</if>
+			<if test="houseLocation != null">HOUSE_LOCATION,</if>
+			<if test="houseRepayTime != null">HOUSE_REPAY_TIME,</if>
+			<if test="vehicleProveType != null">VEHICLE_PROVE_TYPE,</if>
+			<if test="vehicleHandType != null">VEHICLE_HAND_TYPE,</if>
+			<if test="vehicleTotalPrice != null">VEHICLE_TOTAL_PRICE,</if>
+			<if test="vehicleAge != null">VEHICLE_AGE,</if>
+			<if test="industryCode != null">INDUSTRY_CODE,</if>
+			<if test="positionCode != null">POSITION_CODE,</if>
+			<if test="companyEstablishDate != null">COMPANY_ESTABLISH_DATE,</if>
+			<if test="registeredCapital != null">REGISTERED_CAPITAL,</if>
+			<if test="companyEntryDate != null">COMPANY_ENTRY_DATE,</if>
+			<if test="realMonthIncome != null">REAL_MONTH_INCOME,</if>
+			<if test="adoptMonthIncome != null">ADOPT_MONTH_INCOME,</if>
+			<if test="adoptItemId != null">ADOPT_ITEM_ID,</if>
+			
+			<if test="verifryCleanLoanDebt != null">VERIFRY_CLEAN_LOAN_DEBT,</if>
+			<if test="verifryMortgageDebt != null">VERIFY_MORTGAGE_DEBT,</if>
+			<if test="verifryCleanLoanOpen != null">VERIFY_CLEAN_LOAN_OPEN,</if>
+			<if test="custExpectCredit != null">CUST_EXPECT_CREDIT,</if>
+			<if test="applyTerm != null">APPLY_TERM,</if>
+			<if test="rate != null">RATE,</if>
+			<if test="sysAdoptMonthIncome != null">SYS_ADOPT_MONTH_INCOME,</if>
+			CRT_DATE,
+			<if test="createUser != null">CRT_USER,</if>
+			LST_UPD_DATE,
+			<if test="lastUpdateUser != null">LST_UPD_USER,</if>
+			
+		</trim>
+		<trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
+			<if test="insideAppNo != null">#{insideAppNo,jdbcType=CHAR},</if>
+			<if test="appId != null">#{appId,jdbcType=CHAR},</if>
+			<if test="staffNature != null">#{staffNature,jdbcType=CHAR},</if>
+			<if test="executiveLevel != null">#{executiveLevel,jdbcType=CHAR},</if>
+			<if test="unitNature != null">#{unitNature,jdbcType=CHAR},</if>
+			<if test="orgAuthStrength != null">#{orgAuthStrength,jdbcType=CHAR},</if>
+			<if test="orgLevel != null">#{orgLevel,jdbcType=CHAR},</if>
+			<if test="institutionAuthStrength != null">#{institutionAuthStrength,jdbcType=CHAR},</if>
+			<if test="institutionLevel != null">#{institutionLevel,jdbcType=CHAR},</if>
+			<if test="schoolNature != null">#{schoolNature,jdbcType=CHAR},</if>
+			<if test="schoolType != null">#{schoolType,jdbcType=CHAR},</if>
+			<if test="schoolPositionLevel != null">#{schoolPositionLevel,jdbcType=CHAR},</if>
+			<if test="hospitalNature != null">#{hospitalNature,jdbcType=CHAR},</if>
+			<if test="hospitalLevel != null">#{hospitalLevel,jdbcType=CHAR},</if>
+			<if test="hospitalGrade != null">#{hospitalGrade,jdbcType=CHAR},</if>
+			<if test="doctorLevel != null">#{doctorLevel,jdbcType=CHAR},</if>
+			<if test="industryType != null">#{industryType,jdbcType=CHAR},</if>
+			<if test="affiliates != null">#{affiliates,jdbcType=CHAR},</if>
+			<if test="bankStaffType != null">#{bankStaffType,jdbcType=CHAR},</if>
+			<if test="bankStaffLevel != null">#{bankStaffLevel,jdbcType=CHAR},</if>
+			<if test="privateBusinessType != null">#{privateBusinessType,jdbcType=CHAR},</if>
+			<if test="financesCust != null">#{financesCust,jdbcType=CHAR},</if>
+			<if test="wuHanCzType != null">#{wuHanCzType,jdbcType=CHAR},</if>
+			
+			<if test="specialCust != null">#{specialCust,jdbcType=CHAR},</if>
+			<if test="mbaSchoolName != null">#{mbaSchoolName,jdbcType=VARCHAR},</if>
+			<if test="eduCertifType != null">#{eduCertifType,jdbcType=CHAR},</if>
+			<if test="eduBackType != null">#{eduBackType,jdbcType=CHAR},</if>
+			<if test="eduBack != null">#{eduBack,jdbcType=CHAR},</if>
+			<if test="houseProveType != null">#{houseProveType,jdbcType=CHAR},</if>
+			<if test="houseProveNum != null">#{houseProveNum,jdbcType=INTEGER},</if>
+			<if test="houseArea != null">#{houseArea,jdbcType=NUMERIC},</if>
+			<if test="houseTotalPrice != null">#{houseTotalPrice,jdbcType=NUMERIC},</if>
+			<if test="houseLocation != null">#{houseLocation,jdbcType=CHAR},</if>
+			<if test="houseRepayTime != null">#{houseRepayTime,jdbcType=NUMERIC},</if>
+			<if test="vehicleProveType != null">#{vehicleProveType,jdbcType=CHAR},</if>
+			<if test="vehicleHandType != null">#{vehicleHandType,jdbcType=CHAR},</if>
+			<if test="vehicleTotalPrice != null">#{vehicleTotalPrice,jdbcType=NUMERIC},</if>
+			<if test="vehicleAge != null">#{vehicleAge,jdbcType=NUMERIC},</if>
+			<if test="industryCode != null">#{industryCode,jdbcType=VARCHAR},</if>
+			<if test="positionCode != null">#{positionCode,jdbcType=VARCHAR},</if>
+			<if test="companyEstablishDate != null">#{companyEstablishDate,jdbcType=DATE},</if>
+			<if test="registeredCapital != null">#{registeredCapital,jdbcType=INTEGER},</if>
+			<if test="companyEntryDate != null">#{companyEntryDate,jdbcType=DATE},</if>
+			<if test="realMonthIncome != null">#{realMonthIncome,jdbcType=NUMERIC},</if>
+			<if test="adoptMonthIncome != null">#{adoptMonthIncome,jdbcType=NUMERIC},</if>
+			<if test="adoptItemId != null">#{adoptItemId,jdbcType=CHAR},</if>
+			
+			<if test="verifryCleanLoanDebt != null">#{verifryCleanLoanDebt,jdbcType=NUMERIC},</if>
+			<if test="verifryMortgageDebt != null">#{verifryMortgageDebt,jdbcType=NUMERIC},</if>
+			<if test="verifryCleanLoanOpen != null">#{verifryCleanLoanOpen,jdbcType=NUMERIC},</if>
+			<if test="custExpectCredit != null">#{custExpectCredit,jdbcType=NUMERIC},</if>
+			<if test="applyTerm != null">#{applyTerm,jdbcType=INTEGER},</if>
+			<if test="rate != null">#{rate,jdbcType=NUMERIC},</if>
+			<if test="sysAdoptMonthIncome != null">#{sysAdoptMonthIncome,jdbcType=NUMERIC},</if>
+			SYSDATE,
+			<if test="createUser != null">#{createUser,jdbcType=VARCHAR},</if>
+			SYSDATE,
+			<if test="lastUpdateUser != null">#{lastUpdateUser,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<update id="updateEnhanceInfo" parameterType="com.huaxia.opas.domain.collect.EnhanceInfo">
+		UPDATE OPAS_YDJ_ENHANCE_COLLECT
+		SET
+			STAFF_NATURE=#{staffNature,jdbcType=CHAR},
+			EXECUTIVE_LEVEL=#{executiveLevel,jdbcType=CHAR},
+			UNIT_NATURE=#{unitNature,jdbcType=CHAR},
+			ORG_AUTH_STRENGTH=#{orgAuthStrength,jdbcType=CHAR},
+			ORG_LEVEL=#{orgLevel,jdbcType=CHAR},
+			INSTITUTION_AUTH_STRENGTH=#{institutionAuthStrength,jdbcType=CHAR},
+			INSTITUTION_LEVEL=#{institutionLevel,jdbcType=CHAR},
+			SCHOOL_NATURE=#{schoolNature,jdbcType=CHAR},
+			SCHOOL_TYPE=#{schoolType,jdbcType=CHAR},
+			SCHOOL_POSITION_LEVEL=#{schoolPositionLevel,jdbcType=CHAR},
+			HOSPITAL_NATURE=#{hospitalNature,jdbcType=CHAR},
+			HOSPITAL_LEVEL=#{hospitalLevel,jdbcType=CHAR},
+			HOSPITAL_GRADE=#{hospitalGrade,jdbcType=CHAR},
+			DOCTOR_LEVEL=#{doctorLevel,jdbcType=CHAR},
+			INDUSTRY_TYPE=#{industryType,jdbcType=CHAR},
+			IS_AFFILIATES=#{affiliates,jdbcType=CHAR},
+			BANK_STAFF_TYPE=#{bankStaffType,jdbcType=CHAR},
+			BANK_STAFF_LEVEL=#{bankStaffLevel,jdbcType=CHAR},
+			PRIVATE_BUSINESS_TYPE=#{privateBusinessType,jdbcType=CHAR},
+			
+			FINANCES_CUST=#{financesCust,jdbcType=CHAR},
+			WUHANCZ_TYPE=#{wuHanCzType,jdbcType=CHAR},
+			SPECIAL_CUST=#{specialCust,jdbcType=CHAR},
+			MBA_SCHOOL_NAME=#{mbaSchoolName,jdbcType=VARCHAR},
+			EDU_CERTIF_TYPE=#{eduCertifType,jdbcType=CHAR},
+			EDU_BACK_TYPE=#{eduBackType,jdbcType=CHAR},
+			EDU_BACK=#{eduBack,jdbcType=CHAR},
+			HOUSE_PROVE_TYPE=#{houseProveType,jdbcType=CHAR},
+			HOUSE_PROVE_NUM=#{houseProveNum,jdbcType=INTEGER},
+			HOUSE_AREA=#{houseArea,jdbcType=NUMERIC},
+			HOUSE_TOTLE_PRICE=#{houseTotalPrice,jdbcType=NUMERIC},
+			HOUSE_LOCATION=#{houseLocation,jdbcType=CHAR},
+			HOUSE_REPAY_TIME=#{houseRepayTime,jdbcType=NUMERIC},
+			VEHICLE_PROVE_TYPE=#{vehicleProveType,jdbcType=CHAR},
+			VEHICLE_HAND_TYPE=#{vehicleHandType,jdbcType=CHAR},
+			VEHICLE_TOTAL_PRICE=#{vehicleTotalPrice,jdbcType=NUMERIC},
+			VEHICLE_AGE=#{vehicleAge,jdbcType=NUMERIC},
+			
+			INDUSTRY_CODE=#{industryCode,jdbcType=VARCHAR},
+			POSITION_CODE=#{positionCode,jdbcType=VARCHAR},
+			COMPANY_ESTABLISH_DATE=#{companyEstablishDate,jdbcType=DATE},
+			REGISTERED_CAPITAL=#{registeredCapital,jdbcType=INTEGER},
+			COMPANY_ENTRY_DATE=#{companyEntryDate,jdbcType=DATE},
+			REAL_MONTH_INCOME=#{realMonthIncome,jdbcType=NUMERIC},
+			ADOPT_MONTH_INCOME=#{adoptMonthIncome,jdbcType=NUMERIC},
+			ADOPT_ITEM_ID=#{adoptItemId,jdbcType=CHAR},
+			CUST_EXPECT_CREDIT=#{custExpectCredit,jdbcType=NUMERIC},
+			VERIFRY_CLEAN_LOAN_DEBT=#{verifryCleanLoanDebt,jdbcType=NUMERIC},
+			VERIFY_MORTGAGE_DEBT=#{verifryMortgageDebt,jdbcType=NUMERIC},
+			VERIFY_CLEAN_LOAN_OPEN=#{verifryCleanLoanOpen,jdbcType=NUMERIC},
+			APPLY_TERM=#{applyTerm,jdbcType=INTEGER},
+			RATE=#{rate,jdbcType=NUMERIC},
+
+			CERTIFI_MATERIAL=#{certifiMaterial,jdbcType=VARCHAR},
+			REMARK=#{remark,jdbcType=VARCHAR},
+			CUST_GROUP_TYPE=#{custGroupType,jdbcType=VARCHAR},
+			REAL_GROUP=#{realGroup	,jdbcType=VARCHAR},
+			SALARY_MONTH_INCOME=#{salaryMonthIncome,jdbcType=NUMERIC},
+			TAX_MONTH_INCOME=#{taxMonthIncome,jdbcType=NUMERIC},
+			WORK_MONTH_INCOME=#{workMonthIncome,jdbcType=NUMERIC},
+			SOCIAL_SECURITY_MONTH_INCOME=#{socialSecurityMonthIncome,jdbcType=NUMERIC},
+			FUND_MONTH_INCOME=#{fundMonthIncome,jdbcType=NUMERIC},
+			SPOUSE_MONTH_INCOME=#{spouseMonthIncome,jdbcType=NUMERIC},
+			HOUSE_MONTH_INCOME=#{houseMonthIncome,jdbcType=NUMERIC},
+			SYS_ADOPT_MONTH_INCOME=#{sysAdoptMonthIncome,jdbcType=NUMERIC},
+			RANK_MONTH_INCOME=#{rankMonthIncome,jdbcType=NUMERIC},
+						
+			LST_UPD_DATE=SYSDATE,
+			LST_UPD_USER=#{lastUpdateUser,jdbcType=VARCHAR}
+		WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</update>
+	
+	<update id="updateEnhanceInfoForBlaze" parameterType="com.huaxia.opas.domain.collect.EnhanceInfo">
+		UPDATE opas_ydj_enhance_collect
+		<trim prefix="SET" suffixOverrides=",">
+			PBOC_MONTGAGE_DEBT=#{pbocMontgageDebt,jdbcType=NUMERIC},
+			PBOC_UNMONTGAGE_DEBT=#{pbocUnMontgageDebt,jdbcType=NUMERIC},
+			PBOC_CREDIT_DEBT=#{pbocCreditDebt,jdbcType=NUMERIC},
+			PBOC_UNMONTGAGE_OPEN=#{pbocUnmontgageOpen,jdbcType=NUMERIC},
+			CREDIT_OPEN=#{creditOpen,jdbcType=NUMERIC},
+		
+			CERTIFI_MATERIAL=#{certifiMaterial,jdbcType=VARCHAR},
+			REMARK=#{remark,jdbcType=VARCHAR},
+			CUST_GROUP_TYPE=#{custGroupType,jdbcType=VARCHAR},
+			REAL_GROUP=#{realGroup	,jdbcType=VARCHAR},
+			SALARY_MONTH_INCOME=#{salaryMonthIncome,jdbcType=NUMERIC},
+			TAX_MONTH_INCOME=#{taxMonthIncome,jdbcType=NUMERIC},
+			WORK_MONTH_INCOME=#{workMonthIncome,jdbcType=NUMERIC},
+			SOCIAL_SECURITY_MONTH_INCOME=#{socialSecurityMonthIncome,jdbcType=NUMERIC},
+			FUND_MONTH_INCOME=#{fundMonthIncome,jdbcType=NUMERIC},
+			SPOUSE_MONTH_INCOME=#{spouseMonthIncome,jdbcType=NUMERIC},
+			HOUSE_MONTH_INCOME=#{houseMonthIncome,jdbcType=NUMERIC},
+			SYS_ADOPT_MONTH_INCOME=#{sysAdoptMonthIncome,jdbcType=NUMERIC},
+			RANK_MONTH_INCOME=#{rankMonthIncome,jdbcType=NUMERIC},
+		</trim>
+		WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</update>
+	
+	<delete id="deleteEnhanceInfo" parameterType="java.lang.String">
+		DELETE FROM OPAS_YDJ_ENHANCE_COLLECT
+		WHERE 1 = 1
+		<if test="insideAppNo != null and insideAppNo !='' ">
+			AND INSIDE_APP_NO = #{insideAppNo,jdbcType=CHAR}
+		</if>
+		<if test="appId != null and appId !='' ">
+			AND APP_ID = #{appId,jdbcType=CHAR}
+		</if>
+	</delete>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_EnhanceCollect">
+		SELECT INSIDE_APP_NO,APP_ID,STAFF_NATURE,EXECUTIVE_LEVEL,UNIT_NATURE,ORG_AUTH_STRENGTH,ORG_LEVEL,INSTITUTION_AUTH_STRENGTH,INSTITUTION_LEVEL,SCHOOL_NATURE,SCHOOL_TYPE,SCHOOL_POSITION_LEVEL,HOSPITAL_NATURE,HOSPITAL_LEVEL,HOSPITAL_GRADE,DOCTOR_LEVEL,INDUSTRY_TYPE,IS_AFFILIATES,BANK_STAFF_TYPE,BANK_STAFF_LEVEL,PRIVATE_BUSINESS_TYPE,FINANCES_CUST,WUHANCZ_TYPE,SPECIAL_CUST,MBA_SCHOOL_NAME,EDU_CERTIF_TYPE,EDU_BACK_TYPE,EDU_BACK,HOUSE_PROVE_TYPE,HOUSE_PROVE_NUM,HOUSE_AREA,HOUSE_TOTLE_PRICE,HOUSE_LOCATION,HOUSE_REPAY_TIME,VEHICLE_PROVE_TYPE,VEHICLE_HAND_TYPE,VEHICLE_TOTAL_PRICE,VEHICLE_AGE,INDUSTRY_CODE,POSITION_CODE,COMPANY_ESTABLISH_DATE,REGISTERED_CAPITAL,COMPANY_ENTRY_DATE,REAL_MONTH_INCOME,ADOPT_MONTH_INCOME,ADOPT_ITEM_ID,PBOC_MONTGAGE_DEBT,PBOC_UNMONTGAGE_DEBT,PBOC_CREDIT_DEBT,PBOC_UNMONTGAGE_OPEN,CREDIT_OPEN,VERIFRY_CLEAN_LOAN_DEBT,VERIFY_MORTGAGE_DEBT,VERIFY_CLEAN_LOAN_OPEN,CUST_EXPECT_CREDIT,APPLY_TERM,RATE,CERTIFI_MATERIAL,REMARK,CUST_GROUP_TYPE,REAL_GROUP,SALARY_MONTH_INCOME,TAX_MONTH_INCOME,WORK_MONTH_INCOME,SOCIAL_SECURITY_MONTH_INCOME,FUND_MONTH_INCOME,SPOUSE_MONTH_INCOME,HOUSE_MONTH_INCOME,SYS_ADOPT_MONTH_INCOME,RANK_MONTH_INCOME,CRT_DATE,CRT_USER,LST_UPD_DATE,LST_UPD_USER
+		  FROM OPAS_YDJ_ENHANCE_COLLECT
+		 WHERE INSIDE_APP_NO = #{insideAppNo,jdbcType=CHAR}
+	</select>
+	<select id="selectEntryYearByAppId" parameterType="java.lang.String" resultType="java.util.Date">
+	select to_date(add_months((select s.crt_time from opas_biz_inp_appl_c1 s where app_id=#{appId,jdbcType=CHAR}),-12*(select s.c1_coyr from opas_biz_inp_appl_c1 s where app_id=#{appId,jdbcType=CHAR}))) as entryYear from dual
+	</select>
+	<select id="selectC1CoyrByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+	select nvl(s.c1_coyr,0) from opas_biz_inp_appl_c1 s where s.app_id=#{appId,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectRequestTypeByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+	  select requesttype from (select requesttype from opas_fico_big_response  s where s.app_id=#{appId,jdbcType=CHAR} and s.requesttype='YDJ1008' 
+		order by s.lst_upd_date desc) where rownum=1
+	</select>
+	
+	<select id="selectByAppId" parameterType="java.lang.String" resultMap="result_EnhanceCollect">
+		SELECT INSIDE_APP_NO,APP_ID,STAFF_NATURE,EXECUTIVE_LEVEL,UNIT_NATURE,ORG_AUTH_STRENGTH,ORG_LEVEL,INSTITUTION_AUTH_STRENGTH,INSTITUTION_LEVEL,SCHOOL_NATURE,SCHOOL_TYPE,SCHOOL_POSITION_LEVEL,HOSPITAL_NATURE,HOSPITAL_LEVEL,HOSPITAL_GRADE,DOCTOR_LEVEL,INDUSTRY_TYPE,IS_AFFILIATES,BANK_STAFF_TYPE,BANK_STAFF_LEVEL,PRIVATE_BUSINESS_TYPE,FINANCES_CUST,WUHANCZ_TYPE,SPECIAL_CUST,MBA_SCHOOL_NAME,EDU_CERTIF_TYPE,EDU_BACK_TYPE,EDU_BACK,HOUSE_PROVE_TYPE,HOUSE_PROVE_NUM,HOUSE_AREA,HOUSE_TOTLE_PRICE,HOUSE_LOCATION,HOUSE_REPAY_TIME,VEHICLE_PROVE_TYPE,VEHICLE_HAND_TYPE,VEHICLE_TOTAL_PRICE,VEHICLE_AGE,INDUSTRY_CODE,POSITION_CODE,COMPANY_ESTABLISH_DATE,REGISTERED_CAPITAL,COMPANY_ENTRY_DATE,REAL_MONTH_INCOME,ADOPT_MONTH_INCOME,ADOPT_ITEM_ID,PBOC_MONTGAGE_DEBT,PBOC_UNMONTGAGE_DEBT,PBOC_CREDIT_DEBT,PBOC_UNMONTGAGE_OPEN,CREDIT_OPEN,VERIFRY_CLEAN_LOAN_DEBT,VERIFY_MORTGAGE_DEBT,VERIFY_CLEAN_LOAN_OPEN,CUST_EXPECT_CREDIT,APPLY_TERM,RATE,CERTIFI_MATERIAL,REMARK,CUST_GROUP_TYPE,REAL_GROUP,SALARY_MONTH_INCOME,TAX_MONTH_INCOME,WORK_MONTH_INCOME,SOCIAL_SECURITY_MONTH_INCOME,FUND_MONTH_INCOME,SPOUSE_MONTH_INCOME,HOUSE_MONTH_INCOME,SYS_ADOPT_MONTH_INCOME,RANK_MONTH_INCOME,CRT_DATE,CRT_USER,LST_UPD_DATE,LST_UPD_USER
+		       ,DTI_UNMONTGAGE,DTI_SYNTHETICAL,MUE_RISK_OPEN,SYS_ADVISE_LIMIT
+		 FROM OPAS_YDJ_ENHANCE_COLLECT
+		 WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+	
+	<update id="updateForeignKey" parameterType="java.lang.String">
+		UPDATE OPAS_YDJ_ENHANCE_COLLECT SET ADOPT_ITEM_ID = NULL WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</update>
+
+</mapper>

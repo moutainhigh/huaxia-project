@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>首页</title>
+<link rel="stylesheet" type="text/css" href="css/index/index.css"></link>
+<link rel="stylesheet" type="text/css" href="css/tanchu_style.css"></link>
+<script type="text/javascript" src="topui/topui.js"></script>
+<script type="text/javascript" src="js/login/login.js"></script>
+<script type="text/javascript" src="js/common/jqCommon.js"></script>
+<script type="text/javascript" language="javascript" src="/opas/topui/topui.js"></script>
+</head>
+
+<body class="easyui-layout"  id="mylayout">
+<div data-options="region:'north',title:'North Title',split:true,noheader:true,border:false," style="width:100%;height:65px;">
+	<div class="title"><!------头部------>	
+		<div class="title_you">
+			<div id="yong_hu">
+				<span id="tou_xiang"></span> <input type="text" id="usercode"
+					readonly="readonly" />
+				<button id="tui_chu" title="注销" onClick="exit();"></button>
+			</div>
+			<div id="dangqian_ye" name="job"></div>
+		</div>
+	</div><!------头部结束------>
+</div>
+	
+	
+ <div data-options="region:'west',title:'&nbsp;',split:true," style="width:13%; height:100%;">
+	
+	<div class="left_menu" style="top:28px;"></div>
+	<div id="threeMenu" class="list34_box">
+		<div id="threeList" class="list_3"></div>
+	</div>
+	 
+	<!------左侧菜单结束------>
+</div>
+
+
+<div data-options="region:'center',title:'右区域',split:true,noheader:true,border:false" style="width:87%;">	
+    <div id="box_right" style="overflow: hidden;top:0px; left:0px;">
+		<div class="easyui-tabs" id="contents" style="width: 100%"></div>
+	</div>
+	<div id="tabsMenu" data-options="onClick:menuHandler"
+		class="easyui-menu" style="width: 100px;">
+		<div id="0">关闭</div>
+		<div id="1">关闭其他</div>
+		<div id="2">关闭所有</div>
+	</div><!------------------右边整体框结束-------------------->
+</div>	
+ 
+
+	<!-- 机构与角色选择弹出层 -->
+	<div id="divBack" class="bg"></div>
+	<div id="divContent" class="box">
+		<table border="1">
+			<tr>
+				<td class="topleft "></td>
+				<td class="topmidle "><span id="tu"></span> <span
+					class="titles">选择登录机构与角色</span></td>
+				<td class="topright"></td>
+
+			</tr>
+			<tr>
+				<td class="midleleft"></td>
+				<td class="midle">
+					<div
+						style="width: 807px; height: 463px; background-color: #F5FBFE; position: relative;">
+						<br /> <br /> <br /> <br /> <input type="hidden" id="userId"></input>
+						<div class="xuanze">
+							请选择登录机构： <select id="orgId" name="orgId"></select>
+						</div>
+						<div class="xuanze">
+							请选择登录角色： <select id="roleId" name="roleId"></select>
+						</div>
+						<div class="sure">
+							<button onClick="loadUserData();">
+								<strong>确&nbsp;&nbsp;&nbsp;定</strong>
+							</button>
+						</div>
+
+					</div>
+				</td>
+				<td class="midleright"></td>
+			</tr>
+			<tr>
+				<td class="bottomleft"></td>
+				<td class="bottommidle"></td>
+				<td class="bottomright"></td>
+			</tr>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+	var tabObj = $("#contents");
+	var relationInfo = {
+		"loginInfo" : "",
+		"roleInfo" : "",
+		"orgInfo" : ""
+	};
+	var params = this.window.location.search;
+	var uuid = params.substr(6, this.params.length + 1);
+	var mainCenter = $("#mainCenter");
+	var centerTab = $("#centerTab");
+	var menuTree = $("#menuTree");
+	$(function() {
+		//加载用户数据
+		$cf.ajax({
+			url : "/opas-manualnode-auth/userRoleOrg.json",
+			data : {
+				"uuid" : uuid
+			},
+			onSuccess : function(node) {
+				var dataObj = node.RSP_BODY;
+				if (dataObj.exceptionMsg) {
+					hidediv();
+					alert(dataObj.exceptionMsg);
+					return;
+				} else if (dataObj.roleInfo) {
+					fillData(dataObj);
+				} else {
+					showdiv();
+					setRoleOrgData(dataObj.userRoles, dataObj.userOrgs);
+					$("#userId").val(dataObj.userId);
+				}
+
+			}
+		});
+	});
+
+	//导航菜单
+	function loadMenuTree(menus) {
+		var items = "<ul id=\"nav_dot\">";
+		for (var i = 0; i < menus.length; i++) {
+			var data = menus[i];
+			var childs = data.children;
+			var item = buildlines(data, childs);
+			items = items + item;
+		}
+		items = items + "</ul>";
+		$(".left_menu")[0].innerHTML = items;
+		menuStyle(12);
+		addIndCont();
+	}
+
+	//导航列表 
+	function buildlines(data, childs) {
+		var a = "";
+		var begli = "<li>";
+		var endli = "</li>";
+		var begh4 = "<h4 class=\"M1\">";
+		var span = "<span></span>" + data.text + "<b class=\"shou_qi\"></b>";
+		var endh4 = "</h4>";
+		var begdiv = "<div class=\"list-item none\">";
+		var enddiv = "</div>";
+		if (childs) {
+			for (var j = 0; j < childs.length; j++) {
+				var obj = childs[j];
+				a += "<a id='" + obj.id + "' name='" + obj.text
+						+ "' href=\"javascript:addTab('" + obj.text + "','"
+						+ obj.url + "','" + obj.id + "')\">" + obj.text
+						+ "<span class = \"menu_unsel  abc\"></span></a>";
+			}
+		}
+		return begli + begh4 + span + endh4 + begdiv + a + enddiv + endli;
+	}
+
+	//添加tab页
+	function addTab(text, url, id) {
+		var tmp = new Date().getMilliseconds();
+		//if(id){
+			text = text + "<span id='sp' style='display:none;'>" + tmp + "</span>";
+		//}
+		tabObj
+				.tabs(
+						'add',
+						{
+							id : id,
+							title : text,
+							selected : true,
+							closable : true,
+							content : '<iframe name="'
+									+ text
+									+ '" src="'
+									+ url
+									+ '" width="100%" height="900px" frameborder="0" scrolling="auto"></iframe>'
+						});
+	};
+
+	//tabs 右键菜单
+	tabObj.tabs({
+		border : false,
+		onContextMenu : function(e, title, index) {
+			e.preventDefault();
+			$("#tabsMenu").menu('show', {
+				left : e.pageX,
+				top : e.pageY
+			}).data("tabIndex", index);
+			;
+		},
+		onSelect : function(title, index) {
+			var menuId = tabObj.tabs("getTab", index)[0].id;
+			var selTbl = $("a[id='" + menuId + "']");
+			$("#nav_dot").find("a").removeClass("selecteds");
+			selTbl.addClass("selecteds");
+			$(".menu_sel").removeClass("menu_sel");
+			$(selTbl.children()[0]).addClass("menu_sel");
+			var h4 = selTbl.parent().parent().find("H4");
+			tabCase(h4);
+
+		}
+	});
+
+	//tab与菜单联动
+	function tabCase(obj) {
+		var $div = obj.siblings(".list-item");
+		if ($div.is(":hidden")) {
+			$("#nav_dot li").find(".list-item").slideUp(600);
+			$("#nav_dot li").removeClass("selected");
+			obj.parent().addClass("selected");
+			$div.slideDown(600);
+		}
+	}
+
+	//菜单click事件 
+	function menuHandler(item) {
+		var tabs = tabObj.tabs("tabs");
+		var data = $.extend([], tabs);
+		var index = $("#tabsMenu").data("tabIndex");
+		if (item.id == 0 && index != 0) {
+			tabObj.tabs("close", index);
+		} else if (item.id == 1) {
+			for (var i = data.length; i >= 0; i--) {
+				if (i == index) {
+					continue;
+				}
+				if (i != 0) {
+					tabObj.tabs("close", i);
+				}
+			}
+			tabObj.tabs("select", 1);
+		} else if (item.id == 2) {
+			for (var i = data.length; i >= 0; i--) {
+				if (i != 0) {
+					tabObj.tabs("close", i);
+				}
+			}
+		} else {
+			return;
+		}
+	}
+
+	//给角色与机构选项赋值
+	function setRoleOrgData(roles, orgs) {
+		for (var i = 0; i < roles.length; i++) {
+			var role = roles[i];
+			$("#roleId").append(
+					"<option value='"+role.roleId+"'>" + role.roleName
+							+ "</option>");
+		}
+
+		for (var j = 0; j < orgs.length; j++) {
+			var org = orgs[j];
+			$("#orgId").append(
+					"<option value='"+org.orgId+"'>" + org.orgName
+							+ "</option>");
+		}
+	}
+
+	//缓存用户相关信息
+	function cacheUserRelation() {
+		$cf.setStore("userRelInfo", relationInfo, "index");
+	}
+
+	//选择角色与机构后加载相关数据
+	function loadUserData() {
+		var roleId = $("#roleId").find("option:selected").val();
+		var orgId = $("#orgId").find("option:selected").val()
+		var userId = $("#userId").val();
+		if (roleId == null || roleId == "") {
+			alert("请选择登陆机构!");
+			return;
+		}
+
+		if (orgId == null || orgId == "") {
+			alert("请选择登陆角色!");
+			return;
+		}
+		var paramData = {
+			"roleId" : roleId,
+			"loginId" : userId,
+			"orgId" : orgId
+		};
+
+		$cf.ajax({
+			url : "/opas-manualnode-auth/userRelationInfo.json",
+			data : paramData,
+			onSuccess : function(node) {
+				var dataObj = node.RSP_BODY;
+				if (dataObj.exceptionMsg) {
+					alert(dataObj.exceptionMsg);
+					return;
+				} else if (dataObj.roleInfo) {
+					fillData(dataObj);
+				}
+
+			}
+		});
+	}
+
+	//填充数据
+	function fillData(dataObj) {
+		hidediv();
+		loadMenuTree(dataObj.menuInfo);
+		relationInfo.menuInfo = dataObj.menuInfo;
+		relationInfo.userInfo = dataObj.userInfo;
+		relationInfo.roleInfo = dataObj.roleInfo;
+		relationInfo.orgInfo = dataObj.orgInfo;
+		cacheUserRelation();
+		setUserCode(dataObj.userInfo.userCode,dataObj.roleInfo.roleName);
+	}
+
+	//显示遮罩层
+	function showdiv() {
+		document.getElementById("divBack").style.display = "block";
+		document.getElementById("divContent").style.display = "block";
+	}
+
+	//隐藏遮罩层
+	function hidediv() {
+		document.getElementById("divBack").style.display = 'none';
+		document.getElementById("divContent").style.display = 'none';
+	}
+
+	//退出
+	function exit() {
+		var userId = $cf.getStore("userRelInfo", "index").userInfo.userId;
+		$cf.ajax({
+			url : "/opas-manualnode-auth/loginOut.json",
+			data : {
+				"userIds" : userId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.backcode == "1") {
+					$cf.delStore("userRelInfo", "index")
+					window.location.href = "login.html";
+				}
+
+			}
+		});
+	}
+
+	//菜单排版
+	function menuStyle(id) {
+		var $obj = $("#nav_dot");
+		$obj.find("h4").hover(function() {
+			$(this).addClass("hover");
+			$("#threeMenu").css({
+				'left' : '242px',
+				'top' : top + 'px',
+				'display' : 'none',
+				'border-top' : '1px solid #95b8e7'
+			});
+		}, function() {
+			$(this).removeClass("hover");
+		});
+
+		$obj.find("h4").click(function() {
+			var $div = $(this).siblings(".list-item");
+			if ($(this).parent().hasClass("selected")) {
+				$div.slideUp(600);
+				$(this).parent().removeClass("selected");
+			}
+			if ($div.is(":hidden")) {
+				$("#nav_dot li").find(".list-item").slideUp(600);//滑动隐藏
+				$("#nav_dot li").removeClass("selected");
+				$(this).parent().addClass("selected");
+				$div.slideDown(600);//滑动展开
+
+			}
+		});
+
+		//菜单锁定
+		$obj.find("a").click(function() {
+			$obj.find("a").each(function(m, n) {
+				n.className = "";
+			});
+			$(".menu_sel").removeClass("menu_sel");
+			$($(this).children()[0]).addClass("menu_sel");
+			if ($(this).hasClass("selecteds")) {
+				$(this).removeClass("selecteds");
+			} else {
+				$(this).addClass("selecteds");
+			}
+
+		});
+
+		//二级菜单悬浮事件
+		$obj.find("a").hover(function() {
+			var menuName = this.name;
+			var menus = $cf.getStore("userRelInfo", "index").menuInfo;
+			var obj = filterMenu(menus, menuName);
+			var menulist = loadThreeMenu(obj, menuName);
+			$("#threeList")[0].innerHTML = menulist;
+			if (menulist) {
+				var top = $(this).offset().top;
+				$("#threeMenu").css({
+					'left' : '242px',
+					'top' : top + 'px',
+					'display' : 'block',
+					'border-top' : '1px solid #95b8e7'
+				});
+			}
+		});
+	}
+
+	//过虑菜单对象
+	function filterMenu(menus, menuName) {
+		var istrue = false;
+		for (var i = 0; i < menus.length; i++) {
+			menuObj = menus[i];
+			if (menuObj.children) {
+				for (var j = 0; j < menuObj.children.length; j++) {
+					var menu = menuObj.children[j];
+					if (menu.text == menuName) {
+						istrue = true;
+						break;
+					}
+				}
+			}
+			if (istrue) {
+				break;
+			}
+		}
+		return menus[i];
+	}
+
+	//显示三级菜单
+	function loadThreeMenu(obj, menuName) {
+		var menulist = "";
+		var menuObj;
+		if (obj.children) {
+			for (var i = 0; i < obj.children.length; i++) {
+				menuObj = obj.children[i];
+				if (menuObj.text == menuName && menuObj.children) {
+					for (var j = 0; j < menuObj.children.length; j++) {
+						var menu = menuObj.children[j];
+						var url = menu.url;
+						if (!url) {
+							url = "javascript:void(0);"
+						}
+						menulist += "<a href='"+url+"' class=\"three-a\" style=\"border-top:1px solid #95b8e7;\">"
+								+ menu.text + "</a>";
+					}
+				}
+
+			}
+		}
+		return menulist;
+	}
+
+	//显示用户名
+	function setUserCode(usercode,rolename) {
+		$("#usercode").val(usercode);
+		$("#dangqian_ye").text(rolename);
+	}
+
+	//添加首页公共内容
+	function addIndCont() {
+		tabObj.tabs('add',{
+							title : "首页",
+							selected : true,
+							closable : false,
+							content : '<iframe name="首页" src="./indexContent.html" width="100%" height="900px" frameborder="0" scrolling="auto"></iframe>'
+						});
+	}
+
+	//关闭tabs
+	function closeTab(tabName) {
+		var obj=getTabProperty();
+		tabObj.tabs('close',obj.title);
+	}
+	
+	//获取当前选中的tab页面相关属性
+	function getTabProperty(){
+		return tabObj.tabs("getSelected").panel("options");
+	}
+
+	</script>
+</html>

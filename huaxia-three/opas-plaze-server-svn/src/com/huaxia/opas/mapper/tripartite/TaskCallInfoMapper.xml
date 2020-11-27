@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.tripartite.TaskCallInfoMapper">
+ <resultMap id="BaseTaskCallInfoMap" type="java.util.Map">
+    <result column="ALL_TASK_TYPE" jdbcType="VARCHAR" property="allTaskType" />
+    <result column="TASK_TYPE" jdbcType="VARCHAR" property="taskType" />
+    <result column="TASK_STATUS" jdbcType="CHAR" property="taskStatus" />
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="TIME_STAMP" jdbcType="TIMESTAMP" property="timeStamp" />
+    <result column="IDENTITY_TYPE" jdbcType="CHAR" property="identityType" />
+    <result column="IDENTITY_NO" jdbcType="CHAR" property="identityNo" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="PROCESS_ID" jdbcType="CHAR" property="processId" />
+    <result column="NODE_ID" jdbcType="VARCHAR" property="nodeId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="MOBILE" jdbcType="CHAR" property="mobile" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="BANKCARD" jdbcType="VARCHAR" property="bankcard" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+  <resultMap id="WorkflowStringTypeMap" type="java.util.Map">
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="PROCESS_ID" jdbcType="CHAR" property="processId" />
+    <result column="NODE_ID" jdbcType="VARCHAR" property="nodeId" />
+    <result column="ALL_TASK_TYPE" jdbcType="VARCHAR" property="allTaskType" />
+  </resultMap>
+  <resultMap id="SearchStringTypeMap" type="java.util.Map">
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="TASK_TYPE" jdbcType="VARCHAR" property="taskType" />
+    <result column="IDENTITY_TYPE" jdbcType="CHAR" property="identityType" />
+    <result column="IDENTITY_NO" jdbcType="CHAR" property="identityNo" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="MOBILE" jdbcType="CHAR" property="mobile" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="BANKCARD" jdbcType="VARCHAR" property="bankcard" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+<select id="selectAllTaskForWorkflow"  parameterType="java.util.Map" resultMap="WorkflowStringTypeMap">
+ 	SELECT APP_ID, NODE_ID, PROCESS_ID,QUICK_CARD_FLAG,ALL_TASK_TYPE FROM(
+ 	SELECT APP_ID, NODE_ID, PROCESS_ID,QUICK_CARD_FLAG,ALL_TASK_TYPE
+ 	FROM TASK_CALL_INFO
+ 	WHERE TASK_STATUS = #{taskStatus}
+ 	GROUP BY APP_ID,TASK_STATUS,ALL_TASK_TYPE,NODE_ID,PROCESS_ID,QUICK_CARD_FLAG 
+ 	HAVING COUNT(TASK_STATUS) &gt;= (LENGTH(ALL_TASK_TYPE)-LENGTH(REPLACE(ALL_TASK_TYPE,','))+1) 
+ 	ORDER　BY QUICK_CARD_FLAG　DESC,APP_ID
+ 	)　WHERE　rownum&lt;= #{taskCount}
+</select>
+
+<insert id="insertSuccessInfoByAppId" parameterType="java.lang.String">
+INSERT INTO TASK_SUCCESS_INFO (
+			ALL_TASK_TYPE,TASK_TYPE, ID, CRT_TIME, 
+			IDENTITY_TYPE,IDENTITY_NO,APP_ID,NAME,
+			MOBILE, EMAIL, BANKCARD, ADDRESS
+		)
+   SELECT ALL_TASK_TYPE,TASK_TYPE, SYS_GUID(), sysdate, 
+		  IDENTITY_TYPE,IDENTITY_NO,APP_ID,NAME,
+		  MOBILE, EMAIL, BANKCARD, ADDRESS
+	      FROM TASK_CALL_INFO
+   WHERE APP_ID = #{appId, jdbcType = CHAR}
+</insert>
+
+<delete id="deleteTaskCallInfo" parameterType="java.util.Map" >
+DELETE　FROM TASK_CALL_INFO WHERE APP_ID=#{appId, jdbcType = CHAR} AND TASK_STATUS=#{taskStatus}
+</delete>
+
+<update id="updateTaskInfoStatus" parameterType="java.util.Map">
+		UPDATE TASK_CALL_INFO
+		SET TASK_STATUS = #{taskStatus}
+		WHERE APP_ID  = #{appId}
+		AND TASK_TYPE = #{taskType, jdbcType=CHAR}
+</update>
+	
+<select id="selectFormularyNumTasksByType"  parameterType="java.util.Map" resultMap="SearchStringTypeMap">
+SELECT ID,APP_ID,TASK_TYPE,NAME,IDENTITY_TYPE ,IDENTITY_NO ,MOBILE,BANKCARD,ADDRESS,QUICK_CARD_FLAG FROM(
+ SELECT ID,APP_ID,TASK_TYPE,NAME,IDENTITY_TYPE ,IDENTITY_NO ,MOBILE,BANKCARD,ADDRESS,QUICK_CARD_FLAG
+		FROM TASK_CALL_INFO
+		WHERE TASK_TYPE = #{taskType}
+		AND TASK_STATUS = #{taskStatus}
+		ORDER　BY QUICK_CARD_FLAG　DESC,APP_ID
+)WHERE ROWNUM &lt;= #{taskCount}
+</select>
+
+<update id="updateBatchStatus" parameterType="java.util.Map">
+		UPDATE TASK_CALL_INFO
+		SET TASK_STATUS = #{taskStatus}
+		WHERE APP_ID IN
+		<foreach collection="appIdList" item="item" index="index" open="("
+			separator="," close=")">
+			#{item,jdbcType=CHAR}
+		</foreach>
+		AND TASK_TYPE = #{taskType, jdbcType=CHAR}
+</update>
+
+<update id="updateSingleTaskStatus" parameterType="java.util.Map">
+		UPDATE TASK_CALL_INFO
+		SET TASK_STATUS = #{taskStatus}
+		WHERE APP_ID =#{appId}
+		AND TASK_TYPE = #{taskType, jdbcType=CHAR}
+</update>
+
+<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO TASK_CALL_INFO (
+		ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        ID,TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG,LST_OPT_USER,LST_OPT_TIME,REQUEST_NUM,FAILURE_NUM
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.allTaskType},#{item.taskType},#{item.taskStatus},
+			SYS_GUID(),SYSDATE,#{item.identityType},
+			#{item.identityNo},#{item.appId},#{item.processId},
+			#{item.nodeId},#{item.name},substr(#{item.mobile},1,11),#{item.email},#{item.quickCardFlag},'PLAZE',SYSDATE,0,0
+		from dual
+		</foreach>
+</insert>
+	<update id="updateSingleTask" parameterType="java.util.Map">
+		UPDATE TASK_CALL_INFO
+		<set >
+	      <if test="status != null" >
+	         TASK_STATUS = #{status, jdbcType=VARCHAR},
+	      </if>
+	      <if test="errorCode != null" >
+	         ERROR_CODE = #{errorCode, jdbcType=VARCHAR},
+	      </if>
+	      <if test="lstOptUser != null" >
+	         LST_OPT_USER = #{lstOptUser, jdbcType=VARCHAR},
+	      </if>
+	      <if test="requestAddNum != null" >
+	         REQUEST_NUM = REQUEST_NUM + #{requestAddNum, jdbcType=INTEGER},
+	      </if>
+	      <if test="failureAddNum != null" >
+	         FAILURE_NUM = FAILURE_NUM + #{failureAddNum, jdbcType=INTEGER},
+	      </if>
+	         LST_OPT_TIME = SYSDATE
+	   </set>
+		 WHERE APP_ID = #{appId, jdbcType=CHAR} 
+	   <if test="taskType != null" >
+		 AND TASK_TYPE = #{taskType, jdbcType=VARCHAR}
+	  </if>
+	</update>
+    <insert id="insertTaskCallInfoHis" parameterType="java.util.Map" >
+    INSERT INTO  TASK_CALL_INFO_HIS (ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        ID,TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM,CRT_TIME)
+      SELECT ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        SYS_GUID(),TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM, SYSDATE FROM TASK_CALL_INFO WHERE APP_ID=#{appId,jdbcType=CHAR} 
+        <if test="taskType != null" >
+        AND TASK_TYPE=#{taskType,jdbcType=VARCHAR}
+        </if>
+    </insert>
+	<insert id="insertTaskCallInfoHisBatch" parameterType="java.util.Map" >
+    INSERT INTO  TASK_CALL_INFO_HIS (ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        ID,TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM,CRT_TIME)
+	    SELECT ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        SYS_GUID(),TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM, SYSDATE FROM TASK_CALL_INFO 
+      WHERE TASK_STATUS = #{taskStatus,jdbcType=CHAR} 
+      <if test="hourNum != null" >
+      	AND LST_OPT_TIME &lt;= (SYSDATE-(#{hourNum}/24))
+      </if>
+	  <if test="requestNum != null" >
+      	AND REQUEST_NUM &lt;= #{requestNum}
+      </if>
+	</insert>
+	<update id="updateTaskCallInfoBatch" parameterType="java.util.Map">
+	UPDATE TASK_CALL_INFO
+		<set>
+	      <if test="updateStatus != null" >
+	         TASK_STATUS = #{updateStatus, jdbcType=VARCHAR},
+	      </if>
+	      <if test="lstOptUser != null" >
+	         LST_OPT_USER = #{lstOptUser, jdbcType=VARCHAR},
+	      </if>
+	         LST_OPT_TIME = SYSDATE
+		</set>
+		WHERE  TASK_STATUS = #{taskStatus,jdbcType=CHAR} 
+		<if test="hourNum != null" >
+		   AND LST_OPT_TIME &lt;= (SYSDATE-(#{hourNum}/24))
+		</if>
+		<if test="requestNum != null" >
+      	   AND REQUEST_NUM &lt;= #{requestNum}
+		</if>
+	</update>
+	<update id="updateTaskCallInfoInteract"  >
+		UPDATE TASK_CALL_INFO
+		<set >
+	      <if test="status != null" >
+	         TASK_STATUS = #{status, jdbcType=VARCHAR},
+	      </if>
+	      <if test="errorCode != null" >
+	         ERROR_CODE = #{errorCode, jdbcType=VARCHAR},
+	      </if>
+	      <if test="lstOptUser != null" >
+	         LST_OPT_USER = #{lstOptUser, jdbcType=VARCHAR},
+	      </if>
+	      <if test="requestAddNum != null" >
+	         REQUEST_NUM = REQUEST_NUM + #{requestAddNum, jdbcType=INTEGER},
+	      </if>
+	      <if test="failureAddNum != null" >
+	         FAILURE_NUM = FAILURE_NUM + #{failureAddNum, jdbcType=INTEGER},
+	      </if>
+	         LST_OPT_TIME = SYSDATE
+	   </set>
+		 WHERE ID = #{sourceId, jdbcType=CHAR} AND TASK_TYPE = #{taskType, jdbcType=VARCHAR}
+	</update>
+	<!-- 插入任务表 ,注意：ID 插入的是原来的ID  -->
+	<insert id="insertTaskCallInfoInteractHis" >
+    INSERT INTO  TASK_CALL_INFO_HIS (ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        ID,TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM,CRT_TIME)
+      SELECT ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        ID,TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM, SYSDATE FROM TASK_CALL_INFO WHERE  ID = #{sourceId, jdbcType=CHAR} 
+        <if test="taskType != null" >
+        AND TASK_TYPE=#{taskType,jdbcType=VARCHAR}
+        </if>
+    </insert>
+	<select id="selectAppIdTaskInfoInteract" resultType="java.lang.String">
+	  SELECT APP_ID FROM TASK_CALL_INFO
+	  WHERE ID = #{sourceId,jdbcType=CHAR} 
+	  AND TASK_TYPE = #{taskType, jdbcType = VARCHAR} 
+      AND TASK_STATUS = #{taskStatus, jdbcType = VARCHAR} 
+	</select>
+	<update id="updateTaskStatusNotTypeHisBatch">
+	   UPDATE TASK_CALL_INFO
+		<set >
+	      <if test="updateStatus != null" >
+	         TASK_STATUS = #{updateStatus, jdbcType=VARCHAR},
+	      </if>
+	      <if test="requestAddNum != null" >
+	         REQUEST_NUM = REQUEST_NUM + #{requestAddNum, jdbcType=INTEGER},
+	      </if>
+	      <if test="lstOptUser != null" >
+	         LST_OPT_USER = #{lstOptUser, jdbcType=VARCHAR},
+	      </if>
+	         LST_OPT_TIME = SYSDATE
+		</set>
+		WHERE  TASK_STATUS = #{taskStatus,jdbcType=CHAR} 
+		<if test="hourNum != null" >
+		   AND LST_OPT_TIME &lt;= (SYSDATE-(#{hourNum}/24))
+		</if>
+		<if test="requestNum != null" >
+      	   AND REQUEST_NUM &lt;= #{requestNum}
+		</if>
+		<if test="taskTypeMap != null" >
+	       AND TASK_TYPE NOT IN 
+      	   <foreach collection="taskTypeMap" index="key" item="ent" 
+      		separator="," open="(" close=")">
+       		 #{ent}
+            </foreach>
+        </if>
+	</update>
+</mapper>

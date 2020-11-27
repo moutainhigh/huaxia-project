@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TelRiskList">
+	<resultMap id="TelRiskResultMap" type="com.huaxia.opas.domain.riskcheck.TelRiskList">
+		<id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+		<result column="MOBILE_ID" jdbcType="VARCHAR" property="mobileId" />
+		<result column="COMPANY_TEL" jdbcType="VARCHAR" property="companyTel" />
+		<result column="LIVING_TEL" jdbcType="VARCHAR" property="livingTel" />
+		<result column="OTHER_TEL" jdbcType="VARCHAR" property="otherTel" />
+		<result column="INFO_CHANNEL" jdbcType="CHAR" property="infoChannel" />
+		<result column="FRAUD_TYPE" jdbcType="CHAR" property="fraudType" />
+		<result column="MEMO" jdbcType="VARCHAR" property="memo" />
+		<result column="INVALID_TIME" jdbcType="TIMESTAMP" property="invalidTime" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="USER_OPERATOR" jdbcType="VARCHAR" property="userOperator" />
+		<result column="OPERAT_TIME" jdbcType="TIMESTAMP" property="operatTime" />
+		<result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="TelRiskResultMap">
+		select
+		AUTO_ID,
+		MOBILE_ID,
+		COMPANY_TEL,
+		LIVING_TEL,
+		OTHER_TEL,
+		INFO_CHANNEL,
+		FRAUD_TYPE,
+		MEMO,
+		INVALID_TIME,
+		CREATE_TIME,
+		USER_OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS
+		from OPAS_TEL_RISKLIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_TEL_RISKLIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.riskcheck.TelRiskList">
+		insert into OPAS_TEL_RISKLIST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="mobileId != null">
+				MOBILE_ID,
+			</if>
+			<if test="companyTel != null">
+				COMPANY_TEL,
+			</if>
+			<if test="livingTel != null">
+				LIVING_TEL,
+			</if>
+			<if test="otherTel != null">
+				OTHER_TEL,
+			</if>
+			<if test="infoChannel != null">
+				INFO_CHANNEL,
+			</if>
+			<if test="fraudType != null">
+				FRAUD_TYPE,
+			</if>
+			<if test="memo != null">
+				MEMO,
+			</if>
+			<if test="invalidTime != null">
+				INVALID_TIME,
+			</if>
+				CREATE_TIME,
+			<if test="userOperator != null">
+				USER_OPERATOR,
+			</if>
+				OPERAT_TIME,
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileId != null">
+				#{mobileId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyTel != null">
+				#{companyTel,jdbcType=VARCHAR},
+			</if>
+			<if test="livingTel != null">
+				#{livingTel,jdbcType=VARCHAR},
+			</if>
+			<if test="otherTel != null">
+				#{otherTel,jdbcType=VARCHAR},
+			</if>
+			<if test="infoChannel != null">
+				#{infoChannel,jdbcType=CHAR},
+			</if>
+			<if test="fraudType != null">
+				#{fraudType,jdbcType=CHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="invalidTime != null">
+				#{invalidTime,jdbcType=TIMESTAMP},
+			</if>
+			sysdate,
+			<if test="userOperator != null">
+				#{userOperator,jdbcType=VARCHAR},
+			</if>
+			sysdate,
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.riskcheck.TelRiskList">
+		update OPAS_TEL_RISKLIST
+		<set>
+			<if test="mobileId != null">
+				MOBILE_ID = #{mobileId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyTel != null">
+				COMPANY_TEL = #{companyTel,jdbcType=VARCHAR},
+			</if>
+			<if test="livingTel != null">
+				LIVING_TEL = #{livingTel,jdbcType=VARCHAR},
+			</if>
+			<if test="otherTel != null">
+				OTHER_TEL = #{otherTel,jdbcType=VARCHAR},
+			</if>
+			<if test="infoChannel != null">
+				INFO_CHANNEL = #{infoChannel,jdbcType=CHAR},
+			</if>
+			<if test="fraudType != null">
+				FRAUD_TYPE = #{fraudType,jdbcType=CHAR},
+			</if>
+			<if test="memo != null">
+				MEMO = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="invalidTime != null">
+				INVALID_TIME = #{invalidTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userOperator != null">
+				USER_OPERATOR = #{userOperator,jdbcType=VARCHAR},
+			</if>
+			OPERAT_TIME = CURRENT_DATE,
+			<if test="currStatus != null">
+				CURR_STATUS = #{currStatus,jdbcType=CHAR},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.riskcheck.TelRiskList">
+		update OPAS_TEL_RISKLIST
+		set MOBILE_ID = #{mobileId,jdbcType=VARCHAR},
+		COMPANY_TEL = #{companyTel,jdbcType=VARCHAR},
+		LIVING_TEL = #{livingTel,jdbcType=VARCHAR},
+		OTHER_TEL = #{otherTel,jdbcType=VARCHAR},
+		INFO_CHANNEL = #{infoChannel,jdbcType=CHAR},
+		FRAUD_TYPE = #{fraudType,jdbcType=CHAR},
+		MEMO = #{memo,jdbcType=VARCHAR},
+		INVALID_TIME = #{invalidTime,jdbcType=TIMESTAMP},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		USER_OPERATOR = #{userOperator,jdbcType=VARCHAR},
+		OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+		CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!--shihuan 2017-03-03 电话风险名单列表查询 -->
+	<select id="queryTelRistList" parameterType="com.huaxia.opas.domain.riskcheck.TelRiskList"
+		resultMap="TelRiskResultMap">
+		select
+		AUTO_ID,
+		MOBILE_ID,
+		COMPANY_TEL,
+		LIVING_TEL,
+		OTHER_TEL,
+		INFO_CHANNEL,
+		FRAUD_TYPE,
+		MEMO,
+		INVALID_TIME,
+		CREATE_TIME,
+		USER_OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS
+		from OPAS_TEL_RISKLIST
+		where
+		1=1
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+		<if test="mobileId != null and mobileId !='' ">
+			AND MOBILE_ID LIKE '%${mobileId}%'
+		</if>
+		<if test="companyTel != null and companyTel !='' ">
+			AND (COMPANY_TEL LIKE '%${companyTel}%' OR LIVING_TEL LIKE '%${companyTel}%' OR
+			OTHER_TEL LIKE '%${companyTel}%' )
+		</if>
+		order by CREATE_TIME desc
+	</select>
+
+	<!--shihuan 2017-03-03 电话风险名单列表查询条数 -->
+	<select id="queryTelRistCount" parameterType="com.huaxia.opas.domain.riskcheck.TelRiskList"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_TEL_RISKLIST
+		where
+		1=1
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+		<if test="mobileId != null and mobileId !='' ">
+			AND MOBILE_ID LIKE '%${mobileId}%'
+		</if>
+		<if test="companyTel != null and companyTel !='' ">
+			AND (COMPANY_TEL LIKE '%${companyTel}%' OR LIVING_TEL LIKE '%${companyTel}%' OR
+			OTHER_TEL LIKE '%${companyTel}%' )
+		</if>
+	</select>
+	<!--shihuan 2017-03-15 电话风险名单批量启动修改状态 1:启用 0:停用 -->
+	<update id="updateStartStatus" parameterType="java.lang.String">
+		update OPAS_TEL_RISKLIST
+		set CURR_STATUS = '1'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!--shihuan 2017-03-15 电话风险名单批量停用修改状态 1:启用 0:停用 -->
+	<update id="updateStopStatus" parameterType="java.lang.String">
+		update OPAS_TEL_RISKLIST
+		set CURR_STATUS = '0'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+
+	<insert id="insertTelRistList" parameterType="com.huaxia.opas.domain.riskcheck.TelRiskListHistory">
+		insert into OPAS_TEL_RISKLIST_HISTORY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				ID,
+			</if>
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="mobileId != null">
+				MOBILE_ID,
+			</if>
+			<if test="companyTel != null">
+				COMPANY_TEL,
+			</if>
+			<if test="livingTel != null">
+				LIVING_TEL,
+			</if>
+			<if test="otherTel != null">
+				OTHER_TEL,
+			</if>
+			<if test="infoChannel != null">
+				INFO_CHANNEL,
+			</if>
+			<if test="fraudType != null">
+				FRAUD_TYPE,
+			</if>
+			<if test="memo != null">
+				MEMO,
+			</if>
+			<if test="invalidTime != null">
+				INVALID_TIME,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="userOperator != null">
+				USER_OPERATOR,
+			</if>
+			OPERAT_TIME,
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				#{Id,jdbcType=VARCHAR},
+			</if>
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileId != null">
+				#{mobileId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyTel != null">
+				#{companyTel,jdbcType=VARCHAR},
+			</if>
+			<if test="livingTel != null">
+				#{livingTel,jdbcType=VARCHAR},
+			</if>
+			<if test="otherTel != null">
+				#{otherTel,jdbcType=VARCHAR},
+			</if>
+			<if test="infoChannel != null">
+				#{infoChannel,jdbcType=CHAR},
+			</if>
+			<if test="fraudType != null">
+				#{fraudType,jdbcType=CHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="invalidTime != null">
+				#{invalidTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userOperator != null">
+				#{userOperator,jdbcType=VARCHAR},
+			</if>
+			CURRENT_DATE,
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 批量导入 shihuan 2017-03-18 -->
+	<insert id="insertTelRistUpload" parameterType="java.util.List">
+		insert into OPAS_TEL_RISKLIST(
+		AUTO_ID,
+		MOBILE_ID,
+		COMPANY_TEL,
+		LIVING_TEL,
+		OTHER_TEL,
+		INFO_CHANNEL,
+		FRAUD_TYPE,
+		MEMO,
+		INVALID_TIME,
+		CREATE_TIME,
+		USER_OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.mobileId,jdbcType=VARCHAR},
+			#{item.companyTel,jdbcType=VARCHAR},
+			#{item.livingTel,jdbcType=VARCHAR},
+			#{item.otherTel,jdbcType=VARCHAR},
+			#{item.infoChannel,jdbcType=CHAR},
+			#{item.fraudType,jdbcType=CHAR},
+			#{item.memo,jdbcType=VARCHAR},
+			#{item.invalidTime,jdbcType=TIMESTAMP},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.userOperator,jdbcType=VARCHAR},
+			#{item.operatTime,jdbcType=TIMESTAMP},
+			#{item.currStatus,jdbcType=CHAR}
+			from dual)
+		</foreach>
+	</insert>
+	<!-- 新增修改时校验手机号是否添加重复 -->
+	<select id="queryByMobileId" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) from OPAS_TEL_RISKLIST
+		where MOBILE_ID =
+		#{mobileId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 新增修改时校验固话是否添加重复 -->
+	<select id="queryByCompanyTel" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) FROM OPAS_TEL_RISKLIST
+		where COMPANY_TEL = #{companyTel} OR LIVING_TEL = #{companyTel} OR
+		OTHER_TEL = #{companyTel}
+	</select>
+	
+	<!-- 新增修改时校验固话是否添加重复 -->
+	<select id="queryByLivingTel" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) FROM OPAS_TEL_RISKLIST
+		where COMPANY_TEL = #{livingTel} OR LIVING_TEL = #{livingTel} OR
+		OTHER_TEL = #{livingTel}
+	</select>
+	
+	<!-- 新增修改时校验固话是否添加重复 -->
+	<select id="queryByOtherTel" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) FROM OPAS_TEL_RISKLIST
+		where COMPANY_TEL = #{otherTel} OR LIVING_TEL = #{otherTel} OR
+		OTHER_TEL = #{otherTel}
+	</select>
+	
+</mapper>

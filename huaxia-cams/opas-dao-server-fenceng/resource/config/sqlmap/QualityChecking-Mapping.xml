@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QualityChecking">
+
+	<resultMap id="QualityCheckingMap" type="java.util.Map">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+		<result column="CARD_NUM" property="cardNum" jdbcType="VARCHAR" />
+		<result column="CHILD_CARDNAME" property="childCardName" jdbcType="VARCHAR" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="CHECK_CONDITION" property="checkCondition" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="CHAR"/>
+		<result column="APP_PROD" property="appProd" jdbcType="FLOAT"/>
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="STOP_FLAG" property="stopFlag" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_DATE" property="lstDate" jdbcType="TIMESTAMP" />
+		<result column="APPLICATION_FLAG" property="applicationFlag" jdbcType="NUMERIC" />
+		<result column="FLAG" property="flag" jdbcType="CHAR"/>
+		<result column="CURR_STATUS_FLAG" property="currStatusFlag" jdbcType="CHAR"/>
+		<result column="DEL_STATUS_FLAG" property="delStatusFlag" jdbcType="CHAR"/>
+		<result column="CHECK_MEUOFLAG" property="checkMeuoFlag" jdbcType="CHAR"/>
+	</resultMap>
+	 <resultMap id="UserMap" type="com.huaxia.opas.domain.system.ApUser">
+		 <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		 <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		 <result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+	 </resultMap>
+	 <resultMap id="QualityChecking" type="com.huaxia.opas.domain.checking.QualityChecking">
+	 	<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CHECK_CONDITION" property="checkCondition" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="STOP_FLAG" property="stopFlag" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_DATE" property="lstDate" jdbcType="TIMESTAMP" />
+		<result column="EMPLOYEE_FLAG" property="employeeFlag" jdbcType="CHAR" />
+		<result column="CURR_OPT_USER" property="currOptUser" jdbcType="VARCHAR" />
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+		<result column="USER_RECORD" property="userRecord" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+	 </resultMap>
+	<resultMap id="ApproveReasonCodeResultMap" type="com.huaxia.opas.domain.sysparm.ApproveReasonCode">
+		<result column="REASON_CODE" property="reasonCode" jdbcType="VARCHAR" />
+		<result column="REASON_DESC" property="reasonDesc" jdbcType="VARCHAR" />
+	</resultMap> 
+	<select id="queryOperatorCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from (select distinct user_code,user_name,department from OPAS_AP_USER a 
+		left join OPAS_AP_USER_ROLE b on a.USER_ID = b.USER_ID
+		left join OPAS_AP_ROLE c on b.ROLE_ID = c.ROLE_ID 
+		left join OPAS_AP_USER_ORG d on d.USER_ID = a.USER_ID
+		left join OPAS_AP_ORG e on e.ORG_ID = d.ORG_ID
+		where c.role_code like '${roleCode}%' and a.status = '1'
+		<if test="orgNo != null and orgNo !='' ">
+			and e.org_no = #{orgNo}
+		</if>
+		<if test="userName !=null and userName !='' ">
+			and a.user_Name like '%${userName}%'
+		</if>
+		<if test="userCode !=null and userCode !='' ">
+			and a.user_Code like '%${userCode}%'
+		</if>
+		)
+	</select>
+	
+	<select id="queryOperatorList" parameterType="java.util.Map" resultMap="UserMap">
+		select distinct user_code,user_name,department from OPAS_AP_USER a 
+		left join OPAS_AP_USER_ROLE b on a.USER_ID = b.USER_ID
+		left join OPAS_AP_ROLE c on b.ROLE_ID = c.ROLE_ID 
+		left join OPAS_AP_USER_ORG d on d.USER_ID = a.USER_ID
+		left join OPAS_AP_ORG e on e.ORG_ID = d.ORG_ID
+		where c.role_code like '${roleCode}%'  and a.status = '1'
+		<if test="orgNo != null and orgNo !='' ">
+			and e.org_no = #{orgNo}
+		</if>
+		<if test="userName !=null and userName !='' ">
+			and a.user_Name like '%${userName}%'
+		</if>
+		<if test="userCode !=null and userCode !='' ">
+			and a.user_Code like '%${userCode}%'
+		</if>
+	</select>
+	<select id="queryOperatorAllList" parameterType="java.util.Map" resultType="java.lang.String">
+		select distinct user_code from OPAS_AP_USER a 
+		left join OPAS_AP_USER_ROLE b on a.USER_ID = b.USER_ID
+		left join OPAS_AP_ROLE c on b.ROLE_ID = c.ROLE_ID 
+		left join OPAS_AP_USER_ORG d on d.USER_ID = a.USER_ID
+		left join OPAS_AP_ORG e on e.ORG_ID = d.ORG_ID
+		where  a.status = '1'
+		<if test="orgNo != null and orgNo !='' ">
+			and e.org_no = #{orgNo}
+		</if>
+		<if test="userName !=null and userName !='' ">
+			and a.user_Name like '%${userName}%'
+		</if>
+		<if test="userCode !=null and userCode !='' ">
+			and a.user_Code like '%${userCode}%'
+		</if>
+	</select>
+	<select id="queryQualityCheckingCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+	select count(1)  from (
+		select   distinct  a. APP_ID, a.YDJ_FLAG , b1.APP_PROD ,b1.c1_cname CUST_NAME,
+		b1.C1_IDNBR CARD_NUM,b2.c2_cname CHILD_CARDNAME,a.curr_node CURR_STATUS,a.MATCHING_CARD_FLAG,
+		 case when c.app_id is not null then '1' else '0' end as application_flag
+	   from  OPAS_ALLOT_APPLY_ALLOT  a 
+	   left join OPAS_ALLOT_APPLY_ALLOT_HIS j on j.app_id = a.app_id
+	   left join OPAS_BIZ_INP_APPL_C1  b1 on a.app_id = b1.app_id
+	   left join OPAS_BIZ_INP_APPL_C2  b2 on a.app_id = b2.app_id
+	   left join OPAS_FILE_APPLICATION_DETAIL c on a.app_id = c.app_id
+	   left join OPAS_BIZ_APPROVAL d on d.app_id = a.app_id								<!--审核结果-->
+	   left join OPAS_TELCHECK_RESULT h1 on h1.app_id = a.app_id  <!--征信员/获取过件码-->
+	   left join (
+	   		select app_id,check_condition from opas_checkingr_resultinfo group by app_id,check_condition
+	   ) f on f.app_id = a.app_id		<!--检查情况-->
+	   left join OPAS_REVIEW_DECISION_RESULT h2 on h2.app_Id = a.app_Id  <!--审查员-->
+<!-- 	   left join  OPAS_BIZ_APPROVAL_HIS h3 on h3.app_id = a.app_id and a.CHECK_MEUOFLAG='1'	审批员/获取拒绝码、违例码 -->
+<!-- 	   left join  OPAS_BIZ_APPROVAL h4 on h4.app_id = a.app_id and a.CHECK_MEUOFLAG='2'	征审合一员 -->
+     <where>	
+		<if	test="appId !=null and appId !=''">	
+				AND a.app_Id = #{appId} 
+	   </if>  
+	   <if test="toArchiveTime1 != null and toArchiveTime1 !='' and toArchiveTime2 !=null and  toArchiveTime2 !=''"><!-- 归档日期 -->
+			AND c.TO_ARCHIVE_TIME 
+			between  
+			(select to_date(#{toArchiveTime1},'yyyy-mm-dd HH24:mi:ss') + INTERVAL '00:00:01' hour to second from dual)
+			and
+			(select to_date(#{toArchiveTime2},'yyyy-mm-dd HH24:mi:ss') + INTERVAL '23:59:59' hour to second from dual)
+			and  (c.flag = '2' or c.flag = '4')
+			and a.curr_node = '04' 
+		</if>
+		<if test="approveResult != null and approveResult !='' and approveResult !='2'.toString() "><!-- 审核结果 -->
+			AND  c.app_result = #{approveResult} and c.flag in ('2','4')
+		</if>
+		<if test="approveResult == '2'.toString() ">
+			AND a.curr_node <![CDATA[<>]]> '04' and c.app_id is null
+		</if>
+		<if test="refuseCode != null and refuseCode !='' "><!-- 拒绝码 -->
+			AND d.REFUSE_CODE1 = #{refuseCode} and c.flag in ('2','4') and d.approve_result = '0' 
+		</if>
+		<if test="violateCode != null and violateCode !='' "><!-- 违例码 -->
+			AND d.VIOLATE_CODE1 = #{violateCode} and c.flag in ('2','4') and  d.approve_result = '1' 
+		</if> 
+		<if test="blockCode != null and blockCode !='' "><!-- 过件码 -->
+			AND h1.BLOCK_CODE = #{blockCode} 
+		</if>
+		<if test="checkCondition != null and checkCondition !='' "><!-- 检查情况 -->
+			AND f.CHECK_CONDITION = #{checkCondition} 
+		</if>
+		
+		<if test="queueTypeObj == null or queueTypeObj =='' " >
+		<if test="examinerCode != null and examinerCode !='' "><!-- 审查员 -->
+			AND a.app_id in  (
+				select app_id
+					  from (select t1.app_id, t1.curr_opt_user
+					          from opas_allot_apply_allot t1
+					         where t1.curr_opt_user in
+					  <foreach collection = "examinerCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>       
+					         and t1.curr_node = '01'
+					        union
+					        select his1.app_id, his1.curr_opt_user
+					          from opas_allot_apply_allot_his his1
+					         where his1.curr_opt_user in 
+				 <foreach collection = "examinerCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+				 </foreach>    
+				 and his1.curr_node = '01') tab1
+					 group by tab1.app_id
+					having count(app_id) > #{examinerCodeLength}
+				)
+		</if> 
+		<if test="crediterCode != null and crediterCode !='' "><!-- 征信员 -->
+			AND  a.app_id in (
+				  select app_id
+					  from (select t2.app_id, t2.curr_opt_user
+					          from opas_allot_apply_allot t2
+					         where t2.curr_opt_user in  
+					    <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>  
+					         and t2.curr_node = '02'
+					        union
+					        select his2.app_id, his2.curr_opt_user
+					          from opas_allot_apply_allot_his his2
+					         where his2.curr_opt_user in 
+					    <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>    
+					          and his2.curr_node = '02') tab2
+					 group by tab2.app_id
+					having count(app_id) > #{crediterCodeLength}
+			)
+		</if> 
+		<if test="auditorCode != null and auditorCode !='' "><!-- 审批员-->
+			AND a.CHECK_MEUOFLAG='1' and a.app_id in (
+				 select app_id
+					  from (select s.app_id, s.curr_opt_user
+					          from opas_allot_apply_allot s
+					         where s.curr_opt_user in   
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>  and s.curr_node = '03'
+					        union
+					        select sp.app_id, sp.curr_opt_user
+					          from opas_allot_apply_allot_his sp
+					         where sp.curr_opt_user in 
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach> 
+					          and sp.curr_node = '03' and sp.back_flag !='4'
+					          union 
+					           select sp.app_id, sp.curr_opt_user
+					          from opas_allot_apply_allot_his sp
+					         where sp.last_opt_user in 
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach> 
+					          and sp.curr_node = '03' and sp.back_flag ='4'
+					          ) sp2
+					 group by sp2.app_id
+					having count(app_id) > #{auditorCodesLength}
+			)
+		</if> 
+		<if test="totalOperatorCode != null and totalOperatorCode !='' "><!-- 政审合一员-->
+			AND a.app_id in (select app_id
+				   from (select t3.app_id, t3.curr_opt_user
+				           from opas_allot_apply_allot t3
+				          where t3.curr_opt_user in 
+				      <foreach collection = "totalOperatorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>
+				            and ((t3.curr_node = '03'  and t3.check_meuoflag = '2')
+				             or t3.curr_node = '02' )
+				         union
+				         select his3.app_id, his3.curr_opt_user
+				           from opas_allot_apply_allot_his his3
+				          where his3.curr_opt_user in 
+				      <foreach collection = "totalOperatorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>
+				            and ((his3.curr_node = '03' and his3.check_meuoflag = '2')
+				            or his3.curr_node = '02')
+				             ) tab3
+				  group by tab3.app_id
+			 having count(app_id) > #{totalOperatorCodesLength}
+			) 
+		</if> 
+		</if>
+		<if test="ydjFlag !=null and ydjFlag !=''">
+			AND a.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test=" operatorList !=null and operatorList != ''">
+			AND (a.curr_opt_user in
+			<foreach collection = "operatorList" index="index" item="item" open="(" separator="," close=")">
+				#{item,jdbcType=VARCHAR} 
+			</foreach> 
+			or j.curr_opt_user in 
+			<foreach collection = "operatorList" index="index" item="items" open="(" separator="," close=")">
+				#{items,jdbcType=VARCHAR} 
+			</foreach>
+			)
+		</if>
+		<!-- 二次判断，如果选择队列，不判断历史数据 -->
+		<if test="queueTypeObj != null and queueTypeObj!='' " >
+		<if test="examinerCode != null and examinerCode !='' "><!-- 审查员 -->
+			AND a.app_id in  (
+				select app_id
+					  from (select t1.app_id, t1.curr_opt_user
+					          from opas_allot_apply_allot t1
+					         where t1.curr_opt_user in
+					  <foreach collection = "examinerCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>       
+					         and t1.curr_node = '01'
+					        ) tab1
+					 group by tab1.app_id
+					having count(app_id) > #{examinerCodeLength}
+				)
+		</if> 
+		<if test="crediterCode != null and crediterCode !='' "><!-- 征信员 -->
+			AND  a.app_id in (
+				  select app_id
+					  from (select t2.app_id, t2.curr_opt_user
+					          from opas_allot_apply_allot t2
+					          <if test="queueTypeObj != null and queueTypeObj == 'CI2'">
+									where t2.LAST_OPT_USER in  
+										    <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+										  		#{item,jdbcType=VARCHAR} 
+										  </foreach>  
+							</if>
+							<if test="queueTypeObj != null and queueTypeObj != 'CI2'">
+									where t2.curr_opt_user in  
+										    <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+										  		#{item,jdbcType=VARCHAR} 
+										  </foreach>  
+										         and t2.curr_node = '02'
+							</if>
+					        ) tab2
+					 group by tab2.app_id
+					having count(app_id) > #{crediterCodeLength}
+			)
+		</if> 
+		<if test="auditorCode != null and auditorCode !='' "><!-- 审批员-->
+			AND a.CHECK_MEUOFLAG='1' and a.app_id in (
+				 select app_id
+					  from (select s.app_id, s.curr_opt_user
+					          from opas_allot_apply_allot s
+					         where s.curr_opt_user in   
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>  and (s.curr_node = '03' or s.curr_node = '04') ) sp2
+					 group by sp2.app_id
+					having count(app_id) > #{auditorCodesLength}
+			)
+		</if> 
+		<if test="totalOperatorCode != null and totalOperatorCode !='' "><!-- 政审合一员-->
+			AND a.app_id in (select app_id
+				   from (select t3.app_id, t3.curr_opt_user
+				           from opas_allot_apply_allot t3
+				          where t3.curr_opt_user in 
+				      <foreach collection = "totalOperatorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>
+				            and ((t3.curr_node = '03'  and t3.check_meuoflag = '2')
+				             or t3.curr_node = '02'  or t3.curr_node = '04')) tab3
+				  group by tab3.app_id
+			 having count(app_id) > #{totalOperatorCodesLength}
+			) 
+		</if> 
+		</if>
+		
+		<if test="queueTypeObj != null and queueTypeObj == 'HY7'">
+			AND a.CURR_STATUS = '4' AND((a.CURR_NODE = '03' AND a.CHECK_MEUOFLAG = '2') or a.CURR_NODE = '02')
+		</if>
+		<if test="queueTypeObj != null and queueTypeObj == 'CI2'">
+			AND a.DEL_STATUS = '0' AND a.CURR_NODE = '03' AND (a.CURR_STATUS = '0' or a.CURR_STATUS = '1')
+		</if>
+		<!-- 在审批完成时要关联归档表显示 -->
+		<if test="queueTypeObj != null and (queueTypeObj == 'HY5' or queueTypeObj == 'LL2')">
+			and ceil((sysdate -to_date(to_char(C.to_archive_time,'yyyymmdd hh24:mi:ss'),'yyyymmdd hh24:mi:ss')) * 24 * 60) &lt; 121
+            and C.flag = '4'
+		</if>
+		<if test="delStatus !=null and delStatus !=''">
+			AND a.DEL_STATUS = #{delStatus}
+		</if>
+		<if test="currNode !=null and currNode !=''">
+			AND a.CURR_NODE = #{currNode}	
+		</if>
+		<if test="currStatus !=null and currStatus !=''">
+			AND a.CURR_STATUS = #{currStatus}
+		</if>
+		<if test="checkMeuoFlag !=null and checkMeuoFlag !=''">
+			AND a.CHECK_MEUOFLAG = #{checkMeuoFlag}
+		</if>
+		</where>
+		order by substr(a.APP_ID,1,6) desc
+		)
+	</select>
+	
+	<select id="queryQualityCheckingList" parameterType="java.util.Map" resultMap="QualityCheckingMap">
+		  select distinct  a. APP_ID, a.YDJ_FLAG , b1.APP_PROD ,b1.c1_cname CUST_NAME,
+		b1.C1_IDNBR CARD_NUM,b2.c2_cname CHILD_CARDNAME,a.curr_node CURR_STATUS,a.MATCHING_CARD_FLAG,c.flag,
+		 case when c.app_id is not null then '1' else '0' end as application_flag,
+                     a.curr_status as CURR_STATUS_FLAG,
+                     a.del_status as DEL_STATUS_FLAG,
+                     a.check_meuoflag as CHECK_MEUOFLAG
+	   from  OPAS_ALLOT_APPLY_ALLOT  a 
+	   left join OPAS_ALLOT_APPLY_ALLOT_HIS j on j.app_id = a.app_id
+	   left join OPAS_BIZ_INP_APPL_C1  b1 on a.app_id = b1.app_id
+	   left join OPAS_BIZ_INP_APPL_C2  b2 on a.app_id = b2.app_id
+	   left join OPAS_FILE_APPLICATION_DETAIL c on a.app_id = c.app_id
+	   left join OPAS_BIZ_APPROVAL d on d.app_id = a.app_id								<!--审核结果-->
+	   left join OPAS_TELCHECK_RESULT h1 on h1.app_id = a.app_id  <!--征信员/获取过件码-->
+	   left join (
+	   		select app_id,check_condition from opas_checkingr_resultinfo group by app_id,check_condition
+	   ) f on f.app_id = a.app_id		<!--检查情况-->
+	   left join OPAS_REVIEW_DECISION_RESULT h2 on h2.app_Id = a.app_Id  <!--审查员-->
+<!-- 	   left join  OPAS_BIZ_APPROVAL_HIS h3 on h3.app_id = a.app_id and a.CHECK_MEUOFLAG='1'	审批员/获取拒绝码、违例码 -->
+<!-- 	   left join  OPAS_BIZ_APPROVAL h4 on h4.app_id = a.app_id and a.CHECK_MEUOFLAG='2'	征审合一员 -->
+     <where>	
+		<if	test="appId !=null and appId !=''">	
+				AND a.app_Id = #{appId} 
+	   </if>  
+	   <if test="toArchiveTime1 != null and toArchiveTime1 !='' and toArchiveTime2 !=null and  toArchiveTime2 !=''"><!-- 归档日期 -->
+			AND c.TO_ARCHIVE_TIME 
+			between  
+			(select to_date(#{toArchiveTime1},'yyyy-mm-dd HH24:mi:ss') + INTERVAL '00:00:01' hour to second from dual)
+			and
+			(select to_date(#{toArchiveTime2},'yyyy-mm-dd HH24:mi:ss') + INTERVAL '23:59:59' hour to second from dual)
+			and  (c.flag = '2' or c.flag = '4')
+			and a.curr_node = '04' 
+		</if>
+		<if test="approveResult != null and approveResult !='' and approveResult !='2'.toString() "><!-- 审核结果 -->
+			AND c.app_result = #{approveResult} and c.flag in ('2','4') 
+		</if>
+		<if test="approveResult == '2'.toString() ">
+			AND a.curr_node <![CDATA[<>]]> '04' and c.app_id is null 
+		</if>
+		<if test="refuseCode != null and refuseCode !='' "><!-- 拒绝码 -->
+			AND d.REFUSE_CODE1 = #{refuseCode} and c.flag in ('2','4') and d.approve_result = '0' 
+		</if>
+		<if test="violateCode != null and violateCode !='' "><!-- 违例码 -->
+			AND d.VIOLATE_CODE1 = #{violateCode} and c.flag in ('2','4') and d.approve_result = '1' 
+		</if> 
+		<if test="blockCode != null and blockCode !='' "><!-- 过件码 -->
+			AND h1.BLOCK_CODE = #{blockCode}  
+		</if>
+		<if test="checkCondition != null and checkCondition !='' "><!-- 检查情况 -->
+			AND f.CHECK_CONDITION = #{checkCondition} 
+		</if>
+		
+		<if test="queueTypeObj == null or queueTypeObj =='' " >
+		<if test="examinerCode != null and examinerCode !='' "><!-- 审查员 -->
+			AND a.app_id in  (
+				select app_id
+					  from (select t1.app_id, t1.curr_opt_user
+					          from opas_allot_apply_allot t1
+					         where t1.curr_opt_user in 
+					    <foreach collection = "examinerCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach> 
+					         and t1.curr_node = '01'
+					        union
+					        select his1.app_id, his1.curr_opt_user
+					          from opas_allot_apply_allot_his his1
+					         where his1.curr_opt_user in 
+					   <foreach collection = "examinerCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach> 
+					          and his1.curr_node = '01') tab1
+					 group by tab1.app_id
+					having count(app_id) > #{examinerCodeLength}
+				)
+		</if> 
+		<if test="crediterCode != null and crediterCode !='' "><!-- 征信员 -->
+			AND  a.app_id in (
+				  select app_id
+					  from (select t2.app_id, t2.curr_opt_user
+					          from opas_allot_apply_allot t2
+					         where t2.curr_opt_user in   
+					   <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>  and t2.curr_node = '02'
+					        union
+					        select his2.app_id, his2.curr_opt_user
+					          from opas_allot_apply_allot_his his2
+					         where his2.curr_opt_user in 
+					   <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach> 
+					          and his2.curr_node = '02') tab2
+					 group by tab2.app_id
+					having count(app_id) > #{crediterCodeLength}
+			)
+		</if> 
+		<if test="auditorCode != null and auditorCode !='' "><!-- 审批员-->
+			AND a.CHECK_MEUOFLAG='1'and a.app_id in (
+				 select app_id
+					  from (select s.app_id, s.curr_opt_user
+					          from opas_allot_apply_allot s
+					         where s.curr_opt_user in   
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>  and s.curr_node = '03'
+					        union
+					        select sp.app_id, sp.curr_opt_user
+					          from opas_allot_apply_allot_his sp
+					         where sp.curr_opt_user in 
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach> 
+					          and sp.curr_node = '03'  and sp.back_flag !='4'
+					          union 
+					           select sp.app_id, sp.curr_opt_user
+					          from opas_allot_apply_allot_his sp
+					         where sp.last_opt_user in 
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach> 
+					          and sp.curr_node = '03' and sp.back_flag ='4') sp2
+					 group by sp2.app_id
+					having count(app_id) > #{auditorCodesLength}
+			)
+		</if>
+		<if test="totalOperatorCode != null and totalOperatorCode !='' "><!-- 政审合一员-->
+			AND a.app_id in (select app_id
+				   from (select t3.app_id, t3.curr_opt_user
+				           from opas_allot_apply_allot t3
+				          where t3.curr_opt_user in 
+				      <foreach collection = "totalOperatorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>
+				            and ((t3.curr_node = '03'  and t3.check_meuoflag = '2')
+				             or t3.curr_node = '02' )
+				         union
+				         select his3.app_id, his3.curr_opt_user
+				           from opas_allot_apply_allot_his his3
+				          where his3.curr_opt_user in 
+				      <foreach collection = "totalOperatorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>
+				            and ((his3.curr_node = '03' and his3.check_meuoflag = '2')
+				            or his3.curr_node = '02')
+				             ) tab3
+				  group by tab3.app_id
+			 having count(app_id) > #{totalOperatorCodesLength}
+			) 
+		</if> 
+		</if>
+		<if test="ydjFlag !=null and ydjFlag !=''">
+			AND a.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test=" operatorList !=null and operatorList != ''">
+			AND (a.curr_opt_user in
+			<foreach collection = "operatorList" index="index" item="item" open="(" separator="," close=")">
+				#{item,jdbcType=VARCHAR} 
+			</foreach> 
+			or j.curr_opt_user in 
+			<foreach collection = "operatorList" index="index" item="items" open="(" separator="," close=")">
+				#{items,jdbcType=VARCHAR} 
+			</foreach>
+			)
+		</if>
+		<!-- 二次判断，如果选择队列，不判断历史数据 -->
+		<if test="queueTypeObj != null and queueTypeObj!='' " >
+		<if test="examinerCode != null and examinerCode !='' "><!-- 审查员 -->
+			AND a.app_id in  (
+				select app_id
+					  from (select t1.app_id, t1.curr_opt_user
+					          from opas_allot_apply_allot t1
+					         where t1.curr_opt_user in
+					  <foreach collection = "examinerCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>       
+					         and t1.curr_node = '01'
+					        ) tab1
+					 group by tab1.app_id
+					having count(app_id) > #{examinerCodeLength}
+				)
+		</if> 
+		<if test="crediterCode != null and crediterCode !='' "><!-- 征信员 -->
+			AND  a.app_id in (
+				  select app_id
+					  from (select t2.app_id, t2.curr_opt_user
+					          from opas_allot_apply_allot t2
+					          <if test="queueTypeObj != null and queueTypeObj == 'CI2'">
+									where t2.LAST_OPT_USER in  
+										    <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+										  		#{item,jdbcType=VARCHAR} 
+										  </foreach>  
+							</if>
+							<if test="queueTypeObj != null and queueTypeObj != 'CI2'">
+									where t2.curr_opt_user in  
+										    <foreach collection = "crediterCode" index="index" item="item" open="(" separator="," close=")">
+										  		#{item,jdbcType=VARCHAR} 
+										  </foreach>  
+										         and t2.curr_node = '02'
+							</if>
+					        ) tab2
+					 group by tab2.app_id
+					having count(app_id) > #{crediterCodeLength}
+			)
+		</if> 
+		<if test="auditorCode != null and auditorCode !='' "><!-- 审批员-->
+			AND a.CHECK_MEUOFLAG='1' and a.app_id in (
+				 select app_id
+					  from (select s.app_id, s.curr_opt_user
+					          from opas_allot_apply_allot s
+					         where s.curr_opt_user in   
+					   <foreach collection = "auditorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>  and (s.curr_node = '03' or s.curr_node = '04')) sp2
+					 group by sp2.app_id
+					having count(app_id) > #{auditorCodesLength}
+			)
+		</if> 
+		<if test="totalOperatorCode != null and totalOperatorCode !='' "><!-- 政审合一员-->
+			AND a.app_id in (select app_id
+				   from (select t3.app_id, t3.curr_opt_user
+				           from opas_allot_apply_allot t3
+				          where t3.curr_opt_user in 
+				      <foreach collection = "totalOperatorCode" index="index" item="item" open="(" separator="," close=")">
+					  		#{item,jdbcType=VARCHAR} 
+					  </foreach>
+				            and ((t3.curr_node = '03'  and t3.check_meuoflag = '2')
+				             or t3.curr_node = '02'  or t3.curr_node = '04')) tab3
+				  group by tab3.app_id
+			 having count(app_id) > #{totalOperatorCodesLength}
+			) 
+		</if> 
+		</if>
+		<if test="queueTypeObj != null and queueTypeObj == 'HY7'">
+			AND a.CURR_STATUS = '4' AND((a.CURR_NODE = '03' AND a.CHECK_MEUOFLAG = '2') or a.CURR_NODE = '02')
+		</if>
+		<if test="queueTypeObj != null and queueTypeObj == 'CI2'">
+			AND a.DEL_STATUS = '0' AND a.CURR_NODE = '03' AND (a.CURR_STATUS = '0' or a.CURR_STATUS = '1')
+		</if>
+		<!-- 在审批完成时要关联归档表显示 -->
+		<if test="queueTypeObj != null and (queueTypeObj == 'HY5' or queueTypeObj == 'LL2')">
+			and ceil((sysdate -to_date(to_char(C.to_archive_time,'yyyymmdd hh24:mi:ss'),'yyyymmdd hh24:mi:ss')) * 24 * 60) &lt; 121
+            and C.flag = '4'
+		</if>
+		<if test="delStatus !=null and delStatus !=''">
+			AND a.DEL_STATUS = #{delStatus}
+		</if>
+		<if test="currNode !=null and currNode !=''">
+			AND a.CURR_NODE = #{currNode}	
+		</if>
+		<if test="currStatus !=null and currStatus !=''">
+			AND a.CURR_STATUS = #{currStatus}
+		</if>
+		<if test="checkMeuoFlag !=null and checkMeuoFlag !=''">
+			AND a.CHECK_MEUOFLAG = #{checkMeuoFlag}
+		</if>
+		</where>
+		order by substr(a.APP_ID,1,6) desc , a.app_id 
+	</select>
+	
+	<insert id="saveQualityChecking" parameterType="com.huaxia.opas.domain.checking.QualityChecking"> 
+		insert into OPAS_CHECKINGR_RESULTINFO 
+		(AUTO_ID, APP_ID, CHECK_CONDITION, CHECK_RESULT,STOP_FLAG,MEMO, CRT_DATE, CRT_USER,LST_DATE,EMPLOYEE_FLAG,BREAK_FLAG,CURR_OPT_USER,CURR_NODE,USER_RECORD,YDJ_FLAG)
+		values (
+		#{autoId,jdbcType=VARCHAR}, 
+		#{appId,jdbcType=VARCHAR},
+		#{checkCondition,jdbcType=VARCHAR},
+		#{checkResult,jdbcType=VARCHAR},
+		#{stopFlag,jdbcType=CHAR}, 
+		#{memo,jdbcType=VARCHAR},
+		SYSDATE, 
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{employeeFlag,jdbcType=CHAR},
+		#{breakFlag,jdbcType=CHAR},
+		#{currOptUser,jdbcType=VARCHAR},
+		#{currNode,jdbcType=VARCHAR},
+		#{userRecord,jdbcType=VARCHAR},
+		#{ydjFlag,jdbcType=CHAR})
+	</insert>
+	
+	<select id="queryQualityCheckingCountByAppId" parameterType="java.lang.String" resultType="java.lang.Integer" >
+		select count(1) from OPAS_CHECKINGR_RESULTINFO where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+<!-- 	<update id="updateQualityChecking" parameterType="com.huaxia.opas.domain.checking.QualityChecking"> -->
+<!-- 		UPDATE OPAS_CHECKINGR_RESULTINFO SET -->
+<!-- 		     APP_ID=#{appId,jdbcType=VARCHAR}, -->
+<!-- 		     CHECK_CONDITION=#{checkCondition,jdbcType=VARCHAR}, -->
+<!-- 		     CHECK_RESULT=#{checkResult,jdbcType=VARCHAR}, -->
+<!-- 		     STOP_FLAG=#{stopFlag,jdbcType=CHAR}, -->
+<!-- 		     MEMO=#{memo,jdbcType=VARCHAR}, -->
+<!-- 		     LST_DATE=SYSDATE,  -->
+<!-- 		     CRT_USER=#{crtUser,jdbcType=VARCHAR}, -->
+<!-- 		     EMPLOYEE_FLAG=#{employeeFlag,jdbcType=CHAR} -->
+<!-- 	    WHERE  -->
+<!-- 	    	APP_ID = #{appId,jdbcType=VARCHAR} -->
+<!-- 	</update> -->
+	
+<!-- 	<update id="updateQualityCheckingWithoutStopFlag" parameterType="com.huaxia.opas.domain.checking.QualityChecking"> -->
+<!-- 		UPDATE OPAS_CHECKINGR_RESULTINFO  SET  -->
+<!-- 		     APP_ID=#{appId,jdbcType=VARCHAR}, -->
+<!-- 		     CHECK_CONDITION=#{checkCondition,jdbcType=VARCHAR}, -->
+<!-- 		     CHECK_RESULT=#{checkResult,jdbcType=VARCHAR}, -->
+<!-- 		     MEMO=#{memo,jdbcType=VARCHAR}, -->
+<!-- 		     LST_DATE=SYSDATE,  -->
+<!-- 		     CRT_USER=#{crtUser,jdbcType=VARCHAR}, -->
+<!-- 		     EMPLOYEE_FLAG=#{employeeFlag,jdbcType=CHAR} -->
+<!-- 	    WHERE  -->
+<!-- 	    	APP_ID = #{appId,jdbcType=VARCHAR} -->
+<!-- 	</update> -->
+	
+	<select id="selectQualityChecking" parameterType="java.lang.String" resultMap="QualityChecking" >
+		select  rn,APP_ID,MEMO,CHECK_CONDITION,CHECK_RESULT,STOP_FLAG,CRT_DATE,CRT_USER,EMPLOYEE_FLAG
+		from
+		 (select row_number() over (partition by app_id order by crt_date desc) as rn,
+		 	 APP_ID,MEMO,CHECK_CONDITION,CHECK_RESULT,STOP_FLAG,CRT_DATE,CRT_USER,EMPLOYEE_FLAG
+		 from OPAS_CHECKINGR_RESULTINFO ) t  
+		 where rn = 1 and app_id = #{appId}
+	</select>
+	
+	<select id="queryUserOrgNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select ORG_NO
+		from OPAS_AP_USER_ORG a 
+		join OPAS_AP_ORG b on  a.org_id = b.org_id
+		where a.USER_ID = #{userUuid,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryUserUuid" parameterType="java.lang.String" resultType="java.lang.String">
+		  select u.user_id from opas_ap_user u
+ 			 left join opas_allot_apply_allot a on u.user_code = a.curr_opt_user
+ 		  where a.app_id = #{appId}
+	</select>
+	
+	<select id="queryStopFlag" parameterType="java.lang.String" resultType="java.lang.String">
+		select stop_flag from (select STOP_FLAG from OPAS_CHECKINGR_RESULTINFO where app_id = #{appId} 
+		order by crt_date desc) where rownum = 1
+	</select>
+	
+	<select id="queryQualityCheckingListByDate" parameterType="java.util.Map" resultMap="QualityChecking">
+	<!-- 	select APP_ID,CHECK_CONDITION,CHECK_RESULT,CRT_DATE,CRT_USER,MEMO,LST_DATE,CRT_USER,CURR_OPT_USER,CURR_NODE,USER_RECORD from 
+			 OPAS_CHECKINGR_RESULTINFO t
+		where  t.LST_DATE  between  
+		(select to_date(#{startDate},'yyyy-mm-dd HH24:mi:ss') + INTERVAL '00:00:01' hour to second from dual)
+			and
+			(select to_date(#{endDate},'yyyy-mm-dd HH24:mi:ss') + INTERVAL '23:59:59' hour to second from dual)
+			order by app_id -->
+			 select t.APP_ID,
+           t.CHECK_CONDITION,
+           t.CHECK_RESULT,
+           t.CRT_DATE,
+           t.CRT_USER,
+           t.MEMO,
+           t.LST_DATE,
+           t.CRT_USER,
+           t.CURR_OPT_USER,
+           t.CURR_NODE,
+           t.USER_RECORD,
+           c1.ydj_flag
+      from OPAS_CHECKINGR_RESULTINFO t
+      left join opas_biz_inp_appl_c1 c1 on c1.app_id = t.app_id
+     where t.LST_DATE between
+           (select to_date(#{startDate}, 'yyyy-mm-dd HH24:mi:ss') +
+                   INTERVAL '00:00:01' hour to second
+              from dual) and
+           (select to_date(#{endDate}, 'yyyy-mm-dd HH24:mi:ss') +
+                   INTERVAL '23:59:59' hour to second
+              from dual)
+              and t.stop_flag = '1'
+     order by t.app_id
+     
+	</select>
+	
+	<select id="queryPerInspected" parameterType="java.lang.String" resultType="java.util.Map">
+		select C1_CNAME,C1_TITLE from OPAS_BIZ_INP_APPL_C1 
+		where app_id = #{appId}
+	</select>
+	<!-- 查询拒绝码 -->
+	<select id="queryRefuseCode"  resultMap="ApproveReasonCodeResultMap">
+		select
+			REASON_CODE,REASON_DESC
+			from OPAS_APPROVE_REASONCODE
+			where  STATUS = '1'
+			AND REASON_CODE LIKE '%D%'
+			order by REASON_CODE
+	</select>
+	<!-- 查询违例码 -->
+	<select id="queryBreakCode" resultMap="ApproveReasonCodeResultMap">
+			select
+			REASON_CODE,REASON_DESC
+			from OPAS_APPROVE_REASONCODE
+			where STATUS = '1'
+			AND REASON_CODE LIKE '%A%'
+			order by REASON_CODE
+	</select>
+	<!-- 查询组长权限 -->
+	<select id = "queryListRoleCodeByUserCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select distinct ar.role_code from opas_ap_user au
+	    left join opas_ap_user_role aur on aur.user_id = au.user_id
+	    left join opas_ap_role ar on ar.role_id = aur.role_id
+	    where au.user_id = #{userId} and ar.role_code is not null
+	</select>
+
+	<select id="querySomeFlagByAppId" parameterType="java.lang.String" resultType="java.util.Map">
+			select  YDJ_FLAG,LAOJIANFLAG,MATCHING_CARD_FLAG,CURR_OPT_USER,CURR_NODE,ALLOT_VERSION from OPAS_ALLOT_APPLY_ALLOT
+			where app_id = #{appId}
+	</select>
+	
+    <select id="selectStopFlagByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+   			select stop_flag from 
+           ( select row_number() over (partition by app_id order by crt_date desc) rn,APP_ID,stop_flag from OPAS_CHECKINGR_RESULTINFO)
+           where rn=1 and app_id LIKE '${_parameter}%'
+	</select>
+	
+	<select id = "queryCurrOptUserByNode" parameterType="java.util.Map" resultType="java.lang.String">
+  		 select curr_opt_user from ( select row_number() over(partition by app_id order by lst_team_date desc) rn,
+           app_id,
+           h.curr_opt_user,h.lst_team_date
+      from opas_allot_apply_allot_his h where h.curr_node = #{currNode} and  app_id = #{appId}  ) where rn = '1' 
+	</select>
+	
+	 <select id = "queryListOptUserByNode" parameterType="java.util.Map" resultType="java.lang.String">
+	  select a.curr_opt_user
+         from (select h.curr_opt_user, max(h.lst_team_date) lst_team_date
+                 from opas_allot_apply_allot_his h
+                where h.curr_node = #{currNode}
+                  and h.back_flag != '4'
+                  and h.back_flag != '1'
+                  and h.app_id = #{appId}
+                group by h.curr_opt_user) a
+        order by a.lst_team_date asc
+	</select>
+</mapper>

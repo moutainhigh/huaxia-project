@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblBalanceMove" title="BalanceMove" class="easyui-datagrid"
+		style="width: 98%;height:100%"
+		data-options="selectOnCheck:false,checkOnSelect:false,pageSize:20,pageList:[15,20,50],rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,
+		url:'/opas-naps/querybalancemove.json',loadMsg:'数据加载中.....',
+		method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">Id</th>
+				<th field="prodCode" width="5%" align="center">产品编号</th>
+				<th field="prodName" width="12%" align="center">产品名称</th>
+				<th field="moveLimitPer" width="9%" align="center">转移额度百分比(%)</th>
+				<th field="maxLimit" width="8%" align="center">最高限额</th>
+				<th field="lowLimit" width="8%" align="center">最低限额</th>
+				<th field="status" width="5%" align="center"
+					formatter="formatStatus">当前状态</th>
+				<th field="startDate" width="11%" align="center"
+					data-options="formatter:myformatDate" sortable="true">启用日期</th>
+				<th field="stopDate" width="11%" align="center"
+					data-options="formatter:myformatDate" sortable="true">停用日期</th>
+				<th field="crtUser" width="8%" align="center">创建人</th>
+				<th field="crtDate" width="11%" align="center"
+					data-options="formatter:myformatDate" sortable="true">创建日期</th>
+				<th field="lstUpUser" width="8%" align="center">修改人</th>
+				<th field="lstUpdDate" width="10%" align="center"
+					data-options="formatter:myformatDate" sortable="true">修改日期</th>
+				<th field="operate" width="5%" align="center"
+					data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+
+	<!-- 查询窗口 -->
+	<div id="positionCodeCondion" style="padding: 10px; text-align: laft;">
+		<form id="seachPositionCodeForm">
+			产品编号: <input class="easyui-textbox" style="width: 110px"
+				name="prodCode" id="prodCode"> 产品名称: <input
+				class="easyui-textbox" style="width: 110px" name="prodName"
+				id="prodName"> 当前状态: <select class="easyui-combobox"
+				style="width: 80px" id="status" name="status">
+				<option value="">请选择</option>
+				<option value="1">启用</option>
+				<option value="0">停用</option>
+			</select>
+				<a href="javascript:common.searchTbl('seachPositionCodeForm','tblBalanceMove');"
+					class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+				<a href="javascript:common.openWin('winAdd');"
+				class="easyui-linkbutton" iconCls="icon-add">新增</a>
+				<a href="javascript:deleteBalanceMove();"
+					class="easyui-linkbutton" iconCls="icon-remove">批量删除</a>  
+				<a href="javascript:setActiveOk();"
+					class="easyui-linkbutton" iconCls="icon-ok">批量启用</a>  
+				<a href="javascript:setActiveNo();"
+					class="easyui-linkbutton" iconCls="icon-no">批量禁用</a>
+		</form>
+	</div>
+</div>
+	<!--修改窗口  -->
+	<div id="winEdit" class="easyui-window" title="余额修改"
+		style="width: 300px; height: 250px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>产品编号:</td>
+					<td><input class="easyui-validatebox textbox" id="prodCode"
+						type="text" name="prodCode"
+						data-options="required:true,validType:'length[1,4]',editable:false"></input> <input
+						type="hidden" name="autoId" id="autoId"  /></td>
+				</tr>
+				<tr>
+					<td>产品名称:</td>
+					<td><input class="easyui-validatebox textbox" id="prodName"
+						type="text" name="prodName"
+						data-options="required:true,validType:'length[1,32]'"></input></td>
+				</tr>
+				<tr>
+					<td>转移额度百分比:</td>
+					<td><input class="easyui-validatebox textbox"
+						id="moveLimitPer" type="text" name="moveLimitPer"
+						data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<td>最高限额:</td>
+					<td><input class="easyui-validatebox textbox" id="maxLimit"
+						type="text" name="maxLimit"
+						data-options="required:true,validType:'length[1,10]'"></input></td>
+				</tr>
+				<tr>
+					<td>最低限额:</td>
+					<td><input class="easyui-validatebox textbox" id="lowLimit"
+						type="text" name="lowLimit"
+						data-options="required:true,validType:'length[1,10]'"></input></td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp; <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+
+	<!--新增窗口  -->
+	<div id="winAdd" class="easyui-window" title="余额转移记录添加"
+		style="width: 400px; height: 300px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>产品编号:</td>
+					<td><input class="easyui-validatebox textbox" id="prodCode"
+						type="text" name="prodCode"
+						data-options="required:true,validType:'length[1,4]'"></input> <input
+						type="hidden" name="autoId" id="autoId" /></td>
+				</tr>
+				<tr>
+					<td>产品名称:</td>
+					<td><input class="easyui-validatebox textbox" id="prodName"
+						type="text" name="prodName"
+						data-options="validType:'length[1,32]'"></input></td>
+				</tr>
+				<tr>
+					<td>转移额度百分比:</td>
+					<td><input class="easyui-validatebox"
+						data-options="validType:'integer',required:true" id="moveLimitPer" type="text"
+						name="moveLimitPer"> </input></td>
+					<td>%</td>
+				</tr>
+				<tr>
+					<td>最高限额:</td>
+					<td><input class="easyui-validatebox"
+						data-options="validType:'integer'" id="maxLimit" type="text"
+						name="maxLimit"
+						data-options="required:true,validType:'length[1,10]'"></input></td>
+				</tr>
+				<tr>
+					<td>最低限额:</td>
+					<td><input class="easyui-validatebox"
+						data-options="validType:'integer'" id="lowLimit" type="text"
+						name="lowLimit"
+						data-options="required:true,validType:'length[1,10]'"></input></td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+		</div>
+	</div>
+</body>
+
+
+<!-- 对应的js方法 -->
+<script>
+	//余额表单
+	var tblBalanceMove = $("#tblBalanceMove");
+	//修改
+	var editWindow = $("#winEdit");
+	//新增窗口
+	var addWindow = $("#winAdd");
+	//创建时间
+	var editForm = $("#editForm");
+	//添加表单
+	var addForm = $("#addForm");
+
+	var menuTree = $("#menuTree");
+	//操作超链接按钮设置
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editBalanceMove();>修改</a>&nbsp;";
+	}
+
+	//设置当前状态
+	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	}
+
+	
+	
+	//选中行临时存储变量
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+	 tblBalanceMove.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			debugger;
+			value = rowData;
+			debugger;
+		}	
+	})	 
+	
+	
+	function addRole() {
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	//超链接修改按钮方法
+	/* function editBalanceMove() {
+		var roleObj = tblBalanceMove.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(roleObj)
+		});
+	} */
+
+	//展示编辑数据
+	function editBalanceMove() {
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+ 		var cTime = gridDateFormat2(value.createTime);
+		$('#showCreateTime').textbox('setValue',cTime);
+// 		$('#showCreateTime').textbox({disabled:true});
+		tblIdentityRisk.datagrid("clearSelections"); 
+		$("input[name='autoId']").attr("checked",false);
+	}
+	
+	
+	
+	//设置日期的方法
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+	
+	//修改日期格式
+	function myformatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+			}
+		}
+	
+	//工具方法：格式化CST类型时间
+
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+				+ second;
+	};
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	//修改按钮
+	function onUpdate() {
+		var balanceData = isRequired('editForm');
+		var jsondata = getFormData(editForm.serializeArray());
+		var cue = "修改";
+		if(jsondata.moveLimitPer<0){
+			$.messager.alert("操作提示","添加失败,转移额度百分比不能小于0!");
+			return;
+		}
+		if(jsondata.maxLimit<jsondata.lowLimit){
+			$.messager.alert("操作提示","添加失败,最低转移额度不能超过最高转移额度!");
+			return;
+		}
+		if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/balance_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblBalanceMove.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//添加按钮的窗口方法
+	function onSave() {
+		var balanceData = isRequired('addForm');
+		var jsondata = getFormData(addForm.serializeArray());
+		var cue = "添加";
+		if(jsondata.moveLimitPer<0){
+			$.messager.alert("操作提示","添加失败,转移额度百分比不能小于0!");
+			return;
+		}
+		if(jsondata.maxLimit<jsondata.lowLimit){
+			$.messager.alert("操作提示","添加失败,最低转移额度不能超过最高转移额度!");
+			return;
+		}
+		if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/balance_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblBalanceMove.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.RSP_BODY.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+		
+	//批量删除,超链接的删除方法一样适用
+  	 function deleteBalanceMove() {
+		var orgObj = tblBalanceMove.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/balance_remove.json",
+						data : {"ids":ids},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单删除成功！");
+								tblBalanceMove.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "名单删除失败！", "error");
+							}	
+						}
+					});
+				}
+			});
+	}	 
+
+	
+	//批量启用
+	function setActiveOk() {
+	var orgObj = tblBalanceMove.datagrid("getSelections");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var Status = "1";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要启用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/balance_setStatusOK.json",
+						data : {"ids":ids,"Status":Status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单启用成功!");
+								tblBalanceMove.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+	//批量禁用
+	function setActiveNo() {
+		var orgObj = tblBalanceMove.datagrid("getSelections");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var Status = "0";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].autoId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要禁用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/balance_setStatusNO.json",
+						data : {"ids":ids,"Status":Status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单禁用成功!");
+								tblBalanceMove.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}	
+	
+	//校验的方法
+	 function checkData(jsondata , cue){
+		
+		if (jsondata.prodCode == null || jsondata.prodCode.trim().length <=0 ) {
+			$.messager.alert("操作提示", cue+"失败:产品编号不能为空!", "error");
+			return true;
+		}else if(jsondata.prodCode.trim().length>4){
+			$.messager.alert("操作提示", cue+"失败:产品编号长度不能超过4个字符!", "error");
+			return true;
+		}
+		
+		if(jsondata.prodName.trim().length>32){
+			$.messager.alert("操作提示", cue+"失败:产品名称长度不能超过32个字符!", "error");
+			return true;
+		}
+		
+		
+		if (jsondata.moveLimitPer == null || jsondata.moveLimitPer.trim().length <=0 ) {
+			$.messager.alert("操作提示", cue+"失败:转移额度百分比不能为空!", "error");
+			return true;
+		}
+		
+		if(jsondata.maxLimit.trim().length>10){
+			$.messager.alert("操作提示", cue+"失败:最高限额不能超过10位!", "error");
+			return true;
+		}
+		
+		if(jsondata.lowLimit.trim().length>10){
+			$.messager.alert("操作提示", cue+"失败:最低限额不能超过10位!", "error");
+			return true;
+		}
+		
+		if (jsondata.status != "1" && jsondata.status != "0" &&  jsondata.status != "") {
+			$.messager.alert("操作提示", cue+"失败:启用状态格式不正确!", "error");
+			return true;
+		}else if(jsondata.status == ""){
+			jsondata.status = "1";
+		}
+		
+	}
+</script>

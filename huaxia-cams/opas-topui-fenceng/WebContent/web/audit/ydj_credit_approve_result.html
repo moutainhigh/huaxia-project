@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.util.js"></script>
+<style type="text/css">
+.area-option {
+	padding: 10px 10px 15px;
+	text-align: center;
+}
+
+.area-option a {
+	margin: 0; /* 2 */
+	padding: 5px 10px;
+	text-decoration: none;
+	color: #464646;
+	font: bold 100% sans-serif;
+	line-height: 1.15; /* 1 */
+	overflow: visible;
+	text-transform: none;
+	-webkit-appearance: button;
+	line-height: 2;
+	text-decoration: none; /* 2 */
+}
+
+.area-option a input {
+	vertical-align: middle;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; /* 1 */
+  	padding: 0; /* 2 */
+  	height: 12px;
+}
+
+.option-button {
+	border: 1px solid #C0C0C0;
+}
+</style>
+
+</head>
+<body  class="easyui-layout">
+	<div data-options="region:'west',title:'左区域',split:true,noheader:true,border:false" style=" width: 50%;">
+		<div class="easyui-tabs"  style="height: 100%; width: 100%;">
+			<div title="系统决策" style="overflow: hidden" id="div1"></div>
+			<div title="征信信息" style="overflow: hidden" id="div2"></div>
+			<div title="申请表信息" style="overflow: hidden" id="div3"></div>
+			<div title="征信调查" style="overflow: hidden" id="div4"></div>			
+ 			<div title="征信调查查看" style="overflow: hidden" id="div5"></div>
+			<div title="易达金增强采集" style="overflow: hidden" id="div6"></div>
+			<div title="历史审批结果" style="overflow: hidden" id="div7"></div>
+			<div title="提报回复查看" style="overflow: hidden" id="div8"></div>
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:true,noheader:true,border:false" style="width: 50%;">
+		<div  class="easyui-tabs"  style="height: 100%; width: 100%;">
+			<div title="授信审批" style="overflow: hidden" id="div9"></div>
+			<div title="提交补件" style="overflow: hidden" id="div10"></div>
+			<div title="提报反欺诈" style="overflow: hidden" id="div11"></div>
+			
+		</div>
+	</div>
+	<!-- 按钮区 -->
+	<div  data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="overflow:hidden;height:80px;text-align:center;">
+		<input type="button" name="" value="申请修改查看"  onclick="fnShowApplyModify();" style="width: 100px;height:32px;" />
+		<input type="button" name="" value="影像显示"  onclick="showViewCreditControl();" style="width: 100px;height:32px;" />
+	</div>
+</body>
+<script>
+/**
+ * 功能：加载TAB页内容
+ * @param id TAB页ID
+ */
+function _fnLoadIframe(id) {
+	var o = $("#div" + id);
+	if ($("#iframe" + id).prop("name") == "iframe" + id) {
+		return false;
+	}
+	var src = '', url1 = '<iframe name="iframe' + id + '" id="iframe' + id
+			+ '"  style="border: 0; width: 100%; height: 98%" src="', url2 = '?appId='
+			+ appId + '"></iframe>';
+	if (id == 1) {// 系统决策
+		src = '../common/ydj_system_decision_view.html';
+	} else if (id == 9) {// 授信审批
+		src = '../common/ydj_credit_approve_action.html';
+	} else if (id == 2) {// 第三方征信
+		src = '../common/thirdparty_summary_ydj_view.html';
+	} else if (id == 3) {// 申请表信息
+		src = '../common/apply_info_view_readonly_ydj.html';
+	} else if (id == 4) {// 征信调查（易达金）
+		src = '../credit/credit_investigation_zxYdj_readOnly.html';
+	} else if (id == 5) {// 征信调查查看
+		src = '../credit/credit_check_detailed.html';
+	} else if (id == 6) {// 增强信息采集
+		if(meuoFlag_shangping=="0"){
+			src = '../shenpi/ydj_enhance_collect_view.html';
+		}else{//商品易达金
+			src = '../shenpi/patchbolt_spyinfo.html';
+		}
+	} else if (id == 7) {// 历史审批结果
+		src = '../common/history_audit_result.html';
+	} else if (id == 8) {// 提报回复查看
+		src = '../credit/submit_reply.html';
+	} else if (id == 10) {// 提交补件
+		src = '../credit/patchbolt_search_ydj.html';
+	} else if (id == 11) {// 提报反欺诈
+		src = '../credit/credit_cheat_submit_ReadOnly.html';
+	}
+	o.append(url1 + src + url2);
+}
+
+/** 功能：初始化事件设置 */
+function fnEventUI() {
+	var id = 1;
+	$("ul.tabs li a").each(function(i, o){
+		$(this).attr('onclick','_fnLoadIframe(' + id + ')');
+		id += 1;
+	});
+	
+	_fnLoadIframe(1); // 系统决策结果
+	_fnLoadIframe(9); // 授信审批
+}
+var appId="";
+var param;
+var userId;
+var ydjFlag = "1";
+var check_meuoFlag;
+var meuoFlag_shangping="0";
+var matchingCardFlag;
+/***********页面初始化***********/
+$(function() {
+	var url = location.href;
+	appIdParam = url.split("=")[1];
+	appId = appIdParam.split("&")[0];
+	userId =url.split("=")[2].split("&")[0];
+	check_meuoFlag =url.split("=")[3].split("&")[0];
+	matchingCardFlag = url.split("=")[4];
+	if(check_meuoFlag=="3"){
+		check_meuoFlag = "1";
+		meuoFlag_shangping="1";
+	}else if(check_meuoFlag=="4"){
+		check_meuoFlag = "2";
+		meuoFlag_shangping="1";
+	}
+	/** 初始化事件设置 */
+	fnEventUI();
+})
+function fnShowApplyModify() {
+	window.open('../common/apply_modify_view.html?appId='+appId,'newWindow3','height=670px,width=1200px');
+}
+function openWin(){
+	window.open('../credit/creditSubmitNewspaper.html',"newWindow",'height=150,width=300,toolbar=0,menubar=0,scrollbars=0,resizable=0,location=0,status=0,top=400,left=400');
+}
+var submitType="";
+//征信页面提报功能 
+function creditSubmitNewsPaperZx(){
+	var jsondata = {};
+		jsondata.check_number=appId; 
+		jsondata.check_submitType=submitType;
+		jsondata.check_SubmitStatus="1"
+		jsondata.check_ydjFlag="1";
+	$cf.ajax({
+		url : "/opas-naps/creditSubmit_newspaper.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+				$.messager.alert('征信提报提示',"提报成功。",'warning');
+				window.close();
+				window.opener.reload(); 
+			} else {
+				$.messager.alert('征信提报提示',"提报失败。",'warning');
+				return;
+			}
+		}
+	});
+}
+/********** 退件-退回征信 **********/
+function onSaveBZ(){
+	var data = {
+		"memo":$("#memo").val(),
+		"appId":appId
+	};
+	$cf.ajax({
+		url : "/opas-naps/outJian.json",//退件（退回征信）
+		data : data,
+		onSuccess : function(data) {
+			alert(data.RSP_BODY.msg);
+			onConcle("outCreditBZ");
+			//自动推送下一个任务
+			zidonPush();
+		}
+	});
+}
+/*********** ID有效期 ***********/
+function getCertifinoVailud(){
+	var certifinoVailud = document.getElementById("iframe1").contentWindow.document.getElementById("certifinoVailud").value;
+	return certifinoVailud;
+}
+/*********** 获得当前所在节点 ***********/
+function getCurrNode(){
+	return "04";//审批节点
+}
+/*********** userId ***********/
+function getUserId(){
+	return userId;
+}
+/***********保存按钮*************/
+function save(){
+	saveCommon();
+}
+/***********提交按钮***********/
+function submit(){
+	var doc = document.getElementById("iframe9").contentWindow.queryGlResult();
+	alert("审批Tab页触发"+doc);
+	$cf.ajax({
+		url : "/opas-naps/saveOrSubmitButtonCommon.json",
+		data : {
+			"appId" : appId,
+			"userIdParam":userId,
+			"check_meuoFlag":check_meuoFlag,
+			"button" : "submit"
+		},
+		onSuccess : function(resData) {
+			var isSuccess = resData.RSP_BODY.isSuccess;
+			if(isSuccess==true){
+				//saveCommon();
+				//自动推送下一个任务
+				alert("提交成功!");
+				zidonPush();
+			}else{
+				var msg = resData.RSP_BODY.msg;
+				alert(msg);
+			}
+		}
+	});
+}
+/***********触发业务数据保存按钮 ************/
+function saveCommon(){
+	document.getElementById("iframe9").contentWindow.queryGlResult();
+}
+/***********自动获得下一个推送的业务件***********/
+function zidonPush(){
+	var checkbox = $("#zidongPushCheckbox").prop("checked");
+	if(checkbox==false||checkbox=="false"){
+		window_close();
+		return;
+	}
+	$cf.ajax({
+		url : "/opas-naps/zidonPush.json",
+		data:{"userIdParam":userId,"check_meuoFlag":check_meuoFlag},
+		onSuccess : function(resData) {
+			var res = resData.RSP_BODY.applyAllot;
+			if(res==null||res==""){
+				alert("已经没有待办的业务了，请获取任务！");
+				return;
+			}
+			appId = res.appId;
+			var msg = resData.RSP_BODY.msg;
+			alert(msg+",点击可获取下一个待办任务");
+			
+			if(check_meuoFlag=="2"){
+				location.href = "../credit/credit_control_zxYdj.html?appid="+appId+"&ydjFlag=1&userCode="+userId+"&meuoFlag=2";
+			}else{
+				var urlold = location.href.split("?")[0];
+				location.href = urlold+"?appId="+appId+"&userId="+userId+"&check_meuoFlag=1";
+			}
+		}
+	});
+}
+/***********选择员工树公方法***********/
+function openUserTree(obj) {
+	param = obj;
+	/* if(param=='1'){
+		$("#bzArea").show();
+	}else if(param=='2'){
+		$("#bzArea").hide();
+	} */
+	$cf.ajax({
+		url : "/opas-naps/queryThreeApRole.json",
+		data : {
+			"param":param
+		},
+		onSuccess : function(data) {
+			var menuTree = $("#menuTree");
+			var node = data.RSP_BODY.listUser;
+			var noselect = data.RSP_BODY.noselect;
+			menuTree.tree({
+				cascadeCheck: true,
+				data : node,
+				onClick : function(node) {
+					
+				}
+			});
+			showWin("userRelationMenu");
+			selectOne(node,noselect);
+		}
+	})
+}
+/*员工树选择唯一*/
+function selectOne(node,noselect){
+	$('#menuTree').tree({
+        cascadeCheck: false,
+        //onlyLeafCheck: true,
+        checkbox: true,
+        data: node,
+        width: 160,
+        height: 32,
+        panelHeight: 400,
+        onSelect: function (node) {
+            var cknodes = $('#menuTree').tree("getChecked");
+            for (var i = 0; i < cknodes.length; i++) {
+                if (cknodes[i].id != node.id) {
+                    $('#menuTree').tree("uncheck", cknodes[i].target);
+                }
+            }
+            if (node.checked) {
+                $('#menuTree').tree('uncheck', node.target);
+
+            } else {
+                $('#menuTree').tree('check', node.target);
+
+            }
+        },
+        onLoadSuccess: function (node, data) {
+            $(this).find('span.tree-checkbox').unbind().click(function () {
+                $('#menuTree').tree('select', $(this).parent());
+                return false;
+            });
+            var allnodes = $('#menuTree').tree("getRoots");
+            for(var i = 0; i < allnodes.length; i++){
+            	if(allnodes[i].id == noselect){
+            		$('#menuTree').tree("check", allnodes[i].target);
+            	}
+            }
+        }
+    })
+}
+/**********关联管理员**********/
+function zhuanShangJi() {
+	$cf.ajax({
+		url : "/opas-naps/queryThreeApRole.json",
+		onSuccess : function(data) {
+			var menuTree = $("#menuTree");
+			var node = data.RSP_BODY.listUser;
+			menuTree.tree({
+				data : node,
+				onClick : function(node) {
+
+				}
+			});
+			showWin("userRelationMenu");
+		}
+	})
+}
+/**********保存用户授权**********/
+function userSaveCommon() {
+	var menuTree = $("#menuTree");
+	var checkeNode = menuTree.tree('getChecked');
+	var userMenus = [];
+	for (var i = 0; i < checkeNode.length; i++) {
+		var roleObj = {};
+		roleObj.userId = checkeNode[i].id;
+		userMenus[i] = roleObj;
+	}
+	var data = {
+		"menuInfo" : userMenus,
+		"memo":$("#memo").val(),
+		"check_meuoFlag":check_meuoFlag,
+		"appId":appId
+	};
+	var urlparam;
+	if(param=='1'){
+		urlparam = "/opas-naps/outHui.json";//退回（审批）
+	}else if(param=='2'){
+		urlparam = "/opas-naps/zhuanShangJi.json";//转上级
+	}else if(param=='3'){
+		urlparam = "/opas-naps/outJian.json";//退件（退回征信）
+	}
+	$cf.ajax({
+		url : urlparam,
+		data : data,
+		onSuccess : function(data) {
+			alert(data.RSP_BODY.msg);
+			onConcle("userRelationMenu");
+			//自动推送下一个任务
+			zidonPush();
+		}
+	});
+}
+
+function showWin(obj) {
+	var winObj = $("#"+obj);
+	winObj.window({
+		closed : false
+	});
+}
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window({
+		closed : true
+	});
+}
+function window_close(){
+	window.opener=null;
+	window.open('','_self');
+	window.close();
+	window.top.close();
+}
+function showViewCreditControl(){
+	window.open("../win/image_new/imgShow.html?appId=" + appId,"newWindow");	
+}
+
+</script>
+</html>

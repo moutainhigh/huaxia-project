@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CreditCheckSearch">
+
+	<!-- <resultMap id="creditCheckMap" type="java.util.Map">用户信息
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR" />
+		<result column="OFFICE_TEL" property="officeTel" jdbcType="VARCHAR" />
+		<result column="HOUSE_PHONE" property="housePhone" jdbcType="VARCHAR" />
+	</resultMap> -->
+	<resultMap id="creditCheckMap" type="java.util.Map"><!-- 用户信息 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="C1_CNAME" property="custName" jdbcType="VARCHAR" />
+		<result column="C1_IDNBR" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="C1_MOBILE" property="mobileNo" jdbcType="VARCHAR" />
+		<result column="C1_COTEL" property="officeTel" jdbcType="VARCHAR" />
+		<result column="C1_HMTEL" property="housePhone" jdbcType="VARCHAR" />
+		<result column="BLOCK_CODE" property="blockCode" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+		<result column="VERIFYINFO_FLAG" property="verifyinfoFlag" jdbcType="CHAR" />
+		<result column="CREDIT_DECISION_RESULT" property="creditDecisionResult" jdbcType="VARCHAR" />
+		
+	</resultMap>
+
+	<!-- <select id="queryCreditCustInfo" parameterType="java.util.Map"
+		resultMap="creditCheckMap">
+		SELECT APP_ID,CUST_NAME,CERTIFI_NO,MOBILE_NO,OFFICE_TEL,HOUSE_PHONE
+		  FROM opas_cust_baseinfo
+		 WHERE APP_ID = #{appId} and YDJ_FLAG = #{ydjFlag}
+		 order by crt_date desc
+	</select> -->
+	<select id="queryCreditCustInfo" parameterType="java.util.Map"
+		resultMap="creditCheckMap">
+		SELECT b.APP_ID,b.C1_CNAME,b.C1_IDNBR,b.C1_MOBILE,b.C1_COTEL,b.C1_HMTEL,t.BLOCK_CODE,
+		t.YDJ_FLAG,t.VERIFYINFO_FLAG,o.CREDIT_DECISION_RESULT
+		  FROM OPAS_BIZ_INP_APPL_C1 b left join OPAS_TELCHECK_RESULT t on b.app_id = t.app_id
+		  left join OPAS_BZK_SYSRESULT_INFO o on o.app_Id =b.app_id 
+		 WHERE b.APP_ID = #{appId} 
+		 order by b.crt_date desc
+	</select>
+
+	<resultMap id="checkNodeMap" type="java.util.Map"><!-- 注记信息 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="PASS_CODE" property="passCode" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryCheckNodeInfo" parameterType="java.util.Map"
+		resultMap="checkNodeMap">
+		SELECT PASS_CODE,MEMO
+		  FROM opas_telcheck_addnote
+		 WHERE APP_ID = #{appId} 
+		 order by crt_date desc
+	</select>
+	
+<!-- 	<resultMap id="bizApprovalMap" type="java.util.Map">审批复合
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="MEMO" property="denyMemo" jdbcType="VARCHAR" />退回征信备注
+		<result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+		<result column="APPROVE_TIME" property="approveTime" jdbcType="DATE" />
+	</resultMap>
+	
+	<select id="queryApprovalInfo" parameterType="java.util.Map"
+		resultMap="bizApprovalMap">
+		SELECT MEMO,APPROVER_NAME,APPROVE_TIME
+		  FROM opas_biz_approval
+		 WHERE APP_ID = #{appId} and YDJ_FLAG = #{ydjFlag}
+		 order by APPROVE_TIME desc
+		 
+	</select> -->
+	
+	<resultMap id="checkResultMap" type="java.util.Map"><!-- 质检结果 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" /><!-- 质检结果 -->
+		<result column="CHECK_CONDITION" property="checkCondition" jdbcType="VARCHAR" /><!-- 质检备注 -->
+		<result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" /><!-- 操作时间 -->
+		<result column="CRT_USER" property="crtUser" jdbcType="DATE" /><!-- 操作员 -->
+	</resultMap>
+	
+	<select id="queryCheckResultInfo" parameterType="java.util.Map"
+		resultMap="checkResultMap">
+		SELECT CHECK_RESULT,CHECK_CONDITION,CRT_DATE,CRT_USER
+		  FROM opas_checkingr_resultinfo
+		 WHERE APP_ID = #{appId} 
+		  order by crt_date desc
+	</select>
+	
+	<resultMap id="batchMarkMap" type="java.util.Map"><!-- 批量处理标记 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="BATCH_CODE" property="batchCode" jdbcType="CHAR" />
+	</resultMap>
+	
+	<select id="queryBatchMarkInfo" parameterType="java.util.Map"
+		resultMap="batchMarkMap">
+		SELECT BATCH_CODE
+		  FROM opas_review_decision_result
+		 WHERE APP_ID = #{appId} 
+		  order by crt_date desc
+	</select>
+	<!-- 批量处理标记 -->
+	<!-- <resultMap id="denyMemoMap" type="java.util.Map">
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+	</resultMap> -->
+	
+	<resultMap id="bizApprovalMap" type="java.util.Map"><!-- 审批复合 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="MEMO" property="denyMemo" jdbcType="VARCHAR" /><!-- 退回征信备注 -->
+		<result column="CURR_OPT_USER" property="approverName" jdbcType="VARCHAR" />
+		<result column="RECORD_TEAM_DATE" property="approveTime" jdbcType="DATE" />
+	</resultMap>
+	
+	<select id="queryApprovalInfo" parameterType="java.util.Map"
+		resultMap="bizApprovalMap">
+		SELECT MEMO,CURR_OPT_USER,RECORD_TEAM_DATE
+		  FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		 WHERE APP_ID = #{appId}  and BACK_FLAG='4'
+		 order by RECORD_TEAM_DATE desc
+	</select>
+<!-- 	<select id="queryDenyMemo" parameterType="java.util.Map"
+		resultType="java.lang.String">审批复合
+		SELECT MEMO
+		  FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		 WHERE APP_ID = #{appId} and YDJ_FLAG = #{ydjFlag} and BACK_FLAG='4'
+	</select> -->
+	
+	
+	<resultMap id="TelckeckResultMap" type="java.util.Map">
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="RECORD_TEAM_DATE" property="queueDate" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="currOptUser" jdbcType="VARCHAR" />
+		<result column="LAST_OPT_USER" property="lastOptUser" jdbcType="VARCHAR" />
+	</resultMap>
+	
+    <!--1.智能语音退回  -->
+	<select id="selectSVoiceBackMap" parameterType="java.lang.String"
+		resultMap="TelckeckResultMap">
+    select 
+    a.MEMO, a.RECORD_TEAM_DATE,a.CURR_OPT_USER,(select r.user_name from opas_ap_user r where r.user_code=a.LAST_OPT_USER )as LAST_OPT_USER
+    ,b.USER_NAME
+    from OPAS_ALLOT_APPLY_ALLOT_HIS a left join OPAS_AP_USER b on a.curr_opt_user=b.user_code
+    where APP_ID = #{appId,jdbcType=VARCHAR} AND  BACK_FLAG = '6' AND curr_node = '07' order by RECORD_TEAM_DATE desc 
+	</select>
+	
+	<!--1.审批退回  -->
+	<select id="selectApprovalBackMap" parameterType="java.lang.String"
+		resultMap="TelckeckResultMap">
+    select 
+    a.MEMO, a.RECORD_TEAM_DATE,a.CURR_OPT_USER,(select r.user_name from opas_ap_user r where r.user_code=a.LAST_OPT_USER )as LAST_OPT_USER
+    ,b.USER_NAME
+    from OPAS_ALLOT_APPLY_ALLOT_HIS a left join OPAS_AP_USER b on a.curr_opt_user=b.user_code
+    where APP_ID = #{appId,jdbcType=VARCHAR} AND  BACK_FLAG = '4' AND curr_node = '03' order by RECORD_TEAM_DATE desc 
+	</select>
+	
+	
+	<resultMap id="CheckingResultMap" type="java.util.Map">
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+		<result column="LST_DATE" property="lstDate" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+	</resultMap>
+	<!--2.质检  -->
+	<select id="selectCheckingDetail" parameterType="java.lang.String"
+		resultMap="CheckingResultMap">
+    select 
+    a.MEMO, a.CHECK_RESULT,a.LST_DATE,a.CRT_DATE,b.USER_NAME,a.stop_flag
+    from OPAS_CHECKINGR_RESULTINFO a left join OPAS_AP_USER b on a.crt_user=b.user_code
+    where APP_ID = #{appId,jdbcType=VARCHAR} order by LST_DATE desc 
+	</select>
+
+	<resultMap id="TelckeckAddnoteResultMap" type="com.huaxia.opas.domain.decision.TelcheckAddnote">
+		<result column="BIG_MEMO" property="bigMemo" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtTime" jdbcType="VARCHAR" />
+		<result column="COLOR_FLAG" property="colorFlag" jdbcType="CHAR" />
+	</resultMap>
+	<!-- 电核表排序 -->
+	<select id="selectTelcheckAddnote" parameterType="java.lang.String"
+		resultMap="TelckeckAddnoteResultMap">
+    select 
+    BIG_MEMO, CRT_DATE,COLOR_FLAG
+    from OPAS_TELCHECK_ADDNOTE
+    where APP_ID = #{appId,jdbcType=VARCHAR} order by TYPE_FLAG ASC, CRT_DATE ASC
+	</select>
+	
+	
+	<resultMap id="userResultMap" type="java.util.Map">
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUserNameByUserCode" parameterType="java.lang.String"
+		resultMap="userResultMap">
+    select 
+    USER_NAME,USER_ID
+    from OPAS_AP_USER
+    where user_code = #{userCode,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

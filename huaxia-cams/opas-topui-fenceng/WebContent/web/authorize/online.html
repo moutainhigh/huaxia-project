@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblUser" title="在线用户列表" class="easyui-datagrid"
+			style="width: 98%"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/online_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<th field="userId" width="5%" align="center" checkbox="true">用户Id</th>
+					<th field="onlineId" width="5%" align="center">编号</th>
+					<th field="userCode" width="10%" align="center">登录名</th>
+					<th field="userName" width="10%" align="center">用户名</th>
+				    <th field="ipAddr" width="10%" align="center">IP地址</th>
+				    <th field="loginTime" width="15%" align="center" formatter="formatDate">登录时间</th>
+				    <th field="onlineTime" width="15%" align="center" data-options="formatter:calcTime">在线时长</th>
+				    <th field="logoutTime" width="15%" align="center" formatter="formatDate">退出时间</th>
+				    <th field="status" width="5%" align="center" data-options="formatter:formatStatus">状态</th>
+					<th field="operate" width="12%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="positionCodeCondion"
+			style="padding: 10px; text-align: center;">
+			<form id="seachPositionCodeForm">
+			<div id="seachCondion" class="area-search" style="padding: 10px;">
+				<form id="seachForm">
+				<table>
+					<tr>
+						<td>登录名：</td>
+						<td><input class="easyui-textbox" name="userCode"
+							data-options="validType:'maxLength[12]'" style="width: 150px;" />
+						</td>
+						<td>用户名称：</td>
+						<td><input class="easyui-textbox" name="userName"
+							data-options="validType:'maxLength[12]'" style="width: 150px;" />
+						</td>
+						<td>状态：</td>
+						<td><select class="easyui-combobox" name="status" editable="false"
+							style="width: 150px;">
+								<option value="">---请选择---</option>
+								<option value="1">在线</option>
+								<option value="0">下线</option>
+						</select></td>
+					</tr>
+				</table>
+			</form>
+			<div class="area-function">
+				<a href="javascript:common.searchTbl('seachPositionCodeForm','tblUser');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			</div>
+		 </div>
+		</form>
+	</div>
+</div>
+
+</body>
+
+<script type="text/javascript">
+	$cf.loadAllDict();//加载数据字典
+	var tblUser = $("#tblUser");
+	function formatOper(val, row, index) {
+		return "<a href=javascript:offLine();>断开连接</a>";
+	}
+	
+	function calcTime(val, row, index){
+		var dateStr=row.loginTime.trim().split(" ");
+		var date1 = new Date(dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800");
+		var date2 = new Date();
+		var date3 = parseInt((date2.getTime() - date1.getTime())/1000/60);
+		return date3 + "分钟";
+	}
+	
+	//强制用户下线
+	function offLine() {
+		var userId = tblUser.datagrid("getSelected").userId;
+		if (userId.length == 0 || userId == null) {
+			$.messager.alert("操作提示", "请勾选用户信息!");
+			return;
+		}
+		var datas = {
+			"userIds" : userId,
+		};
+		$cf.ajax({
+			url : "/opas-naps/offLineUser.json",
+			data : datas,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("成功踢下线！");
+					return;
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					return;
+				}
+			}
+		});
+	}
+
+	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "下线";
+		} else if (val == "1") {
+			return "上线";
+		}
+	}  
+	function initpage() {
+		$("#addForm")[0].reset();
+	}
+
+	function addParam() {
+		var userObj = tblUser.datagrid("getSelected");
+		var userIId = userObj.userId;
+		var param = {
+			"userIId" : userIId
+		};
+
+		$("#tblRole").datagrid("load", param);
+
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	}; 
+
+</script>
+</html>

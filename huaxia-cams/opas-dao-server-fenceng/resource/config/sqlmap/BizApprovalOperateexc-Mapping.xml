@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BizApprovalOperateexc" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.input.BizApprovalOperateexc" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="OPERATE_CODE" property="operateCode" jdbcType="VARCHAR" />
+    <result column="OPERATE_NAME" property="operateName" jdbcType="VARCHAR" />
+    <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="EXCEPTIONDATELONG" property="exceptiondatelong" jdbcType="DECIMAL" />
+    <result column="EXCEPTIONDATE" property="exceptiondate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMapDetail" type="com.huaxia.opas.domain.input.BizApprovalOperateexc" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="OPERATE_CODE" property="operateCode" jdbcType="VARCHAR" />
+    <result column="OPERATE_NAME" property="operateName" jdbcType="VARCHAR" />
+    <result column="startStr" property="startStr" jdbcType="VARCHAR" />
+    <result column="endStr" property="endStr" jdbcType="VARCHAR" />
+    <result column="EXCDATELONG" property="exceptiondatelong" jdbcType="DECIMAL" />
+    <result column="dateStr" property="dateStr" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    ID, OPERATE_CODE, OPERATE_NAME, STARTDATE, ENDDATE, EXCEPTIONDATELONG, EXCEPTIONDATE
+    from OPAS_BIZ_APPROVAL_OPERATEEXC
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_BIZ_APPROVAL_OPERATEEXC
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.input.BizApprovalOperateexc" >
+    insert into OPAS_BIZ_APPROVAL_OPERATEEXC (ID, OPERATE_CODE, OPERATE_NAME, 
+      STARTDATE, ENDDATE, EXCEPTIONDATELONG, 
+      EXCEPTIONDATE)
+    values (#{id,jdbcType=VARCHAR}, #{operateCode,jdbcType=VARCHAR}, #{operateName,jdbcType=VARCHAR}, 
+      #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{exceptiondatelong,jdbcType=DECIMAL}, 
+      #{exceptiondate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.input.BizApprovalOperateexc" >
+    insert into OPAS_BIZ_APPROVAL_OPERATEEXC
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="operateCode != null" >
+        OPERATE_CODE,
+      </if>
+      <if test="operateName != null" >
+        OPERATE_NAME,
+      </if>
+      <if test="startdate != null" >
+        STARTDATE,
+      </if>
+      <if test="enddate != null" >
+        ENDDATE,
+      </if>
+      <if test="exceptiondatelong != null" >
+        EXCEPTIONDATELONG,
+      </if>
+      <if test="exceptiondate != null" >
+        EXCEPTIONDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="operateCode != null" >
+        #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null" >
+        #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="exceptiondatelong != null" >
+        #{exceptiondatelong,jdbcType=DECIMAL},
+      </if>
+      <if test="exceptiondate != null" >
+        #{exceptiondate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.input.BizApprovalOperateexc" >
+    update OPAS_BIZ_APPROVAL_OPERATEEXC
+    <set >
+      <if test="operateCode != null" >
+        OPERATE_CODE = #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null" >
+        OPERATE_NAME = #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="exceptiondatelong != null" >
+        EXCEPTIONDATELONG = #{exceptiondatelong,jdbcType=DECIMAL},
+      </if>
+      <if test="exceptiondate != null" >
+        EXCEPTIONDATE = #{exceptiondate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.input.BizApprovalOperateexc" >
+    update OPAS_BIZ_APPROVAL_OPERATEEXC
+    set OPERATE_CODE = #{operateCode,jdbcType=VARCHAR},
+      OPERATE_NAME = #{operateName,jdbcType=VARCHAR},
+      STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      EXCEPTIONDATELONG = #{exceptiondatelong,jdbcType=DECIMAL},
+      EXCEPTIONDATE = #{exceptiondate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- zlb -->
+   <select id="queryExceptionDateLong" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+ 	 	select sum(EXCEPTIONDATELONG) FROM OPAS_BIZ_APPROVAL_OPERATEEXC where operate_code=#{operateCode}
+   </select>
+   
+	<resultMap id="ResultMapEcxception" type="java.util.Map" >
+	    <id column="ID" property="id" jdbcType="VARCHAR" />
+	    <result column="OPERATE_CODE" property="operateCode" jdbcType="VARCHAR" />
+	    <result column="OPERATE_NAME" property="operateName" jdbcType="VARCHAR" />
+	    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+	    <result column="startStr" property="startStr" jdbcType="VARCHAR" />
+	    <result column="endStr" property="endStr" jdbcType="VARCHAR" />
+	    <result column="EXCEPTIONDATELONG" property="exceptiondatelong" jdbcType="DECIMAL" />
+	    <result column="dateStr" property="dateStr" jdbcType="VARCHAR" />
+	</resultMap>
+    <select id="selectMemberJobEcxception" parameterType="java.util.Map"
+		resultMap="ResultMapEcxception">
+		 select max(dateStr)as dateStr ,max(OPERATE_CODE)as OPERATE_CODE,max(USER_NAME) as USER_NAME,
+		 sum(EXCEPTIONDATELONG) as EXCEPTIONDATELONG from ( select dateStr,t.OPERATE_CODE,u.user_id,
+		 u.USER_NAME,EXCEPTIONDATELONG from OPAS_AP_USER u LEFT JOIN (select operate_code, 
+		 to_char(EXCDATEDATE, 'yyyy-mm-dd') as dateStr, sum(EXCDATELONG) as EXCEPTIONDATELONG,
+		 EXCDATELONG from OPAS_BIZ_APPROVAL_OPEEXCHIS group by operate_code,EXCDATEDATE,EXCDATELONG ) t
+		 on t.operate_code = u.user_code where USER_ID = #{userId,jdbcType=VARCHAR}
+	     AND dateStr = #{exceptionDate}) group by USER_ID
+  </select>
+   <!-- zlb -->
+    <select id="memberJobEcxceptionDetail" parameterType="java.lang.String"
+		resultMap="BaseResultMapDetail" >
+		SELECT ID, OPERATE_CODE, OPERATE_NAME, to_char(STARTDATE,'yyyy-mm-dd hh24:mi') as startStr, 
+		to_char(ENDDATE,'yyyy-mm-dd hh24:mi') as endStr ,EXCDATELONG, 
+		to_char(EXCDATEDATE,'yyyy-mm-dd') as dateStr 
+		FROM OPAS_BIZ_APPROVAL_OPEEXCHIS where OPERATE_CODE=#{operateCode}
+   </select>
+   
+   <select id="selectmemberJobEcxceptionDetailDataMap" parameterType="java.util.Map"
+		resultMap="ResultMapEcxception" >
+		select * from (SELECT distinct t.ID, t.OPERATE_CODE, t.OPERATE_NAME, to_char(t.STARTDATE,'yyyy-mm-dd hh24:mi') as startStr, 
+		to_char(t.ENDDATE,'yyyy-mm-dd hh24:mi') as endStr ,EXCDATELONG as EXCEPTIONDATELONG, EXCDATEDATE,
+		to_char(t.EXCDATEDATE,'yyyy-mm-dd') as dateStr 
+		FROM OPAS_BIZ_APPROVAL_OPEEXCHIS t )
+		where OPERATE_CODE = #{userCode,jdbcType=VARCHAR} AND dateStr = #{exceptionDate,jdbcType=VARCHAR}
+		order by startStr asc
+   </select>
+   <!-- xuzhiguo 20170912 -->
+   <select id="selectByUserCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from (select 
+    ID, OPERATE_CODE, OPERATE_NAME, STARTDATE, ENDDATE, EXCEPTIONDATELONG, EXCEPTIONDATE
+    from OPAS_BIZ_APPROVAL_OPERATEEXC
+    where OPERATE_CODE = #{userCode,jdbcType=VARCHAR}
+    and to_char(exceptiondate, 'yyyyMMdd') = to_char(sysdate, 'yyyyMMdd') order by ENDDATE desc) where rownum = 1
+  </select>
+</mapper>

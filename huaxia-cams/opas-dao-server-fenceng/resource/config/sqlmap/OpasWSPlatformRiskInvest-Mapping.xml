@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OpasWSPlatformRiskInvest">
+
+	<resultMap id="wsPlatformRiskInvestMap" type="com.huaxia.opas.domain.riskcheck.WSPlatformRiskInvest">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="BUSINESS_NUMBER" property="businessNumber" jdbcType="VARCHAR" />
+		<result column="MODULE_NUMBER" property="moduleNumber" jdbcType="VARCHAR" />
+		<result column="SCENE_DN_LINK_PART" property="sceneDNLinkPart" jdbcType="VARCHAR" />
+		<result column="PTFLJ_RESULT" property="ptfljResult" jdbcType="VARCHAR" />
+		<result column="PTSSZD_RESULT" property="ptsszdResult" jdbcType="VARCHAR" />
+		<result column="IS_BS_OPEN" property="isBSOpen" jdbcType="VARCHAR" />
+		<result column="AL_INVEST_RESULT" property="alInvestResult" jdbcType="VARCHAR" />
+		<result column="MISSZD_RESULT" property="misszdResult" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CURR_OPT_USER" property="currOptUser" jdbcType="VARCHAR" />
+		<result column="LAST_OPT_DATE" property="lastOptDate" jdbcType="TIMESTAMP" />
+		<result column="LAST_OPT_USER" property="lastOptUser" jdbcType="VARCHAR" />
+		<result column="ALREADY_SEND_FLAG" property="alreadySendFlag" jdbcType="VARCHAR" />
+		<result column="REFUSE_REASON" property="refuseReason" jdbcType="VARCHAR" />
+		<result column="CIRCULATE_FLAG" property="circulateFlag" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 查询网申平台风险排查队列列表总记录数 -->
+	<select id="queryWSPlatformRiskInvestCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM OPAS_WS_PLATFORM_RISK_INVEST wsri WHERE 1 = 1 AND wsri.CIRCULATE_FLAG IS NULL 
+		<if test="appId != null and appId !='' ">
+			AND wsri.APP_ID  = #{appId}
+		</if>
+		<if test="businessNumber != null and businessNumber !='' ">
+			AND wsri.BUSINESS_NUMBER  = #{businessNumber}
+		</if>
+		<if test="moduleNumber != null and moduleNumber !='' ">
+			AND wsri.MODULE_NUMBER  = #{moduleNumber}
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '1'.toString() ">
+			AND wsri.PTFLJ_RESULT = '0'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '2'.toString() ">
+			AND wsri.PTSSZD_RESULT = '1'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '3'.toString() ">
+			AND wsri.IS_BS_OPEN = '1'
+		</if>
+		<if test="startDate != null and startDate !='' ">
+			AND wsri.CRT_DATE &gt;= to_date(#{startDate},'yyyy-mm-dd')
+		</if>
+		<if test="endDate != null and endDate !='' ">
+		    AND wsri.CRT_DATE &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		</if>
+	</select>
+	<!-- 查询网申平台风险排查队列列表数据 -->
+	<select id="queryWSPlatformRiskInvestList" parameterType="java.util.Map"
+		resultMap="wsPlatformRiskInvestMap">
+		SELECT wsri.AUTO_ID,
+		       wsri.APP_ID,
+		       wsri.BUSINESS_NUMBER,
+		       wsri.MODULE_NUMBER,
+		       wsri.SCENE_DN_LINK_PART,
+		       wsri.PTFLJ_RESULT,
+		       wsri.PTSSZD_RESULT,
+		       wsri.IS_BS_OPEN,
+		       wsri.AL_INVEST_RESULT,
+		       wsri.MISSZD_RESULT,
+		       wsri.REMARK,
+		       wsri.CRT_DATE
+		  FROM OPAS_WS_PLATFORM_RISK_INVEST wsri
+		 WHERE 1 = 1  AND wsri.CIRCULATE_FLAG IS NULL  
+		<if test="appId != null and appId !='' ">
+			AND wsri.APP_ID  = #{appId}
+		</if>
+		<if test="businessNumber != null and businessNumber !='' ">
+			AND wsri.BUSINESS_NUMBER  = #{businessNumber}
+		</if>
+		<if test="moduleNumber != null and moduleNumber !='' ">
+			AND wsri.MODULE_NUMBER  = #{moduleNumber}
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '1'.toString() ">
+			AND wsri.PTFLJ_RESULT = '0'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '2'.toString() ">
+			AND wsri.PTSSZD_RESULT = '1'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '3'.toString() ">
+			AND wsri.IS_BS_OPEN = '1'
+		</if>
+		<if test="startDate != null and startDate !='' ">
+			AND wsri.CRT_DATE &gt;= to_date(#{startDate},'yyyy-mm-dd')
+		</if>
+		<if test="endDate != null and endDate !='' ">
+		    AND wsri.CRT_DATE &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		</if>
+		ORDER BY substr(wsri.APP_ID,1,6) desc,substr(wsri.app_id,7,1) desc,wsri.app_id,wsri.CRT_DATE DESC
+	</select>
+	<!-- 查询平台调查结果查看队列列表总记录数 -->
+	<select id="queryWSPlatformInvestResultCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM OPAS_WS_PLATFORM_RISK_INVEST wsri LEFT JOIN OPAS_BIZ_APPROVAL a ON wsri.app_id = a.app_id WHERE 1 = 1   
+		<if test="appId != null and appId !='' ">
+			AND wsri.APP_ID  = #{appId}
+		</if>
+		<if test="businessNumber != null and businessNumber !='' ">
+			AND wsri.BUSINESS_NUMBER  = #{businessNumber}
+		</if>
+		<if test="moduleNumber != null and moduleNumber !='' ">
+			AND wsri.MODULE_NUMBER  = #{moduleNumber}
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '1'.toString() ">
+			AND wsri.PTFLJ_RESULT = '0'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '2'.toString() ">
+			AND wsri.PTSSZD_RESULT = '1'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '3'.toString() ">
+			AND wsri.IS_BS_OPEN = '1'
+		</if>
+		<if test="startDate != null and startDate !='' ">
+			AND wsri.CRT_DATE &gt;= to_date(#{startDate},'yyyy-mm-dd')
+		</if>
+		<if test="endDate != null and endDate !='' ">
+		    AND wsri.CRT_DATE &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		</if>
+		<if test="alInvestResult != null and alInvestResult !=''">
+			AND wsri.AL_INVEST_RESULT = #{alInvestResult}
+		</if>
+		<if test="misszdResult != null and misszdResult !=''">
+			AND wsri.MISSZD_RESULT = #{misszdResult}
+		</if>
+		<if test="finalAuditResult != null and finalAuditResult !='' and finalAuditResult == '1'.toString() ">
+			AND a.APPROVE_RESULT = '1'
+		</if>
+		<if test="finalAuditResult != null and finalAuditResult !='' and finalAuditResult == '0'.toString() ">
+			AND a.APPROVE_RESULT != '1'
+		</if>
+	</select>
+	<!-- 查询平台调查结果查看队列列表数据 -->
+	<select id="queryWSPlatformInvestResultList" parameterType="java.util.Map"
+		resultMap="wsPlatformRiskInvestMap">
+		SELECT wsri.AUTO_ID,
+		       wsri.APP_ID,
+		       wsri.BUSINESS_NUMBER,
+		       wsri.MODULE_NUMBER,
+		       wsri.SCENE_DN_LINK_PART,
+		       wsri.PTFLJ_RESULT,
+		       wsri.PTSSZD_RESULT,
+		       wsri.IS_BS_OPEN,
+		       wsri.AL_INVEST_RESULT,
+		       wsri.MISSZD_RESULT,
+		       wsri.REMARK,
+		       wsri.CRT_DATE,
+		       a.APPROVE_RESULT,
+	           (CASE
+		           WHEN a.APPROVE_RESULT = '1' THEN ''
+		           ELSE a.REFUSE_CODE1
+		        END) AS REFUSE_REASON
+		  FROM OPAS_WS_PLATFORM_RISK_INVEST wsri
+      	  LEFT JOIN OPAS_BIZ_APPROVAL a ON wsri.app_id = a.app_id
+		 WHERE 1 = 1   
+		<if test="appId != null and appId !='' ">
+			AND wsri.APP_ID  = #{appId}
+		</if>
+		<if test="businessNumber != null and businessNumber !='' ">
+			AND wsri.BUSINESS_NUMBER  = #{businessNumber}
+		</if>
+		<if test="moduleNumber != null and moduleNumber !='' ">
+			AND wsri.MODULE_NUMBER  = #{moduleNumber}
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '1'.toString() ">
+			AND wsri.PTFLJ_RESULT = '0'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '2'.toString() ">
+			AND wsri.PTSSZD_RESULT = '1'
+		</if>
+		<if test="riskType != null and riskType !='' and riskType == '3'.toString() ">
+			AND wsri.IS_BS_OPEN = '1'
+		</if>
+		<if test="startDate != null and startDate !='' ">
+			AND wsri.CRT_DATE &gt;= to_date(#{startDate},'yyyy-mm-dd')
+		</if>
+		<if test="endDate != null and endDate !='' ">
+		    AND wsri.CRT_DATE &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		</if>
+		<if test="alInvestResult != null and alInvestResult !=''">
+			AND wsri.AL_INVEST_RESULT = #{alInvestResult}
+		</if>
+		<if test="misszdResult != null and misszdResult !=''">
+			AND wsri.MISSZD_RESULT = #{misszdResult}
+		</if>
+		<if test="finalAuditResult != null and finalAuditResult !='' and finalAuditResult == '1'.toString() ">
+			AND a.APPROVE_RESULT = '1'
+		</if>
+		<if test="finalAuditResult != null and finalAuditResult !='' and finalAuditResult == '0'.toString() ">
+			AND a.APPROVE_RESULT != '1'
+		</if>
+		ORDER BY substr(wsri.APP_ID,1,6) desc,substr(wsri.app_id,7,1) desc,wsri.app_id,wsri.CRT_DATE DESC
+	</select>
+	<!-- 根据APPID查询备注内容数据 -->
+	<select id="checkRemarkInfoByAppId" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		SELECT wsri.REMARK FROM OPAS_WS_PLATFORM_RISK_INVEST wsri WHERE 1 = 1 AND wsri.APP_ID  = #{appId}
+	</select>
+	<!-- 查询不能继续流转的条形码列表总记录数 -->
+	<select id="queryWSPlatformRiskInvestCountNotParam" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM OPAS_WS_PLATFORM_RISK_INVEST wsri WHERE 1 = 1 AND wsri.CIRCULATE_FLAG IS NULL AND wsri.al_invest_result IS NULL AND wsri.misszd_result IS NULL
+	</select>
+	<!-- 查询不能继续流转的条形码列表数据 -->
+	<select id="queryWSPlatformRiskInvestListNotParam" parameterType="java.util.Map"
+		resultMap="wsPlatformRiskInvestMap">
+		SELECT wsri.APP_ID
+		  FROM OPAS_WS_PLATFORM_RISK_INVEST wsri 
+		 WHERE 1 = 1 AND wsri.CIRCULATE_FLAG IS NULL AND wsri.al_invest_result IS NULL AND wsri.misszd_result IS NULL
+		  ORDER BY substr(wsri.APP_ID,1,6) desc,substr(wsri.app_id,7,1) desc,wsri.app_id,wsri.CRT_DATE DESC
+	</select>
+	<!-- 批量人工调查 -->
+	<update id="updateBatch" parameterType="com.huaxia.opas.domain.riskcheck.WSPlatformRiskInvest">
+		update OPAS_WS_PLATFORM_RISK_INVEST 
+		<set>
+			AL_INVEST_RESULT = #{alInvestResult,jdbcType=VARCHAR},
+			MISSZD_RESULT = #{misszdResult,jdbcType=VARCHAR},
+			REMARK = #{remark,jdbcType=VARCHAR},
+			LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR},
+			LAST_OPT_DATE = sysdate
+         </set>
+		 where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</update>
+	<!-- 批量拒绝流转 -->
+	<update id="updateBatchRefuse" parameterType="com.huaxia.opas.domain.riskcheck.WSPlatformRiskInvest">
+		update OPAS_WS_PLATFORM_RISK_INVEST 
+		<set>
+			CIRCULATE_FLAG = #{circulateFlag,jdbcType=VARCHAR},
+			LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR},
+			LAST_OPT_DATE = sysdate
+         </set>
+		 where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</update>
+	<!-- 批量继续流转 -->
+	<update id="updateContinueCirculateSubmit" parameterType="com.huaxia.opas.domain.riskcheck.WSPlatformRiskInvest">
+		update OPAS_WS_PLATFORM_RISK_INVEST 
+		<set>
+			CIRCULATE_FLAG = #{circulateFlag,jdbcType=VARCHAR},
+			LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR},
+			LAST_OPT_DATE = sysdate
+         </set>
+		 where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</update>
+	<!-- 根据APPID查询进件c1表的参数数据 -->
+	<select id="queryRefuseParamByAppId" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT c1.APP_PROD,c1.INSIDE_APP_NO FROM OPAS_BIZ_INP_APPL_C1 c1 WHERE c1.APP_ID = #{appId}
+	</select>
+	<!-- 风险调查队列拒绝流转件入归档表 -->
+	<insert id="insertArchiveFlag" parameterType="java.util.Map">
+		insert into
+		OPAS_FILE_APPLICATION_DETAIL
+		(APP_ID,APPLY_CARD,APP_RESULT,FLAG,TO_ARCHIVE_TIME)
+		values (#{appId,jdbcType=VARCHAR},#{applyCard,jdbcType=VARCHAR},'1','2',CURRENT_TIMESTAMP)
+	</insert>
+	<!-- 风险调查队列拒绝流转件落审批表并落上拒绝码 -->
+	<insert id="insertBizInpApprovalForRefuse" parameterType="java.util.Map">
+		insert into OPAS_BIZ_APPROVAL
+		  (AUTO_ID, APP_ID, APPLY_CARD, APPROVE_RESULT, REFUSE_CODE1, APPROVE_TIME)
+		VALUES
+		  (#{autoId jdbcType=VARCHAR},
+		   #{appId, jdbcType=VARCHAR},
+		   #{applyCard, jdbcType=VARCHAR},
+		   #{approveResult, jdbcType=CHAR},
+		   #{refuseCode1, jdbcType=VARCHAR},
+		   sysdate)
+	</insert>
+	
+	<resultMap id="queryAppIdResultMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR" />
+		<result column="ID_NBR" property="idNbr" jdbcType="VARCHAR" />
+		<result column="MATCHING_CARD_FLAG" property="taoFlag" jdbcType="VARCHAR" />
+		<result column="C1C2_FLAG" property="c1C2Flag" jdbcType="VARCHAR" />
+		<result column="ID_TYPE" property="idType" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="QUICK_CARD_FLAG" property="quickCardFlag" jdbcType="VARCHAR" />
+		<result column="APP_PROD" property="appProd" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 调工作流的参数查询方法 -->
+	<select id="queryInvokeBpmAppId" parameterType="java.util.Map" resultMap="queryAppIdResultMap">
+		SELECT c1.APP_ID,
+	           c1.YDJ_FLAG,
+	           c1.MATCHING_CARD_FLAG,
+	           c1.C1C2_FLAG,
+	           c1.QUICK_CARD_FLAG,
+	           c1.APP_PROD,
+	           CASE
+	             WHEN c1.c1c2_flag != '2' THEN
+	              c1.c1_idtype
+	             ELSE
+	              c2.c2_idtype
+	           END ID_TYPE,
+	           CASE
+	             WHEN c1.c1c2_flag != '2' THEN
+	              c1.c1_idnbr
+	             ELSE
+	              c2.c2_idnbr
+	           END ID_NBR,
+	           CASE
+	             WHEN c1.c1c2_flag != '2' THEN
+	              c1.c1_mobile
+	             ELSE
+	              c2.c2_mobile
+	           END MOBILE,
+	           CASE
+	             WHEN c1.c1c2_flag != '2' THEN
+	              c1.c1_cname
+	             ELSE
+	              c2.c2_cname
+	           END NAME
+	      from OPAS_BIZ_INP_APPL_C1 c1
+	      LEFT JOIN OPAS_BIZ_INP_APPL_C2 c2 ON c1.app_id = c2.app_id
+	     WHERE 1 = 1
+	       AND (c1.matching_card_flag = '0' OR c1.matching_card_flag = '2')
+		<if test="appId != null and appId !='' ">
+			AND c1.APP_ID  = #{appId}
+		</if>
+		<!-- <if test="list != null and list.size() > 0 ">
+		   AND c1.APP_ID in  
+		   <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			 #{item}
+		   </foreach>
+		</if> -->
+	</select>
+	
+	<resultMap id="appIdsMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 防止重复操作申请件的过滤方法 -->
+	<select id="selectAppIds" parameterType="java.util.List" resultMap="appIdsMap">
+	    SELECT wsri.APP_ID
+	      FROM OPAS_WS_PLATFORM_RISK_INVEST wsri
+	     WHERE wsri.circulate_flag IS NULL
+	       AND wsri.APP_ID IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<!-- 批量插入异步临时表数据方法 -->
+	<insert id="insertTempBatchAppId" parameterType="java.util.List">
+		INSERT INTO OPAS_TEMP_APPID 
+		(APP_ID,FLAG)
+		<foreach item="item" index="index" collection="list" separator="union all">
+			(SELECT 
+			#{item},
+			'0'
+			FROM dual)
+		</foreach>
+	</insert>
+	<!-- 获取异步临时表中申请件数据的方法 -->
+	<select id="selectTempAppIds" resultMap="appIdsMap">
+	    SELECT temp.APP_ID
+	      FROM OPAS_TEMP_APPID temp
+	     WHERE temp.FLAG = '0'
+	</select>
+	<!-- 修改异步临时表中申请件的处理的标识的方法 -->
+	<update id="updateTempAppIdFlag" parameterType="com.huaxia.opas.domain.riskcheck.WSPlatformRiskInvest">
+		update OPAS_TEMP_APPID 
+		<set>
+			FLAG = '1'
+         </set>
+		 where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</update>
+	<!-- 根据流水号删除异步临时申请表的申请件的方法 -->
+	<delete id="deleteTempAppId" parameterType="java.lang.String">
+		delete OPAS_TEMP_APPID where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</delete>
+	<!-- 根据已处理标识自动删除异步临时申请表中申请件的方法 -->
+	<delete id="autoDeleteTempAppIdByFlag">
+		delete OPAS_TEMP_APPID where FLAG = '1' 
+	</delete>
+	
+</mapper>

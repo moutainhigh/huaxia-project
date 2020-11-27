@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>欺诈审批工作量统计</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<script type="text/javascript" src="StandardCard.js"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style>
+
+</head>
+<body style="padding: 10px;">
+
+		<fieldset style="margin-top: 10px;">
+			<div align="center"> 
+				<table id="standardtbl"  style="width:60%;" border="1">
+						<tr>
+							 <td align="right">时间选择：</td>
+							 <td style="width:40%" align="center">
+							 	开始 : <input id="startTime" class="easyui-datetimebox" name="startTime"  onchange="invalidTime()"  data-options="formatter:formatterDate,required:true,editable:false " >
+							 </td>
+							 <td style="width:40%" align="center">
+							 	结束 : <input  id="endTime" name="endTime" onclick="invalidTime()"  class="easyui-datetimebox" data-options="formatter:formatterDate,required:true,editable:false">
+							 </td>
+						</tr>
+						
+						<tr>
+							<td colspan="3" align="center"><input type="button" value="查询" onclick="selectWorkCount()"></td>
+						</tr>
+						
+						<tr>
+							 <td align="right">个人提交完成量：</td>
+							 <td colspan="2">
+							 	<input class="easyui-textbox" id="personalSubmitAccom" name="personalSubmitAccom" readonly="readonly" style="width:98%">
+							 </td>
+						</tr>					
+						<tr>
+							 <td align="right">个人退回欺诈调查完成量：</td>
+							 <td colspan="2">
+							 	<input class="easyui-textbox" id="personalBackFraudAccom" name="personalBackFraudAccom" readonly="readonly" style="width:98%">
+							 </td>
+						</tr>	
+						<tr>
+							 <td  align="right">个人退回征信调查完成量：</td>
+							 <td colspan="2">
+							 	<input class="easyui-textbox" id="personalBackCreditAccom" name="personalBackCreditAccom" readonly="readonly" style="width:98%">
+							 </td>
+						</tr>			
+				</table>
+			</div>	
+		</fieldset>
+
+
+
+
+<script type="text/javascript">
+function formatterDate(date) {
+	var y = date.getFullYear();
+	var m = date.getMonth() + 1;
+	var d = date.getDate();
+	return y + '-' + m + '-' + d;
+}
+var d = new Date();
+var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+$('#startTime').val(str);
+$('#endTime').val(str);
+function invalidTime(){
+	var startTime=$("#startTime").val();
+	var endTime=$("#endTime").val();
+}
+
+function selectWorkCount(){
+	var jsondata={};
+	var startTime=$('#startTime').filebox('getValue');
+	var endTime=$('#endTime').filebox('getValue');
+	jsondata.startTime=startTime;
+	jsondata.endTime=endTime;
+	if(jsondata.startTime == null || jsondata.startTime == "" || jsondata.endTime == null || jsondata.endTime == ""){
+		$.messager.alert("操作提示", "请指定要查询的日期", "error");
+		return;
+	}
+	jsondata.delStatus='4';
+	$cf.ajax({
+		url:"/opas-naps/work_count.json",
+		data:jsondata,
+		onSuccess:function(data) {
+			if (data.RSP_BODY.success) {
+				var personalSubmitAccom = data.RSP_BODY.personalSubmitAccom;
+				var personalBackFraudAccom = data.RSP_BODY.personalBackFraudAccom;
+				var personalBackCreditAccom = data.RSP_BODY.personalBackCreditAccom;
+				$("#personalSubmitAccom").textbox('setValue',personalSubmitAccom);
+				$("#personalBackFraudAccom").textbox('setValue',personalBackFraudAccom);
+				$("#personalBackCreditAccom").textbox('setValue',personalBackCreditAccom);
+			} else {
+				alert("统计失败");
+				return;
+			}
+		}
+	});
+}
+</script>
+
+
+
+
+
+</body>
+</html>

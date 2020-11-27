@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.huaxia.plaze.ui.fico.mapper.FicoBatchMapper">
+	<resultMap id="result_batch"
+		type="com.huaxia.plaze.ui.fico.domain.FicoBatch">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_ID" property="batchId" jdbcType="VARCHAR" />
+		<result column="BATCH_RECORD_SIZE" property="batchRecordSize"
+			jdbcType="VARCHAR" />
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="insertObject"
+		parameterType="com.huaxia.plaze.ui.fico.domain.FicoBatch">
+		INSERT INTO FICO_TRN_BATCH (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_ID,
+		BATCH_RECORD_SIZE<!-- ,
+		QUERY_TYPE -->
+		)
+		values
+		(
+		SYS_GUID(),
+		SYSDATE,
+		#{crtUser, jdbcType = VARCHAR},
+		#{batchId, jdbcType = CHAR},
+		#{batchRecordSize, jdbcType = INTEGER}<!-- ,
+		#{queryType, jdbcType = CHAR} -->
+		)
+	</insert>
+	<!-- 批次查询 -->
+	<select id="selectBatchListByPage" parameterType="java.util.Map"
+	resultMap="result_batch">
+		SELECT  UUID,CRT_TIME,CRT_USER,BATCH_ID,BATCH_RECORD_SIZE,STAFF_ID,STAFF_NAME, RN FROM
+		(SELECT UUID,CRT_TIME,CRT_USER,BATCH_ID,BATCH_RECORD_SIZE,STAFF_ID,STAFF_NAME, ROWNUM RN FROM
+		(SELECT 
+		T.UUID,
+	  TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		T.CRT_USER,
+		T.BATCH_ID,
+		T.BATCH_RECORD_SIZE,
+		S.STAFF_ID,
+		S.STAFF_NAME
+		FROM
+		FICO_TRN_BATCH T
+	    LEFT JOIN SYS_USER S ON T.CRT_USER=S.USER_ACCT
+		ORDER BY 
+		T.CRT_TIME DESC
+	    ) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+   </select>
+	<select id="selectBatchListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM FICO_TRN_BATCH 
+	</select>
+</mapper>

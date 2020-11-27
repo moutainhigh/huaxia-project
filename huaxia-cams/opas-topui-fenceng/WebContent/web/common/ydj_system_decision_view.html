@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>系统决策结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.min.js"></script>
+
+<style type="text/css">
+input[type="button"] {
+	width: 150px;
+}
+button {
+	width: 120px;
+	height: 20px;
+}
+
+textarea {
+	border: 1px solid #C0C0C0;
+	outline: none;
+	-webkit-transition: .1s ease-in-out;
+	-moz-transition: .1s ease-in-out;
+	-o-transition: .1s ease-in-out;
+	background-color: #fff;
+}
+/** 快速定位导航区 */
+#ksdw_nav {
+	top: 0;
+	text-align: center;
+	width: 100%;
+	background: #EFEFEF;
+}
+
+#ksdw_nav ul:after {
+	content: '';
+	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+}
+
+#ksdw_nav ul {
+	width: 100%;
+	background: #EFEFEF;
+	border-bottom: 1px solid #C0C0C0;
+}
+
+#ksdw_nav ul li {
+	float: left;
+	padding: 5px;
+}
+
+#ksdw_nav ul li a {
+	display: block;
+	padding: 1px;
+	border: 1px solid #EFEFEF;
+	text-decoration: none;
+	color: #696969;
+}
+
+#ksdw_nav ul li a:hover {
+	color: #FF0000;
+	border-color: #FF0000;
+}
+
+;
+#ksdw_area {
+	width: 100%;
+	height: 700px;
+	overflow-y: auto;
+	position: absolute;
+}
+
+/** 快速定位内容区 */
+fieldset {
+	margin: 10px;
+}
+
+.wrapper {
+	position: relative;
+}
+
+.area-view {
+	text-align: right;
+	font-size:12px; 
+}
+
+.area-view caption {
+	padding: 5px 0;
+	text-align: center;
+	padding-left: 10px;
+	background: #ECECEC;
+}
+.area-list{
+	font-size:1em;
+}
+</style>
+</head>
+	<body>
+	<div class="wrapper" >
+		<!-- 快速定位区 开始 -->
+		<div id="ksdw_nav">
+			<ul>
+				<li><a href="#A" class="active">客户基本信息</a></li>
+				<li><a href="#B">客户标签</a></li>
+				<li><a href="#C">政策入组规则提示</a></li>
+				<li><a href="#D">主卡决策结果</a></li>
+				<li><a href="#E">参考数据</a> </li>
+				<li><a href="#F">内部数据检查</a></li>
+				<li><a href="#G">风险信息检查</a></li>
+				<li><a href="#H">风险定价</a></li>
+				<li><a href="#I">质检结果</a></li>
+			</ul>
+		</div>
+		<!-- 快速定位区 结束 -->
+		<div id="ksdw_area">
+		<form  id="custBaseInfoForm">
+		<fieldset>
+			<legend>
+			 	<label id="A">客户基本信息</label>
+			</legend>
+				<table id="tbCustInfo" class="area-view" >
+					<thead></thead>
+					<tr>
+						<td><label>客户姓名：</label></td>
+						<td><input name="custName" id="custName" type="text" readonly="readonly"/></td>
+						<td><label>性别：</label></td>
+						<td>
+						<input type="text" id="sex" name="sex"
+								readonly="readonly" />
+						</td>
+					</tr>
+					<!-- <tr>
+						<td><label>申请流水号：</label></td>
+						<td><input name="appId" id="appId" type="text" readonly="readonly"/></td>
+						<td><label>国籍：</label></td>
+						<td><input type="text" id="nationaity" name="nationaity"
+								readonly="readonly" /></td>
+					</tr> -->
+					<tr>
+						<td><label>年龄：</label></td>
+						<td><input type="text" id="age" name="age"
+							readonly="readonly" /></td>
+						<!-- <td><label>证件类型：</label></td>
+						<td><input type="text" id="certifiType" name="certifiType"
+							readonly="readonly" /></td> -->
+					</tr>
+					<tr>
+						<td><label>证件号码：</label></td>
+						<td><input type="text" id="certifiNo" name="certifiNo"
+							readonly="readonly" /></td>
+						<td><label>链接公安状态：</label></td>
+						<td><input type="text" id="policeStatus" name="policeStatus"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td><label>工作单位：</label></td>
+						<td colspan="5"><input type="text" id="workCompany"
+							name="workCompany" readonly="readonly" style="width: 478px;" /></td>
+					</tr>
+					<!-- <tr>
+						<td><label>办公电话：</label></td>
+						<td><input type="text" id="officeTel" name="officeTel"
+							readonly="readonly" /></td>
+						<td><label>手机号码：</label></td>
+						<td><input type="text" id="mobileNo" name="mobileNo"
+							readonly="readonly" /></td>
+					</tr> -->
+					<tr>
+						<td><label>申请卡种：</label></td>
+						<td colspan="5"><input name="applyCard" id="applyCard"  style="width: 478px;"
+						 type="text" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td><label>快速发卡标识：</label></td>
+						<td><input name="C4_rushflg" id="C4_rushflg" type="text" readonly="readonly"/>
+						</td>
+						<td><label>存量客户电销名单：</label></td>
+						<td><input name="stockcustTelsale" id="stockcustTelsale" type="text"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td><label>目标企业名单：</label></td>
+						<td><input type="button" name="companyMindan" id="companyMindan" style="width: 92px"
+							onclick="openTargetcompanyWin('targetcompanyWin','yes')" readonly="readonly"/>
+							<input type="button" value="查询"  onclick="openTargetcompanyWin('targetcompanyWin','no')" style="width: 50px"/>
+							</td>
+						<td><label>团办名单：</label></td>
+						<td><input type="button" name="teamnoIsmatch" id="teamnoIsmatch" style="width: 92px"
+							 onclick="openIsMathcWin('isMathcWin','yes')" readonly="readonly"/>
+						<input type="button" value="查询"  onclick="openIsMathcWin('isMathcWin','no')" style="width: 50px"/>
+						</td>
+					</tr>
+					<tr>
+					<td><label>重点院校名单： </label></td>
+						<td><input type="button" name="importSchoolMindan" id="importSchoolMindan" style="width: 92px"
+							onclick="openMajorschoolWin('majorschoolWin','yes')" readonly="readonly"/>
+							<input type="button" value="查询"  onclick="openMajorschoolWin('majorschoolWin','no')" style="width: 50px"/></td>
+						<td><label>优质企业名单： </label></td>
+						<td ><input type="button" name="goodCompanyMindan" id="goodCompanyMindan" style="width: 92px"
+							onclick="openGoodCompanyWin('goodCompanyWin','yes')" readonly="readonly"/>
+							<input type="button" value="查询"  onclick="openGoodCompanyWin('goodCompanyWin','no')" style="width: 50px"/>
+						</td>
+					</tr>
+					<tr><td><label>商户团办名单： </label></td>
+						<td><input type="button" name="businessTuanbanMindan" id="businessTuanbanMindan" style="width: 92px"
+							onclick="openMerchTeamdealWin('merchTeamdealWin','yes')" readonly="readonly"/>
+							<input type="button" value="查询"  onclick="openMerchTeamdealWin('merchTeamdealWin','no')" style="width: 50px"/></td>
+						<td><label>特殊项目名单： </label></td>
+						<td><input type="button" name="tsProjectMindan" id="tsProjectMindan" style="width: 92px"
+							onclick="openSpecialProjectWin('specialProjectWin','yes')" readonly="readonly"/>
+							<input type="button" value="查询"  onclick="openSpecialProjectWin('specialProjectWin','no')" style="width: 50px"/></td>
+					</tr>
+					<tr>
+							<td><label>团办号：</label></td>
+							<td><input type="text" id="c4Apbatch" name="c4Apbatch" 
+								readonly="readonly" /></td>
+							<td><label>项目号：</label></td>
+							<td><input type="text" id="c5Jctype"
+								name="c5Jctype" readonly="readonly" /></td>
+						</tr>
+				</table>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<label id="B">客户标签</label></legend>
+				<table class="area-view" >
+				<thead></thead>
+				<tbody>
+					<tr>
+					<td><label>是否我行客户： </label></td>
+						<td><input name="isOneselfCust" id="isOneselfCust" type="button" 
+						onclick="openCRMCustWin('isHavecardCustWin')" readonly="readonly"/></td>
+						<td><label>是否已持卡客户： </label></td>
+						<td><input name="isHavecardCust" id="isHavecardCust" type="button" onclick="openIsHavecardCustWin('isHavecardCustWin')" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td><label>是否预筛选客户： </label></td>
+						<td><input name="isPrefiltercustStandardValue" id="isPrefiltercustStandardValue"  onclick="openIsPrefiltercustStandardWin('isPrefiltercustStandardWin')"
+							type="button" readonly="readonly"/>
+							<input name="isMatchQrcode"id="isMatchQrcode" type="hidden" />
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><label>已持卡账户状态排查：</label></td>
+						<!-- <td><input type="text" name="cardState_all" id="cardState_all" disabled="true"></td> -->  
+						<td>标：<input type="text" name="cardStat_bzk" id="cardStat_bzk" disabled="true" style="width: 40px;text-align: center;">&nbsp;&nbsp;易：<input type="text" name="cardStat_ydj" id="cardStat_ydj" disabled="true" style="width: 40px;text-align: center;"></td>
+					</tr>
+				</tbody>
+				</table>
+		</fieldset>
+		<fieldset>
+			<legend><label id="C">政策入组规则提示</label></legend>
+				<table class="area-view">
+				<thead></thead>
+				<tbody>
+					<tr>
+						<td style="width:170px;"><label>是否符合我行客户入组标准： </label></td>
+						<td style="width:170px;"><input name="isHavecardStandardValue" id="isHavecardStandardValue"  type="button"  readonly="readonly"/>
+						<input name="isHavecardStandard" id="isHavecardStandard" type="hidden"/></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+				</table>
+		</fieldset>
+		<fieldset>
+			<legend><label id="D">主卡决策结果</label></legend>
+				<table class="area-view">
+					<caption>反欺诈决策</caption>
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>反欺诈决策结果：</label></td>
+							<td><input type="text" id="fqzValue" name="fqzValue"
+								readonly="readonly" /></td>
+							<td><label> 反欺诈决策时间：</label></td>
+							<td><input type="text" id="fqzRstTime" name="fqzRstTime"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>反欺诈结果描述：</label></td>
+							<td><input type="button" id="fqzRiskno"
+								onclick="openIsFqzRstDespWin('fqzRiskno')" 
+								name="fqzRiskno"/></td>
+								<input name="fqzRisknoZ" id="fqzRisknoZ" type="hidden" />
+								<input name="fqzRisknoW" id="fqzRisknoW" type="hidden" />
+								<input name="fqzRisknoH" id="fqzRisknoH" type="hidden" />
+								<input name="fqzRequesttype" id="fqzRequesttype" type="hidden" />
+							</td>
+							<td ><label> 反欺诈决策关注：</label></td>
+							<td align="left"><input type="text" id="fqzRemarks" name="fqzRemarks"
+									readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>宅址疑似套叠：</label></td>
+							<td><input type="button" id="fqzRiskDecHome" name="fqzRiskDecHome"
+								readonly="readonly" /></td>
+							<td><label>单址疑似套叠：</label></td>
+							<td><input type="button" id="fqzRiskDecComp" name="fqzRiskDecComp"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>进件量异常：</label></td>
+							<td><input type="button" id="misszdResult" name="misszdResult"
+								readonly="readonly" /></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+				<table class="area-view">
+					<caption>征信策略</caption>
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td ><label>征信策略结果：</label></td>
+							<td><input type="text" id="creditDecisionResult"
+								name="creditDecisionResult" disabled="true" style="width:170px" /></td>
+						</tr>
+						<tr>
+							<td><label>征信策略结果描述：</label></td>
+							<td><input type="text" id="creditDecisionDesc"
+								name="creditDecisionDesc" disabled="true"
+								style="width: 478px;" /></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+				<table class="area-view">
+					<caption>审核决策</caption>
+					<thead></thead>
+					<tbody>
+					<tr>
+						<td><label>审核决策结果：</label></td>
+						<td><input id="decisionResult" size="30" name="decisionResult" type="text" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>审核决策结果描述：</label></td>
+						<td  colspan="4"><input name="decisionDesp" id="decisionDesp"  disabled="true" style="width:87%"/>
+						<input type="button" value= "详情"  onclick="openDecisionDescribe('decisionDescribe')" style="width: 40px"/></td>
+					</tr>
+					<tr>
+						<td><label>审核建议额度：</label></td>
+						<td><input name="proposedLmt" id="proposedLmt" type="text" disabled="true"/></td>
+						<td><label>策略类型：</label></td>
+						<td><input name="tacType" id="tacType" type="text" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>征信评分：</label></td>
+						<td><input name="cdtScore" id="cdtScore" type="text" disabled="true"/></td>
+						<td><label>中征信"信用1000"评分：</label></td>
+						<td><input name="numberRead" id="numberRead" type="text" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>决策时间：</label></td>
+						<td><input type="text" id="crtTime" size="30" name="crtTime" disabled="true"/></td>
+						<td><label>申请人评分：</label></td>
+						<td><input name="appScroe" id="appScroe" type="text" disabled="true"/></td>
+					</tr>
+					</tbody>
+				</table>
+		</fieldset>
+		<fieldset>
+			<legend><span id="E">参考数据</span></legend>
+				<table class="area-view">
+				<thead></thead>
+				<tbody>
+					<tr>
+						<td><label>违例参考额度：</label></td>
+						<td><input name="violRefLmt" id="violRefLmt" type="text" disabled="true"/></td>
+						<td><label>无抵押DTI：</label></td>
+						<td><input name="unPlgeDti" id="unPlgeDti" type="text" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>违例额度上限参考：</label></td>
+						<td><input name="violLmtUp" id="violLmtUp" type="text" disabled="true"/></td>
+						<td><label>综合DTI：</label></td>
+						<td><input name="cpDti" id="cpDti" type="text" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>税前月收入：</label></td>
+						<td><input name="sampMIncome" id="sampMIncome" type="text" disabled="true"/></td>
+						<td><label>风险敞口MUE：</label></td>
+						<td><input name="mue" id="mue" type="text" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td><label>行职业收入：</label></td>
+						<td><input name="matchIncome" id="matchIncome" type="text" disabled="true"/></td>
+						<td><label>DL_AMT：</label></td>
+						<td><input name="dlAmt" id="dlAmt" type="text" disabled="true"/></td>
+					</tr>
+				</tbody>
+				</table>
+		</fieldset>
+		<fieldset>
+			<legend><span id="F">内部数据检查</span></legend>
+				<table class="area-view">
+				<thead></thead>
+				<tbody>
+					<tr>
+						<td><label>重复申请检查：</label></td>
+						<td><input name="repeatCheck" id="repeatCheck" type="button" onclick="openInDataCheckListWin('repeatCheck')" readonly="readonly"/></td>
+						<td><label>灰名单检查：</label></td>
+						<td><input name="graylist" id="graylist" type="button" onclick="openInDataCheckListWin('graylist')" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td><label>证件号码有效期：</label></td>
+						<td><input name="certifinoVailud" id="certifinoVailud" type="button" readonly="readonly"/></td>
+						<td><label>关联性检查-手机：</label></td>
+						<td><input name="relatedcheckTel" id="relatedcheckTel" type="button" onclick="openInDataCheckListWin('relatedcheckTel')" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td><label>关联性检查-家庭地址：</label></td>
+						<td><input name="relatedcheckHomeaddr" id="relatedcheckHomeaddr" type="button" onclick="openInDataCheckListWin('relatedcheckHomeaddr')" readonly="readonly"/></td>
+						<td><label>关联性检查-非公司的邮寄地址：</label></td>
+						<td><input name="relatedcheckCompanyaddr" id="relatedcheckCompanyaddr" type="button" onclick="openInDataCheckListWin('relatedcheckCompanyaddr')" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td><label>关联性检查-直系亲属手机号码：</label></td>
+						<td><input name="relatedcheckNearlyTelno" id="relatedcheckNearlyTelno" type="button" onclick="openInDataCheckListWin('relatedcheckNearlyTelno')" readonly="readonly"/></td>
+						<td><label>申请信息逻辑检查：</label></td>
+						<td><input name="applyinfoBuscheck" id="applyinfoBuscheck" type="button" onclick="openInDataCheckOtherListWin('applyinfoBuscheck')" readonly="readonly"/></td>
+						</tr>
+					<tr>
+						<td><label>是否命中内部风险信息：</label></td>
+						<td><input name="ishaveInriskInfo" id="ishaveInriskInfo" type="button" onclick="openInDataCheckOtherWin('ishaveInriskInfo')" readonly="readonly"/></td>
+						<td><label>国家/证件信息与税收居民逻辑检查：</label></td>
+							<td><input type="button" id="c6ResiTaxid"
+								name="c6ResiTaxid"
+								onclick="openC6ResiTaxidWin('c6ResiTaxid')"
+								readonly="readonly" /></td>
+					</tr>
+			     </tbody>
+				</table>
+		</fieldset>
+		<fieldset>
+			<legend><span id=G">风险信息检查</span></legend>
+				<table class="area-view">
+					<thead></thead>
+					<tbody>
+					<tr>
+						<td><label>银联风险名单：</label></td>
+						<td><input name="unionRisklist" id="unionRisklist" type="button" readonly="readonly"/></td>
+						<td><label>手机实名认证结果：</label></td>
+						<td><input name="phoneCertification" id="phoneCertification" type="button" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td><label>洗钱风险名单：</label></td>
+						<td><input name="washmoneyRisklist" id="washmoneyRisklist" type="button" readonly="readonly"/></td>
+						<td><label>客户洗钱风险等级：</label></td>
+						<td><input name="custwashmoneyRisklevel" id="custwashmoneyRisklevel" type="button" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td><label>附属卡洗钱风险名单：</label></td>
+						<td><input name="washmoneyRisklist2" id="washmoneyRisklist2" type="button" readonly="readonly"/></td>
+						<td><label>附属卡客户洗钱风险等级：</label></td>
+						<td><input name="custwashmoneyRisklevel2" id="custwashmoneyRisklevel2" type="button" readonly="readonly"/></td>
+					</tr>
+					</tbody>
+				</table>
+		</fieldset>
+		<!-- 风险定价 -->
+		<fieldset>
+			<legend>
+				<label id="H">风险定价</label>
+			</legend>
+			<table class="area-list">
+				<thead>
+					<tr>
+						<th><label>项</label></th>
+						<th><label>结果标签/利率时长</label></th>
+						<th><label>值</label></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><label>利率</label></td>
+						<td><input type="text" id="custLevelTagRate"
+							name="custLevelTagA" readonly="readonly" /></td>
+						<td><input type="text" id="rateName" name="rateName"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td><label>利率失效日期</label></td>
+						<td><input type="text" id="custLevelTagD"
+						name="custLevelTagD" readonly="readonly"/></td>
+						<td><input type="text" id="rateValueLoseDate" name="rateValueLoseDate"
+							readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td><label>最低还款额</label></td>
+						<td><input type="text" id="custLevelTagLimit"
+							name="custLevelTagB" readonly="readonly" /></td>
+						<td><input type="text" id="repayRationValue"
+							name="repayRationValue" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td><label>免息还款期</label></td>
+						<td><input type="text" name="custLevelTagC"
+							id="custLevelTagTerm" readonly="readonly" /></td>
+						<td><input type="text" name="repayFreeValue"
+							id="repayFreeValue" readonly="readonly" /></td>
+					</tr>
+				</tbody>
+				<tfoot></tfoot>
+			</table>
+		</fieldset>
+		<div >
+		<fieldset>
+		<legend><span id="I">质检结果</span></legend>
+		<table class="area-list area-list-style-1" id="datalist" >
+			<thead>
+					<tr>
+						<th width="2%"></th>
+						<th><label>检查情况</label></th>
+						<th><label>检查结果</label></th>
+					</tr>
+			</thead>
+		</table>
+		</fieldset>
+		</div>
+		</form>
+		</div>
+		</div>
+		
+</body>
+<script>
+/**
+ * 功能：固定顶端导航栏
+ * @param id 对象ID
+ * @param top 距离顶端距离
+ */
+function fnFixed(id,top) {
+	var o = $('#' + id);
+	if (o.length != 1) return false;
+	var offsetTop = arguments[1] ? arguments[1] : 0;
+	$(document).scroll(function() {
+		o.css({
+			'position':'relative',
+			'top':0
+		});
+		timer = setInterval(function() {
+			if ($(document).scrollTop() <= offsetTop) {
+				o.css({
+					'position':'relative',
+					'top':0
+				});
+			} else {
+				o.css({
+					'position':'fixed',
+					'top':0 + offsetTop + 'px',
+					'z-index':1
+				});
+				clearInterval(timer);
+			}
+		}, 100);
+	});
+}
+var c6ResiTaxidValue;
+var commonRistLit;
+var commonInnerRistLit;
+//内部数据检查使用
+var appIds;
+var custId;
+var cardCustId;
+var ishaveInriskInfo_column;
+var appId;
+//主附卡标识 
+var c1c2Flag;
+//申请卡产品
+var applyCards;
+//进件时间
+var crtTimeC1;
+var phoneDate;
+//关联菜单
+$(function(){
+	var timer = null;
+	fnFixed('ksdw_nav ul',0);
+	
+	/** 快速定位 */
+	$('#ksdw_nav ul li a').on('click', function() {
+		var href = $(this).attr('href');
+		var position = parseInt($(href).offset().top);
+		if (position > 40) {
+			$('html,body').animate({scrollTop: position - 40 - $('#ksdw_nav').height()}, 100);
+		} else {
+			$('html,body').animate({scrollTop: 0}, 100);
+		}
+		return false;
+	});
+	
+	$('#ksdw_nav ul li a.active').trigger('click');
+	
+	var a = new Array("0:女","1:男","M:男","F:女");
+	var s = new Array("0:完全匹配","1:库中无此号","2:身份证号匹配","3:姓名不匹配");//公安状态码表
+	var cardArray = new Array("0:否","1:是","2:排查");//是否已持卡客户中文显示
+	var c = new Array("0:否","1:是");//ss
+	var cc = new Array("0:否","1:是");
+	var p = new Array("0:正常发卡","1:快速发卡","2:紧急发卡");//快速发卡标示
+	appId = $.fnGetAppId("appId");
+	$cf.ajax({
+			data : {
+				"appId" : appId//'2017030814135013'
+			},
+			url : "/opas-naps/systemDecisionYdj_view.json",
+			onSuccess : function(res) {
+				var jsoncustInfo = res.RSP_BODY.jsonStr;
+				var time = res.RSP_BODY.crtTime;
+				var custBaseInfojson = eval('(' +jsoncustInfo+ ')');
+				var fqzRst = res.RSP_BODY.dataMap;
+				commonRistLit = custBaseInfojson;
+				custId = custBaseInfojson.isOneselfCust;
+				cardCustId = custBaseInfojson.isHavecardCust;
+				ishaveInriskInfo_column = custBaseInfojson.ishaveInriskInfo_column;
+				var isHavecardStandard = custBaseInfojson.appLable;
+				if(isHavecardStandard!=null&&isHavecardStandard!=''){
+					if(isHavecardStandard.indexOf('H07')<0){
+						isHavecardStandard = null;
+					}
+				}
+				c1c2Flag=custBaseInfojson.c1c2Flag;
+				crtTimeC1=custBaseInfojson.crtTimeC1;
+				$cf.loadAllDictOnly('ZDSEXXB,ZDNATIONALITYGJ,ZDSQRZJLX,ALLOT_PHONE_TIME,');
+				phoneDate=$cf.getDictName('ALLOT_PHONE_TIME', 'phoneTime');//新手机实名制上线时间
+				//客户基本信息
+				// ========== 客户基本信息 ==========
+				//$("#appId").val(appId);//申请流水号
+				$("#custName").val(custBaseInfojson.custName);//客户姓名
+				$("#sex").val(valueChangeOther(custBaseInfojson.sex,a));//性别
+				//$("#sex").val($cf.getDictName('ZDSEXXB', custBaseInfojson.sex));//性别
+				/* $("#nationaity").val($cf.getDictName('ZDNATIONALITYGJ', custBaseInfojson.nationaity));//国籍
+				if(custBaseInfojson.nationaity==null||custBaseInfojson.nationaity==""){
+					$("#nationaity").val('CHN');
+				} */
+				$("#age").val(custBaseInfojson.age);//年龄
+				//年龄高亮小于18大于65
+				if(custBaseInfojson.age< 18 ||custBaseInfojson.age > 65){
+					$("#age").attr("style","color:red");
+				}
+				//$("#certifiType").val($cf.getDictName('ZDSQRZJLX', custBaseInfojson.certifiType));//证件类型
+				$("#certifiNo").val(custBaseInfojson.certifiNo);//证件号码
+				$("#policeStatus").val(valueChangeOther(custBaseInfojson.policeStatus,s));//链接公安状态
+				//判断是否要高亮
+				if(custBaseInfojson.policeStatus!='完全匹配'&&custBaseInfojson.policeStatus!='库中无此号'){
+					$("#policeStatus").attr("style","color:red");
+				}
+				$("#workCompany").val(custBaseInfojson.workCompany);//工作单位
+			/* 	$("#officeTel").val(custBaseInfojson.officeTel);//办公电话
+				$("#mobileNo").val(custBaseInfojson.mobileNo);//手机号码 */
+				$("#applyCard").val(custBaseInfojson.prodName);//卡种
+				applyCards=custBaseInfojson.applyCard;//申请卡种四位数字码  是否已持卡账户使用
+				$("#C4_rushflg").val(valueChangeOther(custBaseInfojson.c4_rushflg,p));//快速发卡标示
+				//判断存量客户电销名单是否需要高亮
+				$("#stockcustTelsale").val(custBaseInfojson.stockcustTelsale);
+				if(custBaseInfojson.stockcustTelsale!=null && custBaseInfojson.stockcustTelsale > 0){
+					$("#stockcustTelsale").attr("style","color:red");
+				}
+				$("#companyMindan").val(valueChangeCus(custBaseInfojson.companyMindan,cc,"#companyMindan"));//目标企业名单
+				if(custBaseInfojson.c4Apbatch==null || custBaseInfojson.c4Apbatch==""){
+					$("#teamnoIsmatch").val("空");
+				}else{
+					$("#teamnoIsmatch").val(valueChangeCus(custBaseInfojson.teamnoIsmatch,cc,"#teamnoIsmatch"));//团办号是否匹配
+				}
+				$("#importSchoolMindan").val(valueChangeCus(custBaseInfojson.importSchoolMindan,cc,"#importSchoolMindan"));//重点院校名单
+				$("#goodCompanyMindan").val(valueChangeCus(custBaseInfojson.goodCompanyMindan,cc,"#goodCompanyMindan"));//优质企业名单
+				$("#businessTuanbanMindan").val(valueChangeCus(custBaseInfojson.businessTuanbanMindan,cc,"#businessTuanbanMindan"));//商户团办名单
+				$("#tsProjectMindan").val(valueChangeCus(custBaseInfojson.tsProjectMindan,cc,"#tsProjectMindan"));//特殊项目名单
+				$("#c5Jctype").val(custBaseInfojson.c5Jctype);//团办号
+				$("#c4Apbatch").val(custBaseInfojson.c4Apbatch);//项目号
+				
+				// ========== 客户标签 ==========
+				$("#isOneselfCust").val(valueChange(custBaseInfojson.isOneselfCust,cc,"#isOneselfCust"));//是否我行客户	
+				$("#isHavecardCust").val(valueChangeHave(custBaseInfojson.isHavecardCust,cardArray,"#isHavecardCust"));//是否已持卡客户	
+				//$("#isPrefiltercustStandardValue").val(valueChange(custBaseInfojson.isPrefiltercustStandard,cc,"#isPrefiltercustStandardValue"));//是否预筛选客户
+				var isPrefiltercustStandardValue=custBaseInfojson.isPrefiltercustStandard;	//是否符合预筛选客户
+				if(isPrefiltercustStandardValue=="Y"){
+					$("#isPrefiltercustStandardValue").val('是');
+					$("#isPrefiltercustStandardValue").attr("style","color:#FF0000");
+				}else{
+					$("#isPrefiltercustStandardValue").val('否');
+				}
+				//账户状态
+				var cardStat_bzk = custBaseInfojson.cardStat_bzk;
+				var cardStat_ydj = custBaseInfojson.cardStat_ydj;
+				if(cardStat_bzk == undefined){
+					cardStat_bzk = "";
+				}
+				if(cardStat_ydj == undefined){
+					cardStat_ydj = "";
+				}
+			    $("#cardStat_bzk").val(cardStat_bzk);
+				$("#cardStat_ydj").val(cardStat_ydj);
+				if(cardStat_bzk!="正常"&&cardStat_bzk!="A"&&cardStat_bzk!="U"&&cardStat_bzk!="Q"&&cardStat_bzk!=""){
+					$("#cardStat_bzk").css("color","red");
+				}
+				 if(cardStat_ydj!="正常"&&cardStat_ydj!="A"&&cardStat_ydj!="U"&&cardStat_ydj!="Q"&&cardStat_ydj!=""){
+					$("#cardStat_ydj").css("color","red");
+				}
+				$("#isMatchQrcode").val(custBaseInfojson.isMatchQrcode);//二维码匹配结果用于征信审批提交
+				// ========== 政策入组规则提示==========
+				$("#isHavecardStandardValue").val(valueChange(isHavecardStandard,c,'#isHavecardStandardValue'));//是否符合我行客户入组标准
+				$("#isHavecardStandard").val(custBaseInfojson.appLable);//是否符合我行客户入组标准
+				// ========== 主卡决策结果 ==========
+				// 反欺诈
+				var fqz = fqzRst.fqzRstDesp
+				if(fqz.length==0){
+					$("#fqzRstTime").val("");//反欺诈决策时间
+					$("#fqzValue").val("");//反欺诈决策结果
+					$("#fqzRemarks").val("");//反欺诈决策关注
+					$("#fqzRequesttype").val("");//反欺詐结果描述
+					$("#fqzRisknoZ").val("");//反欺詐结果描述
+					$("#fqzRisknoW").val("");//反欺詐结果描述
+					$("#fqzRisknoH").val("");//反欺詐结果描述
+				}else if(fqz.length==1){
+					$("#fqzRstTime").val(fqz[0].crt_date);//反欺诈决策时间
+					$("#fqzValue").val(fqz[0].fqzValue);//反欺诈决策结果
+					$("#fqzRemarks").val(valueChangeRemarke(fqz[0].fqzRemarks,cc,"#fqzRemarks"));//反欺诈决策关注
+					$("#fqzRequesttype").val(fqz[0].fqzRequesttype);//反欺詐结果描述
+					if (fqz[0].fqzRiskno == "满足") {
+						$("#fqzRiskno").val("满足");
+					} else {
+						if (fqz[0].fqzValue1 =="D" ||fqz[0].fqzValue1=="E") {
+							$("#fqzRiskno").val(valueChangeFQZ("排查",cc,"#fqzRiskno"));//反欺詐结果描述
+						} else {
+							$("#fqzRiskno").val("排查");//反欺詐结果描述
+						}
+					}
+					$("#fqzRisknoZ").val(fqz[0].fqzRiskno1);
+					$("#fqzRisknoW").val("");//反欺詐结果描述
+					$("#fqzRisknoH").val("");//反欺詐结果描述
+				}else if(fqz.length==2){
+					$("#fqzRstTime").val(fqz[0].crt_date);//反欺诈决策时间
+					$("#fqzValue").val(fqz[0].fqzValue);//反欺诈决策结果
+					$("#fqzRemarks").val(fqz[0].fqzRemarks);//反欺诈决策关注
+					$("#fqzRequesttype").val(fqz[0].fqzRequesttype);//反欺詐结果描述
+					if (fqz[0].fqzRiskno == "满足" && fqz[1].fqzRiskno == "满足") {
+						$("#fqzRiskno").val("满足");
+					} else {
+						if (fqz[0].fqzValue1 =="D" ||fqz[0].fqzValue1=="E") {
+							$("#fqzRiskno").val(valueChangeFQZ("排查",cc,"#fqzRiskno"));//反欺詐结果描述
+						} else {
+							$("#fqzRiskno").val("排查");//反欺詐结果描述
+						}
+					}
+					$("#fqzRisknoZ").val(fqz[0].fqzRiskno1);
+					$("#fqzRisknoW").val(fqz[1].fqzRiskno1);//反欺詐结果描述
+					$("#fqzRisknoH").val("");//反欺詐结果描述
+				}else{
+					$("#fqzRstTime").val(fqz[0].crt_date);//反欺诈决策时间
+					$("#fqzValue").val(fqz[0].fqzValue);//反欺诈决策结果
+					$("#fqzRemarks").val(valueChangeRemarke(fqz[0].fqzRemarks,cc,"#fqzRemarks"));//反欺诈决策关注
+					$("#fqzRequesttype").val(fqz[0].fqzRequesttype);//反欺詐结果描述
+					if (fqz[0].fqzRiskno == "满足" && fqz[1].fqzRiskno == "满足" && fqz[2].fqzRiskno == "满足") {
+						$("#fqzRiskno").val("满足");
+					} else {
+						if (fqz[0].fqzValue1 =="D" ||fqz[0].fqzValue1=="E") {
+							$("#fqzRiskno").val(valueChangeFQZ("排查",cc,"#fqzRiskno"));//反欺詐结果描述
+						} else {
+							$("#fqzRiskno").val("排查");//反欺詐结果描述
+						}
+					}
+					$("#fqzRisknoZ").val(fqz[0].fqzRiskno1);
+					$("#fqzRisknoW").val(fqz[1].fqzRiskno1);//反欺詐结果描述
+					$("#fqzRisknoH").val(fqz[2].fqzRiskno1);//反欺詐结果描述
+				}
+				//疑似中介进件
+				var misszdResult = fqzRst.misszdResult;
+				if(misszdResult=='1'){
+					$("#misszdResult").val("是");//疑似中介进件
+					$("#misszdResult").attr("style","color:red;");
+				}else {
+					$("#misszdResult").val("否");//疑似中介进件
+				} 
+				var fqzRiskDec = fqzRst.fqzRiskDec;
+				if(fqzRiskDec.length==0){
+					$("#fqzRiskDecHome").val("否");//反欺诈家庭地址匹配結果
+					$("#fqzRiskDecComp").val("否");//反欺诈公司地址匹配結果
+				}else {
+					var fqzRiskDecHome;
+					var fqzRiskDecComp;
+					for(var i = 0;i < fqzRiskDec.length; i++){
+						if(fqzRiskDec[i]!=null){
+							if(fqzRiskDec[i].fqzRiskdesc==("RULE_DZTD_HOME|1")){
+								fqzRiskDecHome=1;
+							}
+							if(fqzRiskDec[i].fqzRiskdesc==("RULE_DZTD_COMP|1")){
+								fqzRiskDecComp=1;
+							}
+						}
+					}
+					if(fqzRiskDecHome){
+						$("#fqzRiskDecHome").val("是");
+						$("#fqzRiskDecHome").attr("style","color:red;");
+					}else {
+						$("#fqzRiskDecHome").val("否");//反欺诈家庭地址匹配結果
+					}
+					if(fqzRiskDecComp){
+						$("#fqzRiskDecComp").val("是");
+						$("#fqzRiskDecComp").attr("style","color:red;");
+					}else{
+						$("#fqzRiskDecComp").val("否");//反欺诈公司地址匹配結果
+					}
+				}
+				// 征信策略
+				$("#creditDecisionResult").val(custBaseInfojson.creditDecisionResult);//征信策略结果
+				$("#creditDecisionDesc").val(custBaseInfojson.creditDecisionDesc);//征信策略结果描述
+				// 审核决策
+				$("#decisionResult").val(valueChangeFQZ(custBaseInfojson.decisionResult,cc,"#decisionResult"));//审核决策结果
+				$("#decisionDesp").val(custBaseInfojson.decisionDesp);//审核决策结果描述
+				$("#proposedLmt").val(custBaseInfojson.proposedLmt);//审核建议额度
+				$("#tacType").val(custBaseInfojson.tacType);//策略类型
+				$("#cdtScore").val(custBaseInfojson.cdtScore);//征信评分
+				$("#numberRead").val(custBaseInfojson.numberRead);//中征信"信用1000"评分
+				$("#crtTime").val(time);//决策时间
+				$("#appScroe").val(custBaseInfojson.appScroe);//申请人评分
+				// ========== 参考数据 ==========
+				$("#violRefLmt").val(custBaseInfojson.violRefLmt);//违例参考额度
+				$("#unPlgeDti").val(custBaseInfojson.unPlgeDti);//无抵押DTI
+				$("#violLmtUp").val(custBaseInfojson.violLmtUp);//违例额度上限
+				$("#cpDti").val(custBaseInfojson.cpDti);//综合DTI
+				$("#sampMIncome").val(custBaseInfojson.sampMIncome);//税前月收入
+				$("#mue").val(custBaseInfojson.mue);//风险敞口MUE
+				$("#matchIncome").val(custBaseInfojson.matchIncome);//行职业收入
+				$("#dlAmt").val(custBaseInfojson.dlAmt);//刚性扣减额度 
+				// ========== 内部数据检查 ==========
+				$("#repeatCheck").val(valueChange(custBaseInfojson.repeatCheck,cc,"#repeatCheck"));//重复申请检查
+				$("#graylist").val(valueChange(custBaseInfojson.graylist,cc,"#graylist"));//灰名单检查
+				$("#relatedcheckTel").val(valueChange(custBaseInfojson.relatedcheckTel,cc,"#relatedcheckTel"));//关联性检查-手机
+				$("#relatedcheckHomeaddr").val(valueChange(custBaseInfojson.relatedcheckHomeaddr,cc,"#relatedcheckHomeaddr"));//关联性检查-家庭地址
+				$("#relatedcheckCompanyaddr").val(valueChange(custBaseInfojson.relatedcheckCompanyaddr,cc,"#relatedcheckCompanyaddr"));//关联性检查-非公司的邮寄地址
+				$("#relatedcheckNearlyTelno").val(valueChange(custBaseInfojson.relatedcheckNearlyTelno,cc,"#relatedcheckNearlyTelno"));//关联性检查-直系亲属手机号码
+				$("#applyinfoBuscheck").val(valueChange(custBaseInfojson.applyinfoBuscheck,cc,"#applyinfoBuscheck"));//申请信息逻辑检查
+				$("#ishaveInriskInfo").val(valueChange(custBaseInfojson.ishaveInriskInfo,cc,"#ishaveInriskInfo"));//是否命中内部风险信息
+				$("#c6ResiTaxid").val(valueChangeRT(custBaseInfojson.c6ResiTaxid,cc,"#c6ResiTaxid"));//是否命中内部风险信息
+				
+				otherInit(custBaseInfojson.certifinoVailud);//证件号码有效期
+				// ========== 风险信息检查 ==========
+				$("#unionRisklist").val(valueChange(custBaseInfojson.unionRisklist,cc,"#unionRisklist"));//银联风险名单
+				$("#washmoneyRisklist").val(valueChange(custBaseInfojson.washmoneyRisklist,cc,"#washmoneyRisklist"));//洗钱风险名单
+				//客户风险等级
+				valChangeRisklevel(custBaseInfojson.custwashmoneyRisklevel,"custwashmoneyRisklevel");//客户洗钱风险等级
+				//附属卡客户反洗钱信息
+				valChangeRisklevel(custBaseInfojson.custwashmoneyRisklevel2,"custwashmoneyRisklevel2");//客户洗钱风险等级
+				$("#washmoneyRisklist2").val(valueChange(custBaseInfojson.washmoneyRisklist2,cc,"#washmoneyRisklist2"));//洗钱风险名单
+				
+				phoneInit(custBaseInfojson.phoneCertification,custBaseInfojson.applyCard);//手机实名认证结果
+				// ========== 风险定价 ==========
+				$("#custLevelTagRate").val(custBaseInfojson.custLevelTagA);//利率
+				$("#rateName").val(custBaseInfojson.rateName);
+				/* 2019/1/7 from wjf */
+				$("#custLevelTagD").val(custBaseInfojson.custLevelTagD);//利率代码失效日期
+				$("#rateValueLoseDate").val(custBaseInfojson.rateValueLoseDate); 
+				$("#custLevelTagLimit").val(custBaseInfojson.custLevelTagB);//最低还款额
+				$("#repayRationValue").val(custBaseInfojson.repayRationValue);
+				$("#custLevelTagTerm").val(custBaseInfojson.custLevelTagC);//免息还款期
+				$("#repayFreeValue").val(custBaseInfojson.repayFreeValue);
+				
+			}
+		});
+		$cf.ajax({
+			 url:'/opas-naps/queryCheckinerResultInfo.json', 
+			 data : {
+					"appId" : appId
+				},
+			 onSuccess : function(response) {
+				var resultList = response.RSP_BODY.rows;
+				var result="";
+				for(var i=0;i<resultList.length;i++){
+					result+="<tr>";
+					result+="<td>"+(i+1)+"</td>";
+					if(resultList.length==1&&resultList[i].checkCondition==null){
+						result+="<td></td>";
+						result+="<td>"+ctfStatusFmt(resultList[i].checkResult)+"</td>";
+					}else{
+						result+="<td>" + checkConditionFmt(resultList[i].checkCondition)+"</td>";
+						result+="<td>"+ctfStatusFmt(resultList[i].checkResult)+"</td>";
+					}
+					result+="</tr>";
+				}
+				$("#datalist").append(result);
+			}
+		});
+});
+ 
+	//目标企业名单
+	function openTargetcompanyWin(obj,param){
+		if(param=='yes'){
+			if($("#companyMindan").val()==='否'|| $("#companyMindan").val()==""){
+				return; 
+			}else{
+				var url=encodeURI('../decision/ydj_target_company.html?appId='+appId+'&obj='+obj+'&param='+param);
+				window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+			}
+		}else if(param=='no'){
+			var url=encodeURI('../decision/ydj_target_company.html?appId='+appId+'&obj='+obj+'&param='+param);
+			window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+		}
+			
+	}
+	
+	//团办号名单
+	function openIsMathcWin(obj,param){
+		if(param=='yes'){
+			if($("#teamnoIsmatch").val()==='否'|| $("#teamnoIsmatch").val()=="")	{		
+				return;	
+			}else{
+				var url=encodeURI('../decision/ydj_mathc.html?appId='+appId+'&obj='+obj+'&param='+param);
+				window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+			}	
+		}else if(param=='no'){
+			var url=encodeURI('../decision/ydj_mathc.html?appId='+appId+'&obj='+obj+'&param='+param);
+			window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+		}
+	}
+	
+	//重点院校名单
+	function openMajorschoolWin(obj,param){
+		if(param=='yes'){
+			if($("#importSchoolMindan").val()==='否'|| $("#importSchoolMindan").val()==""){
+				return;
+			}else{
+				var url=encodeURI('../decision/ydj_major_school.html?appId='+appId+'&obj='+obj+'&param='+param);
+				window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+			}
+		}else if(param=='no'){
+			var url=encodeURI('../decision/ydj_major_school.html?appId='+appId+'&obj='+obj+'&param='+param);
+			window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+		}
+	}
+	
+	//优质企业名单
+	function openGoodCompanyWin(obj,param){
+		if(param=='yes'){
+			if($("#goodCompanyMindan").val()==='否'|| $("#goodCompanyMindan").val()==""){
+				return;
+			}else{
+				var url=encodeURI('../decision/ydj_good_company.html?appId='+appId+'&obj='+obj+'&param='+param);
+				window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+			}
+		}else if(param=='no'){
+			var url=encodeURI('../decision/ydj_good_company.html?appId='+appId+'&obj='+obj+'&param='+param);
+			window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+		}
+	}
+	
+	//商户团办名单
+	function openMerchTeamdealWin(obj,param){
+		if(param=='yes'){
+			if($("#businessTuanbanMindan").val()==='否'|| $("#businessTuanbanMindan").val()==""){
+				return;
+			}else{
+				var url=encodeURI('../decision/ydj_business_tuan_ban.html?appId='+appId+'&obj='+obj+'&param='+param);
+				window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+			}
+		}else if(param=='no'){
+			var url=encodeURI('../decision/ydj_business_tuan_ban.html?appId='+appId+'&obj='+obj+'&param='+param);
+			window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+		}
+		
+	} 
+	
+	//特殊项目名单
+	function openSpecialProjectWin(obj,param){
+		if(param=='yes'){
+			if($("#tsProjectMindan").val()==='否'|| $("#tsProjectMindan").val()==""){
+				return;
+			}else{
+				var url=encodeURI('../decision/ydj_special_project.html?appId='+appId+'&obj='+obj+'&param='+param);
+				window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+			}
+		}else if(param=='no'){
+			var url=encodeURI('../decision/ydj_special_project.html?appId='+appId+'&obj='+obj+'&param='+param);
+			window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+		}
+	}
+	/* 客户标签 */
+	//是否显示CRM
+	function openCRMCustWin(obj){
+		if($("#isOneselfCust").val()=='否'||$("#isOneselfCust").val()==null||$("#isOneselfCust").val()==''){
+			return;
+		}else{
+			window.open('crm_info_view.html?appId='+appId+'&flag=1',"newWindow2",'height=1200px,width=1000px');
+		}
+	}
+	
+	//是否已持卡客户
+	function openIsHavecardCustWin(obj){
+		if($("#isHavecardCust").val()=='否'||$("#isHavecardCust").val()==null||$("#isHavecardCust").val()==''||$("#isHavecardCust").val()=='排查'){
+			return; 
+		}else{
+			if(c1c2Flag=='2'){//单独附属卡(2)
+				window.open('system_decision_havecard_info_fk.html?appId='+appId+'&flag=2&applyCards='+applyCards+'&c1c2Flag='+c1c2Flag,"newWindow2",'resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width='+(screen.availWidth-10)+",height="+(screen.availHeight-50));
+			}else{//主附同申（1）或单独主卡（3）
+				window.open('system_decision_havecard_info.html?appId='+appId+'&flag=2&applyCards='+applyCards+'&c1c2Flag='+c1c2Flag,"newWindow2",'resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width='+(screen.availWidth-10)+",height="+(screen.availHeight-50));
+			}
+		}
+	}
+	
+
+	//是否预筛选客户
+	function openIsPrefiltercustStandardWin(obj){
+		if($("#isPrefiltercustStandardValue").val()==='否'|| $("#isPrefiltercustStandardValue").val()==""){
+			return;
+		}else{
+			var url=encodeURI('../decision/ydj_prefilter_cust_standard.html?appId='+appId+'&obj='+obj);
+			window.open(url,""+obj,'height=400px,width=700px,top=300px,left=300px');
+		}
+	}
+	
+	/****************反欺诈结果描述 ********************/
+	function openIsFqzRstDespWin(obj){
+		var fqzRequesttype = $("#fqzRequesttype").val();
+		var fqzRisknoZ = $("#fqzRisknoZ").val();
+		var fqzRisknoH = $("#fqzRisknoH").val();
+		var fqzRisknoW = $("#fqzRisknoW").val();
+		if($("#"+obj).text()=="满足") {
+			return;
+		} else {
+			window.open(encodeURI('../decision/win_fqz_result.html?appId='+appId+'&fqzRequesttype='+fqzRequesttype+"&fqzRisknoZ="+fqzRisknoZ+"&fqzRisknoW="+fqzRisknoW+"&fqzRisknoH="+fqzRisknoH+"&fqzRiskno="+fqzRiskno+"&obj="+obj),""+obj,'height=400px,width=1000px,top=300px,left=300px');
+		}
+	}
+	
+	//决策结果描述详情
+	function openDecisionDescribe(obj){
+		var url=encodeURI('../decision/ydj_decision_describe.html?appId='+appId+'&obj='+obj);
+		window.open(url,""+obj,'height=450px,width=610px,top=300px,left=300px');
+	}
+	/*******************内部数据列表显示部分************************/
+	function openInDataCheckListWin(obj){
+		if($("#"+obj).val()=='否'||$("#"+obj).val()==""){
+			return;
+		}else{
+			if("repeatCheck"==obj){
+		 		appIds = commonRistLit.repeatCheck;
+			}else if("relatedcheckHomeaddr"==obj){
+				appIds = commonRistLit.relatedcheckHomeaddr;
+			}else if("relatedcheckCompanyaddr"==obj){
+				appIds = commonRistLit.relatedcheckCompanyaddr;
+			}else if("relatedcheckTel"==obj){
+				appIds = commonRistLit.relatedcheckTel;
+			}else if("relatedcheckNearlyTelno"==obj){
+				appIds = commonRistLit.relatedcheckNearlyTelno;
+			}else if("graylist"==obj){
+				appIds = commonRistLit.graylist;
+			}
+			//window.open(encodeURI("../decision/ydj_data_check_list.html?obj="+obj),""+obj,'width=610px,height=400px,top=300px,left=300px');
+			window.open(encodeURI("../decision/ydj_inner_data_check.html?obj="+obj),""+obj,'width=1250px,height=400px,top=100px,left=100px');
+		}
+	  } 
+ 	/****************内部数据检查申请信息逻辑检查********************/
+  	function openInDataCheckOtherListWin(obj){
+		if($("#"+obj).val()=='否'){
+			return;
+		}
+		var autoId = commonRistLit.applyinfoBuscheck;
+		var url=encodeURI('../decision/ydj_data_check_list_other.html?autoId='+autoId);
+		window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+	} 
+  	 //内部数据检查add 20170322
+	function openInDataCheckOtherWin(obj){
+		if($("#"+obj).val()=='否'||$("#"+obj).val()==""){
+			return;
+		}
+		var autoId;
+		if("applyinfoBuscheck"==obj){
+			autoId = commonRistLit.applyinfoBuscheck;
+		}else if("ishaveInriskInfo"==obj){
+			autoId = commonRistLit.ishaveInriskInfo;
+		}
+		var url=encodeURI('../decision/ydj_data_check_win.html?appId='+appId+"&obj="+obj+"&ishaveInriskInfo_column="+ishaveInriskInfo_column+"&autoId="+autoId);
+		window.open(url,""+obj,'height=400px,width=610px,top=300px,left=300px');
+	} 
+	////国家/证件信息与税收居民逻辑检查
+	function openC6ResiTaxidWin(obj){
+		if($("#"+obj).val()=='一致'||$("#"+obj).val()==''){
+			return;
+		}
+		var autoId = c6ResiTaxidValue;
+		var url=encodeURI('../decision/win_data_check_C6ResiTaxid.html?autoId='+autoId);
+		window.open(url,""+obj,'height=400px,width=700px,top=300px,left=300px');
+	} 
+	//获取 ID有效期系统检查结果  征信提交时使用   gaohui 
+	function getCertifinoVailudZxSubmit(){
+		return $("#certifinoVailud").val();
+	}
+	/*	获取 二维码名单库匹配逻辑结果  征信审批提交时使用  andong
+		申请件数据与参数表完全匹配输出 1
+		申请件数据与参数表匹配时，只有单位电话区号无法匹配上输出 2
+		其他情况输出 3
+	*/
+	function getMatchQrcode(){
+		return $("#isMatchQrcode").val();
+	}
+
+	function otherInit(res){
+		if(res=='1'){
+			$("#certifinoVailud").val("关注");
+			$("#certifinoVailud").attr("style","color:red");
+		}else if(res=='2'){
+			$("#certifinoVailud").val("已过期");
+			$("#certifinoVailud").attr("style","color:red");
+		}else if(res=='3'){
+			$("#certifinoVailud").val("未过期");
+		}else if(res=='4'){
+			$("#certifinoVailud").val("长期");
+			//$("#certifinoVailud").attr("style","color:red");
+		}else{
+			$("#certifinoVailud").val("空");
+			$("#certifinoVailud").attr("style","color:red");
+		}
+	}
+	//反欺诈决策关注
+	function valueChangeRemarke(oldVal,arr,gl){
+		if (oldVal == 1) {
+			return "命中特殊客户违例规则";
+		} else if (oldVal == 2) {
+			return "命中特殊产品违例规则";
+		} else if (oldVal == 3) {
+			return "网申非合作第三方商户";
+		} else if (oldVal == 4) {
+			return "易达金进件人工核验";
+		} else if (oldVal == 5) {
+			return "申请人合规性、完整性不满足";
+		} else if (oldVal == 6) {
+			return "ETC迅卡客户违例规则";
+		}
+		return oldVal;
+	}
+	//转码
+	function valueChangeOther(oldVal,arr){
+		var len = arr.length;
+		if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal==temp[0]){
+					return temp[1];
+				}
+			}
+		}
+		return oldVal;
+	}
+	function valChange(str){
+		if(str=='L'){
+			return "低风险人工征信L";
+		}else if(str=='L1'){
+			return "低风险征信L1";
+		}else if(str=='L2'){
+			return "低风险征信L2";
+		}else if(str=='L3'){
+			return "低风险征信L3";
+		}else if(str=='WL'){
+			return "W低风险L";
+		}else if(str=='WL1'){
+			return "W低风险L1";
+		}else if(str=='WL2'){
+			return "W低风险L2";
+		}else if(str=='WL3'){
+			return "W低风险L3";
+		}else if(str=='M'){
+			return "中风险M";
+		}else if(str=='M1'){
+			return "中风险M1";
+		}else if(str=='WM'){
+			return "W中风险M";
+		}else if(str=="H"){
+			return "高风险H";
+		}else if(str=="H1"){
+			return "高风险H1";
+		}else if(str=="H2"){
+			return "高风险H2";
+		}else if(str=="H3"){
+			return "高风险H3";
+		}
+	}
+	//转码，高亮基本信息使用
+	function valueChangeCus(oldVal,arr,gl){
+		var len = arr.length;
+		var obj = '';
+		if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal=='0'){
+					return temp[1];
+				}else if(oldVal!='0'&&i==1){
+					obj = temp[1];
+				}
+			}
+		}else{
+			return "否";
+		}
+		if(oldVal!=null&&oldVal!='0'){
+			$(gl).attr("style","color:red;width: 92px;");
+		}
+		return obj;
+	}
+	//转码，高亮
+	function valueChange(oldVal,arr,gl){
+		var len = arr.length;
+		var obj = '';
+		if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal=='0'){
+					return temp[1];
+				}else if(oldVal.indexOf('是')>-1){//命中风险名单
+					obj = oldVal;
+				}else if(oldVal!='0'&&i==1){
+					obj = temp[1];
+				}
+			}
+		}else{
+			return "否";
+		}
+		if(oldVal!=null&&oldVal!='0'){
+			$(gl).attr("style","color:red");
+		}
+		return obj;
+	}
+	//已持卡客户显示
+	function valueChangeHave(oldVal,arr,gl){
+		var len = arr.length;
+		var obj = '';
+		if(oldVal!=null&&oldVal!=undefined&&oldVal!=""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(temp[0]==oldVal&&oldVal=='0'){
+					return temp[1];
+				}else if(temp[0]==oldVal&&oldVal!='0'){
+					obj=temp[1];
+				}
+			}
+		}else{
+			return "否";
+		}
+		if(oldVal=='1'){
+			$(gl).attr("style","color:red");
+		}
+		return obj;
+	}
+	//手机实名认证结果
+	function phoneInit(res,apflag){
+		//网申件未查询(除了0098，0099,流水号第8位为j需要单独查询)显示网申一致   非网申件未查询显示 未发起查询
+		var ws=appId.substr(6,1);
+		var cft=appId.substr(7,1);
+		//根据C1表进件时间判断网申件是新件还是老件
+		if(new Date(crtTimeC1)<=new Date(phoneDate)&&ws=='B'){//老件
+			if(cft!='J'&&apflag!='0098'&&apflag!='0099'){
+				$("#phoneCertification").val("网申一致");
+			}else{
+				if(res=='0'){
+					$("#phoneCertification").val("未发起查询");
+				}else if(res=='1'){
+					$("#phoneCertification").val("一致");
+				}else if(res=='2'){
+					$("#phoneCertification").val("不一致");
+					$("#phoneCertification").attr("style","color:red");
+				}else{
+					$("#phoneCertification").val("未知");
+					$("#phoneCertification").attr("style","color:red");
+				}
+			}
+		}else{//网申新件和非网申件
+			if(res=='0'){
+				$("#phoneCertification").val("未验证");
+			}else if(res=='1'){
+				$("#phoneCertification").val("验证一致");
+			}else if(res=='2'){
+				$("#phoneCertification").val("验证不一致");
+				$("#phoneCertification").attr("style","color:red");
+			}else if(res=='3'){
+				$("#phoneCertification").val("验证结果未知");
+				$("#phoneCertification").attr("style","color:red");
+			}else{
+				$("#phoneCertification").val("未发起查询");
+			}
+		}
+	}
+	
+	//反欺诈结果描述 不满足的时候变红色
+	function valueChangeFQZ(oldVal,arr,gl){
+		if(oldVal=='排查'){
+			$(gl).attr("style","color:red;");
+		}  else if(oldVal=='直接拒绝'){
+			$(gl).attr("style","color:red;");
+		} else if(oldVal=='建议拒绝'){
+			$(gl).attr("style","color:red;");
+		}
+		return oldVal;
+	}
+
+	//检查情况
+	function checkConditionFmt(val) {
+		if (val == 1) {
+			return "已查-系统";
+		} else if (val == 2) {
+			return "已查-专项";
+		} else if (val == 3) {
+			return "已查-自查";
+		} else if (val == 4) {
+			return "已查-核销";
+		} else {
+			return val;
+		}
+	}
+
+	//洗钱风险名单校验 征信提交  代号
+	function getFlagXiQianFengXian(){
+	    var xqfxmd = $("#washmoneyRisklist").val();
+		if( xqfxmd == "是" ){
+			return "1" ;
+		}
+		return "0" ;    
+	}
+	
+	//反洗钱等级
+	function valChangeRisklevel(custwashmoneyRisklevel,value){
+		if(custwashmoneyRisklevel=="0"){
+			$("#"+value).val("低");
+		}else if(custwashmoneyRisklevel=="1"){
+			$("#"+value).val("较低");
+		}else if(custwashmoneyRisklevel=="2"){
+			$("#"+value).val("中");
+			$("#"+value).attr("style","color:red");
+		}else if(custwashmoneyRisklevel=="3"){
+			$("#"+value).val("较高");
+			$("#"+value).attr("style","color:red");
+		}else if(custwashmoneyRisklevel=="4"){
+			$("#"+value).val("高");
+			$("#"+value).attr("style","color:red");
+		}else{
+			$("#"+value).val("否");
+		} 
+	} 
+
+	//检查结果
+	function ctfStatusFmt(val) {
+		if (val == 0) {
+			return "正常";
+		} else if (val == 1) {
+			return "问题-申请资料类";
+		} else if (val == 2) {
+			return "问题-流程类";
+		} else if (val == 3) {
+			return "问题-核实话术类";
+		} else if (val == 4) {
+			return "问题-注记类";
+		} else if (val == 5) {
+			return "问题-信息采集类";
+		} else if (val == 6) {
+			return "问题-审批评估类";
+		} else if (val == 7) {
+			return "问题-工单投诉类";
+		} else if (val == 8) {
+			return "问题-其他类";
+		} else {
+			return val;
+		}
+	}
+	
+	//国家/证件信息与税收居民逻辑检查
+	function valueChangeRT(value){
+		if (value=='1') {
+			c6ResiTaxidValue = "国家/地区与税收居民逻辑不一致";
+			$("#c6ResiTaxid").attr("style","color:red");
+			return "不一致";
+		} else if (value=='2') {
+			c6ResiTaxidValue = "证件类别与税收居民逻辑不一致";
+			$("#c6ResiTaxid").attr("style","color:red");
+			return "不一致";
+		} else if (value=='12') {
+			c6ResiTaxidValue = "国家/地区与税收居民逻辑不一致||证件类别与税收居民逻辑不一致";
+			$("#c6ResiTaxid").attr("style","color:red");
+			return "不一致";
+		} else if (value=='3') {
+			return "一致";
+		} else if (value=='4') {
+			return "";
+		} else {
+			return "";
+		}
+	}
+</script>

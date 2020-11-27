@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.ZMXYWatchList2Mapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_BIZ_ZM_RISKLIST_DATA (
+			APP_ID,CRT_TIME,CRT_USER,
+			BIZ_NO,TYPE,RISK_TYPE,RISK_CODE,UPDATE_TIME,STEELEMENT,STATUS,STATEMENT,EXTENDINFO,ISRISK
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			SYSDATE,
+			'SYSTEM',
+			#{item.bizNo},
+			#{item.watchList2Detail.bizCode},
+			#{item.watchList2Detail.type},
+			#{item.watchList2Detail.code},
+			#{item.watchList2Detail.refreshTime},
+			DECODE(#{item.watchList2Detail.settlement}, '1', 'T', '0', 'F', null),
+			#{item.watchList2Detail.status},
+			#{item.watchList2Detail.statement},
+			#{item.watchList2Detail.extendInfo},
+			DECODE(#{item.isMatched}, '1', '是', '否')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+	<select id="selectCountZMXYWatchList2ByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM OPAS_BIZ_ZM_RISKLIST_DATA WHERE APP_ID = #{appId, jdbcType = CHAR} 
+	</select>
+</mapper>

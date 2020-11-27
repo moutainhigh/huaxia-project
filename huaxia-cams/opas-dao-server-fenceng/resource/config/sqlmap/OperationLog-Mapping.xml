@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OperationLog">
+
+	<resultMap id="operaLogResultMap" type="com.huaxia.opas.domain.system.OperationLog">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="USE_ACTION" property="useAction" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="MOUDLE_TYPE" property="moudleType" jdbcType="VARCHAR" />
+		<result column="USER_DATE" property="userDate" jdbcType="TIMESTAMP" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryLogList" parameterType="com.huaxia.opas.domain.system.OperationLog"
+		resultMap="operaLogResultMap">
+		select * from OPAS_AP_LOGINFO
+		<where>
+			<if test="useAction != null and useAction !='' ">
+				AND USE_ACTION LIKE '%${useAction}%'
+			</if>
+			<if test="crtUser != null and crtUser !='' ">
+				AND CRT_USER LIKE '%${crtUser}%'
+			</if>
+			<if test="moudleType != null and moudleType !='' ">
+				AND MOUDLE_TYPE LIKE '%${moudleType}%'
+			</if>
+			<if test="userDate != null and userDate !='' ">
+				AND
+				(USER_DATE
+				BETWEEN
+				#{userDate}
+				AND
+				(select #{userDate} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+		</where>
+		order by USER_DATE desc
+	</select>
+
+	<select id="queryLogCount" parameterType="com.huaxia.opas.domain.system.OperationLog"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_LOGINFO
+		<where>
+			<if test="useAction != null and useAction !='' ">
+				AND USE_ACTION LIKE '%${useAction}%'
+			</if>
+			<if test="crtUser != null and crtUser !='' ">
+				AND CRT_USER LIKE '%${crtUser}%'
+			</if>
+			<if test="moudleType != null and moudleType !='' ">
+				AND MOUDLE_TYPE LIKE '%${moudleType}%'
+			</if>
+			<if test="userDate != null and userDate !='' ">
+				AND
+				(USER_DATE
+				BETWEEN
+				#{userDate}
+				AND
+				(select #{userDate} + (INTERVAL '23:59:59'hour to second) from dual)
+				)
+			</if>
+		</where>
+	</select>
+
+</mapper>

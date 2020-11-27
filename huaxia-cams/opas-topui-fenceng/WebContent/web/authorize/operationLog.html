@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblRole" title="操作日志信息列表" class="easyui-datagrid"
+		style="width: 98%"
+		data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-naps/operationLog_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">操作日志Id</th>
+				<th field="useAction" width="15%">操作动作</th>
+				<th field="crtUser" width="15%">操作人</th>
+				<th field="moudleType" width="15%" align="center" >业务模块</th>
+				<th field="userDate" width="15%" align="center" formatter="formatDate">最后操作日期</th>
+				<th field="memo" width="30%" align="center" >操作明细</th>
+<!-- 				<th field="operate" width="15%" align="center"
+					data-options="formatter:formatOper">操作</th> -->
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			操作动作: <input class="easyui-textbox" style="width: 110px" name="useAction" id="useAction"> 
+			操作人: <input class="easyui-textbox" style="width: 110px" name="crtUser" id="crtUser">
+			业务模块: <input class="easyui-textbox" style="width: 110px" name="moudleType" id="moudleType"> 
+			最后操作日期: <input class="easyui-datebox" style="width: 110px" name="userDate" id="userDate" formatter="formatDate">
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblRole');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<!-- <a href="javascript:common.openWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">新增</a> -->
+		</form>
+	</div>
+
+</body>
+<script>
+
+//日期格式转换
+function formatDate(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+}; 
+
+
+</script>

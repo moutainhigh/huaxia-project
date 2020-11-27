@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="riskcheck_ApplyC1">
+
+ <resultMap id="RiskCheck_Apply_C1ResultMap"
+		type="com.huaxia.opas.domain.riskcheck.RiskCheck_Apply_C1">
+		<id column="INSIDE_APP_NO" jdbcType="CHAR" property="insideAppNo" />
+		<result column="APP_BANK" jdbcType="DECIMAL" property="appBank" />
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="APP_PROD" jdbcType="VARCHAR" property="appProd" />
+		<result column="APP_FLAG" jdbcType="DECIMAL" property="appFlag" />
+		<result column="APP_FLOWST" jdbcType="DECIMAL" property="appFlowst" />
+		<result column="APP_CODE" jdbcType="DECIMAL" property="appCode" />
+		<result column="APP_ACCTYP" jdbcType="VARCHAR" property="appAcctyp" />
+		<result column="C1_BRNCH" jdbcType="DECIMAL" property="c1Brnch" />
+		<result column="C1_CARDNBR" jdbcType="VARCHAR" property="c1Cardnbr" />
+		<result column="C1_IDTYPE" jdbcType="VARCHAR" property="c1Idtype" />
+		<result column="C1_IDNBR" jdbcType="VARCHAR" property="c1Idnbr" />
+		<result column="C1_SECNBR" jdbcType="VARCHAR" property="c1Secnbr" />
+		<result column="C1_CNAME" jdbcType="VARCHAR" property="c1Cname" />
+		<result column="C1_ENAME" jdbcType="VARCHAR" property="c1Ename" />
+		<result column="C1_GENDER" jdbcType="VARCHAR" property="c1Gender" />
+		<result column="C1_BIRTH" jdbcType="DATE" property="c1Birth" />
+		<result column="C1_NATION" jdbcType="VARCHAR" property="c1Nation" />
+		<result column="C1_MARST" jdbcType="VARCHAR" property="c1Marst" />
+		<result column="C1_EDUCLS" jdbcType="VARCHAR" property="c1Educls" />
+		<result column="C1_TITLE" jdbcType="VARCHAR" property="c1Title" />
+		<result column="C1_TELVL" jdbcType="VARCHAR" property="c1Telvl" />
+		<result column="C1_HMARE" jdbcType="VARCHAR" property="c1Hmare" />
+		<result column="C1_HMTEL" jdbcType="VARCHAR" property="c1Hmtel" />
+		<result column="C1_MOBILE" jdbcType="VARCHAR" property="c1Mobile" />
+		<result column="C1_EMAIL" jdbcType="VARCHAR" property="c1Email" />
+		<result column="C1_FAX" jdbcType="VARCHAR" property="c1Fax" />
+		<result column="C1_CLASS" jdbcType="VARCHAR" property="c1Class" />
+		<result column="C1_HMADD1" jdbcType="VARCHAR" property="c1Hmadd1" />
+		<result column="C1_HMADD2" jdbcType="VARCHAR" property="c1Hmadd2" />
+		<result column="C1_HMADD3" jdbcType="VARCHAR" property="c1Hmadd3" />
+		<result column="C1_HMADD4" jdbcType="VARCHAR" property="c1Hmadd4" />
+		<result column="C1_HMPOST" jdbcType="VARCHAR" property="c1Hmpost" />
+		<result column="C1_HMST" jdbcType="VARCHAR" property="c1Hmst" />
+		<result column="C1_HMYR" jdbcType="DECIMAL" property="c1Hmyr" />
+		<result column="C1_HLOAN" jdbcType="DECIMAL" property="c1Hloan" />
+		<result column="C1_IDADD1" jdbcType="VARCHAR" property="c1Idadd1" />
+		<result column="C1_IDADD2" jdbcType="VARCHAR" property="c1Idadd2" />
+		<result column="C1_IDADD3" jdbcType="VARCHAR" property="c1Idadd3" />
+		<result column="C1_IDADD4" jdbcType="VARCHAR" property="c1Idadd4" />
+		<result column="C1_IDPOST" jdbcType="VARCHAR" property="c1Idpost" />
+		<result column="C1_ESTADD1" jdbcType="VARCHAR" property="c1Estadd1" />
+		<result column="C1_ESTADD2" jdbcType="VARCHAR" property="c1Estadd2" />
+		<result column="C1_ESTADD3" jdbcType="VARCHAR" property="c1Estadd3" />
+		<result column="C1_ESTADD4" jdbcType="VARCHAR" property="c1Estadd4" />
+		<result column="C1_ESTPOST" jdbcType="DECIMAL" property="c1Estpost" />
+		<result column="C1_CARBRND" jdbcType="VARCHAR" property="c1Carbrnd" />
+		<result column="C1_CARDATE" jdbcType="DATE" property="c1Cardate" />
+		<result column="C1_CARNBR" jdbcType="VARCHAR" property="c1Carnbr" />
+		<result column="C1_CARST" jdbcType="VARCHAR" property="c1Carst" />
+		<result column="C1_COADD1" jdbcType="VARCHAR" property="c1Coadd1" />
+		<result column="C1_COADD2" jdbcType="VARCHAR" property="c1Coadd2" />
+		<result column="C1_COADD3" jdbcType="VARCHAR" property="c1Coadd3" />
+		<result column="C1_COADD4" jdbcType="VARCHAR" property="c1Coadd4" />
+		<result column="C1_COPOST" jdbcType="VARCHAR" property="c1Copost" />
+		<result column="C1_CONAME" jdbcType="VARCHAR" property="c1Coname" />
+		<result column="C1_CODEPT" jdbcType="VARCHAR" property="c1Codept" />
+		<result column="C1_CODUTY" jdbcType="VARCHAR" property="c1Coduty" />
+		<result column="C1_COCODE" jdbcType="VARCHAR" property="c1Cocode" />
+		<result column="C1_COBUSCD" jdbcType="VARCHAR" property="c1Cobuscd" />
+		<result column="C1_COKIND" jdbcType="VARCHAR" property="c1Cokind" />
+		<result column="C1_COLEVL" jdbcType="VARCHAR" property="c1Colevl" />
+		<result column="C1_COTEL" jdbcType="VARCHAR" property="c1Cotel" />
+		<result column="C1_COEXT" jdbcType="VARCHAR" property="c1Coext" />
+		<result column="C1_COYR" jdbcType="DECIMAL" property="c1Coyr" />
+		<result column="C1_EARN" jdbcType="DECIMAL" property="c1Earn" />
+		<result column="C1_FCONAME" jdbcType="VARCHAR" property="c1Fconame" />
+		<result column="C1_FCODEPT" jdbcType="VARCHAR" property="c1Fcodept" />
+		<result column="C1_FCOTITL" jdbcType="VARCHAR" property="c1Fcotitl" />
+		<result column="C1_FCOTEL" jdbcType="VARCHAR" property="c1Fcotel" />
+		<result column="C1_FCOYR" jdbcType="DECIMAL" property="c1Fcoyr" />
+		<result column="C1_FOREANN" jdbcType="DECIMAL" property="c1Foreann" />
+		<result column="C1_DEPEND" jdbcType="DECIMAL" property="c1Depend" />
+		<result column="C1_BUSISER" jdbcType="VARCHAR" property="c1Busiser" />
+		<result column="C1_PROMQU" jdbcType="VARCHAR" property="c1Promqu" />
+		<result column="C1_PROMAN" jdbcType="VARCHAR" property="c1Proman" />
+		<result column="C1_REID" jdbcType="VARCHAR" property="c1Reid" />
+		<result column="C1_RENAME" jdbcType="VARCHAR" property="c1Rename" />
+		<result column="C1_RETELAR" jdbcType="VARCHAR" property="c1Retelar" />
+		<result column="C1_RETEL" jdbcType="VARCHAR" property="c1Retel" />
+		<result column="C1_RESHIP" jdbcType="VARCHAR" property="c1Reship" />
+		<result column="C1_REMOBIL" jdbcType="VARCHAR" property="c1Remobil" />
+		<result column="C1_XID1" jdbcType="VARCHAR" property="c1Xid1" />
+		<result column="C1_XNAME1" jdbcType="VARCHAR" property="c1Xname1" />
+		<result column="C1_XTELAR1" jdbcType="VARCHAR" property="c1Xtelar1" />
+		<result column="C1_XTEL1" jdbcType="VARCHAR" property="c1Xtel1" />
+		<result column="C1_XSHIP1" jdbcType="VARCHAR" property="c1Xship1" />
+		<result column="C1_XCOMP1" jdbcType="VARCHAR" property="c1Xcomp1" />
+		<result column="C1_XMOBIL1" jdbcType="VARCHAR" property="c1Xmobil1" />
+		<result column="C1_XID2" jdbcType="VARCHAR" property="c1Xid2" />
+		<result column="C1_XNAME2" jdbcType="VARCHAR" property="c1Xname2" />
+		<result column="C1_XTELAR2" jdbcType="VARCHAR" property="c1Xtelar2" />
+		<result column="C1_XTEL2" jdbcType="VARCHAR" property="c1Xtel2" />
+		<result column="C1_XSHIP2" jdbcType="VARCHAR" property="c1Xship2" />
+		<result column="C1_XCOMP2" jdbcType="VARCHAR" property="c1Xcomp2" />
+		<result column="C1_XMOBIL2" jdbcType="VARCHAR" property="c1Xmobil2" />
+		<result column="C1_SPIDTYP" jdbcType="VARCHAR" property="c1Spidtyp" />
+		<result column="C1_SPIDNBR" jdbcType="VARCHAR" property="c1Spidnbr" />
+		<result column="C1_SPNAME" jdbcType="VARCHAR" property="c1Spname" />
+		<result column="C1_SPMOBIL" jdbcType="VARCHAR" property="c1Spmobil" />
+		<result column="C1_SPCNAME" jdbcType="VARCHAR" property="c1Spcname" />
+		<result column="C1_SPCDEPT" jdbcType="VARCHAR" property="c1Spcdept" />
+		<result column="C1_SPCDUTY" jdbcType="VARCHAR" property="c1Spcduty" />
+		<result column="C1_SPCTEL" jdbcType="VARCHAR" property="c1Spctel" />
+		<result column="C1_SPCEXT" jdbcType="VARCHAR" property="c1Spcext" />
+		<result column="C1_SPEARN" jdbcType="DECIMAL" property="c1Spearn" />
+		<result column="C2_OBNKNO" jdbcType="DECIMAL" property="c2Obnkno" />
+		<result column="C2_RELCOMP" jdbcType="VARCHAR" property="c2Relcomp" />
+		<result column="C2_SIGNCK" jdbcType="VARCHAR" property="c2Signck" />
+		<result column="C2_IDDT1" jdbcType="DATE" property="c2Iddt1" />
+		<result column="C2_ISDP1" jdbcType="VARCHAR" property="c2Isdp1" />
+		<result column="C2_NATNCD1" jdbcType="VARCHAR" property="c2Natncd1" />
+		<result column="C2_IDDT3" jdbcType="DATE" property="c2Iddt3" />
+		<result column="C2_ISDP3" jdbcType="VARCHAR" property="c2Isdp3" />
+		<result column="C2_NATNCD3" jdbcType="VARCHAR" property="c2Natncd3" />
+		<result column="C2_REVS2" jdbcType="VARCHAR" property="c2Revs2" />
+		<result column="C3_IDTYPE" jdbcType="VARCHAR" property="c3Idtype" />
+		<result column="C3_IDNBR" jdbcType="VARCHAR" property="c3Idnbr" />
+		<result column="C3_CNAME" jdbcType="VARCHAR" property="c3Cname" />
+		<result column="C3_ENAME" jdbcType="VARCHAR" property="c3Ename" />
+		<result column="C3_GENDER" jdbcType="VARCHAR" property="c3Gender" />
+		<result column="C3_BIRTH" jdbcType="DATE" property="c3Birth" />
+		<result column="C3_NATION" jdbcType="VARCHAR" property="c3Nation" />
+		<result column="C3_MARST" jdbcType="VARCHAR" property="c3Marst" />
+		<result column="C3_EDUCLS" jdbcType="VARCHAR" property="c3Educls" />
+		<result column="C3_HMARE" jdbcType="VARCHAR" property="c3Hmare" />
+		<result column="C3_HMTEL" jdbcType="VARCHAR" property="c3Hmtel" />
+		<result column="C3_MOBILE" jdbcType="VARCHAR" property="c3Mobile" />
+		<result column="C3_RESVD1" jdbcType="VARCHAR" property="c3Resvd1" />
+		<result column="C3_RESVD2" jdbcType="VARCHAR" property="c3Resvd2" />
+		<result column="C3_RESVD3" jdbcType="VARCHAR" property="c3Resvd3" />
+		<result column="C3_RESVD4" jdbcType="VARCHAR" property="c3Resvd4" />
+		<result column="C3_RESVD5" jdbcType="VARCHAR" property="c3Resvd5" />
+		<result column="C3_RESVD6" jdbcType="VARCHAR" property="c3Resvd6" />
+		<result column="C3_EMAIL" jdbcType="VARCHAR" property="c3Email" />
+		<result column="C3_CONAME" jdbcType="VARCHAR" property="c3Coname" />
+		<result column="C3_CODEPT" jdbcType="VARCHAR" property="c3Codept" />
+		<result column="C3_CODUTY" jdbcType="VARCHAR" property="c3Coduty" />
+		<result column="C3_COCODE" jdbcType="VARCHAR" property="c3Cocode" />
+		<result column="C3_TITLE" jdbcType="VARCHAR" property="c3Title" />
+		<result column="C3_COKIND" jdbcType="VARCHAR" property="c3Cokind" />
+		<result column="C3_COTEL" jdbcType="VARCHAR" property="c3Cotel" />
+		<result column="C3_COEXT" jdbcType="VARCHAR" property="c3Coext" />
+		<result column="C3_COYR" jdbcType="DECIMAL" property="c3Coyr" />
+		<result column="C3_EARN" jdbcType="DECIMAL" property="c3Earn" />
+		<result column="C3_ACCTNBR" jdbcType="VARCHAR" property="c3Acctnbr" />
+		<result column="C3_GUAMT" jdbcType="DECIMAL" property="c3Guamt" />
+		<result column="C3_TYPE" jdbcType="VARCHAR" property="c3Type" />
+		<result column="C3_GREF" jdbcType="VARCHAR" property="c3Gref" />
+		<result column="C3_GREL" jdbcType="VARCHAR" property="c3Grel" />
+		<result column="C4_CACCNBR" jdbcType="VARCHAR" property="c4Caccnbr" />
+		<result column="C4_CPAYMOD" jdbcType="VARCHAR" property="c4Cpaymod" />
+		<result column="C4_FACCNBR" jdbcType="VARCHAR" property="c4Faccnbr" />
+		<result column="C4_FPAYMOD" jdbcType="VARCHAR" property="c4Fpaymod" />
+		<result column="C4_OTHCARD" jdbcType="VARCHAR" property="c4Othcard" />
+		<result column="C4_OTHTYPE" jdbcType="VARCHAR" property="c4Othtype" />
+		<result column="C4_OTHCRED" jdbcType="DECIMAL" property="c4Othcred" />
+		<result column="C4_PAYCRED" jdbcType="DECIMAL" property="c4Paycred" />
+		<result column="C4_CCREDIT" jdbcType="DECIMAL" property="c4Ccredit" />
+		<result column="C4_FCREDIT" jdbcType="DECIMAL" property="c4Fcredit" />
+		<result column="C4_SOURCE" jdbcType="VARCHAR" property="c4Source" />
+		<result column="C4_APBATCH" jdbcType="VARCHAR" property="c4Apbatch" />
+		<result column="C4_ABACCES" jdbcType="VARCHAR" property="c4Abacces" />
+		<result column="C4_ABBRNCH" jdbcType="VARCHAR" property="c4Abbrnch" />
+		<result column="C4_ABUSER" jdbcType="VARCHAR" property="c4Abuser" />
+		<result column="C4_ABNAME" jdbcType="VARCHAR" property="c4Abname" />
+		<result column="C4_RECNAME" jdbcType="VARCHAR" property="c4Recname" />
+		<result column="C4_RECCARD" jdbcType="VARCHAR" property="c4Reccard" />
+		<result column="C4_RECEMP" jdbcType="VARCHAR" property="c4Recemp" />
+		<result column="C4_RELSHIP" jdbcType="VARCHAR" property="c4Relship" />
+		<result column="C4_RELMOD" jdbcType="VARCHAR" property="c4Relmod" />
+		<result column="C4_CYCDATE" jdbcType="DECIMAL" property="c4Cycdate" />
+		<result column="C4_CYCADD1" jdbcType="VARCHAR" property="c4Cycadd1" />
+		<result column="C4_CYCADD2" jdbcType="VARCHAR" property="c4Cycadd2" />
+		<result column="C4_BNAME" jdbcType="VARCHAR" property="c4Bname" />
+		<result column="C4_PINREQ" jdbcType="DECIMAL" property="c4Pinreq" />
+		<result column="C4_MESSREQ" jdbcType="DECIMAL" property="c4Messreq" />
+		<result column="C4_SMSAMT" jdbcType="DECIMAL" property="c4Smsamt" />
+		<result column="C4_SIGN_FLAG" jdbcType="VARCHAR" property="c4SignFlag" />
+		<result column="C4_REVS2" jdbcType="VARCHAR" property="c4Revs2" />
+		<result column="C4_STMCODE" jdbcType="VARCHAR" property="c4Stmcode" />
+		<result column="C4_GTOC" jdbcType="DECIMAL" property="c4Gtoc" />
+		<result column="C4_DOWNPD" jdbcType="VARCHAR" property="c4Downpd" />
+		<result column="C4_RUSHFLG" jdbcType="DECIMAL" property="c4Rushflg" />
+		<result column="C4_RUSHFEE" jdbcType="DECIMAL" property="c4Rushfee" />
+		<result column="C4_VCODE" jdbcType="VARCHAR" property="c4Vcode" />
+		<result column="C4_VRCODE" jdbcType="DECIMAL" property="c4Vrcode" />
+		<result column="C4_VCCRED" jdbcType="DECIMAL" property="c4Vccred" />
+		<result column="C4_VFCRED" jdbcType="DECIMAL" property="c4Vfcred" />
+		<result column="C4_VPACRED" jdbcType="DECIMAL" property="c4Vpacred" />
+		<result column="C4_CDESPMD" jdbcType="VARCHAR" property="c4Cdespmd" />
+		<result column="C4_CARDCST" jdbcType="DECIMAL" property="c4Cardcst" />
+		<result column="C4_CDESPLC" jdbcType="DECIMAL" property="c4Cdesplc" />
+		<result column="C4_VERCODE" jdbcType="VARCHAR" property="c4Vercode" />
+		<result column="C4_LYSRV" jdbcType="VARCHAR" property="c4Lysrv" />
+		<result column="C4_LYFEE" jdbcType="VARCHAR" property="c4Lyfee" />
+		<result column="C4_EXFLAG" jdbcType="VARCHAR" property="c4Exflag" />
+		<result column="C4_EXCODE" jdbcType="VARCHAR" property="c4Excode" />
+		<result column="C4_EXRTDT" jdbcType="DECIMAL" property="c4Exrtdt" />
+		<result column="C4_EXACCT" jdbcType="VARCHAR" property="c4Exacct" />
+		<result column="C4_CHFLAG" jdbcType="VARCHAR" property="c4Chflag" />
+		<result column="C4_BUEMB" jdbcType="VARCHAR" property="c4Buemb" />
+		<result column="C4_EMPNO" jdbcType="VARCHAR" property="c4Empno" />
+		<result column="C4_RISKCD" jdbcType="VARCHAR" property="c4Riskcd" />
+		<result column="C4_PIN1" jdbcType="VARCHAR" property="c4Pin1" />
+		<result column="C4_SRVCD1" jdbcType="VARCHAR" property="c4Srvcd1" />
+		<result column="C4_GIFTNO" jdbcType="VARCHAR" property="c4Giftno" />
+		<result column="C4_PSNID1" jdbcType="VARCHAR" property="c4Psnid1" />
+		<result column="C4_SYSFLG" jdbcType="VARCHAR" property="c4Sysflg" />
+		<result column="C4_GIFTN2" jdbcType="VARCHAR" property="c4Giftn2" />
+		<result column="C4_OTHCD4" jdbcType="VARCHAR" property="c4Othcd4" />
+		<result column="C4_OTHTYP4" jdbcType="VARCHAR" property="c4Othtyp4" />
+		<result column="C4_OTHEXP4" jdbcType="DECIMAL" property="c4Othexp4" />
+		<result column="C4_OBNKNM" jdbcType="VARCHAR" property="c4Obnknm" />
+		<result column="C4_RA" jdbcType="VARCHAR" property="c4Ra" />
+		<result column="C4_SC" jdbcType="VARCHAR" property="c4Sc" />
+		<result column="C4_SN" jdbcType="DECIMAL" property="c4Sn" />
+		<result column="C4_CLYN1" jdbcType="VARCHAR" property="c4Clyn1" />
+		<result column="C4_OTHCRQ" jdbcType="DECIMAL" property="c4Othcrq" />
+		<result column="C4_MUMPFL" jdbcType="DECIMAL" property="c4Mumpfl" />
+		<result column="C4_FCONM2" jdbcType="VARCHAR" property="c4Fconm2" />
+		<result column="C4_FCOYR2" jdbcType="DECIMAL" property="c4Fcoyr2" />
+		<result column="C4_FCOER2" jdbcType="DECIMAL" property="c4Fcoer2" />
+		<result column="C4_USPROD" jdbcType="VARCHAR" property="c4Usprod" />
+		<result column="C4_USMEB" jdbcType="VARCHAR" property="c4Usmeb" />
+		<result column="C4_USREL" jdbcType="VARCHAR" property="c4Usrel" />
+		<result column="C4_RELADD" jdbcType="VARCHAR" property="c4Reladd" />
+		<result column="C4_RELPOST" jdbcType="VARCHAR" property="c4Relpost" />
+		<result column="C4_APBTID" jdbcType="VARCHAR" property="c4Apbtid" />
+		<result column="C4_HMAMT" jdbcType="DECIMAL" property="c4Hmamt" />
+		<result column="C4_HLOANYR" jdbcType="DECIMAL" property="c4Hloanyr" />
+		<result column="C4_CARAMT" jdbcType="DECIMAL" property="c4Caramt" />
+		<result column="C4_CARLOAN" jdbcType="DECIMAL" property="c4Carloan" />
+		<result column="C4_ABPHON" jdbcType="VARCHAR" property="c4Abphon" />
+		<result column="C4_ABTYPE" jdbcType="VARCHAR" property="c4Abtype" />
+		<result column="C4_APSOUR" jdbcType="VARCHAR" property="c4Apsour" />
+		<result column="C4_CARYR" jdbcType="DECIMAL" property="c4Caryr" />
+		<result column="C4_ASSID" jdbcType="VARCHAR" property="c4Assid" />
+		<result column="C4_ASSIDTY" jdbcType="VARCHAR" property="c4Assidty" />
+		<result column="C4_ASSNAME" jdbcType="VARCHAR" property="c4Assname" />
+		<result column="C4_ASSBIRT" jdbcType="DATE" property="c4Assbirt" />
+		<result column="C4_ASSGEND" jdbcType="VARCHAR" property="c4Assgend" />
+		<result column="C4_ASSMARS" jdbcType="VARCHAR" property="c4Assmars" />
+		<result column="C4_ASSHARE" jdbcType="DECIMAL" property="c4Asshare" />
+		<result column="C4_ASSHTEL" jdbcType="VARCHAR" property="c4Asshtel" />
+		<result column="C4_ASSBTEL" jdbcType="VARCHAR" property="c4Assbtel" />
+		<result column="C4_ASSBEXT" jdbcType="VARCHAR" property="c4Assbext" />
+		<result column="C4_ASSCELL" jdbcType="VARCHAR" property="c4Asscell" />
+		<result column="C4_ASSCOMP" jdbcType="VARCHAR" property="c4Asscomp" />
+		<result column="C4_ASSDEPT" jdbcType="VARCHAR" property="c4Assdept" />
+		<result column="C4_CDSEL" jdbcType="VARCHAR" property="c4Cdsel" />
+		<result column="C4_CDSELNT" jdbcType="VARCHAR" property="c4Cdselnt" />
+		<result column="C4_DECEMP" jdbcType="DECIMAL" property="c4Decemp" />
+		<result column="C4_XCRLMT" jdbcType="DECIMAL" property="c4Xcrlmt" />
+		<result column="C4_CHILDYN" jdbcType="DECIMAL" property="c4Childyn" />
+		<result column="C4_FCODAT" jdbcType="DATE" property="c4Fcodat" />
+		<result column="C5_SERCD11" jdbcType="VARCHAR" property="c5Sercd11" />
+		<result column="C5_SERCD12" jdbcType="VARCHAR" property="c5Sercd12" />
+		<result column="C5_SERCD13" jdbcType="VARCHAR" property="c5Sercd13" />
+		<result column="C5_SERCD14" jdbcType="VARCHAR" property="c5Sercd14" />
+		<result column="C5_SERCD15" jdbcType="VARCHAR" property="c5Sercd15" />
+		<result column="C5_SERCD16" jdbcType="VARCHAR" property="c5Sercd16" />
+		<result column="C5_SERCD17" jdbcType="VARCHAR" property="c5Sercd17" />
+		<result column="C5_SERCD18" jdbcType="VARCHAR" property="c5Sercd18" />
+		<result column="C5_SERCD19" jdbcType="VARCHAR" property="c5Sercd19" />
+		<result column="C5_CAPCNT" jdbcType="DECIMAL" property="c5Capcnt" />
+		<result column="C5_PTPLAN" jdbcType="DECIMAL" property="c5Ptplan" />
+		<result column="C5_CUCODE1" jdbcType="VARCHAR" property="c5Cucode1" />
+		<result column="C5_CUCODE2" jdbcType="VARCHAR" property="c5Cucode2" />
+		<result column="C5_ACCODE1" jdbcType="VARCHAR" property="c5Accode1" />
+		<result column="C5_ACCODE2" jdbcType="VARCHAR" property="c5Accode2" />
+		<result column="C5_OVRMTYN" jdbcType="VARCHAR" property="c5Ovrmtyn" />
+		<result column="C5_COLEVL" jdbcType="VARCHAR" property="c5Colevl" />
+		<result column="C5_HMST" jdbcType="VARCHAR" property="c5Hmst" />
+		<result column="C5_HMYR" jdbcType="DECIMAL" property="c5Hmyr" />
+		<result column="C5_SCHLNMC" jdbcType="VARCHAR" property="c5Schlnmc" />
+		<result column="C5_SCHLNME" jdbcType="VARCHAR" property="c5Schlnme" />
+		<result column="C5_MOAREA" jdbcType="VARCHAR" property="c5Moarea" />
+		<result column="C5_EMAILIN" jdbcType="VARCHAR" property="c5Emailin" />
+		<result column="C5_OVERSEA" jdbcType="VARCHAR" property="c5Oversea" />
+		<result column="C5_ADTYPE1" jdbcType="VARCHAR" property="c5Adtype1" />
+		<result column="C5_ADTYPE2" jdbcType="VARCHAR" property="c5Adtype2" />
+		<result column="C5_ADTYPE3" jdbcType="VARCHAR" property="c5Adtype3" />
+		<result column="C5_ADTYPE4" jdbcType="VARCHAR" property="c5Adtype4" />
+		<result column="C5_BMWYN" jdbcType="VARCHAR" property="c5Bmwyn" />
+		<result column="C5_MSGFREE" jdbcType="VARCHAR" property="c5Msgfree" />
+		<result column="C5_CPTNO" jdbcType="DECIMAL" property="c5Cptno" />
+		<result column="C5_INTCODE" jdbcType="DECIMAL" property="c5Intcode" />
+		<result column="C5_MNGRNO" jdbcType="VARCHAR" property="c5Mngrno" />
+		<result column="C5_IDTE1" jdbcType="DATE" property="c5Idte1" />
+		<result column="C5_IDTE3" jdbcType="DATE" property="c5Idte3" />
+		<result column="C5_ABTEAM" jdbcType="DECIMAL" property="c5Abteam" />
+		<result column="C5_ABAREA" jdbcType="DECIMAL" property="c5Abarea" />
+		<result column="C5_CARLICS" jdbcType="VARCHAR" property="c5Carlics" />
+		<result column="C5_ATM1" jdbcType="VARCHAR" property="c5Atm1" />
+		<result column="C5_TELE1" jdbcType="VARCHAR" property="c5Tele1" />
+		<result column="C5_NET1" jdbcType="VARCHAR" property="c5Net1" />
+		<result column="C5_PHONE1" jdbcType="VARCHAR" property="c5Phone1" />
+		<result column="C5_CPNO1" jdbcType="DECIMAL" property="c5Cpno1" />
+		<result column="C5_NBRMTH1" jdbcType="DECIMAL" property="c5Nbrmth1" />
+		<result column="C5_COMCUST" jdbcType="VARCHAR" property="c5Comcust" />
+		<result column="C5_COMRCCD" jdbcType="VARCHAR" property="c5Comrccd" />
+		<result column="C5_COMNAME" jdbcType="VARCHAR" property="c5Comname" />
+		<result column="C5_MPLLMT" jdbcType="DECIMAL" property="c5Mpllmt" />
+		<result column="C5_JCTYPE" jdbcType="VARCHAR" property="c5Jctype" />
+		<result column="C5_MAILCO1" jdbcType="VARCHAR" property="c5Mailco1" />
+		<result column="C5_GUARNM2" jdbcType="VARCHAR" property="c5Guarnm2" />
+		<result column="C5_GUAR2" jdbcType="VARCHAR" property="c5Guar2" />
+		<result column="C5_EMPNO" jdbcType="VARCHAR" property="c5Empno" />
+		<result column="C5_PATHWAY" jdbcType="VARCHAR" property="c5Pathway" />
+		<result column="C5_GUIDTP" jdbcType="VARCHAR" property="c5Guidtp" />
+		<result column="C5_CUCRED" jdbcType="DECIMAL" property="c5Cucred" />
+		<result column="C5_NCRED" jdbcType="VARCHAR" property="c5Ncred" />
+		<result column="C5_CREDLMT" jdbcType="DECIMAL" property="c5Credlmt" />
+		<result column="C5_EXPYDT" jdbcType="DECIMAL" property="c5Expydt" />
+		<result column="C5_PINLIM1" jdbcType="DECIMAL" property="c5Pinlim1" />
+		<result column="C5_USREL" jdbcType="VARCHAR" property="c5Usrel" />
+		<result column="C5_ABTYPE" jdbcType="VARCHAR" property="c5Abtype" />
+		<result column="C5_OTHBNK" jdbcType="DECIMAL" property="c5Othbnk" />
+		<result column="C5_SENDNBR" jdbcType="VARCHAR" property="c5Sendnbr" />
+		<result column="C5_TEMPLMT" jdbcType="DECIMAL" property="c5Templmt" />
+		<result column="C5_TLMTBEG" jdbcType="DATE" property="c5Tlmtbeg" />
+		<result column="C5_TLMTEND" jdbcType="DATE" property="c5Tlmtend" />
+		<result column="C5_POI_COD" jdbcType="VARCHAR" property="c5PoiCod" />
+		<result column="C5_WORK_TY" jdbcType="VARCHAR" property="c5WorkTy" />
+		<result column="C5_PRO_COD" jdbcType="VARCHAR" property="c5ProCod" />
+		<result column="C5_SIN_DUA" jdbcType="VARCHAR" property="c5SinDua" />
+		<result column="C5_APR_COM" jdbcType="VARCHAR" property="c5AprCom" />
+		<result column="C5_REL_PAR" jdbcType="VARCHAR" property="c5RelPar" />
+		<result column="C5_OTHER_I" jdbcType="VARCHAR" property="c5OtherI" />
+		<result column="C5_BUS_OWN" jdbcType="VARCHAR" property="c5BusOwn" />
+		<result column="C5_BUS_EST" jdbcType="DATE" property="c5BusEst" />
+		<result column="C5_BUS_REG" jdbcType="VARCHAR" property="c5BusReg" />
+		<result column="C5_CUSEG1" jdbcType="VARCHAR" property="c5Cuseg1" />
+		<result column="C5_INTBNK" jdbcType="DECIMAL" property="c5Intbnk" />
+		<result column="C5_TRAN_RTE" jdbcType="VARCHAR" property="c5TranRte" />
+		<result column="C5_COSU_RTE" jdbcType="VARCHAR" property="c5CosuRte" />
+		<result column="C5_DEPO_RTE" jdbcType="VARCHAR" property="c5DepoRte" />
+		<result column="C5_SGNDTE1" jdbcType="DATE" property="c5Sgndte1" />
+		<result column="C5_REGDTE1" jdbcType="DATE" property="c5Regdte1" />
+		<result column="C5_SGNDTE3" jdbcType="DATE" property="c5Sgndte3" />
+		<result column="C5_REGDTE3" jdbcType="DATE" property="c5Regdte3" />
+		<result column="C5_CUREF1" jdbcType="VARCHAR" property="c5Curef1" />
+		<result column="C5_MASTNO1" jdbcType="VARCHAR" property="c5Mastno1" />
+		<result column="C5_NTMSG1" jdbcType="VARCHAR" property="c5Ntmsg1" />
+		<result column="C5_NTMSG2" jdbcType="VARCHAR" property="c5Ntmsg2" />
+		<result column="C5_CARDTO1" jdbcType="VARCHAR" property="c5Cardto1" />
+		<result column="C5_ABCODE" jdbcType="VARCHAR" property="c5Abcode" />
+		<result column="C5_PBCBRNC" jdbcType="VARCHAR" property="c5Pbcbrnc" />
+		<result column="C5_COMNM2P" jdbcType="VARCHAR" property="c5Comnm2p" />
+		<result column="C5_COMNM2V" jdbcType="VARCHAR" property="c5Comnm2v" />
+		<result column="C5_NOREISS" jdbcType="DECIMAL" property="c5Noreiss" />
+		<result column="C5_MSMPNBR" jdbcType="VARCHAR" property="c5Msmpnbr" />
+		<result column="C5_MSMPBAL" jdbcType="DECIMAL" property="c5Msmpbal" />
+		<result column="C5_CDSEL1" jdbcType="VARCHAR" property="c5Cdsel1" />
+		<result column="C5_HDWR_SN" jdbcType="VARCHAR" property="c5HdwrSn" />
+		<result column="C5_AID" jdbcType="VARCHAR" property="c5Aid" />
+		<result column="C5_INTFLCD" jdbcType="DECIMAL" property="c5Intflcd" />
+		<result column="C5_DEPOSIT" jdbcType="DECIMAL" property="c5Deposit" />
+		<result column="C5_DAILYTP" jdbcType="DECIMAL" property="c5Dailytp" />
+		<result column="C5_OPE_MOD" jdbcType="VARCHAR" property="c5OpeMod" />
+		<result column="C5_OPE_TPE" jdbcType="VARCHAR" property="c5OpeTpe" />
+		<result column="C5_CASHRTE" jdbcType="VARCHAR" property="c5Cashrte" />
+		<result column="C5_BEATYPE" jdbcType="DECIMAL" property="c5Beatype" />
+		<result column="C5_INLAND" jdbcType="VARCHAR" property="c5Inland" />
+		<result column="C5_FEEGRP" jdbcType="DECIMAL" property="c5Feegrp" />
+		<result column="C5_CC_YN1" jdbcType="DECIMAL" property="c5CcYn1" />
+		<result column="C5_EC_YN1" jdbcType="DECIMAL" property="c5EcYn1" />
+		<result column="C5_FRELIM" jdbcType="DECIMAL" property="c5Frelim" />
+		<result column="C5_LIVE_CY1" jdbcType="VARCHAR" property="c5LiveCy1" />
+		<result column="C5_INTFL_CODE" jdbcType="DECIMAL" property="c5IntflCode" />
+		<result column="C5_DETCARD" jdbcType="VARCHAR" property="c5Detcard" />
+		<result column="C5_QQ_NBR1" jdbcType="VARCHAR" property="c5QqNbr1" />
+		<result column="C5_WEIXIN_NBR1" jdbcType="VARCHAR" property="c5WeixinNbr1" />
+		<result column="C5_ISS_MOD" jdbcType="VARCHAR" property="c5IssMod" />
+		<result column="C5_CARDCST2" jdbcType="VARCHAR" property="c5Cardcst2" />
+		<result column="C5_ISDPIF1" jdbcType="VARCHAR" property="c5Isdpif1" />
+		<result column="C5_ISDPIF3" jdbcType="VARCHAR" property="c5Isdpif3" />
+		<result column="C5_CUCODE3" jdbcType="VARCHAR" property="c5Cucode3" />
+		<result column="C6_OUT_MTH" jdbcType="DECIMAL" property="c6OutMth" />
+		<result column="THIRD_PARTY_YN1" jdbcType="VARCHAR" property="thirdPartyYn1" />
+		<result column="PAYMT_YN" jdbcType="DECIMAL" property="paymtYn" />
+		<result column="C5_CUCODE4" jdbcType="VARCHAR" property="c5Cucode4" />
+		<result column="C5_LOAN_DTE" jdbcType="DATE" property="c5LoanDte" />
+		<result column="C5_INTR_RATEW" jdbcType="DECIMAL" property="c5IntrRatew" />
+		<result column="C5_RMB_BILL1" jdbcType="DECIMAL" property="c5RmbBill1" />
+		<result column="SERIES_ID1" jdbcType="VARCHAR" property="seriesId1" />
+		<result column="C5_MPLMT_FLAG" jdbcType="DECIMAL" property="c5MplmtFlag" />
+		<result column="C5_HDWR_SN2" jdbcType="VARCHAR" property="c5HdwrSn2" />
+		<result column="C5_AID2" jdbcType="VARCHAR" property="c5Aid2" />
+		<result column="C6_REL_FLAG1" jdbcType="DECIMAL" property="c6RelFlag1" />
+		<result column="C6_REL_FLAG3" jdbcType="DECIMAL" property="c6RelFlag3" />
+		<result column="C6_CLASS_NBR1" jdbcType="VARCHAR" property="c6ClassNbr1" />
+		<result column="C6_CLASS_NBR3" jdbcType="VARCHAR" property="c6ClassNbr3" />
+		<result column="C6_WHITE_RSN1" jdbcType="VARCHAR" property="c6WhiteRsn1" />
+		<result column="C6_WHITE_RSN3" jdbcType="VARCHAR" property="c6WhiteRsn3" />
+		<result column="C6_MP_EXPDTE" jdbcType="DATE" property="c6MpExpdte" />
+		<result column="C6_ETHNIC1" jdbcType="VARCHAR" property="c6Ethnic1" />
+		<result column="C6_OCCUPATION1" jdbcType="VARCHAR" property="c6Occupation1" />
+		<result column="C6_ENROLL_DATE" jdbcType="DECIMAL" property="c6EnrollDate" />
+		<result column="C6_GRADU_DATE" jdbcType="DECIMAL" property="c6GraduDate" />
+		<result column="C6_UNQPASS1" jdbcType="DECIMAL" property="c6Unqpass1" />
+		<result column="C6_MAX_MPAMT1" jdbcType="DECIMAL" property="c6MaxMpamt1" />
+		<result column="C6_MIN_MPAMT1" jdbcType="DECIMAL" property="c6MinMpamt1" />
+		<result column="C6_ABREASON" jdbcType="VARCHAR" property="c6Abreason" />
+		<result column="C6_ABSOUAREA" jdbcType="VARCHAR" property="c6Absouarea" />
+		<result column="C6_UNION_CD" jdbcType="VARCHAR" property="c6UnionCd" />
+		<result column="C6_FINANCE_CD" jdbcType="VARCHAR" property="c6FinanceCd" />
+		<result column="C6_LMT_TYPE1" jdbcType="VARCHAR" property="c6LmtType1" />
+		<result column="C6_SUBLMT_NBR1" jdbcType="DECIMAL" property="c6SublmtNbr1" />
+		<result column="C6_LIMIT1" jdbcType="DECIMAL" property="c6Limit1" />
+		<result column="C6_ATTRBTE1" jdbcType="DECIMAL" property="c6Attrbte1" />
+		<result column="C6_AVAIL_YN1" jdbcType="DECIMAL" property="c6AvailYn1" />
+		<result column="C6_BEGIN_DATE1" jdbcType="DATE" property="c6BeginDate1" />
+		<result column="C6_END_DATE1" jdbcType="DATE" property="c6EndDate1" />
+		<result column="C6_LMT_TYPE2" jdbcType="VARCHAR" property="c6LmtType2" />
+		<result column="C6_SUBLMT_NBR2" jdbcType="DECIMAL" property="c6SublmtNbr2" />
+		<result column="C6_LIMIT2" jdbcType="DECIMAL" property="c6Limit2" />
+		<result column="C6_ATTRBTE2" jdbcType="DECIMAL" property="c6Attrbte2" />
+		<result column="C6_AVAIL_YN2" jdbcType="DECIMAL" property="c6AvailYn2" />
+		<result column="C6_BEGIN_DATE2" jdbcType="DATE" property="c6BeginDate2" />
+		<result column="C6_END_DATE2" jdbcType="DATE" property="c6EndDate2" />
+		<result column="C6_VCN_YN" jdbcType="DECIMAL" property="c6VcnYn" />
+		<result column="C6_VCN_CHL" jdbcType="DECIMAL" property="c6VcnChl" />
+		<result column="C6_ITCD_ENDDT" jdbcType="DATE" property="c6ItcdEnddt" />
+		<result column="C5_RESERV2" jdbcType="VARCHAR" property="c5Reserv2" />
+		<result column="BATCH_OPERATE_FLAG" jdbcType="VARCHAR"
+			property="batchOperateFlag" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+		<result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+		<result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+		<result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+		<result column="C1C2_FLAG" jdbcType="VARCHAR" property="c1c2Flag" />
+		<result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+		<result column="KQ" jdbcType="VARCHAR" property="kq" />
+		<result column="FL" jdbcType="DECIMAL" property="fl" />
+		<result column="MAIN_CARD_STS" jdbcType="VARCHAR" property="mainCardSts" />
+		<result column="HD_INFO_MATCHING" jdbcType="VARCHAR" property="hdInfoMatching" />
+		<result column="ALLOT_STATUS" jdbcType="CHAR" property="allotStatus" />
+		<result column="INPUT_CHANNEL" jdbcType="CHAR" property="inputChannel" />
+		<result column="EPAY_MATCH" jdbcType="CHAR" property="epayMatch" />
+		<result column="CZFQ_MATCH" jdbcType="CHAR" property="czfqMatch" />
+		<result column="MATCHING_CARD_FLAG" jdbcType="CHAR" property="matchingCardFlag" />
+		<result column="C6_RESI_TAXID1" jdbcType="CHAR" property="c6ResiTaxid1" />
+		
+		
+	</resultMap>
+    
+    <select id="selectApply_C1ByPrimaryKey" parameterType="java.lang.String"
+		resultMap="RiskCheck_Apply_C1ResultMap">
+		select 
+		INSIDE_APP_NO, APP_BANK, APP_ID, APP_PROD, APP_FLAG, APP_FLOWST, APP_CODE,
+		APP_ACCTYP,
+		C1_BRNCH, C1_CARDNBR, C1_IDTYPE, C1_IDNBR, C1_SECNBR, C1_CNAME, C1_ENAME,
+		C1_GENDER,
+		C1_BIRTH, C1_NATION, C1_MARST, C1_EDUCLS, C1_TITLE, C1_TELVL, C1_HMARE,
+		C1_HMTEL,
+		C1_MOBILE, C1_EMAIL, C1_FAX, C1_CLASS, trim(to_single_byte(C1_Hmadd1)) C1_Hmadd1, 
+		trim(to_single_byte(C1_Hmadd2)) C1_Hmadd2, trim(to_single_byte(C1_Hmadd3)) C1_Hmadd3,
+		trim(to_single_byte(C1_Hmadd4)) C1_Hmadd4,
+		C1_HMPOST, C1_HMST, C1_HMYR, C1_HLOAN, C1_IDADD1, C1_IDADD2, C1_IDADD3,
+		C1_IDADD4,
+		C1_IDPOST, C1_ESTADD1, C1_ESTADD2, C1_ESTADD3, C1_ESTADD4, C1_ESTPOST,
+		C1_CARBRND,
+		C1_CARDATE, C1_CARNBR, C1_CARST, C1_COADD1, C1_COADD2, C1_COADD3, C1_COADD4,
+		C1_COPOST,
+		C1_CONAME, C1_CODEPT, C1_CODUTY, C1_COCODE, C1_COBUSCD, C1_COKIND, C1_COLEVL,
+		C1_COTEL,
+		C1_COEXT, C1_COYR, C1_EARN, C1_FCONAME, C1_FCODEPT, C1_FCOTITL, C1_FCOTEL,
+		C1_FCOYR,
+		C1_FOREANN, C1_DEPEND, C1_BUSISER, C1_PROMQU, C1_PROMAN, C1_REID, C1_RENAME,
+		C1_RETELAR,
+		C1_RETEL, C1_RESHIP, C1_REMOBIL, C1_XID1, C1_XNAME1, C1_XTELAR1, C1_XTEL1,
+		C1_XSHIP1,
+		C1_XCOMP1, C1_XMOBIL1, C1_XID2, C1_XNAME2, C1_XTELAR2, C1_XTEL2, C1_XSHIP2,
+		C1_XCOMP2,
+		C1_XMOBIL2, C1_SPIDTYP, C1_SPIDNBR, C1_SPNAME, C1_SPMOBIL, C1_SPCNAME,
+		C1_SPCDEPT,
+		C1_SPCDUTY, C1_SPCTEL, C1_SPCEXT, C1_SPEARN, C2_OBNKNO, C2_RELCOMP, C2_SIGNCK,
+		C2_IDDT1,
+		C2_ISDP1, C2_NATNCD1, C2_IDDT3, C2_ISDP3, C2_NATNCD3, C2_REVS2, C3_IDTYPE,
+		C3_IDNBR,
+		C3_CNAME, C3_ENAME, C3_GENDER, C3_BIRTH, C3_NATION, C3_MARST, C3_EDUCLS,
+		C3_HMARE,
+		C3_HMTEL, C3_MOBILE, C3_RESVD1, C3_RESVD2, C3_RESVD3, C3_RESVD4, C3_RESVD5,
+		C3_RESVD6,
+		C3_EMAIL, C3_CONAME, C3_CODEPT, C3_CODUTY, C3_COCODE, C3_TITLE, C3_COKIND,
+		C3_COTEL,
+		C3_COEXT, C3_COYR, C3_EARN, C3_ACCTNBR, C3_GUAMT, C3_TYPE, C3_GREF, C3_GREL,
+		C4_CACCNBR,
+		C4_CPAYMOD, C4_FACCNBR, C4_FPAYMOD, C4_OTHCARD, C4_OTHTYPE, C4_OTHCRED,
+		C4_PAYCRED,
+		C4_CCREDIT, C4_FCREDIT, C4_SOURCE, C4_APBATCH, C4_ABACCES, C4_ABBRNCH, C4_ABUSER,
+		C4_ABNAME, C4_RECNAME, C4_RECCARD, C4_RECEMP, C4_RELSHIP, C4_RELMOD,
+		C4_CYCDATE,
+		C4_CYCADD1, C4_CYCADD2, C4_BNAME, C4_PINREQ, C4_MESSREQ, C4_SMSAMT, C4_SIGN_FLAG,
+		C4_REVS2, C4_STMCODE, C4_GTOC, C4_DOWNPD, C4_RUSHFLG, C4_RUSHFEE,
+		C4_VCODE, C4_VRCODE,
+		C4_VCCRED, C4_VFCRED, C4_VPACRED, C4_CDESPMD, C4_CARDCST, C4_CDESPLC,
+		C4_VERCODE,
+		C4_LYSRV, C4_LYFEE, C4_EXFLAG, C4_EXCODE, C4_EXRTDT, C4_EXACCT, C4_CHFLAG,
+		C4_BUEMB,
+		C4_EMPNO, C4_RISKCD, C4_PIN1, C4_SRVCD1, C4_GIFTNO, C4_PSNID1, C4_SYSFLG,
+		C4_GIFTN2,
+		C4_OTHCD4, C4_OTHTYP4, C4_OTHEXP4, C4_OBNKNM, C4_RA, C4_SC, C4_SN, C4_CLYN1,
+		C4_OTHCRQ,
+		C4_MUMPFL, C4_FCONM2, C4_FCOYR2, C4_FCOER2, C4_USPROD, C4_USMEB, C4_USREL,
+		C4_RELADD,
+		C4_RELPOST, C4_APBTID, C4_HMAMT, C4_HLOANYR, C4_CARAMT, C4_CARLOAN, C4_ABPHON,
+		C4_ABTYPE,
+		C4_APSOUR, C4_CARYR, C4_ASSID, C4_ASSIDTY, C4_ASSNAME, C4_ASSBIRT, C4_ASSGEND,
+		C4_ASSMARS,
+		C4_ASSHARE, C4_ASSHTEL, C4_ASSBTEL, C4_ASSBEXT, C4_ASSCELL, C4_ASSCOMP,
+		C4_ASSDEPT,
+		C4_CDSEL, C4_CDSELNT, C4_DECEMP, C4_XCRLMT, C4_CHILDYN, C4_FCODAT, C5_SERCD11,
+		C5_SERCD12,
+		C5_SERCD13, C5_SERCD14, C5_SERCD15, C5_SERCD16, C5_SERCD17, C5_SERCD18,
+		C5_SERCD19,
+		C5_CAPCNT, C5_PTPLAN, C5_CUCODE1, C5_CUCODE2, C5_ACCODE1, C5_ACCODE2,
+		C5_OVRMTYN,
+		C5_COLEVL, C5_HMST, C5_HMYR, C5_SCHLNMC, C5_SCHLNME, C5_MOAREA, C5_EMAILIN,
+		C5_OVERSEA,
+		C5_ADTYPE1, C5_ADTYPE2, C5_ADTYPE3, C5_ADTYPE4, C5_BMWYN, C5_MSGFREE, C5_CPTNO,
+		C5_INTCODE,
+		C5_MNGRNO, C5_IDTE1, C5_IDTE3, C5_ABTEAM, C5_ABAREA, C5_CARLICS, C5_ATM1,
+		C5_TELE1,
+		C5_NET1, C5_PHONE1, C5_CPNO1, C5_NBRMTH1, C5_COMCUST, C5_COMRCCD, C5_COMNAME,
+		C5_MPLLMT,
+		C5_JCTYPE, C5_MAILCO1, C5_GUARNM2, C5_GUAR2, C5_EMPNO, C5_PATHWAY, C5_GUIDTP,
+		C5_CUCRED,
+		C5_NCRED, C5_CREDLMT, C5_EXPYDT, C5_PINLIM1, C5_USREL, C5_ABTYPE, C5_OTHBNK,
+		C5_SENDNBR,
+		C5_TEMPLMT, C5_TLMTBEG, C5_TLMTEND, C5_POI_COD, C5_WORK_TY, C5_PRO_COD,
+		C5_SIN_DUA,
+		C5_APR_COM, C5_REL_PAR, C5_OTHER_I, C5_BUS_OWN, C5_BUS_EST, C5_BUS_REG,
+		C5_CUSEG1,
+		C5_INTBNK, C5_TRAN_RTE, C5_COSU_RTE, C5_DEPO_RTE, C5_SGNDTE1, C5_REGDTE1,
+		C5_SGNDTE3,
+		C5_REGDTE3, C5_CUREF1, C5_MASTNO1, C5_NTMSG1, C5_NTMSG2, C5_CARDTO1, C5_ABCODE,
+		C5_PBCBRNC,
+		C5_COMNM2P, C5_COMNM2V, C5_NOREISS, C5_MSMPNBR, C5_MSMPBAL, C5_CDSEL1,
+		C5_HDWR_SN,
+		C5_AID, C5_INTFLCD, C5_DEPOSIT, C5_DAILYTP, C5_OPE_MOD, C5_OPE_TPE,
+		C5_CASHRTE, C5_BEATYPE,
+		C5_INLAND, C5_FEEGRP, C5_CC_YN1, C5_EC_YN1, C5_FRELIM, C5_LIVE_CY1,
+		C5_INTFL_CODE,
+		C5_DETCARD, C5_QQ_NBR1, C5_WEIXIN_NBR1, C5_ISS_MOD, C5_CARDCST2, C5_ISDPIF1,
+		C5_ISDPIF3,
+		C5_CUCODE3, C6_OUT_MTH, THIRD_PARTY_YN1, PAYMT_YN, C5_CUCODE4, C5_LOAN_DTE,
+		C5_INTR_RATEW,
+		C5_RMB_BILL1, SERIES_ID1, C5_MPLMT_FLAG, C5_HDWR_SN2, C5_AID2, C6_REL_FLAG1,
+		C6_REL_FLAG3,
+		C6_CLASS_NBR1, C6_CLASS_NBR3, C6_WHITE_RSN1, C6_WHITE_RSN3, C6_MP_EXPDTE,
+		C6_ETHNIC1,
+		C6_OCCUPATION1, C6_ENROLL_DATE, C6_GRADU_DATE, C6_UNQPASS1, C6_MAX_MPAMT1,
+		C6_MIN_MPAMT1,
+		C6_ABREASON, C6_ABSOUAREA, C6_UNION_CD, C6_FINANCE_CD, C6_LMT_TYPE1,
+		C6_SUBLMT_NBR1,
+		C6_LIMIT1, C6_ATTRBTE1, C6_AVAIL_YN1, C6_BEGIN_DATE1, C6_END_DATE1,
+		C6_LMT_TYPE2,
+		C6_SUBLMT_NBR2, C6_LIMIT2, C6_ATTRBTE2, C6_AVAIL_YN2, C6_BEGIN_DATE2, C6_END_DATE2,
+		C6_VCN_YN, C6_VCN_CHL, C6_ITCD_ENDDT, C5_RESERV2, BATCH_OPERATE_FLAG,
+		CRT_TIME, CRT_DATE,
+		CRT_USER, LST_UPD_TIME, LST_UPD_DATE, LST_UPD_USER, C1C2_FLAG, YDJ_FLAG, KQ,
+		FL,
+		MAIN_CARD_STS, HD_INFO_MATCHING, ALLOT_STATUS, INPUT_CHANNEL, EPAY_MATCH, CZFQ_MATCH
+		,MATCHING_CARD_FLAG,C6_RESI_TAXID1
+		 from OPAS_BIZ_INP_APPL_C1
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+    
+    <select id="Query_For_Depot" parameterType="java.lang.String"	resultMap="RiskCheck_Apply_C1ResultMap">
+    	select app_id,
+    	   a.c1_hmadd1,
+	       a.c1_hmadd2,
+	       a.c1_hmadd3,
+	       a.c1_hmadd4,
+	       a.c1_coadd1,
+	       a.c1_coadd2,
+	       a.c1_coadd3,
+	       a.c1_coadd4  
+	    from OPAS_BIZ_INP_APPL_C1 a
+			where a.APP_ID = #{appId,jdbcType=VARCHAR}
+    </select>
+    
+</mapper>

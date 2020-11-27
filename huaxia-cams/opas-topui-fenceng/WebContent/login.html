@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>华夏新审批系统平台</title>
+<link rel="stylesheet" type="text/css" href="css/login/login_style.css">
+<script type="text/javascript" src="topui/topui.js"></script>
+<SCRIPT type=text/javascript src="js/login/login.js"></SCRIPT>
+<script type="text/javascript" src="js/common/jqCommon.js"></script>
+<script type="text/javascript" src="js/login/md5.js"></script>
+</head>
+<body>
+	<div class="login">
+		<div class="title"></div>
+		<div class="input_box">
+			<div class="input_text">
+				<form method="post" name="loginForm">
+					<div class="input_div">
+						<span>账户</span>&nbsp;<input name="userCode" id="userCode"
+							type="text" class="input_name" tabindex="1">&nbsp;<input
+							type="button" onclick="fnReset()" class="button_re" value="重置">
+					</div>
+					<div class="input_div" style="margin-top: 40px;">
+						<span>口令</span>&nbsp;<input type="password" name="userPassword"
+							id="userPassword" class="input_psw" tabindex="2">&nbsp;<input
+							type="button" onclick="fnLogin()" class="button_login" value="登录">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="完成密码修改后,可正常登录"
+		style="width: 400px; height: 300px" top="60px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<br> <br>
+			<table>
+				<tr>
+					<td align="right" width="30%">账户:</td>
+					<td align="center" width="60%"><input id="userName"
+						name="userName" type="text" class="easyui-validatebox textbox"></td>
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="right" width="30%">原密码:</td>
+					<td align="center" width="60%"><input id="oldPassword"
+						name="oldPassword" type="password"
+						class="easyui-validatebox textbox"></td>
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="right" width="30%">新密码:</td>
+					<td align="center" width="60%"><input id="newPassword"
+						name="newPassword" type="password"
+						class="easyui-validatebox textbox"></td>
+				</tr>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="right">确认密码:</td>
+					<td align="center"><input id="reuserPassword"
+						name="reuserPassword" type="password"
+						class="easyui-validatebox textbox"
+						validType="equals['#editForm input[name=newPassword]']" /></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<td align="center"><a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onUpdate()">保存</a> <a
+				href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winEdit','editForm')">取消</a></td>
+
+		</div>
+
+	</div>
+</body>
+<script type="text/javascript">
+	function fnLogin() {
+		var username = $("#userCode").val();
+		var password = $("#userPassword").val();
+		$("#userName").val(username);
+		if (username == "" || username == null) {
+			alert("用户名不能为空！");
+			return;
+		}
+		if (password == "" || password == null) {
+			alert("密码不能为空！");
+			return;
+		}
+		password = hex_md5(password);//密码加密 
+		var loginData = {
+			"userPassword" : password,
+			"userCode" : username
+		};
+
+		$cf.ajax({
+			url : "/opas-naps/login.json",
+			data : loginData,
+			onSuccess : function(data) {
+				var uuid = data.RSP_BODY.uuid;
+				var status = data.RSP_BODY.status;
+				var prompt = data.RSP_BODY.pro;
+				if (uuid) {
+					window.location.href = "index.html?uuid=" + uuid;
+					if(prompt){
+					alert(data.RSP_BODY.pro);
+					}
+				} else if (status) {
+					var currentWinObj = $("#winEdit");
+					currentWinObj.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false
+					});
+				} else {
+					alert(data.RSP_BODY.msg);
+				}
+			}
+		});
+	}
+
+	function fnReset() {
+		document.loginForm.reset();
+		document.loginForm.userCode.value = "";
+		document.loginForm.userPassword.value = "";
+	}
+
+	//修改密码方法
+	function onUpdate() {
+		var userId = $("#userName").val();
+		var oldPassword = $("#oldPassword").val();
+		var newPassword = $("#newPassword").val();
+		var reuserPassword = $("#reuserPassword").val();
+		var userPassword = "";
+		if (userId == null || userId == "") {
+			$.messager.alert("操作提示", "请输入用户名!", "warning");
+			return;
+		}
+		if (oldPassword == null || oldPassword == "") {
+			$.messager.alert("操作提示", "原密码不能为空，请重新输入!", "warning");
+			return;
+		}
+		if (newPassword == null || newPassword == "") {
+			$.messager.alert("操作提示", "新密码不能为空，请重新输入!", "warning");
+			return;
+		}
+		//密码强度的控制
+		var passwordRequire = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#%^&*? ]).*$/;
+		var judge = passwordRequire.test(newPassword);
+		if (newPassword != "" && newPassword != null) {
+			if (judge) {
+				if (reuserPassword == null || reuserPassword == "") {
+					$.messager.alert("操作提示", "请输入确认密码!", "warning");
+					return;
+				}
+				if (newPassword == oldPassword) {
+					$.messager.alert("操作提示", "新密码不能与原密码一致!", "warning");
+					return;
+				}
+				if (newPassword != reuserPassword) {
+					$.messager.alert("操作提示", "密码不一致，请重新输入!", "warning");
+					return;
+				}
+				if (newPassword != null && newPassword != "") {
+					userPassword = newPassword;
+				}
+				oldPassword = hex_md5(oldPassword);
+				userPassword = hex_md5(userPassword);
+				$cf.ajax({
+					url : "/opas-naps/setPassword.json",
+					data : {
+						"user_Id" : userId,
+						"oldPassword" : oldPassword,
+						"userPassword" : userPassword
+					},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							top.$cf.showMsg("密码修改成功!");
+							onConcle('winEdit', 'editForm');
+						} else {
+							$.messager.alert("操作提示", "修改失败，原因:"
+									+ data.RSP_BODY.exMsg, "warning");
+							onConcle('winEdit', 'editForm');
+							return;
+						}
+					}
+				});
+			} else {
+				$.messager.alert("提示",
+						"新密码，最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符[!@#%^&*? ]",
+						"warning");
+				return;
+			}
+		}
+	}
+
+	//密码修改页面,取消方法
+	function onConcle(obj, editForm) {
+		var winObj = $("#" + obj);
+		var fromObj = $("#" + editForm);
+		fromObj.form("clear");
+		winObj.window("close");
+	}
+
+	//键盘驾车事件
+	document.onkeydown = function(event) {
+		var event = event || window.event;
+		if (event.keyCode == 13) {
+			fnLogin();
+		}
+	};
+</script>
+</html>

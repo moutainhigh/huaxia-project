@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="KeyMessageModify">
+  <resultMap id="KeyMessageModifyResultMap" type="com.huaxia.opas.domain.report.KeyMessageModify">
+    <id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+    <result column="MODIFY_DATE" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="APPLY_NAME" jdbcType="VARCHAR" property="applyName" />
+    <result column="CRETIFI_TYPE" jdbcType="CHAR" property="cretifiType" />
+    <result column="CRETIFI_ID" jdbcType="VARCHAR" property="cretifiId" />
+    <result column="KEY_WORDS_ID" jdbcType="VARCHAR" property="keyWordsId" />
+    <result column="CURR_VALUE" jdbcType="VARCHAR" property="currValue" />
+    <result column="MODIFY_VALUE" jdbcType="VARCHAR" property="modifyValue" />
+    <result column="REVIEW_STATUS" jdbcType="CHAR" property="reviewStatus" />
+    <result column="REVIEWER" jdbcType="VARCHAR" property="reviewer" />
+    <result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+    <result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+    <result column="FLAG" jdbcType="CHAR" property="flag" />
+  </resultMap>
+   <resultMap id="KeyMessageModifyResultMap1" type="java.util.Map">
+    <id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+    <result column="MODIFY_DATE" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="APPLY_NAME" jdbcType="VARCHAR" property="applyName" />
+    <result column="CRETIFI_TYPE" jdbcType="CHAR" property="cretifiType" />
+    <result column="CRETIFI_ID" jdbcType="VARCHAR" property="cretifiId" />
+    <result column="KEY_WORDS_ID" jdbcType="VARCHAR" property="keyWordsId" />
+    <result column="CURR_VALUE" jdbcType="VARCHAR" property="currValue" />
+    <result column="MODIFY_VALUE" jdbcType="VARCHAR" property="modifyValue" />
+    <result column="REVIEW_STATUS" jdbcType="CHAR" property="reviewStatus" />
+    <result column="REVIEWER" jdbcType="VARCHAR" property="reviewer" />
+    <result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+    <result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+  </resultMap>
+<!--  关键信息修改查询 
+  <select id="selectApplyLogByAppId" resultMap="KeyMessageModifyResultMap" parameterType="java.lang.String">
+		select
+		AUTO_ID, MODIFY_DATE, OPERATOR, APP_ID, APPLY_NAME, CRETIFI_TYPE,
+		CRETIFI_ID,KEY_WORDS_ID, CURR_VALUE, MODIFY_VALUE,REVIEW_STATUS,REVIEWER,CRT_DATE,YDJ_FLAG
+		from OPAS_KEYMESSAGE_MODIFY
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	 -->
+	 
+	 
+	 <resultMap id="ColumnNameResultMap" type="com.huaxia.opas.domain.report.KeyMessageModify">
+	    <result column="COMMENTS" jdbcType="TIMESTAMP" property="comments" />
+	    <result column="COLUMN_NAME" jdbcType="VARCHAR" property="columnName" />
+	  </resultMap>
+	<select id="selectColumnName" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select
+		COMMENTS
+		from user_col_comments
+		where table_name = 'OPAS_BIZ_INP_APPL_C1'
+		and column_name = #{_parameter,jdbcType=VARCHAR}
+		union all
+		select COMMENTS
+		from user_col_comments
+		where table_name = 'OPAS_BIZ_APPROVA_INFO_SUPP'
+		and column_name = #{_parameter,jdbcType=VARCHAR}
+		union all
+		select COMMENTS
+		from user_col_comments
+		where table_name = 'OPAS_BIZ_INP_APPL_C2'
+		and column_name = #{_parameter,jdbcType=VARCHAR}
+		union all
+		select COMMENTS
+		from user_col_comments
+		where table_name = 'OPAS_REVIEENTRY_COMPARE_INFO'
+		and column_name = #{_parameter,jdbcType=VARCHAR}
+		union all
+		select COMMENTS
+		from user_col_comments
+		where table_name = 'YS_RESULT_INFO'
+		and column_name = #{_parameter,jdbcType=VARCHAR}
+	</select>
+	
+	 
+  <!-- 申请信息修改日志表修改查询 -->
+  <select id="selectApplyLogByAppId" resultMap="KeyMessageModifyResultMap" parameterType="java.lang.String">
+		<!-- select distinct
+		a.LST_UPD_DATE as MODIFY_DATE, 
+		a.CRT_USER as OPERATOR, 
+		c.APP_ID as APP_ID, 
+		c.C1_CNAME as APPLY_NAME, 
+		c.C1_IDTYPE as CRETIFI_TYPE,
+		c.C1_IDNBR as CRETIFI_ID,
+		a.FIELD_NAME as KEY_WORDS_ID, 
+		a.FIELD_OLD_VALUE as CURR_VALUE, 
+		a.FIELD_NEW_VALUE as MODIFY_VALUE,
+		b.REVIEW_STATUS as REVIEW_STATUS,
+		b.REVIEWER as REVIEWER,
+		a.CRT_DATE as CRT_DATE,
+		b.YDJ_FLAG as YDJ_FLAG
+		from OPAS_APPLY_MODIFY_LOG a left join OPAS_KEYMESSAGE_MODIFY b on a.APP_ID = b.APP_ID
+		and a.FIELD_NAME = b.KEY_WORDS_ID
+		left join OPAS_BIZ_INP_APPL_C1 c on a.APP_ID = c.APP_ID
+		where a.APP_ID = #{appId,jdbcType=VARCHAR}
+		order by a.LST_UPD_DATE desc -->
+	select * from 
+		(select distinct
+		a.FLAG as FLAG, 
+		a.LST_UPD_DATE as MODIFY_DATE, 
+		a.CRT_USER as OPERATOR, 
+		a.APP_ID as APP_ID, 
+		a.apply_name as APPLY_NAME, 
+		a.cretifi_type as CRETIFI_TYPE,
+		a.cretifi_id as CRETIFI_ID,
+		a.FIELD_NAME as KEY_WORDS_ID, 
+		a.FIELD_OLD_VALUE as CURR_VALUE, 
+		a.FIELD_NEW_VALUE as MODIFY_VALUE,
+		b.REVIEW_STATUS as REVIEW_STATUS,
+		b.REVIEWER as REVIEWER,
+		a.CRT_DATE as CRT_DATE,
+		b.YDJ_FLAG as YDJ_FLAG
+		from OPAS_APPLY_MODIFY_LOG a left join OPAS_KEYMESSAGE_MODIFY b on a.APP_ID = b.APP_ID
+		and a.FIELD_NAME = b.KEY_WORDS_ID
+		and a.field_old_value = b.curr_value
+    	and a.field_new_value = b.modify_value
+    	and a.auto_id = b.auto_id
+		where a.APP_ID = #{appId,jdbcType=VARCHAR}
+		order by a.LST_UPD_DATE desc)
+		
+		union all
+		
+		select * from
+		(select distinct
+		a.FLAG as FLAG, 
+		a.LST_UPD_DATE as MODIFY_DATE,
+		a.CRT_USER as OPERATOR,
+		a.APP_ID as APP_ID,
+		a.apply_name as APPLY_NAME,
+		a.cretifi_type as
+		CRETIFI_TYPE,
+		a.cretifi_id as CRETIFI_ID,
+		a.FIELD_NAME as
+		KEY_WORDS_ID,
+		a.FIELD_OLD_VALUE as CURR_VALUE,
+		a.FIELD_NEW_VALUE as MODIFY_VALUE,
+		b.REVIEW_STATUS as REVIEW_STATUS,
+		b.REVIEWER as
+		REVIEWER,
+		a.CRT_DATE as
+		CRT_DATE,
+		b.YDJ_FLAG as YDJ_FLAG
+		from
+		YS_APPLY_MODIFY_LOG a left join
+		YS_KEYMESSAGE_MODIFY b on a.APP_ID
+		= b.APP_ID
+		and a.FIELD_NAME =
+		b.KEY_WORDS_ID
+		and a.field_old_value =
+		b.curr_value
+		and a.field_new_value
+		= b.modify_value
+		and a.auto_id = b.auto_id
+		where a.APP_ID =
+		#{appId,jdbcType=VARCHAR}
+		order
+		by a.LST_UPD_DATE desc)
+	</select>
+	
+<select id="getKeyMessageModifyCountByDate" parameterType="java.util.Map"  resultType="java.lang.String">
+    select count(*) from  OPAS_KEYMESSAGE_MODIFY u 
+    <trim   prefix="WHERE" prefixOverrides="AND | OR">
+    <if test="ydjFlag != null and ydjFlag !='' ">
+			 AND u.YDJ_FLAG = #{ydjFlag}
+	</if>
+	 <if test="beginDate != null and beginDate !='' ">
+			 AND trunc(u.CRT_DATE) &gt;= trunc(#{beginDate})
+	</if>
+	<if test="endDate != null and endDate !='' ">
+			 AND trunc(u.CRT_DATE) &lt;= trunc(#{endDate})
+	</if>	
+	</trim>
+  </select>
+   <resultMap id="KeyMessageModifyFindMap" type="java.util.Map">
+    <id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+    <result column="MODIFY_DATE" jdbcType="VARCHAR" property="modifyDate" />
+    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="APPLY_NAME" jdbcType="VARCHAR" property="applyName" />
+    <result column="CRETIFI_TYPE" jdbcType="CHAR" property="cretifiType" />
+    <result column="CRETIFI_ID" jdbcType="VARCHAR" property="cretifiId" />
+    <result column="KEY_WORDS_ID" jdbcType="VARCHAR" property="keyWordsId" />
+    <result column="CURR_VALUE" jdbcType="VARCHAR" property="currValue" />
+    <result column="MODIFY_VALUE" jdbcType="VARCHAR" property="modifyValue" />
+    <result column="REVIEW_STATUS" jdbcType="CHAR" property="reviewStatus" />
+    <result column="REVIEWER" jdbcType="VARCHAR" property="reviewer" />
+    <result column="CRT_DATE" jdbcType="VARCHAR" property="crtDate" />
+    <result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+  </resultMap>
+  <select id="findKeyMessageModifyListByDate" parameterType="java.util.Map" resultMap="KeyMessageModifyFindMap">
+	SELECT u.MODIFY_DATE,u.OPERATOR,u.APP_ID,u.APPLY_NAME,u.CRETIFI_TYPE,u.CRETIFI_ID,u.KEY_WORDS_ID,u.CURR_VALUE,
+	u.MODIFY_VALUE,u.REVIEW_STATUS,u.REVIEWER,u.CRT_DATE
+	FROM  OPAS_KEYMESSAGE_MODIFY u 
+    <trim   prefix="WHERE" prefixOverrides="AND | OR">
+	 <if test="ydjFlag != null and ydjFlag !='' ">
+		AND u.YDJ_FLAG = #{ydjFlag}
+	 </if>
+	 <if test="beginDate != null and beginDate !='' ">
+		AND trunc(u.CRT_DATE) &gt;= trunc(#{beginDate})
+	 </if>
+	 <if test="endDate != null and endDate !='' ">
+		AND trunc(u.CRT_DATE) &lt;= trunc(#{endDate})
+	 </if>
+	</trim>
+  </select>
+  <!-- yang.jiangming 查询总记录数 -->
+	<select id="queryCount" resultType="java.lang.Integer">
+		select count(distinct APP_ID) from OPAS_APPLY_MODIFY_LOG where is_key_field = '1' and
+		CHECK_FLAG = '0'
+	</select>
+	<!-- yang.jiangming 查询列表 -->
+	<resultMap id="KeyMessageList" type="java.util.Map">
+		<id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+		<result column="YDJ_FLAG" jdbcType="VARCHAR" property="ydjFlag" />
+		<result column="APP_PROD" jdbcType="VARCHAR" property="appProd" />
+		<result column="MATCHING_CARD_FLAG" jdbcType="VARCHAR" property="matchingCardFlag" />
+	</resultMap>
+	<select id="queryList" resultMap="KeyMessageList">
+		select distinct APP_ID from OPAS_APPLY_MODIFY_LOG where is_key_field = '1' and
+		CHECK_FLAG = '0'	
+	</select>
+	<!-- yang.jiangming 根据appId查询关键信息修改 详情 -->
+	<resultMap id="infoKeyMessage" type="java.util.Map">
+		<id column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+		<result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+		<result column="CURR_VALUE" jdbcType="VARCHAR" property="currValue" />
+		<result column="MODIFY_VALUE" jdbcType="VARCHAR" property="modifyValue" />
+	</resultMap>
+	<select id="findListKeyMessageByAppId" parameterType="java.lang.String"
+		resultMap="infoKeyMessage">
+		select AUTO_ID,
+		FIELD_NAME,
+		FIELD_OLD_VALUE CURR_VALUE,
+		FIELD_NEW_VALUE MODIFY_VALUE
+		from OPAS_APPLY_MODIFY_LOG
+		where is_key_field = '1'
+		and CHECK_FLAG = '0'
+		and app_id = #{appId}
+	</select>
+	<select id="queryKeyParamsByProperty" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select is_key
+		from OPAS_CONF_KEY_PARAM
+		where correspond_property = #{inCardWay}
+	</select>
+	<!-- log详情 -->
+	<resultMap id="KeyMessageResult1" type="java.util.Map">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+		<result column="FIELD_OLD_VALUE" property="fieldOldValue" jdbcType="VARCHAR" />
+		<result column="FIELD_NEW_VALUE" property="fieldNewValue" jdbcType="VARCHAR" />
+		<result column="APPLY_NAME" property="applyName" jdbcType="VARCHAR" />
+		<result column="CRETIFI_TYPE" property="cretifiType" jdbcType="VARCHAR" />
+		<result column="CRETIFI_ID" property="cretifiId" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="findAllMesByAppId" parameterType="java.lang.String"
+		resultMap="KeyMessageResult1">
+		select AUTO_ID,APP_ID,FIELD_NAME, FIELD_OLD_VALUE, FIELD_NEW_VALUE,
+		CRT_DATE, CRT_USER,APPLY_NAME,CRETIFI_TYPE,CRETIFI_ID
+		from OPAS_APPLY_MODIFY_LOG WHERE CHECK_FLAG = '0' and is_key_field = '1'
+		and app_id like concat(#{_parameter},'%')
+	</select>
+	<!-- 插入KeyMessageModify -->
+	<insert id="insertKeyMessage" parameterType="com.huaxia.opas.domain.report.KeyMessageModify">
+		insert into  OPAS_KEYMESSAGE_MODIFY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="modifyDate != null">
+				MODIFY_DATE,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="applyName != null">
+				APPLY_NAME,
+			</if>
+			<if test="cretifiType != null">
+				CRETIFI_TYPE,
+			</if>
+			<if test="cretifiId != null">
+				CRETIFI_ID,
+			</if>
+			<if test="keyWordsId != null">
+				KEY_WORDS_ID,
+			</if>
+			<if test="currValue != null">
+				CURR_VALUE,
+			</if>
+			<if test="modifyValue != null">
+				MODIFY_VALUE,
+			</if>
+			<if test="reviewStatus != null">
+				REVIEW_STATUS,
+			</if>
+			<if test="reviewer != null">
+				REVIEWER,
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="ydjFlag != null">
+				YDJ_FLAG,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="applyName != null">
+				#{applyName,jdbcType=VARCHAR},
+			</if>
+			<if test="cretifiType != null">
+				#{cretifiType,jdbcType=CHAR},
+			</if>
+			<if test="cretifiId != null">
+				#{cretifiId,jdbcType=VARCHAR},
+			</if>
+			<if test="keyWordsId != null">
+				#{keyWordsId,jdbcType=VARCHAR},
+			</if>
+			<if test="currValue != null">
+				#{currValue,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyValue != null">
+				#{modifyValue,jdbcType=VARCHAR},
+			</if>
+			<if test="reviewStatus != null">
+				#{reviewStatus,jdbcType=CHAR},
+			</if>
+			<if test="reviewer != null">
+				#{reviewer,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				#{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="ydjFlag != null">
+				#{ydjFlag,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 更新ModfyLog -->
+	<update id="updateModifyLogFlag" parameterType="java.lang.String">
+		update  OPAS_APPLY_MODIFY_LOG
+		SET CHECK_FLAG = '1'
+		WHERE APP_ID like concat(#{_parameter},'%') 
+		and CHECK_FLAG = '0'
+		and is_key_field = '1'
+	</update>
+	<delete id="deleteAllot" parameterType="java.lang.String">
+		delete from OPAS_ALLOT_APPLY_ALLOT where app_id like concat(#{_parameter},'%')
+	</delete>
+	<resultMap id = "MessageInBizC1AndBizC2" type= "java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="C1_IDNBR" jdbcType="VARCHAR" property="c1Idnbr" />
+		<result column="C1_CNAME" jdbcType="VARCHAR" property="c1Cname" />
+		<result column="C1_IDTYPE" jdbcType="VARCHAR" property="c1Idtype" />
+		<result column="C2_IDNBR" jdbcType="VARCHAR" property="c2Idnbr" />
+		<result column="C2_CNAME" jdbcType="VARCHAR" property="c2Cname" />
+		<result column="C2_IDTYPE" jdbcType="VARCHAR" property="c2Idtype" />
+	</resultMap>
+	<select id="queryKeyMessageInBizC1AndBizC2" parameterType="java.lang.String" resultMap="MessageInBizC1AndBizC2" >
+		select t1.APP_ID,
+       t1.C1_IDNBR,
+       t1.C1_CNAME,
+       t1.C1_IDTYPE,
+       t2.C2_IDNBR,
+       t2.C2_CNAME,
+       t2.C2_IDTYPE
+  from OPAS_BIZ_INP_APPL_C1 t1
+  left join OPAS_BIZ_INP_APPL_C2 t2 on t1.app_id = t2.app_id
+ where t1.app_id = #{_parameter}
+	</select>
+	<!-- 查询用户中文姓名 -->
+	<select id="qeurUserNameByUserCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select USER_NAME from OPAS_AP_USER where USER_CODE = #{_parameter}
+	</select>
+	<!-- 查询用户中文姓名 -->
+	<select id="qeurUserNameByUserCode1" parameterType="java.lang.String" resultType="java.lang.String">
+		select USER_NAME from YS_AP_USER where USER_CODE = #{_parameter}
+	</select>
+	
+	 <select id="queryCountModify" parameterType="java.lang.String" resultType="java.lang.Integer">
+	 			select count(1)
+		from OPAS_APPLY_MODIFY_LOG a 
+		where a.APP_ID = #{appId,jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="queryDetialMessage" parameterType="java.util.List" resultMap="KeyMessageList">
+	 			 select a.AUTO_ID    AUTO_ID,
+        a.APP_ID     APP_ID,
+        b.FIELD_NAME FIELD_NAME,
+        a.CRT_USER   CRT_USER,
+        a.CRT_DATE   CRT_DATE,
+        c.ydj_flag,
+        c.app_prod,
+        c.matching_card_flag
+   from OPAS_APPLY_MODIFY_LOG a
+   left join OPAS_CONF_KEY_PARAM b on b.CORRESPOND_PROPERTY = a.field_name
+   left join OPAS_BIZ_INP_APPL_C1 c on a.app_id = c.app_id
+  where is_key_field = '1'
+    and CHECK_FLAG = '0'
+    and a.app_id in
+    <foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+			 #{item.appId}
+	</foreach>
+     order by a.CRT_DATE asc
+	 </select>
+	 <!-- 关键信息修改之删除blaze数据 -->
+	 <delete id="deleteBlaze1" parameterType="java.lang.String">
+		delete from OPAS_FICO_SCOREINFO_RESULT where app_id like concat(#{_parameter},'%')
+	</delete>
+	 <delete id="deleteBlaze2" parameterType="java.lang.String">
+		delete from OPAS_FICO_SCOREINFO_BATCHNO where app_id like concat(#{_parameter},'%')
+	</delete>
+	 <delete id="deleteBlaze3" parameterType="java.lang.String">
+		delete from OPAS_FICO_ydj_BLAZE  where app_id like concat(#{_parameter},'%')
+	</delete>
+	 <delete id="deleteBlaze4" parameterType="java.lang.String">
+		delete from OPAS_FICO_SD_BLAZE where app_id like concat(#{_parameter},'%')
+	</delete>
+	 <delete id="deleteBlaze5" parameterType="java.lang.String">
+		delete from OPAS_FICO_RESPONSE_RULE where app_id like concat(#{_parameter},'%')
+	</delete>
+	<parameterMap type="java.util.Map" id="callParame">
+		<parameter property="i_app_id" mode="IN" jdbcType="VARCHAR"/>
+		<parameter property="o_result" mode="OUT" jdbcType="INTEGER"/>
+		<parameter property="o_msg" mode="OUT" jdbcType="VARCHAR"/>
+	</parameterMap>
+	 <select id="executeProceDeletePbocAndFico" statementType="CALLABLE" parameterMap="callParame" >
+	 	<!-- { CALL proc_tool_clean_fico(?,?,?)} -->
+	 	{ CALL PROC_FN_KEYINFO(?,?,?)}
+	 </select>
+	  <select id="executeProceDeletePboc" statementType="CALLABLE" parameterMap="callParame" >
+	 	{ CALL proc_tool_clean_pboc(?,?,?)}
+	 </select>
+	 
+	  <select id="queryHisAllotByAppId" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllotHis" resultType="java.lang.String">
+			select id
+			  from (sELECT id, LST_TEAM_DATE
+			          FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+			         where app_id = #{appId,jdbcType=VARCHAR}
+			         and CURR_NODE = #{currNode,jdbcType=VARCHAR}
+			         order by LST_TEAM_DATE desc)
+			 where rownum = 1
+	 </select>
+	 
+	 <update id="updateHisAllotByUuid" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllotHis">
+ 		update OPAS_ALLOT_APPLY_ALLOT_HIS a set a.last_opt_user = #{lastOptUser,jdbcType=VARCHAR}  
+ 		 where a.id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryLaojian_num" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select to_number(a.laojian_num) laojian_num from opas_biz_approval a  where app_id = #{appId,jdbcType=VARCHAR}
+	 </select>
+	 
+	 <update id="updateLaojian_num" parameterType="java.util.Map">
+ 		update opas_biz_approval a set a.laojian_num = #{Laojian_num,jdbcType=VARCHAR}  
+ 		 where a.app_Id = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="update_jd_appln_is_create_file_flag" parameterType="java.lang.String">
+ 		update opas_biz_jd_appln a set a.is_create_file_flag = '0'
+ 		 where a.app_Id = #{_parameter}
+	</update>
+	
+	<update id="ZSHY_INNER_CHECK" parameterType="java.lang.String">
+ 		update opas_allot_apply_allot set ZSHY_INNER_CHECK = '0',CHECK_MEUOFLAG = '1'
+ 		 where app_Id = #{_parameter}
+	</update>
+	 <select id="executeProceCLEAN_INTERFACE_UNION" statementType="CALLABLE" parameterMap="callParame" >
+	 	{ CALL CLEAN_INTERFACE_UNION(?,?,?)}
+	 </select>
+	 <select id="queryDelStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select del_status from opas_allot_apply_allot where app_id = #{appId,jdbcType=VARCHAR}
+	 </select>
+	 
+	<!-- 查询可信推进表成功条数，大于等于1则进行清表 -->
+	<select id="selectKxTaskCount" resultType="java.lang.Integer" parameterType="java.lang.String" >
+	    select count(1)
+	    from TASK_CALL_STATUS t
+	    where t.app_id = #{appId,jdbcType=CHAR}
+     		and (t.task_type = '002100' or t.task_type = 'F02100')
+     		and  t.task_status = '2'
+  	</select>
+  	
+	<!-- 重调流程清除可信表 -->
+	<delete id="deleteKxSFRZData" parameterType="java.lang.String" >
+    	  delete from SFRZ_BASE_DATA 
+   			where app_id = #{appId,jdbcType=CHAR}
+  	</delete>
+	 
+	<!-- 重调流程清除推进表 -->
+	<delete id="deleteKxTask" parameterType="java.lang.String" >
+    	  delete from task_call_status t
+   			where t.app_id = #{appId,jdbcType=CHAR}
+     		and (t.task_type = '002100' or t.task_type = 'F02100')
+  	</delete>
+  		
+	<!-- 进入页面清除推进表查询成功数据 -->
+	<delete id="deleteKxSuccTask" parameterType="java.lang.String" >
+    	  delete from task_call_status t
+   			where t.app_id = #{appId,jdbcType=CHAR}
+     		and (t.task_type = '002100' or t.task_type = 'F02100')
+     		and  t.task_status = '2'
+  	</delete>
+  	
+	<!-- 新增可信推进表内容 -->
+	 <insert id="insertkxTask" parameterType="com.huaxia.opas.domain.report.TaskCallStatus" >
+	    insert into TASK_CALL_STATUS
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="uuid != null" >
+	        UUID,
+	      </if>
+	      <if test="crtTime != null" >
+	        CRT_TIME,
+	      </if>
+	      <if test="updTime != null" >
+	        UPD_TIME,
+	      </if>
+	      <if test="updUser != null" >
+	        UPD_USER,
+	      </if>
+	      <if test="taskId != null" >
+	        TASK_ID,
+	      </if>
+	      <if test="taskType != null" >
+	        TASK_TYPE,
+	      </if>
+	      <if test="taskStatus != null" >
+	        TASK_STATUS,
+	      </if>
+	      <if test="appId != null" >
+	        APP_ID,
+	      </if>
+	      <if test="certType != null" >
+	        CERT_TYPE,
+	      </if>
+	      <if test="certNo != null" >
+	        CERT_NO,
+	      </if>
+	      <if test="name != null" >
+	        NAME,
+	      </if>
+	      <if test="mobile != null" >
+	        MOBILE,
+	      </if>
+	      <if test="quickFlag != null" >
+	        QUICK_FLAG,
+	      </if>
+	      <if test="errorCode != null" >
+	        ERROR_CODE,
+	      </if>
+	      <if test="requestNum != null" >
+	        REQUEST_NUM,
+	      </if>
+	      <if test="failureNum != null" >
+	        FAILURE_NUM,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="uuid != null" >
+	        #{uuid,jdbcType=CHAR},
+	      </if>
+	      <if test="crtTime != null" >
+	        #{crtTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="updTime != null" >
+	        #{updTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="updUser != null" >
+	        #{updUser,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taskId != null" >
+	        #{taskId,jdbcType=CHAR},
+	      </if>
+	      <if test="taskType != null" >
+	        #{taskType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taskStatus != null" >
+	        #{taskStatus,jdbcType=VARCHAR},
+	      </if>
+	      <if test="appId != null" >
+	        #{appId,jdbcType=CHAR},
+	      </if>
+	      <if test="certType != null" >
+	        #{certType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="certNo != null" >
+	        #{certNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="name != null" >
+	        #{name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="mobile != null" >
+	        #{mobile,jdbcType=VARCHAR},
+	      </if>
+	      <if test="quickFlag != null" >
+	        #{quickFlag,jdbcType=VARCHAR},
+	      </if>
+	      <if test="errorCode != null" >
+	        #{errorCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="requestNum != null" >
+	        #{requestNum,jdbcType=DECIMAL},
+	      </if>
+	      <if test="failureNum != null" >
+	        #{failureNum,jdbcType=DECIMAL},
+	      </if>
+    </trim>
+  </insert>
+</mapper>

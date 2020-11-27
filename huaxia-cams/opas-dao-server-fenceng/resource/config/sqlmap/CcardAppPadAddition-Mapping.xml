@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CcardAppPadAddition">
+	<!-- <resultMap id="EtcPadResultMap" type="com.huaxia.opas.domain.compare.CcardAppPadAddition">
+		<id column="APP_ID"  jdbcType="CHAR" property="appId" />
+		<result column="IS_ALIVE" jdbcType="VARCHAR" property="isAlive" />
+		<result column="COMFIRM_NUM" jdbcType="VARCHAR" property="comfirmNum" />
+		<result column="IS_SIGNATURE_INTEGRITY_VALID" jdbcType="VARCHAR" property="isSignatureIntegrityValid" />
+		<result column="IS_ID_DATE_INTEGRITY_VAILD" jdbcType="VARCHAR" property="isIdDateIntegrityValid" />
+		<result column="IS_INFO_INTEGRITY_VAILD" jdbcType="VARCHAR" property="isInfoIntegrityValid" />
+		<result column="BASE_STATION" jdbcType="VARCHAR" property="baseStation" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lastUpdTime" />
+		<result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+		<result column="LST_UPD_DATE" jdbcType="DATE" property="lastUpdDate" />
+	</resultMap> -->
+	
+	
+  	<resultMap id="EtcPadResultMap1" type="java.util.Map">
+  		<id column="APP_ID"  property="appId" jdbcType="CHAR" />
+		<result column="IS_SIGNATURE_INTEGRITY_VALID" property="isSignatureIntegrityValid" jdbcType="VARCHAR" />
+		<result column="IS_ID_DATE_INTEGRITY_VAILD" property="isIdDateIntegrityValid" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectSignatureAndIdByAppId" parameterType="java.lang.String" resultMap="EtcPadResultMap1">
+    	select 
+    			APP_ID, IS_SIGNATURE_INTEGRITY_VALID,IS_ID_DATE_INTEGRITY_VAILD
+    	from 	
+    			CCARD_APP_PAD_ADDITION
+    	where 
+    			APP_ID = #{appId,jdbcType=CHAR}
+    			
+  	</select>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="FicoBigResponse">
+	<!-- 一次反欺诈拒件数 (自动)-->
+	<select id="queryYCFQZJJS" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(distinct(l.app_Id)) from OPAS_FICO_BIG_RESPONSE e inner join OPAS_BIZ_APPROVAL r 
+		on r.app_id = e.app_id
+		inner join OPAS_FILE_APPLICATION_DETAIL l on e.app_id = l.app_id 
+		where l.flag = '2' and TO_ARCHIVE_TIME BETWEEN to_date(#{managerTime},'yyyy-mm-dd')     
+		AND (to_date(#{managerTime},'yyyy-mm-dd')+1 )  and l.APP_RESULT = '1' and r.approver = 'system'
+		and (REQUESTTYPE = 'SD1001' or  REQUESTTYPE ='YDJ1001' or REQUESTTYPE = 'SD0100' or  REQUESTTYPE ='YDJ0100') 
+		and (WF_RESULT='直接拒绝' or WF_RESULT = '自动拒绝')
+		and l.ydj_flag = #{ydjFlag,jdbcType=VARCHAR}
+	</select>
+	<!-- 二次反欺诈拒件数 （自动）-->
+	<select id="queryECFQZJJS" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(distinct(l.app_Id)) from OPAS_FILE_APPLICATION_DETAIL l inner join OPAS_FICO_BIG_RESPONSE e
+		on e.app_id = l.app_id inner join OPAS_BIZ_APPROVAL r on r.app_id = e.app_id
+ 		where l.flag = '2' and TO_ARCHIVE_TIME BETWEEN to_date(#{managerTime},'yyyy-mm-dd')     
+		AND (to_date(#{managerTime},'yyyy-mm-dd')+1 ) and l.APP_RESULT = '1' and r.approver = 'system'
+		and (REQUESTTYPE = 'SD1003' or  REQUESTTYPE ='YDJ1003' or REQUESTTYPE = 'SD0200' or  REQUESTTYPE ='YDJ0200') 
+		and (WF_RESULT='直接拒绝' or WF_RESULT = '自动拒绝')
+		and l.ydj_flag = #{ydjFlag,jdbcType=VARCHAR}
+ 	</select>
+ 	<!-- 所有都是系统通过  系统拒绝 -->
+ 	<!-- 一次决策拒件数 -->
+	<select id="queryYCJCJJS" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(distinct(l.app_Id)) from OPAS_FILE_APPLICATION_DETAIL l inner join OPAS_FICO_BIG_RESPONSE e
+		on e.app_id = l.app_id inner join OPAS_BIZ_APPROVAL r on r.app_id = e.app_id
+		where l.flag = '2' and TO_ARCHIVE_TIME BETWEEN to_date(#{managerTime},'yyyy-mm-dd')     
+		AND (to_date(#{managerTime},'yyyy-mm-dd')+1 ) and l.APP_RESULT = '1' and r.approver = 'system'
+		and (REQUESTTYPE = 'SD1004' or  REQUESTTYPE ='YDJ1004' or REQUESTTYPE ='SD0700' or REQUESTTYPE ='YDJ0500')
+		and (WF_RESULT='直接拒绝' or WF_RESULT = '自动拒绝') 
+		and l.ydj_flag = #{ydjFlag,jdbcType=VARCHAR}
+ 	</select>
+ 	<!-- 一次决策过件数 -->
+	<select id="queryYCJCGJS" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		select count(distinct(l.app_Id)) from OPAS_FILE_APPLICATION_DETAIL l inner join OPAS_FICO_BIG_RESPONSE e
+		on e.app_id = l.app_id inner join OPAS_BIZ_APPROVAL r on r.app_id = e.app_id
+ 		where l.flag = '2' and TO_ARCHIVE_TIME BETWEEN to_date(#{managerTime},'yyyy-mm-dd')     
+		AND (to_date(#{managerTime},'yyyy-mm-dd')+1 ) and l.APP_RESULT = '0' and r.approver = 'system'
+		and (REQUESTTYPE = 'SD1004' or  REQUESTTYPE ='YDJ1004' or REQUESTTYPE ='SD0700' or REQUESTTYPE ='YDJ0500') 
+		and WF_RESULT='自动核准'
+		and l.ydj_flag = #{ydjFlag,jdbcType=VARCHAR}
+ 	</select>
+ 	<!-- 二次决策拒件数  -->
+ 	<select id="queryECJCJJS" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		select count(distinct(l.app_Id)) from OPAS_FILE_APPLICATION_DETAIL l inner join OPAS_FICO_BIG_RESPONSE e
+		on e.app_id = l.app_id inner join OPAS_BIZ_APPROVAL r on r.app_id = e.app_id
+ 		where l.flag = '2' and  TO_ARCHIVE_TIME BETWEEN to_date(#{managerTime},'yyyy-mm-dd')     
+		AND (to_date(#{managerTime},'yyyy-mm-dd')+1 ) and l.APP_RESULT = '1' and r.approver = 'system'
+		and (REQUESTTYPE = 'SD1005' or  REQUESTTYPE ='YDJ1005' or REQUESTTYPE ='SD0800' or REQUESTTYPE ='YDJ0600')
+		and (WF_RESULT='直接拒绝' or WF_RESULT = '自动拒绝')
+		and l.ydj_flag = #{ydjFlag,jdbcType=VARCHAR}
+ 	</select>
+ 	<!-- //二次决策过件数  -->
+ 	<select id="queryECJCGJS" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		select count(distinct(l.app_Id)) from OPAS_FILE_APPLICATION_DETAIL l inner join OPAS_FICO_BIG_RESPONSE e
+		on e.app_id = l.app_id inner join OPAS_BIZ_APPROVAL r on r.app_id = e.app_id
+ 		where l.flag = '2' and TO_ARCHIVE_TIME BETWEEN to_date(#{managerTime},'yyyy-mm-dd')     
+		AND (to_date(#{managerTime},'yyyy-mm-dd')+1 ) and l.APP_RESULT = '0' and r.approver = 'system'
+		and (REQUESTTYPE = 'SD1005' or  REQUESTTYPE ='YDJ1005' or REQUESTTYPE ='SD0800' or REQUESTTYPE ='YDJ0600')
+		and WF_RESULT='自动核准'
+		and l.ydj_flag = #{ydjFlag,jdbcType=VARCHAR}
+ 	</select>
+</mapper>

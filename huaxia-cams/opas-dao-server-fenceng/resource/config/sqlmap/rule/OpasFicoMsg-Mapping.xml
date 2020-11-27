@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasFicoMsg">
+
+	
+	<select id="queryFicoQueryMsg"  parameterType="java.lang.String" resultType="java.lang.String">
+  	  select fico_query from opas_fico_sd_blaze
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	
+	<select id="queryPbocBadness"  parameterType="java.lang.String" resultType="java.lang.String">
+  	  select pboc_rst_fin_desp from opas_fico_sd_blaze
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	
+	<resultMap id="dateAndCountLimitMap" type="java.util.Map">
+	    <result column="LIMIT_START_DATE" jdbcType="DATE" property="limitStartDate" />
+	    <result column="LIMIT_END_DATE" jdbcType="DATE" property="limitEndDate" />
+	    <result column="LIMIT_QUERY_COUNT" jdbcType="DECIMAL" property="limitQueryCount" />
+	  </resultMap>
+	  
+	<select id="queryDateAndCountLimit" resultMap="dateAndCountLimitMap">
+		select LIMIT_START_DATE,LIMIT_END_DATE,LIMIT_QUERY_COUNT from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0002' 
+	</select>
+	
+	<select id="queryFicoCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		SELECT count(1) FROM  FICO_BIG_DATA_HUB 
+		WHERE 
+		CRT_TIME &gt;= (select LIMIT_START_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0002') 
+	    AND   CRT_TIME &lt;= (select LIMIT_END_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0002')
+		AND RET_CODE='000'
+	</select>
+	
+	<select id="queryFicoMsg"  resultType="java.lang.String">
+  	  select rule_setting_value from CONF_QUERY_TYPE_RULE where b_rule_type = '0002' and flag_active = '1'
+	</select>
+	
+	 <resultMap id="ruleContentMap" type="java.util.Map">
+	    <result column="input_trader" jdbcType="VARCHAR" property="inputTrader" />
+	    <result column="channel" jdbcType="VARCHAR" property="channel" />
+	    <result column="city" jdbcType="VARCHAR" property="city" />
+	  </resultMap>
+	
+	<select id="queryRuleContent"  resultMap="ruleContentMap">
+  	  select input_trader,channel,city from CONF_QUERY_LIMIT_RULE where b_rule_type = '0002'
+	</select>
+	
+	<resultMap id="ficoMsgMap" type="java.util.Map">
+	    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	    <result column="PROPOSED_LMT" jdbcType="DECIMAL" property="proposedLmt" />
+	    <result column="WS_SCORE" jdbcType="INTEGER" property="wsScore" />
+	    <result column="DECISION_DESP" jdbcType="VARCHAR" property="decisionDesp" />
+  	</resultMap>
+	<select id="selectFicoMsgByAppId" resultMap="ficoMsgMap" parameterType="java.lang.String" >
+	  	select  APP_ID, PROPOSED_LMT,WS_SCORE,DECISION_DESP from OPAS_FICO_SD_BLAZE 
+	  	where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+</mapper>

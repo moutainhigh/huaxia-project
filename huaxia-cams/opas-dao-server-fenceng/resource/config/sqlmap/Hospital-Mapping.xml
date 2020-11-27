@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="Hospital">
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="HospitalResultMap" type="com.huaxia.opas.domain.sysparm.Hospital">
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+		<result column="hospital_name" property="hospitalName" jdbcType="VARCHAR" />
+		<result column="hospital_level" property="hospitalLevel" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="business_level" property="businessLevel" jdbcType="VARCHAR" />
+		<result column="crt_time" property="crtTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<!--分页查询 -->
+	<select id="queryHospitalList" parameterType="com.huaxia.opas.domain.sysparm.Hospital"
+		resultMap="HospitalResultMap">
+		select
+			uuid, hospital_name, hospital_level, hospital_level, city, business_level,
+			crt_time
+		from OPAS_Hospital_LIST
+		<where>
+			<if test="hospitalName != null and hospitalName !='' ">
+				AND hospital_name LIKE '${hospitalName}%'
+			</if>
+			<if test="hospitalLevel != null and hospitalLevel !='' ">
+				AND hospital_level LIKE '${hospitalLevel}%'
+			</if>
+			<if test="city != null and city !='' ">
+				AND city LIKE '${city}%'
+			</if>
+			<if test="businessLevel != null and businessLevel !='' ">
+				AND business_level LIKE '${businessLevel}%'
+			</if>
+		</where>
+		ORDER BY CRT_TIME DESC
+	</select>
+	<!-- 统计数量 -->
+	<select id="queryHospitalCount" parameterType="com.huaxia.opas.domain.sysparm.Hospital"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_Hospital_LIST
+		<where>
+			<if test="hospitalName != null and hospitalName !='' ">
+				AND hospital_name LIKE '${hospitalName}%'
+			</if>
+			<if test="hospitalLevel != null and hospitalLevel !='' ">
+				AND hospital_level LIKE '${hospitalLevel}%'
+			</if>
+			<if test="city != null and city !='' ">
+				AND city LIKE '${city}%'
+			</if>
+			<if test="businessLevel != null and businessLevel !='' ">
+				AND business_level LIKE '${businessLevel}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteHospital" parameterType="java.util.List">
+		delete from
+		OPAS_Hospital_LIST
+		where uuid in
+		<foreach collection="ids" open="(" close=")" item="uuid"
+			separator=",">
+			#{uuid,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 修改 -->
+	<update id="updateHospital" parameterType="com.huaxia.opas.domain.sysparm.Hospital">
+		update OPAS_Hospital_LIST
+		<set>
+			hospital_name = #{hospitalName,jdbcType=VARCHAR},
+			hospital_level	= #{hospitalLevel,jdbcType=VARCHAR},
+			city = #{city,jdbcType=VARCHAR},
+			business_level = #{businessLevel,jdbcType=VARCHAR},
+		</set>
+		where uuid = #{uuid,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 查询数据是否已存在 -->
+	<select id="checkIsExistHospital" parameterType="com.huaxia.opas.domain.sysparm.Hospital"
+		resultMap="HospitalResultMap">
+		select uuid from
+		OPAS_Hospital_LIST
+		where hospital_name = #{hospitalName} and
+		hospital_level = #{hospitalLevel} and 
+		city = #{city}
+	</select>
+	
+	<!-- 添加 启用 -->
+	<insert id="insertHospital" parameterType="com.huaxia.opas.domain.sysparm.Hospital">
+		insert into
+		OPAS_Hospital_LIST
+		(uuid,
+		hospital_name,
+		hospital_level,
+		city,
+		business_level,
+		crt_time
+		)
+		values(
+		#{uuid,jdbcType=VARCHAR},
+		#{hospitalName,jdbcType=VARCHAR},
+		#{hospitalLevel,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{businessLevel,jdbcType=CHAR},
+	    SYSDATE
+		)
+	</insert>
+	
+	
+	<!-- 添加 启用 -->
+	<insert id="insertHospitalUpload" parameterType="com.huaxia.opas.domain.sysparm.Hospital">
+		insert into
+		OPAS_Hospital_LIST
+		(uuid,
+		hospital_name,
+		hospital_level,
+		city,
+		business_level,
+		crt_time)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.uuid,jdbcType=VARCHAR},
+			#{item.hospitalName,jdbcType=VARCHAR},
+			#{item.hospitalLevel,jdbcType=VARCHAR},
+			#{item.city,jdbcType=VARCHAR},
+			#{item.businessLevel,jdbcType=DATE},
+			SYSDATE
+			from dual)
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApplyStatistics">
+	<resultMap id="applyStatisticsMap" type="java.util.Map">
+		<result column="orgName" property="orgName" jdbcType="VARCHAR" />
+		<result column="applyer" property="applyer" jdbcType="VARCHAR" />
+		<result column="approveTime" property="approveTime" jdbcType="DATE" />
+		<result column="sumNum" property="sumNum" jdbcType="NUMERIC" />
+		<result column="acceptNum" property="acceptNum" jdbcType="NUMERIC" />
+		<result column="refuseNum" property="refuseNum" jdbcType="NUMERIC" />
+		<result column="invalidNum" property="invalidNum" jdbcType="NUMERIC" />
+		<result column="acceptPerc" property="acceptPerc" jdbcType="NUMERIC" />
+		<result column="refusePers" property="refusePers" jdbcType="NUMERIC" />
+		<result column="invalidPerc" property="invalidPerc" jdbcType="NUMERIC" />
+	</resultMap>
+	
+  <select id="queryApplyStatisticsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+	 select count(1) from(
+	 select (select org_name from opas_ap_org where org_no =  w.curr_opt_group) as orgName,
+       (select r.user_name from OPAS_AP_USER r where  w.approver = r.user_code )as applyer,
+       max(w.approve_time) as approveTime,
+       count(l.app_id) as sumNum,
+       sum(case
+             when APPROVE_RESULT = '1' then
+              1
+             else
+              0
+           end) as acceptNum,
+       sum(case
+             when APPROVE_RESULT = '0' then
+              1
+             else
+              0
+           end) as refuseNum,
+       sum(case
+             when VIOLATE_CODE1 != '' or VIOLATE_CODE2 != '' or
+                  VIOLATE_CODE3 != '' then
+              1
+             else
+              0
+           end) as invalidNum,
+         round((sum(case
+             when APPROVE_RESULT = '1' then
+              1
+             else
+              0
+           end) / count(l.app_id))*100,2) as acceptPerc,
+       round((sum(case
+             when APPROVE_RESULT = '0' then
+              1
+             else
+              0
+           end) / count(l.app_id))*100,2) as refusePers,
+       round((sum(case
+             when VIOLATE_CODE1 != '' or VIOLATE_CODE2 != '' or
+                  VIOLATE_CODE3 != '' then
+              1
+             else
+              0
+           end) / count(l.app_id))*100,2) as invalidPerc
+	  from OPAS_FILE_APPLICATION_DETAIL l
+	  left join OPAS_BIZ_APPROVAL w on w.app_id = l.app_id
+	<where>
+		l.flag in ('0','2')
+		and l.TO_ARCHIVE_TIME &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+	    and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+	    <if test="orgName != null and orgName !='' ">
+	        and w.CURR_OPT_GROUP = #{orgName} 
+	    </if>
+	    <if test="name != null and name !='' ">
+	      and w.applyer_name = #{name} 
+	    </if>
+		<if test="gmOrAi != null and gmOrAi !='' ">
+		  and l.APRROVE_WAY = #{gmOrAi}
+		</if>
+	</where>
+		group by w.approver,w.curr_opt_group
+		)
+  </select>
+  
+  <select id="queryApplyStatistics" parameterType="java.util.Map" resultMap="applyStatisticsMap">
+	select (select org_name from opas_ap_org where org_no =  w.curr_opt_group) as orgName,
+       nvl((select r.user_name from OPAS_AP_USER r where  w.approver = r.user_code ),'workflow')as applyer,
+       max(w.approve_time) as approveTime,
+       count(l.app_id) as sumNum,
+       sum(case
+             when APPROVE_RESULT = '1' then
+              1
+             else
+              0
+           end) as acceptNum,
+       sum(case
+             when APPROVE_RESULT = '0' then
+              1
+             else
+              0
+           end) as refuseNum,
+       sum(case
+       when l.app_result ='1' then 0 
+       when ( VIOLATE_CODE1 is not null  or VIOLATE_CODE2 is not null  or
+             VIOLATE_CODE3 is not null ) then  1
+             else
+             0
+           end) as invalidNum,
+         round((sum(case
+             when APPROVE_RESULT = '1' then
+              1
+             else
+              0
+           end) / count(l.app_id))*100,2) as acceptPerc,
+       round((sum(case
+             when APPROVE_RESULT = '0' then
+              1
+             else
+              0
+           end) / count(l.app_id))*100,2) as refusePers,
+       round((sum(case
+      		 when l.app_result ='1' then 0 
+       		 when ( VIOLATE_CODE1 is not null  or VIOLATE_CODE2 is not null  or
+             VIOLATE_CODE3 is not null ) then  1 else 0 end) / count(l.app_id))*100,2) as invalidPerc
+	  from OPAS_FILE_APPLICATION_DETAIL l
+	  left join OPAS_BIZ_APPROVAL w on w.app_id = l.app_id
+	<where>
+		 l.TO_ARCHIVE_TIME &gt;= to_date(#{startDate}, 'yyyy-mm-dd')
+		 and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		 and l.flag in ('0','2')
+		<if test="orgName != null and orgName !='' ">
+	      and w.CURR_OPT_GROUP = #{orgName} 
+	    </if>
+	    <if test="name != null and name !='' ">
+	      and w.applyer_name = #{name} 
+	    </if>
+	    <if test="gmOrAi != null and gmOrAi !='' ">
+		  and l.APRROVE_WAY = #{gmOrAi}
+	    </if>
+    </where>
+     group by w.approver,w.curr_opt_group
+  </select>
+</mapper>

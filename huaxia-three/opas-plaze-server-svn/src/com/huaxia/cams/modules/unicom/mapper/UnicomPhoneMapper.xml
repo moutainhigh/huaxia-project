@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.cams.modules.unicom.mapper.UnicomPhoneMapper">
+
+	<select id="selectCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM TRD_HAR_LD00001 WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+	
+	<insert id="insertUnicomPhone" parameterType="com.huaxia.cams.modules.unicom.domain.UnicomPhone">
+		INSERT INTO TRD_HAR_LD00001 (
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			APP_ID,
+			SUCCESS,
+			RESPONSE_CODE,
+			RESPONSE_DESC,
+			RESULT_CODE,
+			CARRIER,
+			MAPPING
+		) VALUES (
+			sys_guid(),
+			sysdate,
+			#{crtUser, jdbcType = VARCHAR},
+			#{appId, jdbcType = CHAR},
+			#{status, jdbcType = VARCHAR},
+			#{code, jdbcType = VARCHAR},
+			#{errorDesc, jdbcType = VARCHAR},
+			#{checkResult, jdbcType = VARCHAR},
+			#{carrier, jdbcType = VARCHAR},
+			#{mapping, jdbcType = VARCHAR}
+		)	
+	</insert>
+	
+</mapper>

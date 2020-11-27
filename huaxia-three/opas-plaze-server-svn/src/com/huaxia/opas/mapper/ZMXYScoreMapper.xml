@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.ZMXYScoreMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.ZMXYScore">
+		INSERT INTO OPAS_BIZ_ZM_SCOR_DATA (
+			APP_ID,CRT_TIME,CRT_USER, 
+			BIZ_NO,ZM_SCORE,SUCCESS
+		)
+		VALUES (
+			#{appId, jdbcType = CHAR},
+			SYSDATE,
+			'SYSTEM',
+			#{bizNo, jdbcType = VARCHAR},
+			#{zmScore, jdbcType = VARCHAR},
+			DECODE(#{success, jdbcType = CHAR}, 'T', '1', '0')
+		)
+	</insert>
+	
+	<select id="selectCountZMXYScoreByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM OPAS_BIZ_ZM_SCOR_DATA WHERE APP_ID = #{appId, jdbcType = CHAR} 
+	</select>
+</mapper>

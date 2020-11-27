@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opasrevieentrycompareinfo">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opasrevieentrycompareinfo">
+    <id column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="APPLY_INPUTFULL" jdbcType="CHAR" property="applyInputfull" />
+    <result column="SIGN_FULL" jdbcType="CHAR" property="signFull" />
+    <result column="NATIONAL_INUTFULL" jdbcType="CHAR" property="nationalInutfull" />
+    <result column="CERTIFI_PERIODFULL" jdbcType="CHAR" property="certifiPeriodfull" />
+    <result column="APPLY_WORK_TURE" jdbcType="CHAR" property="applyWorkTure" />
+    <result column="PEOBANK_COMPANY_NAME_ADDR" jdbcType="CHAR" property="peobankCompanyNameAddr" />
+    <result column="PEOBANK_COMPANY_NAME_TEL" jdbcType="CHAR" property="peobankCompanyNameTel" />
+    <result column="COMPANY_114_NAME_ADDR" jdbcType="CHAR" property="company114NameAddr" />
+    <result column="COMPANY_114_NAME_TEL" jdbcType="CHAR" property="company114NameTel" />
+    <result column="PYUAN_COMPANY_NAME_ADDR" jdbcType="CHAR" property="pyuanCompanyNameAddr" />
+    <result column="PYUAN_COMPANY_NAME_TEL" jdbcType="CHAR" property="pyuanCompanyNameTel" />
+    <result column="NO_OFFICWEB_NAME_ADDR" jdbcType="CHAR" property="noOfficwebNameAddr" />
+    <result column="NO_OFFICWEB_NAME_TEL" jdbcType="CHAR" property="noOfficwebNameTel" />
+    <result column="OTHER_THIRD_NAME_ADDR" jdbcType="CHAR" property="otherThirdNameAddr" />
+    <result column="OFFICWEB_NAME_ADDR" jdbcType="CHAR" property="officwebNameAddr" />
+    <result column="OFFICWEB_NAME_TEL" jdbcType="CHAR" property="officwebNameTel" />
+    <result column="THIRDDATA_ADDR" jdbcType="CHAR" property="thirddataAddr" />
+    <result column="APPLY_WORKINFO_TURE" jdbcType="CHAR" property="applyWorkinfoTure" />
+    <result column="SBANDGJJ_6MONTHS_STATUS" jdbcType="CHAR" property="sbandgjj6monthsStatus" />
+    <result column="BUSINETWORK_LEGAL" jdbcType="CHAR" property="businetworkLegal" />
+    <result column="OTHERS" jdbcType="CHAR" property="others" />
+    <result column="OTHER_MEMO" jdbcType="VARCHAR" property="otherMemo" />
+    <result column="PUB_POLICE" jdbcType="CHAR" property="pubPolice" />
+    <result column="BUSINETWORK_MINOR" jdbcType="CHAR" property="businetworkMinor" />
+    <result column="PEOBANK_FIRSTCARD_6MONTHS" jdbcType="CHAR" property="peobankFirstcard6months" />
+    <result column="INSURANCE" jdbcType="CHAR" property="insurance" />
+    <result column="APPLYER_TRUE" jdbcType="CHAR" property="applyerTrue" />
+    <result column="PEOBANK_PHONE" jdbcType="CHAR" property="peobankPhone" />
+    <result column="THIRD_PHONE" jdbcType="CHAR" property="thirdPhone" />
+    <result column="OTHERTHIRD_INFO" jdbcType="CHAR" property="otherthirdInfo" />
+    <result column="ORDER_ADDRESS" jdbcType="CHAR" property="orderAddress" />
+    <result column="PEOBANK_COMPANY_NAME" jdbcType="CHAR" property="peobankCompanyName" />
+    <result column="REGIONAL_DATA_LISTNAME" jdbcType="CHAR" property="regionalDataListName" />
+  </resultMap>
+ 
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.Opasrevieentrycompareinfo" resultMap="BaseResultMap">
+    select 
+   APP_ID, APPLY_INPUTFULL, SIGN_FULL, NATIONAL_INUTFULL, CERTIFI_PERIODFULL, APPLY_WORK_TURE, 
+    PEOBANK_COMPANY_NAME_ADDR, PEOBANK_COMPANY_NAME_TEL, COMPANY_114_NAME_ADDR, COMPANY_114_NAME_TEL, 
+    PYUAN_COMPANY_NAME_ADDR, PYUAN_COMPANY_NAME_TEL, NO_OFFICWEB_NAME_ADDR, NO_OFFICWEB_NAME_TEL, 
+    OTHER_THIRD_NAME_ADDR, OFFICWEB_NAME_ADDR, OFFICWEB_NAME_TEL, THIRDDATA_ADDR, APPLY_WORKINFO_TURE, 
+    SBANDGJJ_6MONTHS_STATUS, BUSINETWORK_LEGAL, OTHERS, OTHER_MEMO, PUB_POLICE, BUSINETWORK_MINOR, 
+    PEOBANK_FIRSTCARD_6MONTHS, INSURANCE, APPLYER_TRUE, PEOBANK_PHONE, THIRD_PHONE, OTHERTHIRD_INFO,ORDER_ADDRESS,
+    PEOBANK_COMPANY_NAME
+     from OPAS_REVIEENTRY_COMPARE_INFO
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select  
+   APP_ID, APPLY_INPUTFULL, SIGN_FULL, NATIONAL_INUTFULL, CERTIFI_PERIODFULL, APPLY_WORK_TURE, 
+    PEOBANK_COMPANY_NAME_ADDR, PEOBANK_COMPANY_NAME_TEL, COMPANY_114_NAME_ADDR, COMPANY_114_NAME_TEL, 
+    PYUAN_COMPANY_NAME_ADDR, PYUAN_COMPANY_NAME_TEL, NO_OFFICWEB_NAME_ADDR, NO_OFFICWEB_NAME_TEL, 
+    OTHER_THIRD_NAME_ADDR, OFFICWEB_NAME_ADDR, OFFICWEB_NAME_TEL, THIRDDATA_ADDR, APPLY_WORKINFO_TURE, 
+    SBANDGJJ_6MONTHS_STATUS, BUSINETWORK_LEGAL, OTHERS, OTHER_MEMO, PUB_POLICE, BUSINETWORK_MINOR, 
+    PEOBANK_FIRSTCARD_6MONTHS, INSURANCE, APPLYER_TRUE, PEOBANK_PHONE, THIRD_PHONE, OTHERTHIRD_INFO,ORDER_ADDRESS,
+    PEOBANK_COMPANY_NAME,REGIONAL_DATA_LISTNAME
+     from OPAS_REVIEENTRY_COMPARE_INFO
+    where APP_ID = #{appId,jdbcType=CHAR}
+  </select>
+  
+   <resultMap id="signFullMap" type="java.util.Map"><!-- 欺诈 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="APPLY_INPUTFULL" property="applyInputfull" jdbcType="VARCHAR" />
+		<result column="SIGN_FULL" property="signFull" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectSignFullInfo" parameterType="java.lang.String" resultMap="signFullMap">
+    select APP_ID,APPLY_INPUTFULL,SIGN_FULL from OPAS_REVIEENTRY_COMPARE_INFO where APP_ID = #{appId}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from OPAS_REVIEENTRY_COMPARE_INFO
+     where APP_ID = #{appId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opasrevieentrycompareinfo">
+    insert into OPAS_REVIEENTRY_COMPARE_INFO (APP_ID, APPLY_INPUTFULL, SIGN_FULL, 
+      NATIONAL_INUTFULL, CERTIFI_PERIODFULL, APPLY_WORK_TURE, 
+      PEOBANK_COMPANY_NAME_ADDR, PEOBANK_COMPANY_NAME_TEL, 
+      COMPANY_114_NAME_ADDR, COMPANY_114_NAME_TEL, PYUAN_COMPANY_NAME_ADDR, 
+      PYUAN_COMPANY_NAME_TEL, NO_OFFICWEB_NAME_ADDR, NO_OFFICWEB_NAME_TEL, 
+      OTHER_THIRD_NAME_ADDR, OFFICWEB_NAME_ADDR, OFFICWEB_NAME_TEL, 
+      THIRDDATA_ADDR, APPLY_WORKINFO_TURE, SBANDGJJ_6MONTHS_STATUS, 
+      BUSINETWORK_LEGAL, OTHERS, OTHER_MEMO, 
+      PUB_POLICE, BUSINETWORK_MINOR, PEOBANK_FIRSTCARD_6MONTHS, 
+      INSURANCE, APPLYER_TRUE, PEOBANK_PHONE, 
+      THIRD_PHONE, OTHERTHIRD_INFO)
+    values (#{appId,jdbcType=CHAR}, #{applyInputfull,jdbcType=CHAR}, #{signFull,jdbcType=CHAR}, 
+      #{nationalInutfull,jdbcType=CHAR}, #{certifiPeriodfull,jdbcType=CHAR}, #{applyWorkTure,jdbcType=CHAR}, 
+      #{peobankCompanyNameAddr,jdbcType=CHAR}, #{peobankCompanyNameTel,jdbcType=CHAR}, 
+      #{company114NameAddr,jdbcType=CHAR}, #{company114NameTel,jdbcType=CHAR}, #{pyuanCompanyNameAddr,jdbcType=CHAR}, 
+      #{pyuanCompanyNameTel,jdbcType=CHAR}, #{noOfficwebNameAddr,jdbcType=CHAR}, #{noOfficwebNameTel,jdbcType=CHAR}, 
+      #{otherThirdNameAddr,jdbcType=CHAR}, #{officwebNameAddr,jdbcType=CHAR}, #{officwebNameTel,jdbcType=CHAR}, 
+      #{thirddataAddr,jdbcType=CHAR}, #{applyWorkinfoTure,jdbcType=CHAR}, #{sbandgjj6monthsStatus,jdbcType=CHAR}, 
+      #{businetworkLegal,jdbcType=CHAR}, #{others,jdbcType=CHAR}, #{otherMemo,jdbcType=VARCHAR}, 
+      #{pubPolice,jdbcType=CHAR}, #{businetworkMinor,jdbcType=CHAR}, #{peobankFirstcard6months,jdbcType=CHAR}, 
+      #{insurance,jdbcType=CHAR}, #{applyerTrue,jdbcType=CHAR}, #{peobankPhone,jdbcType=CHAR}, 
+      #{thirdPhone,jdbcType=CHAR}, #{otherthirdInfo,jdbcType=CHAR})
+  </insert>
+ 
+</mapper>

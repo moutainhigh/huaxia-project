@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<link type="text/css" rel="stylesheet" href="../../css/common/layout.css" />
+<script type="text/javascript">
+// 2.如果调用弹出窗口须定义windata全局变量
+// windata值为JSON格式数据
+var windata = [{"img":"影像1","url":"../../images/0_1.jpg"},{"img":"影像2","url":"../../images/0_3.jpg"}];
+function winShow() {
+	var url = '../common/image.html';
+	ishow(url);
+}
+</script>
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<!-- 删除影像区域 -->
+	<!--  
+	<div data-options="region:'west',title:'左区域',split:true,noheader:true,border:false" style="padding: 2px; background: #eaf2ff; width: 31%;">
+		<div id="right-tab" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="影像信息" style="overflow: hidden"><iframe name="iframe4" id="iframe4" style="border: 0; width: 100%; height: 100%" src=""></iframe></div>
+			
+		</div>
+	</div>
+	-->
+	<div data-options="region:'west',title:'左区域',split:true,noheader:true,border:false" style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="基础信息" style="overflow: hidden"><iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%" src=""></iframe></div>
+			<div title="征信信息" style="overflow: hidden"><iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%"></iframe></div>
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:true,noheader:true,border:false" style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="比对信息" style="overflow: hidden"><iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" src=""></iframe></div>
+		</div>
+	</div>
+	<!-- 按钮区 -->
+	<div id="n09000_tool" data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="height:100px;text-align:center;">
+		<!-- 3.添加影像按钮 -->
+		<a href="javascript:winShow();" class="refreshload" title="影像信息"></a>
+		<a href="#" class="button refreshload" onclick="refreshLoad();"></a>
+		<a href="#" class="memo" onclick="remark();"></a>
+		<a href="#" class="btn_white" onclick="updatewhite();"></a>
+		<a href="#" class="btn_transLog" onclick="showTransLog();"></a>
+		<a herf="#" onclick="openKeyWord();" class="xiugai_jilu"></a>
+		<span id="auto"><a href="#" class="btn_autoGet" onclick="changeGetStatus();" id="getStatus"></a></span>
+		<a href="#" class="btn_cancleVipApp" onclick="changeVipFlag();" id="isVipFlag"></a>
+		<a herf="#" class="ti_jiao" id="ti_jiao"></a>
+		<a herf="#" onclick="save();" class="bao_cun"></a>
+	</div>
+	<div id="dd" data="0" style="left: 534px"></div>
+</body>
+</html>

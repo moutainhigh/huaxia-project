@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.tongdun.mapper.MulBorHistoryMapper">
+	<!-- mulBorRiskList -->
+	<resultMap id="result_MulBorRiskList" type="com.huaxia.plaze.ui.tongdun.domain.MulBorRiskList">
+		<result column="RULE_ID" property="ruleId" jdbcType="INTEGER" />
+		<result column="RISK_NAME" property="riskName" jdbcType="VARCHAR" />
+		<result column="SCORE" property="score" jdbcType="INTEGER" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="FRAUD_TYPE_DISPLAY_NAME" property="fraudTypeDisplayName" jdbcType="VARCHAR" />
+		<result column="HIT_TYPE_DISPLAY_NAME" property="hitTypeDisplayName" jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- MulBorDiscreditCountMain -->
+	<resultMap id="result_MulBorDiscreditCountMain" type="com.huaxia.plaze.ui.tongdun.domain.MulBorDiscreditCountMain">
+		<result column="PK_UUID" property="pkUuid" jdbcType="VARCHAR" />
+		<result column="RISK_NAME" property="riskName" jdbcType="VARCHAR" />
+		<result column="SCORE" property="score" jdbcType="INTEGER" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="DISCREDIT_TIMES" property="discreditTimes" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- MulBorAttentionList -->
+	<resultMap id="result_MulBorAttentionList" type="com.huaxia.plaze.ui.tongdun.domain.MulBorAttentionList">
+		<result column="PK_UUID" property="pkUuid" jdbcType="VARCHAR" />
+		<result column="RISK_NAME" property="riskName" jdbcType="VARCHAR" />
+		<result column="SCORE" property="score" jdbcType="INTEGER" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="FRAUD_TYPE_DISPLAY_NAME" property="fraudTypeDisplayName" jdbcType="CLOB" />
+		<result column="HIT_TYPE_DISPLAY_NAME" property="hitTypeDisplayName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 查询风险名单表-->
+	<select id="queryMulBorRiskList" parameterType="java.lang.String"
+	resultMap="result_MulBorRiskList">
+		select  distinct rule_id,MULBOR_RISK_ITEM.risk_name,score,description,fraud_type_display_name,HIT_TYPE_DISPLAY_NAME,value FROM MULBOR_RISK_ITEM,MULBOR_BLACK_LIST
+		WHERE MULBOR_RISK_ITEM.REF_UUID IN (
+		select PK_UUID from MULBOR_BASE where  trn_id =  #{trnId} and  rownum &lt;2
+		)
+		  AND POLICY_NAME = '风险名单' and  MULBOR_BLACK_LIST.ref_uuid = MULBOR_RISK_ITEM.PK_UUID
+   </select>
+	
+	<!-- 查询表-->
+	<select id="queryMulBorDiscreditCountMain" parameterType="java.lang.String"
+	resultMap="result_MulBorDiscreditCountMain">
+	
+		select distinct MULBOR_RISK_ITEM.pk_uuid ,risk_name,description,DISCREDIT_TIMES,score FROM MULBOR_RISK_ITEM,MULBOR_DESCREDIT_COUNT
+		WHERE MULBOR_RISK_ITEM.REF_UUID IN (
+		select PK_UUID from MULBOR_BASE where   trn_id =  #{trnId} and  rownum &lt;2
+		)
+		 AND POLICY_NAME = '风险名单' and  MULBOR_DESCREDIT_COUNT.ref_uuid = MULBOR_RISK_ITEM.PK_UUID
+
+   </select>
+	
+	<!-- 查询关注名单-->
+	<select id="queryMulBorAttentionList" parameterType="java.lang.String"
+	resultMap="result_MulBorAttentionList">
+	
+select  MULBOR_RISK_ITEM.Pk_Uuid,risk_name,HIT_TYPE_DISPLAY_NAME,score,description,LISTAGG(FRAUD_TYPE_DISPLAY_NAME,',') within group (order by FRAUD_TYPE_DISPLAY_NAME) FRAUD_TYPE_DISPLAY_NAME from    MULBOR_RISK_ITEM,MULBOR_GREY_LIST 
+			WHERE MULBOR_RISK_ITEM.REF_UUID IN (
+			select PK_UUID from MULBOR_BASE where  trn_id =  #{trnId} and  rownum &lt;2
+			)
+			AND POLICY_NAME = '关注名单' and  MULBOR_GREY_LIST.ref_uuid = MULBOR_RISK_ITEM.PK_UUID
+			GROUP BY MULBOR_RISK_ITEM.Pk_Uuid, risk_name ,description,score,HIT_TYPE_DISPLAY_NAME
+
+   </select>
+	
+	<!-- mulBorBase -->
+	<resultMap id="result_MulBorBase" type="com.huaxia.plaze.ui.tongdun.domain.MulBorBase">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="PK_UUID" property="pkUuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="SUCCESS" property="success" jdbcType="VARCHAR" />
+		<result column="ID" property="ID" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="FINAL_SCORE" property="finalScore" jdbcType="INTEGER" />
+		<result column="REASON_CODE" property="reasonCode" jdbcType="VARCHAR" />
+		<result column="REASON_DESC" property="reasonDesc" jdbcType="VARCHAR" />
+		<result column="NEXTSERVICE" property="nextService" jdbcType="VARCHAR" />
+		<result column="ERROR_INFO" property="errorInfo" jdbcType="VARCHAR" />
+		<result column="FINAL_DECISION" property="finalDecision" jdbcType="VARCHAR" />
+		<result column="COURT_CLOSE_RISK_1" property="courtCloseRisk1" jdbcType="VARCHAR" />
+		<result column="OVERDUE_RISK_2" property="overdueRisk2" jdbcType="VARCHAR" />
+		<result column="COURT_RISK_3" property="courtRisk3" jdbcType="VARCHAR" />
+		<result column="OVERDUE_REPAY_RISK_4" property="overdueRepayRisk4" jdbcType="VARCHAR" />
+		<result column="COMPANY_TAXOWING_RISK_5" property="companyTaxowingRisk5" jdbcType="VARCHAR" />
+		<result column="COURT_ZHIXING_RISK_6" property="courtZhixingRisk6" jdbcType="VARCHAR" />
+		<result column="CAR_LOAN_RISK_7" property="carLoanRisk7" jdbcType="VARCHAR" />
+		<result column="TAX_OWING_RISK_8" property="taxOwingRisk8" jdbcType="VARCHAR" />
+		<result column="CRIME_RISK_9" property="crimeRisk9" jdbcType="VARCHAR" />
+		<result column="STUDENT_LOAN_RISK_10" property="studentLoanRisk10" jdbcType="VARCHAR" />
+		<result column="VEHICLE_LEASE_DEFAULT_RISK_11" property="vehicleLeaseDefaultRisk11" jdbcType="VARCHAR" />
+		<result column="COMPANY_PAYING_RISK_12" property="companyPayingRisk12" jdbcType="VARCHAR" />
+		<result column="DELIBERATE_VIOLATION_RISK_13" property="deliberateViolationRisk13" jdbcType="VARCHAR" />
+		<result column="FALSE_MOBILE_RISK_14" property="falseMobileRisk14" jdbcType="VARCHAR" />
+		<result column="ALIMOBILE_RISK_15" property="alimobileRisk15" jdbcType="VARCHAR" />
+		<result column="OVERDUE_RISK_16" property="overdueRisk16" jdbcType="VARCHAR" />
+		<result column="VEHICLE_LEASE_DEFAULT_RISK_17" property="vehicleLeaseDefaultRisk17" jdbcType="VARCHAR" />
+		<result column="COMPANY_PAYING_RISK_18" property="companyPayingRisk18" jdbcType="VARCHAR" />
+		<result column="OVERDUE_REPAY_RISK_19" property="overdueRepayRisk19" jdbcType="VARCHAR" />
+		<result column="FOLLOW_HIGH_20" property="followHigh20" jdbcType="VARCHAR" />
+		<result column="FOLLOW_MEDIUM_21" property="followMedium21" jdbcType="VARCHAR" />
+		<result column="FOLLOW_LOW_22" property="followLow22" jdbcType="VARCHAR" />
+		<result column="FOLLOW_HIGH_23" property="followHigh23" jdbcType="VARCHAR" />
+		<result column="FOLLOW_MEDIUM_24" property="followMedium24" jdbcType="VARCHAR" />
+		<result column="FOLLOW_LOW_25" property="followLow25" jdbcType="VARCHAR" />
+		<result column="EXT_SEARCH_RESULT" property="extSearchResult" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- mulBorRiskItem -->
+	<resultMap id="result_MulBorRiskItem" type="com.huaxia.plaze.ui.tongdun.domain.MulBorRiskItem">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="PK_UUID" property="pkUuid" jdbcType="VARCHAR" />
+		<result column="REF_UUID" property="refUuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		
+		<result column="SCORE" property="score" jdbcType="INTEGER" />
+		<result column="DECISION" property="decision" jdbcType="VARCHAR" />
+		<result column="RISK_NAME" property="riskName" jdbcType="VARCHAR" />
+		<result column="POLICY_DECISION" property="policyDecision" jdbcType="VARCHAR" />
+		<result column="POLICY_MODE" property="policyMode" jdbcType="VARCHAR" />
+		<result column="POLICY_SCORE" property="policyScore" jdbcType="VARCHAR" />
+		<result column="POLICY_NAME" property="policyName" jdbcType="VARCHAR" />
+		<result column="RULE_ID" property="ruleId" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- mulBorBlackList -->
+	<resultMap id="result_MulBorBlackList" type="com.huaxia.plaze.ui.tongdun.domain.MulBorBlackList">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="REF_UUID" property="refUuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="FRAUD_TYPE_DISPLAY_NAME" property="fraudTypeDisplayName" jdbcType="VARCHAR" />
+		<result column="HIT_TYPE_DISPLAY_NAME" property="hitTypeDisplayName" jdbcType="VARCHAR" />
+		<result column="CASE_CODE" property="caseCode" jdbcType="VARCHAR" />
+		<result column="EXECUTE_COURT" property="executeCourt" jdbcType="VARCHAR" />
+		<result column="CASE_DATE" property="caseDate" jdbcType="VARCHAR" />
+		<result column="GENDER" property="gender" jdbcType="VARCHAR" />
+		<result column="CARRY_OUT" property="carryOut" jdbcType="VARCHAR" />
+		<result column="EXECUTED_NAME" property="executedName" jdbcType="VARCHAR" />
+		<result column="FRAUD_TYPE" property="fraudType" jdbcType="VARCHAR" />
+		<result column="SPECIFIC_CIRCUMSTANCES" property="specificCircumstances" jdbcType="VARCHAR" />
+		<result column="EXECUTE_SUBJECT" property="executeSubjec" jdbcType="VARCHAR" />
+		<result column="EXECUTE_STATUS" property="executeStatus" jdbcType="VARCHAR" />
+		<result column="EVIDENCE_COURT" property="evidenceCoutt" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="EXECUTE_CODE" property="executeCode" jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="VARCHAR" />
+		<result column="AGE" property="age" jdbcType="VARCHAR" />
+		<result column="EVIDENCE_TIME" property="evidenceTime" jdbcType="VARCHAR" />
+		<result column="TERM_DUTY" property="termDuty" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- mulBorDescreditCount -->
+	<resultMap id="result_MulBorDescreditCount" type="com.huaxia.plaze.ui.tongdun.domain.MulBorDescreditCount">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="REF_UUID" property="refUuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="DISCREDIT_TIMES" property="discreditTimes" jdbcType="INTEGER" />
+		<result column="PLATFORM_COUNT" property="platformCount" jdbcType="INTEGER" />
+		<result column="OVERDUE_AMOUNT_RANGE" property="overdueAmountRange" jdbcType="VARCHAR" />
+		<result column="OVERDUE_COUNT" property="overdueCount" jdbcType="INTEGER" />
+		<result column="OVERDUE_DAY_RANGE" property="overdueDayRange" jdbcType="VARCHAR" />
+		<result column="OVERDUE_TIME" property="overdueTime" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+	<!-- mulBorGreyList -->
+	<resultMap id="result_MulBorGreyList" type="com.huaxia.plaze.ui.tongdun.domain.MulBorGreyList">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="REF_UUID" property="refUuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="HIT_TYPE_DISPLAY_NAME" property="hitTypeDisplayName" jdbcType="VARCHAR" />
+		<result column="FRAUD_TYPE_DISPLAY_NAME" property="fraudTypeDisplayName" jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="VARCHAR" />
+		<result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+		<result column="FRAUD_TYPE" property="fraudType" jdbcType="VARCHAR" />
+		<result column="EVIDENCE_TIME" property="evidenceTime" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+		<!-- mulBorAntifraudInde -->
+	<resultMap id="result_MulBorAntifraudInde" type="com.huaxia.plaze.ui.tongdun.domain.MulBorAntifraudIndex">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="REF_UUID" property="refUuid" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		
+		<result column="ANTIFRAUD_0A4C82DD50B1" property="ANTIFRAUD_0a4c82dd50b1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_8C5C6B85BA31" property="ANTIFRAUD_8c5c6b85ba31" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_A5CFD2CC0821" property="ANTIFRAUD_a5cfd2cc0821" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_7DC74BE258F1" property="ANTIFRAUD_7dc74be258f1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E4BEF80AB191" property="ANTIFRAUD_e4bef80ab191" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_5F1CFF4A6081" property="ANTIFRAUD_5f1cff4a6081" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D3C5B644D261" property="ANTIFRAUD_d3c5b644d261" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AC586C138441" property="ANTIFRAUD_ac586c138441" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D964CAD56851" property="ANTIFRAUD_d964cad56851" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D0D879F929B1" property="ANTIFRAUD_d0d879f929b1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D7B369958461" property="ANTIFRAUD_d7b369958461" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_7DECF0C10F91" property="ANTIFRAUD_7decf0c10f91" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_CD6DDB5B0231" property="ANTIFRAUD_cd6ddb5b0231" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E400CB476291" property="ANTIFRAUD_e400cb476291" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_5EDEBC93E271" property="ANTIFRAUD_5edebc93e271" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_48E8C2D36F21" property="ANTIFRAUD_48e8c2d36f21" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_06B34DB165E1" property="ANTIFRAUD_06b34db165e1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_69A5FC3DBC11" property="ANTIFRAUD_69a5fc3dbc11" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_8FB406000650" property="ANTIFRAUD_8fb406000650" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_531B058E93F0" property="ANTIFRAUD_531b058e93f0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4C244935AEF0" property="ANTIFRAUD_4c244935aef0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4FAF84E71160" property="ANTIFRAUD_4faf84e71160" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_CD01AA772BD0" property="ANTIFRAUD_cd01aa772bd0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4B549901AEA0" property="ANTIFRAUD_4b549901aea0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_BC72C9CCEC40" property="ANTIFRAUD_bc72c9ccec40" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_39497D9839D0" property="ANTIFRAUD_39497d9839d0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FF7F8FC1F120" property="ANTIFRAUD_ff7f8fc1f120" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_EFCAEB13DF30" property="ANTIFRAUD_efcaeb13df30" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_A549CD137AD0" property="ANTIFRAUD_a549cd137ad0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C3437B89C780" property="ANTIFRAUD_c3437b89c780" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4F66E1F858E0" property="ANTIFRAUD_4f66e1f858e0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_85F885CC4F40" property="ANTIFRAUD_85f885cc4f40" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_7DE9144ECA20" property="ANTIFRAUD_7de9144eca20" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E3509AAF13D0" property="ANTIFRAUD_e3509aaf13d0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_161760EEA3F1" property="ANTIFRAUD_161760eea3f1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_871B4791B741" property="ANTIFRAUD_871b4791b741" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_64343CA2CFA1" property="ANTIFRAUD_64343ca2cfa1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_CD166E53C9B1" property="ANTIFRAUD_cd166e53c9b1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2EBB86A755D1" property="ANTIFRAUD_2ebb86a755d1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_0FD434E40BB1" property="ANTIFRAUD_0fd434e40bb1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_61AEE6654C01" property="ANTIFRAUD_61aee6654c01" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D5D1955FF171" property="ANTIFRAUD_d5d1955ff171" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D3445EAE2341" property="ANTIFRAUD_d3445eae2341" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1904F9B71B31" property="ANTIFRAUD_1904f9b71b31" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FFCFC2B798A1" property="ANTIFRAUD_ffcfc2b798a1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_8401D0095DA1" property="ANTIFRAUD_8401d0095da1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_82B0F20981A1" property="ANTIFRAUD_82b0f20981a1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2EC00F08DE71" property="ANTIFRAUD_2ec00f08de71" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AC9E681B02A1" property="ANTIFRAUD_ac9e681b02a1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_ACF713DF3FD1" property="ANTIFRAUD_acf713df3fd1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AC4F01B59331" property="ANTIFRAUD_ac4f01b59331" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_F7215FE4B561" property="ANTIFRAUD_f7215fe4b561" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_DDA895875860" property="ANTIFRAUD_dda895875860" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C66690712910" property="ANTIFRAUD_c66690712910" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_345211438FF0" property="ANTIFRAUD_345211438ff0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_17E6407B61A0" property="ANTIFRAUD_17e6407b61a0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_65D9389B8AF0" property="ANTIFRAUD_65d9389b8af0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AAB6D8FB91B0" property="ANTIFRAUD_aab6d8fb91b0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_985B5BA42E40" property="ANTIFRAUD_985b5ba42e40" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_CF44BDAE4BA0" property="ANTIFRAUD_cf44bdae4ba0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AA7668222F80" property="ANTIFRAUD_aa7668222f80" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C50FF997AC10" property="ANTIFRAUD_c50ff997ac10" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_423D47136DF0" property="ANTIFRAUD_423d47136df0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C961BDC158C0" property="ANTIFRAUD_c961bdc158c0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C7A2789758C0" property="ANTIFRAUD_c7a2789758c0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_12B48E2AD0D0" property="ANTIFRAUD_12b48e2ad0d0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_3E3266DFF9A0" property="ANTIFRAUD_3e3266dff9a0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_0DDDF6531740" property="ANTIFRAUD_0dddf6531740" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_5E8B36093271" property="ANTIFRAUD_5e8b36093271" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_0F17340BB3D1" property="ANTIFRAUD_0f17340bb3d1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_F50D9A1534F1" property="ANTIFRAUD_f50d9a1534f1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_8B47333B60F1" property="ANTIFRAUD_8b47333b60f1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1063A6592601" property="ANTIFRAUD_1063a6592601" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_91931FC33A61" property="ANTIFRAUD_91931fc33a61" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_DE24C02F8481" property="ANTIFRAUD_de24c02f8481" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_CA08351CC511" property="ANTIFRAUD_ca08351cc511" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E221F4F1E761" property="ANTIFRAUD_e221f4f1e761" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AE4B0D59BDF1" property="ANTIFRAUD_ae4b0d59bdf1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_DD029E7C9B51" property="ANTIFRAUD_dd029e7c9b51" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C8914CF84A01" property="ANTIFRAUD_c8914cf84a01" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_B9094B7F6931" property="ANTIFRAUD_b9094b7f6931" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_516BB59C3741" property="ANTIFRAUD_516bb59c3741" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_52A92783D1A1" property="ANTIFRAUD_52a92783d1a1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_81A4CB14DCC0" property="ANTIFRAUD_81a4cb14dcc0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_0B4C56AFC4D0" property="ANTIFRAUD_0b4c56afc4d0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_5EF845F75C30" property="ANTIFRAUD_5ef845f75c30" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D86123679F20" property="ANTIFRAUD_d86123679f20" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_62085131A0E0" property="ANTIFRAUD_62085131a0e0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_02F0CE3C49B0" property="ANTIFRAUD_02f0ce3c49b0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_B2ADABA137F0" property="ANTIFRAUD_b2adaba137f0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_3F24D3D821F0" property="ANTIFRAUD_3f24d3d821f0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2184D215C1D0" property="ANTIFRAUD_2184d215c1d0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_174F3DAA7090" property="ANTIFRAUD_174f3daa7090" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_840BEA513490" property="ANTIFRAUD_840bea513490" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_250D6DE8F150" property="ANTIFRAUD_250d6de8f150" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_726655FE0E41" property="ANTIFRAUD_726655fe0e41" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E8699AB64F11" property="ANTIFRAUD_e8699ab64f11" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1A3ACD9D8321" property="ANTIFRAUD_1a3acd9d8321" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AE6341359221" property="ANTIFRAUD_ae6341359221" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FCEF6D5316C1" property="ANTIFRAUD_fcef6d5316c1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_31EBEAE71AC1" property="ANTIFRAUD_31ebeae71ac1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_59EC64955F81" property="ANTIFRAUD_59ec64955f81" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_36E823180421" property="ANTIFRAUD_36e823180421" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_565C88CEF451" property="ANTIFRAUD_565c88cef451" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_A2CA08D0AD11" property="ANTIFRAUD_a2ca08d0ad11" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AAE68F6ED511" property="ANTIFRAUD_aae68f6ed511" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_206DCD7F7031" property="ANTIFRAUD_206dcd7f7031" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E12E97972EC1" property="ANTIFRAUD_e12e97972ec1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_920763CB9DD1" property="ANTIFRAUD_920763cb9dd1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_F7D48E7A7FD1" property="ANTIFRAUD_f7d48e7a7fd1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_EAEEB101A711" property="ANTIFRAUD_eaeeb101a711" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2CC6FA284591" property="ANTIFRAUD_2cc6fa284591" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D6C111317E71" property="ANTIFRAUD_d6c111317e71" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_34310D985721" property="ANTIFRAUD_34310d985721" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E5C06632E511" property="ANTIFRAUD_e5c06632e511" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_8518B24E6D01" property="ANTIFRAUD_8518b24e6d01" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_70F6C6B1B550" property="ANTIFRAUD_70f6c6b1b550" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AFB711BB1E80" property="ANTIFRAUD_afb711bb1e80" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_B9A7F3B1BA00" property="ANTIFRAUD_b9a7f3b1ba00" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_0577468331B0" property="ANTIFRAUD_0577468331b0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_815D5462BB70" property="ANTIFRAUD_815d5462bb70" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E3033D42AE10" property="ANTIFRAUD_e3033d42ae10" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_07FE4E9B86C0" property="ANTIFRAUD_07fe4e9b86c0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_5439378F49E0" property="ANTIFRAUD_5439378f49e0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_96DF341D7AC0" property="ANTIFRAUD_96df341d7ac0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_69EFE2ED0480" property="ANTIFRAUD_69efe2ed0480" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_DAD774186B10" property="ANTIFRAUD_dad774186b10" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C7C3DE9AD0A0" property="ANTIFRAUD_c7c3de9ad0a0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_A55921CCFC30" property="ANTIFRAUD_a55921ccfc30" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_9D43AEB5D4C0" property="ANTIFRAUD_9d43aeb5d4c0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_633D1F0F3960" property="ANTIFRAUD_633d1f0f3960" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_CC06E3FC9D80" property="ANTIFRAUD_cc06e3fc9d80" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1D0A2BDBC700" property="ANTIFRAUD_1d0a2bdbc700" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_37D86624C840" property="ANTIFRAUD_37d86624c840" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_58463101EEC0" property="ANTIFRAUD_58463101eec0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2F22F31DF6C0" property="ANTIFRAUD_2f22f31df6c0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_0EFC481C3E11" property="ANTIFRAUD_0efc481c3e11" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_B7CD97A99B91" property="ANTIFRAUD_b7cd97a99b91" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E55E23C04261" property="ANTIFRAUD_e55e23c04261" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_381BE99BDF81" property="ANTIFRAUD_381be99bdf81" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4E28898EB2F1" property="ANTIFRAUD_4e28898eb2f1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E9C90D961B81" property="ANTIFRAUD_e9c90d961b81" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_394A66802D50" property="ANTIFRAUD_394a66802d50" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_EE676D6542C0" property="ANTIFRAUD_ee676d6542c0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4B95F0143420" property="ANTIFRAUD_4b95f0143420" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FA43EE1EA310" property="ANTIFRAUD_fa43ee1ea310" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FD983032DA40" property="ANTIFRAUD_fd983032da40" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_326D3DE30A90" property="ANTIFRAUD_326d3de30a90" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_A2CD59853FA0" property="ANTIFRAUD_a2cd59853fa0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_8ED58D092710" property="ANTIFRAUD_8ed58d092710" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AFCBC297FC41" property="ANTIFRAUD_afcbc297fc41" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_25091A670151" property="ANTIFRAUD_25091a670151" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_7816C976D701" property="ANTIFRAUD_7816c976d701" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1F3C7162FE71" property="ANTIFRAUD_1f3c7162fe71" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_743E0C2CAD61" property="ANTIFRAUD_743e0c2cad61" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C7AF4177D721" property="ANTIFRAUD_c7af4177d721" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2EE5A02FFE70" property="ANTIFRAUD_2ee5a02ffe70" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FA8229C60960" property="ANTIFRAUD_fa8229c60960" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_DCC8EE56FD90" property="ANTIFRAUD_dcc8ee56fd90" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_66C0C946B530" property="ANTIFRAUD_66c0c946b530" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C09E2CDBB0B0" property="ANTIFRAUD_c09e2cdbb0b0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_769DA8285E50" property="ANTIFRAUD_769da8285e50" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_5404BF1F19F0" property="ANTIFRAUD_5404bf1f19f0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_27DA67CB7130" property="ANTIFRAUD_27da67cb7130" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_7330C7055F51" property="ANTIFRAUD_7330c7055f51" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4B3E0DE98881" property="ANTIFRAUD_4b3e0de98881" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_AF70E5CC27F1" property="ANTIFRAUD_af70e5cc27f1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_F4BE4B1BB551" property="ANTIFRAUD_f4be4b1bb551" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D932DAE554D1" property="ANTIFRAUD_d932dae554d1" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FF55F67ED591" property="ANTIFRAUD_ff55f67ed591" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_66C5C4C0DE31" property="ANTIFRAUD_66c5c4c0de31" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_23B3DE194D81" property="ANTIFRAUD_23b3de194d81" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_677CD4B9AF21" property="ANTIFRAUD_677cd4b9af21" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1DB660E01470" property="ANTIFRAUD_1db660e01470" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_9160B72273F0" property="ANTIFRAUD_9160b72273f0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_7E292BB6F130" property="ANTIFRAUD_7e292bb6f130" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_BD3985043C30" property="ANTIFRAUD_bd3985043c30" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FA268E1CE520" property="ANTIFRAUD_fa268e1ce520" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1E56549B4D40" property="ANTIFRAUD_1e56549b4d40" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_B69D97C53570" property="ANTIFRAUD_b69d97c53570" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_FB7E7DA3D670" property="ANTIFRAUD_fb7e7da3d670" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_F1FC1D33C0F0" property="ANTIFRAUD_f1fc1d33c0f0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_9F8618F2D0E0" property="ANTIFRAUD_9f8618f2d0e0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_681952A89FF0" property="ANTIFRAUD_681952a89ff0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_8D1DF12CE690" property="ANTIFRAUD_8d1df12ce690" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_1A3A932F9B01" property="ANTIFRAUD_1a3a932f9b01" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E03ABA035C61" property="ANTIFRAUD_e03aba035c61" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_3DEA83E7B431" property="ANTIFRAUD_3dea83e7b431" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D0D0D3A1AFE0" property="ANTIFRAUD_d0d0d3a1afe0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_727C2B9EEF50" property="ANTIFRAUD_727c2b9eef50" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_06BF8AB91910" property="ANTIFRAUD_06bf8ab91910" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_B563FA4A8AA0" property="ANTIFRAUD_b563fa4a8aa0" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_395DFD22F26D" property="ANTIFRAUD_395dfd22f26d" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2DBDF137424F" property="ANTIFRAUD_2dbdf137424f" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_000B8ADF3484" property="ANTIFRAUD_000b8adf3484" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_F5B35B30910C" property="ANTIFRAUD_f5b35b30910c" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_4DAF6E6D17D9" property="ANTIFRAUD_4daf6e6d17d9" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_09E30F820B20" property="ANTIFRAUD_09e30f820b20" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_80A75FBF9E92" property="ANTIFRAUD_80a75fbf9e92" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_C82D025AF778" property="ANTIFRAUD_c82d025af778" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2BF1553FD109" property="ANTIFRAUD_2bf1553fd109" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_F0745989F331" property="ANTIFRAUD_f0745989f331" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_10848867EF88" property="ANTIFRAUD_10848867ef88" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_D9D16344E7B6" property="ANTIFRAUD_d9d16344e7b6" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_809320C9EA49" property="ANTIFRAUD_809320c9ea49" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_DD5B8C368641" property="ANTIFRAUD_dd5b8c368641" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_2410E2596228" property="ANTIFRAUD_2410e2596228" jdbcType="VARCHAR" />
+		<result column="ANTIFRAUD_E57DD0908FE5" property="ANTIFRAUD_e57dd0908fe5" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+	<!-- 查询MulBase表-->
+	<select id="queryMulBorBase" parameterType="java.lang.String"
+	resultMap="result_MulBorBase">
+		SELECT 
+			UUID  ,
+		  CRT_TIME ,
+		  CRT_USER  ,
+		  PK_UUID ,
+		  APP_ID  ,
+		  CERT_NO ,
+		  TRN_ID,
+		  MOBILE,
+		  
+		  SUCCESS  ,
+		  ID ,
+		  REASON_CODE ,
+		  REASON_DESC ,
+		  NEXTSERVICE  ,
+		  ERROR_INFO  ,
+		  
+		  FINAL_SCORE ,
+		  FINAL_DECISION,
+		  COURT_CLOSE_RISK_1  ,
+		  OVERDUE_RISK_2 ,
+		  COURT_RISK_3  ,
+		  OVERDUE_REPAY_RISK_4  ,
+		  COMPANY_TAXOWING_RISK_5 ,
+		  COURT_ZHIXING_RISK_6  ,
+		  CAR_LOAN_RISK_7    ,
+		  TAX_OWING_RISK_8  ,
+		  CRIME_RISK_9  ,
+		  STUDENT_LOAN_RISK_10 ,
+		  VEHICLE_LEASE_DEFAULT_RISK_11,
+		  COMPANY_PAYING_RISK_12 ,
+		  DELIBERATE_VIOLATION_RISK_13 ,
+		  FALSE_MOBILE_RISK_14 ,
+		  ALIMOBILE_RISK_15 ,
+		  OVERDUE_RISK_16  ,
+		  VEHICLE_LEASE_DEFAULT_RISK_17,
+		  COMPANY_PAYING_RISK_18  ,
+		  OVERDUE_REPAY_RISK_19  ,
+		  FOLLOW_HIGH_20   ,
+		  FOLLOW_MEDIUM_21 ,
+		  FOLLOW_LOW_22    ,
+		  FOLLOW_HIGH_23 ,
+		  FOLLOW_MEDIUM_24 ,
+		  FOLLOW_LOW_25,
+		  ext_search_result
+		FROM MULBOR_BASE 
+			WHERE TRN_ID = #{trnId} and  rownum &lt;2
+   </select>
+	<!-- 查询MulBorRiskItem表-->
+	<select id="queryMulBorRiskItem" parameterType="java.lang.String"
+	resultMap="result_MulBorRiskItem">
+		SELECT 
+		    	UUID ,
+			  CRT_TIME,
+			  CRT_USER,
+			  REF_UUID ,
+			  PK_UUID ,
+			 APP_ID  ,
+		     TRN_ID,
+		      SCORE  ,
+			  DECISION   ,
+			  RISK_NAME  ,
+			  POLICY_DECISION ,
+			  POLICY_MODE   ,
+			  POLICY_SCORE ,
+			  POLICY_NAME ,
+			  RULE_ID
+		FROM MULBOR_RISK_ITEM 
+		where	REF_UUID IN (
+				select PK_UUID from MULBOR_BASE where TRN_ID = #{trnId} and  rownum&lt;2
+				)
+   </select>
+   	<!-- 查询MulBorBlackList表-->
+	<select id="queryMulBorBlackList" parameterType="java.lang.String"
+	resultMap="result_MulBorBlackList">
+		SELECT 
+		    	UUID,
+			  CRT_TIME,
+			  CRT_USER,
+			  REF_UUID,
+			  APP_ID  ,
+		      TRN_ID,
+		      TYPE ,
+			  DESCRIPTION,
+			  HIT_TYPE_DISPLAY_NAME,
+			  FRAUD_TYPE_DISPLAY_NAME,
+		  
+			  CASE_CODE   ,
+			  EXECUTE_COURT   ,
+			  CASE_DATE  ,
+			  GENDER    ,
+			  CARRY_OUT   ,
+			  EXECUTED_NAME  ,
+			  FRAUD_TYPE  ,
+			  SPECIFIC_CIRCUMSTANCES ,
+			  EXECUTE_SUBJECT  ,
+			  EXECUTE_STATUS ,
+			  EVIDENCE_COURT ,
+			  TERM_DUTY ,
+			  PROVINCE  ,
+			  EXECUTE_CODE ,
+			  VALUE    ,
+			  AGE       ,
+			  EVIDENCE_TIME
+		FROM MULBOR_BLACK_LIST 
+		where	REF_UUID IN (
+				  select PK_UUID from MULBOR_RISK_ITEM WHERE REF_UUID IN (
+				  select PK_UUID from MULBOR_BASE where TRN_ID = #{trnId} and  rownum&lt;2
+				  )
+				)
+   </select>
+   	<!-- 查询MulBorDescreditCount表-->
+	<select id="queryMulBorDescreditCount" parameterType="java.lang.String"
+	resultMap="result_MulBorDescreditCount">
+		SELECT 
+		     UUID ,
+			  CRT_TIME,
+			  CRT_USER,
+			  REF_UUID ,
+			  APP_ID  ,
+		      TRN_ID,
+			  TYPE   ,
+			  DESCRIPTION   ,
+			  DISCREDIT_TIMES ,
+			  PLATFORM_COUNT ,
+			  
+			  OVERDUE_AMOUNT_RANGE,
+			  OVERDUE_COUNT ,
+			  OVERDUE_DAY_RANGE ,
+			  OVERDUE_TIME
+		FROM MULBOR_DESCREDIT_COUNT 
+		where	REF_UUID IN (
+				  select PK_UUID from MULBOR_RISK_ITEM WHERE REF_UUID IN (
+				  select PK_UUID from MULBOR_BASE where TRN_ID = #{trnId} and  rownum&lt;2
+				  )
+				)
+   </select>
+   
+   <!-- 查询MulBorGreyList表-->
+	<select id="queryMulBorGreyList" parameterType="java.lang.String"
+	resultMap="result_MulBorGreyList">
+		SELECT 
+		  	  UUID ,
+			  CRT_TIME,
+			  CRT_USER,
+			  REF_UUID ,
+			  APP_ID  ,
+		      TRN_ID,
+			  TYPE,
+			  DESCRIPTION ,
+			  HIT_TYPE_DISPLAY_NAME ,
+			  FRAUD_TYPE_DISPLAY_NAME,
+			  VALUE ,
+			  RISK_LEVEL ,
+			  FRAUD_TYPE ,
+			  EVIDENCE_TIME
+		FROM MULBOR_GREY_LIST 
+		where	REF_UUID IN (
+				  select PK_UUID from MULBOR_RISK_ITEM WHERE REF_UUID IN (
+				  select PK_UUID from MULBOR_BASE where TRN_ID = #{trnId} and  rownum&lt;2
+				  )
+				)
+   </select>
+   
+    <!-- 查询MulBorAntifraudIndex表-->
+	<select id="queryMulBorAntifraudInde" parameterType="java.lang.String"
+	resultMap="result_MulBorAntifraudInde">
+		SELECT 
+		  	 UUID ,
+		  CRT_TIME ,
+		  CRT_USER,
+		  REF_UUID  ,
+		  APP_ID  ,
+		  TRN_ID,
+		   
+		 ANTIFRAUD_0a4c82dd50b1 ,
+		 ANTIFRAUD_8c5c6b85ba31 ,
+		 ANTIFRAUD_a5cfd2cc0821 ,
+		 ANTIFRAUD_7dc74be258f1 ,
+		 ANTIFRAUD_e4bef80ab191 ,
+		 ANTIFRAUD_5f1cff4a6081 ,
+		 ANTIFRAUD_d3c5b644d261 ,
+		 ANTIFRAUD_ac586c138441 ,
+		 ANTIFRAUD_d964cad56851 ,
+		 ANTIFRAUD_d0d879f929b1 ,
+		 ANTIFRAUD_d7b369958461 ,
+		 ANTIFRAUD_7decf0c10f91 ,
+		 ANTIFRAUD_cd6ddb5b0231 ,
+		 ANTIFRAUD_e400cb476291 ,
+		 ANTIFRAUD_5edebc93e271 ,
+		 ANTIFRAUD_48e8c2d36f21 ,
+		 ANTIFRAUD_06b34db165e1 ,
+		 ANTIFRAUD_69a5fc3dbc11 ,
+		 ANTIFRAUD_8fb406000650 ,              
+		 ANTIFRAUD_531b058e93f0 ,
+		 ANTIFRAUD_4c244935aef0 ,
+		 ANTIFRAUD_4faf84e71160 ,
+		 ANTIFRAUD_cd01aa772bd0 ,
+		 ANTIFRAUD_4b549901aea0 ,
+		 ANTIFRAUD_bc72c9ccec40 ,
+		 ANTIFRAUD_39497d9839d0 ,
+		 ANTIFRAUD_ff7f8fc1f120 ,
+		 ANTIFRAUD_efcaeb13df30 ,
+		 ANTIFRAUD_a549cd137ad0 ,
+		 ANTIFRAUD_c3437b89c780 ,
+		 ANTIFRAUD_4f66e1f858e0 ,
+		 ANTIFRAUD_85f885cc4f40 ,
+		 ANTIFRAUD_7de9144eca20 ,
+		 ANTIFRAUD_e3509aaf13d0 ,
+		 ANTIFRAUD_161760eea3f1 ,
+		 ANTIFRAUD_871b4791b741 ,
+		 ANTIFRAUD_64343ca2cfa1 ,
+		 ANTIFRAUD_cd166e53c9b1 ,
+		 ANTIFRAUD_2ebb86a755d1 ,
+		 ANTIFRAUD_0fd434e40bb1 ,
+		 ANTIFRAUD_61aee6654c01 ,
+		 ANTIFRAUD_d5d1955ff171 ,
+		 ANTIFRAUD_d3445eae2341 ,
+		 ANTIFRAUD_1904f9b71b31 ,
+		 ANTIFRAUD_ffcfc2b798a1 ,
+		 ANTIFRAUD_8401d0095da1 ,
+		 ANTIFRAUD_82b0f20981a1 ,
+		 ANTIFRAUD_2ec00f08de71 ,
+		 ANTIFRAUD_ac9e681b02a1 ,
+		 ANTIFRAUD_acf713df3fd1 ,
+		 ANTIFRAUD_ac4f01b59331 ,
+		 ANTIFRAUD_f7215fe4b561 ,
+		 ANTIFRAUD_dda895875860 ,
+		 ANTIFRAUD_c66690712910 ,
+		 ANTIFRAUD_345211438ff0 ,
+		 ANTIFRAUD_17e6407b61a0 ,
+		 ANTIFRAUD_65d9389b8af0 ,
+		 ANTIFRAUD_aab6d8fb91b0 ,
+		 ANTIFRAUD_985b5ba42e40 ,
+		 ANTIFRAUD_cf44bdae4ba0 ,
+		 ANTIFRAUD_aa7668222f80 ,
+		 ANTIFRAUD_c50ff997ac10 ,
+		 ANTIFRAUD_423d47136df0 ,
+		 ANTIFRAUD_c961bdc158c0 ,
+		 ANTIFRAUD_c7a2789758c0 ,
+		 ANTIFRAUD_12b48e2ad0d0 ,
+		 ANTIFRAUD_3e3266dff9a0 ,
+		 ANTIFRAUD_0dddf6531740 ,
+		 ANTIFRAUD_5e8b36093271 ,
+		 ANTIFRAUD_0f17340bb3d1 ,
+		 ANTIFRAUD_f50d9a1534f1 ,
+		 ANTIFRAUD_8b47333b60f1 ,
+		 ANTIFRAUD_1063a6592601 ,
+		 ANTIFRAUD_91931fc33a61 ,
+		 ANTIFRAUD_de24c02f8481 ,
+		 ANTIFRAUD_ca08351cc511 ,
+		 ANTIFRAUD_e221f4f1e761 ,
+		 ANTIFRAUD_ae4b0d59bdf1 ,
+		 ANTIFRAUD_dd029e7c9b51 ,
+		 ANTIFRAUD_c8914cf84a01 ,
+		 ANTIFRAUD_b9094b7f6931 ,
+		 ANTIFRAUD_516bb59c3741 ,
+		 ANTIFRAUD_52a92783d1a1 ,
+		 ANTIFRAUD_81a4cb14dcc0 ,
+		 ANTIFRAUD_0b4c56afc4d0 ,
+		 ANTIFRAUD_5ef845f75c30 ,
+		 ANTIFRAUD_d86123679f20 ,
+		 ANTIFRAUD_62085131a0e0 ,
+		 ANTIFRAUD_02f0ce3c49b0 ,
+		 ANTIFRAUD_b2adaba137f0 ,
+		 ANTIFRAUD_3f24d3d821f0 ,
+		 ANTIFRAUD_2184d215c1d0 ,
+		 ANTIFRAUD_174f3daa7090 ,
+		 ANTIFRAUD_840bea513490 ,
+		 ANTIFRAUD_250d6de8f150 ,
+		 ANTIFRAUD_726655fe0e41 ,
+		 ANTIFRAUD_e8699ab64f11 ,
+		 ANTIFRAUD_1a3acd9d8321 ,
+		 ANTIFRAUD_ae6341359221 ,
+		 ANTIFRAUD_fcef6d5316c1 ,
+		 ANTIFRAUD_31ebeae71ac1 ,
+		 ANTIFRAUD_59ec64955f81 ,
+		 ANTIFRAUD_36e823180421 ,
+		 ANTIFRAUD_565c88cef451 ,
+		 ANTIFRAUD_a2ca08d0ad11 ,
+		 ANTIFRAUD_aae68f6ed511 ,
+		 ANTIFRAUD_206dcd7f7031 ,
+		 ANTIFRAUD_e12e97972ec1 ,
+		 ANTIFRAUD_920763cb9dd1 ,
+		 ANTIFRAUD_f7d48e7a7fd1 ,
+		 ANTIFRAUD_eaeeb101a711 ,
+		 ANTIFRAUD_2cc6fa284591 ,
+		 ANTIFRAUD_d6c111317e71 ,
+		 ANTIFRAUD_34310d985721 ,
+		 ANTIFRAUD_e5c06632e511 ,
+		 ANTIFRAUD_8518b24e6d01 ,
+		 ANTIFRAUD_70f6c6b1b550 ,
+		 ANTIFRAUD_afb711bb1e80 ,
+		 ANTIFRAUD_b9a7f3b1ba00 ,
+		 ANTIFRAUD_0577468331b0 ,
+		 ANTIFRAUD_815d5462bb70 ,
+		 ANTIFRAUD_e3033d42ae10 ,
+		 ANTIFRAUD_07fe4e9b86c0 ,
+		 ANTIFRAUD_5439378f49e0 ,
+		 ANTIFRAUD_96df341d7ac0 ,
+		 ANTIFRAUD_69efe2ed0480 ,
+		 ANTIFRAUD_dad774186b10 ,
+		 ANTIFRAUD_c7c3de9ad0a0 ,
+		 ANTIFRAUD_a55921ccfc30 ,
+		 ANTIFRAUD_9d43aeb5d4c0 ,
+		 ANTIFRAUD_633d1f0f3960 ,
+		 ANTIFRAUD_cc06e3fc9d80 ,
+		 ANTIFRAUD_1d0a2bdbc700 ,
+		 ANTIFRAUD_37d86624c840 ,
+		 ANTIFRAUD_58463101eec0 ,
+		 ANTIFRAUD_2f22f31df6c0 ,
+		 ANTIFRAUD_0efc481c3e11 ,
+		 ANTIFRAUD_b7cd97a99b91 ,
+		 ANTIFRAUD_e55e23c04261 ,
+		 ANTIFRAUD_381be99bdf81 ,
+		 ANTIFRAUD_4e28898eb2f1 ,
+		 ANTIFRAUD_e9c90d961b81 ,
+		 ANTIFRAUD_394a66802d50 ,
+		 ANTIFRAUD_ee676d6542c0 ,
+		 ANTIFRAUD_4b95f0143420 ,
+		 ANTIFRAUD_fa43ee1ea310 ,
+		 ANTIFRAUD_fd983032da40 ,
+		 ANTIFRAUD_326d3de30a90 ,
+		 ANTIFRAUD_a2cd59853fa0 ,
+		 ANTIFRAUD_8ed58d092710 ,
+		 ANTIFRAUD_afcbc297fc41 ,
+		 ANTIFRAUD_25091a670151 ,
+		 ANTIFRAUD_7816c976d701 ,
+		 ANTIFRAUD_1f3c7162fe71 ,
+		 ANTIFRAUD_743e0c2cad61 ,
+		 ANTIFRAUD_c7af4177d721 ,
+		 ANTIFRAUD_2ee5a02ffe70 ,
+		 ANTIFRAUD_fa8229c60960 ,
+		 ANTIFRAUD_dcc8ee56fd90 ,
+		 ANTIFRAUD_66c0c946b530 ,
+		 ANTIFRAUD_c09e2cdbb0b0 ,
+		 ANTIFRAUD_769da8285e50 ,
+		 ANTIFRAUD_5404bf1f19f0 ,
+		 ANTIFRAUD_27da67cb7130 ,
+		 ANTIFRAUD_7330c7055f51 ,
+		 ANTIFRAUD_4b3e0de98881 ,
+		 ANTIFRAUD_af70e5cc27f1 ,
+		 ANTIFRAUD_f4be4b1bb551 ,
+		 ANTIFRAUD_d932dae554d1 ,
+		 ANTIFRAUD_ff55f67ed591 ,
+		 ANTIFRAUD_66c5c4c0de31 ,
+		 ANTIFRAUD_23b3de194d81 ,
+		 ANTIFRAUD_677cd4b9af21 ,
+		 ANTIFRAUD_1db660e01470 ,
+		 ANTIFRAUD_9160b72273f0 ,
+		 ANTIFRAUD_7e292bb6f130 ,
+		 ANTIFRAUD_bd3985043c30 ,
+		 ANTIFRAUD_fa268e1ce520 ,
+		 ANTIFRAUD_1e56549b4d40 ,
+		 ANTIFRAUD_b69d97c53570 ,
+		 ANTIFRAUD_fb7e7da3d670 ,
+		 ANTIFRAUD_f1fc1d33c0f0 ,
+		 ANTIFRAUD_9f8618f2d0e0 ,
+		 ANTIFRAUD_681952a89ff0 ,
+		 ANTIFRAUD_8d1df12ce690 ,
+		 ANTIFRAUD_1a3a932f9b01 ,
+		 ANTIFRAUD_e03aba035c61 ,
+		 ANTIFRAUD_3dea83e7b431 ,
+		 ANTIFRAUD_d0d0d3a1afe0 ,
+		 ANTIFRAUD_727c2b9eef50 ,
+		 ANTIFRAUD_06bf8ab91910 ,
+		 ANTIFRAUD_b563fa4a8aa0 ,
+		 ANTIFRAUD_395dfd22f26d ,
+		 ANTIFRAUD_2dbdf137424f ,
+		 ANTIFRAUD_000b8adf3484 ,
+		 ANTIFRAUD_f5b35b30910c ,
+		 ANTIFRAUD_4daf6e6d17d9 ,
+		 ANTIFRAUD_09e30f820b20 ,
+		 ANTIFRAUD_80a75fbf9e92 ,
+		 ANTIFRAUD_c82d025af778 ,
+		 ANTIFRAUD_2bf1553fd109 ,
+		 ANTIFRAUD_f0745989f331 ,
+		 ANTIFRAUD_10848867ef88 ,
+		 ANTIFRAUD_d9d16344e7b6 ,
+		 ANTIFRAUD_809320c9ea49 ,
+		 ANTIFRAUD_dd5b8c368641 ,
+		 ANTIFRAUD_2410e2596228 ,
+		 ANTIFRAUD_e57dd0908fe5 
+		FROM MULBOR_ANTIFRAUD_INDE 
+		where	REF_UUID IN (
+				select PK_UUID from MULBOR_BASE where TRN_ID = #{trnId} and  rownum&lt;2
+				)
+   </select>
+   
+	<resultMap id="result_Base" type="com.huaxia.plaze.ui.tongdun.domain.MulBorBase">
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="SUCCESS" property="success" jdbcType="VARCHAR" />
+		<result column="FINAL_DECISION" property="finalDecision" jdbcType="VARCHAR" />
+		<result column="FINAL_SCORE" property="finalScore" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 查询的历史-->
+	<select id="selectListByPage" parameterType="java.util.Map"
+	resultMap="result_Base">
+		SELECT 
+			CERT_NO,
+			MOBILE,
+			CRT_USER,
+			TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+			AS CRT_TIME,
+			SUCCESS,
+			FINAL_DECISION,
+			FINAL_SCORE,
+			TRN_ID
+		FROM MULBOR_BASE 
+			WHERE CERT_NO = #{certNo}
+   </select>
+   
+   	
+	<select id="queryName" parameterType="java.lang.String" resultType="java.lang.String">
+		   select  NAME from mulbor_trn_request where TRN_ID = #{trnId} and  rownum&lt;2
+	</select>
+   
+</mapper>

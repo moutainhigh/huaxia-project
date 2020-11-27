@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>推进表详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding:10px;">
+<fieldset>
+	<legend></legend>
+	<form id="tmpdDetailForm" style="width:100%">
+	<div>
+		<table  style="width:100%">
+			<tr>
+				<td>申请件编号：</td>
+				<td><input name="appId" id="appId"  type="text" style="width:300px;" readonly="readonly"/></td>
+			</tr>
+			<tr>
+				<td>推进ID：</td>
+				<td><input name="executionId" id="executionId"  type="text" style="width:300px;" readonly="readonly"/></td>
+				<td>引擎ID：</td>
+				<td><input name="webApplicationId" id="webApplicationId"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>状态：</td>
+				<td><input name="status" id="status"  type="text" style="width:300px;"/></td>
+				<td>节点ID：</td>
+				<td><input name="activityName" id="activityName"  type="text" style="width:300px;"/></td>
+			</tr>
+			<tr>
+				<td>优先级：</td>
+				<td><input name="priority" id="priority"  type="text" style="width:300px;"/></td>
+				<td>主键：</td>
+				<td><input name="dbid" id="dbid"  type="text" style="width:300px;"/></td>
+			</tr>
+		</table>
+		<div align="middle">
+			<a href="javascript:updateTmpDetail();"
+							class="easyui-linkbutton">保存</a>
+			<a href="javascript:deleteTmpDetail();"
+							class="easyui-linkbutton">删除</a>
+		</div>
+		
+	</div>
+	</form>
+	
+</fieldset>	
+</body>
+<script type="text/javascript">
+
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var tmpdDetailForm=$("#tmpdDetailForm");
+	var executionId = GetQueryString("executionId");
+	$(function(){
+		$cf.ajax({
+			data : {
+				"executionId" : executionId
+			},
+			url : "/opas-naps/queryTopbpmTmpExecutionAppidDetail.json",
+			onSuccess : function(res) {
+				tmpdDetailForm.form("load", res.RSP_BODY.tmpDetail);
+				
+			}
+		});
+		
+	});
+	
+	function updateTmpDetail(){
+		var jsonFrom=$('#tmpdDetailForm').serializeArray();
+		var jsondata =overTrim(jsonFrom);
+		$cf.ajax({
+			url : "/opas-naps/updateTopbpmTmpExecutionDetail.json",
+			data : {
+				'jsondata':jsondata
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "保存成功!", "info", function() {
+						window.opener.$("#tblInfo").datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "保存失败!", "error");
+					return;
+				}
+			}
+
+		});
+	}
+	function deleteTmpDetail(){
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/deleteTopbpmTmpExecutionDetail.json",
+					data : {
+						"executionId" : executionId
+					},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							$.messager.alert("操作提示", "删除成功!", "info", function() {
+								window.close();
+								window.opener.$("#tblInfo").datagrid("reload");
+							});
+		
+						} else {
+							$.messager.alert("操作提示", "删除失败!", "error");
+							return;
+						}
+					}
+		
+				});
+				
+			}
+		});
+	}
+	
+	function overTrim(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value.trim();
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+</script>
+</html>

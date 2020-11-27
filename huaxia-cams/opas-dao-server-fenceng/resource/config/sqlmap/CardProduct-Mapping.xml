@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--卡产品维护数据库处理-->
+<!-- @author liudi -->
+<mapper namespace="CardProduct">
+
+	<resultMap id="CardProductResultMap" type="com.huaxia.opas.domain.sysparm.CardProduct">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CARD_CODE" property="productCode" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="CARD_FACE" property="productFace" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE1" property="acctType1" jdbcType="CHAR" />
+		<result column="ACCT_TYPE2" property="acctType2" jdbcType="CHAR" />
+		<result column="STAFF_CARD" property="staffCard" jdbcType="CHAR" />
+		<result column="CARD_TYPE" property="cardType" jdbcType="CHAR" />
+		<result column="LINE_LOW" property="lineLow" jdbcType="NUMERIC" />
+		<result column="LINE_HIGH" property="lineHight" jdbcType="NUMERIC" />
+		<result column="DOUBLE_CURR" property="doubleCurr" jdbcType="CHAR" />
+		<result column="CURR_NO" property="currNo" jdbcType="VARCHAR" />
+		<result column="INTEGER_LINE" property="integerLine" jdbcType="NUMERIC" />
+		<result column="FLAG" property="flag" jdbcType="VARCHAR" />
+		<result column="SIGNEDCARD" property="signedCard" jdbcType="VARCHAR" />
+		<result column="RATE_EXPIRE_LINE" property="rateExpireLine" jdbcType="NUMERIC" />
+		<result column="YEAR_FEE_DERATE_TYPE" property="yearFeeDerateType" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		
+		<result column="YEAR_FEE_DERATE_TYPE_NAME" property="yearFeeDerateTypeName" jdbcType="VARCHAR" />
+		<result column="CARD_FACE_NAME" property="productFaceName" jdbcType="VARCHAR" />
+		<result column="CARD_FACE_DEFAULT" property="productFaceDefault" jdbcType="VARCHAR" />
+		<result column="YEAR_FEE_DERATE_TYPE_Default" property="yearFeeDerateTypeDefault" jdbcType="VARCHAR" />
+	</resultMap> 
+	<resultMap id="DictDetailResultMap1" type="com.huaxia.opas.domain.sysparm.CardFace">
+		<result column="DICT_DETAIL_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_CODE" property="cardFaceCode" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_NAME" property="cardFaceDesc" jdbcType="VARCHAR" />
+	</resultMap>  
+	<resultMap id="DictDetailResultMap2" type="com.huaxia.opas.domain.sysparm.YearFeeDerate">
+		<result column="DICT_DETAIL_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_CODE" property="yearFeeDerateCode" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_NAME" property="yearFeeDerateDesc" jdbcType="VARCHAR" />
+	</resultMap>  
+	<resultMap id="UserCardResultMap" type="com.huaxia.opas.domain.sysparm.UserCard">
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+	</resultMap> 
+<!--添加状态为启动-->
+	<insert id="insertCardProduct1" parameterType="com.huaxia.opas.domain.sysparm.CardProduct">
+		insert into
+		OPAS_PARAM_CARD_PRODUCT
+		(AUTO_ID,CARD_CODE,PROD_NAME,CARD_FACE,ACCT_TYPE1,ACCT_TYPE2,STAFF_CARD,CARD_TYPE,LINE_LOW,LINE_HIGH,DOUBLE_CURR,CURR_NO,INTEGER_LINE,FLAG,SIGNEDCARD,RATE_EXPIRE_LINE,YEAR_FEE_DERATE_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,CARD_FACE_DEFAULT,YEAR_FEE_DERATE_TYPE_Default) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{productCode,jdbcType=VARCHAR},
+		#{productName,jdbcType=VARCHAR},
+		#{productFace,jdbcType=VARCHAR},
+		#{acctType1,jdbcType=CHAR},
+		#{acctType2,jdbcType=CHAR},
+		#{staffCard,jdbcType=CHAR},
+		#{cardType,jdbcType=CHAR},
+		#{lineLow,jdbcType=NUMERIC},
+		#{lineHight,jdbcType=NUMERIC},
+		#{doubleCurr,jdbcType=CHAR},
+		#{currNo,jdbcType=VARCHAR},
+		#{integerLine,jdbcType=NUMERIC},
+		#{flag,jdbcType=VARCHAR},
+		#{signedCard,jdbcType=VARCHAR},
+		#{rateExpireLine,jdbcType=NUMERIC},
+		#{yearFeeDerateType,jdbcType=CHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{productFaceDefault,jdbcType=VARCHAR},
+		#{yearFeeDerateTypeDefault,jdbcType=VARCHAR}
+		)
+	</insert>
+<!--添加状态为禁止-->
+	<insert id="insertCardProduct2" parameterType="com.huaxia.opas.domain.sysparm.CardProduct">
+		insert into
+		OPAS_PARAM_CARD_PRODUCT
+		(AUTO_ID,CARD_CODE,PROD_NAME,CARD_FACE,ACCT_TYPE1,ACCT_TYPE2,STAFF_CARD,CARD_TYPE,LINE_LOW,LINE_HIGH,DOUBLE_CURR,CURR_NO,INTEGER_LINE,FLAG,SIGNEDCARD,RATE_EXPIRE_LINE,YEAR_FEE_DERATE_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,CARD_FACE_DEFAULT,YEAR_FEE_DERATE_TYPE_Default) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{productCode,jdbcType=VARCHAR},
+		#{productName,jdbcType=VARCHAR},
+		#{productFace,jdbcType=VARCHAR},
+		#{acctType1,jdbcType=CHAR},
+		#{acctType2,jdbcType=CHAR},
+		#{staffCard,jdbcType=CHAR},
+		#{cardType,jdbcType=CHAR},
+		#{lineLow,jdbcType=NUMERIC},
+		#{lineHight,jdbcType=NUMERIC},
+		#{doubleCurr,jdbcType=CHAR},
+		#{currNo,jdbcType=VARCHAR},
+		#{integerLine,jdbcType=NUMERIC},
+		#{flag,jdbcType=VARCHAR},
+		#{signedCard,jdbcType=VARCHAR},
+		#{rateExpireLine,jdbcType=NUMERIC},
+		#{yearFeeDerateType,jdbcType=CHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{productFaceDefault,jdbcType=VARCHAR},
+		#{yearFeeDerateTypeDefault,jdbcType=VARCHAR}
+		)
+	</insert>
+<!--删除-->
+	<delete id="deleteCardProductById" parameterType="java.lang.String">
+		delete from
+		OPAS_PARAM_CARD_PRODUCT
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryCardProductStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_PARAM_CARD_PRODUCT where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateCardProductWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.CardProduct">
+		update OPAS_PARAM_CARD_PRODUCT
+		<set>
+			PROD_NAME = #{productName,jdbcType=VARCHAR},
+			CARD_FACE = #{productFace,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType1,jdbcType=CHAR},
+			ACCT_TYPE2 = #{acctType2,jdbcType=CHAR},
+			STAFF_CARD = #{staffCard,jdbcType=CHAR},
+			CARD_TYPE = #{cardType,jdbcType=CHAR},
+			LINE_LOW = #{lineLow,jdbcType=NUMERIC},
+			LINE_HIGH = #{lineHight,jdbcType=NUMERIC},
+			DOUBLE_CURR = #{doubleCurr,jdbcType=CHAR},
+			CURR_NO = #{currNo,jdbcType=VARCHAR},
+			INTEGER_LINE = #{integerLine,jdbcType=NUMERIC},
+			FLAG = #{flag,jdbcType=VARCHAR},
+			SIGNEDCARD = #{signedCard,jdbcType=VARCHAR},
+			RATE_EXPIRE_LINE = #{rateExpireLine,jdbcType=VARCHAR},
+			YEAR_FEE_DERATE_TYPE = #{yearFeeDerateType,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE,
+			CARD_FACE_DEFAULT = #{productFaceDefault,jdbcType=VARCHAR},
+			YEAR_FEE_DERATE_TYPE_Default = #{yearFeeDerateTypeDefault,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!--更新-->
+	<update id="updateCardProduct" parameterType="com.huaxia.opas.domain.sysparm.CardProduct">
+		update OPAS_PARAM_CARD_PRODUCT
+		<set>
+			PROD_NAME = #{productName,jdbcType=VARCHAR},
+			CARD_FACE = #{productFace,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType1,jdbcType=CHAR},
+			ACCT_TYPE2 = #{acctType2,jdbcType=CHAR},
+			STAFF_CARD = #{staffCard,jdbcType=CHAR},
+			CARD_TYPE = #{cardType,jdbcType=CHAR},
+			LINE_LOW = #{lineLow,jdbcType=NUMERIC},
+			LINE_HIGH = #{lineHight,jdbcType=NUMERIC},
+			DOUBLE_CURR = #{doubleCurr,jdbcType=CHAR},
+			CURR_NO = #{currNo,jdbcType=VARCHAR},
+			INTEGER_LINE = #{integerLine,jdbcType=NUMERIC},
+			FLAG = #{flag,jdbcType=VARCHAR},
+			SIGNEDCARD = #{signedCard,jdbcType=VARCHAR},
+			RATE_EXPIRE_LINE = #{rateExpireLine,jdbcType=VARCHAR},
+			YEAR_FEE_DERATE_TYPE = #{yearFeeDerateType,jdbcType=CHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE,
+			CARD_FACE_DEFAULT = #{productFaceDefault,jdbcType=VARCHAR},
+			YEAR_FEE_DERATE_TYPE_Default = #{yearFeeDerateTypeDefault,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!--卡产品件数查询-->
+	<select id="queryCardProductCount" parameterType="com.huaxia.opas.domain.sysparm.CardProduct"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE LIKE '%${productCode}%'
+			</if>
+			<if test="cardType != null and cardType !='' ">
+				AND CARD_TYPE = #{cardType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+<!--卡版面件数查询-->
+	<select id="queryCardFaceCount" parameterType="com.huaxia.opas.domain.sysparm.CardFace"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_DICT_DETAIL
+		<where>
+				DICT_ID = '3c567624d6214c5a925088baa726735c'
+			<if test="cardFaceCode != null and cardFaceCode !='' ">
+				AND DICT_DETAIL_CODE LIKE '%${cardFaceCode}%'
+			</if>
+			<if test="cardFaceDesc != null and cardFaceDesc !='' ">
+				AND DICT_DETAIL_NAME LIKE '%${cardFaceDesc}%'
+			</if>
+		</where>
+	</select>
+<!--年费方式件数查询-->
+	<select id="queryYearFeeDerateCount" parameterType="com.huaxia.opas.domain.sysparm.YearFeeDerate"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_DICT_DETAIL
+		<where>
+				DICT_ID = '5212674bd4114d79948f9d6e3523cf10'
+			<if test="yearFeeDerateCode != null and yearFeeDerateCode !='' ">
+				AND DICT_DETAIL_CODE LIKE '%${yearFeeDerateCode}%'
+			</if>
+			<if test="yearFeeDerateDesc != null and yearFeeDerateDesc !='' ">
+				AND DICT_DETAIL_NAME LIKE '%${yearFeeDerateDesc}%'
+			</if>
+		</where>
+	</select>
+<!--卡产品初始化信息查询-->
+	<select id="queryCardProduct1" parameterType="com.huaxia.opas.domain.sysparm.CardProduct"
+		resultMap="CardProductResultMap">
+		select
+		AUTO_ID,CARD_CODE,PROD_NAME,CARD_FACE,ACCT_TYPE1,ACCT_TYPE2,STAFF_CARD,CARD_TYPE,
+		LINE_LOW,LINE_HIGH,DOUBLE_CURR,CURR_NO,INTEGER_LINE,FLAG,SIGNEDCARD,RATE_EXPIRE_LINE,
+		YEAR_FEE_DERATE_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,CARD_FACE_DEFAULT,YEAR_FEE_DERATE_TYPE_DEFAULT
+		from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE LIKE '%${productCode}%'
+			</if>
+			<if test="cardType != null and cardType !='' ">
+				AND CARD_TYPE = #{cardType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by CARD_CODE 
+	</select>
+<!--卡产品页面点击查询后实现查询和排序-->
+	<select id="queryCardProduct2" parameterType="java.util.Map"
+		resultMap="CardProductResultMap">
+		select
+		AUTO_ID,CARD_CODE,PROD_NAME,CARD_FACE,ACCT_TYPE1,ACCT_TYPE2,STAFF_CARD,CARD_TYPE,LINE_LOW,LINE_HIGH,DOUBLE_CURR,CURR_NO,
+		INTEGER_LINE,FLAG,SIGNEDCARD,RATE_EXPIRE_LINE,YEAR_FEE_DERATE_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,
+		LST_UPD_USER,LST_UPD_DATE,CARD_FACE_DEFAULT,YEAR_FEE_DERATE_TYPE_DEFAULT
+		from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE LIKE '%${productCode}%'
+			</if>
+			<if test="cardType != null and cardType !='' ">
+				AND CARD_TYPE = #{cardType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field == ''">
+			order by CARD_CODE
+		</if>
+	</select>
+<!--卡版面信息查询-->
+	<select id="queryCardFace" parameterType="com.huaxia.opas.domain.sysparm.CardFace"
+		resultMap="DictDetailResultMap1">
+		select
+		DICT_DETAIL_ID,DICT_DETAIL_CODE,DICT_DETAIL_NAME
+		from OPAS_AP_DICT_DETAIL
+		<where>
+				DICT_ID = '3c567624d6214c5a925088baa726735c'
+			<if test="cardFaceCode != null and cardFaceCode !='' ">
+				AND DICT_DETAIL_CODE LIKE '%${cardFaceCode}%'
+			</if>
+			<if test="cardFaceDesc != null and cardFaceDesc !='' ">
+				AND DICT_DETAIL_NAME LIKE '%${cardFaceDesc}%'
+			</if>
+		</where>
+	</select>
+<!--年费方式信息查询-->
+	<select id="queryYearFeeDerate" parameterType="com.huaxia.opas.domain.sysparm.YearFeeDerate"
+		resultMap="DictDetailResultMap2">
+		select
+		DICT_DETAIL_ID,DICT_DETAIL_CODE,DICT_DETAIL_NAME
+		from OPAS_AP_DICT_DETAIL
+		<where>
+				DICT_ID = '5212674bd4114d79948f9d6e3523cf10'
+			<if test="yearFeeDerateCode != null and yearFeeDerateCode !='' ">
+				AND DICT_DETAIL_CODE LIKE '%${yearFeeDerateCode}%'
+			</if>
+			<if test="yearFeeDerateDesc != null and yearFeeDerateDesc !='' ">
+				AND DICT_DETAIL_NAME LIKE '%${yearFeeDerateDesc}%'
+			</if>
+		</where>
+	</select>
+<!--卡产品信息是否重复查询-->
+	<select id="queryCardProduct3" parameterType="com.huaxia.opas.domain.sysparm.CardProduct"
+		resultMap="CardProductResultMap">
+		select
+		CARD_CODE , PROD_NAME
+		from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE = #{productCode}
+			</if>
+		</where>
+	</select>
+	<select id="queryCardProduct4" parameterType="com.huaxia.opas.domain.sysparm.CardProduct"
+		resultMap="CardProductResultMap">
+		select
+		CARD_CODE , PROD_NAME,CARD_FACE,YEAR_FEE_DERATE_TYPE
+		from OPAS_PARAM_CARD_PRODUCT
+		where CARD_CODE = #{productCode}
+			
+	</select>
+	<select id="queryCardProductByCardCode" parameterType="com.huaxia.opas.domain.sysparm.CardProduct"
+		resultMap="CardProductResultMap">
+		  	select product.CARD_CODE,
+			       product.PROD_NAME,
+              		(select to_char(listagg(b.dict_detail_code,',') within group (order by b.dict_detail_code))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXNFDM'
+			           and instr(trim(product.year_fee_derate_type),b.dict_detail_code ) > 0 ) as YEAR_FEE_DERATE_TYPE,
+             		(select to_char(listagg(b.dict_detail_code,',') within group (order by b.dict_detail_code))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXKBM'
+			           and instrcontain(trim(product.card_face),b.dict_detail_code,',') = '1'
+			           ) as CARD_FACE,
+			       (select to_char(listagg(b.dict_detail_name,',') within group (order by b.dict_detail_name))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXNFDM'
+			           and instr(trim(product.year_fee_derate_type),b.dict_detail_code ) > 0 ) as YEAR_FEE_DERATE_TYPE_Name,
+			       (select to_char(listagg(b.dict_detail_name,',') within group (order by b.dict_detail_name))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXKBM'
+			           and instrcontain(trim(product.card_face),b.dict_detail_code,',') = '1'
+			           ) as CARD_FACE_name,
+              product.card_face_default,
+              product.year_fee_derate_type_default,
+			       rownum as num
+			  from opas_param_card_product product
+		 where product.CARD_CODE = #{productCode}
+		 and product.STATUS = '1'
+	</select>
+<!--用户信息表查询-->
+	<select id="queryUserCard"  resultMap="UserCardResultMap">
+		select distinct USER_ID
+		from OPAS_USER_CARD
+	</select>
+<!--用户卡种信息表添加-->
+	<insert id="saveUserCard" parameterType="com.huaxia.opas.domain.sysparm.CardProduct">
+		insert into OPAS_USER_CARD (CARD_ID,CARD_CODE,USER_ID,CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{productCode,jdbcType=VARCHAR},
+		#{userId,jdbcType=VARCHAR},
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE)
+	</insert>
+<!--用户卡种信息表更新-->
+	<!-- <update id="updateByPrimaryKeyUserCard" parameterType="com.huaxia.opas.domain.sysparm.CardProduct">
+		update OPAS_USER_CARD
+		<set>
+		CARD_CODE = #{productCode,jdbcType=VARCHAR},
+		USER_ID = #{userId,jdbcType=VARCHAR},
+		LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+		LST_UPD_DATE = SYSDATE
+		</set>
+		where CARD_CODE = #{productCode,jdbcType=VARCHAR}
+	</update> -->
+<!--用户卡种信息表删除-->
+	<delete id="deleteByPrimaryKeyUserCard" parameterType="java.lang.String">
+		delete from OPAS_USER_CARD
+		where CARD_CODE = #{productCode,jdbcType=VARCHAR}
+	</delete>
+<!-- 产品信息查询 xzg-->
+	<select id="queryCardByCardCode" parameterType="java.lang.String"
+		resultMap="CardProductResultMap">
+		select
+		AUTO_ID,CARD_CODE,PROD_NAME,CARD_FACE,ACCT_TYPE1,ACCT_TYPE2,STAFF_CARD,CARD_TYPE,LINE_LOW,LINE_HIGH,DOUBLE_CURR,CURR_NO,INTEGER_LINE,FLAG,SIGNEDCARD,RATE_EXPIRE_LINE,YEAR_FEE_DERATE_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_CARD_PRODUCT
+		where
+			 CARD_CODE = #{cardCode}
+	</select>
+	
+	<!-- 产品信息查询 xzg-->
+	<select id="queryCardAgreeByCardCode" parameterType="java.lang.String"
+		resultMap="CardProductResultMap">
+		select *
+		  from (select card_code,
+			       prod_name,
+             		(select to_char(listagg(b.dict_detail_code,',') within group (order by b.dict_detail_code))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXNFDM'
+			           and instr(trim(tt.year_fee_derate_type),b.dict_detail_code ) > 0) as YEAR_FEE_DERATE_TYPE,
+             		(select to_char(listagg(b.dict_detail_code,',') within group (order by b.dict_detail_code))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXKBM'
+			           and instrcontain(trim(tt.card_face),b.dict_detail_code,',') = '1'  ) as CARD_FACE,
+			       (select to_char(listagg(b.dict_detail_name,',') within group (order by b.dict_detail_name))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXNFDM'
+			           and instr(trim(tt.year_fee_derate_type),b.dict_detail_code ) > 0) as YEAR_FEE_DERATE_TYPE_Name,
+			       (select to_char(listagg(b.dict_detail_name,',') within group (order by b.dict_detail_name))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXKBM'
+			           and instrcontain(trim(tt.card_face),b.dict_detail_code,',') = '1' ) as CARD_FACE_name,
+                 card_face_default,
+                 year_fee_derate_type_default,
+			       num + 1 as num
+			  from (select distinct a.card_code,
+			                        a.prod_name,
+			                        a.card_face,
+			                        a.year_fee_derate_type,
+                              a.card_face_default,
+                              a.year_fee_derate_type_default,
+			                        rownum as num
+			          from OPAS_CARD_DEGRADE_PARAM s
+			          left join OPAS_PARAM_CARD_PRODUCT a on a.card_code =
+			                                                 s.degrade_cardno
+			         start with s.card_code = #{cardCode}
+			                and s.STATUS = '1'
+			        connect by s.card_code = prior s.degrade_cardno) tt
+			 where card_code is not null
+			union
+			select product.CARD_CODE,
+			       product.PROD_NAME,
+              		(select to_char(listagg(b.dict_detail_code,',') within group (order by b.dict_detail_code))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXNFDM'
+			           and instr(trim(product.year_fee_derate_type),b.dict_detail_code ) > 0 ) as YEAR_FEE_DERATE_TYPE,
+             		(select to_char(listagg(b.dict_detail_code,',') within group (order by b.dict_detail_code))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXKBM'
+			           and instrcontain(trim(product.card_face),b.dict_detail_code,',') = '1'
+			           ) as CARD_FACE,
+			       (select to_char(listagg(b.dict_detail_name,',') within group (order by b.dict_detail_name))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXNFDM'
+			           and instr(trim(product.year_fee_derate_type),b.dict_detail_code ) > 0 ) as YEAR_FEE_DERATE_TYPE_Name,
+			       (select to_char(listagg(b.dict_detail_name,',') within group (order by b.dict_detail_name))
+			          from Opas_Ap_Dict a, OPAS_AP_DICT_DETAIL b
+			         where a.dict_id = b.dict_id
+			           and a.dict_code = 'ZDHXKBM'
+			           and instrcontain(trim(product.card_face),b.dict_detail_code,',') = '1'
+			           ) as CARD_FACE_name,
+              product.card_face_default,
+              product.year_fee_derate_type_default,
+			       rownum as num
+			  from opas_param_card_product product
+			 where product.card_code = #{cardCode})
+		 order by num asc
+	</select>
+		<!-- and instr(trim(product.card_face),b.dict_detail_code) > 0 -->
+		<!-- and instr(trim(tt.card_face),b.dict_detail_code) > 0 -->
+	
+	<!-- 申请表页面卡产品下拉框 -->
+	<resultMap id="CardAgreeByCardCode" type="java.util.Map">
+		<result column="CARD_CODE" property="cardCode" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+	</resultMap>  
+	<select id="queryCodeAndName" resultMap="CardAgreeByCardCode">
+		select CARD_CODE,PROD_NAME from OPAS_PARAM_CARD_PRODUCT where STATUS = '1'
+		order by ACCT_TYPE1 desc
+	</select>
+</mapper>

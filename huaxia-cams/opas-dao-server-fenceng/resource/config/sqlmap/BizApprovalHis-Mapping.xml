@@ -1,0 +1,1139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BizApprovalHis" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.thirdparty.BizApprovalHis" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="ID_TYPE" property="idType" jdbcType="VARCHAR" />
+    <result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+    <result column="REFUSE_CHILDCARD" property="refuseChildcard" jdbcType="CHAR" />
+    <result column="PRE_APPROVELIMIT" property="preApprovelimit" jdbcType="DECIMAL" />
+    <result column="APPLYER_NAME" property="applyerName" jdbcType="VARCHAR" />
+    <result column="APPLY_CARD" property="applyCard" jdbcType="VARCHAR" />
+    <result column="IS_AGREE_DEGRADE" property="isAgreeDegrade" jdbcType="CHAR" />
+    <result column="SYS_DECISION_TIME" property="sysDecisionTime" jdbcType="TIMESTAMP" />
+    <result column="MASTERCARD_DECRESULT" property="mastercardDecresult" jdbcType="VARCHAR" />
+    <result column="MASTERCARD_APPROVEREUSLT" property="mastercardApprovereuslt" jdbcType="VARCHAR" />
+    <result column="SYS_CREDIT_PRODUCE" property="sysCreditProduce" jdbcType="VARCHAR" />
+    <result column="CHILDCARD_DECRESULT" property="childcardDecresult" jdbcType="VARCHAR" />
+    <result column="CHILDCARD_APPROVEREUSLT" property="childcardApprovereuslt" jdbcType="VARCHAR" />
+    <result column="CREDIT_RESULT" property="creditResult" jdbcType="VARCHAR" />
+    <result column="CREDIT_REFUSE_REASON" property="creditRefuseReason" jdbcType="VARCHAR" />
+    <result column="WARNINGLIST_RESULT" property="warninglistResult" jdbcType="VARCHAR" />
+    <result column="APPROVE_RESULT" property="approveResult" jdbcType="CHAR" />
+    <result column="APPROVE_CREDIT_LIMIT" property="approveCreditLimit" jdbcType="DECIMAL" />
+    <result column="APPROVE_CREDIT_PRODUCT" property="approveCreditProduct" jdbcType="VARCHAR" />
+    <result column="MANUAL_LIMIT" property="manualLimit" jdbcType="DECIMAL" />
+    <result column="POLICY_CODE1" property="policyCode1" jdbcType="VARCHAR" />
+    <result column="POLICY_CODE2" property="policyCode2" jdbcType="VARCHAR" />
+    <result column="POLICY_CODE3" property="policyCode3" jdbcType="VARCHAR" />
+    <result column="VIOLATE_CODE1" property="violateCode1" jdbcType="VARCHAR" />
+    <result column="VIOLATE_CODE2" property="violateCode2" jdbcType="VARCHAR" />
+    <result column="VIOLATE_CODE3" property="violateCode3" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="REFUSE_CODE1" property="refuseCode1" jdbcType="VARCHAR" />
+    <result column="REFUSE_CODE2" property="refuseCode2" jdbcType="VARCHAR" />
+    <result column="REFUSE_CODE3" property="refuseCode3" jdbcType="VARCHAR" />
+    <result column="APPROVER" property="approver" jdbcType="VARCHAR" />
+    <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+    <result column="HIGHLEVLE_APPROVER" property="highlevleApprover" jdbcType="VARCHAR" />
+    <result column="HIGHLEVLE_APPROVETIME" property="highlevleApprovetime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_HIGHLEVLE_TIME" property="submitHighlevleTime" jdbcType="TIMESTAMP" />
+    <result column="APPROVE_TIME" property="approveTime" jdbcType="TIMESTAMP" />
+    <result column="CURR_OPT_GROUP" property="currOptGroup" jdbcType="CHAR" />
+    <result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR" />
+    <result column="YEAR_FEE_DERATE_TYPE" property="yearFeeDerateType" jdbcType="VARCHAR" />
+    <result column="CARD_FACE_CODE" property="cardFaceCode" jdbcType="VARCHAR" />
+    <result column="LAOJIAN_NUM" property="laojianNum" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT, APPLYER_NAME, 
+    APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT, MASTERCARD_APPROVEREUSLT, 
+    SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT, 
+    CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+    MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+    VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER, APPROVER_NAME, 
+    HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP, 
+    YDJ_FLAG,YEAR_FEE_DERATE_TYPE,CARD_FACE_CODE,LAOJIAN_NUM
+    from OPAS_BIZ_APPROVAL_HIS
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT, APPLYER_NAME, 
+    APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT, MASTERCARD_APPROVEREUSLT, 
+    SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT, 
+    CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+    MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+    VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER, APPROVER_NAME, 
+    HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP, 
+    YDJ_FLAG,YEAR_FEE_DERATE_TYPE,CARD_FACE_CODE,LAOJIAN_NUM
+    from OPAS_BIZ_APPROVAL_HIS
+    where APP_ID = #{appId,jdbcType=VARCHAR} order by APPROVE_TIME desc
+  </select>
+  <!-- 根据appId与userId，查询出当天的审批过的距离此时最近的一条历史记录 -->
+  <select id="selectByAppIdAndUserId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	select * from ( select
+		AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT,
+		APPLYER_NAME,
+		APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT,
+		MASTERCARD_APPROVEREUSLT,
+		SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT,
+		CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT,
+		APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT,
+		MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1,
+		VIOLATE_CODE2,
+		VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER,
+		APPROVER_NAME,
+		HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME,
+		CURR_OPT_GROUP,
+		YDJ_FLAG,YEAR_FEE_DERATE_TYPE,CARD_FACE_CODE,LAOJIAN_NUM
+		from OPAS_BIZ_APPROVAL_HIS
+		where
+		to_char(APPROVE_TIME,'yyyyMMdd') = to_char(sysdate,'yyyyMMdd')
+		and APPROVER = #{userId,jdbcType=VARCHAR}
+		and APP_ID != #{appId,jdbcType=VARCHAR}
+		order by APPROVE_TIME desc
+	) where rownum = 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_BIZ_APPROVAL_HIS
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.thirdparty.BizApprovalHis" >
+    insert into OPAS_BIZ_APPROVAL_HIS (AUTO_ID, APP_ID, ID_TYPE, 
+      ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT, 
+      APPLYER_NAME, APPLY_CARD, IS_AGREE_DEGRADE, 
+      SYS_DECISION_TIME, MASTERCARD_DECRESULT, 
+      MASTERCARD_APPROVEREUSLT, SYS_CREDIT_PRODUCE, 
+      CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, 
+      CREDIT_RESULT, CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, 
+      APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+      MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, 
+      POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+      VIOLATE_CODE3, MEMO, REFUSE_CODE1, 
+      REFUSE_CODE2, REFUSE_CODE3, APPROVER, 
+      APPROVER_NAME, HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, 
+      SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP, 
+      YDJ_FLAG,YEAR_FEE_DERATE_TYPE,CARD_FACE_CODE,LAOJIAN_NUM)
+    values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{idType,jdbcType=VARCHAR}, 
+      #{idNo,jdbcType=VARCHAR}, #{refuseChildcard,jdbcType=CHAR}, #{preApprovelimit,jdbcType=DECIMAL}, 
+      #{applyerName,jdbcType=VARCHAR}, #{applyCard,jdbcType=VARCHAR}, #{isAgreeDegrade,jdbcType=CHAR}, 
+      #{sysDecisionTime,jdbcType=TIMESTAMP}, #{mastercardDecresult,jdbcType=VARCHAR}, 
+      #{mastercardApprovereuslt,jdbcType=VARCHAR}, #{sysCreditProduce,jdbcType=VARCHAR}, 
+      #{childcardDecresult,jdbcType=VARCHAR}, #{childcardApprovereuslt,jdbcType=VARCHAR}, 
+      #{creditResult,jdbcType=VARCHAR}, #{creditRefuseReason,jdbcType=VARCHAR}, #{warninglistResult,jdbcType=VARCHAR}, 
+      #{approveResult,jdbcType=CHAR}, #{approveCreditLimit,jdbcType=DECIMAL}, #{approveCreditProduct,jdbcType=VARCHAR}, 
+      #{manualLimit,jdbcType=DECIMAL}, #{policyCode1,jdbcType=VARCHAR}, #{policyCode2,jdbcType=VARCHAR}, 
+      #{policyCode3,jdbcType=VARCHAR}, #{violateCode1,jdbcType=VARCHAR}, #{violateCode2,jdbcType=VARCHAR}, 
+      #{violateCode3,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{refuseCode1,jdbcType=VARCHAR}, 
+      #{refuseCode2,jdbcType=VARCHAR}, #{refuseCode3,jdbcType=VARCHAR}, #{approver,jdbcType=VARCHAR}, 
+      #{approverName,jdbcType=VARCHAR}, #{highlevleApprover,jdbcType=VARCHAR}, #{highlevleApprovetime,jdbcType=TIMESTAMP}, 
+      #{submitHighlevleTime,jdbcType=TIMESTAMP}, #{approveTime,jdbcType=TIMESTAMP}, #{currOptGroup,jdbcType=CHAR}, 
+      #{ydjFlag,jdbcType=VARCHAR},#{yearFeeDerateType,jdbcType=VARCHAR},#{cardFaceCode,jdbcType=VARCHAR},
+      #{laojianNum,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.thirdparty.BizApprovalHis" >
+    insert into OPAS_BIZ_APPROVAL_HIS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="idType != null" >
+        ID_TYPE,
+      </if>
+      <if test="idNo != null" >
+        ID_NO,
+      </if>
+      <if test="refuseChildcard != null" >
+        REFUSE_CHILDCARD,
+      </if>
+      <if test="preApprovelimit != null" >
+        PRE_APPROVELIMIT,
+      </if>
+      <if test="applyerName != null" >
+        APPLYER_NAME,
+      </if>
+      <if test="applyCard != null" >
+        APPLY_CARD,
+      </if>
+      <if test="isAgreeDegrade != null" >
+        IS_AGREE_DEGRADE,
+      </if>
+      <if test="sysDecisionTime != null" >
+        SYS_DECISION_TIME,
+      </if>
+      <if test="mastercardDecresult != null" >
+        MASTERCARD_DECRESULT,
+      </if>
+      <if test="mastercardApprovereuslt != null" >
+        MASTERCARD_APPROVEREUSLT,
+      </if>
+      <if test="sysCreditProduce != null" >
+        SYS_CREDIT_PRODUCE,
+      </if>
+      <if test="childcardDecresult != null" >
+        CHILDCARD_DECRESULT,
+      </if>
+      <if test="childcardApprovereuslt != null" >
+        CHILDCARD_APPROVEREUSLT,
+      </if>
+      <if test="creditResult != null" >
+        CREDIT_RESULT,
+      </if>
+      <if test="creditRefuseReason != null" >
+        CREDIT_REFUSE_REASON,
+      </if>
+      <if test="warninglistResult != null" >
+        WARNINGLIST_RESULT,
+      </if>
+      <if test="approveResult != null" >
+        APPROVE_RESULT,
+      </if>
+      <if test="approveCreditLimit != null" >
+        APPROVE_CREDIT_LIMIT,
+      </if>
+      <if test="approveCreditProduct != null" >
+        APPROVE_CREDIT_PRODUCT,
+      </if>
+      <if test="manualLimit != null" >
+        MANUAL_LIMIT,
+      </if>
+      <if test="policyCode1 != null" >
+        POLICY_CODE1,
+      </if>
+      <if test="policyCode2 != null" >
+        POLICY_CODE2,
+      </if>
+      <if test="policyCode3 != null" >
+        POLICY_CODE3,
+      </if>
+      <if test="violateCode1 != null" >
+        VIOLATE_CODE1,
+      </if>
+      <if test="violateCode2 != null" >
+        VIOLATE_CODE2,
+      </if>
+      <if test="violateCode3 != null" >
+        VIOLATE_CODE3,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="refuseCode1 != null" >
+        REFUSE_CODE1,
+      </if>
+      <if test="refuseCode2 != null" >
+        REFUSE_CODE2,
+      </if>
+      <if test="refuseCode3 != null" >
+        REFUSE_CODE3,
+      </if>
+      <if test="approver != null" >
+        APPROVER,
+      </if>
+      <if test="approverName != null" >
+        APPROVER_NAME,
+      </if>
+      <if test="highlevleApprover != null" >
+        HIGHLEVLE_APPROVER,
+      </if>
+      <if test="highlevleApprovetime != null" >
+        HIGHLEVLE_APPROVETIME,
+      </if>
+      <if test="submitHighlevleTime != null" >
+        SUBMIT_HIGHLEVLE_TIME,
+      </if>
+      <if test="approveTime != null" >
+        APPROVE_TIME,
+      </if>
+      <if test="currOptGroup != null" >
+        CURR_OPT_GROUP,
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG,
+      </if>
+      <if test="yearFeeDerateType != null" >
+        YEAR_FEE_DERATE_TYPE,
+      </if>
+      <if test="cardFaceCode != null" >
+        CARD_FACE_CODE,
+      </if>
+      <if test="laojianNum != null" >
+        LAOJIAN_NUM
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseChildcard != null" >
+        #{refuseChildcard,jdbcType=CHAR},
+      </if>
+      <if test="preApprovelimit != null" >
+        #{preApprovelimit,jdbcType=DECIMAL},
+      </if>
+      <if test="applyerName != null" >
+        #{applyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCard != null" >
+        #{applyCard,jdbcType=VARCHAR},
+      </if>
+      <if test="isAgreeDegrade != null" >
+        #{isAgreeDegrade,jdbcType=CHAR},
+      </if>
+      <if test="sysDecisionTime != null" >
+        #{sysDecisionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mastercardDecresult != null" >
+        #{mastercardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="mastercardApprovereuslt != null" >
+        #{mastercardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCreditProduce != null" >
+        #{sysCreditProduce,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardDecresult != null" >
+        #{childcardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardApprovereuslt != null" >
+        #{childcardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="creditResult != null" >
+        #{creditResult,jdbcType=VARCHAR},
+      </if>
+      <if test="creditRefuseReason != null" >
+        #{creditRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="warninglistResult != null" >
+        #{warninglistResult,jdbcType=VARCHAR},
+      </if>
+      <if test="approveResult != null" >
+        #{approveResult,jdbcType=CHAR},
+      </if>
+      <if test="approveCreditLimit != null" >
+        #{approveCreditLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="approveCreditProduct != null" >
+        #{approveCreditProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="manualLimit != null" >
+        #{manualLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="policyCode1 != null" >
+        #{policyCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode2 != null" >
+        #{policyCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode3 != null" >
+        #{policyCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode1 != null" >
+        #{violateCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode2 != null" >
+        #{violateCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode3 != null" >
+        #{violateCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode1 != null" >
+        #{refuseCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode2 != null" >
+        #{refuseCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode3 != null" >
+        #{refuseCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="approver != null" >
+        #{approver,jdbcType=VARCHAR},
+      </if>
+      <if test="approverName != null" >
+        #{approverName,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprover != null" >
+        #{highlevleApprover,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprovetime != null" >
+        #{highlevleApprovetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitHighlevleTime != null" >
+        #{submitHighlevleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveTime != null" >
+        #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currOptGroup != null" >
+        #{currOptGroup,jdbcType=CHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        #{ydjFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="yearFeeDerateType != null" >
+      	#{yearFeeDerateType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardFaceCode != null" >
+      	#{cardFaceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="laojianNum != null" >
+        #{laojianNum,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.thirdparty.BizApprovalHis" >
+    update OPAS_BIZ_APPROVAL_HIS
+    <set >
+      <if test="appId != null" >
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        ID_TYPE = #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null" >
+        ID_NO = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseChildcard != null" >
+        REFUSE_CHILDCARD = #{refuseChildcard,jdbcType=CHAR},
+      </if>
+      <if test="preApprovelimit != null" >
+        PRE_APPROVELIMIT = #{preApprovelimit,jdbcType=DECIMAL},
+      </if>
+      <if test="applyerName != null" >
+        APPLYER_NAME = #{applyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCard != null" >
+        APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+      </if>
+      <if test="isAgreeDegrade != null" >
+        IS_AGREE_DEGRADE = #{isAgreeDegrade,jdbcType=CHAR},
+      </if>
+      <if test="sysDecisionTime != null" >
+        SYS_DECISION_TIME = #{sysDecisionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mastercardDecresult != null" >
+        MASTERCARD_DECRESULT = #{mastercardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="mastercardApprovereuslt != null" >
+        MASTERCARD_APPROVEREUSLT = #{mastercardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCreditProduce != null" >
+        SYS_CREDIT_PRODUCE = #{sysCreditProduce,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardDecresult != null" >
+        CHILDCARD_DECRESULT = #{childcardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardApprovereuslt != null" >
+        CHILDCARD_APPROVEREUSLT = #{childcardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="creditResult != null" >
+        CREDIT_RESULT = #{creditResult,jdbcType=VARCHAR},
+      </if>
+      <if test="creditRefuseReason != null" >
+        CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="warninglistResult != null" >
+        WARNINGLIST_RESULT = #{warninglistResult,jdbcType=VARCHAR},
+      </if>
+      <if test="approveResult != null" >
+        APPROVE_RESULT = #{approveResult,jdbcType=CHAR},
+      </if>
+      <if test="approveCreditLimit != null" >
+        APPROVE_CREDIT_LIMIT = #{approveCreditLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="approveCreditProduct != null" >
+        APPROVE_CREDIT_PRODUCT = #{approveCreditProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="manualLimit != null" >
+        MANUAL_LIMIT = #{manualLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="policyCode1 != null" >
+        POLICY_CODE1 = #{policyCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode2 != null" >
+        POLICY_CODE2 = #{policyCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode3 != null" >
+        POLICY_CODE3 = #{policyCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode1 != null" >
+        VIOLATE_CODE1 = #{violateCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode2 != null" >
+        VIOLATE_CODE2 = #{violateCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode3 != null" >
+        VIOLATE_CODE3 = #{violateCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode1 != null" >
+        REFUSE_CODE1 = #{refuseCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode2 != null" >
+        REFUSE_CODE2 = #{refuseCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode3 != null" >
+        REFUSE_CODE3 = #{refuseCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="approver != null" >
+        APPROVER = #{approver,jdbcType=VARCHAR},
+      </if>
+      <if test="approverName != null" >
+        APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprover != null" >
+        HIGHLEVLE_APPROVER = #{highlevleApprover,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprovetime != null" >
+        HIGHLEVLE_APPROVETIME = #{highlevleApprovetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitHighlevleTime != null" >
+        SUBMIT_HIGHLEVLE_TIME = #{submitHighlevleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveTime != null" >
+        APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currOptGroup != null" >
+        CURR_OPT_GROUP = #{currOptGroup,jdbcType=CHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="yearFeeDerateType != null" >
+      	YEAR_FEE_DERATE_TYPE = #{yearFeeDerateType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardFaceCode != null" >
+      	CARD_FACE_CODE = #{cardFaceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="laojianNum != null" >
+        LAOJIAN_NUM = #{laojianNum,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.thirdparty.BizApprovalHis" >
+    update OPAS_BIZ_APPROVAL_HIS
+    set APP_ID = #{appId,jdbcType=VARCHAR},
+      ID_TYPE = #{idType,jdbcType=VARCHAR},
+      ID_NO = #{idNo,jdbcType=VARCHAR},
+      REFUSE_CHILDCARD = #{refuseChildcard,jdbcType=CHAR},
+      PRE_APPROVELIMIT = #{preApprovelimit,jdbcType=DECIMAL},
+      APPLYER_NAME = #{applyerName,jdbcType=VARCHAR},
+      APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+      IS_AGREE_DEGRADE = #{isAgreeDegrade,jdbcType=CHAR},
+      SYS_DECISION_TIME = #{sysDecisionTime,jdbcType=TIMESTAMP},
+      MASTERCARD_DECRESULT = #{mastercardDecresult,jdbcType=VARCHAR},
+      MASTERCARD_APPROVEREUSLT = #{mastercardApprovereuslt,jdbcType=VARCHAR},
+      SYS_CREDIT_PRODUCE = #{sysCreditProduce,jdbcType=VARCHAR},
+      CHILDCARD_DECRESULT = #{childcardDecresult,jdbcType=VARCHAR},
+      CHILDCARD_APPROVEREUSLT = #{childcardApprovereuslt,jdbcType=VARCHAR},
+      CREDIT_RESULT = #{creditResult,jdbcType=VARCHAR},
+      CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      WARNINGLIST_RESULT = #{warninglistResult,jdbcType=VARCHAR},
+      APPROVE_RESULT = #{approveResult,jdbcType=CHAR},
+      APPROVE_CREDIT_LIMIT = #{approveCreditLimit,jdbcType=DECIMAL},
+      APPROVE_CREDIT_PRODUCT = #{approveCreditProduct,jdbcType=VARCHAR},
+      MANUAL_LIMIT = #{manualLimit,jdbcType=DECIMAL},
+      POLICY_CODE1 = #{policyCode1,jdbcType=VARCHAR},
+      POLICY_CODE2 = #{policyCode2,jdbcType=VARCHAR},
+      POLICY_CODE3 = #{policyCode3,jdbcType=VARCHAR},
+      VIOLATE_CODE1 = #{violateCode1,jdbcType=VARCHAR},
+      VIOLATE_CODE2 = #{violateCode2,jdbcType=VARCHAR},
+      VIOLATE_CODE3 = #{violateCode3,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      REFUSE_CODE1 = #{refuseCode1,jdbcType=VARCHAR},
+      REFUSE_CODE2 = #{refuseCode2,jdbcType=VARCHAR},
+      REFUSE_CODE3 = #{refuseCode3,jdbcType=VARCHAR},
+      APPROVER = #{approver,jdbcType=VARCHAR},
+      APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+      HIGHLEVLE_APPROVER = #{highlevleApprover,jdbcType=VARCHAR},
+      HIGHLEVLE_APPROVETIME = #{highlevleApprovetime,jdbcType=TIMESTAMP},
+      SUBMIT_HIGHLEVLE_TIME = #{submitHighlevleTime,jdbcType=TIMESTAMP},
+      APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+      CURR_OPT_GROUP = #{currOptGroup,jdbcType=CHAR},
+      YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR},
+      YEAR_FEE_DERATE_TYPE = #{yearFeeDerateType,jdbcType=VARCHAR},
+      CARD_FACE_CODE = #{cardFaceCode,jdbcType=VARCHAR},
+      LAOJIAN_NUM = #{laojianNum,jdbcType=VARCHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+	<!-- liuzhihui -->
+	<resultMap id="BizApprovalHisResultMap" type="java.util.Map">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="ID_TYPE" property="idType" jdbcType="VARCHAR" />
+		<result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+		<result column="REFUSE_CHILDCARD" property="refuseChildcard"
+			jdbcType="CHAR" />
+		<result column="PRE_APPROVELIMIT" property="preApprovelimit"
+			jdbcType="DECIMAL" />
+		<result column="APPLYER_NAME" property="applyerName" jdbcType="VARCHAR" />
+		<result column="APPLY_CARD" property="applyCard" jdbcType="VARCHAR" />
+		<result column="IS_AGREE_DEGRADE" property="isAgreeDegrade"
+			jdbcType="CHAR" />
+		<result column="SYS_DECISION_TIME" property="sysDecisionTime"
+			jdbcType="TIMESTAMP" />
+		<result column="MASTERCARD_DECRESULT" property="mastercardDecresult"
+			jdbcType="VARCHAR" />
+		<result column="MASTERCARD_APPROVEREUSLT" property="mastercardApprovereuslt"
+			jdbcType="VARCHAR" />
+		<result column="SYS_CREDIT_PRODUCE" property="sysCreditProduce"
+			jdbcType="VARCHAR" />
+		<result column="CHILDCARD_DECRESULT" property="childcardDecresult"
+			jdbcType="VARCHAR" />
+		<result column="CHILDCARD_APPROVEREUSLT" property="childcardApprovereuslt"
+			jdbcType="VARCHAR" />
+		<result column="CREDIT_RESULT" property="creditResult"
+			jdbcType="VARCHAR" />
+		<result column="CREDIT_REFUSE_REASON" property="creditRefuseReason"
+			jdbcType="VARCHAR" />
+		<result column="WARNINGLIST_RESULT" property="warninglistResult"
+			jdbcType="VARCHAR" />
+		<result column="APPROVE_RESULT" property="approveResult"
+			jdbcType="CHAR" />
+		<result column="APPROVE_CREDIT_LIMIT" property="approveCreditLimit"
+			jdbcType="DECIMAL" />
+		<result column="APPROVE_CREDIT_PRODUCT" property="approveCreditProduct"
+			jdbcType="VARCHAR" />
+		<result column="MANUAL_LIMIT" property="manualLimit" jdbcType="DECIMAL" />
+		<result column="POLICY_CODE1" property="policyCode1" jdbcType="VARCHAR" />
+		<result column="POLICY_CODE2" property="policyCode2" jdbcType="VARCHAR" />
+		<result column="POLICY_CODE3" property="policyCode3" jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE1" property="violateCode1"
+			jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE2" property="violateCode2"
+			jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE3" property="violateCode3"
+			jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE1" property="refuseCode1" jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE2" property="refuseCode2" jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE3" property="refuseCode3" jdbcType="VARCHAR" />
+		<result column="APPROVER" property="approver" jdbcType="VARCHAR" />
+		<result column="APPROVER_NAME" property="approverName"
+			jdbcType="VARCHAR" />
+		<result column="HIGHLEVLE_APPROVER" property="highlevleApprover"
+			jdbcType="VARCHAR" />
+		<result column="HIGHLEVLE_APPROVETIME" property="highlevleApprovetime"
+			jdbcType="TIMESTAMP" />
+		<result column="SUBMIT_HIGHLEVLE_TIME" property="submitHighlevleTime"
+			jdbcType="TIMESTAMP" />
+		<result column="APPROVE_TIME" property="approveTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_OPT_GROUP" property="currOptGroup"
+			jdbcType="CHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR" />
+		<result column="prod_name" property="prod_name" jdbcType="VARCHAR" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+		<result column="crediter" property="crediter" jdbcType="VARCHAR" />
+		<result column="crediter_name" property="crediter_name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryBizApprovalHisByObjAppId" parameterType="java.lang.String"
+		resultMap="BizApprovalHisResultMap">
+		select
+		AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT,
+		APPLYER_NAME,
+		APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT,
+		MASTERCARD_APPROVEREUSLT,
+		SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT,
+		CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT,
+		APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT,
+		MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1,
+		VIOLATE_CODE2,
+		VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER,
+		APPROVER_NAME,
+		HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME,
+		CURR_OPT_GROUP,
+		YDJ_FLAG,LAOJIAN_NUM
+		from OPAS_BIZ_APPROVAL_HIS
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="queryHistoryAuditInfo" parameterType="java.lang.String"
+		resultMap="BizApprovalHisResultMap">
+		select
+		AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT,
+		APPLYER_NAME,
+		APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT,
+		MASTERCARD_APPROVEREUSLT,
+		SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT,
+		CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT,
+		APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT,
+		MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1,
+		VIOLATE_CODE2,
+		VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER,
+		APPROVER_NAME,
+		HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME,
+		CURR_OPT_GROUP,
+		YDJ_FLAG,YEAR_FEE_DERATE_TYPE,CARD_FACE_CODE,LAOJIAN_NUM
+		from OPAS_BIZ_APPROVAL_HIS
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="queryAuditInfo" parameterType="java.lang.String"
+		resultMap="BizApprovalHisResultMap">
+		select 
+		c.APP_ID APP_ID,
+       	c.C1_CNAME APPLYER_NAME,
+        c.C1_IDNBR ID_NO,
+        p.prod_name prod_name,
+        (select AUDITOR_NAME from OPAS_REVIEW_DECISION_RESULT where app_id = c.app_id and rownum = 1) user_name,
+        t.crediter,
+        t.crediter_name
+    from OPAS_BIZ_INP_APPL_C1 c left join OPAS_PARAM_CARD_PRODUCT p on c.APP_PROD = p.card_code
+	    left join OPAS_TELCHECK_RESULT t on t.app_id = c.app_id
+    where c.APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+
+	<select id="queryApprovalMemo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT,
+		APPLYER_NAME,
+		APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT,
+		MASTERCARD_APPROVEREUSLT,
+		SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT,
+		CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT,
+		APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT,
+		MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1,
+		VIOLATE_CODE2,
+		VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER,
+		APPROVER_NAME,
+		HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME,
+		CURR_OPT_GROUP,
+		YDJ_FLAG,LAOJIAN_NUM
+		from OPAS_BIZ_APPROVAL_HIS
+		where APP_ID = #{appId} and APPROVE_RESULT='1'
+	</select><!--  and memo is not null -->
+	
+	<select id="queryDisApprovalMemo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT,
+		APPLYER_NAME,
+		APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT,
+		MASTERCARD_APPROVEREUSLT,
+		SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT,
+		CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT,
+		APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT,
+		MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1,
+		VIOLATE_CODE2,
+		VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER,
+		APPROVER_NAME,
+		HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME,
+		CURR_OPT_GROUP,
+		YDJ_FLAG,LAOJIAN_NUM
+		from OPAS_BIZ_APPROVAL_HIS
+		where APP_ID = #{appId} and APPROVE_RESULT='0'
+	</select>
+	
+	<select id="queryApprovalMsg" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+	select *
+  from (select distinct a.auto_id as id,
+                        p.prod_name as APPROVE_CREDIT_PRODUCT,
+                        a.APPROVE_CREDIT_LIMIT as APPROVE_CREDIT_LIMIT,
+                        a.policy_code1 policy_code1,
+                        a.policy_code2 policy_code2,
+                        a.policy_code3 policy_code3,
+                        a.violate_code1 violate_code1,
+                        a.violate_code2 violate_code2,
+                        a.violate_code3 violate_code3,
+                        a.refuse_code1 refuse_code1,
+                        a.refuse_code2 refuse_code2,
+                        a.refuse_code3 refuse_code3,
+                        a.approver_name approver,
+                        a.approve_time approve_time,
+                        a.memo,
+                        a.approve_result,
+                        a.CREDIT_REFUSE_REASON CREDIT_REFUSE_REASON
+          from opas_biz_approval_his a
+          left join opas_allot_apply_allot m on m.app_id = a.app_id
+          left join OPAS_PARAM_CARD_PRODUCT p on a.approve_credit_product =
+                                                 p.card_code
+          left join (select q.ydj_flag, q.matching_card_flag
+                      from opas_allot_apply_allot q
+                     where q.app_id in (#{appId})) n on 1 = 1
+         where a.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c1
+                 where c1_idnbr in
+                       (select c1_idnbr
+                          from opas_biz_inp_appl_c1
+                         where app_id in (#{appId}, #{appIdStr})))
+           and a.CREDIT_REFUSE_REASON = '2'
+           and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != (case when substr(#{appId}, 16, 1)='1' then substr(#{appId}, 0, 15) || 2
+               else substr(#{appId}, 0, 15) || 1 end )) or
+               (n.matching_card_flag = '2' and
+               a.app_id != (case when substr(#{appId}, 16, 1)='1' then substr(#{appId}, 0, 15) || 2
+               else substr(#{appId}, 0, 15) || 1 end )))) or
+               n.ydj_flag = '2') 
+           <!-- and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               a.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2') -->
+        union
+        select distinct a.auto_id as id,
+                        p.prod_name as APPROVE_CREDIT_PRODUCT,
+                        a.APPROVE_CREDIT_LIMIT as APPROVE_CREDIT_LIMIT,
+                        a.policy_code1 policy_code1,
+                        a.policy_code2 policy_code2,
+                        a.policy_code3 policy_code3,
+                        a.violate_code1 violate_code1,
+                        a.violate_code2 violate_code2,
+                        a.violate_code3 violate_code3,
+                        a.refuse_code1 refuse_code1,
+                        a.refuse_code2 refuse_code2,
+                        a.refuse_code3 refuse_code3,
+                        a.approver_name approver,
+                        a.approve_time approve_time,
+                        a.memo,
+                        a.approve_result,
+                        a.CREDIT_REFUSE_REASON CREDIT_REFUSE_REASON
+          from opas_biz_approval a
+          join opas_biz_inp_appl_c1 s on s.app_id = a.app_id
+          join OPAS_FILE_APPLICATION_DETAIL h on a.app_id = h.app_id
+          left join OPAS_PARAM_CARD_PRODUCT p on a.approve_credit_product =
+                                                 p.card_code
+          left join (select q.ydj_flag, q.matching_card_flag
+                       from opas_biz_inp_appl_c1 q
+                      where q.app_id in (#{appId})) n on 1 = 1
+         where a.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c1
+                 where c1_idnbr in
+                       (select c1_idnbr
+                          from opas_biz_inp_appl_c1
+                         where app_id in (#{appId}, #{appIdStr})))
+             and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != (case when substr(#{appId}, 16, 1)='1' then substr(#{appId}, 0, 15) || 2
+               else substr(#{appId}, 0, 15) || 1 end )) or
+               (n.matching_card_flag = '2' and
+               a.app_id != (case when substr(#{appId}, 16, 1)='1' then substr(#{appId}, 0, 15) || 2
+               else substr(#{appId}, 0, 15) || 1 end )))) or
+               n.ydj_flag = '2') 
+          <!--  and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               a.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2') -->
+        union
+        select a.auto_id as id,
+               p.prod_name as APPROVE_CREDIT_PRODUCT,
+               a.APPROVE_CREDIT_LIMIT as APPROVE_CREDIT_LIMIT,
+               a.policy_code1 policy_code1,
+               a.policy_code2 policy_code2,
+               a.policy_code3 policy_code3,
+               a.violate_code1 violate_code1,
+               a.violate_code2 violate_code2,
+               a.violate_code3 violate_code3,
+               a.refuse_code1 refuse_code1,
+               a.refuse_code2 refuse_code2,
+               a.refuse_code3 refuse_code3,
+               a.approver_name approver,
+               a.approve_time approve_time,
+               a.memo,
+               a.approve_result,
+               a.CREDIT_REFUSE_REASON CREDIT_REFUSE_REASON
+          from opas_biz_approval_his a,
+               opas_biz_inp_appl_c1 s,
+               (select his.laojian_num laojian_num,
+                       app_id,
+                       max(approve_time) approve_time
+                  from opas_biz_approval_his his
+                 group by his.laojian_num, app_id) b,
+               opas_biz_approval c,
+               OPAS_PARAM_CARD_PRODUCT p,
+               (select q.ydj_flag, q.matching_card_flag
+                  from opas_biz_inp_appl_c1 q
+                 where q.app_id in (#{appId})) n
+         where a.laojian_num = b.laojian_num
+           and a.app_id = b.app_id
+           and a.approve_time = b.approve_time
+           and a.app_id = c.app_id
+           and nvl(a.laojian_num, 0) != c.laojian_num
+           and a.approve_credit_product = p.card_code(+)
+           and s.app_id = a.app_id
+           and a.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c1
+                 where c1_idnbr in
+                       (select c1_idnbr
+                          from opas_biz_inp_appl_c1
+                         where app_id in (#{appId}, #{appIdStr})))
+           <!-- and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               a.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2') -->
+        union
+        select distinct c.id,
+                        '1' APPROVE_CREDIT_PRODUCT,
+                        1 as APPROVE_CREDIT_LIMIT,
+                        '1' policy_Code1,
+                        '1' policy_Code2,
+                        '1' policy_Code3,
+                        '1' violate_Code1,
+                        '1' violate_Code2,
+                        '1' violate_Code3,
+                        '1' refuse_code1,
+                        '1' refuse_code2,
+                        '1' refuse_code3,
+                        u.user_name approver,
+                        c.record_team_date approve_time,
+                        c.memo,
+                        '99' approve_result,
+                        '99' CREDIT_REFUSE_REASON
+          from opas_allot_apply_allot_his c
+          left join opas_allot_apply_allot m on m.app_id = c.app_id
+          left join OPAS_AP_USER u on u.user_code = c.curr_opt_user
+          left join (select q.ydj_flag, q.matching_card_flag
+                       from opas_allot_apply_allot q
+                      where q.app_id in (#{appId})) n on 1 = 1
+          left join opas_biz_approval a on a.app_id = c.app_id
+         where c.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c1
+                 where c1_idnbr in
+                       (select c1_idnbr
+                          from opas_biz_inp_appl_c1
+                         where app_id in (#{appId}, #{appIdStr})))
+           and c.syn_flag = '0'
+           and c.back_flag = '1'
+           and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               c.app_id != (case when substr(#{appId}, 16, 1)='1' then substr(#{appId}, 0, 15) || 2
+               else substr(#{appId}, 0, 15) || 1 end )) or
+               (n.matching_card_flag = '2' and
+               c.app_id != (case when substr(#{appId}, 16, 1)='1' then substr(#{appId}, 0, 15) || 2
+               else substr(#{appId}, 0, 15) || 1 end )))) or
+               n.ydj_flag = '2') 
+           <!-- and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               c.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               c.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2') -->
+               )
+ order by approve_time asc
+	</select>
+	<select id="queryApprovalMsg_fsk" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+	select *
+  from (select distinct a.auto_id as id,
+                        p.prod_name as APPROVE_CREDIT_PRODUCT,
+                        a.APPROVE_CREDIT_LIMIT as APPROVE_CREDIT_LIMIT,
+                        a.policy_code1 policy_code1,
+                        a.policy_code2 policy_code2,
+                        a.policy_code3 policy_code3,
+                        a.violate_code1 violate_code1,
+                        a.violate_code2 violate_code2,
+                        a.violate_code3 violate_code3,
+                        a.refuse_code1 refuse_code1,
+                        a.refuse_code2 refuse_code2,
+                        a.refuse_code3 refuse_code3,
+                        a.approver_name approver,
+                        a.approve_time approve_time,
+                        a.memo,
+                        a.approve_result,
+                        a.CREDIT_REFUSE_REASON CREDIT_REFUSE_REASON
+          from opas_biz_approval_his a
+          left join opas_allot_apply_allot m on m.app_id = a.app_id
+          left join OPAS_PARAM_CARD_PRODUCT p on a.approve_credit_product =
+                                                 p.card_code
+          left join (select q.ydj_flag, q.matching_card_flag
+                      from opas_allot_apply_allot q
+                     where q.app_id in (#{appId})) n on 1 = 1
+         where a.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c2
+                 where C2_IDNBR in
+                       (select C2_IDNBR
+                          from opas_biz_inp_appl_c2
+                         where app_id in (#{appId}, #{appIdStr})))
+           and a.CREDIT_REFUSE_REASON = '2'
+           and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               a.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2')
+        union
+        select distinct a.auto_id as id,
+                        p.prod_name as APPROVE_CREDIT_PRODUCT,
+                        a.APPROVE_CREDIT_LIMIT as APPROVE_CREDIT_LIMIT,
+                        a.policy_code1 policy_code1,
+                        a.policy_code2 policy_code2,
+                        a.policy_code3 policy_code3,
+                        a.violate_code1 violate_code1,
+                        a.violate_code2 violate_code2,
+                        a.violate_code3 violate_code3,
+                        a.refuse_code1 refuse_code1,
+                        a.refuse_code2 refuse_code2,
+                        a.refuse_code3 refuse_code3,
+                        a.approver_name approver,
+                        a.approve_time approve_time,
+                        a.memo,
+                        a.approve_result,
+                        a.CREDIT_REFUSE_REASON CREDIT_REFUSE_REASON
+          from opas_biz_approval a
+          join opas_biz_inp_appl_c1 s on s.app_id = a.app_id
+          join OPAS_FILE_APPLICATION_DETAIL h on a.app_id = h.app_id
+          left join OPAS_PARAM_CARD_PRODUCT p on a.approve_credit_product =
+                                                 p.card_code
+          left join (select q.ydj_flag, q.matching_card_flag
+                       from opas_biz_inp_appl_c1 q
+                      where q.app_id in (#{appId})) n on 1 = 1
+         where a.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c2
+                 where C2_IDNBR in
+                       (select C2_IDNBR
+                          from opas_biz_inp_appl_c2
+                         where app_id in (#{appId}, #{appIdStr})))
+           and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               a.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2')
+        union
+        select a.auto_id as id,
+               p.prod_name as APPROVE_CREDIT_PRODUCT,
+               a.APPROVE_CREDIT_LIMIT as APPROVE_CREDIT_LIMIT,
+               a.policy_code1 policy_code1,
+               a.policy_code2 policy_code2,
+               a.policy_code3 policy_code3,
+               a.violate_code1 violate_code1,
+               a.violate_code2 violate_code2,
+               a.violate_code3 violate_code3,
+               a.refuse_code1 refuse_code1,
+               a.refuse_code2 refuse_code2,
+               a.refuse_code3 refuse_code3,
+               a.approver_name approver,
+               a.approve_time approve_time,
+               a.memo,
+               a.approve_result,
+               a.CREDIT_REFUSE_REASON CREDIT_REFUSE_REASON
+          from opas_biz_approval_his a,
+               opas_biz_inp_appl_c1 s,
+               (select his.laojian_num laojian_num,
+                       app_id,
+                       max(approve_time) approve_time
+                  from opas_biz_approval_his his
+                 group by his.laojian_num, app_id) b,
+               opas_biz_approval c,
+               OPAS_PARAM_CARD_PRODUCT p,
+               (select q.ydj_flag, q.matching_card_flag
+                  from opas_biz_inp_appl_c1 q
+                 where q.app_id in (#{appId})) n
+         where a.laojian_num = b.laojian_num
+           and a.app_id = b.app_id
+           and a.approve_time = b.approve_time
+           and a.app_id = c.app_id
+           and nvl(a.laojian_num, 0) != c.laojian_num
+           and a.approve_credit_product = p.card_code(+)
+           and s.app_id = a.app_id
+           and a.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c2
+                 where C2_IDNBR in
+                       (select C2_IDNBR
+                          from opas_biz_inp_appl_c2
+                         where app_id in (#{appId}, #{appIdStr})))
+           <!-- and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               a.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               a.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2') -->
+        union
+        select distinct c.id,
+                        '1' APPROVE_CREDIT_PRODUCT,
+                        1 as APPROVE_CREDIT_LIMIT,
+                        '1' policy_Code1,
+                        '1' policy_Code2,
+                        '1' policy_Code3,
+                        '1' violate_Code1,
+                        '1' violate_Code2,
+                        '1' violate_Code3,
+                        '1' refuse_code1,
+                        '1' refuse_code2,
+                        '1' refuse_code3,
+                        u.user_name approver,
+                        c.record_team_date approve_time,
+                        c.memo,
+                        '99' approve_result,
+                        '99' CREDIT_REFUSE_REASON
+          from opas_allot_apply_allot_his c
+          left join opas_allot_apply_allot m on m.app_id = c.app_id
+          left join OPAS_AP_USER u on u.user_code = c.curr_opt_user
+          left join (select q.ydj_flag, q.matching_card_flag
+                       from opas_allot_apply_allot q
+                      where q.app_id in (#{appId})) n on 1 = 1
+         where c.app_id in
+               (select app_id
+                  from opas_biz_inp_appl_c2
+                 where C2_IDNBR in
+                       (select C2_IDNBR
+                          from opas_biz_inp_appl_c2
+                         where app_id in (#{appId}, #{appIdStr})))
+           and c.syn_flag = '0'
+           and c.back_flag = '1'
+           and ((n.ydj_flag = '1' and
+               (nvl(n.matching_card_flag, 0) = '0' or
+               (n.matching_card_flag = '1' and
+               c.app_id != substr(#{appId}, 0, 15) || 2) or
+               (n.matching_card_flag = '2' and
+               c.app_id != substr(#{appId}, 0, 15) || 1))) or
+               n.ydj_flag = '2'))
+ order by approve_time asc
+	</select>
+	<select id="queryApprovalQzdcByAppId"  parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from opas_submitfraud_info_his
+		where app_id = #{appId}
+		and VDEL_STATUS='4'
+	</select>
+	
+</mapper>

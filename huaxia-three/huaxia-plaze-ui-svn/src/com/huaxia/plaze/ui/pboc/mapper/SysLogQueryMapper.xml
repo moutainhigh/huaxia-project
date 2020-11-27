@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.pboc.mapper.SysLogQueryMapper">
+
+	<resultMap id="result_Base" type="SysLogQuery">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LOG_ID" property="logId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="STAFF_CERT_NO" property="staffCertNo" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="QUERY_TYPE" property="queryType" jdbcType="VARCHAR" />
+		<result column="QUERY_REASON" property="queryReason" jdbcType="VARCHAR" />
+		<result column="QUERY_RESULT" property="queryResult" jdbcType="VARCHAR" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+		<result column="MAC" property="mac" jdbcType="VARCHAR" />
+		<result column="QUERY_ACTION" property="queryAction" jdbcType="VARCHAR" />
+		<result column="QUERY_EXCLUDE" property="queryExclude" jdbcType="VARCHAR" />
+		<result column="PREVENT_QUERY_COUNT" property="preventQueryCount" jdbcType="NUMERIC" />
+		<result column="PREVENT_QUERY_REASON" property="preventQueryReason" jdbcType="VARCHAR" />
+	</resultMap>
+	
+     <!-- 插入记录 -->
+	<insert id="insertObject" parameterType="SysLogQuery">
+		insert into SYS_LOG_QUERY (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		LOG_ID,
+		TRN_ID,
+		STAFF_NAME,
+		STAFF_CERT_NO,
+		NAME,
+		CERT_NO,
+		QUERY_TYPE,
+		QUERY_REASON,
+		QUERY_RESULT,
+		IP,
+		MAC,
+		QUERY_ACTION,
+		QUERY_EXCLUDE,
+		PREVENT_QUERY_COUNT,
+		PREVENT_QUERY_REASON
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		SYS_GUID(),
+		#{trnId},
+		#{staffName},
+		#{staffCertNo},
+		#{name},
+		#{certNo},
+		#{queryType},
+		#{queryReason},
+		#{queryResult},
+		#{ip},
+		#{mac},
+		#{queryAction},
+		#{queryExclude},
+		#{preventQueryCount},
+		#{preventQueryReason}
+		)
+	</insert>
+	<!-- 分页总数 -->
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_LOG_QUERY 
+		<where>
+        	<if test="account != null">
+        		AND CRT_USER LIKE '${account}%'
+        	</if>
+        	<if test="staffName != null">
+        		AND STAFF_NAME LIKE '${staffName}%'
+        	</if>
+        	<if test="startTime != null">
+        		AND CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+        	</if>
+        	<if test="endTime != null">
+        		AND CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+        	</if>
+        	<if test="name != null">
+        		AND NAME LIKE '${name}%'
+        	</if>
+           <if test="queryResult != null">
+      		AND QUERY_RESULT = #{queryResult}
+	     	</if>
+	     	<if test="queryType != null">
+	     		AND QUERY_TYPE = #{queryType}
+	     	</if>
+	     	<if test="queryReason != null">
+	     		AND QUERY_REASON = #{queryReason}
+	     	</if>
+        </where>
+      </select>
+      
+     <!-- 人行查询异常监控 -->
+	<select id="selectListCountByPageEx" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_LOG_QUERY 
+		<where>
+        	<if test="account != null">
+        		AND CRT_USER LIKE '${account}%'
+        	</if>
+        	<if test="staffName != null">
+        		AND STAFF_NAME LIKE '${staffName}%'
+        	</if>
+        	<if test="startTime != null">
+        		AND CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+        	</if>
+        	<if test="endTime != null">
+        		AND CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+        	</if>
+        	<if test="name != null">
+        		AND NAME LIKE '${name}%'
+        	</if>
+        	<if test="queryResult != null">
+        		AND QUERY_RESULT LIKE '${queryResult}%'
+        	</if>
+        	<if test="queryType != null">
+        		AND QUERY_TYPE LIKE '${queryType}%'
+        	</if>
+      	    <if test="queryExclude != null">
+      		AND QUERY_EXCLUDE = #{queryExclude} 
+        	</if>
+        	<if test="queryAction != null">
+      	    AND QUERY_ACTION = #{queryAction} 
+            </if>
+            <if test="queryActionOne != null">
+      	    AND QUERY_ACTION = #{queryActionOne} OR QUERY_ACTION = #{queryActionTwo} 
+            </if>
+        </where>
+	
+	</select>
+	<!-- 分页记录-->
+	<select id="selectListByPage" parameterType="java.util.Map"
+	resultMap="result_Base">
+SELECT CRT_USER,STAFF_NAME,STAFF_CERT_NO,CRT_TIME,NAME,CERT_NO,QUERY_REASON,QUERY_RESULT,IP,MAC,QUERY_TYPE,QUERY_ACTION,QUERY_EXCLUDE,RN  FROM
+  (SELECT CRT_USER,STAFF_NAME,STAFF_CERT_NO,CRT_TIME,NAME,CERT_NO,QUERY_REASON,QUERY_RESULT,IP,MAC,QUERY_TYPE,QUERY_ACTION,QUERY_EXCLUDE,ROWNUM RN FROM
+  (SELECT 
+  s.CRT_USER,
+  s.STAFF_NAME,
+  s.STAFF_CERT_NO,
+  TO_CHAR(s.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+  AS CRT_TIME,
+  s.NAME,
+  s.CERT_NO,
+  s.QUERY_REASON,
+  p.review_status as QUERY_RESULT,
+  s.IP,
+  s.MAC,
+  s.QUERY_TYPE,
+  QUERY_ACTION,
+  QUERY_EXCLUDE
+  FROM
+  SYS_LOG_QUERY s left join pboc_trn_single_review p
+  on  s.trn_id = p.trn_id 
+ 	<where>
+      	<if test="account != null">
+      		AND s.CRT_USER LIKE '${account}%'
+      	</if>
+      	<if test="staffName != null">
+      		AND s.STAFF_NAME LIKE '${staffName}%'
+      	</if>
+      	<if test="startTime != null">
+      		AND s.CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+      	</if>
+      	<if test="endTime != null">
+      		AND s.CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+      	</if>
+      	<if test="name != null">
+      		AND s.NAME LIKE '${name}%'
+      	</if>
+      	<if test="queryResult != null">
+      		AND s.QUERY_RESULT = #{queryResult}
+      	</if>
+      	<if test="queryType != null">
+      		AND s.QUERY_TYPE = #{queryType}
+      	</if>
+      	<if test="queryReason != null">
+	     		AND s.QUERY_REASON = #{queryReason}
+	     </if>
+        </where>
+ 	ORDER BY 
+	CRT_TIME DESC
+    ) A
+	WHERE ROWNUM <![CDATA[ <= ]]>
+	#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+	(#{pageNo} - 1) * #{pageSize}
+   </select>
+   
+   	<!-- 人行查询异常监控-->
+	<select id="selectListByPageEx" parameterType="java.util.Map"
+	resultMap="result_Base">
+	SELECT * FROM
+	(SELECT A.*,ROWNUM RN FROM
+	(SELECT 
+	CRT_USER,
+	STAFF_NAME,
+	STAFF_CERT_NO,
+	TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+	AS CRT_TIME,
+	NAME,
+	CERT_NO,
+	QUERY_REASON,
+	QUERY_RESULT,
+	IP,
+	MAC,
+	QUERY_TYPE,
+	QUERY_ACTION,
+	PREVENT_QUERY_COUNT,
+	PREVENT_QUERY_REASON
+	FROM
+	SYS_LOG_QUERY 
+	<where>
+      	<if test="account != null">
+      		AND CRT_USER LIKE '${account}%'
+      	</if>
+      	<if test="staffName != null">
+      		AND STAFF_NAME LIKE '${staffName}%'
+      	</if>
+      	<if test="startTime != null">
+      		AND CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+      	</if>
+      	<if test="endTime != null">
+      		AND CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+      	</if>
+      	<if test="name != null">
+      		AND NAME LIKE '${name}%'
+      	</if>
+      	<if test="queryResult != null">
+      		AND QUERY_RESULT LIKE '${queryResult}%'
+      	</if>
+      	<if test="queryType != null">
+      		AND QUERY_TYPE LIKE '${queryType}%'
+      	</if>
+      	<if test="queryExclude != null">
+      		AND QUERY_EXCLUDE = #{queryExclude} 
+      	</if>
+       	<if test="queryAction != null">
+      	    AND QUERY_ACTION = #{queryAction} 
+        </if>
+        <if test="queryActionOne != null">
+      	    AND QUERY_ACTION = #{queryActionOne} OR QUERY_ACTION = #{queryActionTwo} 
+        </if>
+        </where>
+	ORDER BY 
+	CRT_TIME DESC
+    ) A
+	WHERE ROWNUM <![CDATA[ <= ]]>
+	#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+	(#{pageNo} - 1) * #{pageSize}
+
+   </select>
+ <!--   筛选结果集 -->
+	<select id="selectList" parameterType="java.util.Map"
+	resultMap="result_Base">
+	SELECT 
+	STAFF_NAME,
+	STAFF_CERT_NO,
+	TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+	AS CRT_TIME,
+	NAME,
+	CERT_NO,
+	QUERY_REASON,
+	FROM
+	SYS_LOG_QUERY 
+	<where>
+      	<if test="account != null">
+      		AND CRT_USER LIKE '${account}%'
+      	</if>
+      	<if test="staffName != null">
+      		AND STAFF_NAME LIKE '${staffName}%'
+      	</if>
+      	<if test="startTime != null">
+      		AND CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+      	</if>
+      	<if test="endTime != null">
+      		AND CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+      	</if>
+      	<if test="name != null">
+      		AND NAME LIKE '${name}%'
+      	</if>
+      	<if test="queryResult != null">
+      		AND QUERY_RESULT LIKE '${queryResult}%'
+      	</if>
+      	<if test="queryType != null">
+      		AND QUERY_TYPE LIKE '${queryType}%'
+      	</if>
+        </where>
+	ORDER BY 
+	CRT_TIME DESC
+   </select>
+	<select id="selectCountByTime" parameterType="java.util.Map" resultType="java.lang.Integer">
+	  SELECT 
+	  COUNT(1)
+	  FROM SYS_LOG_QUERY
+	  WHERE
+	  QUERY_ACTION=#{queryAction}
+	  AND QUERY_TYPE = #{queryType}
+	  AND CRT_USER = #{crtUser}
+	  AND
+	  TO_DATE(TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') 
+	  BETWEEN 
+	  TO_DATE(TO_CHAR(SYSDATE-${time}, 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI')
+	  AND
+	  TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI')
+	</select>
+	
+	<select id="selectMaxCountByMonth" parameterType="java.util.Map" resultType="java.lang.Integer">
+	  SELECT 
+	  NVL(MAX(COUNT(CRT_TIME)),0)
+	  FROM SYS_LOG_QUERY
+	  WHERE
+	  QUERY_ACTION=#{queryAction}
+	  AND QUERY_TYPE = #{queryType}
+	  AND CRT_USER = #{crtUser}
+	  AND
+	  TO_DATE(TO_CHAR(CRT_TIME, 'YYYY-MM-DD'),'YYYY-MM-DD')  
+	  BETWEEN 
+	  TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE,-3), 'YYYY-MM-DD'),'YYYY-MM-DD')
+	  AND
+	  TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'),'YYYY-MM-DD')
+	  GROUP BY TO_CHAR(CRT_TIME,'YYYY-MM-DD')
+	</select>
+	
+	<select id="selectCountByDay" parameterType="java.util.Map" resultType="java.lang.Integer">
+	  SELECT 
+	  NVL(MAX(COUNT(CRT_TIME)),0)
+	  FROM SYS_LOG_QUERY
+	  WHERE
+	  QUERY_ACTION=#{queryAction}
+	  AND QUERY_TYPE = #{queryType}
+	  AND CRT_USER = #{crtUser}
+	  AND
+	  TO_DATE(TO_CHAR(CRT_TIME, 'YYYY-MM-DD'),'YYYY-MM-DD')  
+	  BETWEEN 
+	  TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'),'YYYY-MM-DD')
+	  AND
+	  TO_DATE(TO_CHAR(SYSDATE+1, 'YYYY-MM-DD'),'YYYY-MM-DD')
+	   GROUP BY TO_CHAR(CRT_TIME,'YYYY-MM-DD')
+	</select>
+	<select id="selectCountByMonth" parameterType="java.util.Map" resultType="java.lang.Integer">
+	  SELECT 
+	  COUNT(1)
+	  FROM SYS_LOG_QUERY
+	  WHERE
+	  QUERY_ACTION=#{queryAction}
+	  AND CRT_USER = #{crtUser}
+	  AND QUERY_TYPE = #{queryType}
+	  AND
+	  TO_DATE(TO_CHAR(CRT_TIME, 'YYYY-MM-DD'),'YYYY-MM-DD') 
+	  BETWEEN 
+	  TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE,-3), 'YYYY-MM-DD'),'YYYY-MM-DD')
+	  AND
+	  TO_DATE(TO_CHAR(SYSDATE+1, 'YYYY-MM-DD'),'YYYY-MM-DD')
+	</select>
+	
+	<select id="selectCountByDayAndCert" parameterType="java.util.Map" resultType="java.lang.Integer">
+	  SELECT 
+	  COUNT(1)
+	  FROM SYS_LOG_QUERY
+	  WHERE
+	  QUERY_ACTION=#{queryAction}
+	  AND QUERY_TYPE = #{queryType}
+	  AND CERT_NO = #{certNo}
+	  AND
+	  TO_DATE(TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') 
+	  BETWEEN 
+	  TO_DATE(TO_CHAR(SYSDATE-${time}, 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI')
+	  AND
+	  TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI')
+	</select>
+	
+	<select id="selectListByArguments" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT TO_CHAR(s.CRT_TIME,'YYYY-MM-DD HH24:MI:SS') QUERY_DATE,s.STAFF_NAME,s.STAFF_CERT_NO STAFF_CERTNO,s.NAME QUERY_NAME,s.CERT_NO QUERY_CERTNO,s.QUERY_REASON,s.QUERY_TYPE,
+  p.review_status as QUERY_RESULT,s.QUERY_ACTION
+ FROM SYS_LOG_QUERY s left join pboc_trn_single_review p
+  on  s.trn_id = p.trn_id 
+		<where>
+          <if test="account != null">
+            AND s.CRT_USER LIKE '${account}%'
+          </if>
+          <if test="staffName != null">
+            AND s.STAFF_NAME LIKE '${staffName}%'
+          </if>
+          <if test="startTime != null">
+            AND s.CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+          </if>
+          <if test="endTime != null">
+            AND s.CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+          </if>
+          <if test="name != null">
+            AND s.NAME LIKE '${name}%'
+          </if>
+          <if test="queryResult != null">
+            AND s.QUERY_RESULT = #{queryResult}
+          </if>
+          <if test="queryType != null">
+            AND s.QUERY_TYPE = #{queryType}
+          </if>
+           <if test="queryReason != null">
+            AND s.QUERY_REASON LIKE '${queryReason}%'
+          </if>
+        </where>
+        ORDER BY s.CRT_TIME DESC
+	</select>
+	
+</mapper>

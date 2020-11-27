@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>提报反欺诈控制页面</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- <script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script> -->
+<!-- <script type="text/javascript" src="../../js/author/audit_common.js"></script> -->
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/index/index.css" type="text/css"></link>
+<link type="text/css" rel="stylesheet" href="../../css/common/layout.css" />
+
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<div data-options="region:'west',title:'左区域',split:true,noheader:true,border:false" style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="系统决策" style="overflow: hidden" id="div1"><iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" src="../common/bzk_system_decision_view.html"></iframe></div>
+			<div title="征信信息" style="overflow: hidden" id="div2"></div>
+			<div title="申请表信息" style="overflow: hidden" id="div3"></div>
+ 			<div title="征信调查" style="overflow: hidden" id="div4"></div>
+			<div title="提报回复" style="overflow: hidden" id="div5"></div>
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:true,noheader:true,border:false" style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="增强信息采集" style="overflow: hidden" id="div6"><iframe name="iframe6" id="iframe1" style="border: 0; width: 100%; height: 100%" src="../common/info_collect.html"></iframe></div>
+			<div title="提交补件" style="overflow: hidden" id="div7"></div>
+			<div title="提报反欺诈" style="overflow: hidden" id="div8"></div> 
+		</div>
+	</div>
+	<div><input type="hidden" id="applyId" name="applyId"  ></div>
+	
+</body>
+<script>
+var appId="";
+var param;
+var userId;
+var ydjFlag;
+/***********页面初始化***********/
+$(function() {
+	var url = location.href;
+	appIdParam = url.split("=")[1];
+	appId = appIdParam.split("&")[0];
+	$("#applyId").val(appId);
+	ydjFlag = appIdParam.split("&")[1];
+	userId =url.split("=")[2];
+	/* var aid = 1;
+	$("li a").each(function(){
+		$(this).attr("onclick","addIframe("+aid+")");
+		aid = aid +1;
+	}); */
+	var iframe1 = $("#iframe1").prop("src");
+	$("#iframe1").prop("src",iframe1+"?appId="+appId);
+	var iframe6 = $("#iframe6").prop("src");
+	$("#iframe6").prop("src",iframe6+"?appId="+appId);
+	window.setTimeout(jTime,3000);
+})
+/*********** 计时器定时触发 ***********/
+function jTime(){
+	for (var i = 2; i <= 8; i++) {
+		if(i==6){
+			continue;
+		}else{
+			addIframe(i);
+		}
+	}
+}
+function openWin(){
+	window.open('../credit/creditSubmitNewspaper.html',"newWindow",'height=150,width=300,toolbar=0,menubar=0,scrollbars=0,resizable=0,location=0,status=0,top=400,left=400');
+}
+var submitType="";
+//征信页面提报功能 
+/* function creditSubmitNewsPaperZx(){
+	var jsondata = {};
+		jsondata.check_number=appId; 
+		jsondata.check_submitType=submitType;
+		jsondata.check_SubmitStatus="1"
+		jsondata.check_ydjFlag="2";
+	$cf.ajax({
+		url : "/opas-naps/creditSubmit_newspaper.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+				$.messager.alert('征信提报提示',"提报成功。",'info');
+				window.close();
+				window.opener.reload(); 
+			} else {
+				$.messager.alert('征信提报提示',"提报失败。",'warning');
+				return;
+			}
+		}
+	});
+} */
+function addIframe(obj){
+	var divId = $("#div"+obj);
+	if($("#iframe"+obj).prop("name")=="iframe"+obj){
+		return false;
+	}
+	if(obj==2){//第三方征信
+		divId.append('<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%"'+
+			'src="../common/thirdparty_summary_zxspbzk_view.html?appId='+appId+'"></iframe>'); 
+	}else if(obj==3){//申请表信息
+		divId.append('<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%"'+
+				'src="../common/apply_info_view.html?appId='+appId+'"></iframe>');
+	}else if(obj==4){//征信调查查看
+		divId.append('<iframe name="iframe4" id="iframe4" style="border: 0; width: 100%; height: 100%"'+
+				'src="../credit/credit_check_detailed.html?appId='+appId+'"></iframe>');
+	}else if(obj==5){//提报回复查看
+		divId.append('<iframe name="iframe5" id="iframe5" style="border: 0; width: 100%; height: 100%"'+
+				'src="../credit/submit_reply.html?appId='+appId+'"></iframe>');
+	}else if(obj==6){//增强信息采集
+		divId.append('<iframe name="iframe6" id="iframe6" style="border: 0; width: 100%; height: 100%"'+
+				'src="../common/info_collect.html?appId='+appId+'"></iframe>');
+	}else if(obj==7){//提交补件 onSave()---标准卡
+		divId.append('<iframe name="iframe7" id="iframe7" style="border: 0; width: 100%; height: 100%"'+
+				'src="../credit/patchbolt.html?appId='+appId+'"></iframe>');
+	}else if(obj==8){//提报反欺诈
+		divId.append('<iframe name="iframe8" id="iframe8" style="border: 0; width: 100%; height: 100%"'+
+				'src="../credit/credit_cheat_submit.html?appId='+appId+'"></iframe>');
+	}
+}
+/*********** ID有效期 ***********/
+function getCertifinoVailud(){
+	var certifinoVailud = document.getElementById("iframe1").contentWindow.document.getElementById("certifinoVailud").value;
+	return certifinoVailud;
+}
+/*********** userId ***********/
+function getUserId(){
+	return userId;
+}
+/***********保存按钮*************/
+function save(){
+	/* $cf.ajax({
+		url : "/opas-naps/saveOrSubmitButtonCommon.json",
+		data : {
+			"appId" : appId,
+			"userIdParam":userId,
+			"button" : "save"
+		},
+		onSuccess : function(resData) {
+			var msg = resData.RSP_BODY.msg;
+			alert(msg);
+		}
+	}); */
+	saveCommon();
+}
+/***********提交按钮***********/
+/* function submit(){
+	$cf.ajax({
+		url : "/opas-naps/saveOrSubmitButtonCommon.json",
+		data : {
+			"appId" : appId,
+			"userIdParam":userId,
+			"button" : "submit"
+		},
+		onSuccess : function(resData) {
+			var isSuccess = resData.RSP_BODY.isSuccess;
+			if(isSuccess){
+				//saveCommon();
+				//自动推送下一个任务
+				alert("提交成功!");
+				zidonPush();
+			}else{
+				var msg = resData.RSP_BODY.msg;
+				alert(msg);
+			}
+		}
+	});
+} */
+/***********触发业务数据保存按钮 ************/
+/* function saveCommon(){
+	document.getElementById("iframe3").contentWindow.checkPageData();//申请表信息保存
+	document.getElementById("iframe4").contentWindow.onBizInpApplC1();//征信注纪保存
+	document.getElementById("iframe8").contentWindow.queryGlResult();//授权审批保存
+	document.getElementById("iframe9").contentWindow.onSave();//增强信息采集
+	document.getElementById("iframe10").contentWindow.onSave();//提交补件保存
+	document.getElementById("iframe11").contentWindow.onSave("2");//提报反欺诈
+	document.getElementById("iframe12").contentWindow.onSave(); //审查比对
+} */
+/***********自动获得下一个推送的业务件***********/
+/* function zidonPush(){
+	var checkbox = $("#zidongPushCheckbox").prop("checked");
+	if(checkbox==false||checkbox=="false"){
+		window_close();
+		return;
+	}
+	$cf.ajax({
+		url : "/opas-naps/zidonPush.json",
+		data:{"userIdParam":userId},
+		onSuccess : function(resData) {
+			var res = resData.RSP_BODY.applyAllot;
+			if(res==null||res==""){
+				alert("已经没有待办的业务了，请获取任务！");
+				return;
+			}
+			appId = res.appId;
+			var msg = resData.RSP_BODY.msg;
+			alert(msg+",点击可获取下一个待办任务");
+			
+			var urlold = location.href.split("?")[0];
+			location.href = urlold+"?appId="+appId+"&userId="+userId;
+			$("iframe").each(function(){
+				var iframe = $(this).prop("src");
+				var resalert = $(this).prop("src",iframe+"?appId="+appId);
+			});
+		}
+	});
+} */
+/***********选择员工树公方法***********/
+/* function openUserTree(obj) {
+	param = obj;
+	$cf.ajax({
+		url : "/opas-naps/queryThreeApRole.json",
+		onSuccess : function(data) {
+			var menuTree = $("#menuTree");
+			var node = data.RSP_BODY.listUser;
+			menuTree.tree({
+				cascadeCheck: true,
+				data : node,
+				onClick : function(node) {
+					
+				}
+			});
+			showWin("userRelationMenu");
+			selectOne(node);
+		}
+	})
+} */
+/*员工树选择唯一*/
+/* function selectOne(node){
+	$('#menuTree').tree({
+        cascadeCheck: false,
+        //onlyLeafCheck: true,
+        checkbox: true,
+        data: node,
+        width: 160,
+        height: 32,
+        panelHeight: 400,
+        onSelect: function (node) {
+            var cknodes = $('#menuTree').tree("getChecked");
+            for (var i = 0; i < cknodes.length; i++) {
+                if (cknodes[i].id != node.id) {
+                    $('#menuTree').tree("uncheck", cknodes[i].target);
+                }
+            }
+            if (node.checked) {
+                $('#menuTree').tree('uncheck', node.target);
+
+            } else {
+                $('#menuTree').tree('check', node.target);
+
+            }
+        },
+        onLoadSuccess: function (node, data) {
+            $(this).find('span.tree-checkbox').unbind().click(function () {
+                $('#menuTree').tree('select', $(this).parent());
+                return false;
+            });
+        }
+    })
+} */
+/**********关联管理员**********/
+/* function zhuanShangJi() {
+	$cf.ajax({
+		url : "/opas-naps/queryThreeApRole.json",
+		onSuccess : function(data) {
+			var menuTree = $("#menuTree");
+			var node = data.RSP_BODY.listUser;
+			menuTree.tree({
+				data : node,
+				onClick : function(node) {
+
+				}
+			});
+			showWin("userRelationMenu");
+		}
+	})
+} */
+/**********保存用户授权**********/
+function userSaveCommon() {
+	var menuTree = $("#menuTree");
+	var checkeNode = menuTree.tree('getChecked');
+	var userMenus = [];
+	for (var i = 0; i < checkeNode.length; i++) {
+		var roleObj = {};
+		roleObj.userId = checkeNode[i].id;
+		userMenus[i] = roleObj;
+	}
+	/* var data = {
+		"menuInfo" : userMenus,
+		"appId":appId
+	}; */
+	var urlparam;
+	if(param=='1'){
+		urlparam = "/opas-naps/outHui.json";//退回（审批）
+	}else if(param=='2'){
+		urlparam = "/opas-naps/zhuanShangJi.json";//转上级
+	}else if(param=='3'){
+		urlparam = "/opas-naps/outJian.json";//退件（退回征信）
+	}
+	$cf.ajax({
+		url : urlparam,
+		data:{
+			"menuInfo":userMenus,
+			"appId":appId
+		},
+		onSuccess : function(data) {
+			alert(data.RSP_BODY.msg);
+			onConcle("userRelationMenu");
+			//自动推送下一个任务
+			zidonPush();
+		}
+	});
+}
+/***********申请表信息修改查看页面***********/
+/* function openApplyDealView(){
+	$cf.ajax({
+		url : "/opas-naps/applyDealView.json",
+		data : {
+			"appId" : appId
+		},
+		onSuccess : function(dataRes) {
+			var dataMap = {
+				"rows" : dataRes.RSP_BODY.rows,
+				"total" : dataRes.RSP_BODY.total
+			};
+			$("#tb_applyDealView").datagrid("loadData", dataMap);
+			$("#tb_applyDealView").datagrid('getRows');
+		}
+	}); 
+	showWin('applyDealView');
+}
+function formatKey(value) {
+	if(value=='1'){
+		return "是";
+	}else if(value=='0'){
+		return "否";
+	}
+} */
+function formatDate(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+};
+function showWin(obj) {
+	var winObj = $("#"+obj);
+	winObj.window({
+		closed : false
+	});
+}
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window({
+		closed : true
+	});
+}
+/* 关闭窗口 */
+function window_close(){
+	window.opener=null;
+	window.open('','_self');
+	window.close();
+	window.top.close();
+}
+function showViewCreditControl(){
+	window.open("../win/image/sign.HTML?appId="+appId+"&userId="+userId,"_blank");	
+}
+
+/******获取url地址中的参数并封装成对象begin*************************/
+/* var url=location.search;
+var theRequest=new Object();
+if(url.indexOf("?")!=-1){
+	var str=url.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+} */
+/* var appId=theRequest.check_number; *///获取流程号
+/******获取url地址中的参数并封装成对象end*************************/
+/* $(function(){
+	$("#applyId").val(appId);
+}); */
+</script>
+</html>

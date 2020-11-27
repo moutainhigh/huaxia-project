@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCAdminPunishmentMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_PUBLIC_ADMINPUNISH (
+			APP_ID,PUNISH_ORGANIZ,PUNISH_CONTENT,PUNISH_AMT,EFFECT_DATE,END_DATE,AD_REVIEW_RESULT,
+			CRT_TIME,CRT_USER
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.organname},
+			#{item.content},
+			#{item.money},
+			#{item.beginDate},
+			#{item.endDate},
+			#{item.result},
+			SYSDATE,
+			'SYSTEM'
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Education">
+
+	<resultMap id="resultSummaryInfo" type="java.util.Map">
+		<result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="EDUCATIONDEGREE" property="educationDegree" jdbcType="VARCHAR" />
+		<result column="STUDYSTYLE" property="studyStyle" jdbcType="VARCHAR" />
+    	<result column="DSTUDYSTYLE" property="dstudyStyle" jdbcType="VARCHAR" />
+		<result column="GRADUATE" property="graduate" jdbcType="VARCHAR" />
+		<result column="SPECIALITYNAME" property="specialityName" jdbcType="VARCHAR" />
+		<result column="GRADUATETIME" property="graduateTime" jdbcType="VARCHAR" />
+		<result column="STUDYRESULT" property="studyResult" jdbcType="VARCHAR" />
+		<result column="QUERY_RESULT" property="queryResult" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="IDENTITYCARD" property="identitycard" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="resultDetailInfo" type="java.util.Map">
+	<result column="INSIDE_APP_NO" property="insideAppNo" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="IDENTITYCARD" property="identitycard" jdbcType="VARCHAR" />
+    <result column="GRADUATE" property="graduate" jdbcType="VARCHAR" />
+    <result column="EDUCATIONDEGREE" property="educationdegree" jdbcType="VARCHAR" />
+    <result column="ENROLDATE" property="enroldate" jdbcType="VARCHAR" />
+    <result column="SPECIALITYNAME" property="specialityname" jdbcType="VARCHAR" />
+    <result column="GRADUATETIME" property="graduatetime" jdbcType="VARCHAR" />
+    <result column="STUDYRESULT" property="studyresult" jdbcType="VARCHAR" />
+    <result column="STUDYSTYLE" property="studystyle" jdbcType="VARCHAR" />
+    <result column="SCHOOLTYPE" property="schooltype" jdbcType="VARCHAR" />
+    <result column="PHOTO" property="schooltype" jdbcType="VARCHAR" />
+    <result column="HISNAME" property="hisname" jdbcType="VARCHAR" />
+    <result column="SCHOOLCITY" property="schoolcity" jdbcType="VARCHAR" />
+    <result column="SCHOOLTRADE" property="schooltrade" jdbcType="VARCHAR" />
+    <result column="ORGANIZATION" property="organization" jdbcType="VARCHAR" />
+    <result column="SCHOOLNATURE" property="schoolnature" jdbcType="VARCHAR" />
+    <result column="SCHOOLCATEGORY" property="schoolcategory" jdbcType="VARCHAR" />
+    <result column="LEVEL_" property="level" jdbcType="VARCHAR" />
+    <result column="EDUCATIONAPPROACH" property="educationapproach" jdbcType="VARCHAR" />
+    <result column="CREATEDATE" property="createdate" jdbcType="VARCHAR" />
+    <result column="CREATEYEAR" property="createyear" jdbcType="VARCHAR" />
+    <result column="ACADEMICIANNUM" property="academiciannum" jdbcType="VARCHAR" />
+    <result column="BSHLDZNUM" property="bshldznum" jdbcType="VARCHAR" />
+    <result column="BSDNUM" property="bsdnum" jdbcType="VARCHAR" />
+    <result column="SSDNUM" property="ssdnum" jdbcType="VARCHAR" />
+    <result column="ZDXKNUM" property="zdxknum" jdbcType="VARCHAR" />
+    <result column="LKLQPC" property="lklqpc" jdbcType="VARCHAR" />
+    <result column="WKLQPC" property="wklqpc" jdbcType="VARCHAR" />
+    <result column="DSTUDYSTYLE" property="dstudystyle" jdbcType="VARCHAR" />
+    <result column="IDCORICT2" property="idcorict2" jdbcType="VARCHAR" />
+    <result column="BIRTHDAY2" property="birthday2" jdbcType="VARCHAR" />
+    <result column="SEX2" property="sex2" jdbcType="CHAR" />
+    <result column="NO" property="no" jdbcType="VARCHAR" />
+    <result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    <result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    <result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    <result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="VARCHAR" />
+    <result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+    <result column="BATCH_DATE" property="batchDate" jdbcType="VARCHAR" />
+    <result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+    <result column="SCHOOLCATEGORY" property="schoolCategory" jdbcType="VARCHAR" />
+    <result column="QUERY_RESULT" property="queryResult" jdbcType="VARCHAR" />
+    <result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 摘要信息 -->
+	<select id="querySummaryInfo" parameterType="java.lang.String"
+		resultMap="resultSummaryInfo">
+		SELECT USERNAME,EDUCATIONDEGREE,STUDYSTYLE,DSTUDYSTYLE,GRADUATE,SPECIALITYNAME,GRADUATETIME,STUDYRESULT,QUERY_RESULT, (case when ( QUERY_STATUS='1' and QUERY_RESULT='未查到数据')  then '0' when (QUERY_STATUS='0'and QUERY_RESULT='查询成功') then '1'
+        when  (QUERY_STATUS='1'and QUERY_RESULT!='未查到数据') then '1' when (QUERY_STATUS='0'and QUERY_RESULT!='查询成功') then '0'
+        else '3' end ) as QUERY_STATUS,IDENTITYCARD
+		FROM OPAS_BIZ_EDUCATION_DATA
+		WHERE app_id = #{appId,jdbcType=CHAR}
+	</select>
+	<!-- 查询结果 -->
+	<select id="querySummaryInfoQuery" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT QUERY_RESULT
+		  FROM OPAS_BIZ_EDUCATION_STATUS
+		 WHERE app_id = #{appId,jdbcType=CHAR}
+	</select>
+	<!-- 详情信息 -->
+	<select id="queryDetailInfo" parameterType="java.lang.String" resultMap="resultDetailInfo">
+	  SELECT  INSIDE_APP_NO, APP_ID, USERNAME, 
+      IDENTITYCARD, GRADUATE, EDUCATIONDEGREE, 
+      ENROLDATE, SPECIALITYNAME, GRADUATETIME, 
+      STUDYRESULT, STUDYSTYLE, SCHOOLTYPE, 
+      HISNAME, SCHOOLCITY, SCHOOLTRADE, 
+      ORGANIZATION, SCHOOLCATEGORY, SCHOOLCATEGORY,LEVEL_,NO,
+       EDUCATIONAPPROACH, CREATEDATE, 
+      CREATEYEAR, ACADEMICIANNUM, BSHLDZNUM, 
+      BSDNUM, SSDNUM, ZDXKNUM, 
+      LKLQPC, WKLQPC, DSTUDYSTYLE, 
+      IDCORICT2, BIRTHDAY2, SEX2, 
+       CRT_TIME, trunc(CRT_DATE) as CRT_DATE, 
+      CRT_USER, LST_UPD_TIME, LST_UPD_DATE, 
+      LST_UPD_USER, BATCH_DATE, REC_STATUS,QUERY_RESULT,
+      (case when ( QUERY_STATUS='1' and QUERY_RESULT='未查到数据')  then '0' when (QUERY_STATUS='0'and QUERY_RESULT='查询成功') then '1'
+       when  (QUERY_STATUS='1'and QUERY_RESULT!='未查到数据') then '1' when (QUERY_STATUS='0'and QUERY_RESULT!='查询成功') then '0'
+       else '3' end ) as QUERY_STATUS  FROM opas_biz_education_data
+	  WHERE app_id = #{appId,jdbcType=CHAR}
+	</select>
+
+</mapper>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>厦门公积金信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding: 10px;">
+	<fieldset>
+		<legend>厦门公积金信息</legend>
+		<form id="xmInfoForm" style="width: 100%">
+			<div>
+				<fieldset>
+					<legend>
+						<span style="font-weight: bold">厦门公积金个人信息</span>
+					</legend>
+					<table style="width: 100%">
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;姓名：<input name="xingming" id="name" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>证件号码：<input name="zjhm" id="zjhm" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>性别：<input name="xingbie" id="xingbie" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;个人登记号：<input
+								name="grdjh" id="grdjh" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>个人账号：<input name="grzh" id="grzh" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>上年月平均工资：<input name="snypjgz" id="snypjgz" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>住宅电话：<input name="zzdh" id="zzdh" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;手机号码：<input name="sjhm"
+								id="sjhm" type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>家庭地址：<input name="jtdz" id="jtdz" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位名称：<input name="dwmc" id="dwmc" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位开户日期：<input name="dwkhrq" id="dwkhrq"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;组织机构代码：<input name="zzjgdm"
+								id="zzjgdm" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位性质：<input name="dwxz" id="dwxz"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位地址：<input name="dwdz" id="dwdz" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位账户状态：<input name="dwzhzt" id="dwzhzt" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;单位缴存资金来源：<input name="dwjczjly"
+								id="dwjczjly" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位法人代表姓名：<input name="dwfrdbxm" id="dwfrdbxm"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位联系方式：<input name="dwlxfs" id="dwlxfs"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>受托银行代码：<input name="styhdm" id="styhdm" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;单位账号：<input name="dwzh"
+								id="dwzh" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>单位发薪日：<input name="dwfxr" id="dwfxr"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;是否申请公积金缓缴：<input name="sfsqgjjhj"
+								id="sfsqgjjhj" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>申请缓缴时间：<input name="sqhjsj" id="sqhjsj"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;申请缓缴的原因：<input name="sqhjyy"
+								id="sqhjyy" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>缴存发生地点：<input name="jcfsd" id="jcfsd"
+								type="text" style="border: none; text-align: left;" /></td>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;数据发生机构代码：<input name="sjfsjgdm"
+								id="sjfsjgdm" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td></td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div>
+				<fieldset>
+					<legend>
+						<span style="font-weight: bold">厦门公积金缴存(展示信息由近到远排序)</span>
+					</legend>
+					<table style="width: 100%">
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;个人账号：<input name="grzh" id="grzh" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td> 
+							<td>开户日期：<input name="khrq" id="khrq" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>初缴年月日：<input name="cjrq" id="cjrq" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>缴至年月日：<input name="jzrq" id="jzrq" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;单位月缴存额：<input name="dwyjce" id="dwyjce" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>月缴存额：<input name="yjce" id="yjce" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>个人缴存比例：<input name="grjcbl" id="grjcbl" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>当前余额：<input name="dqye" id="dqye" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;单位缴存比例：<input name="dwjcbl"
+								id="dwjcbl" type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>个人账户状态：<input name="grzhzt" id="grzhzt" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>最近一次缴交日期：<input name="zjjjrq" id="zjjjrq" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>当前公积金年度：<input name="dqnd" id="dqnd"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;累计缴存次数：<input name="ljjcch"
+								id="ljjcch" type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>累计中断次数：<input name="ljzdcs" id="ljzdcs" type="text"
+								style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td>近36个自然月个人缴存额：<input name="cje1" id="cje1"
+								type="text" style="border: none; text-align: left;"  readOnly="readOnly"/></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;单位名称：<input
+								name="dwmc1" id="dwmc1" type="text"
+								style="border: none; text-align: left; width: 1200px"  readOnly="readOnly"/></td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div>
+				<fieldset>
+					<legend>
+						<span style="font-weight: bold">厦门公积金提取信息(展示信息由近到远排序)</span>
+					</legend>
+					<table style="width: 100%">
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;个人账号：<input name="grzh" id="grzh" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td> 
+							<td>提取原因：<input name="tqyy" id="tqyy" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>提取时间：<input name="tqsj" id="tqsj" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>提取方式：<input name="tqfs" id="tqfs" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;核定提取总额：<input
+								name="hdtqze" id="hdtqze" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>提取金额：<input name="tqje" id="tqje" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>累计提取金额：<input name="ljtqje" id="ljtqje" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>共同提取人姓名：<input name="gttqrxm" id="gttqrxm" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;共同提取人身份证号：<input name="gttqrsfzhm"
+								id="gttqrsfzhm" type="text" style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>共同提取人是否建立公积金：<input name="gttqrsfjlgjj" id="gttqrsfjlgjj" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+			
+			<div>
+				<fieldset>
+					<legend>
+						<span style="font-weight: bold">厦门公积金贷款信息</span>
+					</legend>
+					<table style="width: 100%">
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;个人账号：<input name="grzh" id="grzh" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td> 
+							<td>公积金贷款编号：<input name="gjjdkzh" id="gjjdkzh" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>合同贷款金额：<input name="htdkje" id="htdkje" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>贷款期数：<input name="dkqs" id="dkqs" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;贷款还款方式：<input
+								name="dkhkfs" id="dkhkfs" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>贷款月还款额：<input name="dkyhke" id="dkyhke" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>贷款发放日期：<input name="dkffrq" id="dkffrq" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>贷款到期日期：<input name="dkdqrq" id="dkdqrq" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;贷款结清日期：<input
+								name="dkjqrq" id="dkjqrq" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>贷款余额：<input name="dkye" id="dkye" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>共同借款人姓名：<input name="gtjkrxm" id="gtjkrxm" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly" /></td>
+							<td>共同借款人身份证号：<input name="gtjkrzjhm" id="gtjkrzjhm" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;共同借款人是否建立公积金：<input
+								name="gtjkrfsjlgjj" id="gtjkrfsjlgjj" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>联系地址：<input name="lxdz" id="lxdz" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>贷款状态：<input name="dkzt" id="dkzt" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>当期还款状态：<input name="dqhkzt" id="dqhkzt" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;贷款发生逾期次数：<input
+								name="dkfsyqch" id="dkfsyqch" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td>最大连续的逾期期数：<input name="zdlxyqch" id="zdlxyqch" type="text"
+								style="border: none; text-align: left;" readOnly="readOnly"/></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+		</form>
+
+	</fieldset>
+</body>
+<script>
+	function GetQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+	var xmInfoForm = $("#xmInfoForm");
+	var appId = GetQueryString("appId");
+	$(function() {
+		$cf.ajax({
+			data : {
+				"appId" : appId
+			},
+			url : "/opas-naps/queryXmGjjInfo.json",
+			onSuccess : function(res) {
+				var jsonPyInfo = res.RSP_BODY.gjjxxInfo;
+				$('#xmInfoForm').form("load", jsonPyInfo);
+				
+				if("01"==jsonPyInfo.grzhzt){
+					$('#grzhzt').val("正常");
+				}else if ("02"==jsonPyInfo.grzhzt){
+					$('#grzhzt').val("封存");
+				}else if ("03"==jsonPyInfo.grzhzt){
+					$('#grzhzt').val("合并销户");
+				}else if ("04"==jsonPyInfo.grzhzt){
+					$('#grzhzt').val("外部转出销户");
+				}else if ("05"==jsonPyInfo.grzhzt){
+					$('#grzhzt').val("提取销户");
+				}else if ("06"==jsonPyInfo.grzhzt){
+					$('#grzhzt').val("冻结");
+				}else if ("99"==jsonPyInfo.grzhzt){
+					$('#grzhzt').val("其他");
+				}
+				
+				if("01"==jsonPyInfo.dwzhzt){
+					$('#dwzhzt').val("正常");
+				}else if ("02"==jsonPyInfo.dwzhzt){
+					$('#dwzhzt').val("开户");
+				}else if ("03"==jsonPyInfo.dwzhzt){
+					$('#dwzhzt').val("缓缴");
+				}else if ("04"==jsonPyInfo.dwzhzt){
+					$('#dwzhzt').val("销户");
+				}else if ("05"==jsonPyInfo.dwzhzt){
+					$('#dwzhzt').val("封存");
+				}else if ("99"==jsonPyInfo.dwzhzt){
+					$('#dwzhzt').val("其他");
+				}
+				if("01"==jsonPyInfo.dkhkfs){
+					$('#dkhkfs').val("等额本息");
+				}else if ("02"==jsonPyInfo.dkhkfs){
+					$('#dkhkfs').val("等额本金");
+				}else if ("03"==jsonPyInfo.dkhkfs){
+					$('#dkhkfs').val("一次还款付息");
+				}else if ("04"==jsonPyInfo.dkhkfs){
+					$('#dkhkfs').val("自由还款方式");
+				}else if ("99"==jsonPyInfo.dkhkfs){
+					$('#dkhkfs').val("其他");
+				}
+				if("1"==jsonPyInfo.xingbie){
+					$('#xingbie').val("男性");
+				}else if ("2"==jsonPyInfo.xingbie){
+					$('#xingbie').val(" 女性");
+				}
+				
+				if("01"==jsonPyInfo.dkhkfs){
+					$('#dkhkfs').val("已放款");
+				}else if ("02"==jsonPyInfo.dkhkfs){
+					$('#dkhkfs').val("已结清");
+				}
+				if("01"==jsonPyInfo.dkzt){
+					$('#dkzt').val("已放款");
+				}else if ("02"==jsonPyInfo.dkzt){
+					$('#dkzt').val("已结清");
+				}
+				if("0"==jsonPyInfo.sfsqgjjhj){
+					$('#sfsqgjjhj').val("否");
+				}else if ("1"==jsonPyInfo.sfsqgjjhj){
+					$('#sfsqgjjhj').val("是");
+				}
+				
+				if("1"==jsonPyInfo.dwxz){
+					$('#dwxz').val("国有企业");
+				}else if ("2"==jsonPyInfo.dwxz){
+					$('#dwxz').val("集体企业");
+				}else if ("3"==jsonPyInfo.dwxz){
+					$('#dwxz').val("私营企业");
+				}else if ("4"==jsonPyInfo.dwxz){
+					$('#dwxz').val("个体企业");
+				}else if ("5"==jsonPyInfo.dwxz){
+					$('#dwxz').val("联营企业");
+				}else if ("6"==jsonPyInfo.dwxz){
+					$('#dwxz').val("股份制企业");
+				}else if ("7"==jsonPyInfo.dwxz){
+					$('#dwxz').val("外商投资企业");
+				}else if ("8"==jsonPyInfo.dwxz){
+					$('#dwxz').val("港、澳、台投资企业");
+				}else if ("9"==jsonPyInfo.dwxz){
+					$('#dwxz').val("行政机关");
+				}else if ("A"==jsonPyInfo.dwxz){
+					$('#dwxz').val("事业单位");
+				}else if ("B"==jsonPyInfo.dwxz){
+					$('#dwxz').val("军队、武警");
+				}else if ("0"==jsonPyInfo.dwxz){
+					$('#dwxz').val("其他未知");
+				}
+				$('#dwmc1').val(getStr(jsonPyInfo.dwmc1));
+				$('#dwyjce').val(getStr(jsonPyInfo.dwyjce));
+				$('#yjce').val(getStr(jsonPyInfo.yjce));
+				$('#grjcbl').val(getStr(jsonPyInfo.grjcbl));
+				$('#dwjcbl').val(getStr(jsonPyInfo.dwjcbl));
+				$('#cje1').val(getStr(jsonPyInfo.cje1));
+				$('#tqyy').val(getStr(jsonPyInfo.tqyy));
+				$('#tqsj').val(getStr(jsonPyInfo.tqsj));
+				$('#tqfs').val(getStr(jsonPyInfo.tqfs));
+				$('#tqje').val(getStr(jsonPyInfo.tqje));
+			}
+		});
+		
+	});
+	
+
+	/*在指定td标签 创建input标签 并赋值 */
+	function createInputInTd(td, value, width, fontType) {
+		td.style.width = width;
+		var input = document.createElement("input");
+		input.type = 'text';
+		if (value) {
+			var val = value.toString().split("|");
+			input.value = val[val.length - 1];
+		} else {
+			input.value = "";
+		}
+		input.style.width = width;
+		input.style.fontSize = '12px';
+		input.style.textAlign = 'center';
+		if (fontType == "1") {
+			input.style.fontWeight = 'bold';
+		}
+		if (fontType == "0") {
+			input.style.color = 'blue';
+		}
+		input.readOnly = 'readOnly';
+		td.appendChild(input);
+	}
+	/*在指定td标签 创建Div标签 并赋值 */
+	function createDivInTd(td, value, width, fontType) {
+		td.style.width = width;
+		var div = document.createElement("div");
+		div.style.class = "word-wrap:break-word;overflow:hidden;"
+		div.style.fontSize = '12px';
+		if (value) {
+			var textNode = document.createElement('p');
+			textNode.innerHTML = value;
+			div.appendChild(textNode);
+		} else {
+			//div.appendChild(document.createTextNode(""+typeValue));
+		}
+		/* input.style.width=width;
+		input.style.fontSize='12px';
+		input.style.textAlign='center'; */
+		if (fontType == "1") {
+			div.style.fontWeight = 'bold';
+			div.style.color = 'black';
+		}
+		if (fontType == "0") {
+			div.style.color = 'blue';
+		}
+		div.readOnly = 'readOnly';
+		td.appendChild(div);
+	}
+	
+	function formatStatus(value){
+		if (value == '0') {
+			return "不参加";
+		} else if (value == '1') {
+			return "参加";
+		} else {
+			return "不详";
+		}
+	}
+	
+	
+	function formatUnitType(value){
+		console.log(value)
+		if(value=="0"){
+			return "没有参保";
+		}else if (value=="1"){
+			return "正常参保";
+		}else {
+			return "";
+		}
+	}
+	
+	//以竖线分割取  
+	function  getStr(str){
+		var strs = str.split("|");
+		var comp = "";
+		for(var i = 0; i < 6; i++){
+			comp=comp+strs[i]+"|";
+		}
+		return comp;
+	}
+</script>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.QHZXMsc8075Mapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.QHZXMsc8075">
+		INSERT INTO QHZX_VERIFY_MSC8075 (
+			APP_ID,CRT_TIME,CRT_USER,
+			OEG_CODE,CHNL_ID,TRANS_NO,TRANS_DATE,AUTH_CODE,AUTH_DATE,RT_CODE,RT_MSG,BATCH_NO,MOBILE_NO,IP,SEQ_NO,
+			IS_MACHD_FORCE,IS_MACHD_DNS,IS_MACHD_MAIL_SERV,IS_MACHD_SEO,IS_MACHD_ORG,IS_MACHD_CRAWLER,IS_MACHD_PROXY,
+			IS_MACHD_BLACKLIST,IS_MACHD_WEB_SERV,IS_MACHD_VPN,RSK_SCORE,IS_MACHD_BL_MAKT,IS_MACH_CRA_CALL,IS_MACH_FRAUD,
+			IS_MACH_EMPTY,IS_MACH_YZMOBILE,IS_MACH_SMALL_NO,IS_MACH_SZ_NO,I_UPDATE_DATE,M_UPDATE_DATE,I_RSK_DESC,
+			M_RSK_DESC,ER_CODE,ER_MSG,SIGNATURE_VALUE,REASON_NO
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			SYSDATE,
+			'SYSTEM',
+			#{orgCode, jdbcType = VARCHAR},
+			#{chnlId, jdbcType = VARCHAR},
+			#{transNo, jdbcType = VARCHAR},
+			#{transDate, jdbcType = VARCHAR},
+			#{authCode, jdbcType = VARCHAR},
+			#{authDate, jdbcType = VARCHAR},
+			#{rtCode, jdbcType = VARCHAR},
+			#{rtMsg, jdbcType = VARCHAR},
+			#{batchNo, jdbcType = VARCHAR},
+			#{mobileNo, jdbcType = VARCHAR},
+			#{ip, jdbcType = VARCHAR},
+			#{seqNo, jdbcType = VARCHAR},
+			#{isMachdForce, jdbcType = VARCHAR},
+			#{isMachdDNS, jdbcType = VARCHAR},
+			#{isMachdMailServ, jdbcType = VARCHAR},
+			#{isMachdSEO, jdbcType = VARCHAR},
+			#{isMachdOrg, jdbcType = VARCHAR},
+			#{isMachdCrawler, jdbcType = VARCHAR},
+			#{isMachdProxy, jdbcType = VARCHAR},
+			#{isMachdBlacklist, jdbcType = VARCHAR},
+			#{isMachdWebServ, jdbcType = VARCHAR},
+			#{isMachdVPN, jdbcType = VARCHAR},
+			#{rskScore, jdbcType = VARCHAR},
+			#{isMachdBlMakt, jdbcType = VARCHAR},
+			#{isMachCraCall, jdbcType = VARCHAR},
+			#{isMachFraud, jdbcType = VARCHAR},
+			#{isMachEmpty, jdbcType = VARCHAR},
+			#{isMachYZmobile, jdbcType = VARCHAR},
+			#{isMachSmallNo, jdbcType = VARCHAR},
+			#{isMachSZNo, jdbcType = VARCHAR},
+			#{iUpdateDate, jdbcType = VARCHAR},
+			#{mUpdateDate, jdbcType = VARCHAR},
+			#{iRskDesc, jdbcType = VARCHAR},
+			#{mRskDesc, jdbcType = VARCHAR},
+			#{erCode, jdbcType = VARCHAR},
+			#{erMsg, jdbcType = VARCHAR},
+			#{signatureValue, jdbcType = VARCHAR},
+			#{reasonNo, jdbcType = CHAR}
+		)
+	</insert>
+
+	<select id="selectCountMsc8075ByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM QHZX_VERIFY_MSC8075 WHERE APP_ID = #{appId, jdbcType = CHAR}
+	</select>
+</mapper>	

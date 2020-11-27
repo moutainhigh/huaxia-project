@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FileAppDet" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.archive.FileAppDet" >
+    <id column="APP_ID" property="appId" jdbcType="CHAR" />
+    <result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+    <result column="CRED_NO" property="credNo" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+    <result column="SPREADORGAN_CODE" property="spreadorganCode" jdbcType="VARCHAR" />
+    <result column="IN_DAYS" property="inDays" jdbcType="DECIMAL" />
+    <result column="APP_RESULT" property="appResult" jdbcType="CHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="FILE_NO" property="fileNo" jdbcType="VARCHAR" />
+    <result column="ALREADY_SEND_FLAG" property="alreadySendFlag" jdbcType="CHAR" />
+    <result column="DEC_TIME" property="decTime" jdbcType="TIMESTAMP" />
+    <result column="TO_ARCHIVE_TIME" property="toArchiveTime" jdbcType="TIMESTAMP" />
+    <result column="APPLY_CARD" property="applyCard" jdbcType="VARCHAR" />
+    <result column="APPROVE_CREDIT_PRODUCT" property="approveCreditProduct" jdbcType="VARCHAR" />
+    <result column="APRROVE_WAY" property="aprroveWay" jdbcType="CHAR" />
+    <result column="QUICK_CARD_INTERFACE_FLAG" property="quickCardInterfaceFlag" jdbcType="CHAR" />
+    <result column="FLAG" property="flag" jdbcType="CHAR" />
+    <result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+    <result column="INTERFACE_4092_INVOKE_FLAG" property="interface4092InvokeFlag" jdbcType="CHAR" />
+    <result column="INTERFACE_4093_INVOKE_FLAG" property="interface4093InvokeFlag" jdbcType="CHAR" />
+    <result column="SMS_FLAG" property="smsFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select *
+    from OPAS_FILE_APPLICATION_DETAIL
+    where APP_ID = #{appId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_FILE_APPLICATION_DETAIL
+    where APP_ID = #{appId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.archive.FileAppDet" >
+    insert into OPAS_FILE_APPLICATION_DETAIL (APP_ID, CUST_NAME, CRED_NO, 
+      OPERATOR, OPERAT_TIME, SPREADORGAN_CODE, 
+      IN_DAYS, APP_RESULT, STATUS, 
+      FILE_NO, ALREADY_SEND_FLAG, DEC_TIME, 
+      TO_ARCHIVE_TIME, APPLY_CARD, APPROVE_CREDIT_PRODUCT, 
+      APRROVE_WAY, QUICK_CARD_INTERFACE_FLAG, FLAG, 
+      YDJ_FLAG, INTERFACE_4092_INVOKE_FLAG, INTERFACE_4093_INVOKE_FLAG,HU_FLAG,SMS_FLAG
+      )
+    values (#{appId,jdbcType=CHAR}, #{custName,jdbcType=VARCHAR}, #{credNo,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{operatTime,jdbcType=TIMESTAMP}, #{spreadorganCode,jdbcType=VARCHAR}, 
+      #{inDays,jdbcType=DECIMAL}, #{appResult,jdbcType=CHAR}, #{status,jdbcType=CHAR}, 
+      #{fileNo,jdbcType=VARCHAR}, #{alreadySendFlag,jdbcType=CHAR}, #{decTime,jdbcType=TIMESTAMP}, 
+      sysdate, #{applyCard,jdbcType=VARCHAR}, #{approveCreditProduct,jdbcType=VARCHAR}, 
+      #{aprroveWay,jdbcType=CHAR}, #{quickCardInterfaceFlag,jdbcType=CHAR}, #{flag,jdbcType=CHAR}, 
+      #{ydjFlag,jdbcType=CHAR}, #{interface4092InvokeFlag,jdbcType=CHAR}, #{interface4093InvokeFlag,jdbcType=CHAR},
+      #{huFlag,jdbcType=VARCHAR},#{smsFlag,jdbcType=VARCHAR}
+      )
+  </insert>
+ 
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.archive.FileAppDet" >
+    update OPAS_FILE_APPLICATION_DETAIL
+    <set>
+      CUST_NAME = #{custName,jdbcType=VARCHAR},
+      CRED_NO = #{credNo,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+      SPREADORGAN_CODE = #{spreadorganCode,jdbcType=VARCHAR},
+      IN_DAYS = #{inDays,jdbcType=DECIMAL},
+      APP_RESULT = #{appResult,jdbcType=CHAR},
+      STATUS = #{status,jdbcType=CHAR},
+      ALREADY_SEND_FLAG = #{alreadySendFlag,jdbcType=CHAR},
+      DEC_TIME = #{decTime,jdbcType=TIMESTAMP},
+      TO_ARCHIVE_TIME = sysdate,
+      APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+      APPROVE_CREDIT_PRODUCT = #{approveCreditProduct,jdbcType=VARCHAR},
+      APRROVE_WAY = #{aprroveWay,jdbcType=CHAR},
+      QUICK_CARD_INTERFACE_FLAG = #{quickCardInterfaceFlag,jdbcType=CHAR},
+      FLAG = #{flag,jdbcType=CHAR},
+      YDJ_FLAG = #{ydjFlag,jdbcType=CHAR},
+      INTERFACE_4092_INVOKE_FLAG = #{interface4092InvokeFlag,jdbcType=CHAR},
+      INTERFACE_4093_INVOKE_FLAG = #{interface4093InvokeFlag,jdbcType=CHAR},
+      HU_FLAG = #{huFlag,jdbcType=VARCHAR},
+      SMS_FLAG = #{smsFlag,jdbcType=VARCHAR}
+      </set>
+    where APP_ID = #{appId,jdbcType=CHAR}
+  </update>
+</mapper>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>学历查询管理</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style>
+</head>
+<body style="padding: 10px;">
+		<fieldset style="margin-top:10px;"> 
+				<form id="educationForm">
+						<div align="center"> 
+								<table style="width:90%;border-bottom:0px;border-right:0px;border-left:0px;border-top:0px" border="1" >
+										<tr>
+											<td align="right">自动查询学历上限数设置:</td>
+											<td>
+												 <input class="easyui-validatebox" id="set_autoMax" name="set_autoMax" data-options="required:true,validType:'integer'"/>
+											</td>
+											<td align="right">年现查询:</td>
+											<td>
+												 <input class="easyui-textbox" id="zd_lifeQuery" name="zd_lifeQuery"  readonly="readonly"/>
+											</td>
+											
+											<td align="right">自动查学历开始时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="set_autoStartTime" name="set_autoStartTime"/>
+											</td>
+											<td align="right">自动查学历结束时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="set_autoEndTime" name="set_autoEndTime" />
+											</td>
+										</tr>
+										
+										<tr>
+											<td align="right">手动查询学历上限数设置:</td>
+											<td>
+												 <input class="easyui-validatebox" id="set_manualMax" name="set_manualMax" data-options="required:true,validType:'integer'"/>
+											</td>
+											<td align="right">年现查询:</td>
+											<td>
+												 <input class="easyui-textbox" id="sd_lifeQuery" name="sd_lifeQuery"  readonly="readonly"/>
+											</td>
+											<td align="right">手动查学历开始时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="set_manualStartTime" name="set_manualStartTime"/>
+											</td>
+											<td align="right">手动查学历结束时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="set_manualEndTime" name="set_manualEndTime" />
+											</td>
+										</tr>
+										
+										<tr>			
+											<td align="right">总查询上限数:</td>
+											<td >
+												 <input class="easyui-validatebox" id="set_totalMax" name="set_totalMax" data-options="required:true,validType:'integer'"/>
+											</td>
+											<td align="right">年现查询:</td>
+											<td>
+												 <input class="easyui-textbox" id="lifeQuery" name="lifeQuery" readonly="readonly"/>
+											</td>
+											<td align="right">批量查学历时间:</td>
+											<td colspan="3"> 
+												<input class="easyui-datetimebox" data-options="required:true,editable:false" id="set_bathTime" name="set_bathTime"  />
+											</td>
+										</tr>
+										<tr>
+											<td colspan="8" align="center">
+												<a href="javascript:onSave();" class="easyui-linkbutton" iconCls="icon-save">保 存</a>&nbsp;
+												<a href="javascript:onClear()" class="easyui-linkbutton" iconCls="icon-cancel">清 空</a>&nbsp;
+											</td>
+										</tr>
+								</table>
+						</div>
+				</form>
+		</fieldset> 
+	
+	
+	
+<script type="text/javascript">
+var educationForm = $("#educationForm");
+
+$(function(){
+	selectEducationLife_type();
+});
+
+function selectEducationLife_type(){
+	$cf.ajax({
+		url : "/opas-naps/selectEducationLife_type.json",
+		onSuccess:function(data) {
+			if (data.RSP_BODY.success) {
+				var educationM=data.RSP_BODY.educationM;
+				var educationManagemet=data.RSP_BODY.educationManagemet;
+				var sd_lifeQuery=educationM.sd_lifeQuery;
+				var zd_lifeQuery=educationM.zd_lifeQuery;
+				var lifeQuery=educationM.lifeQuery;
+				$("#sd_lifeQuery").textbox('setValue',sd_lifeQuery);
+				$("#zd_lifeQuery").textbox('setValue',zd_lifeQuery);
+				$("#lifeQuery").textbox('setValue',lifeQuery);
+				
+				$("#set_autoMax").val(educationManagemet.set_autoMax); //自动查询学历上限数设置
+				$("#set_manualMax").val(educationManagemet.set_manualMax);//手动查询学历上限数设置
+				$("#set_totalMax").val(educationManagemet.set_totalMax);//总查询上限数
+ 
+				$("#set_autoStartTime").textbox('setValue',educationManagemet.set_autoStartTime);//自动查学历开始时间
+				$("#set_autoEndTime").textbox('setValue',educationManagemet.set_autoEndTime);//自动查学历结束时间
+				$("#set_manualStartTime").textbox('setValue',educationManagemet.set_manualStartTime);//手动查学历开始时间
+				$("#set_manualEndTime").textbox('setValue',educationManagemet.set_manualEndTime);//手动查学历结束时间
+				$("#set_bathTime").textbox('setValue',educationManagemet.set_bathTime);//批量查学历时间
+			}
+		}
+
+	});
+}
+
+function onSave(){
+	var formData = isRequired('educationForm');
+	var set_autoMax=$("#set_autoMax").val(); //自动查询学历上限数设置
+	var set_manualMax=$("#set_manualMax").val();//手动查询学历上限数设置
+	var set_totalMax=$("#set_totalMax").val();//总查询上限数
+	var set_autoStartTime=$("#set_autoStartTime").textbox('getValue');//自动查学历开始时间
+	var set_autoEndTime=$("#set_autoEndTime").textbox('getValue');//自动查学历结束时间
+	var set_manualStartTime=$("#set_manualStartTime").textbox('getValue');//手动查学历开始时间
+	var set_manualEndTime=$("#set_manualEndTime").textbox('getValue');//手动查学历结束时间
+	var set_bathTime=$("#set_bathTime").textbox('getValue');//批量查学历时间
+	if(set_autoMax==''||set_manualMax==''||set_totalMax==''||set_autoStartTime==''||set_autoEndTime==''||set_manualStartTime==''||set_manualEndTime==''||set_bathTime==''){
+		return;
+	}
+	var jsondata = getFormDataJson(educationForm.serializeArray());
+	$cf.ajax({
+		url:"/opas-naps/saveEducationLife_type.json",
+		data:jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+			 	alert("修改成功!");
+				onConcle("winEdit");
+				tblSeach.datagrid("reload");
+			} else {
+				alert("修改失败!");
+				onConcle("winEdit");
+				return;
+			}
+		}
+	});
+}
+
+function onClear(){
+	$("#set_autoMax").val(""); //自动查询学历上限数设置
+	$("#set_manualMax").val("");//手动查询学历上限数设置
+	$("#set_totalMax").val("");//总查询上限数
+	$("#set_autoStartTime").textbox('setValue',"");//自动查学历开始时间
+	$("#set_autoEndTime").textbox('setValue',"");//自动查学历结束时间
+	$("#set_manualStartTime").textbox('setValue',"");//手动查学历开始时间
+	$("#set_manualEndTime").textbox('setValue',"");//手动查学历结束时间
+	$("#set_bathTime").textbox('setValue',"");//批量查学历时间	
+}
+
+
+
+</script>
+
+</body>
+</html>

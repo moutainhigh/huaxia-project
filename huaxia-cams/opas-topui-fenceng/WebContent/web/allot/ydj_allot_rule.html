@@ -1,0 +1,2074 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../topui/easyui/default/easyuiExt.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<script src="../../js/author/allotPath.js" type="text/javascript"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+* {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	color: #003476;
+}
+textarea{
+	resize:none;
+	width:280px;
+	height:400px;
+}
+.titleBg {
+	width: 98%;
+	background-color: #9FCDFE;
+	text-align: center;
+	font-weight: bold;
+}
+p.indent{
+	padding-left:3.2em;
+}
+p.indent2{
+	padding-left:4.1em;
+}
+p.indent3{
+	padding-left:4.7em;
+}
+
+.divHeight2{
+	_height:200px;
+	min-height:200px;
+	height:auto;
+}
+ .yangshi {
+     width:1000px;
+} 
+</style>
+</head>
+<body>
+	<fieldset style="width:98%;">
+	<div class="titleBg">规则信息</div>
+	<div class="area-tips">
+			待分配：<em class="countAppId">0</em>件/ 已分配：<strong id="info_alloted">0</strong>件
+	</div>
+	<div id="ruleinfoRecord" style="padding-left: 5%">
+		<form id="ruleinfo_form"  method="post" accept-charset="UTF-8">
+				<table  class="yangshi">
+					<tr>
+						<td>规则名称：</td>
+						<td>
+							<input type="text" id="ruleName" name="ruleName"
+							style="width: 150px;" class="easyui-validatebox textbox" /> 
+						</td>
+						<td>规则状态：</td>
+						<td>
+							<select class="easyui-combobox"
+							style="width: 150px;" data-options="required:true,editable:false"
+							name="ruleStatus" id="ruleStatus">
+								<option value="-1">--请选择--</option>
+								<option value="0">停用</option>
+								<option value="1">启用</option>
+							</select>
+						</td>
+						<td>规则类型:</td>
+						<td>
+							<select class="easyui-combobox" 
+							style="width: 150px;" data-options="required:true,editable:false"
+							name="ruleType" id="ruleType">
+								<option value="-1">--请选择--</option>
+								<option value="1">易达金征信快速件规则</option>
+								<option value="3">易达金征信普通件规则</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>流水号字母：</td>
+						<td><select class="easyui-combobox" id="serialNum" name="serialNum"
+							dict_type="ALLOT_SERIALNUM" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>展业地区：</td>
+						<td><select class="easyui-combobox" name="appRegion" dict_type="ALLOT_APPREGION"
+							editable="false"  id="appRegion" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>渠道：</td>
+						<td><select class="easyui-combobox" name="appChannel" id="appChannel"
+							dict_type="ALLOT_APPCHANNEL" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr>
+					<tr>
+						<td>录入商：</td>
+						<td><select class="easyui-combobox" name="appInput" id="appInput" 
+							dict_type="ALLOT_APPINPUT" editable="false" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select></td>
+						<td>卡产品类型：</td>
+						<td>
+							<select class="easyui-combobox" data-options="valueField:'cardCode',textField:'prodName'"
+									style="width: 150px" name="appProd" id="appProd" multiple="true">
+							</select>
+						</td>
+						<td>时间：</td>
+						<td>
+						<select class="easyui-combobox" name="shareTime"
+							dict_type="ALLOT_SHARETIME" editable="false" id="shareTime"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<span>
+							<input class="easyui-datebox" name="appTimeStart"  id="appTimeStart" style="width: 150px;"/>
+							<input class="easyui-datebox" name="appTimeEnd"  id="appTimeEnd" style="width: 150px;"/>
+							<input class="easyui-datebox" name="crtTimeStart"  id="crtTimeStart" style="width: 150px;"/>
+							<input class="easyui-datebox" name="crtTimeEnd"  id="crtTimeEnd" style="width: 150px;"/>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>异常进件渠道：</td>
+						<td><select class="easyui-combobox" name="nosafePromoter" dict_type="ALLOT_NO_SAFE"
+							editable="false" id="nosafePromoter"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+						<td>单位名称：</td>
+						<td><input class="easyui-textbox" name="c1CoName"  id="c1CoName" 
+							style="width: 150px;"></td>
+						<td>邮寄地址：</td>
+						<td>
+						<select class="easyui-combobox" name="c4CyCadd1" 
+							dict_type="ALLOT_CARDTO1" editable="false" id="c4CyCadd1"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr>
+					<tr>
+						<td>团办号：</td>
+						<td><input class="easyui-textbox" name="c4ApBatch"  id="c4ApBatch"
+							 style="width: 96px;" />
+							<a href="javascript:fnBatch(1);" 
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+						<td>项目号（专案代码）：</td><!-- added by jpc -->
+						<td><input class="easyui-textbox" name="c5JcType"  id="c5JcType"
+							 style="width: 96px;" />
+							<a href="javascript:fnJCType(1);" 
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+					</tr>
+					<tr>
+						<td>推广机构号：</td>
+						<td><input class="easyui-textbox" name="c5AbCode" id="c5AbCode" 
+							 style="width: 96px;" />
+							<a href="javascript:fnAbCode(1);"
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+						<td>推广人员代码：</td>
+						<td><input class="easyui-textbox" name="c4AbUser" id="c4AbUser"
+							 style="width: 96px;" />
+							<a href="javascript:fnAbUser(1);"
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+					</tr>
+					<tr>
+						<td>中征信1000评分：</td>
+						<td><input class="easyui-textbox" name="minNumberRead" id="minNumberRead"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" id="maxNumberRead" name="maxNumberRead"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>申请件状态：</td>
+						<td><select class="easyui-combobox" name="appStatus" dict_type="ALLOT_CURRSTATUS"
+							editable="false" id="appStatus" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>标识：</td>
+						<td><select class="easyui-combobox" id="identify" name="identify" dict_type="ALLOT_IDENTIFY"
+							editable="false"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_1"  name="isHaveCardCust" dict_type="ALLOT_ISHAVECARD"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_2"  name="quickCardFlag" dict_type="ALLOT_C4RUSHFLG"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_3"  name="pubPolice" dict_type="YDJ_ALLOT_PUBPOLICE"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width:  150px;">
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td>征信策略结果描述：</td>
+						<td>
+							<select class="easyui-combobox" name="creditDecisionLayer" dict_type="ALLOT_YDJ_CREDIT_DESCRIPTION"
+							editable="false" id="creditDecisionLayer"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select>
+						</td>
+						<td>征信策略结果：</td>
+						<td>
+						<select class="easyui-combobox" name="creditDecisionResult" dict_type="ALLOT_YDJ_CREDIT"
+							editable="false"  id="creditDecisionResult"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select>
+						</td>
+						<td>系统决策建议额度：</td>
+						<td><input class="easyui-textbox" name="minProposedLmt"  id="minProposedLmt"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" name="maxProposedLmt"   id="maxProposedLmt"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+					</tr>
+					<tr>
+						<td>分配顺序：</td>
+						<td>
+							<select class="easyui-combobox" name="allotType" dict_type="ALLOT_ALLOTTYPE"
+							editable="false" id="allotType"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+							</select>
+						</td>
+						<td>腾讯天御分：</td>
+						<td><input class="easyui-textbox" name="minRiskScore" id="minRiskScore"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox"  id="maxRiskScore" name="maxRiskScore"
+							 style="width: 73px;"  data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>手机实名认证结果：</td>
+						<td><select class="easyui-combobox" name="phoneCertification" 
+							 id="phoneCertification" style="width: 150px;" 
+							 dict_type="ALLOT_PHONE_NEW" editable="false" multiple="true"
+							 data-options="valueField:'dictDetailCode',textField:'dictDetailName'" >
+							 </select></td>
+					</tr>
+					<tr>
+						<td>反欺诈决策结果：</td>
+						<td><select class="easyui-combobox"  name="fqzValue" id="fqzValue"
+							dict_type="ALLOT_FQZ" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>天御风险码：</td>
+						<td><select class="easyui-combobox" name="riskCode"  id="riskCode"
+							dict_type="ALLOT_RISKCODE" editable="false"  multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>天御风险码等级：</td>
+						<td><select class="easyui-combobox" name="riskLevel" id="riskLevel"
+							dict_type="ALLOT_RISKLEVEL" editable="false"  multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr> 
+					<tr>
+						<td>征信评分：</td>
+						<td><input class="easyui-textbox" name="triggerType1" id="triggerType1"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" id="triggerType2" name="triggerType2"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>人像比对结果</td>
+						<td>
+							<select class="easyui-combobox" dict_type="ALLOT_RXBD"
+							editable="false" id="policeRxbd"  name="policeRxbd" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+							</select>
+						</td>
+						<td>在网时长：</td>
+						<td>
+							<select class="easyui-combobox" name="onlineTime" id="onlineTime"
+								dict_type="ALLOT_ONLINE" editable="false" multiple="true"
+								data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+								style="width: 150px;">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>标签：</td>
+						<td colspan="2">
+							<input type="checkbox" name="batchLabel" id="batchLabel" value="1" />批量标签&nbsp;&nbsp;
+							<input type="checkbox" name="pbocRstFinDesp" id="pbocRstFinDesp" value="1" />人行不良&nbsp;&nbsp;
+							<input type="checkbox" name="appStatus2" id="appStatus2_1" value="24" />挂起标签 &nbsp;&nbsp;
+							<input type="checkbox" name="waiBao" id="waiBao" value="1" />外包 &nbsp;&nbsp;
+							<input type="checkbox" name="secondDecisionLH" id="secondDecisionLH" value="1" />次策略捞回
+						</td>
+					</tr>
+					<tr>
+						<td>自动分配顺序：</td>
+						<td>
+							<input id="sortFlag" name="sortFlag" maxlength="8" onkeyup="this.value=value.replace(/[^\d]/g,'')"/>
+							<em>*只允许数字，最大8位</em>
+						</td>
+						<td><label>开始时间：</label></td>
+						<td>
+							<input class="easyui-datetimebox" id="selectTime1"
+							 name="selectTime1" style="width: 150px;color:red;" 
+							data-options="required:true,showSeconds:false"/>
+						</td>
+						<td><label>结束时间：</label></td>
+						<td>
+							<input class="easyui-datetimebox" id="selectTime2"
+							 name="selectTime2" style="width: 150px;color:red;" 
+							data-options="required:true,showSeconds:false"/>
+						</td>
+					</tr>
+				</table>
+			</form>
+	</div>
+	<div>
+		<span style="padding-left: 35%">
+		 <input type="button" class="bt_public_107" value="提交" onclick="save();" /> &nbsp;&nbsp; 
+		<input	type="button" class="bt_public_107" value="重置" onclick="fnReset();" />&nbsp;&nbsp; 
+		<input	type="button" class="bt_public_107" value="查询" onclick="fnCountApp('1');" />	
+		</span>
+	</div>
+	
+	</fieldset>
+	<!-- 团办 -->
+	<div id="winBatch" class="easyui-window" 
+		style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="batchForm" method="post">
+					<table id="tblBatch" title="团办号代码列表" class="easyui-datagrid" style="width: 98%"
+			       data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[20, 50,100,200],fitColumns:true,url:'',queryParams:{ydjFlag:'1'},loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+							<tr>
+							    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+							    <th field="appCity" width="20%" align="center" data-options="formatter:formatAppCity" >城市</th>
+								<th field="c4ApBatch" width="20%" align="center">团办号代码</th>
+								<th field="num" width="20%" align="center">申请件数量</th>
+							</tr>
+					</thead>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winBatch')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveBatch()">保存</a>
+		        </div>
+	</div>
+	<!-- 项目号（专案代码） --><!-- added by jpc -->
+	<div id="winType" class="easyui-window" 
+		style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+			<form id="typeForm" method="post">
+				<table id="tblType" title="项目号（专案代码）列表" class="easyui-datagrid" style="width: 98%"
+		       data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[20, 50,100,200],fitColumns:true,url:'',queryParams:{ydjFlag:'2'},loadMsg:'数据加载中.....',method:'post'">
+				<thead>
+						<tr>
+						    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+						    <th field="appCity" width="20%" align="center" data-options="formatter:formatAppCity" >城市</th>
+							<th field="c5JcType" width="20%" align="center">项目号（专案代码）</th>
+							<th field="num" width="20%" align="center">申请件数量</th>
+						</tr>
+				</thead>
+				</table>
+			</form>
+			<div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winType')">取消</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveType()">保存</a>
+	        </div>
+	</div>
+	<!-- 推广机构 -->
+	<div id="winAbCode" class="easyui-window" title="推广机构号查询"
+		style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="abCodeForm" method="post">
+					<table id="tblAbCode" title="推广机构号代码列表" class="easyui-datagrid" style="width: 98%"
+			       data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,url:'',queryParams:{ydjFlag:'1'},loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+							<tr>
+							    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+							     <th field="appCity2" width="20%" align="center" data-options="formatter:formatAppCity" >城市</th>
+								<th field="c5AbCode" width="20%" align="center">推广机构号代码</th>
+								<th field="num2" width="20%" align="center">申请件数量</th>
+							</tr>
+						</thead>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAbCode')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveAbCode()">保存</a>
+		        </div>
+	</div>
+	<!-- 推广人员 -->
+	<div id="winAbUser" class="easyui-window" title="推广人员号查询"
+		style="width: 600px; height: 400px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="abUserForm" method="post">
+					<table id="tblAbUser" title="推广人员号代码列表" class="easyui-datagrid" style="width: 98%"
+			       data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,url:'',queryParams:{ydjFlag:'1'},loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+							<tr>
+							    <th field="Id" width="10%" align="center" checkbox="true">ID</th>
+								 <th field="appCity3" width="20%" align="center" data-options="formatter:formatAppCity" >城市</th>
+								<th field="c4AbUser" width="20%" align="center">推广人员代码</th>
+								<th field="num3" width="20%" align="center">申请件数量</th>
+							</tr>
+						</thead>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAbUser')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveAbUser()">保存</a>
+		        </div>
+	</div>
+	<br/>
+	<div id="winEdit" class="easyui-window" title="规则信息修改"
+		style="width: 500px; height: 600px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="editForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">规则名称:</td>
+							<td><input class="easyui-validatebox textbox" id="ruleName2"
+								style="width: 280px;" type="text" name="ruleName" disabled="disabled">
+								</input>
+								<input type="hidden" name="ruleCode" id="ruleCode2" />
+							</td>
+						</tr>
+						<tr>		
+							<td align="right">规则状态:</td>
+							<td><select class="easyui-combobox"
+							style="width: 280px;" data-options="required:true,editable:false"
+							name="ruleStatus" id="ruleStatus2">
+								<option value="-1">请选择</option>
+								<option value="0">停用</option>
+								<option value="1">启用</option>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">规则类型:</td>
+							<td><select class="easyui-combobox" 
+							style="width: 280px;" data-options="required:true,editable:false"
+							name="ruleType" id="ruleType2">
+								<option value="-1">请选择</option>
+								<option value="1">易达金征信快速件规则</option>
+							<!-- 	<option value="2">易达金审批快速件规则</option>  -->
+								<option value="3">易达金征信普通件规则</option>
+								<!-- <option value="4">易达金审批普通件规则</option> -->
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" >规则脚本:</td>
+							<td >
+							<textarea name="ruleScriptDesc" id="ruleScriptDesc2" disabled="disabled">
+							</textarea>
+							<input id="ruleScript2" style="display:none" type="text" name="ruleScript" ></input>
+							<a href="javascript:fnRuleScript();" 
+							class="easyui-linkbutton" style="width: 50px;">更改</a>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">自动分配顺序：</td>
+							<td align="left">
+								<input id="sortFlag2" name="sortFlag" maxlength="8" onkeyup="this.value=value.replace(/[^\d]/g,'')"/>
+								<em>*只允许数字，最大8位</em>
+							</td>
+						</tr>
+					</table>
+					
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+	</div>
+	<!-- 规则脚本更改 -->
+	<div id="winRuleScript" class="easyui-window" 
+		style="width: 1200px; height: 450px" top="0"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="ruleScriptForm" method="post">
+					<table id="tblRuleScript" title="规则脚本列表" cellpadding="5" 
+					style="border-collapse:separate; border-spacing:10px;" >
+					<thead>
+						<tr>
+						<td>流水号字母：</td>
+						<td><select class="easyui-combobox" id="serialNum2" name="serialNum"
+							dict_type="ALLOT_SERIALNUM" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>展业地区：</td>
+						<td><select class="easyui-combobox" name="appRegion" dict_type="ALLOT_APPREGION"
+							editable="false"  id="appRegion2" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>渠道：</td>
+						<td><select class="easyui-combobox" name="appChannel" id="appChannel2"
+							dict_type="ALLOT_APPCHANNEL" editable="false"  multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr>
+					<tr>
+						<td>录入商：</td>
+						<td><select class="easyui-combobox" name="appInput" id="appInput2" 
+							dict_type="ALLOT_APPINPUT" editable="false" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select></td>
+						<td>卡产品类型：</td>
+						<td><select class="easyui-combobox" data-options="valueField:'cardCode',textField:'prodName'"
+									style="width: 150px" name="appProd" id="appProd2" multiple="true">
+							</select></td>
+						<td>时间：</td>
+						<td>
+						<select class="easyui-combobox" name="shareTime"
+							dict_type="ALLOT_SHARETIME" editable="false" id="shareTime2"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td><input class="easyui-datebox" name="appTime"  id="appTime2"
+							style="width: 150px;"/>
+							<input class="easyui-datebox" name="crtTime"  id="crtTime2"
+							style="width: 150px;"/>
+						</td>
+					</tr>
+					<tr>
+						<td>异常进件渠道：</td>
+						<td><select class="easyui-combobox" name="nosafePromoter" dict_type="ALLOT_NO_SAFE"
+							editable="false" id="nosafePromoter2"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+						<td>单位名称：</td>
+						<td><input class="easyui-textbox" name="c1CoName"  id="c1CoName2" 
+							style="width: 150px;"></td>
+						<td>邮寄地址：</td>
+						<td>
+						<select class="easyui-combobox" name="c4CyCadd1" 
+							dict_type="ALLOT_CARDTO1" editable="false" id="c4CyCadd1_2"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr>
+					<tr>
+						<td>团办号：</td>
+						<td><input class="easyui-textbox" name="c4ApBatch"  id="c4ApBatch2"
+							 style="width: 96px;" />
+							<a href="javascript:fnBatch(2);" 
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+						<td>项目号（专案代码）：</td><!-- added by jpc -->
+						<td><input class="easyui-textbox" name="c5JcType"  id="c5JcType2"
+							 style="width: 96px;" />
+							<a href="javascript:fnJCType(2);" 
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+					</tr>
+					<tr>
+						<td>推广机构号：</td>
+						<td><input class="easyui-textbox" name="c5AbCode" id="c5AbCode2" 
+							 style="width: 96px;" />
+							<a href="javascript:fnAbCode(2);"
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+						<td>推广人员代码：</td>
+						<td><input class="easyui-textbox" name="c4AbUser" id="c4AbUser2"
+							 style="width: 96px;" />
+							<a href="javascript:fnAbUser(2);"
+							class="easyui-linkbutton" style="width: 50px;">查询</a></td>
+					</tr>
+					<tr>
+						<td>中征信1000评分：</td>
+						<td><input class="easyui-textbox" name="minNumberRead" id="minNumberRead2"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" id="maxNumberRead2" name="maxNumberRead"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>申请件状态：</td>
+						<td><select class="easyui-combobox" name="appStatus" dict_type="ALLOT_CURRSTATUS"
+							editable="false" id="appStatus_2"  
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>标识：</td>
+						<td><select class="easyui-combobox" id="identify2" name="identify" dict_type="ALLOT_IDENTIFY"
+							editable="false"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_11"  name="isHaveCardCust" dict_type="ALLOT_ISHAVECARD"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_21"  name="quickCardFlag" dict_type="ALLOT_C4RUSHFLG"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+						<select class="easyui-combobox" 
+							editable="false" id="child_31"  name="pubPolice" dict_type="YDJ_ALLOT_PUBPOLICE"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width:  150px;">
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td>征信策略结果描述：</td>
+						<td>
+							<select class="easyui-combobox" name="creditDecisionLayer" dict_type="ALLOT_YDJ_CREDIT_DESCRIPTION"
+							editable="false" id="creditDecisionLayer2"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select>
+						</td>
+						<td>征信策略结果：</td>
+						<td>
+						<select class="easyui-combobox" name="creditDecisionResult" dict_type="ALLOT_YDJ_CREDIT"
+							editable="false"  id="creditDecisionResult2"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;" multiple="true">
+						</select>
+						</td>
+						<td>系统决策建议额度：</td>
+						<td><input class="easyui-textbox" name="minProposedLmt"  id="minProposedLmt2"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" name="maxProposedLmt"   id="maxProposedLmt2"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+					</tr>
+					<tr>
+						<td>分配顺序：</td>
+						<td>
+							<select class="easyui-combobox" name="allotType" dict_type="ALLOT_ALLOTTYPE"
+							editable="false" id="allotType2"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+							</select>
+						</td>
+						<td>腾讯天御分：</td>
+						<td><input class="easyui-textbox" name="minRiskScore" id="minRiskScore2"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox"  id="maxRiskScore2" name="maxRiskScore"
+							 style="width: 73px;"  data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>手机实名认证结果：</td>
+						<td><select class="easyui-combobox" name="phoneCertification" 
+							 id="phoneCertification2" style="width: 150px;" 
+							 dict_type="ALLOT_PHONE_NEW" editable="false" multiple="true"
+							 data-options="valueField:'dictDetailCode',textField:'dictDetailName'" >
+							 </select></td>
+					</tr>
+					<tr>
+						<td>反欺诈决策结果：</td>
+						<td><select class="easyui-combobox"  name="fqzValue" id="fqzValue2"
+							dict_type="ALLOT_FQZ" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>天御风险码：</td>
+						<td><select class="easyui-combobox" name="riskCode" id="riskCode2"
+							dict_type="ALLOT_RISKCODE" editable="false"  multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+						<td>天御风险码等级：</td>
+						<td><select class="easyui-combobox" name="riskLevel" id="riskLevel2"
+							dict_type="ALLOT_RISKLEVEL" editable="false"  multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select></td>
+					</tr> 
+					<tr>
+						<td>征信评分：</td>
+						<td><input class="easyui-textbox" name="triggerType1" id="triggerType12"
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+							-<input class="easyui-textbox" name="triggerType2" id="triggerType22" 
+							style="width: 73px;" data-options="validType:['number','maxLength[12]']" >
+						</td>
+						<td>人像比对结果</td>
+						<td>
+							<select class="easyui-combobox" dict_type="ALLOT_RXBD"
+							editable="false" id="policeRxbd2"  name="policeRxbd" 
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+							</select>
+						</td>
+						<td>标签：</td>
+						<td>
+							<input type="checkbox" name="batchLabel" id="batchLabel2" value="1" />批量标签&nbsp;&nbsp;
+							<input type="checkbox" name="pbocRstFinDesp" id="pbocRstFinDesp2" value="1" />人行不良&nbsp;&nbsp;
+							<input type="checkbox" name="appStatus2" id="appStatus2_2" value="24" />挂起标签 
+							<input type="checkbox" name="waiBao" id="waiBao2" value="1" />外包 
+						</td>
+						<td>在网时长：</td>
+						<td><select class="easyui-combobox" name="onlineTime" id="onlineTime2"
+							dict_type="ALLOT_ONLINE" editable="false" multiple="true"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;"></select></td>
+					</tr>
+					</thead>
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winRuleScript')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSaveRuleScript()">保存</a>
+		        </div>
+	</div>
+	<fieldset style="width:98%;">
+		<div style="height: 50px;">
+		<form id="countForm" method="post">
+		<label>	<h5>自动分件实时统计</h5></label>
+			<table id="tblCount"  class="formtable" style="width: 98%"   >
+				<tr>
+					<td>征信环节:</td>
+					<td><input class="easyui-textbox"  name="ydjCreditCount" id="ydjCreditCount" disabled="disabled" /></td>
+				</tr>
+			</table>
+		</form>
+		</div>
+	</fieldset>
+	<fieldset style="width:98%;">
+		<div style="height: 50px;">
+		<label>	<h5>自动分件征信环节数量设置</h5><input class="easyui-textbox" style="width: 150px" name="ydjCreditNumber" id="ydjCreditNumber" />
+		 <input type="button"  onclick="onSaveAutoNumber()" style="width:150px;" value="保存" /></label>
+		</div>
+	</fieldset>
+	<!-- 规则列表信息-wenyh -->
+	<fieldset style="width:98%;">
+		<div class="titleBg">普通件规则列表信息</div>
+		<div style="margin: 2px; width: 98%;">
+			<div id="seachCommonRule" style="padding: 10px; text-align: center;">
+				<form id="seachCommonForm">
+						规则名称: <input class="easyui-textbox" style="width: 110px" name="ruleName" id="ruleName"> 
+						创建人: <input class="easyui-textbox" style="width: 110px" name="crtUser" id="crtUser"> 
+						<a  href="javascript:checkAndSearchCommonTab('seachCommonRule','ruleinfo_dg_common');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+						<div align="right">
+							分配数量:<input class="easyui-textbox" name="fpNumCommon" id="fpNumCommon" style="width: 50px;"/>
+						</div>
+				</form>
+			</div>
+			<table id="ruleinfo_dg_common" class="easyui-datagrid" style="width:95%;"></table>
+			 <div id="pagination_common" class="easyui-pagination"
+				data-options="pagination:true,pageSize:20,pageList:[20,50,100]" width="95%"
+				style="background: #efefef; border: 1px solid #ccc;">
+			</div> 
+		</div>
+		<div class="titleBg">快速件规则列表信息</div>
+		<div style="margin: 2px; width: 98%;">
+			<div id="seachFastRule" style="padding: 10px; text-align: center;">
+				<form id="seachFastForm">
+						规则名称: <input class="easyui-textbox" style="width: 110px" name="ruleName" id="ruleName"> 
+						创建人: <input class="easyui-textbox" style="width: 110px" name="crtUser" id="crtUser"> 
+						<a  href="javascript:checkAndSearchFastTab('seachFastForm','ruleinfo_dg_fast');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+						<div align="right">
+							分配数量:<input class="easyui-textbox" name="fpNumFast" id="fpNumFast" style="width: 50px;"/>
+						</div>
+				</form>
+			</div>
+			<table id="ruleinfo_dg_fast" class="easyui-datagrid" style="width:95%;"></table>
+			 <div id="pagination_fast" class="easyui-pagination"
+				data-options="pagination:true,pageSize:20,pageList:[20,50,100]" width="95%"
+				style="background: #efefef; border: 1px solid #ccc;">
+			</div> 
+		</div>
+		<input type="hidden" id="hiddenId" name="hiddenId">
+	</fieldset>
+	<div id="space" visibility="hidden" style="margin-top: 10px;" class="divHeight2">
+	</div>
+</body>
+<script>
+var userCode=$cf.getStore("userRelInfo","index").userInfo.userCode;
+var userName=$cf.getStore("userRelInfo","index").userInfo.userName;
+$cf.loadAllDict();
+//var tblObj=$("#ruleinfo_dg");
+var tblCommonObj=$("#ruleinfo_dg_common");//征信普通件规则-wenyh
+var tblFastObj=$("#ruleinfo_dg_fast");//征信快速件规则-wenyh
+//团办号 
+var tblBatch = $("#tblBatch");
+var batchWindow = $("#winBatch");
+var batchForm = $("#batchForm");
+//项目号（专案代码）
+var tblType = $("#tblType");// added by jpc
+var typeWindow = $("#winType");// added by jpc
+var typeForm = $("#typeForm");// added by jpc
+//推广机构 
+var tblAbCode = $("#tblAbCode");
+var abCodeWindow = $("#winAbCode");
+var abCodeForm = $("#abCodeForm");
+//推广人员 
+var tblAbUser = $("#tblAbUser");
+var abUserWindow = $("#winAbUser");
+var abUserForm = $("#abUserForm");
+//规则 信息  
+var tblRuleScript = $("#tblRuleScript");
+var ruleScriptWindow = $("#winRuleScript");
+var ruleScriptForm = $("#ruleScriptForm");
+//查询 
+//1.征信普通件规则-wenyh
+var seachCommonRule=$("#seachCommonRule");
+var seachCommonForm=$("#seachCommonForm");
+//2.征信快速件规则-wenyh
+var seachFastRule=$("#seachFastRule");
+var seachFastForm=$("#seachFastForm");
+//编辑  
+var editWindow = $("#winEdit");
+var editForm = $("#editForm");
+var html=$('#ruleinfoRecord').html();//要添加的form表单
+var listUrl="/opas-allot-server/queryAllotRule.json";
+function fnInitIdentify() {
+	$("#child_1 +.combo").hide();
+	$("#child_2 +.combo").hide();
+	$("#child_3 +.combo").hide();
+}
+function fnInitIdentify2() {
+	$("#child_11 +.combo").hide();
+	$("#child_21 +.combo").hide();
+	$("#child_31 +.combo").hide();
+}
+function fnInitTime(){
+	$("#appTimeStart+.combo").hide();
+	$("#appTimeEnd+.combo").hide();
+	$("#crtTimeStart+.combo").hide();
+	$("#crtTimeEnd+.combo").hide();
+}
+function fnInitTime2(){
+	$("#appTime2+.combo").hide();
+	$("#crtTime2+.combo").hide();
+}
+function init(){
+	// 初始化
+	fnInitIdentify();
+	fnInitTime();
+	fnInitIdentify2();
+	fnInitTime2();
+	fnLoadAppProd();
+}
+$(function(){
+	init();
+	// [事件] select 联动
+	$('#identify').combobox({
+		onChange : function(n, o) {
+			switch (n) {
+			case '1':
+				$("#child_2+.combo").hide();
+				$("#child_3+.combo").hide();
+				$("#child_1+.combo").show();
+				break;
+			case '2':
+				$("#child_1+.combo").hide();
+				$("#child_3+.combo").hide();
+				$("#child_2+.combo").show();
+				break;
+			case '3':
+				$("#child_1+.combo").hide();
+				$("#child_2+.combo").hide();
+				$("#child_3+.combo").show();
+				break;
+			default:
+				fnInitIdentify();
+			}
+			
+		}
+	});
+	$('#identify2').combobox({
+		onChange : function(n, o) {
+			switch (n) {
+			case '1':
+				$("#child_21+.combo").hide();
+				$("#child_31+.combo").hide();
+				$("#child_11+.combo").show();
+				break;
+			case '2':
+				$("#child_11+.combo").hide();
+				$("#child_31+.combo").hide();
+				$("#child_21+.combo").show();
+				break;
+			case '3':
+				$("#child_11+.combo").hide();
+				$("#child_21+.combo").hide();
+				$("#child_31+.combo").show();
+				break;
+			default:
+				fnInitIdentify2();
+			}
+			
+		}
+	});
+	$('#shareTime').combobox({
+		onChange : function(n, o) {
+			switch (n) {
+			case '1':
+				$("#crtTimeStart+.combo").hide();
+				$("#crtTimeEnd+.combo").hide();
+				$("#appTimeStart+.combo").show();
+				$("#appTimeEnd+.combo").show();
+				break;
+			case '2':
+				$("#appTimeStart+.combo").hide();
+				$("#appTimeEnd+.combo").hide();
+				$("#crtTimeStart+.combo").show();
+				$("#crtTimeEnd+.combo").show();
+				break;
+			default:
+				fnInitTime();
+			}
+			
+		}
+	});
+	$('#shareTime2').combobox({
+		onChange : function(n, o) {
+			switch (n) {
+			case '1':
+				$("#crtTime2+.combo").hide();
+				$("#appTime2+.combo").show();
+				break;
+			case '2':
+				$("#appTime2+.combo").hide();
+				$("#crtTime2+.combo").show();
+				break;
+			default:
+				fnInitTime2();
+			}
+			
+		}
+	});
+	//征信普通件规则-wenyh
+	getCommonData();
+	 $("#pagination_common").pagination({
+		onSelectPage:function(pageNumber, pageSize){                      
+			getCommonData();
+		}
+	}); 
+	$("#ruleinfo_dg_common").datagrid({
+		
+		striped : true,
+		animate:true,
+		rownumbers : true,
+		singleSelect : true,
+		fitColumns:true,
+		border:false,
+		fit:false,
+		width:'100%',
+		toolbar:'#seachCommonRule',
+		columns : [ [
+		{
+			field : 'ruleCode',
+			title : '规则代码 ',
+			align:'center',
+			width:150,
+			checxbox:true,
+			hidden:true
+		},{
+			field : 'ruleName',
+			title : '规则名称',
+			align:'center',
+			width:150
+		},{
+			field : 'ruleScript',
+			title : '规则脚本',
+			align:'center',
+			width:150,
+			hidden:true
+		},{
+			field : 'ruleScriptDesc',
+			title : '规则脚本描述 ',
+			align:'center',
+			width:150,
+			hidden:true
+		},{
+			field : 'ruleStatus',
+			title : '规则状态',
+			align:'center',
+			width:150,
+			formatter:formatRuleStatus
+		},{
+			field : 'ruleType',
+			title : '规则类型',
+			align:'center',
+			width:150,
+			formatter:formatRuleType
+		},{
+			field : 'sortFlag',
+			title : '自动分配顺序',
+			align:'center',
+			width:150
+		},{
+			field : 'crtUser',
+			title : '创建人 ',
+			align:'center',
+			width:150
+		},{
+			field : 'crtDate',
+			title : '创建日期 ',
+			align:'center',
+			width:150,
+			formatter:formatDate
+		},{
+			field : 'lstUpdUser',
+			title : '最后操作人 ',
+			align:'center',
+			width:150
+		},{
+			field : 'lstUpdDate',
+			title : '最后操作日期 ',
+			align:'center',
+			width:150,
+			formatter:formatDate
+		},{
+			field : 'fp',
+			title : '分配数量',
+			align:'center',
+			width:100,
+			formatter : function(value, row, index) {
+				return '<a href=javascript:queryRule(tblCommonObj,1); >查询</a>'; 
+			}
+		},{
+			field : 'op',
+			title : '操作',
+			align:'center',
+			width:150,
+			formatter : function(value, row, index) {
+				return '<a href=javascript:editRule(tblCommonObj); >修改</a>&nbsp;&nbsp;<a href=javascript:delRecord(tblCommonObj); >删除</a>'; 
+			}
+		} 
+		] ],
+		onClickRow : function(rowIndex,rowData){
+			$("#ruleCode").val(rowData.ruleCode);
+			$("#ruleName").val(rowData.ruleName);
+			$("#ruleScript").val(rowData.ruleScript);
+			$("#ruleScriptDesc").val(rowData.ruleScriptDesc);
+			$("#ruleStatus").val(rowData.ruleStatus);
+			$("#ruleType").val(rowData.ruleType);
+			$("#sortFlag").val(rowData.sortFlag);
+			$("#crtUser").val(rowData.crtUser);
+			$("#crtDate").val(rowData.crtDate);
+			$("#lstUpdUser").val(rowData.lstUpdUser);
+			$("#lstUpdDate").val(rowData.lstUpdDate);
+		   }
+	});
+	//征信快速件规则-wenyh
+	getFastData();
+	 $("#pagination_fast").pagination({
+		onSelectPage:function(pageNumber, pageSize){                      
+			getFastData();
+		}
+	}); 
+	$("#ruleinfo_dg_fast").datagrid({
+		
+		striped : true,
+		animate:true,
+		rownumbers : true,
+		singleSelect : true,
+		fitColumns:true,
+		border:false,
+		fit:false,
+		width:'100%',
+		toolbar:'#seachFastRule',
+		columns : [ [
+		{
+			field : 'ruleCode',
+			title : '规则代码 ',
+			align:'center',
+			width:150,
+			checxbox:true,
+			hidden:true
+		},{
+			field : 'ruleName',
+			title : '规则名称',
+			align:'center',
+			width:150
+		},{
+			field : 'ruleScript',
+			title : '规则脚本',
+			align:'center',
+			width:150,
+			hidden:true
+		},{
+			field : 'ruleScriptDesc',
+			title : '规则脚本描述 ',
+			align:'center',
+			width:150,
+			hidden:true
+		},{
+			field : 'ruleStatus',
+			title : '规则状态',
+			align:'center',
+			width:150,
+			formatter:formatRuleStatus
+		},{
+			field : 'ruleType',
+			title : '规则类型',
+			align:'center',
+			width:150,
+			formatter:formatRuleType
+		},{
+			field : 'sortFlag',
+			title : '自动分配顺序',
+			align:'center',
+			width:150
+		},{
+			field : 'crtUser',
+			title : '创建人 ',
+			align:'center',
+			width:150
+		},{
+			field : 'crtDate',
+			title : '创建日期 ',
+			align:'center',
+			width:150,
+			formatter:formatDate
+		},{
+			field : 'lstUpdUser',
+			title : '最后操作人 ',
+			align:'center',
+			width:150
+		},{
+			field : 'lstUpdDate',
+			title : '最后操作日期 ',
+			align:'center',
+			width:150,
+			formatter:formatDate
+		},{
+			field : 'fp',
+			title : '分配数量',
+			align:'center',
+			width:100,
+			formatter : function(value, row, index) {
+				return '<a href=javascript:queryRule(tblFastObj,2); >查询</a>'; 
+			}
+		},{
+			field : 'op',
+			title : '操作',
+			align:'center',
+			width:150,
+			formatter : function(value, row, index) {
+				return '<a href=javascript:editRule(tblFastObj); >修改</a>&nbsp;&nbsp;<a href=javascript:delRecord(tblFastObj); >删除</a>'; 
+			}
+		} 
+		] ],
+		onClickRow : function(rowIndex,rowData){
+			$("#ruleCode").val(rowData.ruleCode);
+			$("#ruleName").val(rowData.ruleName);
+			$("#ruleScript").val(rowData.ruleScript);
+			$("#ruleScriptDesc").val(rowData.ruleScriptDesc);
+			$("#ruleStatus").val(rowData.ruleStatus);
+			$("#ruleType").val(rowData.ruleType);
+			$("#sortFlag").val(rowData.sortFlag);
+			$("#crtUser").val(rowData.crtUser);
+			$("#crtDate").val(rowData.crtDate);
+			$("#lstUpdUser").val(rowData.lstUpdUser);
+			$("#lstUpdDate").val(rowData.lstUpdDate);
+		   }
+	});
+});
+//初始化赋值卡产品类型 
+function fnLoadAppProd() {
+	$cf.ajax({
+		url : '/opas-naps/queryAllCardProduct.json',
+		onSuccess : function(ret) {
+			//给输入框和下拉框赋值写法（后台传给前台一个json串）
+			var cardInfo = ret.RSP_BODY.cardInfo;
+			var cardInfoList = eval('(' + cardInfo + ')');
+			$("#appProd").combobox({data:cardInfoList});
+			$("#appProd").combobox("setValue","");
+			$("#appProd2").combobox({data:cardInfoList});
+			$("#appProd2").combobox("setValue","");
+		}
+	});
+}
+//日期格式转换
+function formatDate(value) {
+	var str = getTaskTime(value);
+	if (str.indexOf('1970') >= 0) {
+		return '';
+	} else {
+		return str;
+	}
+} 
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {
+	if (null == strDate || "" == strDate) {
+		return "";
+	}
+	var dateStr = strDate.trim().split(" ");
+	var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+			+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+	var date = new Date(Date.parse(strGMT));
+	var y = date.getFullYear();
+	var m = date.getMonth() + 1;
+	m = m < 10 ? ('0' + m) : m;
+	var d = date.getDate();
+	d = d < 10 ? ('0' + d) : d;
+	var h = date.getHours();
+	h = h < 10 ? ('0' + h) : h;
+	var minute = date.getMinutes();
+	minute = minute < 10 ? ('0' + minute) : minute;
+	var second = date.getSeconds();
+	second = second < 10 ? ('0' + second) : second;
+	return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+			+ second;
+};
+//格式化规则状态
+function formatRuleStatus(val, row, index) {
+	if(val==0){
+		return "停用";
+	}else if(val==1){
+		return "启用";
+	}
+}
+//格式化规则类型 
+function formatRuleType(val, row, index) {
+	if(val==1){
+		return "易达金征信快速件规则 ";
+	}else if(val==2){
+		return "易达金审批快速件规则 ";
+	}else if(val==3){
+		return "易达金征信普通件规则 ";
+	}else if(val==4){
+		return "易达金审批普通件规则  ";
+	}
+}
+//团办号去重
+function fnBatch(value){
+	var opts = tblBatch.datagrid("options");
+	opts.url = "/opas-allot-server/findC4Batch.json";
+	var numType="";
+	if(value==1){
+		numType=$('#ruleType').combobox("getValue"); 
+	}else if(value==2){
+		numType=$('#ruleType2').combobox("getValue"); 
+	}
+	var node="";
+	$("input[name='hiddenId']").val(value);
+	if (numType == null || numType == ""|| numType == "-1") {
+		 $.messager.alert("操作提示","规则类型必须先勾选值 ","error");
+		return;
+	} else {
+		if(numType=='3'||numType=='1'){//征信
+			node="02";
+		}else if(numType=='4'||numType=='2'){//审批 
+			node="03";
+		}
+	}
+	var s={
+			"ydjFlag":"1",
+			"secondNode":'1',
+			'userCode':userCode,
+			"currNode":node
+			};
+	tblBatch.datagrid("reload", s); 
+	tblBatch.datagrid("unselectAll");
+	 batchWindow.window({
+		title:'团办号查询 ',
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+	}); 
+}
+//项目号（专案代码）去重 added by jpc
+function fnJCType(value){
+	var opts = tblType.datagrid("options");
+	opts.url = "/opas-allot-server/findC5JCType.json";
+	var numType="";
+	if(value==1){
+		numType=$('#ruleType').combobox("getValue"); 
+	}else if(value==2){
+		numType=$('#ruleType2').combobox("getValue"); 
+	}
+	var node="";
+	$("input[name='hiddenId']").val(value);
+	if (numType == null || numType == ""|| numType == "-1") {
+		 $.messager.alert("操作提示","规则类型必须先勾选值 ","error");
+		return;
+	} else {
+		if(numType=='5'){//标准卡审查规则
+			node="01";
+		}else if(numType=='6'){//征信
+			node="02";
+		}else if(numType=='7'){//审批
+			node="03";
+		}
+	}
+	var s={
+			"ydjFlag":"2",
+			"secondNode":'1',
+			'userCode':userCode,
+			"currNode":node
+			};
+	tblType.datagrid("reload", s); 
+	tblType.datagrid("unselectAll");
+	 typeWindow.window({
+		title:'项目号（专案代码）查询 ',
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+	}); 
+}
+function onSaveBatch() {
+	var id=$("input[name='hiddenId']").val();
+	var orgObj = tblBatch.datagrid("getChecked");
+	var list=new Array();
+	for(var i=0;i<orgObj.length;i++){
+		list.push(orgObj[i].c4ApBatch);
+	} 
+	var c4ApBatch=list.join(",");
+	//var orgObj = tblBatch.datagrid("getSelected");
+	//var c4ApBatch=orgObj.c4ApBatch;
+	onConcle("winBatch");
+	if(id==1){
+		$("#c4ApBatch").textbox('setValue',c4ApBatch);
+	}else if(id==2){
+		$("#c4ApBatch2").textbox('setValue',c4ApBatch);
+	}
+}
+function onSaveType() {//added by jpc
+	var id=$("input[name='hiddenId']").val();
+	var orgObj = tblType.datagrid("getChecked");
+	var list=new Array();
+	for(var i=0;i<orgObj.length;i++){
+		list.push(orgObj[i].c5JcType);
+	} 
+	var c5JcType=list.join(",");
+	onConcle("winType");
+	if(id==1){
+		$("#c5JcType").textbox('setValue',c5JcType);
+	}else if(id==2){
+		$("#c5JcType2").textbox('setValue',c5JcType);
+	}
+}
+//推广机构
+function fnAbCode(value){
+	var opts = tblAbCode.datagrid("options");
+	opts.url = "/opas-allot-server/findC5AbCode.json";
+	var numType="";
+	if(value==1){
+		numType=$('#ruleType').combobox("getValue"); 
+	}else if(value==2){
+		numType=$('#ruleType2').combobox("getValue"); 
+	}
+	var node="";
+	$("input[name='hiddenId']").val(value);
+	if (numType == null || numType == ""|| numType == "-1") {
+		 $.messager.alert("操作提示","规则类型必须先勾选值 ","error");
+		return;
+	} else {
+		if(numType=='3'||numType=='1'){//征信
+			node="02";
+		}else if(numType=='4'||numType=='2'){//审批 
+			node="03";
+		}
+	}
+	var s={
+			"ydjFlag":"1",
+			"secondNode":'1',
+			'userCode':userCode,
+			"currNode":node
+			};
+	tblAbCode.datagrid("reload", s); 
+	tblAbCode.datagrid("unselectAll");
+	abCodeWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+	});
+}
+function onSaveAbCode(){
+	var id=$("input[name='hiddenId']").val();
+	var orgObj = tblAbCode.datagrid("getChecked");
+	var list=new Array();
+	for(var i=0;i<orgObj.length;i++){
+		list.push(orgObj[i].c5AbCode);
+	} 
+	var c5AbCode=list.join(",");
+	//var orgObj = tblAbCode.datagrid("getSelected");
+	//var c5AbCode=orgObj.c5AbCode;
+	onConcle("winAbCode");
+	if(id==1){
+		$("#c5AbCode").textbox('setValue',c5AbCode);
+	}else if(id==2){
+		$("#c5AbCode2").textbox('setValue',c5AbCode);
+	}
+}
+//推广人员
+function fnAbUser(value){
+	var opts = tblAbUser.datagrid("options");
+	opts.url = "/opas-allot-server/findC4AbUser.json";
+	var numType="";
+	if(value==1){
+		numType=$('#ruleType').combobox("getValue"); 
+	}else if(value==2){
+		numType=$('#ruleType2').combobox("getValue"); 
+	}
+	var node="";
+	$("input[name='hiddenId']").val(value);
+	if (numType == null || numType == ""|| numType == "-1") {
+		 $.messager.alert("操作提示","规则类型必须先勾选值 ","error");
+		return;
+	} else {
+		if(numType=='3'||numType=='1'){//征信
+			node="02";
+		}else if(numType=='4'||numType=='2'){//审批 
+			node="03";
+		}
+	}
+	var s={
+			"ydjFlag":"1",
+			"secondNode":'1',
+			'userCode':userCode,
+			"currNode":node
+			};
+	tblAbUser.datagrid("reload", s); 
+	tblAbUser.datagrid("unselectAll");
+	abUserWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+	});
+}
+function onSaveAbUser(){
+	var id=$("input[name='hiddenId']").val();
+	var orgObj = tblAbUser.datagrid("getChecked");
+	var list=new Array();
+	for(var i=0;i<orgObj.length;i++){
+		list.push(orgObj[i].c4AbUser);
+	} 
+	var c4AbUser=list.join(",");
+	onConcle("winAbUser");
+	if(id==1){
+		$("#c4AbUser").textbox('setValue',c4AbUser);
+	}else if(id==2){
+		$("#c4AbUser2").textbox('setValue',c4AbUser);
+	}
+}
+ //规则脚本修改
+function fnRuleScript(){
+	var script=$("#ruleScript2").val();
+	var scriptJson = eval('(' + script + ')');
+	 ruleScriptWindow.window({
+		title:'规则脚本 ',
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(scriptJson,1)
+	}); 
+}
+function onSaveRuleScript() {
+	var jsondata = getFormMulData(ruleScriptForm.serializeArray(),"2");
+	var param=JSON.stringify(jsondata);
+	$("#ruleScript2").val(param);
+	//描述 
+	var param2=saveRuleScriptDesc2();
+	$("#ruleScriptDesc2").val(param2);
+	onConcle("winRuleScript");
+}
+//往表格里添加记录-普通件-wenyh
+function getCommonData(){
+	var rows = [];
+	var pageopt = $('#pagination_common').data("pagination").options;
+	var pageNumber=pageopt.pageNumber;
+	var pageSize=  pageopt.pageSize;
+	var formData = {};
+		formData.page=pageNumber;
+		formData.rows=pageSize;
+	var jsondata = getFormData(seachCommonForm.serializeArray());	
+     $cf.ajax({
+     	url:listUrl,
+     	data:{
+     			'jsondata':jsondata,
+     			'page':pageNumber,
+     			'rows':pageSize,
+     			'id':"1",
+     			'ydjFlag':'1',
+     			'ruleType':'3'
+     	},
+     	onSuccess:function(respObj){
+     		var rspbody=respObj.RSP_BODY;
+     		var dataRows=[];
+    		$.each(rspbody.rows, function(i, n){
+    			dataRows.push({
+	    			'ruleCode':n.ruleCode,
+	    			'ruleName':n.ruleName,
+	    			'ruleScript': n.ruleScript,
+	    			'ruleScriptDesc': n.ruleScriptDesc,
+	    			'ruleStatus':n.ruleStatus,
+	    			'ruleType':n.ruleType,
+	    			'sortFlag':n.sortFlag,
+	    			'crtUser':n.crtUser,
+	    			'lstUpdUser':n.lstUpdUser,
+	    			'crtDate':n.crtDate,
+	    			'lstUpdDate':n.lstUpdDate
+    		    });
+    		});
+    		$('#ruleinfo_dg_common').datagrid({data:dataRows});
+    		$('#pagination_common').pagination('refresh',{
+    			pageNumber:pageNumber,
+    			total:     rspbody.total
+    		});
+    		var ydjCreditNumber=respObj.RSP_BODY.ydjCreditNumber;
+     		$("#ydjCreditNumber").textbox('setValue',ydjCreditNumber);
+       }
+   	 });
+}
+//往表格里添加记录-快速件-wenyh
+function getFastData(){
+	var rows = [];
+	var pageopt = $('#pagination_fast').data("pagination").options;
+	var pageNumber=pageopt.pageNumber;
+	var pageSize=  pageopt.pageSize;
+	var formData = {};
+		formData.page=pageNumber;
+		formData.rows=pageSize;
+	var jsondata = getFormData(seachFastForm.serializeArray());	
+     $cf.ajax({
+     	url:listUrl,
+     	data:{
+     			'jsondata':jsondata,
+     			'page':pageNumber,
+     			'rows':pageSize,
+     			'id':"1",
+     			'ydjFlag':'1',
+     			'ruleType':'1'
+     	},
+     	onSuccess:function(respObj){
+     		var rspbody=respObj.RSP_BODY;
+     		var dataRows=[];
+    		$.each(rspbody.rows, function(i, n){
+    			dataRows.push({
+	    			'ruleCode':n.ruleCode,
+	    			'ruleName':n.ruleName,
+	    			'ruleScript': n.ruleScript,
+	    			'ruleScriptDesc': n.ruleScriptDesc,
+	    			'ruleStatus':n.ruleStatus,
+	    			'ruleType':n.ruleType,
+	    			'sortFlag':n.sortFlag,
+	    			'crtUser':n.crtUser,
+	    			'lstUpdUser':n.lstUpdUser,
+	    			'crtDate':n.crtDate,
+	    			'lstUpdDate':n.lstUpdDate
+    		    });
+    		});
+    		$('#ruleinfo_dg_fast').datagrid({data:dataRows});
+    		$('#pagination_fast').pagination('refresh',{
+    			pageNumber:pageNumber,
+    			total:     rspbody.total
+    		});
+    		var ydjCreditNumber=respObj.RSP_BODY.ydjCreditNumber;
+     		$("#ydjCreditNumber").textbox('setValue',ydjCreditNumber);
+       }
+   	 });
+}
+
+//根据条件查询征信规则分配数量方法-wenyh
+function queryRule(tblObj,flag) {
+	var orgObj = tblObj.datagrid("getSelected");
+	var ruleCode = orgObj.ruleCode;
+    $cf.ajax({
+     	url:"/opas-allot-server/queryCreditRuleAllotNumber.json",
+      	data:{'ydjFlag':'1', 'ruleCode':ruleCode }, 
+     	onSuccess:function(data){
+     		if (data.RSP_BODY.isSuccess) {
+				$.messager.alert("操作提示", "查询成功 !", "info", function() {
+					var fpNumResult = data.RSP_BODY.fpNumResult;
+					if(flag == "1"){
+						$("#fpNumCommon").textbox('setValue', fpNumResult);
+					}else{
+						$("#fpNumFast").textbox('setValue', fpNumResult);
+					}
+				});
+			} else {
+				$.messager.alert("操作提示", "查询异常!", "error");
+				return;
+			}
+        }
+    });
+}
+
+//修改
+function editRule(tblObj) {
+	var orgObj = tblObj.datagrid("getSelected");
+	editWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(orgObj,2)
+	});
+}
+function setData(data,value) {
+	if(value==1){
+		ruleScriptForm.form("load", data);
+	}else if(value==2){
+		editForm.form("load", data);
+	}
+	$("#id").attr("readonly", "readonly");
+	$("#id").attr("disabled", "disabled");
+}
+function onUpdate() {
+	
+	var ruleName=$("#ruleName2").val();
+	if(ruleName.trim()==""||ruleName==null){
+		$.messager.alert('提示','规则名字不能为空');
+		return;
+	}
+	var ruleCode=$("#ruleCode2").val();
+	var ruleType=$('#ruleType2').combobox("getValue"); 
+	if(ruleType.trim()=="-1"||ruleType.trim()==""||ruleType==null){
+		$.messager.alert('提示','规则类型不能为空 ');
+		return;
+	}
+	var ruleStatus=$('#ruleStatus2').combobox("getValue"); 
+	if(ruleStatus.trim()=="-1"||ruleStatus.trim()==""||ruleStatus==null){
+		$.messager.alert('提示','规则状态不能为空  ');
+		return;
+	}
+	var ruleScript=$('#ruleScript2').val();
+	var ruleScriptDesc=$('#ruleScriptDesc2').val();
+	if(ruleScriptDesc.trim()=="-1"||ruleScriptDesc.trim()==""||ruleScriptDesc==null){
+		$.messager.alert('提示','规则不能为空 ');
+		return;
+	}
+	var sortFlag=$('#sortFlag2').val();
+	if(sortFlag.trim()==""||sortFlag==null){
+		$.messager.alert('提示','自动分配顺序不能为空');
+		return;
+	}
+	$cf.ajax({
+		url : "/opas-allot-server/updateAllotRule.json",
+		data:{
+			'ruleName':ruleName,
+     		'ruleCode':ruleCode,
+     		'ruleType':ruleType,
+     		'ruleStatus':ruleStatus,
+     		'ruleScript':ruleScript,
+     		'ruleScriptDesc':ruleScriptDesc,
+     		'sortFlag':sortFlag,
+     		'ydjFlag':'1',
+     		'userCode':userCode
+     		}, 
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				$.messager.alert("操作提示", "修改成功!", "info", function() {
+					onConcle("winEdit");
+					getCommonData();//征信普通-wenyh
+		     		getFastData();//征信快速-wenyh
+				});
+			} else {
+				$.messager.alert("操作提示", "修改异常,原因:" + data.RSP_BODY.exMsg, "error");
+				onConcle("winEdit");
+				return;
+			}
+		}
+	});
+}
+//调用删除方法
+function delRecord(tblObj) {
+	var obj = tblObj.datagrid("getSelected");
+	var ruleCode=obj.ruleCode;
+	$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+		if (r) {
+			$cf.ajax({
+				url : "/opas-allot-server/delAllotRule.json",
+				data:{'ruleCode':ruleCode},
+				onSuccess:function(data){
+		     		if (data.RSP_BODY.isSuccess) {
+						$.messager.alert("操作提示", "删除成功 !", "info", function() {
+							getCommonData();//征信普通-wenyh
+				     		getFastData();//征信快速-wenyh
+						});
+					} else {
+						$.messager.alert("操作提示", "删除异常,原因:  " + data.RSP_BODY.exMsg, "error");
+						return;
+					}
+		     		
+		       }
+			});
+		}
+	});
+}
+//动态添加规则条件行
+function addRuleinfoRecord(){
+	$('#ruleinfoRecord').append(html);
+}
+//动态删除规则条件行
+function delRuleinfoRecord(){
+	var forms=document.getElementsByName("ruleinfo_form");
+	 if(forms.length==1){
+			return;
+		}
+	$('form:last').remove();
+}
+//保存数据库记录
+function save(){
+	var ruleName=$("#ruleName").val();
+	if(ruleName.trim()==""||ruleName==null){
+		$.messager.alert('提示','规则名字不能为空');
+		return;
+	}
+	var ruleType=$('#ruleType').combobox("getValue"); 
+	if(ruleType.trim()=="-1"||ruleType.trim()==""||ruleType==null){
+		$.messager.alert('提示','规则类型不能为空 ');
+		return;
+	}
+	var ruleStatus=$('#ruleStatus').combobox("getValue"); 
+	if(ruleStatus.trim()=="-1"||ruleStatus.trim()==""||ruleStatus==null){
+		$.messager.alert('提示','规则状态不能为空  ');
+		return;
+	}
+	
+	var forms = $("#ruleinfo_form");
+	var jsondata = getFormMulData(forms.serializeArray(),"1");
+	var ruleScriptDesc=saveRuleScriptDesc();
+	if(ruleScriptDesc.trim()=="-1"||ruleScriptDesc.trim()==""||ruleScriptDesc==null){
+		$.messager.alert('提示','规则不能为空 ');
+		return;
+	}
+	var sortFlag=$("#sortFlag").val();//自动分配顺序
+	if(sortFlag.trim()==""||sortFlag==null){
+		$.messager.alert('提示','自动分配顺序不能为空');
+		return;
+	}
+   $cf.ajax({
+     	url:"/opas-allot-server/saveAllotRule.json",
+      	data:{'ruleName':ruleName,
+     		'jsondata':jsondata,
+     		'ruleStatus':ruleStatus,
+     		'ruleType':ruleType,
+     		'ruleScriptDesc':ruleScriptDesc,
+     		'sortFlag':sortFlag,
+     		'ydjFlag':'1',
+     		'userCode':userCode
+     		}, 
+     	onSuccess:function(data){
+     		if (data.RSP_BODY.isSuccess) {
+				$.messager.alert("操作提示", "保存成功 !", "info", function() {
+					fnReset();
+		     		getCommonData();//征信普通-wenyh
+		     		getFastData();//征信快速-wenyh
+				});
+			} else {
+				$.messager.alert("操作提示", "保存异常,原因:  " + data.RSP_BODY.exMsg, "error");
+				return;
+			}
+       }
+   	 });
+}
+//保存规则脚本 描述 
+function saveRuleScriptDesc() {
+	var D_serialNum = ($("#serialNum").combobox('getText')=="--请选择--")?"":("流水号字母:"+ $("#serialNum").combobox('getText')+";");
+	var D_appRegion = ($("#appRegion").combobox('getText')=="--请选择--")?"":("展业地区:"+ $("#appRegion").combobox('getText')+";");
+	var D_appChannel = ($("#appChannel").combobox('getText')=="--请选择--")?"":("渠道:"+ $("#appChannel").combobox('getText')+";");
+	var D_appInput = ($("#appInput").combobox('getText')=="--请选择--")?"":("录入商:"+ $("#appInput").combobox('getText')+";");
+	var D_appProd = ($("#appProd").combobox('getText')=="--请选择--")?"":("卡产品类型:"+ $("#appProd").combobox('getText')+";");
+	var shareTime = ($("#shareTime").combobox('getText')=="--请选择--")?"":($("#shareTime").combobox('getText'));
+	var D_appTimeStart = ($("#appTimeStart").datebox('getValue')=="")?"":("条形码日期 :"+ $("#appTimeStart").datebox('getValue')+";");
+	var D_crtTimeStart = ($("#crtTimeStart").datebox('getValue')=="")?"":("进件日期 :"+ $("#crtTimeStart").datebox('getValue')+";");
+	var D_shareTime="";
+    if(shareTime=="条形码日期"&&D_appTimeStart!=""){
+    	D_shareTime=D_appTimeStart;
+	}else if(shareTime=="进件日期"&&D_crtTimeStart!=""){
+		D_shareTime=D_crtTimeStart;
+	}
+	var D_nosafePromoter = ($("#nosafePromoter").combobox('getText')=="--请选择--")?"":("异常进件渠道 :"+ $("#nosafePromoter").combobox('getText')+";");
+	var D_c1CoName = ($("#c1CoName").val()=="")?"":("单位名称 :"+$("#c1CoName").val()+";");
+	var D_c4CyCadd1 = ($("#c4CyCadd1").combobox('getText')=="--请选择--")?"":("邮寄地址 :"+ $("#c4CyCadd1").combobox('getText')+";");
+	var D_c4ApBatch = ($("#c4ApBatch").val()=="")?"":("团办号  :"+$("#c4ApBatch").val()+";");
+	var D_c5AbCode = ($("#c5AbCode").val()=="")?"":("推广机构号  :"+$("#c5AbCode").val()+";");
+	var D_c4AbUser = ($("#c4AbUser").val()=="")?"":("推广人员代码  :"+$("#c4AbUser").val()+";");
+	var D_NumberRead="";
+	var D_minNumberRead = ($("#minNumberRead").val()=="")?"":($("#minNumberRead").val());
+	var D_maxNumberRead = ($("#maxNumberRead").val()=="")?";":($("#maxNumberRead").val()+";");
+	if(D_minNumberRead==""&&(D_maxNumberRead==""||D_maxNumberRead==";")){
+		 D_NumberRead="";
+	}else{
+		D_NumberRead="中征信1000评分:"+D_minNumberRead+"-"+D_maxNumberRead;
+	}
+	var D_appStatus = ($("#appStatus").combobox('getText')=="--请选择--")?"":("申请件状态:"+ $("#appStatus").combobox('getText')+";");
+	var identify = ($("#identify").combobox('getText')=="--请选择--")?"":($("#identify").combobox('getText'));
+	var D_isHaveCardCust = ($("#child_1").combobox('getText')=="--请选择--")?"":("已持卡客户:"+ $("#child_1").combobox('getText')+";");
+	var D_quickCardFlag = ($("#child_2").combobox('getText')=="--请选择--")?"":("快速申请:"+ $("#child_2").combobox('getText')+";");
+	var D_pubPolice = ($("#child_3").combobox('getText')=="--请选择--")?"":("公安链接状态:"+ $("#child_3").combobox('getText')+";");
+	var D_identify="";
+	if(identify=='已持卡客户'){
+		D_identify=D_isHaveCardCust;
+	}else if(identify=='快速申请'){
+		D_identify=D_quickCardFlag;
+	}else if(identify=='公安链接状态'){
+		D_identify=D_pubPolice;
+	}
+	var D_creditDecisionLayer = ($("#creditDecisionLayer").combobox('getText')=="--请选择--")?"":("征信策略结果描述:"+ $("#creditDecisionLayer").combobox('getText')+";");
+	var D_creditDecisionResult = ($("#creditDecisionResult").combobox('getText')=="--请选择--")?"":("征信策略结果:"+ $("#creditDecisionResult").combobox('getText')+";");
+	var D_ProposedLmt="";
+	var D_minProposedLmt = ($("#minProposedLmt").val()=="")?"":($("#minProposedLmt").val());
+	var D_maxProposedLmt = ($("#maxProposedLmt").val()==";")?"":($("#maxProposedLmt").val()+";");
+	if(D_minProposedLmt==""&&(D_maxProposedLmt==""||D_maxProposedLmt==";")){
+		D_ProposedLmt="";
+	}else{
+		D_ProposedLmt="系统决策建议额度:"+D_minProposedLmt+"-"+D_maxProposedLmt;
+	}
+	var D_allotType = ($("#allotType").combobox('getText')=="--请选择--")?"":("分配顺序:"+ $("#allotType").combobox('getText')+";");
+	var D_riskScore="";
+	var D_minRiskScore = ($("#minRiskScore").val()=="")?"":($("#minRiskScore").val());
+	var D_maxRiskScore = ($("#maxRiskScore").val()=="")?",":($("#maxRiskScore").val()+",");
+	if(D_minRiskScore==""&&(D_maxRiskScore==""||D_maxRiskScore==",")){
+		D_riskScore="";
+	} else{
+		D_riskScore="腾讯天御分:"+D_minRiskScore+"-"+D_maxRiskScore;
+	}
+	var D_phone = ($("#phoneCertification").combobox('getText')=="--请选择--")?"":("手机实名认证结果:"+ $("#phoneCertification").combobox('getText')+",");
+	var D_fqzValue=($("#fqzValue").combobox('getText')=="--请选择--")?"":("反欺诈决策结果:"+ $("#fqzValue").combobox('getText')+",");
+ 	var D_riskCode=($("#riskCode").combobox('getText')=="--请选择--")?"":("天御风险码:"+ $("#riskCode").combobox('getText')+",");
+ 	var D_riskLevel=($("#riskLevel").combobox('getText')=="--请选择--")?"":("天御风险码等级:"+ $("#riskLevel").combobox('getText')+",");
+	var D_triggerType="";
+	var D_triggerType1 = ($("#triggerType1").val()=="")?"":($("#triggerType1").val());
+	var D_triggerType2 = ($("#triggerType2").val()=="")?",":($("#triggerType2").val()+",");
+	if(D_triggerType1==""&&(D_triggerType2==""||D_triggerType2==",")){
+		D_riskScore="";
+	} else{
+		D_triggerType="征信评分:"+D_triggerType1+"-"+D_triggerType2;
+	}
+	var D_batchLabel='';
+	if(document.getElementById("batchLabel").checked){
+		D_batchLabel="批量标签:是;";
+	}
+	var D_pbocRstFinDesp='';
+	if(document.getElementById("pbocRstFinDesp").checked){
+		D_pbocRstFinDesp="人行不良:是;";
+	}
+	var D_appStatus2='';
+	if(document.getElementById("appStatus2_1").checked){
+		D_appStatus2="挂起标签:是;";
+	}
+	var D_waiBao='';
+	if(document.getElementById("waiBao").checked){
+		D_appStatus2="外包标签:是,";
+	}
+	var D_policeRxbd=($("#policeRxbd").combobox('getText')=="--请选择--")?"":("人像比对结果:"+$("#policeRxbd").combobox('getText')+",");
+ 	var params = D_serialNum+D_appRegion+D_appChannel+D_appInput+D_appProd+D_shareTime+D_nosafePromoter+
+	D_c1CoName+D_c4CyCadd1+D_c4ApBatch+D_c5AbCode+D_c4AbUser+
+	D_NumberRead+D_appStatus+D_identify+D_creditDecisionLayer+
+	D_creditDecisionResult+D_ProposedLmt+D_allotType+
+	D_pbocRstFinDesp+D_appStatus2+D_riskScore+D_phone+
+	D_fqzValue+D_riskCode+D_riskLevel+D_triggerType+D_batchLabel+D_policeRxbd;
+	return params;
+}
+//保存规则脚本 描述 
+function saveRuleScriptDesc2() {
+	var D_serialNum = ($("#serialNum2").combobox('getText')=="--请选择--")?"":("流水号字母:"+ $("#serialNum2").combobox('getText')+";");
+	var D_appRegion = ($("#appRegion2").combobox('getText')=="--请选择--")?"":("展业地区:"+ $("#appRegion2").combobox('getText')+";");
+	var D_appChannel = ($("#appChannel2").combobox('getText')=="--请选择--")?"":("渠道:"+ $("#appChannel2").combobox('getText')+";");
+	var D_appInput = ($("#appInput2").combobox('getText')=="--请选择--")?"":("录入商:"+ $("#appInput2").combobox('getText')+";");
+	var D_appProd = ($("#appProd2").combobox('getText')=="--请选择--")?"":("卡产品类型:"+ $("#appProd2").combobox('getText')+";");
+	var shareTime = ($("#shareTime2").combobox('getText')=="--请选择--")?"":($("#shareTime2").combobox('getText'));
+	var D_appTime = ($("#appTime2").datebox('getValue')=="")?"":("条形码日期 :"+ $("#appTime2").datebox('getValue')+";");
+	var D_crtTime = ($("#crtTime2").datebox('getValue')=="")?"":("进件日期 :"+ $("#crtTime2").datebox('getValue')+";");
+	var D_shareTime="";
+    if(shareTime=="条形码日期"&&D_appTime!=""){
+    	D_shareTime=D_appTime;
+	}else if(shareTime=="进件日期"&&D_crtTime!=""){
+		D_shareTime=D_crtTime;
+	}
+	var D_nosafePromoter = ($("#nosafePromoter2").combobox('getText')=="--请选择--")?"":("异常进件渠道 :"+ $("#nosafePromoter2").combobox('getText')+";");
+	var D_c1CoName = ($("#c1CoName2").val()=="")?"":("单位名称 :"+$("#c1CoName2").val()+";");
+	var D_c4CyCadd1 = ($("#c4CyCadd1_2").combobox('getText')=="--请选择--")?"":("邮寄地址 :"+ $("#c4CyCadd1_2").combobox('getText')+";");
+	var D_c4ApBatch = ($("#c4ApBatch2").val()=="")?"":("团办号  :"+$("#c4ApBatch2").val()+";");
+	var D_c5AbCode = ($("#c5AbCode2").val()=="")?"":("推广机构号  :"+$("#c5AbCode2").val()+";");
+	var D_c4AbUser = ($("#c4AbUser2").val()=="")?"":("推广人员代码  :"+$("#c4AbUser2").val()+";");
+	var D_NumberRead="";
+	var D_minNumberRead = ($("#minNumberRead2").val()=="")?"":($("#minNumberRead2").val());
+	var D_maxNumberRead = ($("#maxNumberRead2").val()=="")?";":($("#maxNumberRead2").val()+";");
+	if(D_minNumberRead==""&&(D_maxNumberRead==""||D_maxNumberRead==";")){
+		 D_NumberRead="";
+	}else{
+		D_NumberRead="中征信1000评分:"+D_minNumberRead+"-"+D_maxNumberRead;
+	}
+	var D_appStatus = ($("#appStatus_2").combobox('getText')=="--请选择--")?"":("申请件状态:"+ $("#appStatus_2").combobox('getText')+";");
+	var identify = ($("#identify2").combobox('getText')=="--请选择--")?"":($("#identify2").combobox('getText'));
+	var D_isHaveCardCust = ($("#child_11").combobox('getText')=="--请选择--")?"":("已持卡客户:"+ $("#child_11").combobox('getText')+";");
+	var D_quickCardFlag = ($("#child_21").combobox('getText')=="--请选择--")?"":("快速申请:"+ $("#child_21").combobox('getText')+";");
+	var D_pubPolice = ($("#child_31").combobox('getText')=="--请选择--")?"":("公安链接状态:"+ $("#child_31").combobox('getText')+";");
+	var D_identify="";
+	if(identify=='已持卡客户'){
+		D_identify=D_isHaveCardCust;
+	}else if(identify=='快速申请'){
+		D_identify=D_quickCardFlag;
+	}else if(identify=='公安链接状态'){
+		D_identify=D_pubPolice;
+	}
+	var D_creditDecisionLayer = ($("#creditDecisionLayer2").combobox('getText')=="--请选择--")?"":("征信策略结果描述:"+ $("#creditDecisionLayer2").combobox('getText')+";");
+	var D_creditDecisionResult = ($("#creditDecisionResult2").combobox('getText')=="--请选择--")?"":("征信策略结果:"+ $("#creditDecisionResult2").combobox('getText')+";");
+	var D_ProposedLmt="";
+	var D_minProposedLmt = ($("#minProposedLmt2").val()=="")?"":($("#minProposedLmt2").val());
+	var D_maxProposedLmt = ($("#maxProposedLmt2").val()=="")?";":($("#maxProposedLmt2").val()+";");
+	if(D_minProposedLmt==""&&(D_maxProposedLmt==""||D_maxProposedLmt==";")){
+		D_ProposedLmt="";
+	}else{
+		D_ProposedLmt="系统决策建议额度:"+D_minProposedLmt+"-"+D_maxProposedLmt;
+	}
+	var D_allotType = ($("#allotType2").combobox('getText')=="--请选择--")?"":("分配顺序:"+ $("#allotType2").combobox('getText')+";");
+	var D_riskScore="";
+	var D_minRiskScore = ($("#minRiskScore2").val()=="")?"":($("#minRiskScore2").val());
+	var D_maxRiskScore = ($("#maxRiskScore2").val()=="")?",":($("#maxRiskScore2").val()+",");
+	if(D_minRiskScore==""&&(D_maxRiskScore==""||D_maxRiskScore==",")){
+		D_riskScore="";
+	} else{
+		D_riskScore="腾讯天御分:"+D_minRiskScore+"-"+D_maxRiskScore;
+	}
+	var D_phone = ($("#phoneCertification2").combobox('getText')=="--请选择--")?"":("手机实名认证结果:"+ $("#phoneCertification2").combobox('getText')+",");
+	var D_fqzValue=($("#fqzValue2").combobox('getText')=="--请选择--")?"":("反欺诈决策结果:"+ $("#fqzValue2").combobox('getText')+",");
+ 	var D_riskCode=($("#riskCode2").combobox('getText')=="--请选择--")?"":("天御风险码:"+ $("#riskCode2").combobox('getText')+",");
+ 	var D_riskLevel=($("#riskLevel2").combobox('getText')=="--请选择--")?"":("天御风险码等级:"+ $("#riskLevel2").combobox('getText')+",");
+	var D_triggerType="";
+	var D_triggerType1 = ($("#triggerType12").val()=="")?"":($("#triggerType12").val());
+	var D_triggerType2 = ($("#triggerType22").val()=="")?",":($("#triggerType22").val()+",");
+	if(D_triggerType1==""&&(D_triggerType2==""||D_triggerType2==",")){
+		D_riskScore="";
+	} else{
+		D_triggerType="征信评分:"+D_triggerType1+"-"+D_triggerType2;
+	}
+	var D_batchLabel='';
+	if(document.getElementById("batchLabel2").checked){
+		D_batchLabel="批量标签:是,";
+	}
+	var D_pbocRstFinDesp='';
+	if(document.getElementById("pbocRstFinDesp2").checked){
+		D_pbocRstFinDesp="人行不良:是,";
+	}
+	var D_appStatus2='';
+	if(document.getElementById("appStatus2_2").checked){
+		D_appStatus2="挂起标签:是,";
+	}
+	var D_waiBao='';
+	if(document.getElementById("waiBao2").checked){
+		D_appStatus2="外包标签:是,";
+	}
+	var D_policeRxbd=($("#policeRxbd2").combobox('getText')=="--请选择--")?"":("人像比对结果:"+$("#policeRxbd2").combobox('getText')+",");
+	var params = D_serialNum+D_appRegion+D_appChannel+D_appInput+D_appProd+D_shareTime+D_nosafePromoter+
+	D_c1CoName+D_c4CyCadd1+D_c4ApBatch+D_c5AbCode+D_c4AbUser+
+	D_NumberRead+D_appStatus+D_identify+D_creditDecisionLayer+
+	D_creditDecisionResult+D_ProposedLmt+D_allotType+
+	D_pbocRstFinDesp+D_appStatus2+D_riskScore+D_phone+
+	D_fqzValue+D_riskCode+D_riskLevel+D_triggerType+D_batchLabel+D_policeRxbd; 
+	return params;
+}
+//清空页面所有值
+function fnReset(){
+		$("#ruleName").val('');
+		$('#ruleType').combobox("setValue",'--请选择--'); 
+		$("#ruleStatus").combobox('clear');
+		$('#ruleStatus').combobox("setValue",'--请选择--'); 
+		$("#sortFlag").val('');
+		$('#allotType').combobox('clear');
+		$('#serialNum').combobox('clear');
+		$('#appRegion').combobox('clear');
+		$('#appChannel').combobox('clear');
+		$('#appInput').combobox('clear');
+		$('#appProd').combobox('clear');
+		$('#shareTime').combobox('clear');
+		$('#nosafePromoter').combobox('clear');
+		$('#child_1').combobox('clear');
+		$('#child_2').combobox('clear');
+		$('#child_3').combobox('clear');
+		$('#c4CyCadd1').combobox('clear');
+		$('#identify').combobox('clear');
+		$('#creditDecisionLayer').combobox('clear');
+		$('#creditDecisionResult').combobox('clear');
+		$('#phoneCertification').combobox('clear');
+		$('#D_policeRxbd').combobox('clear');
+		var forms = $("#ruleinfo_form");
+		forms.form("reset");
+}
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window("close");
+}
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+//征信普通件规则查询方法-wenyh
+function checkAndSearchCommonTab(formName, tblName) {
+	var pageopt = $('#pagination_common').data("pagination").options;
+	var pageNumber=pageopt.pageNumber;
+	var pageSize=  pageopt.pageSize;
+	var opts = tblCommonObj.datagrid("options");
+	var jsondata = getFormData(seachCommonForm.serializeArray());
+	opts.url = "/opas-allot-server/queryAllotRule.json";
+	var s={
+			"jsondata":jsondata,
+			"page":pageNumber,
+			"rows":pageSize,
+			'id':"1",
+			"ydjFlag":"1",
+			"ruleType":"3"
+			};
+	tblCommonObj.datagrid("reload", s); 
+}
+//征信快速件规则查询方法-wenyh
+function checkAndSearchFastTab(formName, tblName) {
+	var pageopt = $('#pagination_fast').data("pagination").options;
+	var pageNumber=pageopt.pageNumber;
+	var pageSize=  pageopt.pageSize;
+	var opts = tblFastObj.datagrid("options");
+	var jsondata = getFormData(seachFastForm.serializeArray());
+	opts.url = "/opas-allot-server/queryAllotRule.json";
+	var s={
+			"jsondata":jsondata,
+			"page":pageNumber,
+			"rows":pageSize,
+			'id':"1",
+			"ydjFlag":"1",
+			"ruleType":"1"
+			};
+	tblFastObj.datagrid("reload", s); 
+}
+
+//保存自动分件数量
+function  onSaveAutoNumber(){
+	var ydjCreditNumber=$("#ydjCreditNumber").textbox('getValue');
+	if(ydjCreditNumber==null||ydjCreditNumber==""){
+		$.messager.alert("提示","当前数值为空,不能保存 ","error");
+		return;
+	}
+	 $cf.ajax({
+	     	url:"/opas-allot-server/saveAutoNumber.json",
+	      	data:{'ydjFlag':'1',
+	     		'currNode':'02',
+	     		'ydjCreditNumber':ydjCreditNumber,
+	     		'userCode':userCode
+	     		}, 
+	     	onSuccess:function(data){
+	     		if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "保存成功 !", "info", function() {
+					});
+				} else {
+					$.messager.alert("操作提示", "保存异常,原因:  " + data.RSP_BODY.exMsg, "error");
+					return;
+				}
+	       }
+	   	 });
+}
+</script>
+</html>

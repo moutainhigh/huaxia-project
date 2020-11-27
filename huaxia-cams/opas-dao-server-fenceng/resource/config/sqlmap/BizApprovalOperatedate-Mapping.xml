@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BizApprovalOperatedate" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.input.BizApprovalOperatedate" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="OPERATE_CODE" property="operateCode" jdbcType="VARCHAR" />
+    <result column="OPERATE_NAME" property="operateName" jdbcType="VARCHAR" />
+    <result column="OPERATE_TIME" property="operateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    ID, OPERATE_CODE, OPERATE_NAME, OPERATE_TIME
+    from OPAS_BIZ_APPROVAL_OPERATEDATE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    ID, OPERATE_CODE, OPERATE_NAME, OPERATE_TIME
+    from OPAS_BIZ_APPROVAL_OPERATEDATE
+    where OPERATE_CODE = #{userId,jdbcType=VARCHAR}
+    and to_char(APPROVE_TIME,'yyyyMMdd') = to_char(sysdate,'yyyyMMdd')
+  </select>
+  <!-- 根据userId查询当天是否有记录xzg -->
+  <select id="selectByUserIdAndDT" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    ID, OPERATE_CODE, OPERATE_NAME, OPERATE_TIME
+    from OPAS_BIZ_APPROVAL_OPERATEDATE
+    where OPERATE_CODE = #{userId,jdbcType=VARCHAR}
+    and to_char(to_date(OPERATE_TIME, 'yyyy/MM/dd'),'yyyyMMdd') = to_char(sysdate, 'yyyyMMdd')
+    and rownum=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_BIZ_APPROVAL_OPERATEDATE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.input.BizApprovalOperatedate" >
+    insert into OPAS_BIZ_APPROVAL_OPERATEDATE (ID, OPERATE_CODE, OPERATE_NAME, 
+      OPERATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{operateCode,jdbcType=VARCHAR}, #{operateName,jdbcType=VARCHAR}, 
+      #{operateTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.input.BizApprovalOperatedate" >
+    insert into OPAS_BIZ_APPROVAL_OPERATEDATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="operateCode != null" >
+        OPERATE_CODE,
+      </if>
+      <if test="operateName != null" >
+        OPERATE_NAME,
+      </if>
+      <if test="operateTime != null" >
+        OPERATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="operateCode != null" >
+        #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null" >
+        #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null" >
+        #{operateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.input.BizApprovalOperatedate" >
+    update OPAS_BIZ_APPROVAL_OPERATEDATE
+    <set >
+      <if test="operateCode != null" >
+        OPERATE_CODE = #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null" >
+        OPERATE_NAME = #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null" >
+        OPERATE_TIME = #{operateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.input.BizApprovalOperatedate" >
+    update OPAS_BIZ_APPROVAL_OPERATEDATE
+    set OPERATE_CODE = #{operateCode,jdbcType=VARCHAR},
+      OPERATE_NAME = #{operateName,jdbcType=VARCHAR},
+      OPERATE_TIME = #{operateTime,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectAllCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select  count(1) from (SELECT ID, OPERATE_CODE, OPERATE_NAME, OPERATE_TIME 
+    	FROM OPAS_BIZ_APPROVAL_OPERATEDATE)
+	</select>
+	<select id="selectAll" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT OPERATE_NAME,ID, OPERATE_CODE, OPERATE_TIME 
+            FROM OPAS_BIZ_APPROVAL_OPERATEDATE
+	</select>
+	<!--组员工作连续性异常统计 sxt-->
+	<select id="queryByName" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT 
+			 OPERATE_NAME,ID, OPERATE_CODE, OPERATE_TIME 
+        FROM OPAS_BIZ_APPROVAL_OPERATEDATE
+        WHERE OPERATE_NAME = #{userName,jdbcType=VARCHAR}
+	</select>
+</mapper>

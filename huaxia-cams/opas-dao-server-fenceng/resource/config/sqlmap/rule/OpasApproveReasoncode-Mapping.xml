@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasApproveReasoncode">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.rule.OpasApproveReasoncode">
+		<result column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+		<result column="REASON_CODE" jdbcType="VARCHAR" property="reasonCode" />
+		<result column="REASON_TYPE" jdbcType="VARCHAR" property="reasonType" />
+		<result column="REASON_DESC" jdbcType="VARCHAR" property="reasonDesc" />
+		<result column="MATCH_ROLE" jdbcType="VARCHAR" property="matchRole" />
+		<result column="STATUS" jdbcType="CHAR" property="status" />
+	</resultMap>
+
+
+	<select id="selectByObapproval" parameterType="com.huaxia.opas.domain.rule.OpasBizApproval"
+		resultMap="BaseResultMap">
+		select AUTO_ID,REASON_CODE,REASON_TYPE,REASON_DESC,MATCH_ROLE,STATUS 
+		from OPAS_APPROVE_REASONCODE
+		WHERE REASON_CODE in (#{refuseCode1,jdbcType=VARCHAR},#{refuseCode2,jdbcType=VARCHAR},#{refuseCode3,jdbcType=VARCHAR})
+	</select>
+	
+	<select id="selectByObapprovalHis" parameterType="com.huaxia.opas.domain.rule.OpasBizApprovalHis"
+		resultMap="BaseResultMap">
+		select AUTO_ID,REASON_CODE,REASON_TYPE,REASON_DESC,MATCH_ROLE,STATUS 
+		from OPAS_APPROVE_REASONCODE
+		WHERE REASON_CODE in (#{refuseCode1,jdbcType=VARCHAR},#{refuseCode2,jdbcType=VARCHAR},#{refuseCode3,jdbcType=VARCHAR})
+	</select>
+</mapper>

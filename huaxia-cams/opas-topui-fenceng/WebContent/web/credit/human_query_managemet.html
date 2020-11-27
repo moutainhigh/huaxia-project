@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>人行查询管理</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style>
+</head>
+<body style="padding: 10px;">
+		<fieldset style="margin-top:10px;"> 
+				<form id="educationForm">
+						<div align="center"> 
+								<table style="width:90%;border-bottom:0px;border-right:0px;border-left:0px;border-top:0px" border="1" >
+										<tr>
+											<td align="right">自动查询人行上限数:</td>
+											<td>
+												 <input class="easyui-validatebox" id="hu_autoMax" name="hu_autoMax" data-options="required:true,validType:'integer'"/>
+											</td>
+											<td align="right">年现查询:</td>
+											<td>
+												 <input class="easyui-textbox" id="zd_lifeQuery" name="zd_lifeQuery"  readonly="readonly"/>
+											</td>
+											
+											<td align="right">自动查人行开始时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="hu_autoStartTime" name="hu_autoStartTime"/>
+											</td>
+											<td align="right">自动查人行结束时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="hu_autoEndTime" name="hu_autoEndTime" />
+											</td>
+										</tr>
+										
+										<tr>
+											<td align="right">手动查询人行上限数:</td>
+											<td>
+												 <input class="easyui-validatebox" id="hu_manualMax" name="hu_manualMax" data-options="required:true,validType:'integer'"/>
+											</td>
+											<td align="right">年现查询:</td>
+											<td>
+												 <input class="easyui-textbox" id="sd_lifeQuery" name="sd_lifeQuery"  readonly="readonly"/>
+											</td>
+											<td align="right">手动查人行开始时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="hu_manualStartTime" name="hu_manualStartTime"/>
+											</td>
+											<td align="right">手动查人行结束时间:</td>
+											<td>
+												 <input class="easyui-datetimebox" data-options="required:true,editable:false" id="hu_manualEndTime" name="hu_manualEndTime" />
+											</td>
+										</tr>
+										
+										<tr>			
+											<td align="right">总查询上限数:</td>
+											<td >
+												 <input class="easyui-validatebox" id="hu_totalMax" name="hu_totalMax" data-options="required:true,validType:'integer'"/>
+											</td>
+											<td align="right">年现查询:</td>
+											<td>
+												 <input class="easyui-textbox" id="lifeQuery" name="lifeQuery" readonly="readonly"/>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="8" align="center">
+												<a href="javascript:onSave();" class="easyui-linkbutton" iconCls="icon-save">保 存</a>&nbsp;
+												<a href="javascript:onClear()" class="easyui-linkbutton" iconCls="icon-cancel">清 空</a>&nbsp;
+											</td>
+										</tr>
+								</table>
+						</div>
+				</form>
+		</fieldset> 
+	
+	
+	
+<script type="text/javascript">
+var educationForm = $("#educationForm");
+
+$(function(){
+	selectOpasApPeopleBank();
+});
+
+function selectOpasApPeopleBank(){
+	$cf.ajax({
+		url : "/opas-naps/selectOpasApPeopleBank_maxCount.json",
+		onSuccess:function(data) {
+			if (data.RSP_BODY.success) {
+				var humanQuery=data.RSP_BODY.humanQuery;
+				var humanM=data.RSP_BODY.humanM;
+				var sd_lifeQuery=humanM.sd_lifeQuery;
+				var zd_lifeQuery=humanM.zd_lifeQuery;
+				var lifeQuery=humanM.lifeQuery;
+				$("#sd_lifeQuery").textbox('setValue',sd_lifeQuery);
+				$("#zd_lifeQuery").textbox('setValue',zd_lifeQuery);
+				$("#lifeQuery").textbox('setValue',lifeQuery);
+				
+				$("#hu_autoMax").val(humanQuery.hu_autoMax); //自动查询人行上限数
+				$("#hu_manualMax").val(humanQuery.hu_manualMax);//手动查询人行上限数
+				$("#hu_totalMax").val(humanQuery.hu_totalMax);//总查询上限数
+				$("#hu_autoStartTime").textbox('setValue',humanQuery.hu_autoStartTime);//自动查人行开始时间
+				$("#hu_autoEndTime").textbox('setValue',humanQuery.hu_autoEndTime);//自动查人行结束时间
+				$("#hu_manualStartTime").textbox('setValue',humanQuery.hu_manualStartTime);//手动查人行开始时间
+				$("#hu_manualEndTime").textbox('setValue',humanQuery.hu_manualEndTime);//手动查人行结束时间			
+			}
+		}
+
+	});
+}
+
+function onSave(){
+	var formData = isRequired('educationForm');
+	var hu_autoMax=$("#hu_autoMax").val(); //自动查询学历上限数设置
+	var hu_manualMax=$("#hu_manualMax").val();//手动查询学历上限数设置
+	var hu_totalMax=$("#hu_totalMax").val();//总查询上限数
+	var hu_autoStartTime=$("#hu_autoStartTime").textbox('getValue');//自动查学历开始时间
+	var hu_autoEndTime=$("#hu_autoEndTime").textbox('getValue');//自动查学历结束时间
+	var hu_manualStartTime=$("#hu_manualStartTime").textbox('getValue');//手动查学历开始时间
+	var hu_manualEndTime=$("#hu_manualEndTime").textbox('getValue');//手动查学历结束时间
+	if(hu_autoMax==''||hu_manualMax==''||hu_totalMax==''||hu_autoStartTime==''||hu_autoEndTime==''||hu_manualStartTime==''||hu_manualEndTime==''){
+		return;
+	}
+	var jsondata = getFormDataJson(educationForm.serializeArray());
+	$cf.ajax({
+		url:"/opas-naps/saveOpasApPeopleBank_maxCount.json",
+		data:jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+			 	alert("保存成功!");
+			} else {
+				alert("保存失败!");
+				return;
+			}
+		}
+	});
+}
+
+function onClear(){
+	$("#hu_autoMax").val(""); //自动查询人行上限数
+	$("#hu_manualMax").val("");//手动查询人行上限数
+	$("#hu_totalMax").val("");//总查询上限数
+	$("#hu_autoStartTime").textbox('setValue',"");//自动查人行开始时间
+	$("#hu_autoEndTime").textbox('setValue',"");//自动查人行结束时间
+	$("#hu_manualStartTime").textbox('setValue',"");//手动查人行开始时间
+	$("#hu_manualEndTime").textbox('setValue',"");//手动查人行结束时间
+}
+
+
+
+</script>
+
+</body>
+</html>

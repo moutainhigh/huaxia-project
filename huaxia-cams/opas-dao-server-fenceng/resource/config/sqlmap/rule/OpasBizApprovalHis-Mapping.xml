@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasBizApprovalHis">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.OpasBizApprovalHis">
+    <id column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+    <result column="REFUSE_CHILDCARD" jdbcType="CHAR" property="refuseChildcard" />
+    <result column="PRE_APPROVELIMIT" jdbcType="DECIMAL" property="preApprovelimit" />
+    <result column="APPLYER_NAME" jdbcType="VARCHAR" property="applyerName" />
+    <result column="APPLY_CARD" jdbcType="VARCHAR" property="applyCard" />
+    <result column="IS_AGREE_DEGRADE" jdbcType="CHAR" property="isAgreeDegrade" />
+    <result column="SYS_DECISION_TIME" jdbcType="DATE" property="sysDecisionTime" />
+    <result column="MASTERCARD_DECRESULT" jdbcType="VARCHAR" property="mastercardDecresult" />
+    <result column="MASTERCARD_APPROVEREUSLT" jdbcType="VARCHAR" property="mastercardApprovereuslt" />
+    <result column="SYS_CREDIT_PRODUCE" jdbcType="VARCHAR" property="sysCreditProduce" />
+    <result column="CHILDCARD_DECRESULT" jdbcType="VARCHAR" property="childcardDecresult" />
+    <result column="CHILDCARD_APPROVEREUSLT" jdbcType="VARCHAR" property="childcardApprovereuslt" />
+    <result column="CREDIT_RESULT" jdbcType="VARCHAR" property="creditResult" />
+    <result column="CREDIT_REFUSE_REASON" jdbcType="VARCHAR" property="creditRefuseReason" />
+    <result column="WARNINGLIST_RESULT" jdbcType="VARCHAR" property="warninglistResult" />
+    <result column="APPROVE_RESULT" jdbcType="CHAR" property="approveResult" />
+    <result column="APPROVE_CREDIT_LIMIT" jdbcType="DECIMAL" property="approveCreditLimit" />
+    <result column="APPROVE_CREDIT_PRODUCT" jdbcType="VARCHAR" property="approveCreditProduct" />
+    <result column="MANUAL_LIMIT" jdbcType="DECIMAL" property="manualLimit" />
+    <result column="POLICY_CODE1" jdbcType="VARCHAR" property="policyCode1" />
+    <result column="POLICY_CODE2" jdbcType="VARCHAR" property="policyCode2" />
+    <result column="POLICY_CODE3" jdbcType="VARCHAR" property="policyCode3" />
+    <result column="VIOLATE_CODE1" jdbcType="VARCHAR" property="violateCode1" />
+    <result column="VIOLATE_CODE2" jdbcType="VARCHAR" property="violateCode2" />
+    <result column="VIOLATE_CODE3" jdbcType="VARCHAR" property="violateCode3" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+    <result column="REFUSE_CODE1" jdbcType="VARCHAR" property="refuseCode1" />
+    <result column="REFUSE_CODE2" jdbcType="VARCHAR" property="refuseCode2" />
+    <result column="REFUSE_CODE3" jdbcType="VARCHAR" property="refuseCode3" />
+    <result column="APPROVER" jdbcType="VARCHAR" property="approver" />
+    <result column="APPROVER_NAME" jdbcType="VARCHAR" property="approverName" />
+    <result column="HIGHLEVLE_APPROVER" jdbcType="VARCHAR" property="highlevleApprover" />
+    <result column="HIGHLEVLE_APPROVETIME" jdbcType="DATE" property="highlevleApprovetime" />
+    <result column="SUBMIT_HIGHLEVLE_TIME" jdbcType="DATE" property="submitHighlevleTime" />
+    <result column="APPROVE_TIME" jdbcType="DATE" property="approveTime" />
+    <result column="CURR_OPT_GROUP" jdbcType="CHAR" property="currOptGroup" />
+    <result column="ID_TYPE" jdbcType="VARCHAR" property="idType" />
+    <result column="ID_NO" jdbcType="VARCHAR" property="idNo" />
+  </resultMap>
+  
+  
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.Opasbizinpapplc1" resultMap="BaseResultMap">
+    select 
+     APP_ID, AUTO_ID, REFUSE_CHILDCARD, PRE_APPROVELIMIT, APPLYER_NAME, APPLY_CARD, IS_AGREE_DEGRADE, 
+    SYS_DECISION_TIME, MASTERCARD_DECRESULT, MASTERCARD_APPROVEREUSLT, SYS_CREDIT_PRODUCE, 
+    CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT, CREDIT_REFUSE_REASON, 
+    WARNINGLIST_RESULT, APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+    MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+    VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER, APPROVER_NAME, 
+    HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP 
+    from OPAS_BIZ_APPROVAL_HIS where ID_TYPE = #{c1Idtype,jdbcType=VARCHAR} and ID_NO = #{c1Idnbr,jdbcType=VARCHAR} 
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+     APP_ID, AUTO_ID, REFUSE_CHILDCARD, PRE_APPROVELIMIT, APPLYER_NAME, APPLY_CARD, IS_AGREE_DEGRADE, 
+    SYS_DECISION_TIME, MASTERCARD_DECRESULT, MASTERCARD_APPROVEREUSLT, SYS_CREDIT_PRODUCE, 
+    CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT, CREDIT_REFUSE_REASON, 
+    WARNINGLIST_RESULT, APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+    MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+    VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER, APPROVER_NAME, 
+    HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP 
+    from OPAS_BIZ_APPROVAL_HIS 
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from OPAS_BIZ_APPROVAL_HIS
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.OpasBizApprovalHis">
+    insert into OPAS_BIZ_APPROVAL_HIS (APP_ID, AUTO_ID, REFUSE_CHILDCARD, 
+      PRE_APPROVELIMIT, APPLYER_NAME, APPLY_CARD, 
+      IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT, 
+      MASTERCARD_APPROVEREUSLT, SYS_CREDIT_PRODUCE, 
+      CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, 
+      CREDIT_RESULT, CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, 
+      APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+      MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, 
+      POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+      VIOLATE_CODE3, MEMO, REFUSE_CODE1, 
+      REFUSE_CODE2, REFUSE_CODE3, APPROVER, 
+      APPROVER_NAME, HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, 
+      SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP
+      )
+    values (#{appId,jdbcType=VARCHAR}, #{autoId,jdbcType=VARCHAR}, #{refuseChildcard,jdbcType=CHAR}, 
+      #{preApprovelimit,jdbcType=DECIMAL}, #{applyerName,jdbcType=VARCHAR}, #{applyCard,jdbcType=VARCHAR}, 
+      #{isAgreeDegrade,jdbcType=CHAR}, #{sysDecisionTime,jdbcType=DATE}, #{mastercardDecresult,jdbcType=VARCHAR}, 
+      #{mastercardApprovereuslt,jdbcType=VARCHAR}, #{sysCreditProduce,jdbcType=VARCHAR}, 
+      #{childcardDecresult,jdbcType=VARCHAR}, #{childcardApprovereuslt,jdbcType=VARCHAR}, 
+      #{creditResult,jdbcType=VARCHAR}, #{creditRefuseReason,jdbcType=VARCHAR}, #{warninglistResult,jdbcType=VARCHAR}, 
+      #{approveResult,jdbcType=CHAR}, #{approveCreditLimit,jdbcType=DECIMAL}, #{approveCreditProduct,jdbcType=VARCHAR}, 
+      #{manualLimit,jdbcType=DECIMAL}, #{policyCode1,jdbcType=VARCHAR}, #{policyCode2,jdbcType=VARCHAR}, 
+      #{policyCode3,jdbcType=VARCHAR}, #{violateCode1,jdbcType=VARCHAR}, #{violateCode2,jdbcType=VARCHAR}, 
+      #{violateCode3,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{refuseCode1,jdbcType=VARCHAR}, 
+      #{refuseCode2,jdbcType=VARCHAR}, #{refuseCode3,jdbcType=VARCHAR}, #{approver,jdbcType=VARCHAR}, 
+      #{approverName,jdbcType=VARCHAR}, #{highlevleApprover,jdbcType=VARCHAR}, #{highlevleApprovetime,jdbcType=DATE}, 
+      #{submitHighlevleTime,jdbcType=DATE}, #{approveTime,jdbcType=DATE}, #{currOptGroup,jdbcType=CHAR}
+      )
+  </insert>
+</mapper>

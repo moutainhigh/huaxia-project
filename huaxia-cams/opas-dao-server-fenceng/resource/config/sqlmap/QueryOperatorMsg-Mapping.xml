@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="QueryOperatorMsg">
+
+	<resultMap id="orgNameMap" type="java.util.Map">
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR" />
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryOrgName" resultMap="orgNameMap">
+		SELECT ORG_NO,ORG_NAME
+		  FROM opas_ap_org
+	</select>
+	
+	<resultMap id="userMap" type="java.util.Map">
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryOperatorName" resultMap="userMap" parameterType="java.lang.String">
+		SELECT u.USER_NAME, u.USER_CODE
+		  FROM opas_ap_user u,
+		       (select uo.USER_ID
+		          from opas_ap_user_org uo, opas_ap_org o
+		         where uo.org_id = o.org_id
+		          and o.org_no = #{orgId}
+		         ) uou
+		 where uou.USER_ID = u.USER_ID  and u.status='1'
+	</select>
+	
+	<resultMap id="applyOrgNameMap" type="java.util.Map">
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="org_no" property="orgNo" jdbcType="VARCHAR" />
+		<result column="curr_opt_group" property="currOptGroup" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryApplyOrgName" resultMap="applyOrgNameMap">
+		 select org_no, org_name from 
+		 OPAS_AP_ORG where ORG_LEVEL in ('4','5')
+		  
+	</select>
+	
+	<resultMap id="applyUserMap" type="java.util.Map">
+		<result column="APPLYER_NAME" property="userName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryApplyOperatorName" resultMap="applyUserMap" parameterType="java.lang.String">
+		select r.user_code,r.user_name as APPLYER_NAME from OPAS_AP_ORG g left join OPAS_AP_USER_ORG o
+      	on o.org_id = g.org_id 
+        left join OPAS_AP_USER r on r.user_id = o.user_id 
+        where org_no  = #{orgName} and r.STATUS='1'
+	</select>
+
+</mapper>

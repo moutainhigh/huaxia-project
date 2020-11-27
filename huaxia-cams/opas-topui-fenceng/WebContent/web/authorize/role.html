@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblRole" title="角色信息列表" class="easyui-datagrid"
+		style="width: 98%"
+		data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/role_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="roleId" width="10%" align="center" checkbox="true">角色Id</th>
+				<th field="roleName" width="15%">角色名称</th>
+				<th field="roleDesc" width="20%">角色描述</th>
+				<th field="status" width="5%" align="center"
+					formatter="formatStatus">状态</th>
+				<th field="roleCode" width="5%" align="center">角色代码</th>
+				<th field="crtUser" width="7%" align="center">创建人</th>
+				<th field="crtTime" width="15%" align="center"
+					formatter="gridDateFormat2">创建时间</th>
+					<th field="lstUpdUser" width="7%" align="center">最后操作人</th>
+				<th field="lstUpdTime" width="15%" align="center"
+					formatter="gridDateFormat2">最后操作时间</th>
+				<th field="operate" width="15%" align="center"
+					data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			角色名称: <input class="easyui-textbox" style="width: 110px" name="roleName" id="roleName"> 
+			角色描述: <input class="easyui-textbox" style="width: 110px" name="roleDesc" id="roleDesc">
+			状态:<select class="easyui-combobox" style="width: 80px" id="status" name="status">
+			                <option value="">请选择</option>
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblRole');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a href="javascript:common.openWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add" onclick="initpage()">新增</a>
+		</form>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="角色信息修改"
+		style="width: 300px; height: 250px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>角色名称:</td>
+					<td><input class="easyui-validatebox textbox" id="roleName"
+						type="text" name="roleName" data-options="required:true"></input>
+						<input type="hidden" name="roleId" id="roleId" /></td>
+				</tr>
+				<tr>
+					<td>角色描述:</td>
+					<td><input class="easyui-validatebox textbox" id="roleDesc"
+						type="text" name="roleDesc" ></input></td>
+				</tr>
+				<tr>
+					<td>角色代码:</td>
+					<td><input class="easyui-validatebox textbox"
+						id="roleCode" type="text" name="roleCode"
+						data-options="required:true,validType:'length[0,5]'"></input></td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="角色信息添加"
+		style="width: 300px; height: 250px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>角色名称:</td>
+					<td><input class="easyui-validatebox textbox" id="roleName"
+						type="text" name="roleName" data-options="required:true"></input>
+						<input type="hidden" name="roleId" id="roleId" /></td>
+				</tr>
+				<tr>
+					<td>角色描述:</td>
+					<td><input class="easyui-validatebox textbox" id="roleDesc"
+						type="text" name="roleDesc"></input></td>
+				</tr>
+				<tr>
+					<td>角色代码:</td>
+					<td><input class="easyui-validatebox textbox"
+						id="roleCode" type="text" name="roleCode"
+						data-options="required:true,validType:['memo','length[0,5]']"></input></td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px" id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+		</div>
+	</div>
+
+	<div id="roleRelationMenu" title="关联菜单" class="easyui-window"
+		title="Window Layout"
+		data-options="iconCls:'icon-save',modal:true,closed:true"
+		style="width: 400px; height: 500px; padding: 5px;">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'" style="padding: 2px;">
+				<div id="menuInfo" data-options="region:'west'" title="菜单信息"
+					style="width: 30%; height: 100%; padding: 1px">
+					<ul id="menuTree" class="easyui-tree"
+						data-options="animate:true,checkbox:true,cascadeCheck:false"></ul>
+				</div>
+			</div>
+			<div data-options="region:'south',border:false"
+				style="text-align: right; padding: 5px 0 0;">
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+					href="javascript:void(0)" onclick="saveMenuRelation()"
+					style="width: 80px">保存</a> <a class="easyui-linkbutton"
+					data-options="iconCls:'icon-cancel'" href="javascript:void(0)"
+					onclick="$('#roleRelationMenu').window('close')"
+					style="width: 80px">关闭</a>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script>
+	var tblRole = $("#tblRole");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	var relWindow = $("#roleRelationMenu");
+	var menuTree = $("#menuTree");
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editRole();>修改</a>&nbsp;<a href=javascript:deleteRole();>删除</a>&nbsp;<a href=javascript:relationMenu(\""
+				+ row.roleId + "\");>关联菜单</a>";
+	}
+	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	}
+
+	function addRole() {
+		addWindow.window({
+			closed : false
+		});
+	}
+	function initpage() {
+		//$("#addForm")[0].reset();
+	document.getElementById("addForm").reset();
+	} 
+	function editRole() {
+		var roleObj = tblRole.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(roleObj)
+		});
+	}
+
+	function deleteRole() {
+		var roleObj = tblRole.datagrid("getSelected");
+		
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/role_remove.json",
+					data : roleObj,
+					onSuccess : function(roleObj) {
+
+						top.$cf.showMsg("角色删除成功！");
+
+						onConcle("save");
+						tblRole.datagrid("reload");
+					}
+				});
+			}
+		});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	function onUpdate() {
+		var roleData = isRequired('editForm');
+		if (roleData.roleName == null || roleData.roleName.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,角色名称不能为空!");
+			return;
+		}
+		if (roleData.roleCode == null || roleData.roleCode.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,角色代码不能为空!");
+			return;
+		}else if(roleData.roleCode.trim().length>5){
+			$.messager.alert("操作提示", cue+"失败:角色代码不能大于五位!", "error");
+			return true;
+		}
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/role_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblRole.datagrid("reload");
+					});
+				}else if(data.RSP_BODY.isFailed){
+					$.messager.alert("操作提示", "角色码重复，请查看后添加!") 
+					onConcle("winAdd");
+					return;
+				}else if(data.RSP_BODY.isFailedName){
+					$.messager.alert("操作提示", "角色名称重复，请查看后添加!") 
+					onConcle("winAdd");
+				return;
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		var roleData = isRequired('addForm');
+		if (roleData.roleName == null || roleData.roleName.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,角色名称不能为空!");
+			return;
+		}
+		if (roleData.roleCode == null || roleData.roleCode.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,角色代码不能为空!");
+			return;
+		}else if(roleData.roleCode.trim().length>5){
+			$.messager.alert("操作提示", cue+"失败:角色代码不能大于五位!", "error");
+			return true;
+		}
+		var jsondata = getFormData(addForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/role_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblRole.datagrid("reload");
+					});
+				}else if(data.RSP_BODY.isFailed){
+					$.messager.alert("操作提示", "角色码重复，请查看后添加!") 
+						onConcle("winAdd");
+						return;
+				}else if(data.RSP_BODY.isFailedName){
+					$.messager.alert("操作提示", "角色名称重复，请查看后添加!") 
+					onConcle("winAdd");
+					return;
+				}else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winAdd");
+					return;
+				}
+			}
+
+		});
+	}
+
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+
+	//关联菜单
+	function relationMenu(roleId) {
+		$cf.ajax({
+			data : {
+				"roleId" : roleId
+			},
+			url : "/opas-naps/menu_list_all.json",
+			onSuccess : function(node) {
+				var node = node.RSP_BODY.menus;
+				menuTree.tree({
+					data : node,
+					onClick : function(node) {
+
+					}
+				});
+				showWin("roleRelationMenu");
+				
+				selectOne(node);
+			}
+		});
+	}
+	function selectOne(node){
+		$('#menuTree').tree({
+	        cascadeCheck: false,
+// 	        onlyLeafCheck: true,
+	        checkbox: true,
+	        data: node,
+	        width: 160,
+	        height: 32,
+	        panelHeight: 400,
+	        onSelect: function (node) {
+	          	
+	            debugger;
+	            if (node.checked) {
+	            	var childs = node.children;
+	            	var parentId = node.parentId;
+	            	var parnode = $('#menuTree').tree('find', parentId);
+	            	if(childs!=null){
+	            		$('#menuTree').tree('uncheck', node.target);
+	            		for(var s=0;s<childs.length;s++){
+	            			var childnode = $('#menuTree').tree('find', childs[s].id);
+	            			$('#menuTree').tree('uncheck', childnode.target);
+		            	}
+	            	}else{
+	            		$('#menuTree').tree('uncheck', node.target);
+	            		var arr = parnode.children;
+	            		var j = 0;
+						for(var i = 0;i<arr.length;i++){
+							if(arr[i].checked){
+								j++;
+							}
+						}
+						if(j==0){
+							$('#menuTree').tree('uncheck', parnode.target);
+						}
+	            	}
+	            } else {
+	                var childs = node.children;
+	                var parent = node.parentId;
+	               // var childs = $('#menuTree').tree("getChildren");
+	            	if(childs!=null){
+	            		$('#menuTree').tree('check', node.target);
+	            		for(var s=0;s<childs.length;s++){
+	            			var childnode = $('#menuTree').tree('find', childs[s].id);
+	            			$('#menuTree').tree('check', childnode.target);
+		            	}
+	            	}else{
+	            		$('#menuTree').tree('check', node.target);
+	            	}
+	            	if(parent!=null){
+	            		var parnode = $('#menuTree').tree('find', parent);
+	            		$('#menuTree').tree('check', parnode.target);
+	            	}
+	            }
+	        },
+	        onLoadSuccess: function (node, data) {
+	            $(this).find('span.tree-checkbox').unbind().click(function () {
+	                $('#menuTree').tree('select', $(this).parent());
+	                return false;
+	            });
+	        }
+	    })
+	}
+	//保存角色菜单关系
+	function saveMenuRelation() {
+		var relationMenu = "";
+		var ralationComponent = "";
+		var row = $('#tblRole').datagrid('getSelected');
+		var roleId = row.roleId;
+		var checkeNode = menuTree.tree('getChecked');
+		var roleMenus = [];
+		for (var i = 0; i < checkeNode.length; i++) {
+			var roleObj = {
+				"roleId" : roleId
+			};
+			roleObj.menuId = checkeNode[i].id;
+			roleMenus[i] = roleObj;
+		}
+		var data = {
+			"roleId" : roleId,
+			"menuInfo" : roleMenus
+		};
+		$cf.ajax({
+			url : "/opas-naps/role_menu_save.json",
+			data : data,
+			onSuccess : function(data) {
+
+				top.$cf.showMsg("角色菜单关联保存成功！");
+
+				onConcle("roleRelationMenu");
+			}
+		});
+	}
+</script>

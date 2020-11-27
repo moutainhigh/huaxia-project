@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>反欺诈结果描述</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+<style type="text/css">
+input[name="fqzRishCategory"] {
+	width: 350px;
+	text-align: center;
+}
+input[name="fqzRiskdesc"] {
+	width: 400px;
+	text-align: center;
+}
+</style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId=GetQueryString("appId");
+		var fqzRequesttype=GetQueryString("fqzRequesttype");
+		var fqzRiskno=GetQueryString("fqzRiskno");
+		$cf.ajax({
+			data : {
+				"appId" : appId,
+				"fqzRequesttype" : fqzRequesttype,
+				"fqzRiskno" : fqzRiskno
+			},
+			url : "/opas-naps/queryFqzRstDesp.json",
+			onSuccess : function(res) {
+				var result="";
+				var jsonResult = res.RSP_BODY.rows;
+				var total = res.RSP_BODY.total;
+				for(var i=0;i<total;i++){
+					result += "<tr>";
+					result += "<td width='15px'>"+(i+1)+"</td>";
+					if(jsonResult[i].fqzRishCategory1=='Z01_6'||jsonResult[i].fqzRishCategory1=='Z01_5'||
+							jsonResult[i].fqzRishCategory1=='Z01_4'||jsonResult[i].fqzRishCategory1=='Z01_3'){
+						result += "<td ><input type='text' style='color:red;border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+					}else if(jsonResult[i].fqzRishCategory1=='Z06_1'){
+						if(jsonResult[i].fqzRiskdesc1=='SNA_D'){
+							result += "<td ><input type='text'  style='color:red;border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+						}else{
+							result += "<td ><input type='text'  style='border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+						}
+					}else{
+						if(jsonResult[i].fqzRishCategory=='undefined'||jsonResult[i].fqzRishCategory==''||jsonResult[i].fqzRishCategory==null){
+							result += "<td ><input type='text' style='border:none;' readonly='readonly'  name='fqzRishCategory' value=''/></td>";
+						}else{
+							result += "<td ><input type='text' style='border:none;' readonly='readonly'  name='fqzRishCategory' value='"+jsonResult[i].fqzRishCategory+"'/></td>";
+						}
+					}
+					if(jsonResult[i].fqzRiskdesc=='undefined'||jsonResult[i].fqzRiskdesc==''||jsonResult[i].fqzRiskdesc==null){
+						result += "<td><input type='text' style='border:none;' readonly='readonly'  name='fqzRiskdesc' value=''/></td>";
+					}else{
+						result += "<td ><input type='text' style='border:none;' readonly='readonly'  name='fqzRiskdesc' value='"+jsonResult[i].fqzRiskdesc+"'/></td>";
+					}
+					result += "</tr>";
+				}
+				$('#template').append(result);
+			}
+		});
+		
+	});
+	
+</script>
+<body >
+<fieldset>
+	<legend>反欺诈结果描述</legend>
+	<div style="width:99%;height:99%;overflow:auto;">
+	<form id="jdCardInfoForm">
+		<table  id="template" class="area-list area-list-style-1">
+		<thead>
+			<tr>
+			<th width="15px"></th>
+			<th >校验规则</th>
+			<th >详情描述</th>
+			</tr>
+		</thead>
+		<!-- <tbody>
+			<tr id="template">
+				<td><input type="text" name="fqzRishCategory" id="fqzRishCategory"   readonly="readonly"/></td>
+				<td><input type="text" name="fqzRiskdesc" id="fqzRiskdesc"   readonly="readonly"/></td>
+			</tr>
+		</tbody> -->
+		</table>
+	</form>	
+   </div>
+</fieldset>	
+		
+</body>
+</html>

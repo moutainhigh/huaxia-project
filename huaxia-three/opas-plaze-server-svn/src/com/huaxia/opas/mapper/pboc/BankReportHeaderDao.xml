@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankReportHeaderDao">
+	<!-- 插入人行基本信息表 -->
+	<insert id="insertPersonalInfo" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_PERSONAL_INFO (
+			APP_ID,REPORT_NO,REPORT_TIME,QUERYED_NAME,
+			QUERYED_CERT_TYPE,QUERYED_CERT_NO,QUERY_ORG,QRY_REASON,
+			GENDER,BIRTH_DAY,
+			RESIDENCY_STATUS,DEGREE,
+			WORK_STATUS,EMAIL,
+			COMMUNICATION_ADDR,
+			NATIONALITY,DOMICILE_ADDR,
+			
+			MARITAL_STATUS,
+			MATE_NAME,MATE_CERT_TYPE,MATE_CERT_NO,
+			MATE_COMPANY,MATE_CONTACT_TEL,
+			CRT_TIME,CRT_USER, LST_UPD_TIME,LST_UPD_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},#{PA01AI01, jdbcType = VARCHAR},REPLACE(#{PA01AR01, jdbcType = VARCHAR},'T',' '),#{PA01BQ01, jdbcType = VARCHAR},
+			#{PA01BD01, jdbcType = VARCHAR},#{PA01BI01, jdbcType = VARCHAR},#{PA01BI02, jdbcType = VARCHAR},#{PA01BD02, jdbcType = VARCHAR},
+			#{PB01AD01, jdbcType = VARCHAR},#{PB01AR01, jdbcType = VARCHAR},
+			#{PB01AD02, jdbcType = VARCHAR},#{PB01AD03, jdbcType = VARCHAR},
+			#{PB01AD04, jdbcType = VARCHAR},#{PB01AQ01, jdbcType = VARCHAR},
+			#{PB01AQ02, jdbcType = VARCHAR},
+			#{PB01AD05, jdbcType = VARCHAR},#{PB01AQ03, jdbcType = VARCHAR},
+			
+			#{PB020D01, jdbcType = VARCHAR},
+			#{PB020Q01, jdbcType = VARCHAR},#{PB020D02, jdbcType = VARCHAR},#{PB020I01, jdbcType = VARCHAR},
+			#{PB020Q02, jdbcType = VARCHAR},
+			#{PB020Q03, jdbcType = VARCHAR},
+			SYSDATE,'SYSTEM',SYSDATE,'SYSTEM'
+		)
+	</insert>
+	<!--  其他身份标识信息段数据PA01C/PA01Cdata -->
+	<insert id="insertOtherIdentityMark" parameterType="com.huaxia.opas.domain.pboc.prh.PA01Cdata">
+	 INSERT INTO PBOC_OTHER_IDENTITY_MARK (UUID, APP_ID, MARK_COUNT, 
+      CRT_TIME)
+     VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PA01CS01,jdbcType=VARCHAR}, 
+      SYSDATE)
+	</insert>
+	<!-- 身份信息PA01C/PA01CH 集合 -->
+	<insert id="insertIdentityDataList" parameterType="java.util.List">
+	  INSERT INTO PBOC_IDENTITY_DATA (UUID, APP_ID, IDENTITY_TYPE, 
+      IDENTITY_NUM, CRT_TIME)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+	    	SYS_GUID(),#{item.appId},#{item.PA01CD01},
+			#{item.PA01CI01},SYSDATE
+		FROM DUAL
+		</foreach>
+	</insert>
+	<!--插入防欺诈警示信息段  PA01D  -->
+	<insert id="insertCheatProofCaution" parameterType="com.huaxia.opas.domain.pboc.prh.PA01D">
+	  INSERT INTO PBOC_CHEAT_PROOF_CAUTION (UUID, APP_ID, MARK, 
+      PHONE, EFFECTIVE_DATE, DEADLINE, 
+      CRT_TIME)
+      values (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PA01DQ01,jdbcType=VARCHAR}, 
+      #{PA01DQ02,jdbcType=VARCHAR}, #{PA01DR01,jdbcType=VARCHAR}, #{PA01DR02,jdbcType=VARCHAR}, 
+      SYSDATE)
+	</insert>
+	<!--异议提示信息段  PA01E -->
+	<insert id="insertDissentHint" parameterType="com.huaxia.opas.domain.pboc.prh.PA01E">
+	 INSERT INTO  PBOC_DISSENT_HINT (UUID, APP_ID, DISSENT_COUNT, 
+      CRT_TIME)
+     VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PA01ES01,jdbcType=VARCHAR}, 
+     SYSDATE)
+	</insert>
+</mapper>

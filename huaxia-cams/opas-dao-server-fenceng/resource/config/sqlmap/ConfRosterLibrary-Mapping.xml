@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="ConfRosterLibrary">
+
+	<resultMap id="ConfRosterLibraryResultMap"
+		type="com.huaxia.opas.domain.sysparm.ConfRosterLibrary">
+		<result column="ROSTER_ID" property="rosterID" jdbcType="VARCHAR" />
+		<result column="ROSTER_NAME" property="rosterName" jdbcType="VARCHAR" />
+		<result column="ROSTER_LDNUMBER" property="rosterLdnumber"
+			jdbcType="VARCHAR" />
+		<result column="ROSTER_UNITS" property="rosterUnits" jdbcType="VARCHAR" />
+		<result column="ROSTER_LEVEL" property="rosterLevel" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 添加 -->
+	<insert id="insertConfRosterLibrary" parameterType="com.huaxia.opas.domain.sysparm.ConfRosterLibrary">
+		insert into
+		OPAS_ROSTER_LIBRARY (
+		ROSTER_ID,
+		ROSTER_NAME,
+		ROSTER_LDNUMBER,
+		ROSTER_UNITS,
+		ROSTER_LEVEL,
+		CRT_DATE,
+		CRT_USER,
+		LST_UPD_DATE,
+		LST_UPD_USER)
+		values (
+		#{rosterID,jdbcType=VARCHAR},
+		#{rosterName,jdbcType=VARCHAR},
+		#{rosterLdnumber,jdbcType=VARCHAR},
+		#{rosterUnits,jdbcType=VARCHAR},
+		#{rosterLevel,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{crtUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{lstUpdUser,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!--删除 -->
+	<delete id="deleteConfRosterLibrary" parameterType="java.util.List">
+		delete from OPAS_ROSTER_LIBRARY
+		where ROSTER_ID in
+		<foreach collection="list" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<delete id="deleteAll">
+		truncate table opas_roster_library
+	</delete>
+
+	<!-- 修改 -->
+	<update id="updateConfRosterLibrary" parameterType="com.huaxia.opas.domain.sysparm.ConfRosterLibrary">
+		update OPAS_ROSTER_LIBRARY
+		<set>
+			ROSTER_NAME = #{rosterName,jdbcType=VARCHAR},
+			ROSTER_LDNUMBER =
+			#{rosterLdnumber,jdbcType=VARCHAR},
+			ROSTER_UNITS =
+			#{rosterUnits,jdbcType=VARCHAR},
+			ROSTER_LEVEL =
+			#{rosterLevel,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		</set>
+		where ROSTER_ID = #{rosterID,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 查询 -->
+	<select id="queryConfRosterLibraryForList" parameterType="com.huaxia.opas.domain.sysparm.ConfRosterLibrary"
+		resultMap="ConfRosterLibraryResultMap">
+		select ROSTER_ID,
+		ROSTER_NAME,
+		ROSTER_LDNUMBER,
+		ROSTER_UNITS,
+		ROSTER_LEVEL,
+		CRT_DATE,
+		CRT_USER,
+		LST_UPD_DATE,
+		LST_UPD_USER
+		from
+		OPAS_ROSTER_LIBRARY
+		where ROSTER_ID is not null
+		<if test="rosterName != '' and rosterName != null">
+			AND ROSTER_NAME LIKE '%${rosterName}%'
+		</if>
+		<if test="rosterLdnumber != '' and rosterLdnumber != null">
+			AND ROSTER_LDNUMBER LIKE '%${rosterLdnumber}%'
+		</if>
+		<if test="rosterUnits != '' and rosterUnits != null">
+			AND ROSTER_UNITS LIKE '%${rosterUnits}%'
+		</if>
+		<if test="rosterLevel != '' and rosterLevel != null">
+			AND ROSTER_LEVEL LIKE '%${rosterLevel}%'
+		</if>
+		<if test="crtDate != '' and crtDate != null">
+			AND
+			( CRT_DATE
+			BETWEEN
+			#{crtDate}
+			AND
+			(select #{crtDate} +
+			(INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+		order by CRT_DATE desc
+	</select>
+
+	<select id="queryConfRosterLibraryCount" parameterType="com.huaxia.opas.domain.sysparm.ConfRosterLibrary"
+		resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_ROSTER_LIBRARY
+		where ROSTER_ID is not null
+		<if test="rosterName != '' and rosterName != null">
+			AND ROSTER_NAME LIKE '%${rosterName}%'
+		</if>
+		<if test="rosterLdnumber != '' and rosterLdnumber != null">
+			AND ROSTER_LDNUMBER LIKE '%${rosterLdnumber}%'
+		</if>
+		<if test="crtDate != '' and crtDate != null">
+			AND
+			( CRT_DATE
+			BETWEEN
+			#{crtDate}
+			AND
+			(select #{crtDate} +
+			(INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+	</select>
+
+	<!-- 上传 -->
+	<insert id="insertConfRosterLibraryList" parameterType="java.util.List">
+		insert into OPAS_ROSTER_LIBRARY ( ROSTER_ID, ROSTER_NAME, ROSTER_LDNUMBER, 
+			ROSTER_UNITS, ROSTER_LEVEL, CRT_DATE, CRT_USER) <foreach collection="list" 
+			item="item" index="index" separator="union all"> (select #{item.rosterID,jdbcType=VARCHAR}, 
+			#{item.rosterName,jdbcType=VARCHAR}, #{item.rosterLdnumber,jdbcType=VARCHAR}, 
+			#{item.rosterUnits,jdbcType=VARCHAR}, #{item.rosterLevel,jdbcType=VARCHAR}, 
+			CURRENT_DATE, #{item.operator,jdbcType=VARCHAR} from dual) </foreach>
+		<!-- <foreach collection="list" item="item" open="begin" close=";end;"
+			separator=";">
+			insert into OPAS_ROSTER_LIBRARY (
+			ROSTER_ID,
+			ROSTER_NAME,
+			ROSTER_LDNUMBER,
+			ROSTER_UNITS,
+			ROSTER_LEVEL,
+			CRT_DATE,
+			CRT_USER) values
+			(#{item.rosterID,jdbcType=VARCHAR},
+			#{item.rosterName,jdbcType=VARCHAR},
+			#{item.rosterLdnumber,jdbcType=VARCHAR},
+			#{item.rosterUnits,jdbcType=VARCHAR},
+			#{item.rosterLevel,jdbcType=VARCHAR},
+			CURRENT_DATE, 
+			#{item.operator,jdbcType=VARCHAR})
+		</foreach> -->
+	</insert>
+
+	<!-- 唯一校验 -->
+	<select id="queryConfRosterLibraryOnly" parameterType="com.huaxia.opas.domain.sysparm.ConfRosterLibrary"
+		resultMap="ConfRosterLibraryResultMap">
+		SELECT ROSTER_ID,
+		ROSTER_NAME,
+		ROSTER_LDNUMBER,
+		ROSTER_UNITS,
+		ROSTER_LEVEL
+		FROM OPAS_ROSTER_LIBRARY
+		WHERE ROSTER_ID IS NOT NULL
+		<if test="rosterLdnumber != '' and rosterLdnumber != null">
+			AND ROSTER_LDNUMBER = '${rosterLdnumber}'
+		</if>
+		<if test="rosterID != '' and rosterID != null">
+			AND ROSTER_ID != '${rosterID}'
+		</if>
+	</select>
+</mapper>

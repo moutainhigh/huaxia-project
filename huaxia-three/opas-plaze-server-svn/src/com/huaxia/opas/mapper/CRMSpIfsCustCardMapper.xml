@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCustCardMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCustCard">
+		INSERT INTO SP_APS_IFS_CUSTCARD (
+			APP_ID,CUSTID,CUSTCODE,CARDNO,ACCNO,CARD_TYPE,CARD_BIN,CARD_NUM,CARD_LEVEL,HTBZW,MOBILEPHONE,OPENDATE,
+			ENDDATE,STATUS,SUBBRID,BRID,POS_TRANSAMT,ATM_TRANSAMT,ACC_TRANSAMT,MEDIUM_TYPE,PROD_BRID,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{cardNo, jdbcType = VARCHAR},
+			#{accNo, jdbcType = VARCHAR},
+			#{cardType, jdbcType = VARCHAR},
+			#{cardBin, jdbcType = VARCHAR},
+			#{cardNum, jdbcType = VARCHAR},
+			#{cardLevel, jdbcType = VARCHAR},
+			#{htbzw, jdbcType = VARCHAR},
+			#{mobilePhone, jdbcType = VARCHAR},
+			#{openDate, jdbcType = DATE},
+			#{endDate, jdbcType = DATE},
+			#{status, jdbcType = VARCHAR},
+			#{subBrId, jdbcType = VARCHAR},
+			#{brId, jdbcType = VARCHAR},
+			#{posTransAmt, jdbcType = NUMERIC},
+			#{atmTransAmt, jdbcType = NUMERIC},
+			#{accTransAmt, jdbcType = NUMERIC},
+			#{mediumType, jdbcType = VARCHAR},
+			#{prodBrId, jdbcType = VARCHAR},
+			#{dDate, jdbcType = DATE}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CUSTCARD (
+			APP_ID,CUSTID,CUSTCODE,CARDNO,ACCNO,CARD_TYPE,CARD_BIN,CARD_NUM,CARD_LEVEL,HTBZW,MOBILEPHONE,OPENDATE,
+			ENDDATE,STATUS,SUBBRID,BRID,POS_TRANSAMT,ATM_TRANSAMT,ACC_TRANSAMT,MEDIUM_TYPE,PROD_BRID,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.cardNo, jdbcType = VARCHAR},
+			#{item.accNo, jdbcType = VARCHAR},
+			#{item.cardType, jdbcType = VARCHAR},
+			#{item.cardBin, jdbcType = VARCHAR},
+			#{item.cardNum, jdbcType = VARCHAR},
+			#{item.cardLevel, jdbcType = VARCHAR},
+			#{item.htbzw, jdbcType = VARCHAR},
+			#{item.mobilePhone, jdbcType = VARCHAR},
+			TO_DATE(#{item.openDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.endDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.status, jdbcType = VARCHAR},
+			#{item.subBrId, jdbcType = VARCHAR},
+			#{item.brId, jdbcType = VARCHAR},
+			#{item.posTransAmt, jdbcType = NUMERIC},
+			#{item.atmTransAmt, jdbcType = NUMERIC},
+			#{item.accTransAmt, jdbcType = NUMERIC},
+			#{item.mediumType, jdbcType = VARCHAR},
+			#{item.prodBrId, jdbcType = VARCHAR},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

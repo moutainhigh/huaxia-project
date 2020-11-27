@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="SameIndustryRisk" >
+
+	<resultMap id="SameIndustryResultMap" type="com.huaxia.opas.domain.sysparm.SameIndustryRisk">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="AUTO_ID" property="auto_id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CERTIFI_TYPE" property="certifiType" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="SUBMIT_BANK" property="submitBank" jdbcType="VARCHAR" />
+		<result column="STAR_LEVLE" property="starLevle" jdbcType="CHAR" />
+		<result column="INFO_CHANNEL" property="infoChannel" jdbcType="CHAR" />
+		<result column="FRAUD_TYPE" property="fraudType" jdbcType="CHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="INVALID_TIME" property="invalidTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="OPERAT_TYPE" property="operatType" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP"/>
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR"/>
+	</resultMap>
+	
+	<resultMap id="ApDictDetailResultMap" type="com.huaxia.opas.domain.dict.ApDictDetail">
+		<result column="DICT_ID" property="dictId" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_CODE" property="dictDetailCode" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_ID" property="dictDetailId" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_NAME" property="dictDetailName" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="DATE" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="DATE" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+	</resultMap>
+  
+  <select id="querySameIndustryRiskCount" parameterType="com.huaxia.opas.domain.sysparm.SameIndustryRisk" resultType="java.lang.Integer">
+		select count(1) from OPAS_SAMEINDUSTRY_RISKLIST
+		<where>		   
+			<if test="name != null and name !='' ">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59' hour to second) from dual)
+					)	
+			</if>
+		</where>
+		ORDER BY OPERAT_TIME DESC
+	</select>
+
+	<select id="querySameIndustryRiskList" parameterType="com.huaxia.opas.domain.sysparm.SameIndustryRisk" resultMap="SameIndustryResultMap">
+		select AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE,
+				MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS
+		 from  OPAS_SAMEINDUSTRY_RISKLIST 
+		<where>		   	
+			<if test="name != null and name !='' ">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59' hour to second) from dual)
+					)	
+			</if>
+		</where>
+		ORDER BY OPERAT_TIME DESC
+	</select>
+	<select id="querySameIndustry" parameterType="java.lang.String" resultMap="SameIndustryResultMap">
+		select AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE,
+				MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS
+		 from  OPAS_SAMEINDUSTRY_RISKLIST where AUTO_ID = #{autoId}
+	</select>
+	
+	 <select id="queryApDictForDictCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select	DICT_CODE  from OPAS_AP_DICT where DICT_NAME = #{dictName}
+	</select>
+	
+	 <select id="queryApDictDetailForCertifiType" parameterType="java.lang.String" resultMap="ApDictDetailResultMap">
+		select DICT_ID,DICT_DETAIL_CODE,DICT_DETAIL_ID,DICT_DETAIL_NAME,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_USER,
+		LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL
+		 from OPAS_AP_DICT_DETAIL 
+		where DICT_ID = (
+		select DICT_ID from OPAS_AP_DICT where DICT_CODE = #{dictCode}
+		)
+	</select>
+	
+	<insert id="insertSameIndustryRisk" parameterType="com.huaxia.opas.domain.sysparm.SameIndustryRisk">
+		insert into OPAS_SAMEINDUSTRY_RISKLIST
+		(AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE
+		,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS)
+		values (
+		#{auto_id,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{certifiType,jdbcType=VARCHAR},
+		#{certifiNo,jdbcType=VARCHAR},
+		#{submitBank,jdbcType=VARCHAR},
+		#{starLevle,jdbcType=CHAR},
+		#{infoChannel,jdbcType=CHAR},
+		#{fraudType,jdbcType=CHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{invalidTime,jdbcType=TIMESTAMP},
+		SYSDATE,
+		#{operator,jdbcType=VARCHAR},
+		SYSDATE,
+		#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+	
+	<update id="updateSameIndustryRisk" parameterType="com.huaxia.opas.domain.sysparm.SameIndustryRisk">
+		update OPAS_SAMEINDUSTRY_RISKLIST
+		<set>
+			NAME = #{name,jdbcType=VARCHAR},
+			CERTIFI_TYPE = #{certifiType,jdbcType=VARCHAR},
+			CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+			SUBMIT_BANK = #{submitBank,jdbcType=VARCHAR},
+			STAR_LEVLE = #{starLevle,jdbcType=CHAR},
+			INFO_CHANNEL = #{infoChannel,jdbcType=CHAR},
+			FRAUD_TYPE = #{fraudType,jdbcType=CHAR},
+			MEMO = #{memo,jdbcType=VARCHAR},
+			INVALID_TIME = #{invalidTime,jdbcType=TIMESTAMP},
+			CREATE_TIME = SYSDATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			OPERAT_TIME = SYSDATE,
+			CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		</set>
+		where AUTO_ID = #{auto_id,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteSameIndustryRisk" parameterType="java.lang.String">
+		delete from
+		OPAS_SAMEINDUSTRY_RISKLIST
+		where AUTO_ID = #{auto_id,jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="batchStartSameIndustryRisk" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_SAMEINDUSTRY_RISKLIST
+			<set>
+				OPERATOR = #{item.operator,jdbcType=VARCHAR},
+				OPERAT_TIME = SYSDATE,
+				CURR_STATUS = #{item.currStatus,jdbcType=CHAR}
+			</set>
+			 where AUTO_ID = #{item.auto_id,jdbcType=VARCHAR}
+	    </foreach>
+	</update>
+	
+	<update id="batchStopSameIndustryRisk" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_SAMEINDUSTRY_RISKLIST
+			<set>
+				OPERATOR = #{item.operator,jdbcType=VARCHAR},
+				OPERAT_TIME = SYSDATE,
+				CURR_STATUS = #{item.currStatus,jdbcType=CHAR}
+			</set>
+			 where AUTO_ID = #{item.auto_id,jdbcType=VARCHAR}
+	    </foreach>
+	</update>
+	
+	<delete id="batchDeleteSameIndustryRisk" parameterType="java.util.ArrayList">
+		delete from
+		OPAS_SAMEINDUSTRY_RISKLIST where AUTO_ID in
+		<foreach collection="list" item="autoId"  open="(" separator="," close=")">
+			#{autoId}
+		</foreach>
+	</delete>
+	
+	<insert id="insertSameIndustryRiskHistory" parameterType="com.huaxia.opas.domain.sysparm.SameIndustryRisk">
+		insert into OPAS_SAMEINDUSTRY_RISKLIST_HIS 
+		(ID,AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE
+		,MEMO,INVALID_TIME,CREATE_TIME,OPERAT_TYPE,OPERATOR,OPERAT_TIME,CURR_STATUS)
+		values (
+		#{id,jdbcType=VARCHAR},
+		#{auto_id,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{certifiType,jdbcType=VARCHAR},
+		#{certifiNo,jdbcType=VARCHAR},
+		#{submitBank,jdbcType=VARCHAR},
+		#{starLevle,jdbcType=CHAR},
+		#{infoChannel,jdbcType=CHAR},
+		#{fraudType,jdbcType=CHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{invalidTime,jdbcType=TIMESTAMP},
+		SYSDATE,
+		#{operatType,jdbcType=VARCHAR},
+		#{operator,jdbcType=VARCHAR},
+		SYSDATE,
+		#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+	
+	<insert id="insertSameIndustryRiskHisOfBatch" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index"   open="begin" separator=";" close=";end;">
+			insert into OPAS_SAMEINDUSTRY_RISKLIST_HIS 
+			(ID,AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE
+			,MEMO,INVALID_TIME,CREATE_TIME,OPERAT_TYPE,OPERATOR,OPERAT_TIME,CURR_STATUS)
+			values (
+			#{item.id,jdbcType=VARCHAR},
+			#{item.auto_id,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.certifiType,jdbcType=VARCHAR},
+			#{item.certifiNo,jdbcType=VARCHAR},
+			#{item.submitBank,jdbcType=VARCHAR},
+			#{item.starLevle,jdbcType=CHAR},
+			#{item.infoChannel,jdbcType=CHAR},
+			#{item.fraudType,jdbcType=CHAR},
+			#{item.memo,jdbcType=VARCHAR},
+			#{item.invalidTime,jdbcType=TIMESTAMP},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.operatType,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR},
+			SYSDATE,
+			#{item.currStatus,jdbcType=CHAR}
+			)
+		</foreach>
+	</insert>
+	
+	<select id="querySameIndustryRiskHistoryCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) 
+		from OPAS_SAMEINDUSTRY_RISKLIST_HIS
+		where AUTO_ID = #{auto_id,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="querySameIndustryRiskHistoryList" parameterType="java.lang.String" resultMap="SameIndustryResultMap">
+		select ID,AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE,
+				MEMO,INVALID_TIME,CREATE_TIME,OPERAT_TYPE,OPERATOR,OPERAT_TIME,CURR_STATUS
+		 from  OPAS_SAMEINDUSTRY_RISKLIST_HIS
+		 where AUTO_ID = #{auto_id,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<insert id="insertSIRiskImportFile" parameterType="java.util.ArrayList">
+			insert into OPAS_SAMEINDUSTRY_RISKLIST
+			(AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE
+			,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS)
+			<foreach collection="list" item="sameIndustryRisk" index="index"  separator="union all" >
+				(select
+				#{sameIndustryRisk.auto_id,jdbcType=VARCHAR},
+				#{sameIndustryRisk.name,jdbcType=VARCHAR},
+				#{sameIndustryRisk.certifiType,jdbcType=VARCHAR},
+				#{sameIndustryRisk.certifiNo,jdbcType=VARCHAR},
+				#{sameIndustryRisk.submitBank,jdbcType=VARCHAR},
+				#{sameIndustryRisk.starLevle,jdbcType=CHAR},
+				#{sameIndustryRisk.infoChannel,jdbcType=CHAR},
+				#{sameIndustryRisk.fraudType,jdbcType=CHAR},
+				#{sameIndustryRisk.memo,jdbcType=VARCHAR},
+				#{sameIndustryRisk.invalidTime,jdbcType=TIMESTAMP},
+				#{sameIndustryRisk.createTime,jdbcType=TIMESTAMP},
+				#{sameIndustryRisk.operator,jdbcType=VARCHAR},
+				#{sameIndustryRisk.operatTime,jdbcType=TIMESTAMP},
+				#{sameIndustryRisk.currStatus,jdbcType=CHAR}
+				from dual)
+		</foreach>
+	</insert>
+	
+	<insert id="insertSIRiskImportFileHis" parameterType="java.util.ArrayList">
+			insert into OPAS_SAMEINDUSTRY_RISKLIST_HIS
+			(ID,AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,SUBMIT_BANK,STAR_LEVLE,INFO_CHANNEL,FRAUD_TYPE
+			,MEMO,INVALID_TIME,CREATE_TIME,OPERAT_TYPE,OPERATOR,OPERAT_TIME,CURR_STATUS)
+			<foreach collection="list" item="sameIndustryRisk" index="index"  separator="union all" >
+				(select
+				#{sameIndustryRisk.id,jdbcType=VARCHAR},
+				#{sameIndustryRisk.auto_id,jdbcType=VARCHAR},
+				#{sameIndustryRisk.name,jdbcType=VARCHAR},
+				#{sameIndustryRisk.certifiType,jdbcType=VARCHAR},
+				#{sameIndustryRisk.certifiNo,jdbcType=VARCHAR},
+				#{sameIndustryRisk.submitBank,jdbcType=VARCHAR},
+				#{sameIndustryRisk.starLevle,jdbcType=CHAR},
+				#{sameIndustryRisk.infoChannel,jdbcType=CHAR},
+				#{sameIndustryRisk.fraudType,jdbcType=CHAR},
+				#{sameIndustryRisk.memo,jdbcType=VARCHAR},
+				#{sameIndustryRisk.invalidTime,jdbcType=TIMESTAMP},
+				#{sameIndustryRisk.createTime,jdbcType=TIMESTAMP},
+				#{sameIndustryRisk.operatType,jdbcType=VARCHAR},
+				#{sameIndustryRisk.operator,jdbcType=VARCHAR},
+				#{sameIndustryRisk.operatTime,jdbcType=TIMESTAMP},
+				#{sameIndustryRisk.currStatus,jdbcType=CHAR}
+				from dual)
+		</foreach>
+	</insert>
+</mapper>

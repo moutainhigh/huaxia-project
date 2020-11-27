@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasBizPubsecGather">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.OpasBizPubsecGather">
+    <result column="INSIDE_APP_NO" jdbcType="VARCHAR" property="insideAppNo" />
+    <result column="IDENTITY_NO" jdbcType="VARCHAR" property="identityNo" />
+    <result column="IDENTITY_NO_CHECK_RST" jdbcType="VARCHAR" property="identityNoCheckRst" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="NAME_CHECK_RST" jdbcType="VARCHAR" property="nameCheckRst" />
+    <result column="OLD_NAME" jdbcType="VARCHAR" property="oldName" />
+    <result column="GENDER" jdbcType="VARCHAR" property="gender" />
+    <result column="NATIONALITY" jdbcType="VARCHAR" property="nationality" />
+    <result column="BIRTH_DAY" jdbcType="DATE" property="birthDay" />
+    <result column="BELONG_HOME_PROV_CITY" jdbcType="VARCHAR" property="belongHomeProvCity" />
+    <result column="BIRTH_HOME_PROV_CITY" jdbcType="VARCHAR" property="birthHomeProvCity" />
+    <result column="JGSSXHOME_PROV_CITY" jdbcType="VARCHAR" property="jgssxhomeProvCity" />
+    <result column="MARITAL_STATUS" jdbcType="VARCHAR" property="maritalStatus" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="SRVS_LOCATION" jdbcType="VARCHAR" property="srvsLocation" />
+    <result column="EDU_DEGREE" jdbcType="VARCHAR" property="eduDegree" />
+    <result column="ERROR_CODE" jdbcType="DECIMAL" property="errorCode" />
+    <result column="ERROR_DESC" jdbcType="VARCHAR" property="errorDesc" />
+    <result column="ERRORMESAGECOL" jdbcType="VARCHAR" property="errormesagecol" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="CHAR" property="recStatus" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="DN1" jdbcType="VARCHAR" property="dn1" />
+    <result column="DES1" jdbcType="VARCHAR" property="des1" />
+    <result column="DN2" jdbcType="VARCHAR" property="dn2" />
+    <result column="DES2" jdbcType="VARCHAR" property="des2" />
+  </resultMap>
+ 
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.OpasBizPubsecGather" resultMap="BaseResultMap">
+    select 
+    INSIDE_APP_NO, IDENTITY_NO, IDENTITY_NO_CHECK_RST, NAME, NAME_CHECK_RST, OLD_NAME, 
+    GENDER, NATIONALITY, BIRTH_DAY, BELONG_HOME_PROV_CITY, BIRTH_HOME_PROV_CITY, JGSSXHOME_PROV_CITY, 
+    MARITAL_STATUS, ADDRESS, SRVS_LOCATION, EDU_DEGREE, ERROR_CODE, ERROR_DESC, ERRORMESAGECOL, 
+    CRT_TIME, CRT_DATE, CRT_USER, LST_UPD_TIME, LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, 
+    REC_STATUS, APP_ID, DN1, DES1, DN2, DES2 
+     from OPAS_BIZ_PUBSEC_GATHER
+  </select>
+  
+  <select id="selectByAppid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    INSIDE_APP_NO, IDENTITY_NO, IDENTITY_NO_CHECK_RST, NAME, NAME_CHECK_RST, OLD_NAME, 
+    GENDER, NATIONALITY, BIRTH_DAY, BELONG_HOME_PROV_CITY, BIRTH_HOME_PROV_CITY, JGSSXHOME_PROV_CITY, 
+    MARITAL_STATUS, ADDRESS, SRVS_LOCATION, EDU_DEGREE, ERROR_CODE, ERROR_DESC, ERRORMESAGECOL, 
+    CRT_TIME, CRT_DATE, CRT_USER, LST_UPD_TIME, LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, 
+    REC_STATUS, APP_ID, DN1, DES1, DN2, DES2 
+     from OPAS_BIZ_PUBSEC_GATHER where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <resultMap id="opasBizPubsecGatherMap" type="java.util.Map">
+    <!-- <result column="IDENTITY_NO_CHECK_RST" jdbcType="VARCHAR" property="idCheckRst" />
+    <result column="NAME_CHECK_RST" jdbcType="VARCHAR" property="nameCheckRst" />
+    <result column="IDENTITY_NO" jdbcType="VARCHAR" property="idNo" /> -->
+    <result column="RESULT_GMSFHM" jdbcType="VARCHAR" property="idCheckRst" />
+    <result column="RESULT_XM" jdbcType="VARCHAR" property="nameCheckRst" />
+    <result column="GMSFHM" jdbcType="VARCHAR" property="idNo" />
+    <result column="app_id" jdbcType="VARCHAR" property="appIdThd" />
+    <result column="CARD_FLAG" jdbcType="VARCHAR" property="cardFlag" />
+  </resultMap>
+  
+  <select id="selectByIdnbr" parameterType="java.lang.String" resultMap="opasBizPubsecGatherMap">
+    <!-- select IDENTITY_NO,IDENTITY_NO_CHECK_RST,NAME_CHECK_RST from OPAS_BIZ_PUBSEC_GATHER where IDENTITY_NO = #{identityNo} -->
+    select GMSFHM,RESULT_GMSFHM,RESULT_XM,CARD_FLAG from POLICE_SIMPLIFY_INFO where GMSFHM = #{identityNo}
+  </select>
+  <select id="selectByAppidThd" parameterType="java.lang.String" resultMap="opasBizPubsecGatherMap">
+    <!-- select IDENTITY_NO,IDENTITY_NO_CHECK_RST,NAME_CHECK_RST from OPAS_BIZ_PUBSEC_GATHER where IDENTITY_NO = #{identityNo} -->
+    select GMSFHM,RESULT_GMSFHM,RESULT_XM,CARD_FLAG from POLICE_SIMPLIFY_INFO where app_id = #{appIdThd}
+  </select>
+  
+  <resultMap id="foreignMsgMap" type="java.util.Map">
+    <result column="RESULT_CODE" jdbcType="VARCHAR" property="idCheckRst" />
+    <result column="XM" jdbcType="VARCHAR" property="name" />
+    <result column="ZJHM" jdbcType="VARCHAR" property="idNo" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="CARD_FLAG" jdbcType="VARCHAR" property="cardFlag" />
+  </resultMap>
+	
+  <select id="queryForeignCheckByAppId" parameterType="java.lang.String" resultMap="foreignMsgMap">
+    <!-- select IDENTITY_NO,IDENTITY_NO_CHECK_RST,NAME_CHECK_RST from OPAS_BIZ_PUBSEC_GATHER where IDENTITY_NO = #{identityNo} -->
+    select APP_ID,ZJHM,XM,RESULT_CODE,CARD_FLAG from nciic_foreigner_info where app_id = #{appIdThd}
+  </select>
+  
+  <resultMap id="KexinMsgMap" type="java.util.Map">
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="AUTH_RESULT" jdbcType="VARCHAR" property="authResult" />
+    <result column="CARD_FLAG" jdbcType="VARCHAR" property="cardFlag" />
+  </resultMap>
+  
+   <select id="selectKexinMsgByAppidThd" parameterType="java.lang.String" resultMap="KexinMsgMap">
+    select APP_ID,AUTH_RESULT,CARD_FLAG from sfrz_base_data 
+    where app_id = #{appIdThd}
+    and success = 'true'
+  </select>
+  
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.OpasBizPubsecGather">
+    insert into OPAS_BIZ_PUBSEC_GATHER (INSIDE_APP_NO, IDENTITY_NO, IDENTITY_NO_CHECK_RST, 
+      NAME, NAME_CHECK_RST, OLD_NAME, 
+      GENDER, NATIONALITY, BIRTH_DAY, 
+      BELONG_HOME_PROV_CITY, BIRTH_HOME_PROV_CITY, 
+      JGSSXHOME_PROV_CITY, MARITAL_STATUS, ADDRESS, 
+      SRVS_LOCATION, EDU_DEGREE, ERROR_CODE, 
+      ERROR_DESC, ERRORMESAGECOL, CRT_TIME, 
+      CRT_DATE, CRT_USER, LST_UPD_TIME, 
+      LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, 
+      REC_STATUS, APP_ID, DN1, 
+      DES1, DN2, DES2
+      )
+    values (#{insideAppNo,jdbcType=VARCHAR}, #{identityNo,jdbcType=VARCHAR}, #{identityNoCheckRst,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{nameCheckRst,jdbcType=VARCHAR}, #{oldName,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, #{birthDay,jdbcType=DATE}, 
+      #{belongHomeProvCity,jdbcType=VARCHAR}, #{birthHomeProvCity,jdbcType=VARCHAR}, 
+      #{jgssxhomeProvCity,jdbcType=VARCHAR}, #{maritalStatus,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{srvsLocation,jdbcType=VARCHAR}, #{eduDegree,jdbcType=VARCHAR}, #{errorCode,jdbcType=DECIMAL}, 
+      #{errorDesc,jdbcType=VARCHAR}, #{errormesagecol,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}, 
+      #{crtDate,jdbcType=DATE}, #{crtUser,jdbcType=VARCHAR}, #{lstUpdTime,jdbcType=TIMESTAMP}, 
+      #{lstUpdDate,jdbcType=DATE}, #{lstUpdUser,jdbcType=VARCHAR}, #{batchDate,jdbcType=DATE}, 
+      #{recStatus,jdbcType=CHAR}, #{appId,jdbcType=VARCHAR}, #{dn1,jdbcType=VARCHAR}, 
+      #{des1,jdbcType=VARCHAR}, #{dn2,jdbcType=VARCHAR}, #{des2,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+</mapper>

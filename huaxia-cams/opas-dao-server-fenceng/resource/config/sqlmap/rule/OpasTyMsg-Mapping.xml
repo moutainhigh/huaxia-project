@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasTyMsg">
+
+	
+	<select id="queryTyScore"  parameterType="java.lang.String" resultType="java.lang.String">
+  	   select  RISKSCORE from opas_tianyu_antifraud_data
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	
+	<resultMap id="tyScoreCodeFoundMap" type="java.util.Map">
+	   <result column="RISKSCORE" jdbcType="VARCHAR" property="riskscore" />
+	   <result column="CODE" jdbcType="VARCHAR" property="code" />
+	   <result column="FOUND" jdbcType="VARCHAR" property="found" />
+	</resultMap>
+	
+	<!-- 将天御查询响应代码,记录是否查到的值添加在查询结果 -->
+	<select id="queryTyScoreCodeFound"  parameterType="java.lang.String" resultMap="tyScoreCodeFoundMap">
+  	   select  to_char(RISKSCORE) RISKSCORE  , CODE , to_char(FOUND) FOUND  from opas_tianyu_antifraud_data
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	
+	<resultMap id="tyRiskLvMap" type="java.util.Map">
+	   <result column="RISKCODE" jdbcType="VARCHAR" property="riskcode" />
+	   <result column="RISKCODEVALUE" jdbcType="VARCHAR" property="riskcodevalue" />
+	</resultMap>
+	  
+	<select id="queryTyRiskLv" parameterType="java.lang.String" resultMap="tyRiskLvMap">
+  	 select app_id,RISKCODE,RISKCODEVALUE from opas_tianyu_antifraud_riskinfo
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR} <!-- and crt_time = (select max(crt_time) from opas_tianyu_antifraud_data ) -->
+	  </where>
+	</select>
+	
+</mapper>

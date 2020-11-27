@@ -1,0 +1,80 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.huaxia.plaze.ui.*.service" />
+	<context:component-scan base-package="com.huaxia.plaze.quartz.service" />
+
+	<!-- 接口代理开发模式:扫描接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="com.huaxia.support.mapper,com.huaxia.plaze.ui.*.mapper,com.huaxia.plaze.quartz.mapper" />
+	</bean>
+
+	<!-- 加载数据库配置文件 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:redis.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 加密算法配置 -->
+	<bean id="dataSourceProperties" class="com.huaxia.util.PropertiesEncryptFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="user">${jdbc.username}</prop>
+				<prop key="password">${jdbc.password}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="properties" ref="dataSourceProperties" />
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="acquireIncrement" value="1" />
+		<property name="initialPoolSize" value="5" />
+		<property name="maxPoolSize" value="20" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxStatements" value="100" />
+		<property name="testConnectionOnCheckout" value="true" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+	</bean>
+
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="interface3118Service" class="com.huaxia.plaze.ui.unionpay.service.impl.Interface3118ServiceImpl">
+		<property name="temList">
+			<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+				<property name="targetObject" ref="loadUnionPayTempltesBeanService" />
+				<property name="targetMethod" value="init3118" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean class="com.huaxia.util.SpringContextUtil" />
+	<bean id="pageProperty" class="com.huaxia.plaze.common.PageProperty" scope="prototype" />
+	<bean id="queryLogSupport" class="com.huaxia.plaze.ui.pboc.support.QueryLogSupport" />
+
+</beans>

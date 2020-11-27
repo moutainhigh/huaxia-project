@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--电核过件码数据库处理-->
+<!--@author liudi-->
+<mapper namespace="PhoneChkPassCode">
+
+	<resultMap id="PhoneChkPassCodeResultMap" type="com.huaxia.opas.domain.sysparm.PhoneChkPassCode">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PHONE_CHK_PASS_CODE" property="phoneChkPassCode" jdbcType="VARCHAR" />
+		<result column="PHONE_CHK_PASS_NAME" property="phoneChkPassName" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE1" property="acctType" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+
+	</resultMap> 
+<!-- 添加状态为Start -->
+	<insert id="insertPhoneCode1" parameterType="com.huaxia.opas.domain.sysparm.PhoneChkPassCode">
+		insert into
+		OPAS_PHONE_CHK_PASS_CODE
+		(AUTO_ID,PHONE_CHK_PASS_CODE,PHONE_CHK_PASS_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{phoneChkPassCode,jdbcType=VARCHAR},
+		#{phoneChkPassName,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 添加状态为End -->
+	<insert id="insertPhoneCode2" parameterType="com.huaxia.opas.domain.sysparm.PhoneChkPassCode">
+		insert into
+		OPAS_PHONE_CHK_PASS_CODE
+		(AUTO_ID,PHONE_CHK_PASS_CODE,PHONE_CHK_PASS_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{phoneChkPassCode,jdbcType=CHAR},
+		#{phoneChkPassName,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deletePhoneCodeById" parameterType="java.lang.String">
+		delete from
+		OPAS_PHONE_CHK_PASS_CODE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryPhoneChkPassCodeStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_PHONE_CHK_PASS_CODE where AUTO_ID = #{autoId,jdbcType=VARCHAR} 
+	</select>
+	
+	<update id="updatePhoneChkPassCodeWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.PhoneChkPassCode">
+		update OPAS_PHONE_CHK_PASS_CODE
+		<set>
+			PHONE_CHK_PASS_NAME = #{phoneChkPassName,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 修改 -->
+	<update id="updatePhoneCode" parameterType="com.huaxia.opas.domain.sysparm.PhoneChkPassCode">
+		update OPAS_PHONE_CHK_PASS_CODE
+		<set>
+			PHONE_CHK_PASS_NAME = #{phoneChkPassName,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 查询 -->
+	<select id="queryPhoneCode" parameterType="com.huaxia.opas.domain.sysparm.PhoneChkPassCode"
+		resultMap="PhoneChkPassCodeResultMap">
+		select
+		AUTO_ID,PHONE_CHK_PASS_CODE,PHONE_CHK_PASS_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PHONE_CHK_PASS_CODE
+		<where>
+			<if test="phoneChkPassCode != null and phoneChkPassCode !='' ">
+				AND PHONE_CHK_PASS_CODE LIKE '%${phoneChkPassCode}%'
+			</if>
+			<if test="phoneChkPassName != null and phoneChkPassName !='' ">
+				AND PHONE_CHK_PASS_NAME LIKE '%${phoneChkPassName}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+<!-- 点击查询后，触发查询和排序功能 -->
+	<select id="queryPhoneCode2" parameterType="java.util.Map"
+		resultMap="PhoneChkPassCodeResultMap">
+		select
+		AUTO_ID,PHONE_CHK_PASS_CODE,PHONE_CHK_PASS_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PHONE_CHK_PASS_CODE
+		<where>
+			<if test="phoneChkPassCode != null and phoneChkPassCode !='' ">
+				AND PHONE_CHK_PASS_CODE LIKE '%${phoneChkPassCode}%'
+			</if>
+			<if test="phoneChkPassName != null and phoneChkPassName !='' ">
+				AND PHONE_CHK_PASS_NAME LIKE '%${phoneChkPassName}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CRT_DATE
+		</if>
+	</select>
+<!-- 查询是否重复 -->
+	<select id="queryPhoneCode3" parameterType="com.huaxia.opas.domain.sysparm.PhoneChkPassCode"
+		resultMap="PhoneChkPassCodeResultMap">
+		select
+		PHONE_CHK_PASS_CODE
+		from OPAS_PHONE_CHK_PASS_CODE
+		<where>
+			<if test="phoneChkPassCode != null and phoneChkPassCode !='' ">
+				AND PHONE_CHK_PASS_CODE = #{phoneChkPassCode}
+			</if>
+		</where>
+	</select>
+
+<!-- 件数查询 -->
+	<select id="queryPhoneCodeCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PHONE_CHK_PASS_CODE
+		<where>
+			<if test="phoneChkPassCode != null and phoneChkPassCode !='' ">
+				AND PHONE_CHK_PASS_CODE LIKE '%${phoneChkPassCode}%'
+			</if>
+			<if test="phoneChkPassName != null and phoneChkPassName !='' ">
+				AND PHONE_CHK_PASS_NAME LIKE '%${phoneChkPassName}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+	<!-- 全部查询-->
+	<select id="queryAllPhoneCode" parameterType="java.util.Map"
+		resultMap="PhoneChkPassCodeResultMap">
+		select
+		AUTO_ID,PHONE_CHK_PASS_CODE,PHONE_CHK_PASS_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PHONE_CHK_PASS_CODE
+		where  1=1 
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+	</select>
+
+</mapper>

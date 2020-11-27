@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.bairong.mapper.ApplyLoanStrConfigurateMapper">
+	<resultMap id="result_SelectSettingByParams" type="QueryConfiguration">
+		<result column="SOURCE_CODE" property="sourceCode" jdbcType="CHAR" />
+		<result column="CHANNEL_CODE" property="channelCode" jdbcType="CHAR" />
+		<result column="MAX_COUNT" property="maxCount" jdbcType="NUMERIC" />
+		<result column="START_DATE" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="END_DATE" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="START_TIME_STRING" property="startTimeString" jdbcType="VARCHAR" />
+		<result column="END_TIME_STRING" property="endTimeString" jdbcType="VARCHAR" />
+	</resultMap>
+	
+   <select id="selectCountByParams" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT '00070001' TASK_TYPE, COUNT(1) TASK_COUNT
+				  FROM BAIRONG_ALS_TRN_BATCH_DETAIL
+				 WHERE query_status = '1'
+				  <if test="startTime != null and endTime != null">
+				   AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+			       AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+		          </if>
+		UNION  
+		 SELECT '00070010' TASK_TYPE, (select count(*) from BAIRONG_ALS_BASE where crt_user = 'CAMS' 
+		   <if test="startTime != null and endTime != null">
+			   AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+		       AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+           	</if>
+		 ) TASK_COUNT
+		     FROM DUAL where 1 =1
+	</select>
+	
+	<select id="selectSettingByTaskType" parameterType="java.util.Map"
+		resultMap="result_SelectSettingByParams">
+		SELECT SOURCE_CODE,CHANNEL_CODE,MAX_COUNT,START_DATE,END_DATE,TO_CHAR(START_DATE,'YYYY-MM-DD HH24:MI:SS') START_TIME_STRING,TO_CHAR(END_DATE,'YYYY-MM-DD HH24:MI:SS') END_TIME_STRING
+       FROM CONF_QUERY_COUNT
+       WHERE SOURCE_CODE =  #{sourceCode,jdbcType=CHAR}
+       AND CHANNEL_CODE = #{channelCode,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectBatchCountByReferTime" parameterType="java.util.Map" resultType="java.lang.Integer">
+		  SELECT 
+			 COUNT(1) 
+		  FROM BAIRONG_ALS_TRN_BATCH_DETAIL
+		  WHERE  (QUERY_STATUS = '0'   OR QUERY_STATUS = '1')
+		  AND
+		  CRT_TIME
+		  BETWEEN 
+		  #{startTime}
+		  AND
+		  #{endTime}
+	</select>
+	<select id="selectBatchOverCountByReferTime" parameterType="java.util.Map" resultType="java.lang.Integer">
+		  SELECT 
+			 COUNT(1) 
+		  FROM BAIRONG_ALS_TRN_BATCH_DETAIL
+		  WHERE  QUERY_STATUS = '1' 
+		  AND
+		  CRT_TIME
+		  BETWEEN 
+		  #{startTime}
+		  AND
+		  #{endTime}
+	</select>
+	<select id="selectBatchWaitCountByReferTime" parameterType="java.util.Map" resultType="java.lang.Integer">
+		  SELECT 
+			 COUNT(1) 
+		  FROM BAIRONG_ALS_TRN_BATCH_DETAIL
+		  WHERE  QUERY_STATUS = '0' 
+		  AND
+		  CRT_TIME
+		  BETWEEN 
+		  #{startTime}
+		  AND
+		  #{endTime}
+	</select>
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsLoanAccMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsLoanAcc">
+		INSERT INTO SP_APS_IFS_LOAN_ACC (
+			APP_ID,CUSTID,CUSTCODE,ACCNO,PROD_CLASS,PROD_TYPE,PROD_NAME,CREDLIMT,USABLELIMIT,CREDGD,IS_SETTL,LOAN_BAL,
+			REPAYMENT,OWEINT_BAL,LOAN_TERM,LOAN_RATE,PAY_ACCNO,PAY_TYPE,LOAN_CONTNO,ISSUE_DT,ENDDATE,FLOATING_TYPE,
+			FLOATING_RATE,IS_DUE,FIVE_CLASS,OVERDUE,OVERDUE_NUM,T_OVERDUE_NUM,OVERDUE_DAY,GUARTYPE,PLEDGE_NO,COLL_COST,
+			COLL_RATE,FIR_PAY,SUBBRID,BRID,OWNERID,ACC_STATUS,D_DATE,PRODUCTID,OPEN_DATE,LOAN_TYPE,CURRENCY,CNY_LOAN_BAL,
+			SUB_ACCNO,PS_DUE_DT
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{accNo, jdbcType = VARCHAR},
+			#{prodClass, jdbcType = VARCHAR},
+			#{prodType, jdbcType = VARCHAR},
+			#{prodName, jdbcType = VARCHAR},
+			#{credLimt, jdbcType = NUMERIC},
+			#{usableLimit, jdbcType = NUMERIC},
+			#{credGd, jdbcType = NUMERIC},
+			#{isSettl, jdbcType = VARCHAR},
+			#{loanBal, jdbcType = NUMERIC},
+			#{repayment, jdbcType = NUMERIC},
+			#{oweintBal, jdbcType = NUMERIC},
+			#{loanTerm, jdbcType = NUMERIC},
+			#{loanRate, jdbcType = NUMERIC},
+			#{payAccNo, jdbcType = VARCHAR},
+			#{payType, jdbcType = VARCHAR},
+			#{loanContNo, jdbcType = VARCHAR},
+			#{isSueDt, jdbcType = VARCHAR},
+			#{endDate, jdbcType = VARCHAR},
+			#{floatingType, jdbcType = VARCHAR},
+			#{floatingRate, jdbcType = VARCHAR},
+			#{isDue, jdbcType = VARCHAR},
+			#{fiveClass, jdbcType = VARCHAR},
+			#{overdue, jdbcType = NUMERIC},
+			#{overdueNum, jdbcType = VARCHAR},
+			#{tOverdueNum, jdbcType = VARCHAR},
+			#{overdueDay, jdbcType = VARCHAR},
+			#{guarType, jdbcType = VARCHAR},
+			#{pledgeNo, jdbcType = VARCHAR},
+			#{collCost, jdbcType = NUMERIC},
+			#{collRate, jdbcType = NUMERIC},
+			#{firPay, jdbcType = NUMERIC},
+			#{subBrId, jdbcType = VARCHAR},
+			#{brId, jdbcType = VARCHAR},
+			#{ownerId, jdbcType = VARCHAR},
+			#{accStatus, jdbcType = VARCHAR},
+			#{dDate, jdbcType = VARCHAR},
+			#{productId, jdbcType = VARCHAR},
+			#{openDate, jdbcType = VARCHAR},
+			#{loanType, jdbcType = VARCHAR},
+			#{currency, jdbcType = VARCHAR},
+			#{cnyLoanBal, jdbcType = NUMERIC},
+			#{subAccNo, jdbcType = VARCHAR},
+			#{psDueDt, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_LOAN_ACC (
+			APP_ID,CUSTID,CUSTCODE,ACCNO,PROD_CLASS,PROD_TYPE,PROD_NAME,CREDLIMT,USABLELIMIT,CREDGD,IS_SETTL,LOAN_BAL,
+			REPAYMENT,OWEINT_BAL,LOAN_TERM,LOAN_RATE,PAY_ACCNO,PAY_TYPE,LOAN_CONTNO,ISSUE_DT,ENDDATE,FLOATING_TYPE,
+			FLOATING_RATE,IS_DUE,FIVE_CLASS,OVERDUE,OVERDUE_NUM,T_OVERDUE_NUM,OVERDUE_DAY,GUARTYPE,PLEDGE_NO,COLL_COST,
+			COLL_RATE,FIR_PAY,SUBBRID,BRID,OWNERID,ACC_STATUS,D_DATE,PRODUCTID,OPEN_DATE,LOAN_TYPE,CURRENCY,CNY_LOAN_BAL,
+			SUB_ACCNO,PS_DUE_DT
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.accNo, jdbcType = VARCHAR},
+			#{item.prodClass, jdbcType = VARCHAR},
+			#{item.prodType, jdbcType = VARCHAR},
+			#{item.prodName, jdbcType = VARCHAR},
+			#{item.credLimt, jdbcType = NUMERIC},
+			#{item.usableLimit, jdbcType = NUMERIC},
+			#{item.credGd, jdbcType = NUMERIC},
+			#{item.isSettl, jdbcType = VARCHAR},
+			#{item.loanBal, jdbcType = NUMERIC},
+			#{item.repayment, jdbcType = NUMERIC},
+			#{item.oweintBal, jdbcType = NUMERIC},
+			#{item.loanTerm, jdbcType = NUMERIC},
+			#{item.loanRate, jdbcType = NUMERIC},
+			#{item.payAccNo, jdbcType = VARCHAR},
+			#{item.payType, jdbcType = VARCHAR},
+			#{item.loanContNo, jdbcType = VARCHAR},
+			TO_DATE(#{item.isSueDt, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.endDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.floatingType, jdbcType = VARCHAR},
+			#{item.floatingRate, jdbcType = VARCHAR},
+			#{item.isDue, jdbcType = VARCHAR},
+			#{item.fiveClass, jdbcType = VARCHAR},
+			#{item.overdue, jdbcType = NUMERIC},
+			#{item.overdueNum, jdbcType = VARCHAR},
+			#{item.tOverdueNum, jdbcType = VARCHAR},
+			#{item.overdueDay, jdbcType = VARCHAR},
+			#{item.guarType, jdbcType = VARCHAR},
+			#{item.pledgeNo, jdbcType = VARCHAR},
+			#{item.collCost, jdbcType = NUMERIC},
+			#{item.collRate, jdbcType = NUMERIC},
+			#{item.firPay, jdbcType = NUMERIC},
+			#{item.subBrId, jdbcType = VARCHAR},
+			#{item.brId, jdbcType = VARCHAR},
+			#{item.ownerId, jdbcType = VARCHAR},
+			#{item.accStatus, jdbcType = VARCHAR},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.productId, jdbcType = VARCHAR},
+			TO_DATE(#{item.openDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.loanType, jdbcType = VARCHAR},
+			#{item.currency, jdbcType = VARCHAR},
+			#{item.cnyLoanBal, jdbcType = NUMERIC},
+			#{item.subAccNo, jdbcType = VARCHAR},
+			#{item.psDueDt, jdbcType = VARCHAR}
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

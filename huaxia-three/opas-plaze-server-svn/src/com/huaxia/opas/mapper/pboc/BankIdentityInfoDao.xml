@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankIdentityInfoDao">
+    <!-- 保存手机号码信息段数据PB01B/PB01Bdata -->
+	<insert id="insertPhoneNumberData" parameterType="com.huaxia.opas.domain.pboc.pim.PB01Bdata">
+	INSERT INTO  PBOC_PHONE_NUMBER_DATA (UUID, APP_ID, PHONE_COUNT, 
+      CRT_TIME)
+    values (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PB01BS01,jdbcType=VARCHAR}, 
+      SYSDATE)
+	</insert>
+	 <!-- 保存手机号码信息 PB01B/PB01BH -->
+	<insert id="insertPhoneNumberDetailList" parameterType="java.util.List">
+	 INSERT INTO PBOC_PHONE_NUMBER_DETAIL (UUID, APP_ID, PHONE_NUM, 
+      UPDATED_DATE, CRT_TIME)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+	    	SYS_GUID(),#{item.appId},#{item.PB01BQ01},
+			#{item.PB01BR01},SYSDATE
+		FROM DUAL
+		</foreach>
+	</insert>
+</mapper>

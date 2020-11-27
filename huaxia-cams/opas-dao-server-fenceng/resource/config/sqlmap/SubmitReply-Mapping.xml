@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SubmitReply">
+
+	<resultMap id="submitFraudMap" type="java.util.Map"><!-- 欺诈 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_USER_NAME" property="crtUser" jdbcType="VARCHAR" />
+		<result column="INVEST_RESULTNAME" property="delStatus" jdbcType="VARCHAR" />
+		<!-- <result column="VDEL_STATUS" property="delStatus" jdbcType="CHAR" /> -->
+		<result column="INVEST_MEMO" property="investMemo" jdbcType="VARCHAR" />
+		<result column="APPROVAL_MEMO" property="approvalMemo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="querySubmitFraudInfo" parameterType="java.util.Map"
+		resultMap="submitFraudMap">
+		SELECT APP_ID,CRT_DATE,CRT_USER_NAME,INVEST_RESULTNAME,INVEST_MEMO,APPROVAL_MEMO
+		  FROM opas_submitfraud_info_his
+		 WHERE APP_ID = #{appId} and CHECKBACK_MEMO is null and VDEL_STATUS in ('3','4')
+		 order by CRT_DATE asc
+	</select>
+
+
+	<resultMap id="submitAuthoMap" type="java.util.Map"><!-- 授权-->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDateAu" jdbcType="DATE" />
+		<result column="CRT_USER" property="crtUserAu" jdbcType="VARCHAR" />
+		<result column="SUB_REASON" property="subReasonAu" jdbcType="CHAR" />
+		<result column="MEMO" property="memoAu" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="querySubmitAuthoInfo" parameterType="java.util.Map"
+		resultMap="submitAuthoMap">
+		SELECT b.app_id,b.CRT_DATE,b.SUB_REASON,b.MEMO,
+		 ap.user_name as CRT_USER
+		  FROM opas_submittype_info_his b
+		  left join opas_ap_user ap on b.CRT_USER = ap.user_code
+		 WHERE b.APP_ID = #{appId}  and b.SUBMIT_TYPE='4' and b.DEL_STATUS ='1'
+		 order by CRT_DATE asc
+	</select>
+	
+	
+	<resultMap id="submitAccountMap" type="java.util.Map"><!-- 账户 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDateAc" jdbcType="DATE" />
+		<result column="CRT_USER" property="crtUserAc" jdbcType="VARCHAR" />
+		<result column="SUB_REASON" property="subReasonAc" jdbcType="CHAR" />
+		<result column="MEMO" property="memoAc" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="querySubmitAccountInfo" parameterType="java.util.Map"
+		resultMap="submitAccountMap">
+		SELECT b.app_id,b.CRT_DATE,b.SUB_REASON,b.MEMO,
+		 ap.user_name as CRT_USER
+		  FROM opas_submittype_info_his b
+		  left join opas_ap_user ap on b.CRT_USER = ap.user_code
+		 WHERE b.APP_ID = #{appId}  and b.SUBMIT_TYPE='3' and b.DEL_STATUS ='1'
+		 order by CRT_DATE asc
+	</select>
+	
+	<resultMap id="submitAMLMap" type="java.util.Map"><!-- 反洗钱 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDateAML" jdbcType="DATE" />
+		<result column="CRT_USER" property="crtUserAML" jdbcType="VARCHAR" />
+		<result column="SUB_REASON" property="subReasonAML" jdbcType="CHAR" />
+		<result column="MEMO" property="memoAML" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 查询反洗钱信息-add by wenyh -->
+	<select id="querySubmitAMLInfo" parameterType="java.util.Map"
+		resultMap="submitAMLMap">
+		SELECT b.app_id,b.CRT_DATE,b.SUB_REASON,b.MEMO,
+		 ap.user_name as CRT_USER
+		  FROM opas_submittype_info_his b
+		  left join opas_ap_user ap on b.CRT_USER = ap.user_code
+		 WHERE b.APP_ID = #{appId}  and b.SUBMIT_TYPE='5' and b.DEL_STATUS ='1'
+		 order by CRT_DATE asc
+	</select>
+	
+	<resultMap id="submitUrgeMap" type="java.util.Map"><!-- 催收 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDateU" jdbcType="DATE" />
+		<result column="CRT_USER" property="crtUserU" jdbcType="VARCHAR" />
+		<result column="SUB_REASON" property="subReasonU" jdbcType="CHAR" />
+		<result column="LIMIT_USED_PERCENT" property="percent" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memoU" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="querySubmitUrgeInfo" parameterType="java.util.Map"
+		resultMap="submitUrgeMap"><!--  and YDJ_FLAG = #{ydjFlag} -->
+		SELECT b.app_id,b.CRT_DATE,b.SUB_REASON,b.MEMO,LIMIT_USED_PERCENT,
+		 ap.user_name as CRT_USER
+		  FROM opas_submittype_info_his b
+		  left join opas_ap_user ap on b.CRT_USER = ap.user_code
+		 WHERE b.APP_ID = #{appId}  and b.SUBMIT_TYPE='2' and b.DEL_STATUS ='1'
+		 order by CRT_DATE asc
+	</select>
+	
+	
+	<resultMap id="submitKeyMap" type="java.util.Map"><!-- 关键信息回复 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="MODIFY_DATE" property="modifyDate" jdbcType="DATE" />
+		<result column="REVIEWER" property="operator" jdbcType="VARCHAR" />
+		<result column="REVIEW_STATUS" property="reviewStatus" jdbcType="CHAR" />
+		<result column="REMARK" property="modifyValue" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="querySubmitKeyInfo" parameterType="java.util.Map"
+		resultMap="submitKeyMap">
+		SELECT distinct MODIFY_DATE,REVIEWER,REVIEW_STATUS,REMARK
+		  FROM opas_keymessage_modify
+		 WHERE APP_ID = #{appId} 
+		 order by MODIFY_DATE asc
+	</select>
+	
+	<resultMap id="checkReturnMap" type="java.util.Map"><!-- 复核退回反馈 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDateCr" jdbcType="DATE" />
+		<result column="user_name" property="crtUserCr" jdbcType="VARCHAR" />
+		<result column="INVEST_RESULTNAME" property="delStatusCr" jdbcType="VARCHAR" />
+		<!-- <result column="VDEL_STATUS" property="delStatus" jdbcType="CHAR" />
+		<result column="INVEST_MEMO" property="investMemoCr" jdbcType="VARCHAR" />
+		<result column="APPROVAL_MEMO" property="approvalMemoCr" jdbcType="VARCHAR" /> -->
+		<result column="CHECKBACK_MEMO" property="checkMemo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryCheckReturnInfo" parameterType="java.util.Map"
+		resultMap="checkReturnMap"><!-- INVEST_MEMO,APPROVAL_MEMO, -->
+		 SELECT h.APP_ID APP_ID,h.CRT_DATE CRT_DATE,h.crt_user crt_user,h.INVEST_RESULTNAME INVEST_RESULTNAME,h.CHECKBACK_MEMO CHECKBACK_MEMO,ap.user_name user_name
+		  FROM opas_submitfraud_info_his h left join opas_ap_user ap on H.crt_user= ap.user_code
+		 WHERE APP_ID = #{appId} and CHECKBACK_MEMO is not null and VDEL_STATUS != '6'
+		 order by CRT_DATE asc
+	</select>
+	<!-- 预审欺诈  wdb -->
+	<resultMap id="ysSubmitFraudMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_USER_NAME" property="crtUser" jdbcType="VARCHAR" />
+		<result column="INVEST_RESULTNAME" property="delStatus" jdbcType="VARCHAR" />
+		<result column="INVEST_MEMO" property="investMemo" jdbcType="VARCHAR" />
+		<result column="APPROVAL_MEMO" property="approvalMemo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryYsSubmitFraudInfo" parameterType="java.util.Map" resultMap="ysSubmitFraudMap">
+		SELECT APP_ID,CRT_DATE,CRT_USER_NAME,INVEST_RESULTNAME,INVEST_MEMO,APPROVAL_MEMO
+		  FROM ys_submitfraud_info_his
+		 WHERE APP_ID = #{appId} and CHECKBACK_MEMO is null and VDEL_STATUS in ('3','4')
+		 order by CRT_DATE asc
+	</select>
+	<!-- 预审复核退回反馈 wdb  -->
+	<resultMap id="ysCheckReturnMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDateCr" jdbcType="DATE" />
+		<result column="user_name" property="crtUserCr" jdbcType="VARCHAR" />
+		<result column="INVEST_RESULTNAME" property="delStatusCr" jdbcType="VARCHAR" />
+		<result column="CHECKBACK_MEMO" property="checkMemo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryYsCheckReturnInfo" parameterType="java.util.Map" 	resultMap="ysCheckReturnMap">
+		 SELECT h.APP_ID APP_ID,h.CRT_DATE CRT_DATE,h.crt_user crt_user,h.INVEST_RESULTNAME INVEST_RESULTNAME,h.CHECKBACK_MEMO CHECKBACK_MEMO,ap.user_name user_name
+		  FROM ys_submitfraud_info_his h left join ys_ap_user ap on H.crt_user= ap.user_code
+		 WHERE APP_ID = #{appId} and CHECKBACK_MEMO is not null and VDEL_STATUS != '6'
+		 order by CRT_DATE asc
+	</select>
+	
+	<resultMap id="pfxcReturnInfo" type="java.util.Map"><!-- 复核退回反馈 -->
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="PFXC_TIME" property="pfxctime" jdbcType="DATE" />
+		<result column="CURR_OPT_USER" property="currOptUser" jdbcType="VARCHAR" />
+		<result column="PFXC_PROCESS" property="pfxcProcess" jdbcType="VARCHAR" />
+		<result column="PFXC_MEMO" property="pfxcMemo" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 派发协查 wenyh -->
+	<select id="queryPfxcReturnInfo" parameterType="java.util.Map"
+		resultMap="pfxcReturnInfo">
+		select pfxc.PFXC_MEMO, pfxc.PFXC_PROCESS, ap.user_name AS CURR_OPT_USER, pfxc.LAST_OPT_DATE AS PFXC_TIME
+        from YS_HANDDING_OUT_INVEST_INFO pfxc left join ys_ap_user ap on pfxc.LAST_OPT_USER= ap.user_code where pfxc.app_id = #{appId}
+	</select>
+</mapper>

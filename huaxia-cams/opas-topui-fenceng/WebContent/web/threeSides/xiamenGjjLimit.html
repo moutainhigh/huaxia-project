@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body style="padding: 10px;">
+	<div id="checkFlagLimitSearch_div">
+		<fieldset>
+			<legend>是否发起查询设置</legend>
+			<div align="center">
+			<input  type="checkbox" value="1" name="checkFlag" />发起查询
+			<br>
+			<a href="javascript:void(0)"class="easyui-linkbutton" onclick="saveOrUpdateTypeLimitSearch()">保存</a>
+			</div>
+		</fieldset>
+	</div>
+</body>
+<script type="text/javascript">
+	var currentType=getCurrentUrlParam();    ///0002-FICO  0900-车辆   1000-天御  0003-多头借贷  000700-互联网多头借贷
+	$(function(){
+		queryTypeLimitSearch();
+	});
+	function queryTypeLimitSearch(){
+		$("input[name=checkFlag]:checkbox").prop('checked',false);
+		var param=new Object();
+		param.bRuleType=currentType;//三方数据源码值
+		param.sRuleType="checkFlag";
+		param.flagActive="1";//启用 
+		$cf.ajax({
+			url : "/opas-naps/queryTypeLimitSearch.json",
+			data : param,
+			async:false,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {//5
+					var searchData= eval('(' + data.RSP_BODY.htmlMap + ')');
+					var dataLength = searchData.length;
+					  if(dataLength>0){//4
+						for (var i = 0; i < dataLength; i++) {//3
+							var array_element = searchData[i];
+							$(":checkbox[name='checkFlag']").each(function(){//2
+								var curCheckbox=$(this);
+								if(array_element.ruleSettingValue==curCheckbox.val()){//1
+									curCheckbox.prop('checked',true);
+								}//1
+							});//2
+						}//3
+					}//4
+				}//5
+			}
+		});
+		
+	}
+	
+	
+	//限制查询中 保存账户类型 
+	function saveOrUpdateTypeLimitSearch(){
+		var param=new Array();
+		//获取name为checkFlag的 checkbox 
+		$(":checkbox[name='checkFlag']").each(function(){
+			var curCheckbox=$(this);
+			var obj=new Object();
+			obj.bRuleType=currentType;//代表多头借贷
+			obj.sRuleType="checkFlag";
+			obj.ruleSettingValue=curCheckbox.val();
+			if(curCheckbox[0].checked){//选中 
+				obj.flagActive="1"; 
+			}else{
+				obj.flagActive="0"; 
+			}
+			param.push(obj);
+		});
+		$cf.ajax({
+			url : "/opas-naps/saveOrUpdateTypeLimitSearch.json",
+			data : {"typeObjList":param},
+			async:false,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					queryTypeLimitSearch();
+					$.messager.alert("提示", "保存成功。", "warning");
+				} else{
+					$.messager.alert("操作提示", "保存失败。", "warning");
+				}
+			}
+		});
+		
+	}
+	function getCurrentUrlParam(){
+		var currentUrl=window.location.href;
+		return  currentUrl.split("=")[1];
+	}
+</script>
+</html>

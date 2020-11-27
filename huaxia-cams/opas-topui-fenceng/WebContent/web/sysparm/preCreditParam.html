@@ -1,0 +1,806 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblCust" class="easyui-datagrid"  style="width: 98%;height:100%"
+		data-options="rownumbers:true,animate:true,singleSelect:false,selectOnCheck:false,checkOnSelect:false,pageSize:20,pageList:[15, 20, 50],pagination:true,fitColumns:true,url:'/opas-naps/preCreditList.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#credit'">
+		<thead frozen="true">
+			<tr>
+				<th field="autoID" width="5%" align="center" name="autoID" checkbox="true">全选</th>
+				<th field="batchNo" width="5%">批次号</th>
+				<th field="importDate" width="12%" align="center" formatter="formatDate">导入日期</th>
+				<th field="custID" width="5%">客户ID</th>
+				<th field="preSellLimit" width="6%">预筛选收入</th>
+				<th field="startDate" width="12%" align="center" formatter="formatDate1">开始日期</th>
+				<th field="endDate" width="12%" align="center" formatter="formatDate1">结束日期</th>
+			</tr>
+		</thead>
+		<thead>
+			<tr>
+				<th field="custName" width="10%" align="center">客户姓名</th>
+				<th field="status" width="5%" align="center"
+						data-options="formatter:formatStatus">当前状态</th>
+				<th field="certifiID" width="10%">身份证号</th>
+				<th field="phoneNum" width="8%">手机号</th>
+				<th field=acctType width="5%" align="center"
+							data-options="formatter:formatType">帐户类型</th>
+				<th field="beginDate" width="12%" align="center" formatter="formatDate">启用日期</th>
+				<th field="stopDate" width="12%" align="center" formatter="formatDate">停用日期</th>
+				<th field="crtDate" width="12%" align="center" formatter="formatDate">创建日期</th>
+				<th field="crtUser" width="8%" align="center">创建人</th>
+				<th field="lstUpdUser" width="8%" align="center" >最后操作人</th>
+				<th field="lstUpdDate" width="15%" align="center" formatter="formatDate">最后操作日期</th>
+				<th field="operate" width="8%" align="center"
+							data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="credit" style="padding: 12px;">
+		<form id="searchData">
+			客户ID:<input class="easyui-textbox" name="custID" id="custID">&nbsp;
+			当前状态:<select class="easyui-combobox" name="status" editable="false"
+					style="width: 150px;">
+						<option value="">---请选择---</option>
+						<option value="1">启用</option>
+						<option value="0">停用</option>
+				</select>
+			客户姓名:<input class="easyui-textbox" name="custName" id="custName">&nbsp;
+			身份证号:<input class="easyui-textbox" name="certifiID" id="certifiID">&nbsp;
+			<a href="javascript:common.searchTbl('searchData','tblCust');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+			</br>
+			<a href="javascript:myOpenWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">新增 </a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onClick="onStart()">批量启用 </a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" onClick="onStop()">批量停用 </a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-no" onClick="onBatchDelete()">删除 </a>
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/PreCreditParamUploadServlet.json" target="tartIframe"> 
+				<div style="margin: 10px 0 0 30px;width:100%;">
+			        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+					<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+					<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+					<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+					<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+					<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+					<span class="filebox-label" style="left: 20px;"><font size="2" >导入数据</font></span></span>
+				</div>
+			</form>	
+			<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+	</div>
+	</div>	
+		
+	<div id="winAdd" class="easyui-window" title="预授信信息添加" style="width: 450px; height: 400px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">批次号：</td>
+					<td><input class="easyui-validatebox" id="batchNo" type="text" name="batchNo" data-options="required:true,validType:'maxLength[32]'"></td>
+				</tr>
+				<tr>
+					<td align="right">客户ID:</td>
+					<td><input class="easyui-validatebox" id="custID" type="text" name="custID" data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">预筛选收入:</td>
+					<td><input class="easyui-numberbox" id="preSellLimit" type="text" name="preSellLimit" data-options="required:true,validType:'maxLength[10]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">开始日期:</td>
+					<td><input class="easyui-datebox"  name="startDate" data-options="required:true,validType:'date'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">结束日期:</td>
+					<td><input class="easyui-datebox" name="endDate"  data-options="required:true,validType:'date'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">客户姓名:</td>
+					<td><input class="easyui-validatebox" name="custName" id="custName" type="text" data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">身份证号:</td>
+					<td><input class="easyui-validatebox" name="certifiID" id="certifiID" type="text" data-options="required:true,validType:'idcard'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">手机号:</td>
+					<td><input class="easyui-validatebox" name="phoneNum" id="phoneNum" type="text" data-options="required:true,validType:'zidngyimobile'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">帐户类型:</td>
+					<td>
+						<select class="easyui-combobox" name="acctType" editable="false"
+							style="width: 150px;">
+								<option value="">---请选择---</option>
+								<option value="0">标准卡</option>
+								<option value="1">易达金卡</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>用户状态:</td>
+					<td>
+						<select class="easyui-combobox" name="status" editable="false" id="status1"
+							style="width: 150px;">
+								<option value="1" selected="selected">启用</option>
+								<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onSave()">保存</a>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="预授信信息修改" style="width: 450px; height: 500px"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input type="hidden" name="autoID" id="autoID" /></td>
+				</tr>
+				<tr>
+					<td align="right">客户ID:</td>
+					<td><input class="easyui-validatebox" id="custID" type="text" name="custID" data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">预筛选收入:</td>
+					<td><input class="easyui-numberbox" id="preSellLimit" type="text" name="preSellLimit" data-options="required:true,validType:'maxLength[10]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">开始日期:</td>
+					<td><input class="easyui-datebox" style="width: 180px;" id="startDate" type="text" name="startDate" data-options="required:true,validType:'date'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">结束日期:</td>
+					<td><input class="easyui-datebox" style="width: 180px;" name="endDate" id="endDate" type="text" data-options="required:true,validType:'date'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">客户姓名:</td>
+					<td><input class="easyui-validatebox" name="custName" id="custName" type="text" data-options="required:true,validType:'maxLength[32]'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">身份证号:</td>
+					<td><input class="easyui-validatebox" name="certifiID" id="certifiID" type="text" data-options="required:true,validType:'idcard'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">手机号:</td>
+					<td><input class="easyui-validatebox" name="phoneNum" id="phoneNum" type="text" data-options="required:true,validType:'zidngyimobile'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">帐户类型:</td>
+					<td>
+						<select class="easyui-combobox" name="acctType" editable="false"
+							style="width: 150px;">
+								<option value="0">标准卡</option>
+								<option value="1">易达金卡</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">用户状态:</td>
+					<td>
+						<select class="easyui-combobox" name="status" editable="false"
+							style="width: 150px;">
+								<option value="">---请选择---</option>
+								<option value="1">启用</option>
+								<option value="0">停用</option>
+						</select></td>
+				</tr>
+			</table>
+			
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')" iconCls="icon-cancel">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()" iconCls="icon-save">保存</a>
+		</div>
+	</div>
+
+
+	
+	<div id="showHistory" class="easyui-window" title="预授信操作记录" style="width: 1000px;height: 500px;"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+				<div data-options="region:'center'">
+					<table id="tblHistory" class="easyui-datagrid" 
+						data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList: [15,20,50],fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+						<thead frozen="true">
+							<tr>
+								<th field="batchNo" width="5%">批次号</th>
+								<th field="importDate" width="12%" align="center" formatter="formatDate">导入日期</th>
+								<th field="custID" width="5%">客户ID</th>
+								<th field="preSellLimit" width="10%">预筛选收入</th>
+								<th field="startDate" width="12%" align="center" formatter="formatDate1">开始日期</th>
+								<th field="endDate" width="12%" align="center" formatter="formatDate1">结束日期</th>
+							</tr>
+						</thead>
+						<thead>
+							<tr>
+								<th field="custName" width="10%">客户姓名</th>
+								<th field="status" width="10%" align="center"
+										data-options="formatter:formatStatus">当前状态</th>
+								<th field="certifiID" width="13%">身份证号</th>
+								<th field="phoneNum" width="10%">手机号</th>
+								<th field="acctType" width="10%" align="center"
+											data-options="formatter:formatType">帐户类型</th>
+								<th field="beginDate" width="12%" align="center" formatter="formatDate">启用日期</th>
+								<th field="stopDate" width="12%" align="center" formatter="formatDate">停用日期</th>
+								<th field="crtDate" width="12%" align="center" formatter="formatDate">创建日期</th>
+								<th field="crtUser" width="8%" align="center">创建人</th>
+								<th field="lstUpdUser" width="8%" align="center" >最后操作人</th>
+								<th field="lstUpdDate" width="15%" align="center" formatter="formatDate">最后操作日期</th>
+							</tr>
+						
+					</table>
+				</div>
+			</div>
+	</div>
+</body>
+<script>
+
+var tblCust = $("#tblCust");
+var addForm = $("#addForm");
+var editForm = $("#editForm");
+var editWindow = $("#winEdit");
+
+var value;
+//取消所有行选中状态，选中的同时将所属行的数据保存至value
+tblCust.datagrid({
+	onSelect : function(rowIndex,rowData){
+		$(this).datagrid("unselectAll");
+		value = rowData;
+	}	
+})	 
+
+function formatOper(val, row, index) {
+	return "<a href=javascript:editCust(); >修改</a>&nbsp;<a href=javascript:showHistory('showHistory','tblCust','tblHistory','/opas-naps/preCreditParamHistory.json','autoID');>历史修改</a>&nbsp;";
+}
+
+function formatStatus(val, row, index) {
+	if (val == "0") {
+		return "停用";
+	} else if (val == "1") {
+		return "启用";
+	}
+}
+
+function formatType(val, row, index) {
+	if (val == "0") {
+		return "标准卡";
+	} else if (val == "1") {
+		return "易达金卡";
+	}
+}
+ //正则表达式对页面的验证
+ //日期验证正则
+var pattDate = /^(?:(?!0000)[0-9]{4}([-]?)(?:(?:0?[1-9]|1[0-2])\1(?:0?[1-9]|1[0-9]|2[0-8])|(?:0?[13-9]|1[0-2])\1(?:29|30)|(?:0?[13578]|1[02])\1(?:31))|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)([-]?)0?2\2(?:29))$/;
+//身份证号校验正则
+var	certifiPattDate = /^\d{15}(\d{2}[A-Za-z0-9])?$/ ;
+//手机号校验正则表达式
+var phoneNumDate = /^((1)+\d{10})$/;
+
+ 
+myOpenWin = function(winName) {
+	winObj = $("#" + winName + "");
+	winObj.form('clear');
+	$('#status1').combobox('select','1');
+	winObj.window({
+		closed : false
+	});
+}
+
+function editCust(){
+	editWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(value)
+	});
+	var startDate = gridDateFormatYMD(value.startDate);
+	var endDate = gridDateFormatYMD(value.endDate);
+	$('#startDate').datebox('setValue',startDate);
+	$('#endDate').datebox('setValue',endDate);
+}
+
+function onStart(){
+ 	var custObj = tblCust.datagrid("getChecked");
+	if(custObj.length<= 0){
+		$.messager.alert("操作提示", "请勾选要启用的信息!");
+		return;
+	}
+	for(var i=0;i<custObj.length;i++){
+		if(custObj[i].status == "1"){
+			$.messager.alert("操作提示", "当前选中的行中已有行处于启用状态!");
+			return;
+		}
+	}
+	$.messager.confirm(
+		'请您确认',
+		'确定要启用该名单吗?',
+		function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/batchStartPreCredit.json",
+					data :{"custObj":custObj},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							
+							top.$cf.showMsg("批量启用成功!");
+							
+							tblCust.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "批量启用异常，原因:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});	
+}
+
+function onStop(){
+	var custObj = tblCust.datagrid("getChecked");
+	if(custObj.length <= 0){
+		$.messager.alert("操作提示", "请勾选要停用的信息!");
+		return;
+	}
+	for(var i=0;i<custObj.length;i++){
+		if(custObj[i].status == "0"){
+			$.messager.alert("操作提示", "当前选中的行中已有行处于停用状态!");
+			return;
+		}
+	}
+	$.messager.confirm(
+			'请您确认',
+			'确定要停用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/batchStopPreCredit.json",
+						data :{"custObj":custObj},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								
+								top.$cf.showMsg("批量停用成功!");
+								
+								tblCust.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "批量停用异常，原因:" + data.exMsg, "error");
+								return;
+							}
+						}
+					});
+				}
+			});
+}
+
+function onBatchDelete(){
+	var custObj = tblCust.datagrid("getChecked");
+	if(custObj.length <= 0){
+		$.messager.alert("操作提示", "请勾选要删除的信息!");
+		return;
+	}
+	var autoIds=[];
+	for(var i=0;i<custObj.length;i++){
+		var autoId = custObj[i].autoID;
+		autoIds.push(autoId);
+	}	
+	$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+		if (r) {
+			$cf.ajax({
+				url : "/opas-naps/batchDeletePreCredit.json",
+				data : {"autoIds":autoIds},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						
+						top.$cf.showMsg("删除成功！");
+						
+						tblCust.datagrid("reload");
+					}else{
+						$.messager.alert("操作提示", "删除失败，原因:" + data.exMsg, "error");
+						return;
+					}
+				}
+			});
+		}
+	});
+}
+
+function onUpdate() {
+	var jsondata = getFormData(editForm.serializeArray());
+	if (jsondata.custID == null || jsondata.custID.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请添加客户ID!");
+		return;
+	}
+	if (jsondata.custID.trim().length > 32) {
+		$.messager.alert("操作提示", "修改失败,客户ID长度不能超过32位！");
+		return;
+	}
+	if (jsondata.preSellLimit == null || jsondata.preSellLimit.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请添加预筛选收入!");
+		return;
+	}
+	if (jsondata.preSellLimit< 0) {
+		$.messager.alert("操作提示", "修改失败,预筛选收入不能为负数！");
+		return;
+	}
+	if (jsondata.preSellLimit.trim().length > 10) {
+		$.messager.alert("操作提示", "修改失败,预筛选收入不能超过10位！");
+		return;
+	}
+	if (jsondata.startDate == null || jsondata.startDate.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请选择开始日期!");
+		return;
+	}
+	if (jsondata.endDate == null || jsondata.endDate.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请选择结束日期!");
+		return;
+	}
+	if (jsondata.custName == null || jsondata.custName.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请添加客户姓名!");
+		return;
+	}
+	if (jsondata.custName.trim().length > 32) {
+		$.messager.alert("操作提示", "修改失败,客户姓名不能超过32位！");
+		return;
+	}
+	if (jsondata.certifiID == null || jsondata.certifiID.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请添加身份证号!");
+		return;
+	}	
+	if (jsondata.certifiID.trim().length > 32) {
+		$.messager.alert("操作提示", "修改失败,输入的身份证号不合法！");
+		return;
+	}
+	if (jsondata.phoneNum == null || jsondata.phoneNum.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请添加手机号!");
+		return;
+	}
+	if (jsondata.acctType == null || jsondata.acctType.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请设置帐户类型!");
+		return;
+	}
+	if (jsondata.status == null || jsondata.status.trim() == "") {
+		$.messager.alert("操作提示", "修改失败,请设置启停状态!");
+		return;
+	}
+	if(!pattDate.test(jsondata.startDate)){
+		$.messager.alert("操作提示", "修改失败,请输入正确格式的开始日期!");
+		return;
+	}
+	if(!pattDate.test(jsondata.endDate)){
+		$.messager.alert("操作提示", "修改失败,请输入正确格式的结束日期!");
+		return;
+	}
+	if(jsondata.startDate > jsondata.endDate){
+		$.messager.alert("操作提示", "修改失败,开始日期不能大于结束日期!");
+		return;
+	}
+	if(!certifiPattDate.test(jsondata.certifiID)){
+		$.messager.alert("操作提示", "修改失败,身份证号码格式不正确!");
+		return;
+	}
+	if(!phoneNumDate.test(jsondata.phoneNum)){
+		$.messager.alert("操作提示", "修改失败,手机号码格式不正确!");
+		return;
+	}
+
+	$cf.ajax({
+		url : "/opas-naps/updatePreCredit.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				
+				top.$cf.showMsg("修改成功!");
+				
+				onConcle("winEdit");
+			
+				tblCust.datagrid("reload");
+			} else {
+				$.messager.alert("操作提示", "修改异常，原因:" + data.exMsg, "error");
+				onConcle("winEdit");
+				return;
+			}
+		}
+	});
+}
+function showHistory(winName, tblName, tarTblName, tarUrl, tarParam) {
+	var tblObj = $("#" + tblName + "");
+	var tblDict = $("#" + tarTblName + "");
+	winObj = $("#" + winName + "");
+	var custObj = tblObj.datagrid("getChecked");
+	var id = value.autoID;
+	var paramObj = document.getElementsByName(tarParam);
+	for (var i = 0; i < paramObj.length; i++) {
+		paramObj[i].value = id;
+	}
+	winObj.window({
+		closed : false
+	});
+	var quryParam = {};
+	quryParam[tarParam] = id;
+	tblDict.datagrid({
+		url : tarUrl,
+		queryParams : quryParam
+	});
+}
+
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window("close");
+}
+
+function onSave() {
+	var jsondata = getFormData(addForm.serializeArray());
+	
+	if (jsondata.batchNo == null || jsondata.batchNo.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加批次号!");
+		return;
+	}
+	if (jsondata.batchNo.trim().length > 32) {
+		$.messager.alert("操作提示", "添加失败,批次号长度不能超过32位！");
+		return;
+	}
+	if (jsondata.custID == null || jsondata.custID.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加客户ID!");
+		return;
+	}
+	if (jsondata.custID.trim().length > 32) {
+		$.messager.alert("操作提示", "添加失败,客户ID长度不能超过32位！");
+		return;
+	}
+	if (jsondata.preSellLimit == null || jsondata.preSellLimit.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加预筛选收入!");
+		return;
+	}
+	if (jsondata.preSellLimit< 0) {
+		$.messager.alert("操作提示", "添加失败,预筛选收入不能为负数！");
+		return;
+	}
+	if (jsondata.preSellLimit.trim().length > 10) {
+		$.messager.alert("操作提示", "添加失败,预筛选收入不能超过10位！");
+		return;
+	}
+	if (jsondata.startDate == null || jsondata.startDate.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请选择开始日期!");
+		return;
+	}
+	if (jsondata.endDate == null || jsondata.endDate.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请选择结束日期!");
+		return;
+	}
+	if (jsondata.custName == null || jsondata.custName.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加客户姓名!");
+		return;
+	}
+	if (jsondata.custName.trim().length > 32) {
+		$.messager.alert("操作提示", "添加失败,客户姓名不能超过32位！");
+		return;
+	}
+	if (jsondata.certifiID == null || jsondata.certifiID.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加身份证号!");
+		return;
+	}	
+	if (jsondata.certifiID.trim().length > 32) {
+		$.messager.alert("操作提示", "添加失败,输入的身份证号不合法！");
+		return;
+	}
+	if (jsondata.phoneNum == null || jsondata.phoneNum.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请添加手机号!");
+		return;
+	}
+	if (jsondata.acctType == null || jsondata.acctType.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请设置帐户类型!");
+		return;
+	}
+	if (jsondata.status == null || jsondata.status.trim() == "") {
+		$.messager.alert("操作提示", "添加失败,请设置启停状态!");
+		return;
+	}
+	if(!pattDate.test(jsondata.startDate)){
+		$.messager.alert("操作提示", "添加失败,请输入正确格式的开始日期!");
+		return;
+	}
+	if(!pattDate.test(jsondata.endDate)){
+		$.messager.alert("操作提示", "添加失败,请输入正确格式的结束日期!");
+		return;
+	}
+	if(jsondata.startDate > jsondata.endDate){
+		$.messager.alert("操作提示", "添加失败,开始日期不能大于结束日期!");
+		return;
+	}
+	if(!certifiPattDate.test(jsondata.certifiID)){
+		$.messager.alert("操作提示", "添加失败,身份证号码格式不正确!");
+		return;
+	}
+	if(!phoneNumDate.test(jsondata.phoneNum)){
+		$.messager.alert("操作提示", "添加失败,手机号码格式不正确!");
+		return;
+	}
+	
+	$cf.ajax({
+		url : "/opas-naps/insertPreCredit.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			
+			if (data.RSP_BODY.isSuccess) {
+
+				top.$cf.showMsg("添加成功！");
+
+				onConcle('winAdd');
+				tblCust.datagrid("reload");
+				addForm[0].reset();
+
+			} else {
+				$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+				onConcle("winAdd");
+				return;
+			}
+		}
+
+	});
+}
+
+function setData(data) {
+	editForm.form("load", data);
+	$("#id").attr("readonly", "readonly");
+	$("#id").attr("disabled", "disabled");
+}
+
+//获取表单数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+
+
+//日期格式转换
+ function formatDate(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+ function formatDate1(value) {
+		var str = getTaskTime1(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+};  
+
+function getTaskTime1(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	return y+"-"+m+"-"+d;  
+};  
+
+
+<!-- 批量导入EXCEL文件相关js -->
+$('#fb').filebox({    
+buttonText: '选择文件', 
+buttonAlign: 'right',
+buttonIcon:'icon-search',
+onChange: function (newValue, oldValue) {
+		excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+		if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+			alert("请上传excel格式的文件");
+			$('#fb').filebox('setValue','');
+			return;
+		}
+	}
+})
+
+function resetValue(){
+$('#fb').filebox('setValue','');
+}
+
+function importExcel() {
+	var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+	$('#userName').textbox('setValue',userName);
+	$('#userCode').textbox('setValue',userCode);
+	var fileValue = $('#fb').filebox('getValue');
+	if(fileValue != ""){
+		if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+			alert("请选择正确的excel格式的文件！");
+			return;
+		}
+	}
+	if (fileValue == "") {
+			$.messager.alert('提示', '请选择需要上传的文件！');
+	} else {
+			importSave();
+	}
+}
+
+//保存数据
+function importSave() {
+	$('#formFile').submit();
+		$.messager.progress(); 
+}
+
+
+var tartIframe = document.getElementById("tartIframe");
+tartIframe.src = "/opas-naps/PreCreditParamUploadServlet.json";
+if(tartIframe.attachEvent){
+	tartIframe.attachEvent("onload",function(){
+		responPage();
+	});
+}else{
+	tartIframe.onload = function(){
+		responPage();			
+	}
+}
+
+function responPage(){
+	$.messager.progress('close'); 
+	var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+	if(value[0] == "success"){
+		tblCust.datagrid("reload");
+		top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+	}
+	if(value[0] == "false"){
+		$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+	}
+	
+}	
+</script>

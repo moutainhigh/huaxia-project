@@ -1,0 +1,1580 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="credit">
+
+	<resultMap id="OpasTelcheckResult" type="com.huaxia.opas.domain.credit.OpasTelcheckResult">
+			<result column="AUTO_ID" 				property="auto_id" 				jdbcType="VARCHAR" />
+			<result column="APP_ID" 				property="app_id" 				jdbcType="VARCHAR" />
+			<result column="BLOCK_CODE" 			property="block_code" 			jdbcType="VARCHAR" />
+			<result column="CREDIT_REFUSE_REASON" 	property="credit_refuse_reason" jdbcType="VARCHAR" />
+			<result column="TELCHECK_RESULT" 		property="telcheck_result" 		jdbcType="VARCHAR" />
+			<result column="IDENTITY_RESULT" 		property="identity_result" 		jdbcType="VARCHAR" />
+			<result column="CREDIT_TIME" 			property="credit_time" 			jdbcType="DATE" />
+			<result column="CREDITER" 				property="crediter" 			jdbcType="VARCHAR" />
+			<result column="CREDITER_NAME" 			property="crediter_name" 		jdbcType="VARCHAR" />
+			<result column="CRT_DATE" 				property="crt_date" 			jdbcType="DATE" />
+			<result column="CRT_USER" 				property="crt_user" 			jdbcType="VARCHAR" />
+			<result column="CURR_OPT_GROUP" 		property="curr_opt_group" 		jdbcType="VARCHAR" />
+			<result column="YDJ_FLAG" 				property="ydj_flag" 			jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<resultMap id="CreditMatching" type="com.huaxia.opas.domain.credit.CreditMatching">
+		<result column="AUTO_ID" 			property="match_autoID" 			jdbcType="VARCHAR" />
+		<result column="NON_PEOBANK_NAME" 	property="match_peobankName" 		jdbcType="VARCHAR" />
+		<result column="NON_PEOBANK_MATCH" 	property="match_nonPeobankMatct" 	jdbcType="VARCHAR" />
+		<result column="CURR_STATUS" 		property="match_currStatus" 		jdbcType="CHAR" />
+		<result column="CRT_USER" 			property="match_crtUser" 			jdbcType="VARCHAR" />
+		<result column="CRT_TIME" 			property="match_crtTime" 			jdbcType="DATE" />
+	</resultMap>
+	
+	<resultMap id="Candidate" type="com.huaxia.opas.domain.credit.Candidate">
+		<result column="ROLE_NAME" 			property="role_name" 		jdbcType="VARCHAR" />
+		<result column="USER_CODE" 			property="user_code" 		jdbcType="VARCHAR" />
+		<result column="USER_NAME" 			property="user_name" 		jdbcType="VARCHAR" />
+		<result column="GROUP_NAME" 		property="group_name" 		jdbcType="VARCHAR" />
+		<result column="GROUP_NO" 			property="group_no" 		jdbcType="VARCHAR" />		
+	</resultMap>
+	
+	
+	
+	<resultMap id="CreditCheck" type="com.huaxia.opas.domain.credit.CreditCheck">
+		<result column="USER_DATE" 			property="check_USER_DATE" 		jdbcType="TIMESTAMP" />
+		<result column="APP_ID" 			property="check_number" 		jdbcType="VARCHAR" />
+		<result column="LAST_OPT_USER" 		property="check_lastOU" 		jdbcType="CHAR" />
+		<result column="LAST_OU" 			property="check_lastOPT" 		jdbcType="CHAR" />
+		<result column="LST_TEAM_DATE" 		property="check_lastOD" 		jdbcType="DATE" />
+		<result column="GROUP_DATE" 		property="check_GourpDate" 		jdbcType="VARCHAR" />
+		<result column="QUEUE_DATE" 		property="check_queueDate" 		jdbcType="VARCHAR" />
+		<result column="CUST_NAME" 			property="check_custName" 		jdbcType="VARCHAR" />
+		<result column="CERTIFI_TYPE" 		property="check_certType" 		jdbcType="CHAR" />
+		<result column="CERTIFI_NO" 		property="check_certNo" 		jdbcType="VARCHAR" />
+		<result column="WORK_COMPANY" 		property="check_currentCN" 		jdbcType="VARCHAR" />
+		<result column="TELCHECK_RESULT"	property="check_nclearPS" 		jdbcType="VARCHAR" />
+		<result column="QUICK_CARD_FLAG" 	property="check_aproveFlag" 	jdbcType="VARCHAR" />
+		<result column="SUBMIT_TYPE" 		property="check_submitType" 	jdbcType="VARCHAR" />
+		<result column="DEL_STATUS" 		property="check_delStatus" 		jdbcType="CHAR" />
+		<result column="CURR_OPT_USER" 		property="check_currOptUser" 	jdbcType="CHAR" />
+		<result column="CURR_OPT_GROUP" 	property="check_currOptGroup" 	jdbcType="CHAR" />
+		<result column="CURR_NODE" 			property="check_currNode" 		jdbcType="VARCHAR" />
+		<result column="SUBMIT_STATUS" 		property="check_SubmitStatus" 	jdbcType="CHAR" />
+		<result column="REASON" 			property="check_reason" 		jdbcType="VARCHAR" />
+		<result column="SUBMIT_MEMO" 		property="check_memo" 			jdbcType="VARCHAR" />
+		<result column="REASON_TYPE" 		property="check_reasonType" 	jdbcType="VARCHAR" />
+		<result column="CRT_DATE" 			property="check_crtDate" 		jdbcType="DATE" />
+		<result column="YDJ_FLAG" 			property="check_ydjFlag" 		jdbcType="CHAR" />
+		 
+		<result column="REASON_CODE" 		property="check_reasonCode" 	jdbcType="VARCHAR" />
+		<result column="REASON_TYPE_CODE" 	property="check_reasonTypeCode" jdbcType="VARCHAR" />
+		<result column="REASON_ID" 			property="check_reasonAutoId" 	jdbcType="VARCHAR" />
+		 
+		<!--  OPAS_SUBMITFRAUD_INFO -->
+		<result column="AUTO_ID" 			property="invest_autoId" 		jdbcType="VARCHAR" />
+		<result column="INVEST_RESULTNAME" 	property="invest_resultName" 	jdbcType="VARCHAR" />
+		<result column="INVEST_RESULTCODE" 	property="invest_resultCode" 	jdbcType="VARCHAR" />
+		<result column="VDEL_STATUS" 		property="invest_delStatus" 	jdbcType="CHAR" />
+		<result column="INVEST_MEMO" 		property="invest_memo" 			jdbcType="VARCHAR" />
+		<result column="CRT_DATE" 			property="invest_crtDate" 		jdbcType="DATE" />
+		<result column="CRT_USER" 			property="invest_crtUser" 		jdbcType="VARCHAR" />
+		<result column="CRT_USER_NAME" 		property="invest_crtUserName" 	jdbcType="VARCHAR" />
+		<result column="APPROVAL_MEMO" 		property="invest_approvalMemo" 	jdbcType="VARCHAR" />
+		<result column="INVEST_RESULT_FLAG" property="invest_resultFlag" 	jdbcType="CHAR" />
+		<result column="DICT_DETAIL_CODE" 	property="invest_detailCode" 	jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_NAME" 	property="invest_detailName" 	jdbcType="VARCHAR" />
+		<result column="OPERATION_DATE" 	property="invest_operationDate" jdbcType="DATE" />
+		
+		
+	 	<result column="APP_PROD" 			jdbcType="VARCHAR" 				property="appProd" />
+	 	<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" 	jdbcType="CHAR"/>
+	 	<result column="LAST_DATE" 			property="lastDate" 			jdbcType="CHAR"/>
+	 	<result column="ENTRY_SYSTEM_DATE" 	property="entrySystemDate" 		jdbcType="CHAR"/>
+	 	<result column="remark" 			jdbcType="NUMERIC" 				property="remark" />
+	 	<result column="checkStr" 			jdbcType="VARCHAR" 				property="checkStr" />
+	 	<result column="HIS_VDEL_STATUS" 			property="pfxcFlag" 			jdbcType="CHAR"/>
+	</resultMap>
+	<resultMap id="CreditSVoice" type="com.huaxia.opas.domain.credit.CreditSVoice">
+	    <result column="APP_ID" 			property="check_number" 		jdbcType="VARCHAR" />
+	    <result column="YDJ_FLAG" 			property="check_ydjFlag" 		jdbcType="CHAR" />
+	    <result column="MATCHING_CARD_FLAG" property="matchingCardFlag" 	jdbcType="CHAR"/>
+	    <result column="QUICK_CARD_FLAG" 	property="check_aproveFlag" 	jdbcType="VARCHAR" />
+	    <result column="CURR_NODE" 			property="check_currNode" 		jdbcType="VARCHAR" />
+	    <result column="GROUP_DATE" 		property="check_GourpDate" 		jdbcType="VARCHAR" />
+		<result column="QUEUE_DATE" 		property="check_queueDate" 		jdbcType="VARCHAR" />
+		<result column="USER_DATE" 			property="check_userDate" 		jdbcType="TIMESTAMP" />
+		<result column="LAST_DATE" 			property="lastDate" 			jdbcType="CHAR"/>
+		<result column="CHECK_LASTOU" 		property="check_lastOU" 		jdbcType="CHAR" />	
+		<result column="CONCLUSION" 		property="check_conclusion"     jdbcType="VARCHAR" />
+		<result column="SUMMARY" 			property="check_summary" 		jdbcType="VARCHAR" />
+		<result column="CUST_NAME" 			property="check_custName" 		jdbcType="VARCHAR" />
+		<result column="CERTIFI_TYPE" 		property="check_certType" 		jdbcType="CHAR" />
+		<result column="CERTIFI_NO" 		property="check_certNo" 		jdbcType="VARCHAR" />
+		<result column="WORK_COMPANY" 		property="check_currentCN" 		jdbcType="VARCHAR" />
+		<result column="REMARK" 			property="remark"               jdbcType="NUMERIC" />
+	</resultMap>
+	<!-- By liuheng 2019-09-10 预审分件表ys_allot_apply_allot 审批分件表 -->
+	<resultMap id="ApplyPfxcResultMap" type="java.util.Map">
+		<id column="AUTO_ID" property="autoid" jdbcType="VARCHAR" />
+		<result column="PFXC_DATE" property="opasPfxcTime" jdbcType="DATE" />
+		<result column="PFXC_TIME" property="ysPfxcTime" jdbcType="DATE" />
+		<result column="PFXC_Day" property="pfxcDay" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryPfxcTime" resultMap="ApplyPfxcResultMap" parameterType="java.lang.String">
+   		select a.pfxc_date,
+           b.LAST_OPT_DATE as pfxc_time, 
+           workday(trunc(a.pfxc_date), trunc(b.LAST_OPT_DATE)) as PFXC_Day
+      	from opas_allot_apply_allot a, YS_HANDDING_OUT_INVEST_INFO b
+     	where a.app_id = b.app_id and a.app_id = #{appId}
+	</select>
+	
+	<!--征信调查复核列表数据查询 -->
+
+	<!-- <select id="selectCreditCheckPage" parameterType="java.util.Map" resultMap="CreditCheck">
+			SELECT H.APP_ID,
+			H.LAST_OPT_USER,
+			H.SUBMIT_TYPE,
+			H.USER_DATE,
+			round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char( H.GROUP_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS GROUP_DATE,
+		    round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char(H.QUEUE_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS QUEUE_DATE,
+			H.CURR_NODE,
+			H.CUST_NAME,
+			H.CERTIFI_TYPE,
+			H.CERTIFI_NO,
+			H.WORK_COMPANY,
+			H.TELCHECK_RESULT,
+			H.QUICK_CARD_FLAG,
+			H.YDJ_FLAG ,
+			H.SUBMIT_STATUS FROM(
+				 SELECT T1.APP_ID,T1.LAST_OPT_USER,T1.SUBMIT_TYPE,T1.USER_DATE,T1.GROUP_DATE,T1.CURR_NODE,
+				 T1.QUEUE_DATE,T1.CUST_NAME,T1.CERTIFI_TYPE,T1.YDJ_FLAG,T1.CERTIFI_NO,T1.WORK_COMPANY,
+				 T1.TELCHECK_RESULT,E.QUICK_CARD_FLAG,T1.SUBMIT_STATUS FROM(
+				    SELECT T.APP_ID,T.LAST_OPT_USER,T.SUBMIT_TYPE,T.USER_DATE,T.GROUP_DATE,T.QUEUE_DATE,
+				    T.CURR_NODE,T.CUST_NAME,T.CERTIFI_TYPE,T.YDJ_FLAG,T.CERTIFI_NO,T.WORK_COMPANY,U.TELCHECK_RESULT,
+				    T.SUBMIT_STATUS FROM (
+				        SELECT O.APP_ID,O.LAST_OPT_USER,O.SUBMIT_TYPE,O.USER_DATE,O.GROUP_DATE,
+				        O.QUEUE_DATE,O.CURR_NODE,O.YDJ_FLAG,B.CUST_NAME,B.CERTIFI_TYPE,B.CERTIFI_NO,B.WORK_COMPANY,
+				        O.SUBMIT_STATUS from OPAS_ALLOT_APPLY_ALLOT O
+				        LEFT JOIN  OPAS_CUST_BASEINFO B on o.APP_ID=b.APP_ID
+				    ) T LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID=U.APP_ID
+				)T1 LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON T1.APP_ID = E.APP_ID
+			)H WHERE H.CURR_NODE='02'  	
+			AND H.SUBMIT_TYPE='1' 	
+			AND H.SUBMIT_STATUS='1' 
+			AND H.YDJ_FLAG=#{ydjFlag,jdbcType=VARCHAR}
+	</select> -->
+	<select id="selectCreditCheckPage" parameterType="java.util.Map" resultMap="CreditCheck">
+		SELECT H.APP_ID,
+      	 ap.user_name as check_lastOU,
+      	 H.SUBMIT_TYPE,
+      	 H.USER_DATE,
+      	 e.APP_PROD,H.MATCHING_CARD_FLAG,
+      	  to_char(h.QUEUE_DATE, 'yyyy-mm-dd hh24:mi:ss') last_date,
+      	  (select count(c.REMARK_ID)
+	          from OPAS_ALLOT_APPLY_REMARK c
+	         where H.APP_ID = c.APP_ID) as remark,
+      	<!--  round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char( H.GROUP_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS GROUP_DATE,
+		 round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char(H.QUEUE_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS QUEUE_DATE,
+      	 -->
+      	 (trunc(to_char(sysdate, 'yyyymmdd')) -
+       	 trunc(to_char(H.QUEUE_DATE, 'yyyymmdd')) + 1) as QUEUE_DATE,
+      	 (select workday(H.group_date, sysdate) from dual) as  GROUP_DATE, 
+      	 H.CURR_NODE,
+      	 (E.C1_CNAME) CUST_NAME,
+      	 (E.C1_IDTYPE) CERTIFI_TYPE,
+      	 (E.C1_IDNBR) CERTIFI_NO,
+       	 (E.C1_CONAME) WORK_COMPANY,
+      	 U.TELCHECK_RESULT,
+      	 E.QUICK_CARD_FLAG,
+      	 H.YDJ_FLAG,
+       	 H.SUBMIT_STATUS
+   		from OPAS_ALLOT_APPLY_ALLOT H
+   		LEFT JOIN OPAS_TELCHECK_RESULT U ON H.APP_ID = U.APP_ID
+   		LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON H.APP_ID = E.APP_ID
+   		left join opas_ap_user ap on H.last_opt_user = ap.user_code
+ 		WHERE 
+ 		H.curr_node in('02','03')
+   		and H.SUBMIT_TYPE = '1'
+   		AND H.SUBMIT_STATUS = '1'
+   		and H.CURR_OPT_GROUP = #{orgNo}
+   		AND H.YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR}
+   		order by (trunc(to_char(sysdate, 'yyyymmdd')) -
+          trunc(to_char(H.QUEUE_DATE, 'yyyymmdd')) + 1) desc,H.APP_ID
+	</select>
+	
+	<!--智能语音复核列表总条数-->
+	<select id="selectCreditSVoiceCount" parameterType="java.util.Map"
+	resultType="java.lang.String">
+	SELECT COUNT(1) FROM(
+		SELECT H.APP_ID,
+      	 H.LAST_OPT_USER,
+      	 H.SUBMIT_TYPE,
+      	 H.USER_DATE,
+      	 round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char( H.GROUP_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS GROUP_DATE,
+		 round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char(H.QUEUE_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS QUEUE_DATE,
+      	 H.CURR_NODE,
+      	 E.C1_CNAME,
+      	 E.C1_IDTYPE,
+      	 E.C1_IDNBR,
+       	 E.C1_CONAME,
+      	 U.TELCHECK_RESULT,
+      	 E.QUICK_CARD_FLAG,
+      	 H.YDJ_FLAG,
+       	 H.SUBMIT_STATUS
+   		from OPAS_ALLOT_APPLY_ALLOT H
+   		LEFT JOIN OPAS_TELCHECK_RESULT U ON H.APP_ID = U.APP_ID
+   		LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON H.APP_ID = E.APP_ID
+ 		WHERE H.CURR_NODE = '07'
+ 	    <!-- AND H.DEL_STATUS = '0' -->
+   		AND H.SYN_FLAG = '0'
+   		AND H.CURR_OPT_GROUP = #{orgNo}
+   		AND H.YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR}
+	)
+    </select>	 
+    <!--智能语音发起条数-->
+	<select id="selectCallSVoiceCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM CAMS_VOICE_CALL_RECORD R                                     
+            WHERE R.APP_ID  = #{appId,jdbcType=VARCHAR}
+    </select>
+    <!-- 智能语音复核队列 -->
+	<select id="selectCreditSVoiceCheckPage" parameterType="java.util.Map" resultMap="CreditSVoice">
+		SELECT H.APP_ID,
+	       AP.USER_NAME AS CHECK_LASTOU,
+	       H.USER_DATE,
+	       H.MATCHING_CARD_FLAG,
+	       TO_CHAR(H.QUEUE_DATE, 'YYYY-MM-DD HH24:MI:SS') LAST_DATE,
+	       (SELECT COUNT(C.REMARK_ID)
+	          FROM OPAS_ALLOT_APPLY_REMARK C
+	         WHERE H.APP_ID = C.APP_ID) AS REMARK,
+	       (TRUNC(TO_CHAR(SYSDATE, 'YYYYMMDD')) -
+	       TRUNC(TO_CHAR(H.LST_TEAM_DATE, 'YYYYMMDD')) + 1) AS QUEUE_DATE,
+	       (SELECT WORKDAY(H.GROUP_DATE, SYSDATE) FROM DUAL) AS GROUP_DATE,
+	       H.CURR_NODE,
+	       (E.C1_CNAME) CUST_NAME,
+	       (E.C1_IDTYPE) CERTIFI_TYPE,
+	       (E.C1_IDNBR) CERTIFI_NO,
+	       (E.C1_CONAME) WORK_COMPANY,
+	       E.QUICK_CARD_FLAG,
+	       H.YDJ_FLAG,
+	       V.CONCLUSION,
+	       V.SUMMARY
+	  FROM OPAS_ALLOT_APPLY_ALLOT H
+	  LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON H.APP_ID = E.APP_ID
+	  LEFT JOIN OPAS_AP_USER AP ON H.LAST_OPT_USER = AP.USER_CODE
+	  LEFT JOIN (SELECT DX.APP_ID, DX.FINISH, DX.CONCLUSION, DX.SUMMARY
+                 FROM CAMS_VOICE_CALLBACK_RECORD DX
+                 WHERE DX.FINISH = '1') v on E.APP_ID = V.APP_ID
+	 WHERE H.CURR_NODE = '07'
+	   <!-- AND H.DEL_STATUS = '0' -->
+	   AND H.SYN_FLAG = '0'
+	   AND H.CURR_OPT_GROUP = #{orgNo}
+	   AND H.YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR}
+	   <!-- AND V.FINISH = '1' -->
+	 ORDER BY (TRUNC(TO_CHAR(SYSDATE, 'YYYYMMDD')) -
+	          TRUNC(TO_CHAR(H.QUEUE_DATE, 'YYYYMMDD')) + 1) DESC,H.APP_ID
+	</select>
+    
+	
+	<!--征信调查复核列表总条数-->
+	<select id="selectCreditCheckCount" parameterType="java.util.Map"
+	resultType="java.lang.String">
+	SELECT COUNT(1) FROM(
+		SELECT H.APP_ID,
+      	 H.LAST_OPT_USER,
+      	 H.SUBMIT_TYPE,
+      	 H.USER_DATE,
+      	 round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char( H.GROUP_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS GROUP_DATE,
+		 round (to_date(to_char(sysdate,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss') - to_date(to_char(H.QUEUE_DATE,'yyyy-mm-dd hh:mm:ss'),'yyyy-mm-dd hh24:mi:ss'),1) AS QUEUE_DATE,
+      	 H.CURR_NODE,
+      	 E.C1_CNAME,
+      	 E.C1_IDTYPE,
+      	 E.C1_IDNBR,
+       	 E.C1_CONAME,
+      	 U.TELCHECK_RESULT,
+      	 E.QUICK_CARD_FLAG,
+      	 H.YDJ_FLAG,
+       	 H.SUBMIT_STATUS
+   		from OPAS_ALLOT_APPLY_ALLOT H
+   		LEFT JOIN OPAS_TELCHECK_RESULT U ON H.APP_ID = U.APP_ID
+   		LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON H.APP_ID = E.APP_ID
+ 		WHERE (H.CURR_NODE = '02' or h.curr_node='03')
+   		AND H.SUBMIT_TYPE = '1'
+   		AND H.SUBMIT_STATUS = '1'
+   		and H.CURR_OPT_GROUP = #{orgNo}
+   		AND H.YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR}
+	)
+</select>	
+	
+	<!--根据流水号查询 -->
+	<select id="selectCreditCheckByApp_id" parameterType="java.util.Map" resultMap="CreditCheck">
+			SELECT H.APP_ID,H.LAST_OPT_USER,H.SUBMIT_TYPE,H.LST_TEAM_DATE,H.GROUP_DATE,H.QUEUE_DATE,H.CUST_NAME,H.CERTIFI_TYPE,H.CERTIFI_NO,H.WORK_COMPANY,H.TELCHECK_RESULT,H.QUICK_CARD_FLAG FROM(
+				 SELECT T1.APP_ID,T1.LAST_OPT_USER,T1.SUBMIT_TYPE,T1.LST_TEAM_DATE,T1.GROUP_DATE,T1.QUEUE_DATE,T1.CUST_NAME,T1.CERTIFI_TYPE,T1.CERTIFI_NO,T1.WORK_COMPANY,T1.TELCHECK_RESULT,E.QUICK_CARD_FLAG FROM(
+				    SELECT T.APP_ID,T.LAST_OPT_USER,T.SUBMIT_TYPE,T.LST_TEAM_DATE,T.GROUP_DATE,T.QUEUE_DATE,T.CUST_NAME,T.CERTIFI_TYPE,T.CERTIFI_NO,T.WORK_COMPANY,U.TELCHECK_RESULT FROM (
+				        SELECT O.APP_ID,O.LAST_OPT_USER,O.SUBMIT_TYPE,O.LST_TEAM_DATE,O.GROUP_DATE,O.QUEUE_DATE,B.CUST_NAME,B.CERTIFI_TYPE,B.CERTIFI_NO,B.WORK_COMPANY from OPAS_ALLOT_APPLY_ALLOT O
+				        LEFT JOIN  OPAS_CUST_BASEINFO B on o.APP_ID=b.APP_ID
+				    ) T LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID=U.APP_ID
+				)T1 LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON T1.APP_ID = E.APP_ID
+			)H WHERE H.SUBMIT_TYPE='1' AND H.APP_ID = #{check_number,jdbcType=VARCHAR} 
+	</select>
+	
+	
+	<!-- 修改申请件分配表 -->
+	<update id="updateCreditCheck" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		update OPAS_ALLOT_APPLY_ALLOT
+		<set>
+		    <if test="check_synFlag != null">SYN_FLAG=#{check_synFlag,jdbcType=CHAR},</if>
+			<if test="check_delStatus != null">DEL_STATUS=#{check_delStatus,jdbcType=CHAR},</if> 
+			<if test="check_SubmitStatus != null">SUBMIT_STATUS=#{check_SubmitStatus,jdbcType=CHAR},</if>
+			<if test="check_lastOptGroup != null">LAST_OPT_GROUP=#{check_lastOptGroup,jdbcType=VARCHAR},</if>
+			<if test="check_lastOU != null">LAST_OPT_USER=#{check_lastOU,jdbcType=CHAR},</if>
+			<if test="check_lastOptQueue != null">LAST_OPT_QUEUE=#{check_lastOptQueue,jdbcType=CHAR},</if>
+			LST_TEAM_DATE=sysdate,
+			<if test="check_lastOptQueue != null">CURR_OPT_QUEUE=#{check_lastOptQueue,jdbcType=CHAR},</if>
+			<if test="check_lastOptGroup != null">CURR_OPT_GROUP=#{check_lastOptGroup,jdbcType=VARCHAR},</if>
+			<if test="check_currOptUser != null">CURR_OPT_USER=#{check_currOptUser,jdbcType=CHAR},</if>
+			QUEUE_DATE=sysdate,
+			<!-- <if test="check_lastOD != null">CRT_TEAM_DATE=#{check_lastOD,jdbcType=DATE},</if> -->
+			<if test="check_queueDate != null">QUEUE_DATE=#{check_queueDate,jdbcType=DATE},</if>
+			SUBMIT_TYPE=#{check_submitType,jdbcType=VARCHAR},
+			<if test="check_memo != null">SUBMIT_MEMO=#{check_memo,jdbcType=VARCHAR},</if>
+			<if test="check_currNode != null">CURR_NODE=#{check_currNode,jdbcType=VARCHAR},</if>
+			<if test="check_meuoFlag != null">CHECK_MEUOFLAG = #{check_meuoFlag,jdbcType=CHAR},</if>
+			<if test="check_currStatus != null">CURR_STATUS=#{check_currStatus,jdbcType=CHAR},</if>
+			<if test="check_USER_DATE != null">USER_DATE=#{check_USER_DATE,jdbcType=DATE},</if>
+			<if test="check_zshy_inner_check != null">ZSHY_INNER_CHECK=#{check_zshy_inner_check,jdbcType=CHAR}</if>
+		</set> 
+		where APP_ID = #{check_number,jdbcType=VARCHAR}
+	</update>
+	<insert id="insertCopyOpasAllotToAllotHis"  parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+	  insert into OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG, 
+      PROCESS_ID, RECORD_TEAM_DATE, USER_DATE,BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME) 
+      select (select sys_guid() from dual),APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG,
+      PROCESS_ID,sysdate,USER_DATE,BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME from OPAS_ALLOT_APPLY_ALLOT where APP_ID=#{check_number,jdbcType=VARCHAR}
+	</insert>
+	
+	<!-- 修改申请件分配表      可存入空的操作人 组 队列 时间等 -->
+	<update id="updateCreditCheck1" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		update OPAS_ALLOT_APPLY_ALLOT
+		<set>
+		    <if test="check_synFlag != null">SYN_FLAG=#{check_synFlag,jdbcType=CHAR},</if>
+			<if test="check_delStatus != null">DEL_STATUS=#{check_delStatus,jdbcType=CHAR},</if> 
+			SUBMIT_STATUS=#{check_SubmitStatus,jdbcType=CHAR},
+			LAST_OPT_GROUP=#{check_lastOptGroup,jdbcType=VARCHAR},
+			LAST_OPT_USER=#{check_lastOU,jdbcType=CHAR}, 
+			LAST_OPT_QUEUE=#{check_lastOptQueue,jdbcType=CHAR},
+			<if test="check_lastOD != null">LST_TEAM_DATE=sysdate,</if> 
+			CURR_OPT_QUEUE=#{check_lastOptQueue,jdbcType=CHAR},
+			CURR_OPT_GROUP=#{check_currOptGroup,jdbcType=VARCHAR},
+			CURR_OPT_USER=#{check_lastOU,jdbcType=CHAR}, 
+			CURR_USER_NAME='',
+			user_date='',
+			FRAUD_DATE=sysdate,
+			QUEUE_DATE=#{check_queueDate,jdbcType=DATE},
+			SUBMIT_TYPE=#{check_submitType,jdbcType=VARCHAR},
+			<if test="check_memo != null">SUBMIT_MEMO=#{check_memo,jdbcType=VARCHAR},</if>
+			<if test="check_currNode != null">CURR_NODE=#{check_currNode,jdbcType=VARCHAR},</if>
+			<if test="check_currStatus != null">CURR_STATUS=#{check_currStatus,jdbcType=CHAR}</if>
+		</set> 
+		where APP_ID = #{check_number,jdbcType=VARCHAR}
+	</update>
+	
+	<!--征信提报反欺诈列表数据查询 -->
+	<select id="selectCreditCheckCheatPage" parameterType="java.util.Map" resultMap="CreditCheck">
+		SELECT H.APP_ID,H.LAST_OPT_USER,H.SUBMIT_TYPE,H.LST_TEAM_DATE,H.GROUP_DATE,H.QUEUE_DATE,H.CUST_NAME,H.CERTIFI_TYPE,H.CERTIFI_NO,H.WORK_COMPANY,H.TELCHECK_RESULT,H.CURR_NODE,H.DEL_STATUS,H.QUICK_CARD_FLAG,H.YDJ_FLAG FROM(
+				 SELECT T1.APP_ID,T1.LAST_OPT_USER,T1.SUBMIT_TYPE,T1.LST_TEAM_DATE,T1.GROUP_DATE,T1.QUEUE_DATE,T1.CUST_NAME,T1.CERTIFI_TYPE,T1.CERTIFI_NO,T1.WORK_COMPANY,T1.TELCHECK_RESULT,T1.YDJ_FLAG,T1.CURR_NODE,T1.DEL_STATUS,E.QUICK_CARD_FLAG FROM(
+				    SELECT T.APP_ID,T.LAST_OPT_USER,T.SUBMIT_TYPE,T.LST_TEAM_DATE,T.GROUP_DATE,T.QUEUE_DATE,T.CUST_NAME,T.CERTIFI_TYPE,T.CERTIFI_NO,T.WORK_COMPANY,T.CURR_NODE,T.DEL_STATUS,T.YDJ_FLAG,U.TELCHECK_RESULT FROM (
+				        SELECT O.APP_ID,O.LAST_OPT_USER,O.SUBMIT_TYPE,O.LST_TEAM_DATE,O.GROUP_DATE,O.QUEUE_DATE,B.CUST_NAME,B.CERTIFI_TYPE,B.CERTIFI_NO,B.WORK_COMPANY,O.CURR_NODE,O.DEL_STATUS,O.YDJ_FLAG from OPAS_ALLOT_APPLY_ALLOT O
+				        LEFT JOIN  OPAS_CUST_BASEINFO B on o.APP_ID=b.APP_ID
+				    ) T LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID=U.APP_ID
+				)T1 LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON T1.APP_ID = E.APP_ID
+			)H WHERE 
+			H.CURR_NODE='02' AND 
+			(H.DEL_STATUS='0' OR H.DEL_STATUS='3') AND
+			(H.SUBMIT_TYPE IS NULL OR  H.SUBMIT_TYPE='')
+			
+	</select>
+
+	<!--征信提报反欺诈列表总条数-->
+	<select id="selectCreditCheckCheatCount" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT COUNT(1) FROM(
+			 SELECT T1.APP_ID,T1.LAST_OPT_USER,T1.SUBMIT_TYPE,T1.LST_TEAM_DATE,T1.GROUP_DATE,T1.QUEUE_DATE,T1.CUST_NAME,T1.CERTIFI_TYPE,T1.CERTIFI_NO,T1.WORK_COMPANY,T1.TELCHECK_RESULT,T1.YDJ_FLAG,T1.CURR_NODE,T1.DEL_STATUS,E.QUICK_CARD_FLAG FROM(
+				    SELECT T.APP_ID,T.LAST_OPT_USER,T.SUBMIT_TYPE,T.LST_TEAM_DATE,T.GROUP_DATE,T.QUEUE_DATE,T.CUST_NAME,T.CERTIFI_TYPE,T.CERTIFI_NO,T.WORK_COMPANY,T.CURR_NODE,T.DEL_STATUS,T.YDJ_FLAG,U.TELCHECK_RESULT FROM (
+				        SELECT O.APP_ID,O.LAST_OPT_USER,O.SUBMIT_TYPE,O.LST_TEAM_DATE,O.GROUP_DATE,O.QUEUE_DATE,B.CUST_NAME,B.CERTIFI_TYPE,B.CERTIFI_NO,B.WORK_COMPANY,O.CURR_NODE,O.DEL_STATUS,O.YDJ_FLAG from OPAS_ALLOT_APPLY_ALLOT O
+				        LEFT JOIN  OPAS_CUST_BASEINFO B on o.APP_ID=b.APP_ID
+				    ) T LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID=U.APP_ID
+				)T1 LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON T1.APP_ID = E.APP_ID
+			)H WHERE  
+			H.CURR_NODE='02' AND 
+			(H.DEL_STATUS='0' OR H.DEL_STATUS='3') AND
+			(H.SUBMIT_TYPE IS NULL OR  H.SUBMIT_TYPE='')
+	</select>		
+	
+	
+ 
+	<!--提报反欺诈添加提报原因-->
+	<insert id="insertReason" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		insert into
+		OPAS_REASON_INFO
+		(REASON_ID,APP_ID,REASON,REASON_TYPE,REASON_CODE,REASON_TYPE_CODE)
+		values (
+			#{check_reasonAutoId,jdbcType=VARCHAR},
+			#{check_number,jdbcType=VARCHAR},
+			#{check_reason,jdbcType=VARCHAR},
+			#{check_reasonType,jdbcType=VARCHAR},
+			#{check_reasonCode,jdbcType=VARCHAR},
+			#{check_reasonTypeCode,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+  <delete id="deleteReasonById" parameterType="java.lang.String" >
+    delete from OPAS_REASON_INFO
+     where REASON_ID = #{reasonID,jdbcType=VARCHAR}
+  </delete>
+  
+  	<insert id="insertReasonList" parameterType="java.util.List">
+		insert into OPAS_REASON_INFO(
+				REASON_ID,
+				APP_ID,
+				REASON,
+				REASON_TYPE,
+				REASON_CODE,
+				REASON_TYPE_CODE
+			 ) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.check_reasonAutoId,jdbcType=VARCHAR},
+			#{item.check_number,jdbcType=VARCHAR},
+			#{item.check_reason,jdbcType=VARCHAR},
+			#{item.check_reasonType,jdbcType=VARCHAR},
+			#{item.check_reasonCode,jdbcType=VARCHAR},
+			#{item.check_reasonTypeCode,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>	
+	
+	<!--查询提报原因查询-->
+	<select id="selectReasonByAppId" parameterType="java.lang.String" resultMap="CreditCheck">
+		SELECT O.REASON_ID,O.APP_ID,O.REASON,O.REASON_TYPE,O.REASON_CODE,O.REASON_TYPE_CODE,T.SUBMIT_MEMO FROM OPAS_REASON_INFO O
+         LEFT JOIN OPAS_ALLOT_APPLY_ALLOT T ON O.APP_ID=T.APP_ID	
+		WHERE  O.APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+ 		
+	<!-- 修改提报原因 -->
+	<update id="updateReasonByAppId" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		update OPAS_REASON_INFO
+		<set>
+			<if test="check_reason != null">REASON=#{check_reason,jdbcType=VARCHAR},</if> 
+			<if test="check_reasonType != null">REASON_TYPE=#{check_reasonType,jdbcType=VARCHAR},</if> 
+			<if test="check_reasonCode != null">REASON_CODE=#{check_reasonCode,jdbcType=VARCHAR},</if> 
+			<if test="check_reasonTypeCode != null">REASON_TYPE_CODE=#{check_reasonTypeCode,jdbcType=VARCHAR}</if> 
+		</set> 
+		where APP_ID = #{check_number,jdbcType=VARCHAR} AND REASON_ID= #{check_reasonAutoId,jdbcType=VARCHAR}
+	</update>
+ 		
+ 		
+ 		
+	<!--征信提报原因查询-->
+	<select id="selectMentionAntiFraud" parameterType="java.util.Map" resultMap="CreditCheck">
+		SELECT distinct(O.APP_ID),O.REASON,O.REASON_TYPE,T.SUBMIT_MEMO,s.LAST_OU FROM OPAS_REASON_INFO O 
+		    LEFT JOIN OPAS_ALLOT_APPLY_ALLOT T ON O.APP_ID=T.APP_ID  
+		    LEFT JOIN opas_submitfraud_info s ON O.APP_ID=s.APP_ID	
+		WHERE  O.APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>		
+	
+	
+	<!--添加征信提报欺诈结果信息表 OPAS_SUBMITFRAUD_INFO-->
+	<insert id="insertOpasSubmitFraudInfo" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		INSERT INTO OPAS_SUBMITFRAUD_INFO
+		(AUTO_ID,APP_ID,INVEST_RESULTNAME,INVEST_RESULTCODE,VDEL_STATUS,INVEST_MEMO,CRT_DATE,CRT_USER,LAST_OU,APPROVAL_MEMO,INVEST_RESULT_FLAG,OPERATION_DATE,CRT_USER_NAME,YDJ_FLAG,CHECKBACK_MEMO,curr_node)
+		values(
+				#{invest_autoId,jdbcType=VARCHAR},
+				#{check_number,jdbcType=VARCHAR},
+				#{invest_resultName,jdbcType=VARCHAR},
+				#{invest_resultCode,jdbcType=VARCHAR},
+				#{invest_delStatus,jdbcType=CHAR},
+				#{invest_memo,jdbcType=VARCHAR},
+				sysdate,	
+				#{invest_crtUser,jdbcType=VARCHAR}, 
+				#{check_lastOU,jdbcType=VARCHAR}, 
+				#{invest_approvalMemo,jdbcType=VARCHAR}, 
+				#{invest_resultFlag,jdbcType=CHAR},	
+				#{invest_operationDate,jdbcType=DATE},
+				#{invest_crtUserName,jdbcType=VARCHAR},
+				#{check_ydjFlag,jdbcType=CHAR},
+				#{invest_checkBackMeo,jdbcType=VARCHAR},
+				#{check_currNode,jdbcType=VARCHAR}
+			)
+	</insert>	
+	<update id="updateOpasSubmitFraudInfo" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		update  OPAS_SUBMITFRAUD_INFO
+		<set>
+				<if test="check_number != null">APP_ID=#{check_number,jdbcType=VARCHAR},</if>
+				<if test="invest_resultName != null">INVEST_RESULTNAME=#{invest_resultName,jdbcType=VARCHAR},</if>
+				<if test="invest_resultCode != null">INVEST_RESULTCODE=#{invest_resultCode,jdbcType=VARCHAR},</if>
+				<if test="invest_delStatus != null">VDEL_STATUS=#{invest_delStatus,jdbcType=CHAR},</if>
+				<if test="invest_memo != null">INVEST_MEMO=#{invest_memo,jdbcType=VARCHAR},</if>
+				CRT_DATE=sysdate,	
+				<if test="invest_crtUser != null">CRT_USER=#{invest_crtUser,jdbcType=VARCHAR},</if> 
+				<if test="check_lastOU != null">LAST_OU=#{check_lastOU,jdbcType=VARCHAR}, </if>
+				<if test="invest_approvalMemo != null">APPROVAL_MEMO=#{invest_approvalMemo,jdbcType=VARCHAR}, </if>
+				<if test="invest_resultFlag != null">INVEST_RESULT_FLAG=#{invest_resultFlag,jdbcType=CHAR},	</if>
+				<if test="invest_operationDate != null">OPERATION_DAT=#{invest_operationDate,jdbcType=DATE},</if>
+				<if test="invest_crtUserName != null">CRT_USER_NAME=#{invest_crtUserName,jdbcType=VARCHAR},</if>
+				<if test="check_ydjFlag != null">YDJ_FLAG=#{check_ydjFlag,jdbcType=CHAR},</if>
+				<if test="invest_checkBackMeo != null">CHECKBACK_MEMO=#{invest_checkBackMeo,jdbcType=VARCHAR},</if>
+				<if test="check_currNode != null">curr_node=#{check_currNode,jdbcType=VARCHAR}</if>
+		</set> 
+		<where>		  
+				<if test="check_number != null and check_number !='' ">
+					  APP_ID = #{check_number,jdbcType=VARCHAR}
+				</if>
+		</where>
+	</update>
+	<!-- 推送 -->
+	<select id="selfTheOne" parameterType="java.util.Map" resultMap="CreditCheck">
+				select *
+				  from (select o.app_id,
+				               O.LAST_OPT_USER,
+				               O.SUBMIT_TYPE,
+				               O.LST_TEAM_DATE,
+				               o.user_date,
+				               o.YDJ_FLAG,
+				               I.VDEL_STATUS,
+				               I.AUTO_ID,
+				               o.MATCHING_CARD_FLAG	,
+				               s.QUICK_CARD_FLAG			        
+				          from OPAS_SUBMITFRAUD_INFO I
+				          left join OPAS_ALLOT_APPLY_ALLOT o on I.app_id = o.app_id
+				          left join OPAS_BIZ_INP_APPL_C1 s on s.app_id = I.app_id
+				         WHERE ((I.VDEL_STATUS = #{delStatus,jdbcType=VARCHAR}))
+				           AND O.SUBMIT_STATUS = '2'
+				           AND O.CURR_OPT_USER = #{userCode, jdbcType=VARCHAR}
+				           AND O.CURR_STATUS = '3'
+				         order by QUICK_CARD_FLAG desc,GROUP_DATE ,USER_DATE asc,substr(APP_ID,1,6) asc,substr(APP_ID,8,3) asc,substr(APP_ID,7,1) desc,substr(APP_ID,11,5) asc,substr(APP_ID,16,1) desc)
+				 where rownum = '1'
+	</select>
+	<!--反欺诈调查未完成列表数据查询 -->
+	<select id="selectCreditCheatInvestigationPage" parameterType="java.util.Map" resultMap="CreditCheck">
+				SELECT H.APP_ID,
+		       H.LAST_OPT_USER,
+		       H.SUBMIT_TYPE,
+		       H.LAST_DATE,
+		       H.GROUP_DATE,
+		       H.QUEUE_DATE,
+		       H.VDEL_STATUS,
+		       H.CUST_NAME,
+		       H.CERTIFI_TYPE,
+		       H.CERTIFI_NO,
+		       H.WORK_COMPANY,
+		       h.AUTO_ID,
+		       H.TELCHECK_RESULT,
+		       H.QUICK_CARD_FLAG,
+		       H.ENTRY_SYSTEM_DATE,
+		       H.YDJ_FLAG,
+		       H.remark,
+		       H.HIS_VDEL_STATUS,
+		       H.MATCHING_CARD_FLAG
+		  FROM (SELECT T1.APP_ID,
+		               T1.LAST_OPT_USER,
+		               T1.SUBMIT_TYPE,
+		               T1.LAST_DATE,
+		               T1.GROUP_DATE,
+		               T1.QUEUE_DATE,
+		               T1.VDEL_STATUS,
+		               T1.CUST_NAME,
+		               T1.CERTIFI_TYPE,
+		               T1.CERTIFI_NO,
+		               T1.WORK_COMPANY,
+		               t1.AUTO_ID,
+		               T1.TELCHECK_RESULT,
+		               E.QUICK_CARD_FLAG,
+		               (trunc(sysdate) -
+                       trunc(e.crt_date) + 1) as ENTRY_SYSTEM_DATE,
+		               T1.YDJ_FLAG,
+		               t1.remark,
+		               T1.HIS_VDEL_STATUS,
+		               t1.MATCHING_CARD_FLAG
+		          FROM (SELECT T.APP_ID,
+		                       T.LAST_OPT_USER,
+		                       T.SUBMIT_TYPE,
+		                       T.LAST_DATE,
+		                       T.GROUP_DATE,
+		                       T.QUEUE_DATE,
+		                       T.VDEL_STATUS,
+		                       T.CUST_NAME,
+		                       T.CERTIFI_TYPE,
+		                       T.CERTIFI_NO,
+		                       T.WORK_COMPANY,
+		                       T.AUTO_ID,
+		                       U.TELCHECK_RESULT,
+		                       T.YDJ_FLAG,
+		                       t.remark,
+		                       T.HIS_VDEL_STATUS,
+		                       t.MATCHING_CARD_FLAG
+		                  FROM (SELECT v.APP_ID,
+		                               v.LAST_OPT_USER,
+		                               v.SUBMIT_TYPE,
+		                               v.LAST_DATE,
+		                               v.VDEL_STATUS,
+		                               CASE
+		                                 WHEN v.GROUP_DATE >= 0 THEN
+		                                  v.GROUP_DATE
+		                                 ELSE
+		                                  0
+		                               END AS GROUP_DATE,
+		                               CASE
+		                                 WHEN v.QUEUE_DATE >= 0 THEN
+		                                  v.QUEUE_DATE
+		                                 ELSE
+		                                  0
+		                               END AS QUEUE_DATE,
+		                               v.AUTO_ID,
+		                               (b.C1_CNAME) CUST_NAME,
+		                               (b.C1_IDTYPE) CERTIFI_TYPE,
+		                               (b.C1_IDNBR) CERTIFI_NO,
+		                               (b.C1_CONAME) WORK_COMPANY,
+		                               v.YDJ_FLAG,
+		                               v.remark,
+		                               v.HIS_VDEL_STATUS,
+		                               v.MATCHING_CARD_FLAG
+		                          FROM (select ss.app_id,
+		                                       ss.LAST_OPT_USER,
+		                                       ss.SUBMIT_TYPE,
+		                                       ss.LAST_DATE,
+		                                       ss.user_date,
+		                                       ss.YDJ_FLAG,
+		                                       ss.QUEUE_DATE,
+		                                       ss.GROUP_DATE,
+		                                       ss.VDEL_STATUS,
+		                                       ss.AUTO_ID,
+		                                       ss.remark,
+		                                       ss.HIS_VDEL_STATUS,
+		                                       ss.MATCHING_CARD_FLAG
+		                                
+                                  from (SELECT o.app_id,
+                                   			  (case  when ap.user_name is not null and ysap.user_name is not null  then ap.user_name
+                                               else ap.user_name || ysap.user_name end) LAST_OPT_USER,
+                                               O.SUBMIT_TYPE,
+                                                 to_char(o.LST_TEAM_DATE, 'yyyy-mm-dd hh24:mi:ss')LAST_DATE,
+                                               o.user_date,
+                                               o.YDJ_FLAG,
+                                             	trunc((sysdate) - trunc(o.LST_TEAM_DATE) + 1) as QUEUE_DATE,
+                                               (select workday(trunc(o.group_date),trunc(sysdate))                                                             
+                                                  from dual) as GROUP_DATE,
+                                               I.VDEL_STATUS,
+                                               I.AUTO_ID,
+                                               I.HIS_VDEL_STATUS,
+                                               (select count(c.REMARK_ID)
+                                                  from OPAS_ALLOT_APPLY_REMARK c
+                                                 where o.APP_ID = c.APP_ID) as remark,
+                                                 o.MATCHING_CARD_FLAG,
+                                               row_number() over(partition by o.app_id order by o.user_date desc) as rn
+                                        
+                                          FROM OPAS_SUBMITFRAUD_INFO I
+                                  LEFT JOIN OPAS_ALLOT_APPLY_ALLOT O ON O.APP_ID = I.APP_ID
+                                    left join opas_ap_user ap on o.last_opt_user = ap.user_code 
+                                 	left join ys_ap_user ysap on o.last_opt_user = ysap.user_code
+                                 WHERE 
+                                   <if test="delStatus != null and delStatus !='' ">I.VDEL_STATUS = #{delStatus,jdbcType=VARCHAR}</if>
+                                   <if test=" delStatus =='' ">I.VDEL_STATUS in ('0','1','2')</if>
+                                   AND O.SUBMIT_STATUS = '2'
+                                   AND O.CURR_OPT_USER = #{userCode,jdbcType=VARCHAR}
+                                   AND O.CURR_STATUS = #{currStatus,jdbcType=VARCHAR}
+                                   <if test="lsh != null and lsh !='' ">AND I.APP_ID LIKE '%${lsh}%'</if>
+										  ) ss
+                                 where  ss.rn='1')v LEFT JOIN OPAS_BIZ_INP_APPL_C1 B ON v.APP_ID=B.APP_ID 
+                                   left join OPAS_FILE_PATCHBOLT c on c.APP_ID=v.APP_ID WHERE 1=1
+		                            <if test="khxm != null and khxm !='' ">AND  B.C1_CNAME LIKE '%${khxm}%'</if>
+		                            <if test="zjhm != null and zjhm !='' ">AND B.C1_IDNBR LIKE '%${zjhm}%'</if>
+		                            <if test="dwmc != null and dwmc !='' ">AND B.C1_CONAME LIKE '%${dwmc}%'</if>
+		                            <if test="checkStr != null and checkStr !='' ">order by ${checkStr}</if>
+                              )T LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID=U.APP_ID
+		     )T1 LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON T1.APP_ID = E.APP_ID WHERE 1=1
+		    <if test="queryID =='1' "> ORDER BY E.QUICK_CARD_FLAG </if>
+		)H	
+	</select>
+	
+	<!--反欺诈调查列表总条数-->
+	<select id="selectCreditCheatInvestigationCount" parameterType="java.util.Map" resultType="java.lang.String">
+		select count(1)
+		  from (SELECT T.APP_ID,
+		               T.LAST_OPT_USER,
+		               T.SUBMIT_TYPE,
+		               T.LST_TEAM_DATE,
+		               T.GROUP_DATE,
+		               T.QUEUE_DATE,
+		               T.VDEL_STATUS,
+		               T.CUST_NAME,
+		               T.CERTIFI_TYPE,
+		               T.CERTIFI_NO,
+		               T.WORK_COMPANY,
+		               T.AUTO_ID,
+		               U.TELCHECK_RESULT,
+		               T.YDJ_FLAG,
+		               t.remark
+		          FROM (SELECT v.APP_ID,
+		                       v.LAST_OPT_USER,
+		                       v.SUBMIT_TYPE,
+		                       v.LST_TEAM_DATE,
+		                       v.VDEL_STATUS,
+		                       CASE
+		                         WHEN v.GROUP_DATE >= 0 THEN
+		                          v.GROUP_DATE
+		                         ELSE
+		                          0
+		                       END AS GROUP_DATE,
+		                       CASE
+		                         WHEN v.QUEUE_DATE >= 0 THEN
+		                          v.QUEUE_DATE
+		                         ELSE
+		                          0
+		                       END AS QUEUE_DATE,
+		                       v.AUTO_ID,
+		                       (b.C1_CNAME) CUST_NAME,
+		                       (b.C1_IDTYPE) CERTIFI_TYPE,
+		                       (b.C1_IDNBR) CERTIFI_NO,
+		                       (b.C1_CONAME) WORK_COMPANY,
+		                       v.YDJ_FLAG,
+		                       v.remark
+		                  FROM (select ss.app_id,
+		                               ss.LAST_OPT_USER,
+		                               ss.SUBMIT_TYPE,
+		                               ss.LST_TEAM_DATE,
+		                               ss.user_date,
+		                               ss.YDJ_FLAG,
+		                               ss.QUEUE_DATE,
+		                               ss.GROUP_DATE,
+		                               ss.VDEL_STATUS,
+		                               ss.AUTO_ID,
+		                               ss.remark
+		                        
+		                          from (SELECT o.app_id,
+		                                       O.LAST_OPT_USER,
+		                                       O.SUBMIT_TYPE,
+		                                       O.LST_TEAM_DATE,
+		                                       o.user_date,
+		                                       o.YDJ_FLAG,
+		                                       (trunc(to_char(sysdate, 'yyyymmdd')) -
+		                                       trunc(to_char(o.user_date, 'yyyymmdd')) + 1) as QUEUE_DATE,
+		                                       (select workday(o.group_date, sysdate)
+		                                          from dual) as GROUP_DATE,
+		                                       I.VDEL_STATUS,
+		                                       I.AUTO_ID,
+		                                       (select count(c.REMARK_ID)
+		                                          from OPAS_ALLOT_APPLY_REMARK c
+		                                         where o.APP_ID = c.APP_ID) as remark,
+		                                       row_number() over(partition by o.app_id order by o.user_date desc) as rn
+		                                
+                                  FROM OPAS_SUBMITFRAUD_INFO I
+                                  LEFT JOIN OPAS_ALLOT_APPLY_ALLOT O ON O.APP_ID =
+                                                                        I.APP_ID
+                                 WHERE  
+                                 	<if test="delStatus != null and delStatus !='' ">I.VDEL_STATUS = #{delStatus,jdbcType=VARCHAR}</if>
+                                   <if test=" delStatus =='' ">I.VDEL_STATUS in ('0','1','2')</if>
+                                   AND O.SUBMIT_STATUS = '2'
+                                   AND O.CURR_OPT_USER = #{userCode,jdbcType=VARCHAR}
+                                   AND O.CURR_STATUS =  #{currStatus,jdbcType=VARCHAR}
+                                 <if test="lsh != null and lsh !='' ">AND I.APP_ID LIKE '%${lsh}%'</if>
+                                ) ss
+                         where ss.rn = '1') v
+                  LEFT JOIN OPAS_BIZ_INP_APPL_C1 B ON v.APP_ID = B.APP_ID
+                 WHERE 1 = 1
+                
+                ) T
+          LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID = U.APP_ID)
+
+	</select>
+	
+	
+		<!--反欺诈调查查询原因码条数-->
+	<select id="selectOpasApDict" parameterType="java.util.Map" resultMap="CreditCheck">
+		SELECT S.DICT_DETAIL_CODE,S.DICT_DETAIL_NAME FROM OPAS_AP_DICT O LEFT JOIN OPAS_AP_DICT_DETAIL S ON O.DICT_ID=S.DICT_ID 
+		WHERE O.DICT_CODE='QZTCJGYYM' 
+	</select>
+	
+	
+
+		<!-- 修改  征信提报欺诈结果信息表-->
+	<update id="updateCheatInvestigation" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		update OPAS_SUBMITFRAUD_INFO
+		<set>
+			<if test="invest_resultName != null">INVEST_RESULTNAME=#{invest_resultName,jdbcType=VARCHAR},</if>
+			<if test="invest_delStatus != null">VDEL_STATUS=#{invest_delStatus,jdbcType=CHAR},</if> 
+			<if test="invest_memo != null">INVEST_MEMO=#{invest_memo,jdbcType=VARCHAR},</if> 
+			<if test="invest_crtUser != null">CRT_USER=#{invest_crtUser,jdbcType=VARCHAR},</if> 
+			<if test="invest_crtUserName != null">CRT_USER_NAME=#{invest_crtUserName,jdbcType=VARCHAR},</if> 
+			<if test="invest_approvalMemo != null">APPROVAL_MEMO=#{invest_approvalMemo,jdbcType=VARCHAR},</if>
+			<if test="invest_resultFlag != null">INVEST_RESULT_FLAG=#{invest_resultFlag,jdbcType=VARCHAR},</if>
+			<if test="invest_resultCode != null">INVEST_RESULTCODE=#{invest_resultCode,jdbcType=VARCHAR},</if>
+			<if test="his_vdel_status != null">HIS_VDEL_STATUS=#{his_vdel_status,jdbcType=VARCHAR},</if>
+				OPERATION_DATE=sysdate
+		</set> 
+		<where>		  
+				<if test="check_number != null and check_number !='' ">
+					  APP_ID = #{check_number,jdbcType=VARCHAR}
+				</if>
+				<if test="invest_autoId != null and invest_autoId !='' ">
+					AND AUTO_ID = #{invest_autoId,jdbcType=VARCHAR}
+				</if>
+		</where>
+		
+		
+		
+	</update>
+	
+	 
+	<update id="updateOpasAllotApplyAllot" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+			update OPAS_ALLOT_APPLY_ALLOT
+			 <set>  
+				QUEUE_DATE=sysdate,
+				LST_TEAM_DATE=sysdate,
+				PFXC_DATE = sysdate,
+			 	SUBMIT_STATUS = #{check_SubmitStatus,jdbcType=CHAR},
+			 	SUBMIT_TYPE = #{check_submitType,jdbcType=VARCHAR},
+				BATCH_APPROVAL_FLAG = '0',
+			 	<if test="check_currOptUser !=null and check_currOptUser != '' ">
+					CURR_OPT_USER = #{check_currOptUser,jdbcType=VARCHAR},
+				</if>
+				<if test="check_lastOU !=null and check_lastOU != '' ">
+					LAST_OPT_USER = #{check_lastOU,jdbcType=VARCHAR},
+				</if>
+				<if test="check_currNode != null and check_currNode != '' ">
+					CURR_NODE=#{check_currNode,jdbcType=VARCHAR},
+				</if>
+				<if test="check_currOptGroup != null and check_currOptGroup != '' ">
+					CURR_OPT_GROUP=#{check_currOptGroup,jdbcType=VARCHAR},
+				</if>
+				<if test="check_lastOptGroup != null and check_lastOptGroup != '' ">
+					LAST_OPT_GROUP=#{check_lastOptGroup,jdbcType=VARCHAR}
+				</if>
+			</set>
+		  	WHERE APP_ID = #{check_number,jdbcType=VARCHAR}
+	</update>
+	<update id="updateOpasAllotApplyAllotToBack" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+			update OPAS_ALLOT_APPLY_ALLOT
+			 <set>  
+				QUEUE_DATE=sysdate,
+				LST_TEAM_DATE=sysdate,
+				BATCH_APPROVAL_FLAG = '0',
+			 	<if test="check_currOptUser !=null and check_currOptUser != '' ">
+					CURR_OPT_USER = #{check_currOptUser,jdbcType=VARCHAR}
+				</if>
+				
+			</set>
+		  	WHERE APP_ID = #{check_number,jdbcType=VARCHAR}
+	</update>
+	<update id="updateOpasAllotApplyAllot1" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+			update OPAS_ALLOT_APPLY_ALLOT 
+				<set>
+					LAST_OPT_USER = #{check_lastOU,jdbcType=VARCHAR},
+					BATCH_APPROVAL_FLAG = '2',
+				<if test="invest_crtUser != null and invest_crtUser != '' ">
+					CURR_OPT_USER=#{invest_crtUser,jdbcType=VARCHAR}
+				</if>					
+				</set>
+		  	WHERE APP_ID = #{check_number,jdbcType=VARCHAR}
+	</update>
+	
+  <delete id="deleteOpasSubmitfraudInfoByautoID" parameterType="java.lang.String" >
+    delete from OPAS_SUBMITFRAUD_INFO
+     where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+	
+  <delete id="deleteOpasReasonInfoByAppID" parameterType="java.lang.String" >
+    delete from OPAS_REASON_INFO
+     where APP_ID = #{app_id,jdbcType=VARCHAR}
+  </delete>
+  <update id="updateOpasAllotApplySubmitMemo" parameterType="java.lang.String">
+  	update  OPAS_ALLOT_APPLY_ALLOT
+  		<set>
+			submit_memo = ''
+		</set>
+		  	WHERE APP_ID = #{check_number,jdbcType=VARCHAR}
+  </update> 
+  
+	<select id="selectOpasOpasSubmitfraudInfoByautoID" parameterType="java.lang.String" resultMap="CreditCheck">
+			SELECT AUTO_ID,APP_ID,INVEST_RESULTNAME,INVEST_RESULTCODE,
+			VDEL_STATUS,INVEST_MEMO,CRT_DATE,CRT_USER,CRT_USER_NAME,APPROVAL_MEMO,
+			INVEST_RESULT_FLAG from OPAS_SUBMITFRAUD_INFO WHERE AUTO_ID= #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="countOpasSubmitfraudInfoByAppID" parameterType="java.lang.String" resultType="java.lang.Integer">
+			SELECT count(1)
+			 from OPAS_SUBMITFRAUD_INFO WHERE app_id= #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectOpasOpasSubmitfraudInfoByAppID" parameterType="java.lang.String" resultMap="CreditCheck">
+			SELECT AUTO_ID,APP_ID,INVEST_RESULTNAME,INVEST_RESULTCODE,
+			VDEL_STATUS,INVEST_MEMO,CRT_DATE,CRT_USER,CRT_USER_NAME,APPROVAL_MEMO,
+			INVEST_RESULT_FLAG from OPAS_SUBMITFRAUD_INFO WHERE app_id= #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	
+		<!--反欺诈审批列表数据查询  李航改-->
+	<select id="selectCreditCheatApprovalPage" parameterType="com.huaxia.opas.domain.credit.CreditCheck" resultMap="CreditCheck">
+				SELECT H.APP_ID,
+		       H.LAST_OPT_USER,
+		       H.SUBMIT_TYPE,
+		       H.last_date,
+		       H.GROUP_DATE,
+		       H.QUEUE_DATE,
+		       H.VDEL_STATUS,
+		       H.CUST_NAME,
+		       H.CERTIFI_TYPE,
+		       H.CERTIFI_NO,
+		       H.WORK_COMPANY,
+		       h.AUTO_ID,
+		       H.TELCHECK_RESULT,
+		       H.QUICK_CARD_FLAG,
+		       H.ENTRY_SYSTEM_DATE,
+		       H.YDJ_FLAG,
+		       H.app_Prod,
+		       H.remark,
+		       H.HIS_VDEL_STATUS,
+		       H.MATCHING_CARD_FLAG
+		  FROM (SELECT T1.APP_ID,
+	               T1.LAST_OPT_USER,
+	               T1.SUBMIT_TYPE,
+	               T1.last_date,
+	               T1.GROUP_DATE,
+	               T1.QUEUE_DATE,
+	               T1.VDEL_STATUS,
+	               T1.CUST_NAME,
+	               T1.CERTIFI_TYPE,
+	               T1.CERTIFI_NO,
+	               T1.WORK_COMPANY,
+	               t1.AUTO_ID,
+	               T1.TELCHECK_RESULT,
+	               E.QUICK_CARD_FLAG,
+	                (trunc(sysdate) -
+                       trunc(e.crt_date) + 1) as ENTRY_SYSTEM_DATE,
+	               t1.YDJ_FLAG,
+	               e.APP_PROD,
+	               t1.remark,
+	               T1.HIS_VDEL_STATUS,
+	               t1.MATCHING_CARD_FLAG
+	          FROM (SELECT T.APP_ID,
+	                       T.LAST_OPT_USER,
+	                       T.SUBMIT_TYPE,
+	                       T.last_date,
+	                       T.GROUP_DATE,
+	                       T.QUEUE_DATE,
+	                       T.VDEL_STATUS,
+	                       T.CUST_NAME,
+	                       T.CERTIFI_TYPE,
+	                       T.CERTIFI_NO,
+	                       T.WORK_COMPANY,
+	                       T.AUTO_ID,
+	                       t.ydj_flag,
+	                       U.TELCHECK_RESULT,
+	                       t.remark,
+	                       T.HIS_VDEL_STATUS,
+	                       t.MATCHING_CARD_FLAG
+                  FROM (SELECT v.APP_ID,
+                               v.LAST_OPT_USER,
+                               v.SUBMIT_TYPE,
+                               v.last_date,
+                               CASE
+                                 WHEN v.GROUP_DATE >= 0 THEN
+                                  v.GROUP_DATE
+                                 ELSE
+                                  0
+                               END AS GROUP_DATE,
+                               CASE
+                                 WHEN v.QUEUE_DATE >= 0 THEN
+                                  v.QUEUE_DATE
+                                 ELSE
+                                  0
+                               END AS QUEUE_DATE,
+                               (b.C1_CNAME) CUST_NAME,
+                               (b.C1_IDTYPE) CERTIFI_TYPE,
+                               (b.C1_IDNBR) CERTIFI_NO,
+                               (b.C1_CONAME) WORK_COMPANY,
+                               v.VDEL_STATUS,
+                               v.AUTO_ID,
+                               v.YDJ_FLAG,
+                               v.remark,
+                               v.HIS_VDEL_STATUS,
+                               v.MATCHING_CARD_FLAG
+                          FROM (select ss.app_id,
+                                       ss.LAST_OPT_USER,
+                                       ss.SUBMIT_TYPE,
+                                       ss.last_date,
+                                       ss.user_date,
+                                       ss.YDJ_FLAG,
+                                       ss.QUEUE_DATE,
+                                       ss.GROUP_DATE,
+                                       ss.VDEL_STATUS,
+                                       ss.AUTO_ID,
+                                       ss.remark,
+                                       ss.HIS_VDEL_STATUS,
+                                       ss.MATCHING_CARD_FLAG
+                                
+                                  from (SELECT o.app_id,
+                                              (case  when ap.user_name is not null and ysap.user_name is not null  then ap.user_name
+                                               else ap.user_name || ysap.user_name end) LAST_OPT_USER,
+                                               O.SUBMIT_TYPE,
+                                               to_char(I.OPERATION_DATE,'yyyy-mm-dd hh24:mi:ss')last_date,
+                                               o.user_date,
+                                               o.YDJ_FLAG,
+                                               trunc((sysdate) - trunc(I.OPERATION_DATE) + 1) as QUEUE_DATE,
+                                               (select workday(trunc(o.group_date),
+                                                               trunc(sysdate))
+                                                  from dual) as GROUP_DATE,
+                                               I.VDEL_STATUS,
+                                               I.AUTO_ID,
+                                               I.HIS_VDEL_STATUS,
+                                               (select count(c.REMARK_ID)
+                                                  from OPAS_ALLOT_APPLY_REMARK c
+                                                 where o.APP_ID = c.APP_ID) as remark,
+                                                 o.MATCHING_CARD_FLAG,
+                                               row_number() over(partition by o.app_id order by o.user_date desc) as rn
+                                          FROM OPAS_SUBMITFRAUD_INFO I
+                                LEFT JOIN OPAS_ALLOT_APPLY_ALLOT O ON O.APP_ID=I.APP_ID   
+                                 left join opas_ap_user ap on o.last_opt_user = ap.user_code 
+                                 left join ys_ap_user ysap on o.last_opt_user = ysap.user_code
+                                WHERE  I.VDEL_STATUS='2'  AND O.SUBMIT_STATUS='2'
+                                and o.curr_status='3'
+                                AND I.CRT_USER=#{invest_crtUser,jdbcType=VARCHAR}                                
+                                <!-- AND I.YDJ_FLAG= #{check_ydjFlag,jdbcType=CHAR} -->
+								<if test="check_number != null and check_number !='' ">AND O.APP_ID LIKE '%${check_number}%'</if>
+								 ) ss
+                             where  ss.rn='1')v LEFT JOIN OPAS_BIZ_INP_APPL_C1 B ON v.APP_ID=B.APP_ID 
+                              	left join OPAS_FILE_PATCHBOLT c on c.APP_ID=v.APP_ID WHERE 1=1 
+                            <if test="check_custName != null and check_custName !='' ">AND  B.C1_CNAME LIKE '%${check_custName}%'</if>
+                            <if test="check_certNo != null and check_certNo !='' ">AND B.C1_IDNBR LIKE '%${check_certNo}%'</if>
+                            <if test="check_currentCN != null and check_currentCN !='' ">AND B.C1_CONAME LIKE '%${check_currentCN}%'</if>
+                            <if test="checkStr !='' and checkStr != null ">ORDER BY ${checkStr}</if>            
+                     )T LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID=U.APP_ID
+		     )T1 LEFT JOIN OPAS_BIZ_INP_APPL_C1 E ON T1.APP_ID = E.APP_ID WHERE 1=1
+		)H 		
+	</select>
+	 
+	<!--反欺诈审批列表总条数-->
+	<select id="selectCreditCheatApprovalCount" parameterType="com.huaxia.opas.domain.credit.CreditCheck" resultType="java.lang.String">
+		select count(1)
+		  from (SELECT T.APP_ID,
+		               T.LAST_OPT_USER,
+		               T.SUBMIT_TYPE,
+		               T.LST_TEAM_DATE,
+		               T.GROUP_DATE,
+		               T.QUEUE_DATE,
+		               T.VDEL_STATUS,
+		               T.CUST_NAME,
+		               T.CERTIFI_TYPE,
+		               T.CERTIFI_NO,
+		               T.WORK_COMPANY,
+		               T.AUTO_ID,
+		               t.ydj_flag,
+		               U.TELCHECK_RESULT,
+		               t.remark
+		          FROM (SELECT v.APP_ID,
+		                       v.LAST_OPT_USER,
+		                       v.SUBMIT_TYPE,
+		                       v.LST_TEAM_DATE,
+		                       CASE
+		                         WHEN v.GROUP_DATE >= 0 THEN
+		                          v.GROUP_DATE
+		                         ELSE
+		                          0
+		                       END AS GROUP_DATE,
+		                       CASE
+		                         WHEN v.QUEUE_DATE >= 0 THEN
+		                          v.QUEUE_DATE
+		                         ELSE
+		                          0
+		                       END AS QUEUE_DATE,
+		                       (b.C1_CNAME) CUST_NAME,
+		                       (b.C1_IDTYPE) CERTIFI_TYPE,
+		                       (b.C1_IDNBR) CERTIFI_NO,
+		                       (b.C1_CONAME) WORK_COMPANY,
+		                       v.VDEL_STATUS,
+		                       v.AUTO_ID,
+		                       v.YDJ_FLAG,
+		                       v.remark
+		                  FROM (select ss.app_id,
+		                               ss.LAST_OPT_USER,
+		                               ss.SUBMIT_TYPE,
+		                               ss.LST_TEAM_DATE,
+		                               ss.user_date,
+		                               ss.YDJ_FLAG,
+		                               ss.QUEUE_DATE,
+		                               ss.GROUP_DATE,
+		                               ss.VDEL_STATUS,
+		                               ss.AUTO_ID,
+		                               ss.remark
+		                        
+		                          from (SELECT o.app_id,
+		                                       O.LAST_OPT_USER,
+		                                       O.SUBMIT_TYPE,
+		                                       O.LST_TEAM_DATE,
+		                                       o.user_date,
+		                                       o.YDJ_FLAG,
+		                                       (trunc(to_char(sysdate, 'yyyymmdd')) -
+		                                       trunc(to_char(o.user_date, 'yyyymmdd')) + 1) as QUEUE_DATE,
+		                                       (select workday(o.group_date, sysdate)
+		                                          from dual) as GROUP_DATE,
+		                                       I.VDEL_STATUS,
+		                                       I.AUTO_ID,
+		                                       (select count(c.REMARK_ID)
+		                                          from OPAS_ALLOT_APPLY_REMARK c
+		                                         where o.APP_ID = c.APP_ID) as remark,
+		                                       row_number() over(partition by o.app_id order by o.user_date desc) as rn
+		                                  FROM OPAS_SUBMITFRAUD_INFO I
+		                                  LEFT JOIN OPAS_ALLOT_APPLY_ALLOT O ON O.APP_ID =
+		                                                                        I.APP_ID
+		                                 WHERE I.VDEL_STATUS = '2'
+		                                   AND O.SUBMIT_STATUS = '2'
+		                                   AND I.CRT_USER = #{invest_crtUser,jdbcType=VARCHAR}
+		                                   and o.curr_status='3'
+		                                
+		                                ) ss
+		                         where ss.rn = '1') v
+		                  LEFT JOIN OPAS_BIZ_INP_APPL_C1 B ON v.APP_ID = B.APP_ID
+		                 WHERE 1 = 1
+		                
+		                ) T
+		          LEFT JOIN OPAS_TELCHECK_RESULT U ON T.APP_ID = U.APP_ID)
+		
+	</select>
+	
+		<!--添加 征信提报欺诈结果信息表历史表 OPAS_SUBMITFRAUD_INFO_HIS-->
+	<insert id="insertOpasSubmitFraudInfoHis" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		INSERT INTO OPAS_SUBMITFRAUD_INFO_HIS
+		(AUTO_ID,APP_ID, INVEST_RESULTNAME,VDEL_STATUS, INVEST_MEMO, CRT_DATE, CRT_USER, APPROVAL_MEMO, INVEST_RESULT_FLAG, INVEST_RESULTCODE,OPERATION_DATE,CRT_USER_NAME,YDJ_FLAG,CURR_NODE, CHECKBACK_MEMO,LAST_OU)
+		values(
+				#{invest_autoId,jdbcType=VARCHAR},
+				#{check_number,jdbcType=VARCHAR},
+				#{invest_resultName,jdbcType=VARCHAR},
+				#{invest_delStatus,jdbcType=CHAR},
+				#{invest_memo,jdbcType=VARCHAR},
+				sysdate,
+				#{invest_crtUser,jdbcType=VARCHAR}, 
+				#{invest_approvalMemo,jdbcType=VARCHAR}, 
+				#{invest_resultFlag,jdbcType=CHAR}, 
+				#{invest_resultCode,jdbcType=VARCHAR},
+				#{invest_operationDate,jdbcType=DATE},
+				#{invest_crtUserName,jdbcType=VARCHAR},
+				#{check_ydjFlag,jdbcType=CHAR},
+				#{check_currNode,jdbcType=VARCHAR},
+				#{invest_checkBackMeo,jdbcType=VARCHAR},
+				#{invest_lastOU,jdbcType=VARCHAR}
+				
+			)
+	</insert>
+	
+	
+		<!--复制 征信提报欺诈结果信息表 到 征信提报欺诈结果信息表历史表 OPAS_SUBMITFRAUD_INFO_HIS-->
+	<insert id="copyOpasSubmitFraudInfoToHis"   parameterType="java.util.Map">
+	   INSERT INTO OPAS_SUBMITFRAUD_INFO_HIS SELECT * FROM OPAS_SUBMITFRAUD_INFO WHERE  
+	   AUTO_ID=#{invest_autoId,jdbcType=VARCHAR}
+	</insert>
+	
+	
+	<!--根据角色查询候选人-->
+	<select id="selectCandidate" parameterType="com.huaxia.opas.domain.credit.Candidate" resultMap="Candidate">
+	    SELECT T.ROLE_NAME,T.USER_CODE,T.USER_NAME,P.ORG_NAME AS GROUP_NAME,P.ORG_NO AS GROUP_NO FROM( 
+            SELECT U.ROLE_ID,U.ROLE_NAME,U.USER_CODE,U.USER_NAME,G.ORG_ID FROM (
+                    SELECT B.ROLE_ID,B.ROLE_NAME,R.USER_CODE,R.USER_NAME,R.USER_ID FROM (
+                        SELECT O.ROLE_ID,O.ROLE_NAME,E.USER_ID from OPAS_AP_ROLE O LEFT JOIN OPAS_AP_USER_ROLE E ON O.ROLE_ID=E.ROLE_ID WHERE O.ROLE_NAME='反欺诈调查'
+                    )B LEFT JOIN OPAS_AP_USER R ON B.USER_ID=R.USER_ID
+            )U LEFT JOIN OPAS_AP_USER_ORG G ON U.USER_ID=G.USER_ID
+    	)T LEFT JOIN OPAS_AP_ORG P ON T.ORG_ID = P.ORG_ID	
+	</select>	
+	
+	<!--根据角色查询候选人条数-->
+	<select id="selectCandidateCount" parameterType="com.huaxia.opas.domain.credit.Candidate" resultMap="Candidate">
+	    SELECT COUNT(1) FROM( 
+            SELECT T.ROLE_NAME,T.USER_CODE,T.USER_NAME,P.ORG_NAME AS GROUP_NAME,P.ORG_NO AS GROUP_NO FROM( 
+            	SELECT U.ROLE_ID,U.ROLE_NAME,U.USER_CODE,U.USER_NAME,G.ORG_ID FROM (
+                    SELECT B.ROLE_ID,B.ROLE_NAME,R.USER_CODE,R.USER_NAME,R.USER_ID FROM (
+                        SELECT O.ROLE_ID,O.ROLE_NAME,E.USER_ID from OPAS_AP_ROLE O LEFT JOIN OPAS_AP_USER_ROLE E ON O.ROLE_ID=E.ROLE_ID WHERE O.ROLE_NAME='总统'
+                    )B LEFT JOIN OPAS_AP_USER R ON B.USER_ID=R.USER_ID
+            )U LEFT JOIN OPAS_AP_USER_ORG G ON U.USER_ID=G.USER_ID
+    	)T LEFT JOIN OPAS_AP_ORG P ON T.ORG_ID = P.ORG_ID)
+	</select>	
+	
+	
+	<!--欺诈    工作量统计-->
+	<select id="selectOpasSubmitFraudInfoByOperationDate" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT count(O.app_id)
+		FROM OPAS_SUBMITFRAUD_INFO_HIS O 
+	
+		WHERE O.CRT_USER=#{invest_crtUser,jdbcType=VARCHAR}
+		<if test="vdelStatus != null and vdelStatus !='' ">
+	 		and o.VDEL_STATUS = #{vdelStatus,jdbcType=VARCHAR}
+	 	</if>
+		AND O.CRT_DATE
+		BETWEEN  
+			to_date(#{startTime},'yyyy-mm-dd')     
+		AND  
+		 	(to_date(#{endTime},'yyyy-mm-dd')+1 )
+		<if test="checkStr != null and checkStr !='' ">
+	 		AND O.OPERATION_DATE is null AND O.LAST_OU is not null
+	 	</if>
+	</select>
+	<select id="selectWorkCountInvestigation" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT count(O.app_id)
+		FROM OPAS_SUBMITFRAUD_INFO_HIS O 
+		WHERE O.CRT_USER=#{invest_crtUser,jdbcType=VARCHAR}
+		AND O.CRT_DATE
+		BETWEEN  
+			to_date(#{startTime},'yyyy-mm-dd')     
+		AND  
+		 	to_date(#{endTime},'yyyy-mm-dd')+1 
+	 	<if test="vdelStatus != null and vdelStatus !='' ">
+ 			and o.VDEL_STATUS = #{vdelStatus,jdbcType=VARCHAR}
+	 	</if>
+	 	<if test="checkStr != null and checkStr !='' ">
+	 		AND O.OPERATION_DATE is not null AND O.LAST_OU is null
+	 	</if>
+	</select>
+	
+	<!--人行征信查询匹配设置 -->
+	<select id="selectCreditMatchPage" parameterType="com.huaxia.opas.domain.credit.CreditMatching" resultMap="CreditMatching">
+		SELECT O.AUTO_ID,O.NON_PEOBANK_NAME,O.NON_PEOBANK_MATCH,O.CURR_STATUS,O.CRT_USER,O.CRT_TIME 
+		FROM OPAS_PEOPLEBANK_CREDIT_SET O WHERE 1=1 
+		 <if test="match_peobankName != null and match_peobankName !='' "> AND O.NON_PEOBANK_NAME LIKE '%${match_peobankName}%'</if> 
+		 <if test="match_currStatus != null and match_currStatus !='' ">AND O.CURR_STATUS =#{match_currStatus} </if> 
+	</select>
+	 
+	<!--人行征信查询匹配设置条数-->
+	<select id="selectCreditMatchPageCount" parameterType="com.huaxia.opas.domain.credit.CreditMatching" resultType="java.lang.String">
+		SELECT COUNT(1) FROM OPAS_PEOPLEBANK_CREDIT_SET O WHERE 1=1 
+		 <if test="match_peobankName != null and match_peobankName !='' ">AND O.NON_PEOBANK_NAME LIKE '%${match_peobankName}%'</if> 
+		 <if test="match_currStatus != null and match_currStatus !='' ">AND O.CURR_STATUS=#{match_currStatus,jdbcType=CHAR} </if> 
+	</select>
+	
+	<!--删除人行征信查询匹配-->
+	<delete id="deleteCreditMatch" parameterType="java.lang.String" >
+    	DELETE FROM OPAS_PEOPLEBANK_CREDIT_SET
+     	WHERE AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  	</delete>
+  	
+  	<!--修改人行征信查询匹配-->
+	<update id="updateCreditMatch" parameterType="com.huaxia.opas.domain.credit.CreditMatching">
+		UPDATE OPAS_PEOPLEBANK_CREDIT_SET
+		<set>
+ 			<if test="match_peobankName != null and match_peobankName !='' ">NON_PEOBANK_NAME=#{match_peobankName,jdbcType=VARCHAR},</if> 
+ 			<if test="match_nonPeobankMatct != null and match_nonPeobankMatct !='' ">NON_PEOBANK_MATCH=#{match_nonPeobankMatct,jdbcType=VARCHAR},</if> 
+ 			<if test="match_currStatus != null and match_currStatus !='' ">CURR_STATUS=#{match_currStatus,jdbcType=CHAR}</if> 
+		</set> 
+		<where>		  
+			 AUTO_ID = #{match_autoID,jdbcType=VARCHAR}	 
+		</where>
+	</update>  	
+	
+	<!--添加 人行征信查询匹配-->
+	<insert id="insertCreditMatch" parameterType="com.huaxia.opas.domain.credit.CreditMatching">
+		INSERT INTO OPAS_PEOPLEBANK_CREDIT_SET
+		(AUTO_ID,NON_PEOBANK_NAME,NON_PEOBANK_MATCH,CURR_STATUS,CRT_USER,CRT_TIME)
+		values(
+				#{match_autoID,jdbcType=VARCHAR},
+				#{match_peobankName,jdbcType=VARCHAR},
+				#{match_nonPeobankMatct,jdbcType=VARCHAR},
+				#{match_currStatus,jdbcType=CHAR},
+				#{match_crtUser,jdbcType=VARCHAR},
+				#{match_crtTime,jdbcType=DATE}							
+		)
+	</insert>  	
+	
+
+	<!--复制 申请件分配表-->
+	<insert id="copyOpasAllotApplyAllot"  parameterType="java.lang.String">
+	  insert into OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE, 
+      LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, 
+      CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, 
+      QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+      SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, 
+      YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG, 
+      PROCESS_ID, RECORD_TEAM_DATE, USER_DATE,CHECK_MEUOFLAG) select (select sys_guid() from dual),
+      APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, 
+      LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+     SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, 
+     MATCHING_CARD_FLAG, PROCESS_ID,sysdate,USER_DATE,CHECK_MEUOFLAG from OPAS_ALLOT_APPLY_ALLOT where APP_ID=#{app_id,jdbcType=VARCHAR}
+	</insert>
+	
+	<!--复制 申请件分配表-->
+	<insert id="insertOpasTelcheckResult"  parameterType="com.huaxia.opas.domain.credit.OpasTelcheckResult">
+	   INSERT INTO OPAS_TELCHECK_RESULT (
+		AUTO_ID,APP_ID,BLOCK_CODE,CREDIT_REFUSE_REASON,TELCHECK_RESULT,IDENTITY_RESULT,CREDIT_TIME,CREDITER,CREDITER_NAME,CRT_DATE,CRT_USER,CURR_OPT_GROUP,YDJ_FLAG
+	   )values(
+			#{auto_id,jdbcType=VARCHAR},
+			#{app_id,jdbcType=VARCHAR},
+			#{block_code,jdbcType=VARCHAR},
+			#{credit_refuse_reason,jdbcType=VARCHAR},
+			#{telcheck_result,jdbcType=VARCHAR},
+			#{identity_result,jdbcType=VARCHAR},
+			#{credit_time,jdbcType=DATE},
+			#{crediter,jdbcType=VARCHAR},
+			#{crediter_name,jdbcType=VARCHAR},
+			#{crt_date,jdbcType=DATE},
+			#{crt_user,jdbcType=VARCHAR},
+			#{curr_opt_group,jdbcType=VARCHAR},
+			#{ydj_flag,jdbcType=VARCHAR}
+	   )
+	   
+	</insert>
+	
+	<!-- 
+	<select id="queryUnfinishedCount" parameterType="" resultMap="">
+		select count(1) from 
+		<where>
+			<if test="">
+			
+			</if>
+		</where>
+	</select>
+	反欺诈未完成列表查询
+	<select id="queryUnfinishedList" parameterType="" resultMap="">
+		select * from 
+		<where>
+			<if test="">
+			
+			</if>
+		</where>
+	</select> -->
+	<!-- 申请件获取 -->
+	<update id="updateOne" parameterType="java.util.Map">
+		update OPAS_ALLOT_APPLY_ALLOT
+		set
+		CURR_OPT_GROUP = #{userOrg},LAST_OPT_GROUP=#{userOrg},CURR_OPT_USER = #{userCode},LAST_OPT_USER = #{userCode}
+		where APP_ID = #{sqjlsh} and CURR_STATUS in (0,1) and CURR_NODE = #{currNode}
+	</update>
+	<!-- 手动抢件 -->
+	<update id="updateThree">
+		update (select * from OPAS_ALLOT_APPLY_ALLOT where CURR_STATUS in (0,1) and CURR_NODE = #{currNode})
+		set
+		CURR_OPT_GROUP = #{userOrg},LAST_OPT_GROUP=#{userOrg},CURR_OPT_USER = #{userCode},LAST_OPT_USER = #{userCode}
+		where rownum &lt; 4
+	</update>
+	<!-- 查询进件信息表信息 -->
+	<select id="queryBizInpApplC1ByAppId" parameterType="java.lang.String" resultType="com.huaxia.opas.domain.input.BizInpApplC1">
+		select 
+		C1_CNAME,
+		C1_IDTYPE,
+		C1_IDNBR,
+		C1_CONAME,
+		C1_MOBILE,
+		C1_HMTEL,
+		C1_COTEL,
+		C1_HMADD1,
+		C1_HMADD2,
+		C1_HMADD3,
+		C1_HMADD4,
+		C1_IDADD1,
+		C1_IDADD2,
+		C1_IDADD3,
+		C1_IDADD4,
+		C1_COADD1,
+		C1_COADD2,
+		C1_COADD3,
+		C1_COADD4,
+		C1_ESTADD1,
+		C1_ESTADD2,
+		C1_ESTADD3,
+		C1_ESTADD4,
+		C4_CYCADD1,
+		C4_CYCADD2,
+		YDJ_FLAG
+		from OPAS_BIZ_INP_APPL_C1
+		where APP_ID = #{appId}
+	</select>
+	<!-- 根据提报人查询该提报人所在组 -->
+	<select id="queryGroup" parameterType="java.lang.String" resultType="java.lang.String">
+	
+		select ORG_NO from OPAS_AP_ORG where ORG_ID=
+			(select ORG_ID from OPAS_AP_USER_ORG where user_id=
+ 				(select user_id from OPAS_AP_USER where USER_CODE=#{crediter,jdbcType=VARCHAR}))
+		<!-- select distinct a.user_id from OPAS_AP_USER_ORG a , OPAS_AP_USER_ROLE b
+		where a.org_id=(select ORG_ID from OPAS_AP_USER_ORG where user_id=
+ 		(select user_id from OPAS_AP_USER where USER_CODE=#{crediter,jdbcType=VARCHAR})) 
+ 		 and b.ROLE_CODE = '' -->
+	</select>
+	<select id="queryGroupName" parameterType="java.lang.String" resultType="java.lang.String">
+	
+		select ORG_NAME from OPAS_AP_ORG where ORG_ID=
+			(select ORG_ID from OPAS_AP_USER_ORG where user_id=
+ 				(select user_id from OPAS_AP_USER where USER_CODE=#{crediter,jdbcType=VARCHAR}))
+		<!-- select distinct a.user_id from OPAS_AP_USER_ORG a , OPAS_AP_USER_ROLE b
+		where a.org_id=(select ORG_ID from OPAS_AP_USER_ORG where user_id=
+ 		(select user_id from OPAS_AP_USER where USER_CODE=#{crediter,jdbcType=VARCHAR})) 
+ 		 and b.ROLE_CODE = '' -->
+	</select>
+	<!-- 根据提报人查询该提报人所在组的id -->
+	<select id="queryGroupId" parameterType="java.lang.String" resultType="java.lang.String">
+	
+		select ORG_ID from
+			(select ORG_ID from OPAS_AP_USER_ORG where user_id in
+ 				(select user_id from OPAS_AP_USER where USER_CODE=#{userId,jdbcType=VARCHAR}))
+	</select>
+	<!-- 查询当前用足所在组内具有欺诈审批权限的所有角色id -->
+	<select id="selectListApUserByOrgId" parameterType="java.util.Map" resultType="java.util.Map">
+				select s.user_id
+				   from opas_ap_user_org s
+				   left join opas_ap_user_role a on s.user_id = a.user_id
+				   left join OPAS_AP_ROLE b on a.role_id = b.role_id
+				   where s.org_id =#{orgId,jdbcType=VARCHAR}
+				   and b.role_code = 'DAM '
+				   and b.status = '1'
+	</select>
+	<resultMap id="ApUserMap" type="java.util.Map" >
+     <result column="USER_CODE" property="dictDetailCode" jdbcType="VARCHAR" />
+     <result column="USER_NAME" property="dictDetailName" jdbcType="VARCHAR" />
+   </resultMap>
+	<select id="selectListApUserByListUserId" parameterType="java.util.Map"
+		resultMap="ApUserMap">
+		 SELECT t.USER_CODE  ,t.USER_NAME  FROM OPAS_AP_USER t WHERE 1=1
+ 		     <if test="listUserId != null and listUserId.size() != 0 ">
+				AND t.USER_ID in  
+				 <foreach item="item" index="index" collection="listUserId" open="(" separator=","
+					close=")">
+						#{item.USER_ID}
+					</foreach>
+				<!-- <foreach item="item" index="index" collection="listUserId" open="(" separator=","
+				close=")">
+					#{item}
+				</foreach> -->
+			</if>
+	</select>
+	<!-- 向申请件分配历史表中插入数据 -->
+	<insert id="insertOpasAllotApplyAllotHis" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		insert into
+		OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE,
+		LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP,
+		CURR_OPT_USER,
+		LAST_OPT_USER, CURR_STATUS,
+		DEL_STATUS, CURR_NODE,
+		QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS,
+		SUBMIT_TYPE,
+		SUBMIT_MEMO,
+		RECORD_TEAM_DATE,
+		YDJ_FLAG)
+		values 
+		(#{check_autoId,jdbcType=VARCHAR},
+		#{check_number,jdbcType=VARCHAR},
+		#{check_lastOptQueue,jdbcType=VARCHAR},
+		#{check_lastOptQueue,jdbcType=VARCHAR}, 
+		#{check_currOptGroup,jdbcType=VARCHAR},
+		#{check_lastOptGroup,jdbcType=VARCHAR},
+		#{check_currOptUser,jdbcType=VARCHAR},
+		#{check_lastOU,jdbcType=VARCHAR},
+		#{check_currStatus,jdbcType=CHAR},
+		#{check_delStatus,jdbcType=CHAR}, 
+		#{check_currNode,jdbcType=VARCHAR},
+		#{check_queueDate,jdbcType=TIMESTAMP},
+		#{check_GourpDate,jdbcType=TIMESTAMP},
+		#{check_SubmitStatus,jdbcType=CHAR},
+		#{check_submitType,jdbcType=VARCHAR},
+		#{check_memo,jdbcType=VARCHAR},
+		sysdate,
+		#{check_ydjFlag,jdbcType=VARCHAR}
+		)
+	</insert>
+	<select id="querySubmitFraud"  parameterType="java.lang.String" resultType="java.lang.String">
+		select LAST_OU from
+		(select LAST_OU from OPAS_SUBMITFRAUD_INFO
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+		order by CRT_DATE desc)
+		where rownum =1
+	</select>
+	<select id="queryInvestMemo"  parameterType="java.lang.String" resultType="java.lang.String">
+		
+		select s.INVEST_MEMO from (select INVEST_MEMO,row_number() over(partition by i.app_id order by i.crt_date desc) as rn
+		from OPAS_SUBMITFRAUD_INFO i where i.APP_ID = #{appId,jdbcType=VARCHAR}) s
+		where s.rn='1'
+		
+		
+	</select>
+	<select id="queryAllotApplyAllotByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+		select LAST_OPT_USER from OPAS_ALLOT_APPLY_ALLOT
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="queryCurrOptUserByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+		select CURR_OPT_USER from OPAS_ALLOT_APPLY_ALLOT
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="queryCurrNodeByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+		select curr_node from OPAS_ALLOT_APPLY_ALLOT
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="queryqzCurrNodeByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+			select ss.curr_node		
+			  from (SELECT I.curr_node,
+			               row_number() over(partition by i.app_id order by i.crt_date desc) as rn			        
+			          FROM OPAS_SUBMITFRAUD_INFO I			        
+			         where I.APP_ID = #{appId,jdbcType=VARCHAR}) ss
+			 where ss.rn = '1'		
+	</select>
+	<select id="queryqzVdelStatusByAppId"  parameterType="java.lang.String" resultType="java.lang.String">
+	select vdel_status from OPAS_SUBMITFRAUD_INFO where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="querySubmitTypeByAppId"  parameterType="java.lang.String" resultType="java.lang.String">
+	select submit_type from opas_allot_apply_allot where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryReasonCodeByAppId"  parameterType="java.lang.String" resultType="java.util.Map">
+	select reason_code from opas_reason_info where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="queryOrgNameByAppId"  parameterType="java.lang.String" resultType="java.lang.String">
+	select org_name from opas_ap_org where org_no = #{orgNo,jdbcType=VARCHAR}
+	</select>
+	<!-- 修改预审分件表中数据 -->
+	<update id="updateYsAllotApplyAllot" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		update YS_ALLOT_APPLY_ALLOT
+		 <set>  
+		 	<if test="fenHang !=null and fenHang != '' ">
+				CURR_OPT_AREA = #{fenHang,jdbcType=VARCHAR},
+			</if>
+			<if test="check_lastOU !=null and check_lastOU != '' ">
+				LAST_OPT_USER = #{check_lastOU,jdbcType=VARCHAR},
+			</if>
+			<if test="curr_status !=null and curr_status != '' ">
+				CURR_STATUS = #{curr_status,jdbcType=VARCHAR},
+			</if>
+			<if test="curr_node != null and curr_node != '' ">
+				CURR_NODE=#{curr_node,jdbcType=VARCHAR},
+			</if>				
+					LST_TEAM_DATE=sysdate, 		
+               <if test="check_ydjFlag != null and check_ydjFlag != '' ">
+				YDJ_FLAG=#{check_ydjFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="matchingCardFlag != null and matchingCardFlag != '' ">
+				MATCHING_CARD_FLAG=#{matchingCardFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="del_stasus != null and del_stasus != '' ">
+				DEL_STATUS=#{del_stasus,jdbcType=VARCHAR},
+			</if>
+		</set>
+	  	WHERE APP_ID = #{check_number,jdbcType=VARCHAR}
+	</update>
+	<!-- 向预审分件表中插入数据 -->
+	<insert id="insertysallotapplyallotID" parameterType="com.huaxia.opas.domain.credit.CreditCheck">
+		insert into  
+		YS_ALLOT_APPLY_ALLOT (AUTO_ID, APP_ID, CURR_OPT_AREA,
+		LAST_OPT_USER,CURR_STATUS, CURR_NODE, CRT_TIME,
+		LST_TEAM_DATE,
+		YDJ_FLAG,MATCHING_CARD_FLAG, SYN_FLAG,DEL_STATUS,
+		MODIFY_DATE
+		)
+		values 
+		(#{check_autoId,jdbcType=VARCHAR},
+		#{check_number,jdbcType=VARCHAR},
+		#{fenHang,jdbcType=VARCHAR},
+		#{check_lastOU,jdbcType=VARCHAR},
+		#{curr_status,jdbcType=VARCHAR},
+		#{curr_node,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		#{check_ydjFlag,jdbcType=VARCHAR},
+		#{matchingCardFlag,jdbcType=VARCHAR},
+		#{syn_flag,jdbcType=VARCHAR},
+		#{del_stasus,jdbcType=VARCHAR}	,
+		sysdate
+		)
+	</insert>
+	<select id="selectysallotapplyallotID"  parameterType="java.lang.String" resultType="com.huaxia.opas.domain.credit.CreditCheck">
+		select * from YS_ALLOT_APPLY_ALLOT where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+</mapper>

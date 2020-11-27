@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="AllotTime">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.allot.AllotTime">
+	    <result column="ID" property="id" jdbcType="CHAR"/>
+		<result column="MAPPING_ID" property="mappingId" jdbcType="CHAR"/>
+		<result column="RULE_TYPE" property="ruleType" jdbcType="CHAR"/>
+		<result column="START_TIME" property="startTime" jdbcType="VARCHAR"/>
+		<result column="END_TIME" property="endTime" jdbcType="VARCHAR"/>
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="LST_USER" property="lstUser" jdbcType="VARCHAR"/>
+		<result column="LST_DATE" property="lstDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.allot.AllotTime">
+		insert into opas_allot_auto_time 
+		(
+		ID,MAPPING_ID,RULE_TYPE,START_TIME,END_TIME,CRT_USER,CRT_DATE,LST_USER,LST_DATE
+		) 
+		values (
+		    #{id,jdbcType=CHAR},
+			#{mappingId,jdbcType=CHAR},
+			#{ruleType,jdbcType=CHAR},
+			#{startTime,jdbcType=VARCHAR},
+			#{endTime,jdbcType=VARCHAR},
+			#{crtUser,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			#{lstUser,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+	<update id="update"
+		parameterType="com.huaxia.opas.domain.allot.AllotMappingRule">
+		update opas_allot_auto_time
+		<set>
+			START_TIME = #{startTime,jdbcType=VARCHAR},
+			END_TIME = #{endTime,jdbcType=VARCHAR},
+			LST_USER=#{lstUser,jdbcType=VARCHAR},
+			LST_DATE = CURRENT_DATE
+		</set>
+		where ID = #{id,jdbcType=CHAR}
+	</update>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from opas_allot_auto_time
+		where ID = #{id,jdbcType=CHAR}
+	</delete>
+	<select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select   mr.ID,mr.MAPPING_ID,mr.RULE_TYPE,mr.START_TIME,
+		mr.END_TIME,mr.CRT_USER,mr.CRT_DATE,
+		 mr.LST_USER,mr.LST_DATE
+		from opas_allot_auto_time  mr 
+		 <where>
+		 	<if test="mappingId != null and mappingId !='' ">
+				AND  mr.MAPPING_ID=#{mappingId}
+			</if>
+			<if test="crtUser != null and crtUser !='' ">
+				AND  mr.CRT_USER=#{crtUser}
+			</if>
+			<if test="lstUser != null and lstUser !='' ">
+				AND  mr.LST_USER=#{lstUser}
+			</if>
+			<if test="startTime != null and startTime !='' ">
+				AND mr.START_TIME = #{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				AND mr.END_TIME = #{endTime}
+			</if>
+			<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+					AND mr.RULE_TYPE in
+					<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+					close=")">
+						#{item}
+					</foreach>
+			</if>
+		</where>	
+	</select>
+	<select id="count" parameterType="java.util.Map" resultType="int">
+		select count(1) from opas_allot_auto_time mr
+		  <where>
+		 	<if test="mappingId != null and mappingId !='' ">
+				AND  mr.MAPPING_ID=#{mappingId}
+			</if>
+			<if test="crtUser != null and crtUser !='' ">
+				AND  mr.CRT_USER=#{crtUser}
+			</if>
+			<if test="lstUser != null and lstUser !='' ">
+				AND  mr.LST_USER=#{lstUser}
+			</if>
+			<if test="startTime != null and startTime !='' ">
+				AND mr.START_TIME  = #{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				AND mr.END_TIME = #{endTime}
+			</if>
+			<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+					AND mr.RULE_TYPE in
+					<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+					close=")">
+						#{item}
+					</foreach>
+			</if>
+		  </where>
+	</select>
+</mapper>

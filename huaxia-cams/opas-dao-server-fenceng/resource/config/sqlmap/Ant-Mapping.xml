@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Ant">
+
+	<resultMap id="resultSummaryInfo" type="java.util.Map">
+		 <result column="ZM_SCORE" property="zmScore" jdbcType="VARCHAR" />
+		 <result column="IVS_SCORE" property="ivsScore" jdbcType="VARCHAR" />
+		 <result column="NAME" property="name" jdbcType="VARCHAR" />
+		 <result column="CERT_NO" property="certNo" jdbcType="CHAR" />
+		 <result column="MOBILE" property="mobile" jdbcType="CHAR" />
+		 <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		 <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	     <result column="DESCRIPTION_PHONE" property="descriptionPhone" jdbcType="VARCHAR" />
+	     <result column="DESCRIPTION_ADDR" property="descriptionAddr" jdbcType="VARCHAR" />
+	     <result column="DESCRIPTION_NAME" property="descriptionName" jdbcType="VARCHAR" />
+	     <result column="DESCRIPTION_CERTNO" property="descriptionCertno" jdbcType="VARCHAR" />
+	     <result column="CODEADDRENGLISH" jdbcType="VARCHAR" property="codeAddrEnglish" />
+   		 <result column="CODEPHOENENGLISH" jdbcType="VARCHAR" property="codePhoenEnglish" />
+         <result column="CODENAMEENGLISH" jdbcType="VARCHAR" property="codeNameEnglish" />
+         <result column="CODEEMAILENGLISH" jdbcType="VARCHAR" property="codeEmailEnglish" />
+         <result column="CODECERTNOENGLISH" jdbcType="VARCHAR" property="codeCertnoEnglish" />
+	</resultMap>
+	
+	<resultMap id="resultInfoView" type="java.util.Map">
+		 <result column="INSIDE_APP_NO" property="insideAppNo" jdbcType="VARCHAR" />
+	    <result column="ZM_SCORE" property="zmScore" jdbcType="VARCHAR" />
+	    <result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+	    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+	    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+	    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	    <result column="IVS_SCORE" property="ivsScore" jdbcType="VARCHAR" />
+	    <result column="BIZ_ID" property="bizId" jdbcType="VARCHAR" />
+	    <result column="CODE" property="code" jdbcType="VARCHAR" />
+	    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+	    <result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+	    <result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	    <result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	    <result column="BATCH_DATE" property="batchDate" jdbcType="TIMESTAMP" />
+	    <result column="REC_STATUS" property="recStatus" jdbcType="VARCHAR" />
+	    <result column="CERT_NO" property="certNo" jdbcType="CHAR" />
+	    <result column="CERT_TYPE" property="certType" jdbcType="CHAR" />
+	    <result column="NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="MOBILE" property="mobile" jdbcType="CHAR" />
+	    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+	    <result column="BANK_CARD" property="bankCard" jdbcType="CHAR" />
+	    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+	    <result column="IP" property="ip" jdbcType="VARCHAR" />
+	    <result column="MAC" property="mac" jdbcType="VARCHAR" />
+	    <result column="WIFIMAC" property="wifimac" jdbcType="VARCHAR" />
+	    <result column="IMEI" property="imei" jdbcType="VARCHAR" />
+	    <result column="IMSI" property="imsi" jdbcType="VARCHAR" />
+	    <result column="ISRISK" property="isRisk" jdbcType="VARCHAR" />
+	    <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+	    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	    <result column="RISK_CODE" property="riskCode" jdbcType="VARCHAR" />
+	    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+	    <result column="STEELEMENT" property="settlement" jdbcType="VARCHAR" />
+	    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+	    <result column="STATEMENT" property="statement" jdbcType="VARCHAR" />
+	    <result column="DESCRIPTION_PHONE" property="descriptionPhone" jdbcType="VARCHAR" />
+	    <result column="DESCRIPTION_ADDR" property="descriptionAddr" jdbcType="VARCHAR" />
+	    <result column="DESCRIPTION_NAME" property="descriptionName" jdbcType="VARCHAR" />
+	    <result column="DESCRIPTION_EMAIL" property="descriptionEmail" jdbcType="VARCHAR" />
+	    <result column="DESCRIPTION_CERTNO" property="descriptionCertno" jdbcType="VARCHAR" />
+	    <result column="ISRISK" property="isRisk" jdbcType="VARCHAR" />
+	    <result column="SUCCESS" property="success" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="resultAppId" type="java.util.Map">
+		<result column="APP_ID1" property="appId1" jdbcType="VARCHAR" />
+	    <result column="APP_ID2" property="appId2" jdbcType="VARCHAR" />
+	    <result column="APP_ID3" property="appId3" jdbcType="VARCHAR" />
+
+	</resultMap>
+	
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opasbizzmivsdata">
+    <result column="INSIDE_APP_NO" jdbcType="VARCHAR" property="insideAppNo" />
+    <result column="IVS_SCORE" jdbcType="VARCHAR" property="ivsScore" />
+    <result column="BIZ_ID" jdbcType="VARCHAR" property="bizId" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="VARCHAR" property="recStatus" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="CERT_NO" jdbcType="CHAR" property="certNo" />
+    <result column="CERT_TYPE" jdbcType="CHAR" property="certType" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="MOBILE" jdbcType="CHAR" property="mobile" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="BANK_CARD" jdbcType="CHAR" property="bankCard" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="CODEADDRENGLISH" jdbcType="VARCHAR" property="codeAddrEnglish" />
+    <result column="CODEPHOENENGLISH" jdbcType="VARCHAR" property="codePhoenEnglish" />
+    <result column="CODENAMEENGLISH" jdbcType="VARCHAR" property="codeNameEnglish" />
+    <result column="CODEEMAILENGLISH" jdbcType="VARCHAR" property="codeEmailEnglish" />
+    <result column="CODECERTNOENGLISH" jdbcType="VARCHAR" property="codeCertnoEnglish" />
+  </resultMap>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    INSIDE_APP_NO, IVS_SCORE, BIZ_ID, CRT_TIME, CRT_DATE, CRT_USER, 
+    LST_UPD_TIME, LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, REC_STATUS, APP_ID, CERT_NO, 
+    CERT_TYPE, NAME, MOBILE, EMAIL, BANK_CARD, ADDRESS,
+    CODEADDRENGLISH,CODEPHOENENGLISH,CODENAMEENGLISH,CODEEMAILENGLISH,CODECERTNOENGLISH
+     from OPAS_BIZ_ZM_IVS_DATA
+      where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+	 <select id="selectIvsScoreByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+    	select  nvl(max(IVS_SCORE),0)
+	     from OPAS_BIZ_ZM_IVS_DATA
+	      where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+	<select id="querySummaryInfoByAppId" parameterType="java.lang.String" resultMap="resultSummaryInfo">
+	   select t1.ZM_SCORE,t2.IVS_SCORE,t2.NAME,
+       t2.ADDRESS,
+       t2.MOBILE,
+       t2.CERT_NO,
+       t2.DESCRIPTION_PHONE,
+       t2.DESCRIPTION_ADDR,
+       t2.DESCRIPTION_NAME,
+       t2.DESCRIPTION_EMAIL,
+       t2.DESCRIPTION_CERTNO,
+       t2.CODEADDRENGLISH,
+       t2.CODEPHOENENGLISH,
+       t2.CODENAMEENGLISH,
+       t2.CODECERTNOENGLISH
+       FROM (SELECT APP_ID,ZM_SCORE FROM  OPAS_BIZ_ZM_SCOR_DATA WHERE APP_ID=#{appId,jdbcType=CHAR}) t1 
+       FULL JOIN  (SELECT APP_ID,IVS_SCORE,NAME,ADDRESS,MOBILE,CERT_NO,DESCRIPTION_PHONE,DESCRIPTION_ADDR,
+       DESCRIPTION_NAME,DESCRIPTION_EMAIL,DESCRIPTION_CERTNO,CODEADDRENGLISH,
+       CODEPHOENENGLISH,CODENAMEENGLISH,CODECERTNOENGLISH 
+       FROM OPAS_BIZ_ZM_IVS_DATA WHERE APP_ID=#{appId,jdbcType=CHAR}) t2 ON t1.app_id = t2.app_id
+	</select>
+	<select id="selectZMRiskTypesGroup" parameterType="java.util.Map" resultType="java.util.Map">
+	   SELECT trim(RISK_TYPE) AS RISK_TYPE FROM  OPAS_BIZ_ZM_RISKLIST_DATA  WHERE APP_ID = #{appId,jdbcType=CHAR} AND RISK_TYPE is not null  GROUP BY  RISK_TYPE
+	</select>
+	 <resultMap id="riskListMessageMap" type="java.util.Map">
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="BIZ_NO" jdbcType="VARCHAR" property="bizNo" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="RISK_TYPE" jdbcType="VARCHAR" property="riskType" />
+    <result column="RISK_CODE" jdbcType="VARCHAR" property="riskCode" />
+    <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="STEELEMENT" jdbcType="CHAR" property="steelement" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="STATEMENT" jdbcType="VARCHAR" property="statement" />
+    <result column="REC_STATUS" jdbcType="CHAR" property="recStatus" />
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="ISRISK" jdbcType="CHAR" property="isRisk" />
+     <result column="EXTENDINFO" jdbcType="CLOB" property="extendinfo" javaType="java.lang.String"  />
+  </resultMap>
+	<select id="selectZMriskListMessageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+	SELECT count(*) FROM (SELECT APP_ID  FROM  OPAS_BIZ_ZM_RISKLIST_DATA GROUP BY APP_ID,TYPE,RISK_TYPE,RISK_CODE,UPDATE_TIME,STEELEMENT,ISRISK)  WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+	<select id="selectZMriskListMessageData" parameterType="java.util.Map" resultMap="riskListMessageMap">
+	  select TYPE,RISK_TYPE,RISK_CODE,UPDATE_TIME,STEELEMENT,ISRISK,STATUS,STATEMENT
+	  FROM ( SELECT row_number() over(partition by APP_ID,TYPE,RISK_TYPE,RISK_CODE,UPDATE_TIME,STEELEMENT,ISRISK 
+      ORDER BY UPDATE_TIME desc) as rn,APP_ID
+      ,TYPE,RISK_TYPE,RISK_CODE,UPDATE_TIME,STEELEMENT,ISRISK,STATUS,STATEMENT
+      FROM  OPAS_BIZ_ZM_RISKLIST_DATA ) where rn =1 AND APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+		
+	<select id="queryDetailInfoByAppId" parameterType="java.lang.String"
+		resultMap="resultInfoView">
+	SELECT t1.ZM_SCORE,
+       t1.REC_STATUS,
+       case when t1.SUCCESS='1' then '查询成功' else '查询失败' end as SUCCESS,
+       t2.IVS_SCORE,
+       t2.CERT_NO,
+       t2.CERT_TYPE,
+       t2.NAME,
+       t2.MOBILE,
+       t2.ADDRESS,
+       t2.EMAIL,
+       t2.DESCRIPTION_PHONE,
+       t2.DESCRIPTION_ADDR,
+       t2.DESCRIPTION_NAME,
+       t2.DESCRIPTION_EMAIL,
+       t2.DESCRIPTION_CERTNO
+  FROM (SELECT  APP_ID,ZM_SCORE,REC_STATUS,SUCCESS FROM OPAS_BIZ_ZM_SCOR_DATA WHERE APP_ID=#{appId,jdbcType=CHAR}) t1
+  FULL JOIN (SELECT APP_ID,IVS_SCORE,CERT_NO,CERT_TYPE,NAME,MOBILE,ADDRESS,EMAIL,
+       DESCRIPTION_PHONE,DESCRIPTION_ADDR,DESCRIPTION_NAME,DESCRIPTION_EMAIL,
+       DESCRIPTION_CERTNO FROM OPAS_BIZ_ZM_IVS_DATA WHERE APP_ID=#{appId,jdbcType=CHAR})  t2 ON t1.APP_ID = t2.APP_ID
+ 	</select>
+ 
+ <select id="queryDetailAppId" parameterType="java.lang.String" resultMap="resultAppId">
+  select t1.app_id as app_id1, t2.app_id as app_id2, t3.app_id as app_id3
+  from OPAS_BIZ_ZM_SCOR_DATA t1 left join  OPAS_BIZ_ZM_IVS_DATA t2 on t1.app_id = t2.app_id
+  left join  (select rn,APP_ID from  (select row_number() over(partition by APP_ID order by crt_date desc)rn,APP_ID
+  from OPAS_BIZ_ZM_RISKLIST_DATA ) where  rn = 1)t3 on t1.app_id = t3.app_id
+  where  t1.app_id = #{appId, jdbcType=CHAR}
+</select>
+<resultMap id="taskRequestInfoMap" type="java.util.Map">
+    <result column="UUID" jdbcType="CHAR" property="uuid" />
+    <result column="CRT_TIME" jdbcType="VARCHAR" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="VARCHAR" property="lstUpdTime" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="REQ_PBOC" jdbcType="CHAR" property="reqPboc" />
+    <result column="REQ_POLICE" jdbcType="CHAR" property="reqPolice" />
+    <result column="REQ_EDUCATION" jdbcType="CHAR" property="reqEducation" />
+    <result column="REQ_CREDIT100" jdbcType="CHAR" property="reqCredit100" />
+    <result column="REQ_ANT_SCORE" jdbcType="CHAR" property="reqAntScore" />
+    <result column="REQ_ANT_IVS" jdbcType="CHAR" property="reqAntIvs" />
+    <result column="REQ_ANT_RISKLIST" jdbcType="CHAR" property="reqAntRisklist" />
+    <result column="REQ_QHZX_MSC8005" jdbcType="CHAR" property="reqQhzxMsc8005" />
+    <result column="REQ_QHZX_MSC8007" jdbcType="CHAR" property="reqQhzxMsc8007" />
+    <result column="REQ_QHZX_MSC8036" jdbcType="CHAR" property="reqQhzxMsc8036" />
+    <result column="REQ_QHZX_MSC8037" jdbcType="CHAR" property="reqQhzxMsc8037" />
+    <result column="REQ_QHZX_MSC8075" jdbcType="CHAR" property="reqQhzxMsc8075" />
+    <result column="REQ_QHZX_MSC8107" jdbcType="CHAR" property="reqQhzxMsc8107" />
+  </resultMap>
+<select id="selectThreePartiesTaskRequestInfo" parameterType="java.util.Map" resultMap="taskRequestInfoMap">
+SELECT APP_ID, REQ_PBOC, REQ_POLICE, REQ_EDUCATION, REQ_CREDIT100, REQ_ANT_SCORE, REQ_ANT_IVS, REQ_ANT_RISKLIST,
+       REQ_QHZX_MSC8005, REQ_QHZX_MSC8007, REQ_QHZX_MSC8036, REQ_QHZX_MSC8037, REQ_QHZX_MSC8075, REQ_QHZX_MSC8107
+       FROM TASK_REQUEST_INFO
+WHERE  APP_ID= #{appId, jdbcType=CHAR}
+</select>
+<!-- xzg风险信息检测 -->
+<!-- 蚂蚁风险名单 -->
+<select id="selectAntRiskOrder" parameterType="java.util.Map" resultType="java.util.Map">
+	select RISK_TYPE from Opas_Biz_Zm_Risklist_Data
+	where
+	APP_ID= #{appId}
+	and RISK_TYPE in ('R011','R012','R013','R014','R015')
+</select>	
+<!-- 百融风险名单-1 -->
+<select id="selectBrRistOrder1" parameterType="java.util.Map" resultType="java.util.Map">
+	select * from OPAS_BIZ_SPECIALLIST_CELL_DATA
+	where
+	APP_ID= #{appId}
+	and (SL_CELL_BANK_FRAUD in ('0','1')
+	or SL_CELL_BANK_LOST  in ('0','1')
+	or SL_CELL_P2P_FRAUD  in ('0','1'))
+</select>
+<!-- 百融风险名单-2 -->
+<select id="selectBrRistOrder2" parameterType="java.util.Map" resultType="java.util.Map">
+	select INSIDE_APP_NO, SL_ID_ABNORMAL, SL_ID_PHONE_OVERDUE, 
+      SL_ID_COURT_BAD, SL_ID_COURT_EXECUTED, SL_ID_BANK_BAD, 
+      SL_ID_BANK_OVERDUE, SL_ID_BANK_FRAUD, SL_ID_BANK_LOST, 
+      SL_ID_BANK_REFUSE, SL_ID_P2P_BAD, SL_ID_P2P_OVERDUE, 
+      SL_ID_P2P_FRAUD, SL_ID_P2P_LOST, SL_ID_P2P_REFUSE, 
+      SL_ID_NBANK_P2P_BAD, SL_ID_NBANK_P2P_OVERDUE, SL_ID_NBANK_P2P_FRAUD, 
+      SL_ID_NBANK_P2P_LOST, SL_ID_NBANK_P2P_REFUSE, SL_ID_NBANK_MC_BAD, 
+      SL_ID_NBANK_MC_OVERDUE, SL_ID_NBANK_MC_FRAUD, SL_ID_NBANK_MC_LOST, 
+      SL_ID_NBANK_MC_REFUSE, SL_ID_NBANK_CA_BAD, SL_ID_NBANK_CA_OVERDUE, 
+      SL_ID_NBANK_CA_FRAUD, SL_ID_NBANK_CA_LOST, SL_ID_NBANK_CA_REFUSE, 
+      SL_ID_NBANK_COM_BAD, SL_ID_NBANK_COM_OVERDUE, SL_ID_NBANK_COM_FRAUD, 
+      SL_ID_NBANK_COM_LOST, SL_ID_NBANK_COM_REFUSE, SL_ID_NBANK_CF_BAD, 
+      SL_ID_NBANK_CF_OVERDUE, SL_ID_NBANK_CF_FRAUD, SL_ID_NBANK_CF_LOST, 
+      SL_ID_NBANK_CF_REFUSE, SL_ID_NBANK_OTHER_BAD, SL_ID_NBANK_OTHER_OVERDUE, 
+      SL_ID_NBANK_OTHER_FRAUD, SL_ID_NBANK_OTHER_LOST, 
+      SL_ID_NBANK_OTHER_REFUSE, CRT_TIME, CRT_DATE, 
+      CRT_USER, LST_UPD_TIME, LST_UPD_DATE, 
+      LST_UPD_USER, BATCH_DATE, REC_STATUS, 
+      APP_ID, IDENTITYCARD, CELL, 
+      NAME from OPAS_BIZ_SPECIALLIST_ID_DATA
+      where
+		APP_ID= #{appId}
+		and (SL_ID_COURT_BAD in ('0','1')
+		or SL_ID_COURT_EXECUTED in ('0','1')
+		or SL_ID_BANK_FRAUD in ('0','1')
+		or SL_ID_BANK_LOST in ('0','1')
+		or SL_ID_P2P_FRAUD in ('0','1')
+		or SL_ID_P2P_LOST in ('0','1')
+		or SL_ID_P2P_REFUSE in ('0','1')
+		)
+</select>
+<!-- 客户风险等级 -->
+<select id="selectCustRiskLevel" parameterType="java.util.Map" resultType="java.lang.String">
+	select RISK_LEVEL from AML_CUST_RISK_LEVEL
+	where CERT_NO = #{certNo,jdbcType=VARCHAR}
+</select>
+</mapper>

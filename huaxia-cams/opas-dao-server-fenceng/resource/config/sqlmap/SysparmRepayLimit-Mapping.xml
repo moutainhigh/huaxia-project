@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--最低还款额数据库处理-->
+<!--@author liudi-->
+<mapper namespace="SysparmRepayLimit">
+
+	<resultMap id="SysparmRepayLimitResultMap" type="com.huaxia.opas.domain.sysparm.SysparmRepayLimit">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="REPAY_RATIO_CODE" property="repayRatioCode" jdbcType="VARCHAR" />
+		<result column="REPAY_RATIO_VALUE" property="repayRatioValue" jdbcType="NUMERIC" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加 -->
+	<insert id="insertSysparmRepayLimit" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayLimit">
+		insert into
+		OPAS_SYSPARM_REPAY_LIMIT
+		(AUTO_ID,REPAY_RATIO_CODE,REPAY_RATIO_VALUE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_TIME)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{repayRatioCode,jdbcType=VARCHAR},
+		#{repayRatioValue,jdbcType=NUMERIC},
+		#{status,jdbcType=CHAR},
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteSysparmRepayLimitById" parameterType="java.lang.String">
+		delete from
+		OPAS_SYSPARM_REPAY_LIMIT
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+<!-- 全部删除 -->
+	<delete id="deleteAllSysparmRepayLimit">
+		delete from
+		OPAS_SYSPARM_REPAY_LIMIT
+	</delete>
+<!-- 修改 -->
+	<update id="updateSysparmRepayLimit" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayLimit">
+		update OPAS_SYSPARM_REPAY_LIMIT
+		<set>
+			REPAY_RATIO_VALUE = #{repayRatioValue,jdbcType=NUMERIC},
+			STATUS = #{status,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_TIME = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 最低还款额件数查询 -->
+	<select id="querySysparmRepayLimitCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_SYSPARM_REPAY_LIMIT
+		<where>
+			<if test="repayRatioCode != null and repayRatioCode !='' ">
+				AND REPAY_RATIO_CODE LIKE '%${repayRatioCode}%'
+			</if>
+			<if test="repayRatioValue != null and repayRatioValue !='' ">
+				AND REPAY_RATIO_VALUE LIKE '%${repayRatioValue}%'
+			</if>
+		</where>
+	</select>
+<!-- 最低还款额信息查询 -->
+	<select id="querySysparmRepayLimit1" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayLimit"
+		resultMap="SysparmRepayLimitResultMap">
+		select
+		AUTO_ID,REPAY_RATIO_CODE,REPAY_RATIO_VALUE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_TIME
+		from OPAS_SYSPARM_REPAY_LIMIT
+		<where>
+			<if test="repayRatioCode != null and repayRatioCode !='' ">
+				AND REPAY_RATIO_CODE LIKE '%${repayRatioCode}%'
+			</if>
+			<if test="repayRatioValue != null and repayRatioValue !='' ">
+				AND REPAY_RATIO_VALUE LIKE '%${repayRatioValue}%'
+			</if>
+		</where>
+		order by CRT_DATE
+	</select>
+<!-- 最低还款额代码是否重复 -->
+	<select id="querySysparmRepayLimit2" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayLimit"
+		resultMap="SysparmRepayLimitResultMap">
+		select
+		REPAY_RATIO_CODE
+		from OPAS_SYSPARM_REPAY_LIMIT
+		<where>
+			<if test="repayRatioCode != null and repayRatioCode !='' ">
+				AND REPAY_RATIO_CODE = #{repayRatioCode}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:service interface="com.huaxia.opas.cache.service.IDictService" ref="dictServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.cache.service.ITokenService" ref="tokenServiceImpl" />
+	<dubbo:service interface="com.huaxia.opas.cache.service.LueneService" ref="lueneServiceImpl" />
+	
+	<!-- 行政地址匹配 -->
+	<dubbo:service interface="com.huaxia.opas.cache.service.address.AddresMachLevService" ref="addresMachLevImpl" />
+	<!-- 风险检查 -->
+	<dubbo:service interface="com.huaxia.opas.cache.service.riskcheck.RiskMachCheckService" ref="riskMachCheckServiceImpl" />
+	<!-- 规则调用接口 -->
+	<dubbo:service interface="com.huaxia.opas.service.rule.InvokeRuleService" ref="invokeRuleService" />
+	<!-- 三方规则调用接口 -->
+	<dubbo:service interface="com.huaxia.opas.service.rule.ThdRuleService" ref="thdRuleService" />
+	<!-- 海航规则调用接口 -->
+	<dubbo:service interface="com.huaxia.opas.service.rule.SailRuleService" ref="sailRuleService" />
+	<dubbo:service interface="com.huaxia.opas.service.rule.FicoRuleService" ref="ficoRuleService" />
+	<!-- <dubbo:service interface="com.huaxia.opas.service.rule.LoansRuleService" ref="loansRuleService" /> -->
+	<!--  
+	<dubbo:service interface="com.spdbccc.service.iface.cache.IReportService" ref="reportServiceImpl" />
+	<dubbo:service interface="com.spdbccc.service.iface.cache.IMonitorService" ref="monitorServerImpl" />
+	<dubbo:service interface="com.spdbccc.service.iface.common.LueneService" ref="lueneService" />
+	-->
+		
+</beans>

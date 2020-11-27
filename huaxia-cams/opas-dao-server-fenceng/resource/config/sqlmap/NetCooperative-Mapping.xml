@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="NetCooperative">
+
+	<resultMap id="BusinessResultMap" type="com.huaxia.opas.domain.sysparm.Business">
+		<result column="BUSINESS_ID" property="businessID" jdbcType="VARCHAR" />
+		<result column="BUSINESS_LOGO" property="businessLogo" jdbcType="VARCHAR" />
+		<result column="BUSINESS_NUMBER" property="businessNumber" jdbcType="VARCHAR" />
+		<result column="BUSINESS_NAME" property="businessName" jdbcType="VARCHAR" />
+		<result column="MODULE_NUMBER" property="moduleNumber" jdbcType="VARCHAR" />
+		<result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="RCD_SRC" property="rcdSrc" jdbcType="VARCHAR" />
+		<result column="PLAT_TYPE" property="platType" jdbcType="VARCHAR" />
+		<result column="COPR_TYPE" property="coprType" jdbcType="VARCHAR" />
+		<result column="PLAT_RISK_LVL" property="platRiskLvl" jdbcType="VARCHAR" />
+		<result column="INTERFACE_MODE" property="interfaceMode" jdbcType="VARCHAR" />
+		<result column="SCENE_FILE_DN_LINK" property="sceneFileDNLink" jdbcType="VARCHAR" />
+		<result column="BLOCKING_THRESHOLD" property="blockingThreshold" jdbcType="VARCHAR" />
+		<result column="BLOCKING_SWITCH" property="blockingSwitch" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 添加 -->
+	<insert id="insertBusiness" parameterType="com.huaxia.opas.domain.sysparm.Business">
+		insert into
+		OPAS_NET_COOPERATIVE (
+		BUSINESS_ID,
+		BUSINESS_LOGO,
+		BUSINESS_NUMBER,
+		BUSINESS_NAME,
+		MODULE_NUMBER,
+		MODULE_NAME,
+		STATUS,
+		CRT_DATE,
+		CRT_USER,
+		LST_UPD_DATE,
+		LST_UPD_USER,
+		RCD_SRC,
+		PLAT_TYPE,
+		COPR_TYPE,
+		PLAT_RISK_LVL,
+		INTERFACE_MODE,
+		SCENE_FILE_DN_LINK,
+		BLOCKING_THRESHOLD,
+		BLOCKING_SWITCH)
+		values (
+		#{businessID,jdbcType=VARCHAR},
+		#{businessLogo,jdbcType=VARCHAR},
+		#{businessNumber,jdbcType=VARCHAR},
+		#{businessName,jdbcType=VARCHAR},
+		#{moduleNumber,jdbcType=VARCHAR},
+		#{moduleName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{crtUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		#{rcdSrc,jdbcType=VARCHAR},
+		#{platType,jdbcType=VARCHAR},
+		#{coprType,jdbcType=VARCHAR},
+		#{platRiskLvl,jdbcType=VARCHAR},
+		#{interfaceMode,jdbcType=VARCHAR},
+		#{sceneFileDNLink,jdbcType=VARCHAR},
+		#{blockingThreshold,jdbcType=VARCHAR},
+		#{blockingSwitch,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!--删除 -->
+	<delete id="deleteBusiness" parameterType="java.util.List">
+		delete from OPAS_NET_COOPERATIVE
+		where BUSINESS_ID in
+		<foreach collection="list" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<!-- 修改 -->
+	<update id="updateBusiness" parameterType="com.huaxia.opas.domain.sysparm.Business">
+		update OPAS_NET_COOPERATIVE
+		<set>
+			BUSINESS_LOGO = #{businessLogo,jdbcType=VARCHAR},
+			BUSINESS_NUMBER = #{businessNumber,jdbcType=VARCHAR},
+			BUSINESS_NAME = #{businessName,jdbcType=VARCHAR},
+			MODULE_NUMBER = #{moduleNumber,jdbcType=VARCHAR},
+			MODULE_NAME = #{moduleName,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			RCD_SRC = #{rcdSrc,jdbcType=VARCHAR},
+			PLAT_TYPE = #{platType,jdbcType=VARCHAR},
+			COPR_TYPE = #{coprType,jdbcType=VARCHAR},
+			PLAT_RISK_LVL = #{platRiskLvl,jdbcType=VARCHAR},
+			INTERFACE_MODE = #{interfaceMode,jdbcType=VARCHAR},
+			SCENE_FILE_DN_LINK = #{sceneFileDNLink,jdbcType=VARCHAR},
+			BLOCKING_THRESHOLD = #{blockingThreshold,jdbcType=VARCHAR},
+			BLOCKING_SWITCH = #{blockingSwitch,jdbcType=VARCHAR}
+		</set>
+		where BUSINESS_ID = #{businessID,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 查询 -->
+	<select id="queryBusinessForList" parameterType="com.huaxia.opas.domain.sysparm.Business"
+		resultMap="BusinessResultMap">
+		select BUSINESS_ID,
+			   BUSINESS_LOGO,
+			   BUSINESS_NUMBER,
+			   BUSINESS_NAME,
+			   MODULE_NUMBER,
+			   MODULE_NAME,
+			   STATUS,
+			   CRT_DATE,
+			   CRT_USER,
+			   LST_UPD_DATE,
+			   LST_UPD_USER,
+			   RCD_SRC,
+			   PLAT_TYPE,
+			   COPR_TYPE,
+			   PLAT_RISK_LVL,
+			   INTERFACE_MODE,
+			   SCENE_FILE_DN_LINK,
+			   BLOCKING_THRESHOLD,
+			   BLOCKING_SWITCH
+		from OPAS_NET_COOPERATIVE 
+		where BUSINESS_ID is not null 
+			<if test="businessLogo != '' and businessLogo != null">
+				AND BUSINESS_LOGO LIKE '%${businessLogo}%'
+			</if>
+			<if test="businessNumber != '' and businessNumber != null">
+				AND BUSINESS_NUMBER LIKE '%${businessNumber}%'
+			</if>
+			<if test="businessName != '' and businessName != null">
+				AND BUSINESS_NAME LIKE '%${businessName}%'
+			</if>
+			<if test="moduleNumber != '' and moduleNumber != null">
+				AND MODULE_NUMBER LIKE '%${moduleNumber}%'
+			</if>
+			<if test="moduleName != '' and moduleName != null">
+				AND MODULE_NAME LIKE '%${moduleName}%'
+			</if>
+			<if test="status != '' and status != null">
+				AND STATUS = '${status}'
+			</if>
+			<if test="interfaceMode != '' and interfaceMode != null">
+				AND INTERFACE_MODE = '${interfaceMode}'
+			</if>
+			<if test="blockingSwitch != '' and blockingSwitch != null">
+				AND BLOCKING_SWITCH = '${blockingSwitch}'
+			</if>
+			order by CRT_DATE desc
+	</select>
+
+	<select id="queryBusinessCount" parameterType="com.huaxia.opas.domain.sysparm.Business"
+		resultType="java.lang.Integer">
+		select count(1) 
+		from OPAS_NET_COOPERATIVE
+		  where BUSINESS_ID is not null 
+			<if test="businessLogo != '' and businessLogo != null">
+				AND BUSINESS_LOGO LIKE '%${businessLogo}%'
+			</if>
+			<if test="businessNumber != '' and businessNumber != null">
+				AND BUSINESS_NUMBER LIKE '%${businessNumber}%'
+			</if>
+			<if test="businessName != '' and businessName != null">
+				AND BUSINESS_NAME LIKE '%${businessName}%'
+			</if>
+			<if test="moduleNumber != '' and moduleNumber != null">
+				AND MODULE_NUMBER LIKE '%${moduleNumber}%'
+			</if>
+			<if test="moduleName != '' and moduleName != null">
+				AND MODULE_NAME LIKE '%${moduleName}%'
+			</if>
+			<if test="status != '' and status != null">
+				AND STATUS = '${status}'
+			</if>
+			<if test="interfaceMode != '' and interfaceMode != null">
+				AND INTERFACE_MODE = '${interfaceMode}'
+			</if>
+			<if test="blockingSwitch != '' and blockingSwitch != null">
+				AND BLOCKING_SWITCH = '${blockingSwitch}'
+			</if>
+			<if test="crtDate != '' and crtDate != null">
+				 AND 
+					(   CRT_DATE 
+						BETWEEN 
+						#{crtDate}
+						AND
+						(select #{crtDate} + (INTERVAL '23:59:59'hour to second) from dual)
+					)			 
+			</if>		
+	</select>
+
+	<!-- 批量启用 -->
+	<update id="BusinesssetStatusOK" parameterType="com.huaxia.opas.domain.sysparm.Business">
+		update OPAS_NET_COOPERATIVE
+		<set>
+			STATUS = '1',
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where BUSINESS_ID in
+		<foreach collection="ids" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<!-- 批量禁用 -->
+	<update id="BusinesssetStatusNO" parameterType="com.huaxia.opas.domain.sysparm.Business">
+		update OPAS_NET_COOPERATIVE
+		<set>
+			STATUS = '2',
+			BLOCKING_SWITCH = '0',
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where BUSINESS_ID in
+		<foreach collection="ids" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+		
+	<!-- 唯一查询 -->
+	<select id="queryBusinessOnly" parameterType="com.huaxia.opas.domain.sysparm.Business"
+		resultMap="BusinessResultMap">
+		select BUSINESS_ID,
+			   BUSINESS_LOGO,
+			   BUSINESS_NUMBER,
+			   BUSINESS_NAME,
+			   MODULE_NUMBER,
+			   MODULE_NAME,
+			   STATUS,
+			   CRT_DATE,
+			   CRT_USER,
+			   LST_UPD_DATE,
+			   LST_UPD_USER,
+			   RCD_SRC,
+			   PLAT_TYPE,
+			   COPR_TYPE,
+			   PLAT_RISK_LVL
+		from OPAS_NET_COOPERATIVE 
+		where BUSINESS_ID is not null 
+			<if test="businessNumber != '' and businessNumber != null">
+				AND BUSINESS_NUMBER = '${businessNumber}'
+			</if>
+			<if test="moduleNumber != '' and moduleNumber != null">
+				AND MODULE_NUMBER = '${moduleNumber}'
+			</if>
+			<if test="businessID != '' and businessID != null">
+				AND BUSINESS_ID != '${businessID}'
+			</if>
+	</select>
+	<!-- 上传 -->
+	<insert id="insertBusinessList" parameterType="java.util.List">
+		insert into OPAS_NET_COOPERATIVE (
+		BUSINESS_ID,
+		BUSINESS_LOGO,
+		BUSINESS_NUMBER,
+		BUSINESS_NAME,
+		MODULE_NUMBER,
+		MODULE_NAME,
+		STATUS,
+		CRT_USER,
+		CRT_DATE,
+	    RCD_SRC,
+	    PLAT_TYPE,
+	    COPR_TYPE,
+	    PLAT_RISK_LVL,
+	    INTERFACE_MODE,
+		SCENE_FILE_DN_LINK,
+		BLOCKING_THRESHOLD,
+		BLOCKING_SWITCH)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.businessID,jdbcType=VARCHAR},
+			#{item.businessLogo,jdbcType=VARCHAR},
+			#{item.businessNumber,jdbcType=VARCHAR},
+			#{item.businessName,jdbcType=VARCHAR},
+			#{item.moduleNumber,jdbcType=VARCHAR},
+			#{item.moduleName,jdbcType=VARCHAR},
+			#{item.status,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR},
+			CURRENT_DATE,
+			#{item.rcdSrc,jdbcType=VARCHAR},
+			#{item.platType,jdbcType=VARCHAR},
+			#{item.coprType,jdbcType=VARCHAR},
+			#{item.platRiskLvl,jdbcType=VARCHAR},
+			#{item.interfaceMode,jdbcType=VARCHAR},
+			#{item.sceneFileDNLink,jdbcType=VARCHAR},
+			#{item.blockingThreshold,jdbcType=VARCHAR},
+			#{item.blockingSwitch,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+	<resultMap id="netBusinessMap" type="java.util.Map">
+		<result column="BUSINESS_NUMBER" property="businessNumber"
+			jdbcType="VARCHAR" />
+	    <result column="BUSINESS_NAME" property="businessName"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryAllNet" resultMap="netBusinessMap" >
+		select  BUSINESS_NUMBER,BUSINESS_NAME from OPAS_NET_COOPERATIVE order by BUSINESS_NAME
+	</select>
+</mapper>

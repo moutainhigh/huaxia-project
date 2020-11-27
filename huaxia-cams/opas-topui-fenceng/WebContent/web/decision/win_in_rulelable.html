@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>政策入组规则</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var bigStr="rzLable,4-QC,7-JD,7-HH,7-RS,3-WH6,2-YC,6-BGL,4-YZ,"+
+		"A01,A02,A03,A04,A05,A07,A08,B01,B02,B03,B04,B05,B06,B07,B08,B09,B10,B11,B12,"
+		+"C03,C04,C05,C06,C07,C08,ZX01,ZX02,ZX03,ZX04,ZX05,ZX07";
+		var result='';
+		var rzStr='';
+		var codeList;
+		var rzLableCode=window.opener.rzLableCode;
+		var rzLable=window.opener.rzLable;
+		if(rzLableCode!=null&&rzLableCode!=""&&rzLableCode!='undefined'){
+			codeList=rzLableCode.replace(/\s*/g,"").split(",");
+		}else{
+			codeList=new Array();
+		}
+		if(rzLable!=null&&rzLable!=""&&rzLable!='undefined'){
+		 	var ss=location.href.split("&");
+			var sss=decodeURI(ss[1]).split("=");
+			rzStr=sss[1];//是否符合年轻高学历入组标准
+			codeList.push("rzLable");
+		}
+		//去掉数组中的空值
+		for(var j=0;j<codeList.length;j++){
+			if(codeList[j]==''||codeList[j]==null||typeof(codeList[j])==undefined){
+				codeList.splice(j,1);
+				j=j-1;
+			}
+		}
+		var a=0;
+		for(var i=0;i<codeList.length;i++){
+			if(bigStr.indexOf(codeList[i])>-1){				
+				result+="<tr>";
+				result += "<td>"+(a+1)+"</td>"; 
+				result += "<td>"+codeList[i]+"</td>";
+				if(codeList[i]=="rzLable"){
+					result += "<td>"+rzStr+"</td>";
+				}else if(codeList[i]=="4-QC"){
+					result += "<td>符合车辆入组标准</td>";
+				}else if(codeList[i]=="7-JD"){
+					result += "<td>符合京东联名卡入组标准</td>";
+				}else if(codeList[i]=="7-HH"){
+					result += "<td>符合海航联名卡入组标准</td>";
+				}else if(codeList[i]=="7-RS"){
+					result += "<td>符合存量客户入组标准</td>";
+				}else if(codeList[i]=="3-WH6"){
+					result += "<td>符合人寿项目入组标准</td>";
+				}else if(codeList[i]=="2-YC"){
+					result += "<td>符合专项1(CMB)入组标准</td>";
+				}else if(codeList[i]=="6-BGL"){
+					result += "<td>符合BGL客户入组标准</td>";
+				}else if(codeList[i]=="4-YZ"){
+					result += "<td>符合优质行业入组标准</td>";
+				}else if(codeList[i]=="A01"){
+					result += "<td>优质行业I类入组</td>";
+				}else if(codeList[i]=="A02"){
+					result += "<td>绩优企业I类入组</td>";
+				}else if(codeList[i]=="A03"){
+					result += "<td>学历I类入组</td>";
+				}else if(codeList[i]=="A04"){
+					result += "<td>房贷I类入组</td>";
+				}else if(codeList[i]=="A05"){
+					result += "<td>车贷I类入组</td>";
+				}else if(codeList[i]=="A07"){
+					result += "<td>我行往来I类入组</td>";
+				}else if(codeList[i]=="A08"){
+					result += "<td>公积金/社保I类入组</td>";
+				}else if(codeList[i]=="B01"){
+					result += "<td>优质行业II类入组</td>";
+				}else if(codeList[i]=="B02"){
+					result += "<td>绩优企业II类入组</td>";
+				}else if(codeList[i]=="B03"){
+					result += "<td>学历II类入组</td>";
+				}else if(codeList[i]=="B04"){
+					result += "<td>房贷II类入组</td>";
+				}else if(codeList[i]=="B05"){
+					result += "<td>车贷II类入组</td>";
+				}else if(codeList[i]=="B06"){
+					result += "<td>持卡II类入组</td>";
+				}else if(codeList[i]=="B07"){
+					result += "<td>我行往来II类入组</td>";
+				}else if(codeList[i]=="B08"){
+					result += "<td>公积金/社保II类入组</td>";
+				}else if(codeList[i]=="B09"){
+					result += "<td>户籍II类入组</td>";
+				}else if(codeList[i]=="B10"){
+					result += "<td>固定资产II类入组</td>";
+				}else if(codeList[i]=="B11"){
+					result += "<td>流动资产II类入组</td>";
+				}else if(codeList[i]=="B12"){
+					result += "<td>收入II类入组</td>";
+				}else if(codeList[i]=="C03"){
+					result += "<td>学历III类入组</td>";
+				}else if(codeList[i]=="C04"){
+					result += "<td>房贷III类入组</td>";
+				}else if(codeList[i]=="C05"){
+					result += "<td>车贷III类入组</td>";
+				}else if(codeList[i]=="C06"){
+					result += "<td>持卡III类入组</td>";
+				}else if(codeList[i]=="C07"){
+					result += "<td>我行往来III类入组</td>";
+				}else if(codeList[i]=="C08"){
+					result += "<td>公积金/社保III类入组</td>";
+				}else if(codeList[i]=="ZX01"){
+					result += "<td>已持我行信用卡入组</td>";
+				}else if(codeList[i]=="ZX02"){
+					result += "<td>人寿项目入组</td>";
+				}else if(codeList[i]=="ZX03"){
+					result += "<td>京东联名卡入组</td>";
+				}else if(codeList[i]=="ZX04"){
+					result += "<td>海航联名卡入组</td>";
+				}else if(codeList[i]=="ZX05"){
+					result += "<td>ETC业务专项入组</td>";
+				}else if(codeList[i]=="ZX07"){
+					result += "<td>ETC迅卡专项入组</td>";
+				}
+				result+="</tr>";
+				a++;
+			}
+		}
+		if(result==""){//存在不确定的码值
+			result+="<tr><td>存在不确定的码值</td></tr>";
+		}
+		$("#rzLableTable").append(result);
+		/* $("#qc").val("否");
+		$("#jd").val("否");
+		$("#hh").val("否");
+		$("#rs").val("否");
+		$("#wh").val("否");
+		$("#yc").val("否");
+		$("#bgl").val("否");
+		$("#qyhy").val("否");
+		if(rzLableCode.indexOf("4-QC")>-1){
+			$("#qc").val(valueChange(rzLableCode,cc,"#qc"));
+		}
+		if(rzLableCode.indexOf("7-JD")>-1){
+			$("#jd").val(valueChange(rzLableCode,cc,"#jd"));
+		}
+		if(rzLableCode.indexOf("7-HH")>-1){
+			$("#hh").val(valueChange(rzLableCode,cc,"#hh"));
+		}
+		if(rzLableCode.indexOf("7-RS")>-1){
+			$("#rs").val(valueChange(rzLableCode,cc,"#rs"));
+		}
+		if(rzLableCode.indexOf("3-WH6")>-1){
+			$("#wh").val(valueChange(rzLableCode,cc,"#wh"));
+		}
+		if(rzLableCode.indexOf("2-YC")>-1){
+			$("#yc").val(valueChange(rzLableCode,cc,"#yc"));
+		}
+		if(rzLableCode.indexOf("6-BGL")>-1){
+			$("#bgl").val(valueChange(rzLableCode,cc,"#bgl"));
+		}
+		if(rzLableCode.indexOf("4-YZ")>-1){
+			$("#qyhy").val(valueChange(rzLableCode,cc,"#qyhy"));
+		}
+		if(rzLable==null||rzLable==""||rzLable=='undefined'){
+			rzLable = "否";
+			$("#rzLable").val(rzLable);//是否符合年轻高学历入组标准	
+		}else{
+			var ss=location.href.split("&");
+			var sss=decodeURI(ss[2]).split("=");
+			$("#rzLable").val(sss[1]);//是否符合年轻高学历入组标准
+		} */
+	});
+	/*************信息验证标示***************/
+	function valueChange(oldVal,arr,gl){
+		var len = arr.length;
+		var obj = '';
+		if(oldVal!=null&&oldVal!=undefined&&oldVal!=""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal=='0'){
+					return temp[1];
+				}else if(oldVal!='0'&&i==1){
+					obj = temp[1];
+				}
+			}
+		}else{
+			return "否";
+		}
+		if(oldVal!=null&&oldVal!='0'){
+			$(gl).attr("style","background-color:pink;color:red");
+		}
+		return obj;
+	}
+	
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">政策入组规则</legend>
+	<form id="jdCardInfoForm">
+		<table id="rzLableTable" style="border-collapse: separate; border-spacing: 10px;">
+ 				<!-- <tr>
+					<td>1</td>
+					<td>是否符合学历入组标准</td>
+					<td><input type="text" name="rzLable" id="rzLable"   readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>是否符合车辆入组标准</td>
+					<td><input type="text" name="qc" id="qc"   readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>是否符合京东联名卡入组标准</td>
+					<td><input type="text" name="jd" id="jd"  readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td>是否符合海航联名卡入组标准</td>
+					<td><input type="text" name="hh" id="hh"  readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>是否符合存量客户入组标准</td>
+					<td><input type="text" name="wh" id="wh" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>6</td>
+					<td>是否符合人寿项目入组标准</td>
+					<td><input type="text" name="rs" id="rs" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>7</td>
+					<td>是否符合专项1(CMB)入组标准</td>
+					<td><input type="text" name="yc" id="yc" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>8</td>
+					<td>是否符合BGL客户入组标准</td>
+					<td><input type="text" name="bgl" id="bgl" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>9</td>
+					<td>是否符合优质行业入组标准</td>
+					<td><input type="text" name="qyhy" id="qyhy" readonly="readonly"/></td>
+				</tr> -->
+			</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

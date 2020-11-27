@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+
+<script type="text/javascript">
+/******获取url地址中的参数并封装成对象begin*************************/
+var url=location.search;
+var theRequest=new Object();
+if(url.indexOf("?")!=-1){
+	var str=url.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+}
+var appId=theRequest.check_number;//获取流程号
+var node=theRequest.node;//获取流程号
+/******获取url地址中的参数并封装成对象end*************************/
+   
+$(function(){
+	$("#applyId").val(appId);
+	$("#node").val(node);
+});
+ 
+/*******************************
+ *@describe:信调查复核通过(点击确认按钮)
+ *@author:xiaoJianFeng
+ *@date:2017-03-05
+ ******************************/
+function onSave(){
+	var node=$("#node").val();
+	var adoptForm = $("#adoptForm");
+	var jsondata = getFormDataJson(adoptForm.serializeArray());
+		jsondata.check_number=appId;//流水号
+		jsondata.check_ydjFlag=node; 
+		jsondata.invest_delStatus='0';
+		jsondata.check_SubmitStatus='2';
+	$cf.ajax({
+		url : "/opas-naps/creditCheck_adopt.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				alert("复核通过");
+				window.close();
+				window.opener.reload();//调用父窗口credit_check_list.html方法
+			} else {
+				alert("复核失败"+data.exMsg);
+				return;
+			}
+		}
+	});
+}
+/*******************************
+ *@describe:信调查复核回退(点击回退按钮)
+ *@author:xiaoJianFeng
+ *@date:2017-03-08
+ ******************************/
+function onBack(){
+	var adoptForm = $("#adoptForm");
+	var jsondata = getFormDataJson(adoptForm.serializeArray());
+		jsondata.check_number=appId;//流水号
+		jsondata.check_submitType="";
+		jsondata.check_SubmitStatus="0";
+		jsondata.type="back";
+	$cf.ajax({
+		url : "/opas-naps/creditCheck_adopt.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				alert("回退成功");
+				window.close();
+				window.opener.reload();//调用父窗口credit_check_list.html方法
+			} else {
+				alert("回退失败"+ data.exMsg);
+				return;
+			}
+		}
+	});
+}
+</script>
+</head>
+
+
+
+<body id="n09000_body" class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div data-options="region:'west',title:'左区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width:98%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="系统决策" style="overflow: hidden">
+				<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src=""></iframe>
+			</div>
+			<div title="征信信息" style="overflow: hidden">
+				<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src=""></iframe>
+			</div>
+			<div title="申请表信息" style="overflow: hidden">
+				<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%" scrolling="auto" src=""></iframe>
+			</div>
+			<div title="征信调查查看" style="overflow: hidden">
+				<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src=""></iframe>
+			</div>		
+			<div title="提报回复" style="overflow: hidden">
+				<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src=""></iframe>
+			</div>	
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div title="征信调查" style="overflow: hidden">
+				<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%" src=""></iframe>
+			</div>
+			<div title="提交补件" style="overflow: hidden">
+				<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%" src=""></iframe>
+			</div>	
+			<div title="增强信息采集" style="overflow: hidden">
+				<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%" src=""></iframe>
+			</div>	
+			<div title="欺诈提报" style="overflow: hidden">
+				<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%" src="credit_subreason_view.html"></iframe>
+			</div>							
+		</div>
+	</div>
+	<!-- 按钮区 -->
+	<div id="n09000_tool" data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="height:50px;text-align:center;">
+		<a href="javascript:onSave();" class="easyui-linkbutton"  style="text-align:center;display:inline-block;width:93px;height:32px">确 定</a>&nbsp;
+		<a href="javascript:onBack();" class="easyui-linkbutton"  style="text-align:center;display:inline-block;width:93px;height:32px">回 退</a>&nbsp;
+		<input type="hidden" id="applyId" name="applyId"  >	
+		<input type="hidden" id="node" name="node"  >	
+	</div>
+	
+	<div>
+		<form id="adoptForm">
+			<input  name="check_reviewStatus" id="check_reviewStatus" value="1" />
+			<input  name="invest_delStatus" id="invest_delStatus" value="0" />
+		</form>	
+	</div>
+</body>
+ 
+</html>

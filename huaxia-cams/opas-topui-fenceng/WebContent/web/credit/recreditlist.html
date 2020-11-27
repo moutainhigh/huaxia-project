@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblWhiteList" title="征信白名单列表" class="easyui-datagrid"
+		style="width: 98%"
+		data-options="pageSize:20,pageList:[15,20,50,200],rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,url:'/opas-naps/creditwhitelist_queryList.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="autoId" width="10%" align="center" checkbox="true">id</th>
+				<th field="appId" width="10%" align="center" data-options="formatter:formatappId" >申请件流水号</th>
+				<th field="aa" width="7%" align="center" data-options="formatter:formatOper">操作</th>
+				<th field="companyName" width="12%" align="center">单位名称</th>
+				<th field="companyTel" width="8%" align="center">单位电话</th>
+				<th field="companyDept" width="8%" align="center"
+				    formatter="formatCompanyDept">部门名称</th>
+				<th field="companyAddr" width="15%" align="center">单位地址</th>
+				<th field="legaler" width="8%" align="center">法人</th>
+				<th field="registerFund" width="8%" align="center">注册资金</th>
+				<th field="registerAddr" width="15%" align="center">注册地址</th>
+				<th field="manageStatus" width="5%" align="center">经营状态</th>
+				<th field="partnerInfo" width="12%" align="center">股东信息</th>
+				<th field="manageExceptionInfo" width="12%" align="center">经营异常信息</th>
+				<th field="operator" width="8%" align="center">操作员系统登录号</th>
+				<th field="ydjFlag" width="10%"  align="center"  hidden="true" ></th>
+				<th field="appProd" width="10%"  align="center" hidden="true"></th>  <!-- 商品易达金85 , 其它：80,82,83,84  --> 
+				<th field="matchingCardFlag" width="10%"  align="center"  hidden="true" ></th><!-- 套卡标识 -->
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			<table align="center">
+				<tr align="center">
+					<td>单位名称: <input class="easyui-textbox" style="width: 100px"
+						name="companyName">
+					</td>
+					<td>单位电话: <input class="easyui-textbox" style="width: 100px"
+						name="companyTel">
+					</td>
+					<td>部门名称: <select class="easyui-combobox" style="width: 100px" 
+						id = "companyDept" name="companyDept">
+						<option value="">--请选择--</option>
+                        <option value="01">人力</option>
+                        <option value="02">财务</option>
+                        <option value="03">行政</option>
+                        <option value="04">办公室</option>
+                        <option value="05">总机</option>
+                        <option value="06">其它</option>
+						</select>
+					</td>
+					<td>单位地址: <input class="easyui-textbox" style="width: 100px"
+						name="companyAddr">
+					</td>
+					<td>法人: <input class="easyui-textbox" style="width: 100px"
+						name="legaler" >
+					</td>
+					<td>流水号: <input class="easyui-textbox" style="width: 100px"
+						name="appId">
+					</td>
+					<td>操作员: <input class="easyui-textbox" style="width: 100px"
+						name="operator">
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div class="area-function">
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblWhiteList');"
+				class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a href="javascript:deleteInfo();" class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+			<a href="javascript:saveList();" class="easyui-linkbutton" iconCls="icon-save">批量添加</a>
+
+		</div>
+	</div>
+	
+	<div id="winAdd" class="easyui-window" title="征信白名单复核窗口"
+		style="width: 450px; height: 500px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">申请件流水号:</td>
+					<td><input class="easyui-validatebox" id="appId" type="text"
+						name="appId" readonly="readonly" /> <input type="hidden"
+						class="easyui-textbox" name="autoId"></td>
+				</tr>
+				<tr>
+					<td align="right">单位名称:</td>
+					<td><input class="easyui-validatebox" id="companyName"
+						type="text" name="companyName" readonly="readonly"/></td>
+				</tr>
+				
+				<tr>
+					<td align="right">单位电话:</td>
+					<td><input class="easyui-validatebox" id="companyTel"
+						type="text" name="companyTel" readonly="readonly"/></td>
+
+				</tr>
+				<tr>
+					<td align="right">单位地址:</td>
+					<td><input class="easyui-validatebox" id="companyAddr"
+						type="text" name="companyAddr" readonly="readonly" /></td>
+
+				</tr>
+				<tr>
+					<td align="right">法人:</td>
+					<td><input class="easyui-validatebox" id="legaler"
+						type="text" name="legaler" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td align="right">注册资金:</td>
+					<td><input class="easyui-validatebox" id="registerFund"
+						type="text" name="registerFund" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td align="right">注册地址:</td>
+					<td><input class="easyui-validatebox" id="registerAddr"
+						type="text" name="registerAddr" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td align="right">经营状态:</td>
+					<td><input class="easyui-validatebox" id="manageStatus"
+						type="text" name="manageStatus" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td align="right">股东信息:</td>
+					<td><input class="easyui-validatebox" id="partnerInfo"
+						type="text" name="partnerInfo" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td align="right">经营异常信息:</td>
+					<td><input class="easyui-validatebox" id="manageExceptionInfo"
+						type="text" name="manageExceptionInfo" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td align="right">操作员系统登录号:</td>
+					<td><input class="easyui-validatebox" id="operator"
+						type="text" name="operator" readonly="readonly"/></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">确认添加</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onRefuse()">拒绝添加</a>
+		</div>
+	</div>
+</body>
+<script>
+	var tblWhiteList = $("#tblWhiteList");
+	var addForm = $("#addForm")
+	var addWindow = $("#winAdd");
+	
+	function formatOper(val, row, index){
+		if(val==0){
+			return "";
+		}else{
+			return "<a href=javascript:formatLink("+index+");>查看</a>";
+		}
+	}
+	
+	function formatLink(index) {
+		var whiteListObj = tblWhiteList.datagrid("getData").rows[index];
+		addWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(whiteListObj)
+		});
+	}
+	
+	
+/* 	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	} */
+	//批量删除
+	function deleteInfo() {
+		var obj = tblWhiteList.datagrid("getSelections");
+		var ids = new Array();
+		for (var i = 0; i < obj.length; i++) {
+			ids.push(obj[i].autoId);
+		}
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/creditWhiteList_remove.json",
+					data : {
+						"ids" : ids
+					},
+					onSuccess : function(response) {
+						if(response.RSP_BODY.isSuccess){
+							
+							top.$cf.showMsg("删除成功！");
+							onConcle("delete");
+							tblWhiteList.datagrid("reload");
+							return;
+						}else{
+							$.messager.alert("操作提示", "删除失败:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});
+	}
+
+	function setData(data) {
+		addForm.form("load", data);
+		/* $("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled"); */
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	//复核确认保存
+	function onSave() {
+		var jsondata = getFormData(addForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/creditwhitelist_save.json",
+			data : jsondata,
+			onSuccess : function(response) {
+				if (response.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "保存成功!", "info", function() {
+						onConcle("winAdd");
+						tblWhiteList.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "保存异常,原因:" + data.exMsg, "error");
+					onConcle("winAdd");
+					return;
+				}
+			}
+		});
+	}
+	//复核拒绝添加
+	function onRefuse(){
+		var jsondata = getFormData(addForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/creditwhitelist_refuse.json",
+			data : jsondata,
+			onSuccess : function(response) {
+				if (response.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "已成功拒绝!", "info", function() {
+						onConcle("winAdd");
+						tblWhiteList.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "拒绝异常,原因:" + data.exMsg, "error");
+					onConcle("winAdd");
+					return;
+				}
+			}
+		});
+	}
+	//复核确认批量保存
+	function saveList() {
+		var obj = tblWhiteList.datagrid("getSelections");
+		/* var ids = new Array();
+		for (var i = 0; i < obj.length; i++) {
+			ids.push(obj[i].autoId);
+		} */
+		$cf.ajax({
+			url : "/opas-naps/creditwhitelist_saveList.json",
+			data : {"ids":obj},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "保存成功!", "info", function() {
+						onConcle("winAdd");
+						tblWhiteList.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "保存异常,原因:" + data.exMsg, "error");
+					onConcle("winAdd");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	
+	function formatappId(val,row,index){
+		var appId = val+"";
+		return "<a href=javascript:getInfo("+index+");>"+appId+"</a>";
+	}
+	
+	function getInfo(index) {
+		var infoObj = tblWhiteList.datagrid("getData").rows[index];
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+		var appId = infoObj["appId"]; //动态传参数 appId 
+		var ydjFlag = infoObj["ydjFlag"]; //动态传参数 ydjFlag
+		var appProd = infoObj.appProd;  //商品易达金85 , 其它：80,82,83,84 
+		var matchingCardFlag = infoObj.matchingCardFlag;
+		if(ydjFlag=="1" && matchingCardFlag=='2'){//1为易达金
+		window.open("credit_control_zxYdj_readOnly.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&appProd="+appProd+"&meuoFlag=1");
+		}else {//2为非易达金
+		window.open("credit_control_zxBzk_readOnly.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&appProd="+appProd+"&meuoFlag=1");	
+		}
+	}	
+	
+	
+	function formatCompanyDept(val,row,index){
+		if(val == "01"){
+			return "人力";
+		}
+		if(val == "02"){
+			return "财务";
+		}
+		if(val == "03"){
+			return "行政";
+		}
+		if(val == "04"){
+			return "办公室";
+		}
+		if(val == "05"){
+			return "总机";
+		}
+		if(val == "06"){
+			return "其它";
+		}
+	}
+	
+</script>

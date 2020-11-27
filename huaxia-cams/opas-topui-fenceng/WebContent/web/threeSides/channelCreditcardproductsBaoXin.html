@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script src="../../js/author/allotPath.js" type="text/javascript"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body style="padding: 10px;">
+	<div id="channelCityLimitSearch_div">
+		<fieldset>
+			<legend>卡产品查询设置</legend>
+			<div  align="center">
+				<a href="javascript:void(0)"class="easyui-linkbutton" onclick="openAddWindow()">增加</a>
+				&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)"class="easyui-linkbutton" onclick="deleteSelectedRules()">删除</a>				
+				<div id="checkMessageShow"  align="left"></div>
+			</div>
+			<div id="addWindow" class="easyui-window" title="增加" style="width: 400px; height: 300px;top: 200px" data-options="collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true,onBeforeClose:function(){cleanAddWindow();}">
+				<div align="center">
+					<br><br>
+		             <form id="ruleinfo_form"  method="post" accept-charset="UTF-8">
+		             <td>卡产品类型：</td>
+					 <td>
+						<select class="easyui-combobox" data-options="valueField:'cardCode',textField:'prodName'"
+									style="width: 150px" name="appProd" id="appProd" multiple="true">
+						</select>
+					 </td>
+		             <br>
+					 <br><br>					
+					<a href="javascript:void(0)"class="easyui-linkbutton" onclick="commitAddRule()">提交</a>
+					<a href="javascript:void(0)"class="easyui-linkbutton" onclick="addAllRule()">一键添加</a>
+					</form>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+</body>
+
+<script type="text/javascript">
+	$cf.loadAllDict();//用于引进    业务字典     
+	var currentType=getCurrentUrlParam();     //业务字典大类 ALLOT_APPPROD 申请卡产品类型      001900-保信汽车
+	$(function(){
+		showExistedRule();	// 加载已经存在的规则
+		fnLoadAppProd();	// 加载卡产品下拉框
+	});
+	//展示 已存在的规则 
+	function showExistedRule(){
+		var param=new Object(); //传给后台的参数map
+		var bRuleType = ""; // 三方标志 001900-保信汽车
+		var sRuleType = ""; //默认值 appProd
+		var flagActive = ""; //启停标志 0-停用 1-启用
+		param.bRuleType = currentType;
+		param.sRuleType = "appProd";
+		param.flagActive = "1";
+		$cf.ajax({
+			url : "/opas-naps/queryBaoXinRule.json",		
+			data : param,
+			onSuccess : function(data) {
+				var ruleList=data.RSP_BODY.ruleList
+				if (ruleList) {
+					var checkMessageShowDiv = document.getElementById("checkMessageShow");
+					
+					for (var i = 0; i < ruleList.length; i++) {
+						var existRule=ruleList[i];
+						var label=document.createElement("label");
+				 		label.appendChild(document.createTextNode("卡产品编码："+existRule["ruleSettingValue"]));
+				 		label.style="font-size: 12px;width: 310px";
+				 		
+				 		var input=document.createElement("input");
+				 		input.type="checkbox";
+				 		input.name="ruleCheckBox";
+				 		input.value=existRule["uuid"];
+				 		checkMessageShowDiv.appendChild(input);
+				 		checkMessageShowDiv.appendChild(label);
+				 		var br=document.createElement("br");
+				 		checkMessageShowDiv.appendChild(br);
+					}
+				}
+			}
+		});
+	}
+	 //清空窗体
+	 function cleanAddWindow() {
+		$('#channelCityLimitSearch_choseOperator_id').combobox('clear');
+	 }
+	  //打开窗体 
+	function openAddWindow() {
+	   $("#addWindow").window({closed : false});
+	}
+	  //删除 选中的规则
+	function deleteSelectedRules(){
+		var listId=new Array();
+		var checkBoxList = $("input:checkbox[name='ruleCheckBox']:checked");
+		for (var i = 0; i < checkBoxList.length; i++) {
+			listId.push(checkBoxList[i].value);
+		}
+		if(listId.length<=0){
+			$.messager.alert("提示", "请选择要删除的规则。", "warning");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/deleteBaoXinRulesByIdList.json",
+			data : {"listId":listId},
+			async:false,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$("#checkMessageShow").html('');
+					cleanAddWindow();
+					$("#addWindow").window("close");
+				    showExistedRule();
+					$.messager.alert("提示", "删除成功。", "warning");
+				} else{
+					$.messager.alert("操作提示", "删除失败。", "warning");
+				}
+			}
+		});
+	}
+	   
+	   //卡产品信息 
+	$('#channelCityLimitSearch_choseOperator_id').combobox({
+		panelHeight:180,
+	       onSelect: function(rec){
+	       	
+	       }  
+	}); 
+		
+	//提交 新加的规则 
+	function  commitAddRule(){
+		/* var content=""; //展现内容 
+		var uniqueFlag="";//规则唯一
+		var operator="";//卡产品信息
+		var choseOperator=$('#channelCityLimitSearch_choseOperator_id').combobox('getValue');
+		if(choseOperator!=null&&choseOperator!="undefined"&&choseOperator!=""){
+			operator+=choseOperator;
+			content+="卡产品信息:"+$('#channelCityLimitSearch_choseOperator_id').combobox('getText');
+		}
+		
+		var judgeUniqueFlag=operator;
+		uniqueFlag=operator;
+		if(judgeUniqueFlag==""){
+			$.messager.alert("提示","请至少选择一项内容。", "warning");
+			return ;
+		}
+		var param=new Object();
+		param.sRuleType="appProd"; //默认设置
+		param.bRuleType=currentType;//三方数据源码值
+		param.ruleContent=content;
+		param.ruleOperator=operator;
+		param.ruleUniqueCode=uniqueFlag; */
+		
+		var forms = $("#ruleinfo_form");
+		var jsondata = getFormMulData(forms.serializeArray(),'1');
+		$cf.ajax({
+			url : "/opas-naps/saveBaoXinTypeLimitSearch.json",
+			/* data : param, */
+			data : {'jsondata':jsondata},
+			async:false,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$("#checkMessageShow").html('');
+					cleanAddWindow();
+					$("#addWindow").window("close")
+				    showExistedRule();
+					$.messager.alert("提示", "保存成功。", "warning");
+				} else{
+					if(data.RSP_BODY.message){
+						$.messager.alert("操作提示", data.RSP_BODY.message, "warning");
+					}else{
+						$.messager.alert("操作提示", "保存失败。", "warning");
+					}
+				}
+			}
+		});
+	}
+	// 一键添加卡产品功能
+	function  addAllRule(){		
+		var forms = $("#ruleinfo_form");
+		var jsondata = getFormMulData(forms.serializeArray(),'1');
+		$cf.ajax({
+			url : "/opas-naps/saveAllTypeLimitSearch.json",
+			data : {'jsondata':jsondata},
+			async:false,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$("#checkMessageShow").html('');
+					cleanAddWindow();
+					$("#addWindow").window("close")
+				    showExistedRule();
+					$.messager.alert("提示", "保存成功。", "warning");
+				} else{
+					if(data.RSP_BODY.message){
+						$.messager.alert("操作提示", data.RSP_BODY.message, "warning");
+					}else{
+						$.messager.alert("操作提示", "保存失败。", "warning");
+					}
+				}
+			}
+		});
+	}
+	
+	function getCurrentUrlParam(){
+		var currentUrl=window.location.href;
+		return  currentUrl.split("=")[1];
+	}
+	
+	// 卡产品信息下拉框加载方法，值取自OPAS_PARAM_CARD_PRODUCT表
+	function fnLoadAppProd() {
+		$cf.ajax({
+			url : '/opas-naps/queryAllCardProduct.json',
+			onSuccess : function(ret) {
+				var cardInfo = ret.RSP_BODY.cardInfo;
+				var cardInfoList = eval('(' + cardInfo + ')');
+				$("#appProd").combobox({data:cardInfoList});
+				$("#appProd").combobox("setValue","");
+			}
+		});
+	}
+	// 卡产品下拉框动态选取加载
+	function addRuleinfoRecord(){
+		$('#ruleinfoRecord').append(html);
+	}
+	//	卡产品下拉框动态删除加载
+	function delRuleinfoRecord(){
+		var forms=document.getElementsByName("ruleinfo_form");
+		 if(forms.length==1){
+				return;
+			}
+		$('form:last').remove();
+	}
+</script>
+</html>

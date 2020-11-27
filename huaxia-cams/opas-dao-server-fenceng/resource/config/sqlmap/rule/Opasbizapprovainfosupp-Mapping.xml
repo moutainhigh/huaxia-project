@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opasbizapprovainfosupp">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opasbizapprovainfosupp">
+    <id column="INSIDE_APP_NO" jdbcType="VARCHAR" property="insideAppNo" />
+    <result column="EMP_UNIVERSAL_LIMIT" jdbcType="VARCHAR" property="empUniversalLimit" />
+    <result column="EMP_SPEND_LIMIT" jdbcType="VARCHAR" property="empSpendLimit" />
+    <result column="BUS_CARD_LIMIT" jdbcType="VARCHAR" property="busCardLimit" />
+    <result column="BUS_CARD_RANK" jdbcType="CHAR" property="busCardRank" />
+    <result column="BATCH_APP_PEOPLE_NO" jdbcType="VARCHAR" property="batchAppPeopleNo" />
+    <result column="OTHER_ASSETS" jdbcType="VARCHAR" property="otherAssets" />
+    <result column="BATCH_ENTERPRISE_NO" jdbcType="VARCHAR" property="batchEnterpriseNo" />
+    <result column="BATCH_PROGRAMME_NO" jdbcType="VARCHAR" property="batchProgrammeNo" />
+    <result column="ONE_BRANK" jdbcType="VARCHAR" property="oneBrank" />
+    <result column="WHETHER_EXPRESS" jdbcType="CHAR" property="whetherExpress" />
+    <result column="OTHER_RMB_BANK_DEPOSIT" jdbcType="VARCHAR" property="otherRmbBankDeposit" />
+    <result column="RMB_BANK_DEPOSIT" jdbcType="VARCHAR" property="rmbBankDeposit" />
+    <result column="WAGE_WATER_ANNUAL_INCOME" jdbcType="VARCHAR" property="wageWaterAnnualIncome" />
+    <result column="TAX_BILL_CALCU_ANNUAL_INCOME" jdbcType="VARCHAR" property="taxBillCalcuAnnualIncome" />
+    <result column="AIR_MILES" jdbcType="VARCHAR" property="airMiles" />
+    <result column="SOCIAL_SECURITY" jdbcType="VARCHAR" property="socialSecurity" />
+    <result column="VEHICLE" jdbcType="VARCHAR" property="vehicle" />
+    <result column="HOUSE_INITIAL_LOAN" jdbcType="VARCHAR" property="houseInitialLoan" />
+    <result column="HOUSE_MONTHLY_PAYMENT" jdbcType="VARCHAR" property="houseMonthlyPayment" />
+    <result column="OWN_HOUSE" jdbcType="VARCHAR" property="ownHouse" />
+    <result column="LUCKY_FEE" jdbcType="VARCHAR" property="luckyFee" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+    <result column="JUDGE_REASON1" jdbcType="VARCHAR" property="judgeReason1" />
+    <result column="JUDGE_REASON2" jdbcType="VARCHAR" property="judgeReason2" />
+    <result column="JUDGE_REASON3" jdbcType="VARCHAR" property="judgeReason3" />
+    <result column="JUDGE_STAGE_UNIVERSAL" jdbcType="VARCHAR" property="judgeStageUniversal" />
+    <result column="JUDGE_LIMIT" jdbcType="VARCHAR" property="judgeLimit" />
+    <result column="JUDGE_RESULT" jdbcType="VARCHAR" property="judgeResult" />
+    <result column="PRIVATE_BANK_LOGO" jdbcType="CHAR" property="privateBankLogo" />
+    <result column="BANK_CARD_LIMIT" jdbcType="VARCHAR" property="bankCardLimit" />
+    <result column="ISSUE_BANK_TIME" jdbcType="CHAR" property="issueBankTime" />
+    <result column="ISSUE_BANK" jdbcType="VARCHAR" property="issueBank" />
+    <result column="COMPANY_START_TIME" jdbcType="CHAR" property="companyStartTime" />
+    <result column="COMPANY_REG_FUND" jdbcType="VARCHAR" property="companyRegFund" />
+    <result column="HOPE_UNIVERSAL_LIMIT" jdbcType="VARCHAR" property="hopeUniversalLimit" />
+    <result column="HOPE_SPEND_LIMIT" jdbcType="VARCHAR" property="hopeSpendLimit" />
+    <result column="STAFF_RANK_LIMIT" jdbcType="VARCHAR" property="staffRankLimit" />
+    <result column="STAFF_RANK" jdbcType="CHAR" property="staffRank" />
+    <result column="EXECUTIVE_RANK" jdbcType="CHAR" property="executiveRank" />
+    <result column="MSP_MATCH" jdbcType="CHAR" property="mspMatch" />
+    <result column="GOV_TEACHER_RANK" jdbcType="CHAR" property="govTeacherRank" />
+    <result column="BRANCH_AGREE" jdbcType="VARCHAR" property="branchAgree" />
+    <result column="MOBILE_STAFF_LIMIT" jdbcType="VARCHAR" property="mobileStaffLimit" />
+    <result column="MOBILE_STAFF_RANK" jdbcType="CHAR" property="mobileStaffRank" />
+    <result column="BATCH_LIMIT_FACTOR" jdbcType="VARCHAR" property="batchLimitFactor" />
+    <result column="BATCH_RANK" jdbcType="VARCHAR" property="batchRank" />
+    <result column="BATCH_PAY_RATE" jdbcType="VARCHAR" property="batchPayRate" />
+    <result column="BATCH_MONTH_PAY_AMT" jdbcType="VARCHAR" property="batchMonthPayAmt" />
+    <result column="OPEN_MAN_CHECK_FINISH_FLAG" jdbcType="CHAR" property="openManCheckFinishFlag" />
+    <result column="BATCH_SCHEMA_OPEN_MAN_MOBILE" jdbcType="CHAR" property="batchSchemaOpenManMobile" />
+    <result column="BATCH_SCHEMA_OPEN_MAN_PHONE" jdbcType="VARCHAR" property="batchSchemaOpenManPhone" />
+    <result column="BATCH_SCHEMA_OPEN_MAN_POSITION" jdbcType="VARCHAR" property="batchSchemaOpenManPosition" />
+    <result column="BATCH_SCHEMA_OPEN_MAN_DEPT" jdbcType="VARCHAR" property="batchSchemaOpenManDept" />
+    <result column="BATCH_SCHEMA_OPEN_MAN_NAME" jdbcType="VARCHAR" property="batchSchemaOpenManName" />
+    <result column="BATCH_SCHEMA_SALE_MANAGER_CONT" jdbcType="VARCHAR" property="batchSchemaSaleManagerCont" />
+    <result column="BATCH_SCHEMA_SALE_MANAGER_NAME" jdbcType="VARCHAR" property="batchSchemaSaleManagerName" />
+    <result column="BATCH_SCHEMA_SALE_MAN_CONTACT" jdbcType="VARCHAR" property="batchSchemaSaleManContact" />
+    <result column="BATCH_SCHEMA_SALE_MAN_NAME" jdbcType="VARCHAR" property="batchSchemaSaleManName" />
+    <result column="BATCH_SCHEMA_CREDIT_SCALE" jdbcType="CHAR" property="batchSchemaCreditScale" />
+    <result column="BATCH_SCHEMA_PERSONS" jdbcType="CHAR" property="batchSchemaPersons" />
+    <result column="BATCH_SCHEMA_VALID_DATE" jdbcType="CHAR" property="batchSchemaValidDate" />
+    <result column="BATCH_SCHEMA_SEND_DATE" jdbcType="CHAR" property="batchSchemaSendDate" />
+    <result column="MEMO_INFO" jdbcType="VARCHAR" property="memoInfo" />
+    <result column="CREDIT_REFUSE_REASON1" jdbcType="VARCHAR" property="creditRefuseReason1" />
+    <result column="CREDIT_REFUSE_REASON2" jdbcType="VARCHAR" property="creditRefuseReason2" />
+    <result column="CREDIT_REFUSE_REASON3" jdbcType="VARCHAR" property="creditRefuseReason3" />
+    <result column="MANP_JUDGE_CONC" jdbcType="VARCHAR" property="manpJudgeConc" />
+    <result column="PAYER_INCOME" jdbcType="VARCHAR" property="payerIncome" />
+    <result column="GUARANTEE_INCOME" jdbcType="VARCHAR" property="guaranteeIncome" />
+    <result column="INCOME" jdbcType="VARCHAR" property="income" />
+    <result column="SH_LICENSE" jdbcType="CHAR" property="shLicense" />
+    <result column="PURCHASE_INVOICE" jdbcType="VARCHAR" property="purchaseInvoice" />
+    <result column="RANK" jdbcType="CHAR" property="rank" />
+    <result column="MORTGAGE_LOANS" jdbcType="DECIMAL" property="mortgageLoans" />
+    <result column="INS_TYPE" jdbcType="CHAR" property="insType" />
+    <result column="DOWN_FEE_RATE" jdbcType="VARCHAR" property="downFeeRate" />
+    <result column="JOB_CODE" jdbcType="CHAR" property="jobCode" />
+    <result column="SERVICE_YEARS" jdbcType="CHAR" property="serviceYears" />
+    <result column="D_COMP_NAME" jdbcType="VARCHAR" property="dCompName" />
+    <result column="ACCT_TYPE" jdbcType="VARCHAR" property="acctType" />
+    <result column="OPERATOR_NO" jdbcType="VARCHAR" property="operatorNo" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="CHAR" property="recStatus" />
+    <result column="SCR_LEVEL" jdbcType="CHAR" property="scrLevel" />
+    <result column="TOP_LEVEL" jdbcType="VARCHAR" property="topLevel" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="EDU_TYPE" jdbcType="CHAR" property="eduType" />
+    <result column="SB_CURR_COMPANY_MONTH" jdbcType="DECIMAL" property="sbCurrCompanyMonth" />
+    <result column="SB_CURR_PAYCOMPANY" jdbcType="VARCHAR" property="sbCurrPaycompany" />
+    <result column="SB_MONTH_PAYBASE" jdbcType="DECIMAL" property="sbMonthPaybase" />
+    <result column="SB_PAY_DATE" jdbcType="DATE" property="sbPayDate" />
+    <result column="SB_MONTH_PAYMENT" jdbcType="DECIMAL" property="sbMonthPayment" />
+    <result column="SB_CURR_PAY_STATUS" jdbcType="CHAR" property="sbCurrPayStatus" />
+    <result column="REFREE_LIMIT" jdbcType="DECIMAL" property="refreeLimit" />
+    <result column="REFREE" jdbcType="VARCHAR" property="refree" />
+    <result column="HX_BANK_STAFF_LEVEL" jdbcType="CHAR" property="hxBankStaffLevel" />
+    <result column="HX_BANK_STAFF" jdbcType="CHAR" property="hxBankStaff" />
+  </resultMap>
+  
+  
+
+  
+  
+  <select id="selectByExample" parameterType="java.lang.String" resultMap="BaseResultMap">
+  
+    select 
+   		 APP_ID,
+	INDUSTRY_CODE,
+	JOB_CODE,
+	HOUSE_INFO_FROM,
+	HOUSE_COST,
+	HOUSE_AREA,
+	CAR_COST,
+	CAR_HAND,
+	CAR_OLD,
+	REGISTER_DATE,
+	ISSUE_DATE,
+	PER_OPENDATE,
+	PER_PAY_WAGE,
+	PER_ASSET_BALANCE,
+	PER_FIN_ASSET_SUM,
+	PER_LOANPRI,
+	PER_LOANSTATUS,
+	PUB_OPENDATE,
+	PUB_CREDITLIMIT,
+	PUB_LOANSTATUS,
+	PUB_SAVEBALANCE,
+	PUB_SAVE_DAYBALANCE,
+	HX_CARDCENTRE_STAFF,
+	HX_CARDCENTRE_STAFF_LEVEL,
+	HX_BANK_STAFF,
+	HX_BANK_STAFF_LEVEL,
+	REFREE,
+	REFREE_LIMIT,
+	SB_CURR_PAY_STATUS,
+	SB_MONTH_PAYMENT,
+	SB_PAY_DATE,
+	SB_MONTH_PAYBASE,
+	SB_CURR_PAYCOMPANY,
+	SB_CURR_COMPANY_MONTH,
+	GJJ_PAY_STATUS,
+	GJJ_MONTH_PAYMENT,
+	GJJ_PER_PAYRATE,
+	GJJ_PAY_DATE,
+	GJJ_END_MONTH,
+	EDU_MODEL,
+	EDU_TYPE,
+	HIGH_CUST,
+	ELITE_EARNCUST,
+	YOUNG_HIGHEDUCUST,
+	NORMALEARNCUST,
+	PRESCREEN_CUST,
+	MAJOR_PROJECT,
+	OTHER_CUST,
+	HOUSE_INFO,
+	DRIVING_LICENSE,
+	CROSS_SALECUST,
+	BANK_STAFF,
+	VIP_CUST,
+	SB_CUST,
+	GJJ_CUST
+    from OPAS_BIZ_APPROVA_INFO_SUPP
+    where APP_ID =#{appId,jdbcType=VARCHAR}
+    
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    	 APP_ID,
+	INDUSTRY_CODE,
+	JOB_CODE,
+	HOUSE_INFO_FROM,
+	HOUSE_COST,
+	HOUSE_AREA,
+	CAR_COST,
+	CAR_HAND,
+	CAR_OLD,
+	REGISTER_DATE,
+	ISSUE_DATE,
+	PER_OPENDATE,
+	PER_PAY_WAGE,
+	PER_ASSET_BALANCE,
+	PER_FIN_ASSET_SUM,
+	PER_LOANPRI,
+	PER_LOANSTATUS,
+	PUB_OPENDATE,
+	PUB_CREDITLIMIT,
+	PUB_LOANSTATUS,
+	PUB_SAVEBALANCE,
+	PUB_SAVE_DAYBALANCE,
+	HX_CARDCENTRE_STAFF,
+	HX_CARDCENTRE_STAFF_LEVEL,
+	HX_BANK_STAFF,
+	HX_BANK_STAFF_LEVEL,
+	REFREE,
+	REFREE_LIMIT,
+	SB_CURR_PAY_STATUS,
+	SB_MONTH_PAYMENT,
+	SB_PAY_DATE,
+	SB_MONTH_PAYBASE,
+	SB_CURR_PAYCOMPANY,
+	SB_CURR_COMPANY_MONTH,
+	GJJ_PAY_STATUS,
+	GJJ_MONTH_PAYMENT,
+	GJJ_PER_PAYRATE,
+	GJJ_PAY_DATE,
+	GJJ_END_MONTH,
+	EDU_MODEL,
+	EDU_TYPE,
+	HIGH_CUST,
+	ELITE_EARNCUST,
+	YOUNG_HIGHEDUCUST,
+	NORMALEARNCUST,
+	PRESCREEN_CUST,
+	MAJOR_PROJECT,
+	OTHER_CUST,
+	HOUSE_INFO,
+	DRIVING_LICENSE,
+	CROSS_SALECUST,
+	BANK_STAFF,
+	VIP_CUST,
+	SB_CUST,
+	GJJ_CUST
+    from OPAS_BIZ_APPROVA_INFO_SUPP
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from OPAS_BIZ_APPROVA_INFO_SUPP
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opasbizapprovainfosupp">
+    insert into OPAS_BIZ_APPROVA_INFO_SUPP (EMP_UNIVERSAL_LIMIT, EMP_SPEND_LIMIT, 
+      BUS_CARD_LIMIT, BUS_CARD_RANK, BATCH_APP_PEOPLE_NO, 
+      OTHER_ASSETS, BATCH_ENTERPRISE_NO, BATCH_PROGRAMME_NO, 
+      ONE_BRANK, WHETHER_EXPRESS, OTHER_RMB_BANK_DEPOSIT, 
+      RMB_BANK_DEPOSIT, WAGE_WATER_ANNUAL_INCOME, 
+      TAX_BILL_CALCU_ANNUAL_INCOME, AIR_MILES, SOCIAL_SECURITY, 
+      VEHICLE, HOUSE_INITIAL_LOAN, HOUSE_MONTHLY_PAYMENT, 
+      OWN_HOUSE, LUCKY_FEE, MEMO, 
+      JUDGE_REASON1, JUDGE_REASON2, JUDGE_REASON3, 
+      JUDGE_STAGE_UNIVERSAL, JUDGE_LIMIT, JUDGE_RESULT, 
+      PRIVATE_BANK_LOGO, BANK_CARD_LIMIT, ISSUE_BANK_TIME, 
+      ISSUE_BANK, COMPANY_START_TIME, COMPANY_REG_FUND, 
+      HOPE_UNIVERSAL_LIMIT, HOPE_SPEND_LIMIT, STAFF_RANK_LIMIT, 
+      STAFF_RANK, EXECUTIVE_RANK, MSP_MATCH, 
+      GOV_TEACHER_RANK, BRANCH_AGREE, MOBILE_STAFF_LIMIT, 
+      MOBILE_STAFF_RANK, BATCH_LIMIT_FACTOR, BATCH_RANK, 
+      BATCH_PAY_RATE, BATCH_MONTH_PAY_AMT, OPEN_MAN_CHECK_FINISH_FLAG, 
+      BATCH_SCHEMA_OPEN_MAN_MOBILE, BATCH_SCHEMA_OPEN_MAN_PHONE, 
+      BATCH_SCHEMA_OPEN_MAN_POSITION, BATCH_SCHEMA_OPEN_MAN_DEPT, 
+      BATCH_SCHEMA_OPEN_MAN_NAME, BATCH_SCHEMA_SALE_MANAGER_CONT, 
+      BATCH_SCHEMA_SALE_MANAGER_NAME, BATCH_SCHEMA_SALE_MAN_CONTACT, 
+      BATCH_SCHEMA_SALE_MAN_NAME, BATCH_SCHEMA_CREDIT_SCALE, 
+      BATCH_SCHEMA_PERSONS, BATCH_SCHEMA_VALID_DATE, BATCH_SCHEMA_SEND_DATE, 
+      MEMO_INFO, CREDIT_REFUSE_REASON1, CREDIT_REFUSE_REASON2, 
+      CREDIT_REFUSE_REASON3, MANP_JUDGE_CONC, PAYER_INCOME, 
+      GUARANTEE_INCOME, INCOME, SH_LICENSE, 
+      PURCHASE_INVOICE, RANK, MORTGAGE_LOANS, 
+      INS_TYPE, DOWN_FEE_RATE, JOB_CODE, 
+      SERVICE_YEARS, D_COMP_NAME, ACCT_TYPE, 
+      OPERATOR_NO, CRT_TIME, CRT_DATE, 
+      CRT_USER, LST_UPD_TIME, LST_UPD_DATE, 
+      LST_UPD_USER, BATCH_DATE, REC_STATUS, 
+      SCR_LEVEL, TOP_LEVEL, APP_ID, 
+      EDU_TYPE, SB_CURR_COMPANY_MONTH, SB_CURR_PAYCOMPANY, 
+      SB_MONTH_PAYBASE, SB_PAY_DATE, SB_MONTH_PAYMENT, 
+      SB_CURR_PAY_STATUS, REFREE_LIMIT, REFREE, 
+      HX_BANK_STAFF_LEVEL, HX_BANK_STAFF)
+    values (#{empUniversalLimit,jdbcType=VARCHAR}, #{empSpendLimit,jdbcType=VARCHAR}, 
+      #{busCardLimit,jdbcType=VARCHAR}, #{busCardRank,jdbcType=CHAR}, #{batchAppPeopleNo,jdbcType=VARCHAR}, 
+      #{otherAssets,jdbcType=VARCHAR}, #{batchEnterpriseNo,jdbcType=VARCHAR}, #{batchProgrammeNo,jdbcType=VARCHAR}, 
+      #{oneBrank,jdbcType=VARCHAR}, #{whetherExpress,jdbcType=CHAR}, #{otherRmbBankDeposit,jdbcType=VARCHAR}, 
+      #{rmbBankDeposit,jdbcType=VARCHAR}, #{wageWaterAnnualIncome,jdbcType=VARCHAR}, 
+      #{taxBillCalcuAnnualIncome,jdbcType=VARCHAR}, #{airMiles,jdbcType=VARCHAR}, #{socialSecurity,jdbcType=VARCHAR}, 
+      #{vehicle,jdbcType=VARCHAR}, #{houseInitialLoan,jdbcType=VARCHAR}, #{houseMonthlyPayment,jdbcType=VARCHAR}, 
+      #{ownHouse,jdbcType=VARCHAR}, #{luckyFee,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{judgeReason1,jdbcType=VARCHAR}, #{judgeReason2,jdbcType=VARCHAR}, #{judgeReason3,jdbcType=VARCHAR}, 
+      #{judgeStageUniversal,jdbcType=VARCHAR}, #{judgeLimit,jdbcType=VARCHAR}, #{judgeResult,jdbcType=VARCHAR}, 
+      #{privateBankLogo,jdbcType=CHAR}, #{bankCardLimit,jdbcType=VARCHAR}, #{issueBankTime,jdbcType=CHAR}, 
+      #{issueBank,jdbcType=VARCHAR}, #{companyStartTime,jdbcType=CHAR}, #{companyRegFund,jdbcType=VARCHAR}, 
+      #{hopeUniversalLimit,jdbcType=VARCHAR}, #{hopeSpendLimit,jdbcType=VARCHAR}, #{staffRankLimit,jdbcType=VARCHAR}, 
+      #{staffRank,jdbcType=CHAR}, #{executiveRank,jdbcType=CHAR}, #{mspMatch,jdbcType=CHAR}, 
+      #{govTeacherRank,jdbcType=CHAR}, #{branchAgree,jdbcType=VARCHAR}, #{mobileStaffLimit,jdbcType=VARCHAR}, 
+      #{mobileStaffRank,jdbcType=CHAR}, #{batchLimitFactor,jdbcType=VARCHAR}, #{batchRank,jdbcType=VARCHAR}, 
+      #{batchPayRate,jdbcType=VARCHAR}, #{batchMonthPayAmt,jdbcType=VARCHAR}, #{openManCheckFinishFlag,jdbcType=CHAR}, 
+      #{batchSchemaOpenManMobile,jdbcType=CHAR}, #{batchSchemaOpenManPhone,jdbcType=VARCHAR}, 
+      #{batchSchemaOpenManPosition,jdbcType=VARCHAR}, #{batchSchemaOpenManDept,jdbcType=VARCHAR}, 
+      #{batchSchemaOpenManName,jdbcType=VARCHAR}, #{batchSchemaSaleManagerCont,jdbcType=VARCHAR}, 
+      #{batchSchemaSaleManagerName,jdbcType=VARCHAR}, #{batchSchemaSaleManContact,jdbcType=VARCHAR}, 
+      #{batchSchemaSaleManName,jdbcType=VARCHAR}, #{batchSchemaCreditScale,jdbcType=CHAR}, 
+      #{batchSchemaPersons,jdbcType=CHAR}, #{batchSchemaValidDate,jdbcType=CHAR}, #{batchSchemaSendDate,jdbcType=CHAR}, 
+      #{memoInfo,jdbcType=VARCHAR}, #{creditRefuseReason1,jdbcType=VARCHAR}, #{creditRefuseReason2,jdbcType=VARCHAR}, 
+      #{creditRefuseReason3,jdbcType=VARCHAR}, #{manpJudgeConc,jdbcType=VARCHAR}, #{payerIncome,jdbcType=VARCHAR}, 
+      #{guaranteeIncome,jdbcType=VARCHAR}, #{income,jdbcType=VARCHAR}, #{shLicense,jdbcType=CHAR}, 
+      #{purchaseInvoice,jdbcType=VARCHAR}, #{rank,jdbcType=CHAR}, #{mortgageLoans,jdbcType=DECIMAL}, 
+      #{insType,jdbcType=CHAR}, #{downFeeRate,jdbcType=VARCHAR}, #{jobCode,jdbcType=CHAR}, 
+      #{serviceYears,jdbcType=CHAR}, #{dCompName,jdbcType=VARCHAR}, #{acctType,jdbcType=VARCHAR}, 
+      #{operatorNo,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}, #{crtDate,jdbcType=DATE}, 
+      #{crtUser,jdbcType=VARCHAR}, #{lstUpdTime,jdbcType=TIMESTAMP}, #{lstUpdDate,jdbcType=DATE}, 
+      #{lstUpdUser,jdbcType=VARCHAR}, #{batchDate,jdbcType=DATE}, #{recStatus,jdbcType=CHAR}, 
+      #{scrLevel,jdbcType=CHAR}, #{topLevel,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, 
+      #{eduType,jdbcType=CHAR}, #{sbCurrCompanyMonth,jdbcType=DECIMAL}, #{sbCurrPaycompany,jdbcType=VARCHAR}, 
+      #{sbMonthPaybase,jdbcType=DECIMAL}, #{sbPayDate,jdbcType=DATE}, #{sbMonthPayment,jdbcType=DECIMAL}, 
+      #{sbCurrPayStatus,jdbcType=CHAR}, #{refreeLimit,jdbcType=DECIMAL}, #{refree,jdbcType=VARCHAR}, 
+      #{hxBankStaffLevel,jdbcType=CHAR}, #{hxBankStaff,jdbcType=CHAR})
+  </insert>
+ 
+ 
+</mapper>

@@ -1,0 +1,214 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+<style type="text/css">
+ input[type="checkbox"] {
+	width: 12px;
+	vertical-align: middle;
+}
+</style>
+</head>
+	<body style="width:100%;">
+	<form id="compareForm">
+		<table class="formtable">
+			<tr>
+				<td><input id="applyInputfull" type="checkbox" value="1" name="applyInputfull" disabled="disabled"/><b>抄录文字完整有效</b></td>
+				<td><input id="signFull" type="checkbox" value="1" name="signFull" disabled="disabled"/><b>签名完整有效</b></td>
+			</tr>
+			<tr>
+				<td><input id="nationalInutfull" type="checkbox" value="1" name="nationalInutfull" disabled="disabled"/><b>国籍填写有效</b></td>
+				<td><input id="certifiPeriodfull" type="checkbox" value="1" name="certifiPeriodfull"disabled="disabled"/><b>身份证有效期填写完整有效</b></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="applyWorkTure" disabled="disabled"/><b>申请单位真实</b></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="peobankCompanyNameAddr" disabled="disabled"/>人行单名+单址</td>
+				<td><input type="checkbox" value="1" name="peobankCompanyNameTel" disabled="disabled"/>人行单名+单电</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="company114NameAddr" disabled="disabled"/>114单名+单址</td>
+				<td><input type="checkbox" value="1" name="company114NameTel" disabled="disabled"/>114单名+单电</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="pyuanCompanyNameAddr" disabled="disabled"/>鹏元单名+单址</td>
+				<td><input type="checkbox" value="1" name="pyuanCompanyNameTel" disabled="disabled"/>鹏元单名+单电</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="officwebNameAddr"disabled="disabled"/>官方单名+单址</td>
+				<td><input type="checkbox" value="1" name="officwebNameTel" disabled="disabled"/>官方单名+单电</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="noOfficwebNameAddr"disabled="disabled"/>非官方单名+单址</td>
+				<td><input type="checkbox" value="1" name="noOfficwebNameTel"disabled="disabled"/>非官方单名+单电</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="otherThirdNameAddr"disabled="disabled"/>其他第三方信息单名+单址</td>
+				<td><input type="checkbox" value="1" name="thirddataAddr" disabled="disabled"/>第三方信息单址</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="applyWorkinfoTure"disabled="disabled"/><b>申请人工作信息真实</b></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="sbandgjj6monthsStatus" disabled="disabled"/>社保或公积金信息近6个月缴交正常</td>
+				<td><input type="checkbox" value="1" name="businetworkLegal" disabled="disabled"/>工商网法人</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="pubPolice" disabled="disabled"/>增强公安</td>
+				<td><input type="checkbox" value="1" name="businetworkMinor" disabled="disabled"/>工商网股东</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="peobankFirstcard6months" disabled="disabled"/>人行首张贷记卡发卡日期大于六个月</td>
+				<td><input type="checkbox" value="1" name="insurance" disabled="disabled"/>保监会</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="others"disabled="disabled"/>其他</td>
+				<td>请说明：<input name="otherMemo" id="otherMemo" disabled="disabled"/></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="applyerTrue" disabled="disabled"/><b>申请人真实</b></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="peobankPhone" disabled="disabled"/>人行手机</td>
+				<td><input type="checkbox" value="1" name="thirdPhone" disabled="disabled"/>第三方信息手机</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="1" name="otherthirdInfo"disabled="disabled"/>其他第三方信息</td>
+				<td><input type="hidden" id="appId" name="appId" value=""></td>
+			</tr>
+		</table>
+	</form>
+	<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()" id="save">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')" id="close">关闭</a>
+	</div>
+	<script>
+	/* $(function() {
+		//$("#appId").val(parent.appId]);
+	}) */
+	var infoCollForm=$("#infoCollForm");
+	var url = location.href;
+	function GetQueryString(name){
+		var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	 	var r = window.location.search.substr(1).match(reg);
+		if(r!=null) return unescape(r[2]);
+	 	return null;
+	}
+	var appId = GetQueryString("appId");
+	
+var roleObj={"appId":appId};//"1601240945P00101"
+$(function(){
+	$('#appId').val(appId);
+	//此方法用于循环给单选框赋值，后台返回给前台一个json串，前台循环json串，如果单选框的name等于json串的key，value等于json串的value，就把它勾选
+	$cf.ajax({
+		url : "/opas-naps/query_info_compare.json",
+		data : roleObj,
+		onSuccess : function(ret) {
+			var jsonrevCompInfo = ret.RSP_BODY.jsonrevCompInfo;
+			var revCompInfojson = eval('(' +jsonrevCompInfo+ ')');
+			
+			for(var item in revCompInfojson){
+					var jvalue=revCompInfojson[item];
+					$(":checkbox[name='"+item+"'][value='"+jvalue+"']").attr("checked", true);
+					//该页面只有一个文本框，直接赋值即可，如果需要参考循环赋值，请看info_collect.html页面
+					if(item=="otherMemo"){
+						$("#otherMemo").val(jvalue);
+					}
+			}
+			
+			$("#save").linkbutton('disable');
+			$("#close").linkbutton('disable');
+			var rcellPhone = isNull(parent.getRCellphone());//人行手机号			
+			var scellPhone = isNull(parent.getSCellphone()); //申请表手机号
+			//alert("rcellPhone+scellPhone==="+scellPhone+rcellPhone);
+			if(rcellPhone != null&&scellPhone != null&&rcellPhone == scellPhone){
+				$("[name='peobankPhone']").attr("checked","checked");
+			} 
+			
+			
+		}
+	
+
+	});
+	
+	
+})
+
+	//是否为空
+	function isNull(dataObject){
+	if(dataObject!=''||dataObject!=null||dataObject!=undefined){
+		return dataObject;
+	}else{
+		return null;
+	}
+	
+}
+	var compareForm = $("#compareForm");
+	function onSave() {
+		//解决bug,xuzhiguo=====校验项添加=======
+		var applyInputfull = $("#applyInputfull").prop("checked");
+		//alert("applyInputfull========="+applyInputfull);
+		var signFull = $("#signFull").prop("checked");
+		var nationalInutfull = $("#nationalInutfull").prop("checked");
+		var certifiPeriodfull = $("#certifiPeriodfull").prop("checked");
+		if(!applyInputfull&&confirm('【审查比对---抄录文字完整有效】未勾选，是否提交通过')){
+			return;
+		}
+		if(!signFull&&confirm('【审查比对---签名完整有效】未勾选，是否提交通过')){
+			return;
+		}
+		if(!nationalInutfull&&confirm('【审查比对---国籍填写有效】未勾选，是否提交通过')){
+			return;
+		}
+		if(!certifiPeriodfull&&confirm('【审查比对---身份证有效期填写完整有效】未勾选，是否提交通过')){
+			return;
+		}
+		var jsondata = getFormData(compareForm.serializeArray());
+		
+		$cf.ajax({
+			url : "/opas-naps/info_compare_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblRole.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+		
+	}
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	</script>
+</body>
+

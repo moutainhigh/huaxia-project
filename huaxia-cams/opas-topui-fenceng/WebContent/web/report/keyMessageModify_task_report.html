@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div id="report_keyMessageModify_center" data-options="fit:true,boder:false">
+<div data-options="region='north',title:'查询',border:false,icons:'icon-searh'"
+ style="height:40px;overflow:hidden;">
+ <form id="report_keyMessageModify_form">
+ <table class="report_keyMessageModify_tableForm datagrid-toolbar" style="width:100%;height:100%">
+  <tr>
+   <td><label>开始时间</label><input id="report_keyMessageModify_beginDate" name="beginDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   $(this).datebox('setValue',date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate());
+   }"/><label>结束时间</label><input id="report_keyMessageModify_endDate" name="endDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   $(this).datebox('setValue',date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate());
+   }"/>
+   <a id="report_keyMessageModify_searchButton" class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>
+   <a id="report_keyMessageModify_cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+   </td>
+  </tr>
+ </table>
+ </form>
+ </div>
+ <div data-options="region:'center',border:false">
+ <table id="report_keyMessageModify_datagrid" style="height:650px;"></table>
+ </div>
+</div>
+</body>
+<script type="text/javascript">
+var report_keyMessageModify_form=undefined;
+var report_keyMessageModify_datagrid=undefined;
+var report_keyMessageModify_ydjFlagType=''; //易达金卡1或标准卡2的判断依据 
+$(function(){
+	if(report_keyMessageModify_ydjFlagType==''){
+		report_keyMessageModify_ydjFlagType=getCurrentUrlParam();
+	}
+	report_keyMessageModify_form=$('#report_keyMessageModify_form');
+	$('#report_keyMessageModify_searchButton').bind('click',function(){
+		report_keyMessageModify_search();
+	});
+	$('#report_keyMessageModify_cleanButton').bind('click',function(){
+		report_keyMessageModify_clean();
+	});
+	report_keyMessageModify_datagrid=$('#report_keyMessageModify_datagrid').datagrid({
+		url:"",
+		border:false,
+		animate:true,
+		pagination:true,
+		fitColumns:true,
+		singleSelect:false,
+		nowrap:false,
+		rownumbers:true,
+		pageSize:20,
+		pageList:[15,20,50],
+		columns:[[{
+			title:'修改日期',
+			field:'modifyDate',
+			width:"12%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'操作员',
+			field:'operator',
+			width:"6%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'条形码',
+			field:'appId',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'申请人姓名',
+			field:'applyName',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'证件类别',
+			field:'cretifiType',
+			width:"10%",
+			formatter:function(value,row,index){
+				if(value=='01'){
+					return "18位身份证";
+				}else if(value=='02'){
+					return "15位身份证";
+				}else if(value=='03'){
+					return "外国护照";
+				}else if(value=='04'){
+					return "港澳台居民来往内地通行证台胞证";
+				}else if(value=='05'){
+					return "军官证";
+				}else if(value=='20'){
+					return "其他";
+				}
+			},
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'证件号码',
+			field:'cretifiId',
+			width:"12%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'数据项',
+			field:'keyWordsId',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			},formatter:function(value,currentRow,index){
+				if(value=="c1Cname"||value=="c2Cname"){
+					return "中文姓名" ;
+				}
+				if(value=="c1Idtype"||value=="c2Idtype"){
+					return "证件类型"  ;
+				}
+				if(value=="c1Idnbr"||value=="c2Idnbr"){
+					return "证件号码"  ;
+				}
+			}
+		},{
+			title:'原信息',
+			field:'currValue',
+			width:"12%",
+			halign:'center',
+			
+			formatter:function(value,row,index){
+				if(value=='01'){
+					return "18位身份证";
+				}else if(value=='02'){
+					return "15位身份证";
+				}else if(value=='03'){
+					return "外国护照";
+				}else if(value=='04'){
+					return "港澳台居民来往内地通行证台胞证";
+				}else if(value=='05'){
+					return "军官证";
+				}else if(value=='20'){
+					return "其他";
+				}else{
+					return value;
+				}
+			},
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'修改后信息',
+			field:'modifyValue',
+			width:"12%",
+			formatter:function(value,row,index){
+				if(value=='01'){
+					return "18位身份证";
+				}else if(value=='02'){
+					return "15位身份证";
+				}else if(value=='03'){
+					return "外国护照";
+				}else if(value=='04'){
+					return "港澳台居民来往内地通行证台胞证";
+				}else if(value=='05'){
+					return "军官证";
+				}else if(value=='20'){
+					return "其他";
+				}else{
+					return value;
+				}
+			},
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'复核状态',
+			field:'reviewStatus',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			},formatter:function(value,currentRow,index){
+				if(value=="0"){
+					return "拒绝" ;
+				}
+				if(value=="1"){
+					return "通过"  ;
+				}
+			}
+		},{
+			title:'复核人',
+			field:'reviewer',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'创建日期',
+			field:'crtDate',
+			width:"12%",
+			formatter:function formatDate(value) {
+				return value.substring(0,19);
+			},
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}
+		]]
+	});
+});
+function report_keyMessageModify_search(){
+	var beginDate=$('#report_keyMessageModify_beginDate').datebox('getValue');
+	var endDate=$('#report_keyMessageModify_endDate').datebox('getValue');
+	if(beginDate==""||endDate==""){//没有选择起止时间
+		$.messager.alert('提示','请选择起止时间.','warning'); return null;
+	}
+	var ydjObject=new Object();
+	ydjObject.name='ydjFlag';
+	ydjObject.value=report_keyMessageModify_ydjFlagType;
+	var paramArray=report_keyMessageModify_form.serializeArray();//new Array();
+	paramArray.push(ydjObject);
+	var jsondata =common.formToJson(paramArray);
+	report_keyMessageModify_datagrid.datagrid('options').url="/opas-naps/showKeyMessageModifyData.json";
+	report_keyMessageModify_datagrid.datagrid('load',jsondata);
+}
+function report_keyMessageModify_clean(){
+	report_keyMessageModify_datagrid.datagrid('load',{});
+	report_keyMessageModify_form.form('reset');
+	
+}
+function getCurrentUrlParam(){
+	var currentUrl=window.location.href;
+	return  ydjFlagType=currentUrl.split("=")[1];
+}
+</script>
+
+</html>

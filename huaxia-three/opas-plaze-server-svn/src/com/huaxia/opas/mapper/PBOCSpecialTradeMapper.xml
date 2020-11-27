@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCSpecialTradeMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+	INSERT INTO OPAS_PBOC_LOAN_CARD_SPETRAD
+	 (FA_REC_SEQ, MESS_TYPE,  
+	  TYPE, OCCUR_DATE, CHANGING_MONTHS,
+	  OCCUR_AMT,  DETAIL_REC, CRT_USER,
+	  LST_UPD_TIME, LST_UPD_USER, BATCH_DATE,
+	  APP_ID, CRT_TIME
+	 )
+	<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	SELECT
+	  #{item.faRecSeq,jdbcType=CHAR}, #{item.messType,jdbcType=CHAR},
+      #{item.type,jdbcType=VARCHAR}, #{item.occurDate,jdbcType=VARCHAR}, #{item.changingMonths,jdbcType=VARCHAR}, 
+      #{item.occurAmt,jdbcType=VARCHAR}, #{item.detailRec,jdbcType=VARCHAR},'SYSTEM', 
+      SYSDATE, 'SYSTEM', SYSDATE, 
+       #{item.appId,jdbcType=CHAR},SYSDATE
+	FROM DUAL
+	</foreach>
+	</insert>
+
+</mapper>

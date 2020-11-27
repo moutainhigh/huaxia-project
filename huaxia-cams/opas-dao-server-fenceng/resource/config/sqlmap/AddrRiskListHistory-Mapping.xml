@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AddrRiskListHistory" >
+
+  <resultMap id="addrRiskListResultMap" type="com.huaxia.opas.domain.riskcheck.AddrRiskListHistory" >
+  	<id column="ID" property="Id" jdbcType="VARCHAR" />
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="COMPANY_ADDR" property="companyAddr" jdbcType="VARCHAR" />
+    <result column="LIVING_ADDR" property="livingAddr" jdbcType="VARCHAR" />
+    <result column="BORN_ADDR" property="bornAddr" jdbcType="VARCHAR" />
+    <result column="BILL_ADDR" property="billAddr" jdbcType="VARCHAR" />
+    <result column="OTHER_ADDR" property="otherAddr" jdbcType="VARCHAR" />
+    <result column="FRAUD_TYPE" property="fraudType" jdbcType="CHAR" />
+    <result column="INFO_CHANNEL" property="infoChannel" jdbcType="CHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="INVALID_TIME" property="invalidTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="USER_OPERATOR" property="userOperator" jdbcType="VARCHAR" />
+    <result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+    <result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="addrRiskListResultMap" parameterType="java.lang.String" >
+    select 
+        ID,
+  		AUTO_ID, 
+		COMPANY_ADDR, 
+		LIVING_ADDR, 
+        BORN_ADDR, 
+        BILL_ADDR, 
+        OTHER_ADDR,
+        FRAUD_TYPE,
+        INFO_CHANNEL,
+        MEMO,
+        INVALID_TIME,
+        CREATE_TIME,
+        CURR_STATUS,
+        USER_OPERATOR,
+        OPERAT_TIME
+    from OPAS_ADDR_RISTLIST_HISRORY
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_ADDR_RISTLIST_HISRORY
+    where ID = #{Id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.riskcheck.AddrRiskListHistory" >
+    insert into OPAS_ADDR_RISTLIST_HISRORY (ID,AUTO_ID, COMPANY_ADDR, LIVING_ADDR, 
+      BORN_ADDR, BILL_ADDR, OTHER_ADDR, 
+      FRAUD_TYPE, INFO_CHANNEL, MEMO, 
+      INVALID_TIME, CREATE_TIME, USER_OPERATOR, 
+      OPERAT_TIME, CURR_STATUS)
+    values (#{Id,jdbcType=VARCHAR},#{autoId,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{livingAddr,jdbcType=VARCHAR}, 
+      #{bornAddr,jdbcType=VARCHAR}, #{billAddr,jdbcType=VARCHAR}, #{otherAddr,jdbcType=VARCHAR}, 
+      #{fraudType,jdbcType=CHAR}, #{infoChannel,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{invalidTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{userOperator,jdbcType=VARCHAR}, 
+      #{operatTime,jdbcType=TIMESTAMP}, #{currStatus,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.riskcheck.AddrRiskListHistory" >
+    insert into OPAS_ADDR_RISTLIST_HISRORY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     <if test="Id != null" >
+        ID,
+      </if>
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="companyAddr != null" >
+        COMPANY_ADDR,
+      </if>
+      <if test="livingAddr != null" >
+        LIVING_ADDR,
+      </if>
+      <if test="bornAddr != null" >
+        BORN_ADDR,
+      </if>
+      <if test="billAddr != null" >
+        BILL_ADDR,
+      </if>
+      <if test="otherAddr != null" >
+        OTHER_ADDR,
+      </if>
+      <if test="fraudType != null" >
+        FRAUD_TYPE,
+      </if>
+      <if test="infoChannel != null" >
+        INFO_CHANNEL,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="invalidTime != null" >
+        INVALID_TIME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="userOperator != null" >
+        USER_OPERATOR,
+      </if>
+      <if test="operatTime != null" >
+        OPERAT_TIME,
+      </if>
+      <if test="currStatus != null" >
+        CURR_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    <if test="Id != null" >
+        #{Id,jdbcType=VARCHAR},
+      </if>
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddr != null" >
+        #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="livingAddr != null" >
+        #{livingAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="bornAddr != null" >
+        #{bornAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="billAddr != null" >
+        #{billAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="otherAddr != null" >
+        #{otherAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="fraudType != null" >
+        #{fraudType,jdbcType=CHAR},
+      </if>
+      <if test="infoChannel != null" >
+        #{infoChannel,jdbcType=CHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="invalidTime != null" >
+        #{invalidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userOperator != null" >
+        #{userOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null" >
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null" >
+        #{currStatus,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.riskcheck.AddrRiskListHistory" >
+    update OPAS_ADDR_RISTLIST_HISRORY
+    <set >
+      <if test="companyAddr != null" >
+        COMPANY_ADDR = #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="livingAddr != null" >
+        LIVING_ADDR = #{livingAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="bornAddr != null" >
+        BORN_ADDR = #{bornAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="billAddr != null" >
+        BILL_ADDR = #{billAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="otherAddr != null" >
+        OTHER_ADDR = #{otherAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="fraudType != null" >
+        FRAUD_TYPE = #{fraudType,jdbcType=CHAR},
+      </if>
+      <if test="infoChannel != null" >
+        INFO_CHANNEL = #{infoChannel,jdbcType=CHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="invalidTime != null" >
+        INVALID_TIME = #{invalidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userOperator != null" >
+        USER_OPERATOR = #{userOperator,jdbcType=VARCHAR},
+      </if>
+        OPERAT_TIME = CURRENT_DATE,
+      <if test="currStatus != null" >
+        CURR_STATUS = #{currStatus,jdbcType=CHAR},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.riskcheck.AddrRiskListHistory" >
+    update OPAS_ADDR_RISTLIST_HISRORY
+    set COMPANY_ADDR = #{companyAddr,jdbcType=VARCHAR},
+      LIVING_ADDR = #{livingAddr,jdbcType=VARCHAR},
+      BORN_ADDR = #{bornAddr,jdbcType=VARCHAR},
+      BILL_ADDR = #{billAddr,jdbcType=VARCHAR},
+      OTHER_ADDR = #{otherAddr,jdbcType=VARCHAR},
+      FRAUD_TYPE = #{fraudType,jdbcType=CHAR},
+      INFO_CHANNEL = #{infoChannel,jdbcType=CHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      INVALID_TIME = #{invalidTime,jdbcType=TIMESTAMP},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      USER_OPERATOR = #{userOperator,jdbcType=VARCHAR},
+      OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+      CURR_STATUS = #{currStatus,jdbcType=CHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+  <!--shihuan 2017-03-03 地址风险名单列表查询条数 -->
+	<select id="queryAddrRistListHistory" parameterType="java.lang.String"
+		resultMap="addrRiskListResultMap">
+		select 
+			ID,
+			AUTO_ID, 
+			COMPANY_ADDR, 
+			LIVING_ADDR, 
+	        BORN_ADDR, 
+	        BILL_ADDR, 
+	        OTHER_ADDR,
+	        FRAUD_TYPE,
+	        INFO_CHANNEL,
+	        MEMO,
+	        INVALID_TIME,
+	        CREATE_TIME,
+	        CURR_STATUS,
+	        USER_OPERATOR,
+	        OPERAT_TIME
+		from OPAS_ADDR_RISTLIST_HISRORY
+        where AUTO_ID = #{autoId,jdbcType=CHAR}
+        order by OPERAT_TIME desc
+	</select>
+	
+	<!--shihuan 2017-03-03 地址风险名单列表查询条数 -->
+	<select id="queryAddrRistHistoryCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select  count(1) from OPAS_ADDR_RISTLIST_HISRORY where AUTO_ID = #{autoId,jdbcType=CHAR}
+	</select>
+	
+</mapper>

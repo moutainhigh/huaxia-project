@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="IdentityRisk">
+
+	<resultMap id="IdentityRiskResultMap" type="com.huaxia.opas.domain.sysparm.IdentityRisk">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="CERTIFI_TYPE" property="certifiType" jdbcType="VARCHAR"/>
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR"/>
+		<result column="INFO_CHANNEL" property="infoChannel" jdbcType="CHAR"/>
+		<result column="FRAUD_TYPE" property="fraudType" jdbcType="CHAR"/>
+		<result column="MEMO" property="memo" jdbcType="VARCHAR"/>
+		<result column="INVALID_TIME" property="invalidTime" jdbcType="TIMESTAMP"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR"/>
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP"/>
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR"/>
+		<result column="CERTIFI_TYPE_EXTRA" property="certifiTypeExtra" jdbcType="VARCHAR"/>
+		<result column="INFO_CHANNEL_EXTRA" property="infoChannelExtra" jdbcType="VARCHAR"/>
+		<result column="FRAUD_TYPE_EXTRA" property="fraudTypeExtra" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="queryIdentityRisk"
+		parameterType="java.lang.String"
+		resultMap="IdentityRiskResultMap">
+		select 
+		AUTO_ID, NAME, CERTIFI_TYPE, CERTIFI_NO, INFO_CHANNEL, FRAUD_TYPE, MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS, CERTIFI_TYPE_EXTRA, INFO_CHANNEL_EXTRA, FRAUD_TYPE_EXTRA
+		from OPAS_IDENTITY_RISKLIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryIdentityRiskList"
+		parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk"
+		resultMap="IdentityRiskResultMap">
+		select 
+		AUTO_ID, NAME, CERTIFI_TYPE, CERTIFI_NO, INFO_CHANNEL, FRAUD_TYPE, MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS, CERTIFI_TYPE_EXTRA, INFO_CHANNEL_EXTRA, FRAUD_TYPE_EXTRA 
+		FROM OPAS_IDENTITY_RISKLIST t
+		<where>
+			<if test="name != null and name != ''"> 
+			    AND NAME LIKE '%${name}%'
+			</if>
+			<if test="certifiNo != null and certifiNo != ''">
+				AND CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(t.CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+		</where>
+		ORDER BY t.OPERAT_TIME DESC
+	</select>
+	
+	<select id="queryIdentityRiskCount"
+		parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID) from 
+		OPAS_IDENTITY_RISKLIST t
+		<where>
+			<if test="name != null and name != ''"> 
+			    t.NAME LIKE '%${name}%'
+			</if>
+			<if test="certifiNo != null and certifiNo != ''">
+				AND t.CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(t.CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>	
+		</where>	
+	</select>
+	
+	<delete id="deleteIdentityRisk" parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk">
+		delete from
+		OPAS_IDENTITY_RISKLIST
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<update id="updateIdentityRisk" parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk">
+		update OPAS_IDENTITY_RISKLIST
+		<set>
+			OPERAT_TIME = CURRENT_DATE,
+			<if test="name != null">NAME = #{name,jdbcType=VARCHAR},</if>
+			<if test="certifiType != null">CERTIFI_TYPE = #{certifiType,jdbcType=VARCHAR},</if>
+			<if test="certifiNo != null">CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},</if>
+			<if test="infoChannel != null">INFO_CHANNEL = #{infoChannel,jdbcType=VARCHAR},</if>
+			<if test="fraudType != null">FRAUD_TYPE = #{fraudType,jdbcType=VARCHAR},</if>
+			<if test="memo != null">MEMO = #{memo,jdbcType=VARCHAR},</if>
+			<if test="invalidTime != null">INVALID_TIME = #{invalidTime,jdbcType=VARCHAR},</if>
+			<if test="operator != null">OPERATOR = #{operator,jdbcType=VARCHAR},</if>
+			<if test="currStatus != null">CURR_STATUS = #{currStatus,jdbcType=VARCHAR},</if>
+			<if test="certifiTypeExtra != null">CERTIFI_TYPE_EXTRA = #{certifiTypeExtra,jdbcType=VARCHAR},</if>
+			<if test="infoChannelExtra != null">INFO_CHANNEL_EXTRA = #{infoChannelExtra,jdbcType=VARCHAR},</if>
+			<if test="fraudTypeExtra != null">FRAUD_TYPE_EXTRA = #{fraudTypeExtra,jdbcType=VARCHAR},</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>	
+	
+	<update id="updateIdentityRiskActive" parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk">
+		update OPAS_IDENTITY_RISKLIST
+		<set>
+			CURR_STATUS = #{currStatus,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<select id="queryIdentityRiskHistoryList"
+		parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk"
+		resultMap="IdentityRiskResultMap">
+		select 
+		NAME,CERTIFI_TYPE,CERTIFI_NO,INFO_CHANNEL,FRAUD_TYPE,CURR_STATUS,MEMO,OPERATOR,CREATE_TIME,INVALID_TIME,OPERAT_TIME
+		from OPAS_IDENTITY_RISKLIST_HISTORY
+		WHERE AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		ORDER BY OPERAT_TIME DESC
+	</select>
+	
+	<select id="queryIdentityRiskHistoryCount"
+		parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID) from 
+		OPAS_IDENTITY_RISKLIST_HISTORY
+		where
+		AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	 
+	<insert id="insertIdentityRisk" parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk">
+	<!-- 	insert into OPAS_IDENTITY_RISKLIST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			CREATE_TIME,
+			OPERAT_TIME,
+	      <if test="autoId != null">
+	        AUTO_ID,
+	      </if>
+	      <if test="name != null">
+	        NAME,
+	      </if>
+	      <if test="certifiType != null">
+	        CERTIFI_TYPE,
+	      </if>
+	      <if test="certifiNo != null">
+	        CERTIFI_NO,
+	      </if>
+	      <if test="infoChannel != null">
+	        INFO_CHANNEL,
+	      </if>
+	      <if test="certifiType != null">
+	        FRAUD_TYPE,
+	      </if>
+	      <if test="memo != null">
+	        MEMO,
+	      </if>
+	      <if test="invalidTime != null">
+	        INVALID_TIME,
+	      </if>
+	      <if test="operator != null">
+	        OPERATOR,
+	      </if>
+	      <if test="currStatus != null">
+	        CURR_STATUS,
+	      </if>
+	      <if test="certifiTypeExtra != null">
+	        CERTIFI_TYPE_EXTRA,
+	      </if>
+	      <if test="infoChannelExtra != null">
+	        INFO_CHANNEL_EXTRA,
+	      </if>
+	      <if test="fraudTypeExtra != null">
+	        FRAUD_TYPE_EXTRA,
+	      </if>
+	    </trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			sysdate,
+			sysdate,
+	      <if test="autoId != null">
+	        #{autoId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="name != null">
+	        #{name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="certifiType != null">
+	        #{certifiType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="certifiNo != null">
+	        #{certifiNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="infoChannel != null">
+	        #{infoChannel,jdbcType=CHAR},
+	      </if>
+	      <if test="fraudType != null">
+	        #{fraudType,jdbcType=CHAR},
+	      </if>
+	      <if test="memo != null">
+	        #{memo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="invalidTime != null">
+	        #{invalidTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="operator != null">
+	        #{operator,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currStatus != null">
+	        #{currStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="certifiTypeExtra != null">
+	        #{certifiTypeExtra,jdbcType=VARCHAR},
+	      </if>
+	      <if test="infoChannelExtra != null">
+	        #{infoChannelExtra,jdbcType=VARCHAR},
+	      </if>
+	      <if test="fraudTypeExtra != null">
+	        #{fraudTypeExtra,jdbcType=VARCHAR},
+	      </if>
+	   </trim> -->
+	   insert into OPAS_IDENTITY_RISKLIST (CREATE_TIME,OPERAT_TIME,AUTO_ID,NAME,CERTIFI_TYPE,CERTIFI_NO,INFO_CHANNEL,FRAUD_TYPE,MEMO,INVALID_TIME,OPERATOR,CURR_STATUS,
+		CERTIFI_TYPE_EXTRA,INFO_CHANNEL_EXTRA,FRAUD_TYPE_EXTRA)
+			values(	sysdate,
+					sysdate,
+	    
+			        #{autoId,jdbcType=VARCHAR},
+			   
+			        #{name,jdbcType=VARCHAR},
+			   
+			        #{certifiType,jdbcType=VARCHAR},
+			     
+			        #{certifiNo,jdbcType=VARCHAR},
+			    
+			        #{infoChannel,jdbcType=CHAR},
+			    
+			        #{fraudType,jdbcType=CHAR},
+			     
+			        #{memo,jdbcType=VARCHAR},
+			     
+			        #{invalidTime,jdbcType=TIMESTAMP},
+			     
+			        #{operator,jdbcType=VARCHAR},
+			      
+			        #{currStatus,jdbcType=CHAR},
+			      
+			        #{certifiTypeExtra,jdbcType=VARCHAR},
+			     
+			        #{infoChannelExtra,jdbcType=VARCHAR},
+	
+			        #{fraudTypeExtra,jdbcType=VARCHAR}
+			)
+	</insert>
+ 	
+	<insert id="insertIdentityRiskList" parameterType="java.util.List">
+		insert into OPAS_IDENTITY_RISKLIST 
+		(AUTO_ID, NAME, CERTIFI_TYPE, CERTIFI_NO, INFO_CHANNEL, FRAUD_TYPE, MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS, CERTIFI_TYPE_EXTRA, INFO_CHANNEL_EXTRA, FRAUD_TYPE_EXTRA)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.certifiType,jdbcType=VARCHAR},
+			#{item.certifiNo,jdbcType=VARCHAR},
+			#{item.infoChannel,jdbcType=CHAR},
+			#{item.fraudType,jdbcType=CHAR},
+			#{item.memo,jdbcType=VARCHAR},
+			#{item.invalidTime,jdbcType=TIMESTAMP}, 
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operatTime,jdbcType=TIMESTAMP},
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.certifiTypeExtra,jdbcType=VARCHAR},
+			#{item.infoChannelExtra,jdbcType=VARCHAR},
+			#{item.fraudTypeExtra,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+			
+	<insert id="insertIdentityRiskHistory"
+			parameterType="com.huaxia.opas.domain.sysparm.IdentityRisk">
+		INSERT INTO OPAS_IDENTITY_RISKLIST_HISTORY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			CREATE_TIME,
+			OPERAT_TIME,
+	      <if test="opretionId != null">
+	        OPRETION_ID,
+	      </if>
+	      <if test="autoId != null">
+	        AUTO_ID,
+	      </if>
+	      <if test="name != null">
+	        NAME,
+	      </if>
+	      <if test="certifiType != null">
+	        CERTIFI_TYPE,
+	      </if>
+	      <if test="certifiNo != null">
+	        CERTIFI_NO,
+	      </if>
+	      <if test="infoChannel != null">
+	        INFO_CHANNEL,
+	      </if>
+	      <if test="certifiType != null">
+	        FRAUD_TYPE,
+	      </if>
+	      <if test="memo != null">
+	        MEMO,
+	      </if>
+	      <if test="invalidTime != null">
+	        INVALID_TIME,
+	      </if>
+	      <if test="operator != null">
+	        OPERATOR,
+	      </if>
+	      <if test="currStatus != null">
+	        CURR_STATUS,
+	      </if>
+	      <if test="certifiTypeExtra != null">
+	        CERTIFI_TYPE_EXTRA,
+	      </if>
+	      <if test="infoChannelExtra != null">
+	        INFO_CHANNEL_EXTRA,
+	      </if>
+	      <if test="fraudTypeExtra != null">
+	        FRAUD_TYPE_EXTRA,
+	      </if>
+	    </trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			CURRENT_DATE,
+			CURRENT_DATE,
+	      <if test="opretionId != null">
+	        #{opretionId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="autoId != null">
+	        #{autoId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="name != null">
+	        #{name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="certifiType != null">
+	        #{certifiType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="certifiNo != null">
+	        #{certifiNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="infoChannel != null">
+	        #{infoChannel,jdbcType=CHAR},
+	      </if>
+	      <if test="fraudType != null">
+	        #{fraudType,jdbcType=CHAR},
+	      </if>
+	      <if test="memo != null">
+	        #{memo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="invalidTime != null">
+	        #{invalidTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="operator != null">
+	        #{operator,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currStatus != null">
+	        #{currStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="certifiTypeExtra != null">
+	        #{certifiTypeExtra,jdbcType=VARCHAR},
+	      </if>
+	      <if test="infoChannelExtra != null">
+	        #{infoChannelExtra,jdbcType=VARCHAR},
+	      </if>
+	      <if test="fraudTypeExtra != null">
+	        #{fraudTypeExtra,jdbcType=VARCHAR},
+	      </if>
+	   </trim>
+	</insert>	
+ 	
+	<insert id="insertIdentityRiskHistoryList" parameterType="java.util.List">
+		insert into OPAS_IDENTITY_RISKLIST_HISTORY 
+	 	(OPRETION_ID, AUTO_ID, NAME, CERTIFI_TYPE, CERTIFI_NO, INFO_CHANNEL, FRAUD_TYPE, MEMO, INVALID_TIME, CREATE_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS, CERTIFI_TYPE_EXTRA, INFO_CHANNEL_EXTRA, FRAUD_TYPE_EXTRA) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(SELECT
+ 			#{item.opretionId,jdbcType=VARCHAR},
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.certifiType,jdbcType=VARCHAR},
+			#{item.certifiNo,jdbcType=VARCHAR},
+			#{item.infoChannel,jdbcType=CHAR},
+			#{item.fraudType,jdbcType=CHAR},
+			#{item.memo,jdbcType=VARCHAR},
+			#{item.invalidTime,jdbcType=TIMESTAMP}, 
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operatTime,jdbcType=TIMESTAMP},
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.certifiTypeExtra,jdbcType=VARCHAR},
+			#{item.infoChannelExtra,jdbcType=VARCHAR},
+			#{item.fraudTypeExtra,jdbcType=VARCHAR}
+			FROM dual)
+		</foreach>
+	</insert>
+
+</mapper>

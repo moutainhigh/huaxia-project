@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="YdjSysresultInfo">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.decision.YdjSysresultInfo">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="DECISION_DATE" property="decisionDate"
+			jdbcType="TIMESTAMP" />
+		<result column="CREDIT_DECISION_RESULT" property="creditDecisionResult"
+			jdbcType="VARCHAR" />
+		<result column="CREDIT_DECISION_LAYER" property="creditDecisionLayer"
+			jdbcType="VARCHAR" />
+		<result column="CREDIT_DECISION_DESC" property="creditDecisionDesc"
+			jdbcType="VARCHAR" />
+		<result column="ADVISE_LIMIT" property="adviseLimit" jdbcType="DECIMAL" />
+		<result column="MACTH_INCOME" property="macthIncome" jdbcType="DECIMAL" />
+		<result column="APPLY_SCORE" property="applyScore" jdbcType="DECIMAL" />
+		<result column="CREDIT_SCORE" property="creditScore" jdbcType="DECIMAL" />
+		<result column="ZCREDIT" property="zcredit" jdbcType="DECIMAL" />
+		<result column="FRAUD_DECISION_RESULT" property="fraudDecisionResult"
+			jdbcType="VARCHAR" />
+		<result column="FRAUD_RESULT_DESC" property="fraudResultDesc"
+			jdbcType="VARCHAR" />
+		<result column="SYS_DECISION_RESULT" property="sysDecisionResult"
+			jdbcType="VARCHAR" />
+		<result column="SYS_RESULT_DESC" property="sysResultDesc"
+			jdbcType="CHAR" />
+		<result column="INDUSTRY_INCOME" property="industryIncome"
+			jdbcType="DECIMAL" />
+		<result column="VIOLATION_LIMIT" property="violationLimit"
+			jdbcType="DECIMAL" />
+		<result column="VIOLATION_REFER" property="violationRefer"
+			jdbcType="DECIMAL" />
+		<result column="PRETAX_INCOME" property="pretaxIncome"
+			jdbcType="DECIMAL" />
+		<result column="SYS_UNMORTGAGE_DTI" property="sysUnmortgageDti"
+			jdbcType="DECIMAL" />
+		<result column="SYS_SYNTHETICAL_DTI" property="sysSyntheticalDti"
+			jdbcType="DECIMAL" />
+		<result column="SYS_RISK_OPEN_MUE" property="sysRiskOpenMue"
+			jdbcType="DECIMAL" />
+		<result column="ADAPT_UNMORTGAGE_DTI" property="adaptUnmortgageDti"
+			jdbcType="DECIMAL" />
+		<result column="ADAPT_SYNTHETICAL_DTI" property="adaptSyntheticalDti"
+			jdbcType="DECIMAL" />
+		<result column="ADAPT_RISK_OPEN_MUE" property="adaptRiskOpenMue"
+			jdbcType="DECIMAL" />
+		<result column="REF_UNMORTGAGE_DTI" property="refUnmortgageDti"
+			jdbcType="DECIMAL" />
+		<result column="REF_SYNTHETICAL_DTI" property="refSyntheticalDti"
+			jdbcType="DECIMAL" />
+		<result column="REF_RISK_OPEN_MUE" property="refRiskOpenMue"
+			jdbcType="DECIMAL" />
+		<result column="DEBT_CONTROL" property="debtControl" jdbcType="DECIMAL" />
+		<result column="PRO_LINE_XIAXIAN" property="proLineXiaxian"
+			jdbcType="DECIMAL" />
+		<result column="DECISION_SEQ" property="decisionSeq" jdbcType="DECIMAL" />
+		<result column="STRATEGY_TYPE" property="strategyType"
+			jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+
+		<result column="CUST_LEVEL_TAG_RATE" property="custLevelTagRate"
+			jdbcType="VARCHAR" />
+		<result column="CUST_LEVEL_TAG_LIMIT" property="custLevelTagLimit"
+			jdbcType="VARCHAR" />
+		<result column="CUST_LEVEL_TAG_TERM" property="custLevelTagTerm"
+			jdbcType="VARCHAR" />
+
+		<result column="RATE_NAME" property="rateName" jdbcType="VARCHAR" />
+		<result column="REPAY_RATIO_VALUE" property="repayRatioValue"
+			jdbcType="VARCHAR" />
+		<result column="REPAY_FREE_VALUE" property="repayFreeValue"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > AUTO_ID, APP_ID, DECISION_DATE, CREDIT_DECISION_RESULT, 
+		CREDIT_DECISION_LAYER, CREDIT_DECISION_DESC, ADVISE_LIMIT, MACTH_INCOME, 
+		APPLY_SCORE, CREDIT_SCORE, ZCREDIT, FRAUD_DECISION_RESULT, FRAUD_RESULT_DESC, 
+		SYS_DECISION_RESULT, SYS_RESULT_DESC, INDUSTRY_INCOME, VIOLATION_LIMIT, VIOLATION_REFER, 
+		PRETAX_INCOME, SYS_UNMORTGAGE_DTI, SYS_SYNTHETICAL_DTI, SYS_RISK_OPEN_MUE, 
+		ADAPT_UNMORTGAGE_DTI, ADAPT_SYNTHETICAL_DTI, ADAPT_RISK_OPEN_MUE, REF_UNMORTGAGE_DTI, 
+		REF_SYNTHETICAL_DTI, REF_RISK_OPEN_MUE, DEBT_CONTROL, PRO_LINE_XIAXIAN, DECISION_SEQ, 
+		STRATEGY_TYPE, CRT_DATE, CRT_USER </sql> -->
+	<select id="selectByAppId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		s.AUTO_ID, s.APP_ID, s.DECISION_DATE,
+		s.CREDIT_DECISION_RESULT,
+		s.CREDIT_DECISION_LAYER,
+		s.CREDIT_DECISION_DESC,
+		s.ADVISE_LIMIT, s.MACTH_INCOME, s.APPLY_SCORE,
+		s.CREDIT_SCORE, s.ZCREDIT,
+		s.FRAUD_DECISION_RESULT,
+		s.FRAUD_RESULT_DESC, s.SYS_DECISION_RESULT, s.SYS_RESULT_DESC,
+		s.INDUSTRY_INCOME,
+		s.VIOLATION_LIMIT,
+		s.VIOLATION_REFER,
+		s.PRETAX_INCOME, s.SYS_UNMORTGAGE_DTI, s.SYS_SYNTHETICAL_DTI,
+		s.SYS_RISK_OPEN_MUE,
+		s.ADAPT_UNMORTGAGE_DTI, s.ADAPT_SYNTHETICAL_DTI,
+		s.ADAPT_RISK_OPEN_MUE, s.REF_UNMORTGAGE_DTI,
+		s.REF_SYNTHETICAL_DTI,
+		s.REF_RISK_OPEN_MUE, s.DEBT_CONTROL, s.PRO_LINE_XIAXIAN,
+		s.DECISION_SEQ,
+		s.STRATEGY_TYPE, s.CRT_DATE,
+		s.CRT_USER,s.CUST_LEVEL_TAG_RATE,s.CUST_LEVEL_TAG_LIMIT,s.CUST_LEVEL_TAG_TERM,
+		a.RATE_NAME, b.REPAY_RATIO_VALUE,c.repay_free_value
+		from
+		OPAS_YDJ_SYSRESULT_INFO s
+		left join (select m1.cust_level_tag,
+		n1.RATE_NAME
+		from OPAS_SYSPARM_RATE_CONF m1, OPAS_SYSPARM_RATE n1
+		where
+		m1.RATE_CODE = n1.RATE_CODE) a on s.cust_level_tag_rate =
+		a.CUST_LEVEL_TAG
+		left join (select m2.cust_level_tag,
+		n2.REPAY_RATIO_VALUE
+		from OPAS_SYSPARM_REPAY_LIMIT_CONF m2,
+		OPAS_SYSPARM_REPAY_LIMIT n2
+		where m2.REPAY_RATIO_CODE =
+		n2.REPAY_RATIO_CODE) b on
+		s.cust_level_tag_limit = b.CUST_LEVEL_TAG
+		left join (select m3.cust_level_tag, n3.repay_free_value
+		from
+		OPAS_SYSPARM_REPAY_TERM_CONF m3,
+		OPAS_SYSPARM_REPAY_FREE_TERM n3
+		where
+		m3.repay_free_code = n3.repay_free_code) c on s.cust_level_tag_term =
+		c.cust_level_tag
+		where s.APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectResultByAppId" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select
+		CREDIT_DECISION_RESULT
+		from OPAS_YDJ_SYSRESULT_INFO
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="queryCreditDecisionDescByAppIdYDJ" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select
+		CREDIT_DECISION_DESC
+		from OPAS_YDJ_SYSRESULT_INFO
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, DECISION_DATE,
+		CREDIT_DECISION_RESULT, CREDIT_DECISION_LAYER,
+		CREDIT_DECISION_DESC,
+		ADVISE_LIMIT, MACTH_INCOME, APPLY_SCORE, CREDIT_SCORE, ZCREDIT,
+		FRAUD_DECISION_RESULT,
+		FRAUD_RESULT_DESC, SYS_DECISION_RESULT,
+		SYS_RESULT_DESC, INDUSTRY_INCOME,
+		VIOLATION_LIMIT,
+		VIOLATION_REFER,
+		PRETAX_INCOME, SYS_UNMORTGAGE_DTI, SYS_SYNTHETICAL_DTI,
+		SYS_RISK_OPEN_MUE,
+		ADAPT_UNMORTGAGE_DTI, ADAPT_SYNTHETICAL_DTI,
+		ADAPT_RISK_OPEN_MUE, REF_UNMORTGAGE_DTI,
+		REF_SYNTHETICAL_DTI,
+		REF_RISK_OPEN_MUE, DEBT_CONTROL,
+		PRO_LINE_XIAXIAN, DECISION_SEQ,
+		STRATEGY_TYPE, CRT_DATE,
+		CRT_USER,CUST_LEVEL_TAG_RATE,CUST_LEVEL_TAG_LIMIT,CUST_LEVEL_TAG_TERM
+		from OPAS_YDJ_SYSRESULT_INFO
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectCreditScore" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, APP_ID, DECISION_DATE,
+		CREDIT_DECISION_RESULT, CREDIT_DECISION_LAYER,
+		CREDIT_DECISION_DESC,
+		ADVISE_LIMIT, MACTH_INCOME, APPLY_SCORE, CREDIT_SCORE, ZCREDIT,
+		FRAUD_DECISION_RESULT,
+		FRAUD_RESULT_DESC, SYS_DECISION_RESULT,
+		SYS_RESULT_DESC, INDUSTRY_INCOME,
+		VIOLATION_LIMIT,
+		VIOLATION_REFER,
+		PRETAX_INCOME, SYS_UNMORTGAGE_DTI, SYS_SYNTHETICAL_DTI,
+		SYS_RISK_OPEN_MUE,
+		ADAPT_UNMORTGAGE_DTI, ADAPT_SYNTHETICAL_DTI,
+		ADAPT_RISK_OPEN_MUE, REF_UNMORTGAGE_DTI,
+		REF_SYNTHETICAL_DTI,
+		REF_RISK_OPEN_MUE, DEBT_CONTROL,
+		PRO_LINE_XIAXIAN, DECISION_SEQ,
+		STRATEGY_TYPE, CRT_DATE,
+		CRT_USER,CUST_LEVEL_TAG_RATE,CUST_LEVEL_TAG_LIMIT,CUST_LEVEL_TAG_TERM
+		from OPAS_YDJ_SYSRESULT_INFO
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectCreditScoreYdj" resultType="java.lang.Float"
+		parameterType="java.lang.String">
+		select CDT_SCORE from
+		OPAS_FICO_YDJ_BLAZE
+		where APP_ID =
+		#{appId,jdbcType=VARCHAR}
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		OPAS_YDJ_SYSRESULT_INFO
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.decision.YdjSysresultInfo">
+		insert into
+		OPAS_YDJ_SYSRESULT_INFO (AUTO_ID, APP_ID,
+		DECISION_DATE,
+		CREDIT_DECISION_RESULT, CREDIT_DECISION_LAYER, CREDIT_DECISION_DESC,
+		ADVISE_LIMIT, MACTH_INCOME, APPLY_SCORE,
+		CREDIT_SCORE, ZCREDIT,
+		FRAUD_DECISION_RESULT,
+		FRAUD_RESULT_DESC, SYS_DECISION_RESULT,
+		SYS_RESULT_DESC,
+		INDUSTRY_INCOME, VIOLATION_LIMIT, VIOLATION_REFER,
+		PRETAX_INCOME, SYS_UNMORTGAGE_DTI, SYS_SYNTHETICAL_DTI,
+		SYS_RISK_OPEN_MUE, ADAPT_UNMORTGAGE_DTI, ADAPT_SYNTHETICAL_DTI,
+		ADAPT_RISK_OPEN_MUE, REF_UNMORTGAGE_DTI, REF_SYNTHETICAL_DTI,
+		REF_RISK_OPEN_MUE, DEBT_CONTROL, PRO_LINE_XIAXIAN,
+		DECISION_SEQ,
+		STRATEGY_TYPE, CRT_DATE,
+		CRT_USER,CUST_LEVEL_TAG_RATE,CUST_LEVEL_TAG_LIMIT,CUST_LEVEL_TAG_TERM)
+		values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR},
+		#{decisionDate,jdbcType=TIMESTAMP},
+		#{creditDecisionResult,jdbcType=CHAR},
+		#{creditDecisionLayer,jdbcType=CHAR},
+		#{creditDecisionDesc,jdbcType=VARCHAR},
+		#{adviseLimit,jdbcType=DECIMAL}, #{macthIncome,jdbcType=DECIMAL},
+		#{applyScore,jdbcType=DECIMAL},
+		#{creditScore,jdbcType=DECIMAL},
+		#{zcredit,jdbcType=DECIMAL}, #{fraudDecisionResult,jdbcType=VARCHAR},
+		#{fraudResultDesc,jdbcType=VARCHAR},
+		#{sysDecisionResult,jdbcType=VARCHAR}, #{sysResultDesc,jdbcType=CHAR},
+		#{industryIncome,jdbcType=DECIMAL},
+		#{violationLimit,jdbcType=DECIMAL},
+		#{violationRefer,jdbcType=DECIMAL},
+		#{pretaxIncome,jdbcType=DECIMAL},
+		#{sysUnmortgageDti,jdbcType=DECIMAL},
+		#{sysSyntheticalDti,jdbcType=DECIMAL},
+		#{sysRiskOpenMue,jdbcType=DECIMAL},
+		#{adaptUnmortgageDti,jdbcType=DECIMAL},
+		#{adaptSyntheticalDti,jdbcType=DECIMAL},
+		#{adaptRiskOpenMue,jdbcType=DECIMAL},
+		#{refUnmortgageDti,jdbcType=DECIMAL},
+		#{refSyntheticalDti,jdbcType=DECIMAL},
+		#{refRiskOpenMue,jdbcType=DECIMAL}, #{debtControl,jdbcType=DECIMAL},
+		#{proLineXiaxian,jdbcType=DECIMAL},
+		#{decisionSeq,jdbcType=DECIMAL},
+		#{strategyType,jdbcType=VARCHAR}, CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},#{custLevelTagRate,jdbcType=VARCHAR},#{custLevelTagLimit,jdbcType=VARCHAR},
+		#{custLevelTagTerm,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.decision.YdjSysresultInfo">
+		insert into OPAS_YDJ_SYSRESULT_INFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="decisionDate != null">
+				DECISION_DATE,
+			</if>
+			<if test="creditDecisionResult != null">
+				CREDIT_DECISION_RESULT,
+			</if>
+			<if test="creditDecisionLayer != null">
+				CREDIT_DECISION_LAYER,
+			</if>
+			<if test="creditDecisionDesc != null">
+				CREDIT_DECISION_DESC,
+			</if>
+			<if test="adviseLimit != null">
+				ADVISE_LIMIT,
+			</if>
+			<if test="macthIncome != null">
+				MACTH_INCOME,
+			</if>
+			<if test="applyScore != null">
+				APPLY_SCORE,
+			</if>
+			<if test="creditScore != null">
+				CREDIT_SCORE,
+			</if>
+			<if test="zcredit != null">
+				ZCREDIT,
+			</if>
+			<if test="fraudDecisionResult != null">
+				FRAUD_DECISION_RESULT,
+			</if>
+			<if test="fraudResultDesc != null">
+				FRAUD_RESULT_DESC,
+			</if>
+			<if test="sysDecisionResult != null">
+				SYS_DECISION_RESULT,
+			</if>
+			<if test="sysResultDesc != null">
+				SYS_RESULT_DESC,
+			</if>
+			<if test="industryIncome != null">
+				INDUSTRY_INCOME,
+			</if>
+			<if test="violationLimit != null">
+				VIOLATION_LIMIT,
+			</if>
+			<if test="violationRefer != null">
+				VIOLATION_REFER,
+			</if>
+			<if test="pretaxIncome != null">
+				PRETAX_INCOME,
+			</if>
+			<if test="sysUnmortgageDti != null">
+				SYS_UNMORTGAGE_DTI,
+			</if>
+			<if test="sysSyntheticalDti != null">
+				SYS_SYNTHETICAL_DTI,
+			</if>
+			<if test="sysRiskOpenMue != null">
+				SYS_RISK_OPEN_MUE,
+			</if>
+			<if test="adaptUnmortgageDti != null">
+				ADAPT_UNMORTGAGE_DTI,
+			</if>
+			<if test="adaptSyntheticalDti != null">
+				ADAPT_SYNTHETICAL_DTI,
+			</if>
+			<if test="adaptRiskOpenMue != null">
+				ADAPT_RISK_OPEN_MUE,
+			</if>
+			<if test="refUnmortgageDti != null">
+				REF_UNMORTGAGE_DTI,
+			</if>
+			<if test="refSyntheticalDti != null">
+				REF_SYNTHETICAL_DTI,
+			</if>
+			<if test="refRiskOpenMue != null">
+				REF_RISK_OPEN_MUE,
+			</if>
+			<if test="debtControl != null">
+				DEBT_CONTROL,
+			</if>
+			<if test="proLineXiaxian != null">
+				PRO_LINE_XIAXIAN,
+			</if>
+			<if test="decisionSeq != null">
+				DECISION_SEQ,
+			</if>
+			<if test="strategyType != null">
+				STRATEGY_TYPE,
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="crtUser != null">
+				CRT_USER,
+			</if>
+
+			<if test="custLevelTagRate != null">
+				CUST_LEVEL_TAG_RATE,
+			</if>
+			<if test="custLevelTagLimit != null">
+				CUST_LEVEL_TAG_LIMIT,
+			</if>
+			<if test="custLevelTagTerm != null">
+				CUST_LEVEL_TAG_TERM,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="decisionDate != null">
+				#{decisionDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creditDecisionResult != null">
+				#{creditDecisionResult,jdbcType=CHAR},
+			</if>
+			<if test="creditDecisionLayer != null">
+				#{creditDecisionLayer,jdbcType=CHAR},
+			</if>
+			<if test="creditDecisionDesc != null">
+				#{creditDecisionDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="adviseLimit != null">
+				#{adviseLimit,jdbcType=DECIMAL},
+			</if>
+			<if test="macthIncome != null">
+				#{macthIncome,jdbcType=DECIMAL},
+			</if>
+			<if test="applyScore != null">
+				#{applyScore,jdbcType=DECIMAL},
+			</if>
+			<if test="creditScore != null">
+				#{creditScore,jdbcType=DECIMAL},
+			</if>
+			<if test="zcredit != null">
+				#{zcredit,jdbcType=DECIMAL},
+			</if>
+			<if test="fraudDecisionResult != null">
+				#{fraudDecisionResult,jdbcType=VARCHAR},
+			</if>
+			<if test="fraudResultDesc != null">
+				#{fraudResultDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="sysDecisionResult != null">
+				#{sysDecisionResult,jdbcType=VARCHAR},
+			</if>
+			<if test="sysResultDesc != null">
+				#{sysResultDesc,jdbcType=CHAR},
+			</if>
+			<if test="industryIncome != null">
+				#{industryIncome,jdbcType=DECIMAL},
+			</if>
+			<if test="violationLimit != null">
+				#{violationLimit,jdbcType=DECIMAL},
+			</if>
+			<if test="violationRefer != null">
+				#{violationRefer,jdbcType=DECIMAL},
+			</if>
+			<if test="pretaxIncome != null">
+				#{pretaxIncome,jdbcType=DECIMAL},
+			</if>
+			<if test="sysUnmortgageDti != null">
+				#{sysUnmortgageDti,jdbcType=DECIMAL},
+			</if>
+			<if test="sysSyntheticalDti != null">
+				#{sysSyntheticalDti,jdbcType=DECIMAL},
+			</if>
+			<if test="sysRiskOpenMue != null">
+				#{sysRiskOpenMue,jdbcType=DECIMAL},
+			</if>
+			<if test="adaptUnmortgageDti != null">
+				#{adaptUnmortgageDti,jdbcType=DECIMAL},
+			</if>
+			<if test="adaptSyntheticalDti != null">
+				#{adaptSyntheticalDti,jdbcType=DECIMAL},
+			</if>
+			<if test="adaptRiskOpenMue != null">
+				#{adaptRiskOpenMue,jdbcType=DECIMAL},
+			</if>
+			<if test="refUnmortgageDti != null">
+				#{refUnmortgageDti,jdbcType=DECIMAL},
+			</if>
+			<if test="refSyntheticalDti != null">
+				#{refSyntheticalDti,jdbcType=DECIMAL},
+			</if>
+			<if test="refRiskOpenMue != null">
+				#{refRiskOpenMue,jdbcType=DECIMAL},
+			</if>
+			<if test="debtControl != null">
+				#{debtControl,jdbcType=DECIMAL},
+			</if>
+			<if test="proLineXiaxian != null">
+				#{proLineXiaxian,jdbcType=DECIMAL},
+			</if>
+			<if test="decisionSeq != null">
+				#{decisionSeq,jdbcType=DECIMAL},
+			</if>
+			<if test="strategyType != null">
+				#{strategyType,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				#{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				#{crtUser,jdbcType=VARCHAR},
+			</if>
+
+			<if test="custLevelTagRate != null">
+				#{custLevelTagRate,jdbcType=VARCHAR},
+			</if>
+			<if test="custLevelTagLimit != null">
+				#{custLevelTagLimit,jdbcType=VARCHAR},
+			</if>
+			<if test="custLevelTagTerm != null">
+				#{custLevelTagTerm,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.decision.YdjSysresultInfo">
+		update OPAS_YDJ_SYSRESULT_INFO
+		<set>
+			<if test="appId != null">
+				APP_ID = #{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="decisionDate != null">
+				DECISION_DATE = #{decisionDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creditDecisionResult != null">
+				CREDIT_DECISION_RESULT =
+				#{creditDecisionResult,jdbcType=CHAR},
+			</if>
+			<if test="creditDecisionLayer != null">
+				CREDIT_DECISION_LAYER =
+				#{creditDecisionLayer,jdbcType=CHAR},
+			</if>
+			<if test="creditDecisionDesc != null">
+				CREDIT_DECISION_DESC =
+				#{creditDecisionDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="adviseLimit != null">
+				ADVISE_LIMIT = #{adviseLimit,jdbcType=DECIMAL},
+			</if>
+			<if test="macthIncome != null">
+				MACTH_INCOME = #{macthIncome,jdbcType=DECIMAL},
+			</if>
+			<if test="applyScore != null">
+				APPLY_SCORE = #{applyScore,jdbcType=DECIMAL},
+			</if>
+			<if test="creditScore != null">
+				CREDIT_SCORE = #{creditScore,jdbcType=DECIMAL},
+			</if>
+			<if test="zcredit != null">
+				ZCREDIT = #{zcredit,jdbcType=DECIMAL},
+			</if>
+			<if test="fraudDecisionResult != null">
+				FRAUD_DECISION_RESULT =
+				#{fraudDecisionResult,jdbcType=VARCHAR},
+			</if>
+			<if test="fraudResultDesc != null">
+				FRAUD_RESULT_DESC = #{fraudResultDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="sysDecisionResult != null">
+				SYS_DECISION_RESULT =
+				#{sysDecisionResult,jdbcType=VARCHAR},
+			</if>
+			<if test="sysResultDesc != null">
+				SYS_RESULT_DESC = #{sysResultDesc,jdbcType=CHAR},
+			</if>
+			<if test="industryIncome != null">
+				INDUSTRY_INCOME = #{industryIncome,jdbcType=DECIMAL},
+			</if>
+			<if test="violationLimit != null">
+				VIOLATION_LIMIT = #{violationLimit,jdbcType=DECIMAL},
+			</if>
+			<if test="violationRefer != null">
+				VIOLATION_REFER = #{violationRefer,jdbcType=DECIMAL},
+			</if>
+			<if test="pretaxIncome != null">
+				PRETAX_INCOME = #{pretaxIncome,jdbcType=DECIMAL},
+			</if>
+			<if test="sysUnmortgageDti != null">
+				SYS_UNMORTGAGE_DTI =
+				#{sysUnmortgageDti,jdbcType=DECIMAL},
+			</if>
+			<if test="sysSyntheticalDti != null">
+				SYS_SYNTHETICAL_DTI =
+				#{sysSyntheticalDti,jdbcType=DECIMAL},
+			</if>
+			<if test="sysRiskOpenMue != null">
+				SYS_RISK_OPEN_MUE = #{sysRiskOpenMue,jdbcType=DECIMAL},
+			</if>
+			<if test="adaptUnmortgageDti != null">
+				ADAPT_UNMORTGAGE_DTI =
+				#{adaptUnmortgageDti,jdbcType=DECIMAL},
+			</if>
+			<if test="adaptSyntheticalDti != null">
+				ADAPT_SYNTHETICAL_DTI =
+				#{adaptSyntheticalDti,jdbcType=DECIMAL},
+			</if>
+			<if test="adaptRiskOpenMue != null">
+				ADAPT_RISK_OPEN_MUE =
+				#{adaptRiskOpenMue,jdbcType=DECIMAL},
+			</if>
+			<if test="refUnmortgageDti != null">
+				REF_UNMORTGAGE_DTI =
+				#{refUnmortgageDti,jdbcType=DECIMAL},
+			</if>
+			<if test="refSyntheticalDti != null">
+				REF_SYNTHETICAL_DTI =
+				#{refSyntheticalDti,jdbcType=DECIMAL},
+			</if>
+			<if test="refRiskOpenMue != null">
+				REF_RISK_OPEN_MUE = #{refRiskOpenMue,jdbcType=DECIMAL},
+			</if>
+			<if test="debtControl != null">
+				DEBT_CONTROL = #{debtControl,jdbcType=DECIMAL},
+			</if>
+			<if test="proLineXiaxian != null">
+				PRO_LINE_XIAXIAN = #{proLineXiaxian,jdbcType=DECIMAL},
+			</if>
+			<if test="decisionSeq != null">
+				DECISION_SEQ = #{decisionSeq,jdbcType=DECIMAL},
+			</if>
+			<if test="strategyType != null">
+				STRATEGY_TYPE = #{strategyType,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUser != null">
+				CRT_USER = #{crtUser,jdbcType=VARCHAR},
+			</if>
+
+			<if test="custLevelTagRate != null">
+				CUST_LEVEL_TAG_RATE =
+				#{custLevelTagRate,jdbcType=VARCHAR},
+			</if>
+			<if test="custLevelTagLimit != null">
+				CUST_LEVEL_TAG_LIMIT =
+				#{custLevelTagLimit,jdbcType=VARCHAR},
+			</if>
+			<if test="custLevelTagTerm != null">
+				CUST_LEVEL_TAG_TERM =
+				#{custLevelTagTerm,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.decision.YdjSysresultInfo">
+		update
+		OPAS_YDJ_SYSRESULT_INFO
+		set APP_ID = #{appId,jdbcType=VARCHAR},
+		DECISION_DATE = #{decisionDate,jdbcType=TIMESTAMP},
+		CREDIT_DECISION_RESULT = #{creditDecisionResult,jdbcType=CHAR},
+		CREDIT_DECISION_LAYER = #{creditDecisionLayer,jdbcType=CHAR},
+		CREDIT_DECISION_DESC = #{creditDecisionDesc,jdbcType=VARCHAR},
+		ADVISE_LIMIT = #{adviseLimit,jdbcType=DECIMAL},
+		MACTH_INCOME =
+		#{macthIncome,jdbcType=DECIMAL},
+		APPLY_SCORE =
+		#{applyScore,jdbcType=DECIMAL},
+		CREDIT_SCORE =
+		#{creditScore,jdbcType=DECIMAL},
+		ZCREDIT = #{zcredit,jdbcType=DECIMAL},
+		FRAUD_DECISION_RESULT = #{fraudDecisionResult,jdbcType=VARCHAR},
+		FRAUD_RESULT_DESC = #{fraudResultDesc,jdbcType=VARCHAR},
+		SYS_DECISION_RESULT = #{sysDecisionResult,jdbcType=VARCHAR},
+		SYS_RESULT_DESC = #{sysResultDesc,jdbcType=CHAR},
+		INDUSTRY_INCOME =
+		#{industryIncome,jdbcType=DECIMAL},
+		VIOLATION_LIMIT =
+		#{violationLimit,jdbcType=DECIMAL},
+		VIOLATION_REFER =
+		#{violationRefer,jdbcType=DECIMAL},
+		PRETAX_INCOME =
+		#{pretaxIncome,jdbcType=DECIMAL},
+		SYS_UNMORTGAGE_DTI =
+		#{sysUnmortgageDti,jdbcType=DECIMAL},
+		SYS_SYNTHETICAL_DTI =
+		#{sysSyntheticalDti,jdbcType=DECIMAL},
+		SYS_RISK_OPEN_MUE =
+		#{sysRiskOpenMue,jdbcType=DECIMAL},
+		ADAPT_UNMORTGAGE_DTI =
+		#{adaptUnmortgageDti,jdbcType=DECIMAL},
+		ADAPT_SYNTHETICAL_DTI =
+		#{adaptSyntheticalDti,jdbcType=DECIMAL},
+		ADAPT_RISK_OPEN_MUE =
+		#{adaptRiskOpenMue,jdbcType=DECIMAL},
+		REF_UNMORTGAGE_DTI =
+		#{refUnmortgageDti,jdbcType=DECIMAL},
+		REF_SYNTHETICAL_DTI =
+		#{refSyntheticalDti,jdbcType=DECIMAL},
+		REF_RISK_OPEN_MUE =
+		#{refRiskOpenMue,jdbcType=DECIMAL},
+		DEBT_CONTROL =
+		#{debtControl,jdbcType=DECIMAL},
+		PRO_LINE_XIAXIAN =
+		#{proLineXiaxian,jdbcType=DECIMAL},
+		DECISION_SEQ =
+		#{decisionSeq,jdbcType=DECIMAL},
+		STRATEGY_TYPE =
+		#{strategyType,jdbcType=VARCHAR},
+		CRT_DATE =
+		#{crtDate,jdbcType=TIMESTAMP},
+		CUST_LEVEL_TAG_RATE =
+		#{custLevelTagRate,jdbcType=TIMESTAMP},
+		CUST_LEVEL_TAG_LIMIT =
+		#{custLevelTagLimit,jdbcType=TIMESTAMP},
+		CUST_LEVEL_TAG_TERM =
+		#{custLevelTagTerm,jdbcType=TIMESTAMP},
+		CRT_USER =
+		#{crtUser,jdbcType=VARCHAR}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectSystemApprovalResult" resultType="java.util.Map"
+		parameterType="java.lang.String">
+		select a.app_id,a.cust_name,a.apply_card,c.Pre_Sellimit,
+		b.CREDIT_DECISION_RESULT,b.CREDIT_DECISION_DESC,
+		b.ZCREDIT,b.CREDIT_SCORE,b.VIOLATION_LIMIT,b.REF_UNMORTGAGE_DTI,b.REF_RISK_OPEN_MUE
+		from Opas_Cust_Baseinfo a
+		left join OPAS_YDJ_SYSRESULT_INFO b on a.app_id = b.app_id
+		left join OPAS_PARAM_PRECREDIT c on a.CERTIFI_NO = c.CERTIFI_ID
+		where a.APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<!-- 易达金征信策略结论入库 -->
+	<insert id="insertInfo" parameterType="com.huaxia.opas.domain.decision.YdjSysresultInfo">
+		insert into OPAS_YDJ_SYSRESULT_INFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="creditDecisionResult != null">
+				CREDIT_DECISION_RESULT,
+			</if>
+			<if test="creditDecisionLayer != null">
+				CREDIT_DECISION_LAYER,
+			</if>
+			<if test="creditDecisionDesc != null">
+				CREDIT_DECISION_DESC,
+			</if>
+			CRT_DATE,
+			<if test="crtUser != null">
+				CRT_USER
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="creditDecisionResult != null">
+				#{creditDecisionResult,jdbcType=VARCHAR},
+			</if>
+			<if test="creditDecisionLayer != null">
+				#{creditDecisionLayer,jdbcType=VARCHAR},
+			</if>
+			<if test="creditDecisionDesc != null">
+				#{creditDecisionDesc,jdbcType=VARCHAR},
+			</if>
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">
+				#{crtUser,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateYdjResultInfo" parameterType="com.huaxia.opas.domain.decision.YdjSysresultInfo">
+		update OPAS_YDJ_SYSRESULT_INFO
+		set
+		CREDIT_DECISION_RESULT = #{creditDecisionResult,jdbcType=VARCHAR},
+		CREDIT_DECISION_LAYER = #{creditDecisionLayer,jdbcType=VARCHAR},
+		CREDIT_DECISION_DESC = #{creditDecisionDesc,jdbcType=VARCHAR},
+		CRT_DATE=CURRENT_TIMESTAMP,
+		CRT_USER=#{crtUser,jdbcType=VARCHAR}
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectCount" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select
+		count(1)
+		from OPAS_YDJ_SYSRESULT_INFO
+		where APP_ID ='${_parameter}'
+	</select>
+
+	<resultMap id="FqzRstDespResultMap" type="java.util.Map">
+		<result column="fqz_riskno" property="fqzRiskno" jdbcType="VARCHAR" />
+		<result column="fqz_value" property="fqzValue" jdbcType="VARCHAR" />
+		<result column="fqz_value1" property="fqzValue1" jdbcType="VARCHAR" />
+		<result column="fqz_remarks" property="fqzRemarks" jdbcType="VARCHAR" />
+		<result column="fqz_remark" property="fqzRemark" jdbcType="VARCHAR" />
+		<result column="crt_date" property="crt_date" jdbcType="VARCHAR" />
+		<result column="fqz_remarks" property="fqzRemarks" jdbcType="VARCHAR" />
+		<result column="fqz_requesttype" property="fqzRequesttype"
+			jdbcType="VARCHAR" />
+		<result column="fqz_riskno1" property="fqzRiskno1" jdbcType="VARCHAR" />
+		<result column="fqz_riskdesc" property="fqzRiskdesc" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectFqzRequestTypeByAppId" parameterType="java.lang.String"
+		resultMap="FqzRstDespResultMap">
+		select
+		fqz_requesttype,fqz_value
+		from OPAS_FQZ_BIG_RESPONSE where fqz_type='AF_ALL'
+		and APP_ID like '${_parameter}%'
+
+	</select>
+	
+	<select id="selectFqzFraudScore" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		select
+		fqz_value
+		from OPAS_FQZ_BIG_RESPONSE where fqz_type=#{fqzType,jdbcType=VARCHAR}
+		and fqz_requesttype = #{fqzRequesttype,jdbcType=VARCHAR}
+		and APP_ID like '${appId}%'
+	</select>
+
+	<select id="selectFqzRstDespByAppId" parameterType="java.util.Map"
+		resultMap="FqzRstDespResultMap">
+		select DISTINCT e.app_id,
+		(select fqz_desc from opas_fqz_param where fqz_id = e.fqz_value) as
+		fqz_value,
+		(select fqz_desc from opas_fqz_param where fqz_id = t.fqz_riskno) as
+		fqz_riskno,
+		(select fqz_desc from opas_fqz_param where fqz_id = e.fqz_remarks) as
+		fqz_remarks,
+		fqz_remarks as fqz_remark,
+		e.fqz_value as fqz_value1,
+		t.fqz_riskno as fqz_riskno1,
+		e.fqz_requesttype,
+		e.crt_date from OPAS_FQZ_BIG_RESPONSE e
+		left join opas_fqz_result t on e.app_id = t.app_id
+		and e.fqz_requesttype = t.fqz_requesttype
+		where e.fqz_type='AF_ALL' and e.fqz_requesttype =
+		#{fqzRequesttype,jdbcType=VARCHAR}
+		<if test="appId !=null">
+			and e.APP_ID like '${appId}%'
+		</if>
+		order by fqz_riskno1 desc
+	</select>
+	
+	<select id="selectMisszdResultByAppId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select misszd_result from opas_ws_platform_risk_invest 
+		where APP_ID like '${_parameter}%'
+	</select>
+	
+	<select id="selectMaxFqzRequestTypeByAppId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select
+		max(fqz_requesttype)
+		from OPAS_FQZ_BIG_RESPONSE where fqz_type='AF_ALL'
+		and APP_ID like '${_parameter}%'
+	</select>
+	
+	<select id="selectFqzRiskDec" parameterType="java.util.Map"
+		resultMap="FqzRstDespResultMap">
+		select DISTINCT t.fqz_riskdesc
+		from OPAS_FQZ_BIG_RESPONSE e
+		left join opas_fqz_result t on e.app_id = t.app_id
+		and e.fqz_requesttype = t.fqz_requesttype
+		where e.fqz_type='AF_ALL' and e.fqz_requesttype =
+		#{fqzRequesttype,jdbcType=VARCHAR}
+		<if test="appId !=null">
+			and e.APP_ID like '${appId}%'
+		</if>
+	</select>
+	
+</mapper>

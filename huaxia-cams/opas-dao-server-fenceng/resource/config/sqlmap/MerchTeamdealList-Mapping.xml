@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MerchTeamdealList">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="TEAMDEAL_NO" property="teamdealNo" jdbcType="VARCHAR" />
+		<result column="MERCH_NAME" property="merchName" jdbcType="VARCHAR" />
+		<result column="PRODUCE_NAME" property="produceName" jdbcType="VARCHAR" />
+		<result column="PRODUCE_PRICE" property="producePrice"
+			jdbcType="DECIMAL" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, 
+		PRODUCE_PRICE, OPERATOR, OPERAT_TIME, CURR_STATUS </sql> -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS
+		from OPAS_MERCH_TEAMDEAL_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByCondtion" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	    select
+		AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS
+		from OPAS_MERCH_TEAMDEAL_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="teamdealNo != null and teamdealNo != ''" >
+	      and  upper(TEAMDEAL_NO) LIKE upper('%${teamdealNo}%')
+	    </if>
+	    <if test="merchName != null and merchName != ''" >
+	      and  MERCH_NAME LIKE '%${merchName}%'
+	    </if>
+  	</select>
+  	<select id="queryCountList" resultType="java.lang.Integer" parameterType="java.util.Map" >
+	    select count(1)
+		from OPAS_MERCH_TEAMDEAL_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="teamdealNo != null and teamdealNo != ''" >
+	      and  upper(TEAMDEAL_NO) LIKE upper('%${teamdealNo}%')
+	    </if>
+	    <if test="merchName != null and merchName != ''" >
+	      and  MERCH_NAME LIKE '%${merchName}%'
+	    </if>
+  	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_MERCH_TEAMDEAL_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		insert into OPAS_MERCH_TEAMDEAL_LIST (AUTO_ID, TEAMDEAL_NO,
+		MERCH_NAME,
+		PRODUCE_NAME, PRODUCE_PRICE, OPERATOR,
+		OPERAT_TIME, CURR_STATUS)
+		values (#{autoId,jdbcType=VARCHAR}, #{teamdealNo,jdbcType=VARCHAR},
+		#{merchName,jdbcType=VARCHAR},
+		#{produceName,jdbcType=VARCHAR}, #{producePrice,jdbcType=DECIMAL}, #{operator,jdbcType=VARCHAR},
+		#{operatTime,jdbcType=TIMESTAMP}, #{currStatus,jdbcType=CHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		insert into OPAS_MERCH_TEAMDEAL_LIST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="teamdealNo != null">
+				TEAMDEAL_NO,
+			</if>
+			<if test="merchName != null">
+				MERCH_NAME,
+			</if>
+			<if test="produceName != null">
+				PRODUCE_NAME,
+			</if>
+			<if test="producePrice != null">
+				PRODUCE_PRICE,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="teamdealNo != null">
+				#{teamdealNo,jdbcType=VARCHAR},
+			</if>
+			<if test="merchName != null">
+				#{merchName,jdbcType=VARCHAR},
+			</if>
+			<if test="produceName != null">
+				#{produceName,jdbcType=VARCHAR},
+			</if>
+			<if test="producePrice != null">
+				#{producePrice,jdbcType=DECIMAL},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="operatTime != null">
+				#{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		update OPAS_MERCH_TEAMDEAL_LIST
+		<set>
+			<if test="teamdealNo != null">
+				TEAMDEAL_NO = #{teamdealNo,jdbcType=VARCHAR},
+			</if>
+			<if test="merchName != null">
+				MERCH_NAME = #{merchName,jdbcType=VARCHAR},
+			</if>
+			<if test="produceName != null">
+				PRODUCE_NAME = #{produceName,jdbcType=VARCHAR},
+			</if>
+			<if test="producePrice != null">
+				PRODUCE_PRICE = #{producePrice,jdbcType=DECIMAL},
+			</if>
+			<if test="operator != null">
+				OPERATOR = #{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS = #{currStatus,jdbcType=CHAR},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		update OPAS_MERCH_TEAMDEAL_LIST
+		set TEAMDEAL_NO = #{teamdealNo,jdbcType=VARCHAR},
+		MERCH_NAME = #{merchName,jdbcType=VARCHAR},
+		PRODUCE_NAME = #{produceName,jdbcType=VARCHAR},
+		PRODUCE_PRICE = #{producePrice,jdbcType=DECIMAL},
+		OPERATOR = #{operator,jdbcType=VARCHAR},
+		OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+		CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<select id="queryMerchTeamdeal"
+		parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select 
+		AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR, CREATE_TIME , OPERAT_TIME, CURR_STATUS
+		from OPAS_MERCH_TEAMDEAL_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryMerchTeamdealList"
+		parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList"
+		resultMap="BaseResultMap">
+		select 
+		AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR, CREATE_TIME , OPERAT_TIME, CURR_STATUS
+		FROM OPAS_MERCH_TEAMDEAL_LIST
+		<where>
+			<if test="teamdealNo != null and teamdealNo != ''"> 
+			    AND TEAMDEAL_NO LIKE '%${teamdealNo}%'
+			</if>
+			<if test="merchName != null and merchName != ''">
+				AND MERCH_NAME LIKE '%${merchName}%'
+			</if>
+			<if test="produceName != null and produceName != ''">
+				AND PRODUCE_NAME LIKE '%${produceName}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>			
+		</where>
+		ORDER BY CREATE_TIME DESC,to_number(ORDERBY_NO)
+	</select>
+	
+	<select id="queryMerchTeamdealCount"
+		parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID) from 
+		OPAS_MERCH_TEAMDEAL_LIST
+		<where>
+			<if test="teamdealNo != null and teamdealNo != ''"> 
+			    AND upper(TEAMDEAL_NO) LIKE upper('%${teamdealNo}%')
+			</if>
+			<if test="merchName != null and merchName != ''">
+				AND MERCH_NAME LIKE '%${merchName}%'
+			</if>
+			<if test="produceName != null and produceName != ''">
+				AND PRODUCE_NAME LIKE '%${produceName}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+		</where>	
+		ORDER BY CREATE_TIME DESC
+	</select>
+	
+	<delete id="deleteMerchTeamdeal" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		delete from
+		OPAS_MERCH_TEAMDEAL_LIST
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<update id="updateMerchTeamdeal" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		update OPAS_MERCH_TEAMDEAL_LIST
+		<set>
+			TEAMDEAL_NO = #{teamdealNo,jdbcType=VARCHAR},
+			MERCH_NAME = #{merchName,jdbcType=VARCHAR},
+			PRODUCE_NAME = #{produceName,jdbcType=VARCHAR},
+			PRODUCE_PRICE = #{producePrice,jdbcType=DECIMAL},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>	
+	
+	<update id="updateMerchTeamdealActive" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		update OPAS_MERCH_TEAMDEAL_LIST
+		<set>
+			CURR_STATUS = #{currStatus,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<select id="queryMerchTeamdealHistoryList"
+		parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList"
+		resultMap="BaseResultMap">
+		select 
+		TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR, CREATE_TIME , OPERAT_TIME, CURR_STATUS
+		from OPAS_MERCH_TEAMDEAL_LIST_HIS
+		WHERE AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		ORDER BY OPERAT_TIME DESC
+	</select>
+	
+	<select id="queryMerchTeamdealHistoryCount"
+		parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID) from 
+		OPAS_MERCH_TEAMDEAL_LIST_HIS
+		where
+		AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	 
+	<insert id="insertMerchTeamdeal" parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+		insert into OPAS_MERCH_TEAMDEAL_LIST
+		(AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR, CREATE_TIME , OPERAT_TIME, CURR_STATUS)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{teamdealNo,jdbcType=VARCHAR},
+		#{merchName,jdbcType=VARCHAR},
+		#{produceName,jdbcType=VARCHAR},
+		#{producePrice,jdbcType=VARCHAR},
+		#{operator,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_DATE,
+		#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+ 	
+	<insert id="insertMerchTeamdealList" parameterType="java.util.List">
+		insert into OPAS_MERCH_TEAMDEAL_LIST 
+		(AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR, CREATE_TIME , OPERAT_TIME, CURR_STATUS,ORDERBY_NO)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.teamdealNo,jdbcType=VARCHAR},
+			#{item.merchName,jdbcType=VARCHAR},
+			#{item.produceName,jdbcType=VARCHAR},
+			#{item.producePrice,jdbcType=DECIMAL},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},	
+			#{item.operatTime,jdbcType=TIMESTAMP},					
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.orderByNo,jdbcType=VARCHAR}			
+			from dual)
+		</foreach>
+	</insert>
+			
+	<insert id="insertMerchTeamdealHistory"
+			parameterType="com.huaxia.opas.domain.decision.MerchTeamdealList">
+	INSERT INTO OPAS_MERCH_TEAMDEAL_LIST_HIS
+	(OPRETION_ID, AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR, CREATE_TIME , OPERAT_TIME, CURR_STATUS) 
+    	values
+	    (
+	 		#{opretionId,jdbcType=VARCHAR},	    
+			#{autoId,jdbcType=VARCHAR},
+			#{teamdealNo,jdbcType=VARCHAR},
+			#{merchName,jdbcType=VARCHAR},
+			#{produceName,jdbcType=VARCHAR},
+			#{producePrice,jdbcType=DECIMAL},
+			#{operator,jdbcType=VARCHAR},
+			#{createTime,jdbcType=TIMESTAMP},	
+			sysdate,					
+			#{currStatus,jdbcType=CHAR}   
+		)
+	</insert>	
+ 	
+	<insert id="insertMerchTeamdealHistoryList" parameterType="java.util.List">
+		insert into OPAS_MERCH_TEAMDEAL_LIST_HIS
+	 	(OPRETION_ID, AUTO_ID, TEAMDEAL_NO, MERCH_NAME, PRODUCE_NAME, PRODUCE_PRICE, OPERATOR, CREATE_TIME , OPERAT_TIME, CURR_STATUS) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+		(SELECT
+	 		#{item.opretionId,jdbcType=VARCHAR},	    
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.teamdealNo,jdbcType=VARCHAR},
+			#{item.merchName,jdbcType=VARCHAR},
+			#{item.produceName,jdbcType=VARCHAR},
+			#{item.producePrice,jdbcType=DECIMAL},			
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},	
+			sysdate,					
+			#{item.currStatus,jdbcType=CHAR}  	  				
+		FROM dual)
+		</foreach>
+	</insert> 	
+</mapper>

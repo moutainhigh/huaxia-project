@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCDissentInfoMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_ANNOUNCE_DISINFO (
+			APP_ID,CRT_TIME,CRT_USER,DECLARE_CONTENT,ADD_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},SYSDATE,'SYSTEM',#{content, jdbcType = VARCHAR},#{getTime, jdbcType = VARCHAR}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_ANNOUNCE_DISINFO (
+			APP_ID,CRT_TIME,CRT_USER,DECLARE_CONTENT,ADD_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT #{item.appId},SYSDATE,'SYSTEM',#{item.content},#{item.getTime} FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

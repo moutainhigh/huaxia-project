@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>卡件页面信息展示</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/modify/modify.js"></script>
+<script type="text/javascript">
+/******获取url地址中的参数并封装成对象begin*************************/
+var url=location.search;
+var theRequest=new Object();
+if(url.indexOf("?")!=-1){
+	var str=url.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+}
+var appId=theRequest.appId;//获取流程号
+var ydjFlag=theRequest.ydjFlag;//易达金标示
+var userCode=theRequest.userCode;//用户登录名 
+var matchingCardFlag= theRequest.matchingCardFlag;
+var submitType="";
+var flag = "";
+if(theRequest.flag == undefined||theRequest.flag==""){
+
+}else{
+	flag = theRequest.flag;
+	flag = 1;
+}
+//控制 tab点击 是否触发 加载页面
+var left0='';
+var left1='';
+var left2='';
+var right0='';
+var right1='';
+var right2='';
+var right3='';
+/******获取url地址中的参数并封装成对象end*************************/
+$(function(){
+	$("#appId").val(appId);
+	var liLeft =document.getElementById("credit_control_leftTab").getElementsByTagName("li");
+	var liRight =document.getElementById("credit_control_rightTab").getElementsByTagName("li");
+	for(var i=0;i<liLeft.length;i++){
+		liLeft[i].number=i;
+		liLeft[i].onclick=function(){loadCurrentPageLeft(this);};
+	}
+	for(var i=0;i<liRight.length;i++){
+		liRight[i].number=i;
+		liRight[i].onclick=function(){loadCurrentPageRight(this);};
+	}
+	$("#credit_control_left0").html('<iframe name="leftIframe0" id="leftIframe0" style="border: 0; width: 100%; height: 100%"  src="../coming/topbpmExceSolveTierAppid.html"></iframe>');
+	$("#credit_control_right0").html('<iframe name="rightIframe0" id="rightIframe0" style="border: 0; width: 100%; height: 100%"  src="../coming/topbpmExceSolveAutoAppid.html?appId='+appId+'"></iframe>');
+
+}); 
+/**
+ * 加载页面左边 所选择的当前tab页
+ */
+function loadCurrentPageLeft(currentObject){
+	var number=currentObject.number;
+	var currObj=currentObject;
+	
+	if(number==0&&left0==''){
+	}else if(number==1&&left1==''){
+		left1='1';     
+		$("#credit_control_left1").html('<iframe name="leftIframe1" id="leftIframe1" style="border: 0; width: 100%; height: 100%"  src="../coming/topbpmExceSolveArtiAppid.html"></iframe>');
+	}else if(number==2&&left1==''){
+		left2='2';     
+		$("#credit_control_left2").html('<iframe name="leftIframe2" id="leftIframe2" style="border: 0; width: 100%; height: 100%"  src="../coming/queryWeiguidangAppid.html"></iframe>');
+	}
+}	
+/**
+ * 加载页面右边 所选择的当前tab页
+ */
+function loadCurrentPageRight(currentObject){
+	var number=currentObject.number;
+	var currObj=currentObject;
+	
+	if(number==0&&right0==''){
+	}else if(number==1&&right1==''){
+		right1='1';     
+		$("#credit_control_right1").html('<iframe name="rightIframe1" id="rightIframe1" style="border: 0; width: 100%; height: 100%"  src="../coming/topbpmTmpExecutionAppid.html"></iframe>');
+	}else if(number==2&&right2==''){
+		right2='2';     
+		$("#credit_control_right2").html('<iframe name="rightIframe2" id="rightIframe2" style="border: 0; width: 100%; height: 100%"  src="../coming/topbpmExceProcessAppid.html"></iframe>');
+	}else if(number==3&&right3==''){
+		right3='3';     
+		$("#credit_control_right3").html('<iframe name="rightIframe3" id="rightIframe3" style="border: 0; width: 100%; height: 100%"  src="../coming/work_flow_qu.html"></iframe>');
+	}
+}	
+
+
+
+</script>
+
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<div
+		data-options="region:'west',title:'左区域',split:true,noheader:true,border:false"
+		style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="credit_control_leftTab" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div id="credit_control_left0" title="梯队节点"></div>
+			<div id="credit_control_left1" title="人工节点"></div>
+			<div id="credit_control_left2" title="未归档"></div>
+		</div>
+	</div>
+	<div
+		data-options="region:'east',title:'右区域',split:true,noheader:true,border:false"
+		style="padding: 2px; background: #eaf2ff; width: 50%;">
+		<div id="credit_control_rightTab" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div id="credit_control_right0" title="异常信息"></div>
+			<div id="credit_control_right1" title="推进表"></div>
+			<div id="credit_control_right2" title="流程表"></div>
+			<div id="credit_control_right3" title="节点统计"></div>
+		</div>
+	</div>
+
+
+</body>
+</html>

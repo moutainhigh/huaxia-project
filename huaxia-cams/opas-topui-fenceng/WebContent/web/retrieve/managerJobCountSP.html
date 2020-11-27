@@ -1,0 +1,290 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div id="nemberJobCountAppDiv"   class="area-search" style="padding: 10px;height:650px">
+		<table id="nemberJobCountAppTab" title="审批   组员工作情况统计"  class="easyui-datagrid" style="width: 98%;" data-options="rownumbers:true,singleSelect:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<th field="userId" width="10%" align="center" checkbox="true">ID</th>
+					<th field="staffName" width="10%" align="center">员工姓名</th>				
+					<th field="hangInTheAirStatus" width="10%" align="center">未完成队列</th>
+					<th field="supplementLetter" width="10%" align="center">补件队列</th>
+					<th field="pauseDocument" width="10%" align="center">挂起队列</th>
+					<!-- <th field="finishedStatus" width="10%" align="center">已完成队列</th> -->
+					<th field="total" width="10%" align="center">合计（除已完成）</th>
+					<th field="subNum" width="10%" align="center">当日提交量</th>
+					<th field="gdNum" width="10%" align="center">归档</th>
+					<th field="operate" width="10%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div id="checkDetailedApp"  class="easyui-window" title="审批   明细查看" style="width: 1150px; height: 600px" top="45px" data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div id="seachCondion" class="area-search" style="padding: 10px;"> 
+			<table>
+				<tr>
+					<label>流水号:&nbsp;&nbsp;</label><input class="easyui-textbox" id="appId" name="appId" data-options="validType:'maxLength[16]'" style="width: 130px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<label>排&nbsp;&nbsp;序:&nbsp;&nbsp;</label>
+					<select id="order" class="easyui-combobox"  name="order"style="width: 70px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<option value="-1" select="selected">请选择</option>
+						<option value="01">未完成</option>
+						<option value="02">已完成</option>
+						<option value="03">待补件</option>
+						<option value="04">已挂起</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkDetailedApp()">查询</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="nemberRemarksWindowOpen()">组长备注</a>
+				</tr>
+			</table>
+		</div>
+		<table id="checkDetailedTabApp"  class="easyui-datagrid" style="width: 1130px; height: 500px" iconCls="icon-save" rownumbers="true" data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+				<th field="id"  width="11%" align="center" checkbox="true">流水号</th>
+				<th field="ydjFig"  width="11%" align="center" hidden="hidden">易达金标识</th>
+				<th field="dilStatusFig"  width="11%" align="center" hidden="hidden">队列标识</th>
+				<th field="appProd"  width="11%" align="center" hidden="hidden">申请卡片产品</th>
+				<th field="appId"  width="11%" align="center" data-options="formatter:queryAppid">流水号</th><!-- data-options="formatter:queryAppid" -->
+				<th field="c1Cname"  width="8%" align="center" >客户姓名</th>
+				<th field="c1Idnbr"  width="12%" align="center" >证件号码</th>
+				<th field="c1Coname"  width="22%" align="center" >现单位全称</th>
+				<th field="lastOptUser"  width="8%" align="center" >最后操作员</th>
+				<th field="lstTeamDate"  width="11%" align="center" >最后操作时间</th>
+				<th field="queDate"  width="7%" align="center" >进入队列天数</th>
+				<th field="delStatus"  width="8%" align="center" >所在队列名称</th>
+				<th field="remarkInfoFig" width="10%" align="center" data-options="formatter:remarkInfoApp">组长备注</th><!--   -->
+			</tr>
+		</table>
+	</div>
+	<div id="remarkInfoDivApp"  class="easyui-window" title="组长备注" style="width: 750px; height: 350px" top="45px" data-options="iconCls:'icon-save',modal:true,closed:true">
+		<table id="remarkInfoTabApp" class="easyui-datagrid" style="width: 99%" >
+			<thead>
+				<tr>
+					<th field="remarkInfo" width="45%" align="center">备注</th>	
+					<th field="remarkUser" width="10%" align="center">备注人</th>		
+					<th field="remarkDate" width="25%" align="center">备注时间</th>	
+					<th field="currNode" width="15%" align="center">备注环节</th>						
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div id="nemberRemarksDiv"  class="easyui-window" title="组长备注" style="width: 550px; height: 450px" top="45px" data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form  id="nemberRemarksForm">
+			<table>
+				<tr>
+					<td style="width:50px;"><label>&nbsp;&nbsp;&nbsp;&nbsp;备注：</label></td>
+					<td><textarea id="nemberRemarksTextareaId" name="nemberRemarksTextareaNmae" style="width:390px; height:200px;" align="center" ></textarea></td>
+				</tr>
+				<tr>
+					<td><a href="javascript:void(0)"class="easyui-linkbutton" onclick="saveNemberRemarks()" align="center">保存</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('nemberRemarksDiv')" align="center">取消</a> </td>
+				</tr>
+			</table>
+		</form>	
+	</div>
+	<script>
+	//审批
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var userCode = "";
+	$(function(){
+		var groupId = GetQueryString("groupId");
+		var startTime = GetQueryString("managerTime");
+		if (typeof(groupId)=="undefined"||groupId==""||groupId==null){
+			userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;	
+		}
+		var opts = $('#nemberJobCountAppTab').datagrid("options");
+		opts.url = '/opas-naps/queryMemberJobCountApprove.json';
+		var s={"orgId" : groupId,"startTime":startTime};
+		$('#nemberJobCountAppTab').datagrid("reload", s);
+		
+	});
+	
+	
+	var checkDetailedWindow = $("#checkDetailed");
+	var nemberRemarksWindow = $("#nemberRemarksDiv"); 
+	var remarkInfoWindowApp = $("#remarkInfoDivApp");
+	var remarkInfoTabApp = $("#remarkInfoTabApp");
+	var checkDetailedTab = $("#checkDetailedTabApp");
+	var nemberJobCountAppTab = $("#nemberJobCountAppTab");
+	var checkDetailedWindowApp = $("#checkDetailedApp");
+	function formatOper(val, row, index) {
+		if(index!=0){
+			return "<a href=javascript:checkDetailedApp();>查看</a>";
+		}
+	}
+	function formatOperTotal(val, row, index) {
+		if(index==0){
+			return "<font style='font-weight:bold;'size='4'  >"+val+"</font>";
+		}else{
+			return val;
+		}
+	}
+	function remarkInfoApp(val, row, index) {
+		if(val==0||typeof(val) =="undefined"){
+			return "";
+		}else{
+			return "<a href=javascript:checkRemarkInfoApp();>查看组长备注</a>";
+		}
+	}
+	function checkDetailedApp() {
+		var nemberJobCountTabUserId = nemberJobCountAppTab.datagrid("getSelected");
+		var nemberUserId = nemberJobCountTabUserId.userId;
+		var appId = $("#appId").val();
+		var delStatus = $("input[name=order]").eq(0).val();
+		/* $('#checkDetailedTabApp').datagrid({    
+		    //url:'/opas-naps/queryStaffJobDetailApprove.json',
+		    url:'/opas-naps/queryStaffJobDetail.json',
+	    	queryParams: {
+	    		"nemberUserId" : nemberUserId,
+				"appId" : appId,
+				"delStatus" : delStatus,
+				"currNode":"03"
+	    	}
+		});  */
+		var opts = $('#checkDetailedTabApp').datagrid("options");
+		opts.url = '/opas-naps/queryStaffJobDetail.json';
+		var s={"nemberUserId" : nemberUserId,
+				"appId" : appId,
+				"delStatus" : delStatus,
+				"currNode":"03"};
+		$('#checkDetailedTabApp').datagrid("reload", s);
+		checkDetailedWindowApp.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+		});
+		/* $cf.ajax({
+			url : "/opas-naps/queryStaffJobDetailApprove.json",
+			data : {
+				"nemberUserId" : nemberUserId,
+				"appId" : appId,
+				"pageNumber" : page,
+				"pageSie" : rows,
+				"delStatus" : delStatus
+			},
+			onSuccess : function(data) {
+				debugger;
+				if(data.RSP_BODY.fig == "true"){
+					if(data.RSP_BODY.rows!=null||data.RSP_BODY.rows!=undefined){
+						var dataMap = {
+							"rows" : data.RSP_BODY.rows,
+							"total" : data.RSP_BODY.total
+						};
+						$("#checkDetailedTabApp").datagrid("loadData", dataMap);
+						$("#checkDetailedTabApp").datagrid('getRows');
+					}
+					checkDetailedWindowApp.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false,
+					}); 
+				}
+			}
+		});    */
+	}
+	//查看组长备注
+	function checkRemarkInfoApp(){
+		var checkDetailedTab = $("#checkDetailedTabApp").datagrid("getSelected");
+		var appId = checkDetailedTab.id;
+		$cf.ajax({
+			url : "/opas-naps/checkRemarkInfo.json",
+			data : {
+				"appId" : appId
+			},
+			onSuccess : function(data) {
+				if(data.RSP_BODY.fig == "true"){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#remarkInfoTabApp").datagrid("loadData", dataMap);
+					$("#remarkInfoTabApp").datagrid('getRows');
+					remarkInfoWindowApp.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false,
+					}); 
+				}
+			}
+		});   
+	}
+	//组长备注
+	function nemberRemarksWindowOpen(){
+		nemberRemarksWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+		}); 
+	}
+	function saveNemberRemarks(){
+		userCode = GetQueryString("userId");
+		if (typeof(userCode)=="undefined"||userCode==""||userCode==null){
+			userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;	
+		} 
+		var nemberRemarks = $("#nemberRemarksTextareaId").val();
+		var checkDetailedTabObj = checkDetailedTab.datagrid("getSelections");
+		var ids = new Array();
+		for(var i=0; i<checkDetailedTabObj.length; i++){
+			ids.push(checkDetailedTabObj[i].id);
+		}
+		if(checkDetailedTabObj.length == 0){
+			$.messager.alert("操作提示", "请选择要备注的申请件 ");
+			return false;
+		}
+		if(nemberRemarks == ""){
+			$.messager.alert("操作提示", "请填写备注内容");
+			return false;
+		}
+		$cf.ajax({
+			url : "/opas-naps/saveNemberRemarks.json",
+			data : {//01=审查 02=征信 03=审批
+				"ids" : ids,
+				"currNode" : "03",
+				"nemberRemarks" : nemberRemarks,
+				"userCode" : userCode
+			},
+			onSuccess : function(data) {
+				if(data.RSP_BODY.fig == "true"){
+					$.messager.alert("操作提示", "组备注新增成功");
+					$("#nemberRemarksTextareaId").val("");
+					onConcle('nemberRemarksDiv');
+				}else{
+					$.messager.alert("操作提示", "组备注新增失败");
+				}
+			}
+		}); 
+	}
+
+	function queryAppid(val, row, index) {
+		var appId = row.appId;
+		var matchingCardFlag = row.matchingCardFlag;
+		var ydjFlag = row.ydjFig;
+		var path = "";
+		var appProd = row.appProd;
+		if(ydjFlag=="1"&&appProd!="0085"&&matchingCardFlag!="1"){// 1为易达金 2标准卡 
+			path = "../audit/ydj_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=1";
+		}else if(ydjFlag=="1"&&appProd=="0085"&&matchingCardFlag!="1"){//商品易达金
+			path = "../audit/ydj_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=3";
+		}else if(ydjFlag=="1" && matchingCardFlag=="1"){//易达金的副卡--标准卡
+			path = "../audit/ydjFk_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=1";
+		}else if(ydjFlag=="2"){
+			path = "../audit/bzk_credit_approve_result.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=1";
+		}
+		return "<a href="+path+" target=_blank>"+val+"</a>";
+	}
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	</script>
+</body>
+

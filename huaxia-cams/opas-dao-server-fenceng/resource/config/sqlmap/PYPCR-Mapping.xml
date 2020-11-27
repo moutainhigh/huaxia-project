@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PYPCR">
+  <resultMap id="PYPCRBaseInfoMap" type="java.util.Map" >
+    <result column="CURRENT_STATUS" property="currentStatus" jdbcType="VARCHAR" />
+    <result column="INFO_DATE" property="infoDatePCR" jdbcType="VARCHAR" />
+    <result column="LAST_UNIT_NAME" property="lastUnitName" jdbcType="VARCHAR" />
+    <result column="FACT_INSURE_PAY" property="factInsurePay" jdbcType="INTEGER" />
+    <result column="UNIT_TYPE" property="unitTypePCR" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="PYPCRInfoMap" type="java.util.Map" >
+    <result column="TREAT_RESULT" property="treatResult" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="PYPCR60InfoMap" type="java.util.Map" >
+    <result column="UNIT_NAME" property="unitName" jdbcType="VARCHAR" />
+    <result column="INSURANCE_STATE" property="insuranceState" jdbcType="VARCHAR" />
+    <result column="UNIT_TYPE" property="unitTypePWSL" jdbcType="VARCHAR" />
+    <result column="INFO_DATE" property="infoDatePWSL" jdbcType="INTEGER" />
+    <result column="START_DATE" property="startDate" jdbcType="VARCHAR" />
+    <result column="END_DATE" property="endDate" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="PYPCR60SyllogeInfoMap" type="java.util.Map" >
+    <result column="ST_RECENTLY60_MONTHS" property="stRecently60Months" jdbcType="INTEGER" />
+    <result column="UC_RECENTLY60_MONTHS" property="ucRecently60Months" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <select id="selectPYPCRBaseInfo" parameterType="java.lang.String" resultMap="PYPCRBaseInfoMap">
+		SELECT CURRENT_STATUS, INFO_DATE, LAST_UNIT_NAME, FACT_INSURE_PAY, UNIT_TYPE
+		FROM PY_PCR_CRS_CRT_SISZ2_BI WHERE APP_ID = #{appId}
+  </select>
+  
+  <select id="selectPYPCRInfo" parameterType="java.lang.String" resultMap="PYPCRInfoMap">
+  		SELECT TREAT_RESULT FROM PY_PCR_CRS_CRT_SISZ2 
+		WHERE APP_ID = #{appId}
+  </select>
+  
+  <select id="selectPYPCR60Info" parameterType="java.lang.String" resultMap="PYPCR60InfoMap">
+		SELECT UNIT_NAME, INSURANCE_STATE, UNIT_TYPE,INFO_DATE, START_DATE, END_DATE
+		FROM PY_PCR_CRS_CRT_SISZ2_HI5Y WHERE APP_ID = #{appId}
+  </select>
+  
+  <select id="selectPYPCR60SyllogeInfo" parameterType="java.lang.String" resultMap="PYPCR60SyllogeInfoMap">
+  		SELECT ST_RECENTLY60_MONTHS, UC_RECENTLY60_MONTHS
+		FROM PY_PCR_CRS_CRT_SISZ2_SI5Y WHERE APP_ID = #{appId}
+  </select>
+</mapper>

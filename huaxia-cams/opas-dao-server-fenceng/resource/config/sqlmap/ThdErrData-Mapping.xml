@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 
+	三方数据异常信息Mapping文件
+ -->
+<mapper namespace="ThdErrData">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.sysparm.ThdErrMsg">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="TASK_TYPE" property="taskType" jdbcType="VARCHAR" />
+		<result column="ERROR_CODE" property="errorCode" jdbcType="VARCHAR" />
+		<result column="FAILURE_NUM" property="failureNum" jdbcType="VARCHAR" />
+		<result column="TASK_STATUS" property="taskStatus" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="timeStamp" jdbcType="TIMESTAMP" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+		<result column="LST_OPT_TIME" property="lstOptTime" jdbcType="TIMESTAMP" />
+		<result column="LST_OPT_USER" property="lstOptUser" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<select id="queryCount" parameterType="com.huaxia.opas.domain.sysparm.ThdErrMsg" resultType="java.lang.Integer">
+		select count(1)
+		from task_call_status
+		<where>
+			(TASK_STATUS in('3','6','7','8','11','12','13') or (TASK_STATUS = '1' and CRT_TIME &lt; (sysdate-1)))
+			<if test="appId != null and appId !=''">
+				AND APP_ID LIKE '%${appId}'
+			</if>		
+			<if test="taskType != null and taskType !=''">
+				AND TASK_TYPE LIKE '${taskType}%'
+			</if>		
+			<if test="taskStatus != null and taskStatus !=''">
+				AND TASK_STATUS = #{taskStatus}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND CRT_TIME &gt;= #{startDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND CRT_TIME &lt;= #{endDate,jdbcType=TIMESTAMP}+1 
+			</if>
+		</where>
+	</select>
+	
+	<select id="querythdErrMsgList" parameterType="com.huaxia.opas.domain.sysparm.ThdErrMsg" resultMap="BaseResultMap">
+		select
+		APP_ID,TASK_TYPE,ERROR_CODE,FAILURE_NUM,CRT_TIME,TASK_STATUS
+		from task_call_status 
+		<where>
+			(TASK_STATUS in('3','6','7','8','11','12','13') or (TASK_STATUS = '1' and CRT_TIME &lt; (sysdate-1)))
+			<if test="appId != null and appId !=''">
+				AND APP_ID LIKE '%${appId}'
+			</if>		
+			<if test="taskType != null and taskType !=''">
+				AND TASK_TYPE LIKE '${taskType}%'
+			</if>		
+			<if test="taskStatus != null and taskStatus !=''">
+				AND TASK_STATUS = #{taskStatus}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND CRT_TIME &gt;= #{startDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND CRT_TIME &lt;= #{endDate,jdbcType=TIMESTAMP}+1 
+			</if>	
+		</where>
+		order by CRT_TIME desc
+	</select>
+	
+	<update id="requery" parameterType="java.util.Map">
+		update task_call_status
+		<set>
+			TASK_STATUS = '0' , UPD_TIME = SYSDATE , UPD_USER = #{lstOptUser}
+		</set>
+		where app_id = #{appId} AND TASK_TYPE = #{taskType} AND TASK_STATUS = #{taskStatus}
+	</update>
+	
+	<update id="passData" parameterType="java.util.Map">
+		update task_call_status
+		<set>
+			TASK_STATUS = '2' , UPD_TIME = SYSDATE , UPD_USER = #{lstOptUser}
+		</set>
+		where app_id = #{appId} AND TASK_TYPE = #{taskType} AND TASK_STATUS = #{taskStatus}
+	</update>
+
+	<insert id="insertHis" parameterType="java.util.Map">
+	 	INSERT INTO TASK_STATUS_HISTORY (
+			UUID,CRT_TIME,TASK_CRT_TIME,TASK_UPD_TIME,
+			TASK_UPD_USER,APP_ID,TASK_ID,TASK_TYPE,TASK_STATUS
+		) SELECT UUID,SYSDATE,CRT_TIME,UPD_TIME,
+			UPD_USER,APP_ID,TASK_ID,TASK_TYPE,TASK_STATUS FROM TASK_CALL_STATUS 
+		  WHERE APP_ID = #{appId}
+		<if test="taskType != null" >
+         AND TASK_TYPE=#{taskType}
+      </if>
+      AND TASK_STATUS = #{taskStatus}
+	</insert>
+	
+	<!-- INSERT INTO  TASK_CALL_STATUS_HIS (TASK_TYPE, TASK_STATUS, BLANK1, 
+      BLANK2, ID, TIME_STAMP, 
+      IDENTITY_TYPE, IDENTITY_NO, APP_ID, 
+      PROCESS_ID, NODE_ID, NAME, 
+      MOBILE, EMAIL, BANKCARD, 
+      ADDRESS, APPLY_TYPE, YDJ_FLAG, 
+      TAO_FLAG, QUICK_CARD_FLAG, ERROR_CODE, 
+      LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+      FAILURE_NUM,CRT_TIME)
+      SELECT TASK_TYPE, TASK_STATUS, BLANK1, 
+      BLANK2, SYS_GUID(), TIME_STAMP, 
+      IDENTITY_TYPE, IDENTITY_NO, APP_ID, 
+      PROCESS_ID, NODE_ID, NAME, 
+      MOBILE, EMAIL, BANKCARD, 
+      ADDRESS, APPLY_TYPE, YDJ_FLAG, 
+      TAO_FLAG, QUICK_CARD_FLAG, ERROR_CODE, 
+      LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+      FAILURE_NUM,SYSDATE FROM TASK_CALL_STATUS WHERE 
+      app_id = #{appId} AND TASK_TYPE = #{taskType} AND TASK_STATUS = #{taskStatus} -->
+	
+		
+	
+	<select id="querySailAndFicoCount" parameterType="com.huaxia.opas.domain.sysparm.ThdErrMsg" resultType="java.lang.Integer">
+		select count(1)
+		from task_call_info
+		<where>
+			(TASK_STATUS = '3' or TASK_STATUS = '7' or TASK_STATUS = '11' or TASK_STATUS = '13' or TASK_STATUS = '14' )
+			<if test="appId != null and appId !=''">
+				AND APP_ID LIKE '%${appId}'
+			</if>		
+			<if test="taskType != null and taskType !=''">
+				AND TASK_TYPE LIKE '${taskType}%'
+			</if>		
+			<if test="taskStatus != null and taskStatus !=''">
+				AND TASK_STATUS = #{taskStatus}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND TIME_STAMP &gt;= #{startDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND TIME_STAMP &lt;= #{endDate,jdbcType=TIMESTAMP}+1 
+			</if>
+		</where>
+	</select>
+	
+	<select id="querySailAndFicoList" parameterType="com.huaxia.opas.domain.sysparm.ThdErrMsg" resultMap="BaseResultMap">
+		select
+		APP_ID,TASK_TYPE,ERROR_CODE,FAILURE_NUM,TIME_STAMP,TASK_STATUS
+		from task_call_info 
+		<where>
+			(TASK_STATUS = '3' or TASK_STATUS = '7' or TASK_STATUS = '11' or TASK_STATUS = '13' or TASK_STATUS = '14' )
+			<if test="appId != null and appId !=''">
+				AND APP_ID LIKE '%${appId}'
+			</if>		
+			<if test="taskType != null and taskType !=''">
+				AND TASK_TYPE LIKE '${taskType}%'
+			</if>		
+			<if test="taskStatus != null and taskStatus !=''">
+				AND TASK_STATUS = #{taskStatus}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND TIME_STAMP &gt;= #{startDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND TIME_STAMP &lt;= #{endDate,jdbcType=TIMESTAMP}+1 
+			</if>	
+		</where>
+		order by TIME_STAMP desc
+	</select>
+	
+	<update id="sailAndFicoRequery" parameterType="java.util.Map">
+		update task_call_info
+		<set>
+			TASK_STATUS = '0' , LST_OPT_TIME = SYSDATE , LST_OPT_USER = #{lstOptUser}
+		</set>
+		where app_id = #{appId} AND TASK_TYPE = #{taskType} AND TASK_STATUS = #{taskStatus}
+	</update>
+	
+	<update id="sailAndFicoPassData" parameterType="java.util.Map">
+		update task_call_info
+		<set>
+			TASK_STATUS = '2' , LST_OPT_TIME = SYSDATE , LST_OPT_USER = #{lstOptUser}
+		</set>
+		where app_id = #{appId} AND TASK_TYPE = #{taskType} AND TASK_STATUS = #{taskStatus}
+	</update>
+
+	<insert id="insertSailAndFicoHis" parameterType="java.util.Map">
+	  INSERT INTO  TASK_CALL_INFO_HIS (ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        ID,TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM,CRT_TIME)
+      SELECT ALL_TASK_TYPE,TASK_TYPE,TASK_STATUS,
+        SYS_GUID(),TIME_STAMP,IDENTITY_TYPE,
+        IDENTITY_NO,APP_ID,PROCESS_ID,
+        NODE_ID,NAME,MOBILE, EMAIL,QUICK_CARD_FLAG, ERROR_CODE, 
+        LST_OPT_USER, LST_OPT_TIME, REQUEST_NUM, 
+        FAILURE_NUM, SYSDATE FROM TASK_CALL_INFO WHERE 
+      app_id = #{appId} AND TASK_TYPE = #{taskType} AND TASK_STATUS = #{taskStatus}
+	</insert>
+	
+
+	
+	
+</mapper>

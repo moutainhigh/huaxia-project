@@ -1,0 +1,63 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>目标企业名单</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<!-- 目标企业名单 -->
+			<table id="tb_targetcompanyWin" class="easyui-datagrid"
+				 iconCls="icon-save" style="width: 99%; height: 99%" 
+				data-options="nowrap:false,rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#targetcompanyWinCondion'">
+				<thead>
+					<tr>
+						<th field="companyName" width="45%" align="left" sortable="true" >企业名称</th>
+						<th field="companyType" width="45%" align="left" sortable="true" >企业类型</th>
+					</tr>
+				</thead>
+			</table>
+			<div id="targetcompanyWinCondion" style="padding: 10px; text-align: center;">
+				<form id="seachDictForm">
+					企业名称:<input class="easyui-textbox" style="width: 110px" name="companyName" id="targetcompanyWin_companyName" > 
+					<a href="javascript:targetcompanyWin('targetcompanyWin')"
+					      class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</form>
+			</div>
+			<!-- <div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('targetcompanyWin')">取消</a>
+			</div> -->
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var appId;
+	 $(function(){
+		 //获取参数
+		 appId = GetQueryString("appId");
+		 var obj= GetQueryString("obj");
+		 var param= GetQueryString("param");
+		 if(param=='yes'){
+			 openTargetcompanyWin(obj);
+		 }else if(param=='no'){
+			 showOpenWin(obj,'companyMindan');
+		 }
+	 });
+	//目标企业名单
+	function openTargetcompanyWin(obj){
+		$("#targetcompanyWinCondion").hide();
+		var urljson = 'queryTargetcompany_tab_view';
+		openCommonWinYjd(obj,urljson,appId);
+	}
+	//目标企业名单 查询 
+	function targetcompanyWin(obj){
+		var urljson = 'queryTargetcompany_tab_view';
+		var paramMap = {
+				companyName:$("#targetcompanyWin_companyName").textbox('getValue').toUpperCase()
+		};
+		commonWinYjd(obj,urljson,appId,paramMap);
+	}
+</script>

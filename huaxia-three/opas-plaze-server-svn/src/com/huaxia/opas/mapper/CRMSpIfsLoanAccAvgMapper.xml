@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsLoanAccAvgMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsLoanAccAvg">
+		INSERT INTO SP_APS_IFS_LOAN_ACC_AVG (
+			APP_ID,CUSTID,CUSTCODE,CONTRNO,ACCNO,MAVG,QAVG,YAVG,D_DATE,SUB_ACCNO
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{contrNo, jdbcType = VARCHAR},
+			#{accNo, jdbcType = VARCHAR},
+			#{mAvg, jdbcType = NUMERIC},
+			#{qAvg, jdbcType = NUMERIC},
+			#{yAvg, jdbcType = NUMERIC},
+			#{dDate, jdbcType = VARCHAR},
+			#{subAccNo, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_LOAN_ACC_AVG (
+			APP_ID,CUSTID,CUSTCODE,CONTRNO,ACCNO,MAVG,QAVG,YAVG,D_DATE,SUB_ACCNO
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.contrNo, jdbcType = VARCHAR},
+			#{item.accNo, jdbcType = VARCHAR},
+			#{item.mAvg, jdbcType = NUMERIC},
+			#{item.qAvg, jdbcType = NUMERIC},
+			#{item.yAvg, jdbcType = NUMERIC},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.subAccNo, jdbcType = VARCHAR}
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

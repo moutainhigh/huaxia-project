@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.ApplyLifeCicleMapper">
+
+	<insert id="insertApplyLifeCicle" parameterType="com.huaxia.opas.domain.ApplyLifeCicle">
+	  insert into OPAS_APPLY_LIFE_CICLE (UUID, APP_ID, OPERATER, 
+      OPERATE_DESC, OPERATE_RESULT, CRT_DATE, 
+      CRT_USER, LST_UPD_DATE, LST_UPD_USER)
+      values (SYS_GUID(), #{appId,jdbcType=CHAR},#{operater,jdbcType=VARCHAR}, 
+      #{operateDesc,jdbcType=VARCHAR}, #{operateResult,jdbcType=VARCHAR}, systimestamp, 
+      #{crtUser,jdbcType=VARCHAR},systimestamp, #{lstUpdUser,jdbcType=VARCHAR})
+	</insert>
+	
+</mapper>

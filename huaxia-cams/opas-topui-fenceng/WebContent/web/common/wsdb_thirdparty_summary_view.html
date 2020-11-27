@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>征信信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript"
+	src="../../topui/jquery/default/jquery.min.js"></script>
+<script type="text/javascript"
+	src="../../topui/easyui/default/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="../../topui/easyui/default/jquery.query.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<style type="text/css">
+.font-red {
+	color: #FF0000;
+}
+
+.font-black {
+	color: #000;
+}
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	background-color: #E6F0FF;
+	color: #003476;
+}
+
+.dvi-table input {
+	color: blue;
+	disabled: disabled;
+	height: 14px;
+	width: 100%;
+	line-height: 14px;
+	margin-top: 0px;
+	border-top-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	text-align: center;
+	font-size: 12px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table td {
+	padding: 0px 0px;
+	font-size: 12px;
+}
+
+.positionhead {
+	height: 14px;
+	line-height: 14px;
+	background: #02bafa;
+	border: 1px #26bbdb solid;
+	border-radius: 2px;
+	display: inline-block;
+	text-decoration: none;
+	margin-top: 0px;
+	text-align: center;
+	font-size: 12px;
+	outline: none;
+}
+/** 快速定位内容区 */
+#ksdw_area {
+    top: 40px;
+	width: 100%;
+	height: 90%;
+	overflow-y: auto;
+	position: absolute;
+}
+</style>
+<script type="text/javascript">
+	function GetQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+	function getUrlVlue(k){
+		var url = window.location.href;
+		url = url.replace("?","?&").split("&");
+		var re = "";
+		for (i=1;i<url.length;i++){
+			if(url[i].indexOf(k+"=") == 0){
+				re = url[i].replace(k+"=","");
+			}
+		}
+		return re;
+	}
+	var txt_identity_no = "";//身份证号
+	var pboc_cid = '{"cellphone":"cellphone","ccomp_phone":"cCompPhone","communication_addr":"communicationAddr","company1":"company1","comp_addr1":"compAddr1","update_req_time1":"infoUpdTime1","frs_cred_crd_issue_mon":"frsCredCrdIssueMon","pay_comp":"payComp","info_upd_time":"infoUpdTime","pay_status":"payStatus","personCompRate":"personCompRate","monthly_deposit":"monthlyDeposit","no_pd_card_bank_max_credit_lim":"noPdCardBankMaxCreditLim","company2":"company2","comp_addr2":"compAddr2","update_req_time2":"infoUpdTime2","case_status":"case_status","common_err_status":"common_err_status","loan_or_credit_acct_status":"loan_or_credit_acct_status","opas_pboc_public_adminpunish1":"opas_pboc_public_adminpunish1","opas_pboc_public_adminpunish2":"opas_pboc_public_adminpunish2","loan_accounts_count":"loan_accounts_count"}';
+	var bank_cid = '{"phone_num1":"phone_num1","comp_addr1":"comp_addr1","company1":"company1","info_upd_time1":"info_upd_time1","unit_phone1":"unit_phone1","communication_addr":"communication_addr","first_yw_grant_month":"first_yw_grant_month","single_bank_max_credit":"single_bank_max_credit","pay_comp":"pay_comp","pay_status":"pay_status","monthly_deposit":"monthly_deposit","person_deposit_rate":"person_deposit_rate","info_upd_time":"info_upd_time","phone_num2":"phone_num2","comp_addr2":"comp_addr2","company2":"company2","update_req_time2":"update_req_time2","unit_phone2":"unit_phone2","case_status":"case_status","common_err_status":"common_err_status","loan_or_credit_acct_status":"loan_or_credit_acct_status","opas_pboc_public_adminpunish1":"opas_pboc_public_adminpunish1","opas_pboc_public_adminpunish2":"opas_pboc_public_adminpunish2","loan_accounts_count":"loan_accounts_count","loan_accounts_count1":"loan_accounts_count1"}';
+	var c_pboc = JSON.parse(pboc_cid);
+	var c_bank = JSON.parse(bank_cid);
+	function fnFillPBOC(o) {
+		$.each(c_pboc, function(n, v) {
+			/* console.log(eval('o.' + v)); */
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+	function fnFillBANK(o) {
+		/* console.log(o) */
+		$.each(c_bank, function(n, v) {
+			/* console.log(eval('o.' + v)); */
+			$('#txt_' + n + '_new').val(eval('o.' + v));
+		});
+	}
+	var police_cid = '{"name":"name","identity_no":"identityNo","identity_no_check_rst":"identityNoCheckRst","old_name":"oldName","jgssx_home_prov_city":"jgssxHomeProvCity","belong_home_prov_city":"belongHomeProvCity","srvs_location":"srvsLocation","birth_home_prov_city":"birthHomeProvCity"}';
+	var c_police = JSON.parse(police_cid);
+
+	function fnFillPolice(o) {
+		$.each(c_police, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+
+	//var credit100_cid = '{"id_abnormal":"slIdAbnormal","id_bank_lost":"slIdBankLost","id_nbank_p2p_bad":"slIdNbankP2pFraud","id_nbank_p2p_lost":"slIdNbankP2pLost","id_nbank_p2p_refuse":"slIdNbankP2pRefuse","id_slIdCourtBad":"slIdCourtBad","id_p2p_bad":"slIdP2pBad"}';
+	//var credit100_cidCell = '{"cell_slCellBankFraud":"slCellBankFraud","cell_bank_lost":"slCellBankLost","cell_nbank_p2p_bad":"slCellNbankP2pBad","cell_p2p_bad":"slCellP2pBad"}';
+	var credit100_cid = '{"slIdBankBad":"slIdBankBad","slIdBankLost":"slIdBankLost","slIdBankFraud":"slIdBankFraud","slIdCourtBad":"slIdCourtBad","slIdNbankP2pLost":"slIdNbankP2pLost","slIdNbankP2pRefuse":"slIdNbankP2pRefuse","slIdCourtExecuted":"slIdCourtExecuted"}';
+	var credit100_cidCell = '{"slCellBankLost":"slCellBankLost","slCellBankBad":"slCellBankBad","slCellBankFraud":"slCellBankFraud"}';
+	var c_credit100 = JSON.parse(credit100_cid);
+	var c_credit100Cell = JSON.parse(credit100_cidCell);
+
+	function fnFillCredit100(o, flag) {
+		if ("IdDate" == flag) {
+			$.each(c_credit100, function(n, v) {
+				var value = '';
+				var v = eval('o.' + v);
+				if (v == null) {
+					value = '';
+				} else if (v == '0') {
+					value = '本人直接命中';
+				} else if (v == '1') {
+					value = '一度关系命中';
+				} else if (v == '2') {
+					value = '二度关系命中';
+				} else {
+					value = v;
+				}
+				$('#' + n).val(value);
+			});
+		}
+		if ("CellDate" == flag) {
+			$.each(c_credit100Cell, function(n, v) {
+				var value = '';
+				var v = eval('o.' + v);
+				if (v == null) {
+					value = '';
+				} else if (v == '0') {
+					value = '本人直接命中';
+				} else if (v == '1') {
+					value = '一度关系命中';
+				} else if (v == '2') {
+					value = '二度关系命中';
+				} else {
+					value = v;
+				}
+				$('#' + n).val(value);
+			});
+		}
+	}
+
+	var education_cid = '{"user_name":"userName","education_degree":"educationDegree","study_style":"studyStyle","education_approach":"dstudyStyle","graduate":"graduate","speciality_name":"specialityName","graduate_time":"graduateTime","study_result":"studyResult","query_result":"searchStatus","identitycard":"identitycard"}';
+	var c_education = JSON.parse(education_cid);
+
+	function fnFillEducation(o) {
+		$.each(c_education, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+	var ant_cid = '{"zm_score":"zmScore","ivs_score":"ivsScore","ant_name":"descriptionName","cert_no":"descriptionCertno","ant_mobile":"descriptionPhone","ant_address":"descriptionAddr","ant_type":"riskTypes"}';
+	var c_ant = JSON.parse(ant_cid);
+
+	function fnFillAnt(o) {
+		$.each(c_ant, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+
+	/*	var sid = [ 'pboc', 'police', 'ant', 'credit100', 'education' ];
+
+	function fnInitStyle(sid) {
+		$.each(sid, function(i, v) {
+			$('#' + v + '_summary_area table tr td:even').css('width', '140')
+					.css('text-align', 'right').css('padding-right', '10px')
+					.css('font', 'normal 12px Arial');
+		});
+	} */
+
+	
+
+	function fnLoadPolice(appId) {
+		$cf.ajax({
+			url : '/opas-naps/police_summary_query.json',
+			data : {
+				'appId' : appId,
+				'cardFlag' : '0'
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.applyPoliceSummary;
+ 				var o = JSON.parse(result);
+ 				fnFillPolice(o);
+ 				var resultStr = eval('(' + result + ')');
+ 				var resultRx = response.RSP_BODY;
+ 				if(resultRx.resultRx == '不一致'){
+ 					$("#resultRx").attr("style","color:red");
+ 				}
+ 				if(resultRx.errorMessage != ''&&resultRx.errorMessage != null &&resultRx.errorMessage != 'undefined'){
+ 					$("#errorMessage").show();
+ 				}else {
+ 					$("#errorMessage").hide();
+ 				}
+ 					
+ 				$('#police_summary_area').form("load", resultRx);
+				//修改一下颜色   add by ddh   
+				if(!(o.identityNoCheckRst =="完全匹配" || o.identityNoCheckRst == "未查询")){
+					$("#txt_identity_no_check_rst").attr("style","color:red");
+				}
+ 			}
+ 		});
+ 	}
+    //附属卡公安信息
+    function fnLoadPoliceF(appId) {
+ 		$cf.ajax({
+ 			url : '/opas-naps/police_summary_query.json',
+ 			data : {
+ 				'appId' : appId,
+ 				'cardFlag' : '1'
+ 			},
+ 			onSuccess : function(response) {
+ 				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyPoliceSummary;
+					var resultStr = eval('(' + result + ')');
+					$('#policeSummary').form("load", resultStr);
+					 //修改一下颜色   add by ddh   
+					if(!(resultStr.identityNoCheckRst =="完全匹配")){
+						$("#identityNoCheckRst").attr("style","color:red");
+					}
+ 				}
+ 			}
+ 		});
+ 	}
+     
+	
+	function fnLoadCredit100(appId) {
+		$cf.ajax({
+			url : '/opas-naps/credit100_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				//add by qingfeng.xiu 20190218 17:50 百融查询结果
+				$("#br_query_result").val(response.RSP_BODY.searchStatus);
+				if (response.RSP_BODY.success) {
+					if (response.RSP_BODY.IdDate) {
+						var result = response.RSP_BODY.applyCredit100Id;
+						var o = JSON.parse(result);
+						fnFillCredit100(o, "IdDate");
+					}
+					if (response.RSP_BODY.CellDate) {
+						var result = response.RSP_BODY.applyCredit100Cell;
+						var o = JSON.parse(result);
+						fnFillCredit100(o, "CellDate");
+					}
+				}
+			}
+		});
+	}
+
+	function showDetail(str) {
+		if (str == "police") {//公安摘要信息
+			txt_identity_no = $("#txt_identity_no").val();
+		}
+		
+		window.open("thirdparty_" + str + "_view.html?appId=" + appId +"&userCode=" + userCode, "",
+				"resizable=no,toolbar=no,location=no,left=0,top=0,width="
+						+ (screen.availWidth - 10) + ",height="
+						+ (screen.availHeight - 70));
+	}
+	function setPositionAbsolute(top) {
+		document.getElementById("quickPosition").style.top = top + "px";
+	}
+	//加载 天御分信息 
+	function fnLoadTianYuSummary(appId) {
+		$cf.ajax({
+			url : '/opas-naps/queryTianYuSummaryInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$('#tianYuSummaryinfoForm').form("load",
+							data.RSP_BODY.tianYuSummary);
+				}
+			}
+		});
+	}
+	//加载 数字解读
+	function fnLoadSzjdSummary(appId) {
+		$cf.ajax({
+			url : '/opas-naps/selectSzjdInfoByAppId.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$('#szjdSummaryForm').form("load",
+							data.RSP_BODY.szjdSummary);
+				}
+			}
+		});
+	}
+	//加载企业行业信息
+	function fnLoadQiye(appId) {
+		$cf.ajax({
+			url : '/opas-naps/queryQiyeInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$('#qiyeinfoForm').form("load", data.RSP_BODY.qiYeCode);
+					var entStatus = data.RSP_BODY.qiYe.entstatus;
+					if (entStatus != "在营（开业）" && entStatus != "开业"
+							&& entStatus != "存续" && entStatus != "正常"
+							&& entStatus != "正常执业" && entStatus != "正常经营") {
+						$("#entStatus").attr("style", "background:red;");
+					}
+					$('#qiyeinfoForm').form("load", data.RSP_BODY.qiYe);
+				}
+			}
+		});
+	}
+	
+	
+	
+	
+	//加载业务字典
+	//$cf.loadAllDict();
+ 	$cf.loadAllDictOnly('XMYLZ_BPD,');
+	$cf.loadAllDictOnly('XMYLZ_ISS,');
+	$cf.loadAllDictOnly('XMYLZ_IOJ,');
+	$cf.loadAllDictOnly('XMYLZ_RMA,');
+	$cf.loadAllDictOnly('PYPCR_TR,');
+
+	
+	
+	//以竖线分割取第一个有效数据
+	function  getStr(str){
+		var strs = str.split("|");
+		var comp = "";
+		for(var i = 0; i < strs.length; i++){
+			if(""!=strs[i].replace(/\s/g,"")){
+				comp=strs[i];
+				break;
+			}
+		}
+		return comp;
+	}
+	
+</script>
+</head>
+<body >
+	<!-- 快速定位区 开始  left:1px;height:10px;-->
+	<div id="quickPosition" style="position: fixed; z-index: 1; text-align: left;">
+		<a href="#B" class="positionhead" >公安摘要信息</a>
+		<a href="#D" class="positionhead" >百融摘要信息</a>
+		<a href="#G" class="positionhead" >天御摘要信息</a>
+		<a href="#H" class="positionhead" >企业及行业信息</a>
+		<a href="#S" class="positionhead" >数字解读信息</a>
+	</div>
+	<div id="ksdw_area">
+		<div id="police_summary_area">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span  id="B">主卡公安摘要信息</span>
+				</legend>
+				<table>
+					<tr>
+						<td>姓名</td>
+						<td><input type="text" id="txt_name" readonly="readonly"
+							style="width: 160px" /></td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;证件号码</td>
+						<td><input type="text" id="txt_identity_no"
+							readonly="readonly" style="width: 140px" /></td>
+					</tr>
+					<tr>
+						<td style="text-align: left;">增强公安查询状态</td>
+						<td><input type="text" id="txt_identity_no_check_rst"
+							readonly="readonly" style="width: 160px" /></td>
+						<td>PAD人像比对</td>
+						<td><input type="text" id="resultRx" name="resultRx"
+						readonly="readonly" style="width: 140px" />
+						<input type="text" id="errorMessage" name="errorMessage"
+						readonly="readonly" style="width: 300px display=none" /></td>
+					</tr>
+				</table>
+				<p align="center">
+					<a href='javascript:showDetail("police");'>查看详情</a>
+				</p>
+			</fieldset>
+		</div>
+		<div id="credit100_summary_area">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="D">百融摘要信息</span>
+				</legend>
+				<table>
+					<tr>
+						<td>查询结果</td>
+						<td><input type="text" id="br_query_result"
+							readonly="readonly" /></td>
+						<!-- <td colspan="4"></td> -->
+					</tr>
+					<tr>
+						<td>身份证检查命中：</td>
+						<td colspan="5"></td>
+					</tr>
+					<tr>
+						<td>不良：</td>
+						<td><input type="text" id="slIdBankBad" readonly="readonly" /></td>
+						<td>失联：</td>
+						<td><input type="text" id="slIdBankLost" readonly="readonly" /></td>
+						<td>资信不佳：</td>
+						<td><input type="text" id="slIdBankFraud" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>法院失信：</td>
+						<td><input type="text" id="slIdCourtBad" readonly="readonly" /></td>
+						<td>P2P失联：</td>
+						<td><input type="text" id="slIdNbankP2pLost"
+							readonly="readonly" /></td>
+						<td>P2P拒绝：</td>
+						<td><input type="text" id="slIdNbankP2pRefuse"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>法院被执行人：</td>
+						<td><input type="text" id="slIdCourtExecuted"
+							readonly="readonly" /></td>
+						<td colspan="4"></td>
+					</tr>
+					<tr>
+						<td>手机检查命中：</td>
+						<td colspan="5"></td>
+					</tr>
+					<tr>
+						<td>失联：</td>
+						<td><input type="text" id="slCellBankLost"
+							readonly="readonly" /></td>
+						<td>不良：</td>
+						<td><input type="text" id="slCellBankBad" readonly="readonly" /></td>
+						<td>资信不佳：</td>
+						<td><input type="text" id="slCellBankFraud"
+							readonly="readonly" /></td>
+					</tr>
+				</table>
+				<p align="center">
+					<a href='javascript:showDetail("credit100");'>查看详情</a>
+				</p>
+			</fieldset>
+		</div>
+		<div id="tianYuSummaryArea">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="G">天御摘要信息</span>
+				</legend>
+				<form id="tianYuSummaryinfoForm">
+					<table>
+						<tr>
+							<td>查询结果: <input name="queryResult" style="width: 230px"
+								type="text" readonly="readonly" />
+							</td>
+							<td>&nbsp;&nbsp;&nbsp;天御分: <input name="riskScore"
+								style="width: 221px" type="text" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">风险代码: <input name="riskCodeCombine"
+								style="width: 510px" type="text" readonly="readonly" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</fieldset>
+		</div>
+		<div id="qiYeArea">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="H">企业及行业信息</span>
+				</legend>
+				<form id="qiyeinfoForm">
+					<table>
+						<tr>
+							<td>查询结果:</td>
+							<td><input name="code" style="width: 205px" type="text"
+								readonly="readonly" /></td>
+							<td>经营状态:</td>
+							<td><input id="entStatus" name="entstatus"
+								style="width: 229px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>企业名称:</td>
+							<td colspan="3"><input name="entname" style="width: 514px"
+								type="text" readonly="readonly" /></td>
+						</tr>
+	
+						<tr>
+							<td>法定代表人/负责人/执行事务合伙人:</td>
+							<td colspan="3"><input name="frname" style="width: 514px"
+								type="text" readonly="readonly" /></td>
+	
+						</tr>
+						<tr>
+							<td>注册资本(万元):</td>
+							<td><input name="regcap" style="width: 205px" type="text"
+								readonly="readonly" /></td>
+							<td>注册资本币种:</td>
+							<td><input name="regcapcur" style="width: 229px" type="text"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>联系人电话:</td>
+							<td><input name="tel" style="width: 205px" type="text"
+								readonly="readonly" /></td>
+							<td>员工人数:</td>
+							<td><input name="empnum" style="width: 229px" type="text"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+	
+							<td>企业(机构)类型:</td>
+							<td colspan="3"><input name="enttype" style="width: 514px"
+								type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>住址:</td>
+							<td colspan="3"><input name="dom" style="width: 514px"
+								type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("qiYeinfo");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div>
+		<div id="szjdArea">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="S">数字解读信息</span>
+				</legend>
+				<form id="szjdSummaryForm">
+					<table>
+						<tr>
+							<td>姓名:</td>
+							<td><input id="userName" name="userName" 
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td>证件号码:</td>
+							<td><input id="idNum" name="idNum"
+								style="width: 229px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>查询结果:</td>
+							<td colspan="3"><input id="resultDesc" name="resultDesc" 
+							 style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+	
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("szjd");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	/* function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	} */
+	
+	var url = location.href;
+	var appId = GetQueryString("appId");
+	var userCode = parent.userCode;
+	var ydjFlag = "";
+	var matchingCardFlag="";
+	if (parent.ydjFlag) {
+		ydjFlag = parent.ydjFlag;
+	}
+	matchingCardFlag = parent.matchingCardFlag;
+	if (ydjFlag == "1"&&matchingCardFlag=="1") {
+		var weihao=appId.substring(15,16);
+		if(weihao=="1"){
+			appId = appId.substring(0, 15) + "2";
+		}else{
+			appId = appId.substring(0, 15) + "1";
+		}
+	}
+	$(function() {
+		//	alert("gaohuiappId"+appId);
+		// 初始化页面样式
+		//fnInitStyle(sid);
+		// 获取申请件信息
+		//var appId = GetQueryString("appId");
+		/* var parent = window.parent;
+		//var appId = parent.applyId.value;
+		var appId = "1523241990021511"; */
+		if (appId != '') {
+			appId = $.trim(appId);
+		}
+		
+		// 加载公安摘要信息
+		fnLoadPolice(appId);
+		// 加载百融摘要信息
+		fnLoadCredit100(appId);//'1512241611P10141'
+		//	var imageZxSpBzkSrc="/app/opas/police/"+$("#txt_identity_no").val()+".jpg";//身份证号为依据查 图片的路径 
+		//加载 腾讯天御分 
+		fnLoadTianYuSummary(appId);
+		//数字解读
+		fnLoadSzjdSummary(appId);
+		//加载企业行业信息
+		fnLoadQiye(appId);
+	});
+</script>
+</html>

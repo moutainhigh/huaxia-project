@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FicoSdBlaze" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.input.FicoSdBlaze" >
+    <id column="SD_ID" property="sdId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="CRT_TIME" property="crtTime" jdbcType="DATE" />
+    <result column="PROPOSED_LMT" property="proposedLmt" jdbcType="DECIMAL" />
+    <result column="APP_SCORE" property="appScore" jdbcType="DECIMAL" />
+    <result column="APP_SCORE_LVL" property="appScoreLvl" jdbcType="VARCHAR" />
+    <result column="REVOLVING_LMT" property="revolvingLmt" jdbcType="DECIMAL" />
+    <result column="APP_CHANNEL" property="appChannel" jdbcType="VARCHAR" />
+    <result column="OP_ACCT_DT" property="opAcctDt" jdbcType="VARCHAR" />
+    <result column="SUPPLEMENT_RST" property="supplementRst" jdbcType="VARCHAR" />
+    <result column="SUPPLEMENT_RST_DSCP" property="supplementRstDscp" jdbcType="VARCHAR" />
+    <result column="FQZ_RST" property="fqzRst" jdbcType="VARCHAR" />
+    <result column="FQZ_RST_DESP" property="fqzRstDesp" jdbcType="VARCHAR" />
+    <result column="FQZ_RST_TIME" property="fqzRstTime" jdbcType="DATE" />
+    <result column="CP_RST" property="cpRst" jdbcType="VARCHAR" />
+    <result column="CP_RST_DESP" property="cpRstDesp" jdbcType="VARCHAR" />
+    <result column="PBOC_RST" property="pbocRst" jdbcType="VARCHAR" />
+    <result column="PBOC_RST_FIN" property="pbocRstFin" jdbcType="VARCHAR" />
+    <result column="APP_SCORE_RST" property="appScoreRst" jdbcType="VARCHAR" />
+    <result column="APP_SCORE_RST_FIN" property="appScoreRstFin" jdbcType="VARCHAR" />
+    <result column="CIF_AGE" property="cifAge" jdbcType="VARCHAR" />
+    <result column="IS_HAVE_PBOC" property="isHavePboc" jdbcType="VARCHAR" />
+    <result column="IS_HAVE_LOANCARD" property="isHaveLoancard" jdbcType="VARCHAR" />
+    <result column="TT_PAY_RATE" property="ttPayRate" jdbcType="DECIMAL" />
+    <result column="PAY" property="pay" jdbcType="DECIMAL" />
+    <result column="PAY_DUE" property="payDue" jdbcType="DECIMAL" />
+    <result column="REVOLVING_LABEL" property="revolvingLabel" jdbcType="VARCHAR" />
+    <result column="CIF_LABEL" property="cifLabel" jdbcType="VARCHAR" />
+    <result column="LOWEST_PAY_AMT_LABEL" property="lowestPayAmtLabel" jdbcType="VARCHAR" />
+    <result column="FREE_PAY_TERM_LABEL" property="freePayTermLabel" jdbcType="VARCHAR" />
+    <result column="ACCFUND_INCOME" property="accfundIncome" jdbcType="DECIMAL" />
+    <result column="COMFIRM_AMT" property="comfirmAmt" jdbcType="DECIMAL" />
+    <result column="ADB_AMT" property="adbAmt" jdbcType="DECIMAL" />
+    <result column="CS_LOAN_AMT" property="csLoanAmt" jdbcType="DECIMAL" />
+    <result column="CITY_TYP" property="cityTyp" jdbcType="VARCHAR" />
+    <result column="AVG_MOB" property="avgMob" jdbcType="DECIMAL" />
+    <result column="ONE_CARD_MOB" property="oneCardMob" jdbcType="DECIMAL" />
+    <result column="RISK_LVL" property="riskLvl" jdbcType="DECIMAL" />
+    <result column="APP_LABLE" property="appLable" jdbcType="VARCHAR" />
+    <result column="CARD_ACTIV_TIMES" property="cardActivTimes" jdbcType="DECIMAL" />
+    <result column="MAX_RC_CRIDIT_LMT" property="maxRcCriditLmt" jdbcType="DECIMAL" />
+    <result column="MAX_RC_CHARE_LMT" property="maxRcChareLmt" jdbcType="DECIMAL" />
+    <result column="MAX_RC_CARD_MOB" property="maxRcCardMob" jdbcType="DECIMAL" />
+    <result column="MAX_CS_LOAN_MOB" property="maxCsLoanMob" jdbcType="DECIMAL" />
+    <result column="HAVE_CC_USE_RECORD" property="haveCcUseRecord" jdbcType="VARCHAR" />
+    <result column="HAVE_CL_USE_RECORD" property="haveClUseRecord" jdbcType="VARCHAR" />
+    <result column="INCOME_AMT" property="incomeAmt" jdbcType="DECIMAL" />
+    <result column="OTHER_BANK_AMT" property="otherBankAmt" jdbcType="DECIMAL" />
+    <result column="PAY_AMT" property="payAmt" jdbcType="DECIMAL" />
+    <result column="EDU_AMT" property="eduAmt" jdbcType="DECIMAL" />
+    <result column="HOUSE_AMT" property="houseAmt" jdbcType="DECIMAL" />
+    <result column="CAR_AMT" property="carAmt" jdbcType="DECIMAL" />
+    <result column="OTHER_BANK_MAX_LMT" property="otherBankMaxLmt" jdbcType="DECIMAL" />
+    <result column="OTHER_BANK_CREDIT_LMT" property="otherBankSecondLmt" jdbcType="DECIMAL" />
+    <result column="IS_MASTER_CUST_APP" property="isMasterCustApp" jdbcType="VARCHAR" />
+    <result column="IS_NEW_CUST_APP" property="isNewCustApp" jdbcType="VARCHAR" />
+    <result column="CUST_TYPE" property="custType" jdbcType="VARCHAR" />
+    <result column="IS_SPECIAL_CUST" property="isSpecialCust" jdbcType="VARCHAR" />
+    <result column="GJM_CD" property="gjmCd" jdbcType="VARCHAR" />
+    <result column="JUJ_CD" property="jujCd" jdbcType="VARCHAR" />
+    <result column="DTI" property="dti" jdbcType="DECIMAL" />
+    <result column="DL_LMT" property="dlLmt" jdbcType="DECIMAL" />
+    <result column="CARDORLOANACCTSTATUSABL" property="cardorloanacctstatusabl" jdbcType="VARCHAR" />
+    <result column="CREDITCARD12MDUEABL" property="creditcard12mdueabl" jdbcType="VARCHAR" />
+    <result column="CREDITCARD3MDUEABL" property="creditcard3mdueabl" jdbcType="VARCHAR" />
+    <result column="CARDORLOAN3MDUEABL" property="cardorloan3mdueabl" jdbcType="VARCHAR" />
+    <result column="LOANCARDDUEABL" property="loancarddueabl" jdbcType="VARCHAR" />
+    <result column="LOAN12MDUEABL" property="loan12mdueabl" jdbcType="VARCHAR" />
+    <result column="LOAN3MDUEABL" property="loan3mdueabl" jdbcType="VARCHAR" />
+    <result column="NEWLOANCARDACCTCOUNTABL" property="newloancardacctcountabl" jdbcType="VARCHAR" />
+    <result column="LOANCARDAMTUSERATIOABL" property="loancardamtuseratioabl" jdbcType="VARCHAR" />
+    <result column="CARDLOANSELECTCOUNTABL" property="cardloanselectcountabl" jdbcType="VARCHAR" />
+    <result column="CREDITCARDCOUNTABL" property="creditcardcountabl" jdbcType="VARCHAR" />
+    <result column="RZ_LABLE" property="rzLable" jdbcType="VARCHAR" />
+    <result column="RZ_LABLE_CODE" property="rzLableCode" jdbcType="VARCHAR" />
+    <result column="IS_HX_EMP" property="isHxEmp" jdbcType="VARCHAR" />
+    <result column="IS_HX_XYK_EMP" property="isHxXykEmp" jdbcType="VARCHAR" />
+    <result column="TEMP_DECISIONRESULT" property="tempDecisionresult" jdbcType="VARCHAR" />
+    <result column="MAIN_ROLLING_LABEL" property="mainRollingLabel" jdbcType="VARCHAR" />
+    <result column="MAIN_ROLLING_RESULT" property="mainRollingResult" jdbcType="VARCHAR" />
+    <result column="DECISION_RESULT" property="decisionResult" jdbcType="VARCHAR" />
+    <result column="DECISION_DESP" property="decisionDesp" jdbcType="VARCHAR" />
+    <result column="INTEREST_RATE_PRODUCT" property="interestRateProduct" jdbcType="VARCHAR" />
+    <result column="CUST_TYPE_DESP" property="custTypeDesp" jdbcType="VARCHAR" />
+    <result column="RC_CC_CL_12M_NOT_ACTION" property="rcCcCl12mNotAction" jdbcType="VARCHAR" />
+    <result column="RZ_RESULT" property="rzResult" jdbcType="VARCHAR" />
+    <result column="RZ_DESP" property="rzDesp" jdbcType="VARCHAR" />
+    <result column="LOANDUEABL" property="loandueabl" jdbcType="VARCHAR" />
+    <result column="APP_SCORE_RST_DESP" property="appScoreRstDesp" jdbcType="VARCHAR" />
+    <result column="APP_SCORE_RST_FIN_DESP" property="appScoreRstFinDesp" jdbcType="VARCHAR" />
+    <result column="PBOC_RST_DESP" property="pbocRstDesp" jdbcType="VARCHAR" />
+    <result column="PBOC_RST_FIN_DESP" property="pbocRstFinDesp" jdbcType="VARCHAR" />
+    <result column="WF_RESULT" property="wfResult" jdbcType="VARCHAR" />
+    <result column="YSX_AMT" property="ysxAmt" jdbcType="DECIMAL" />
+    <result column="JINGDONG_AMT" property="jingdongAmt" jdbcType="DECIMAL" />
+    <result column="CUT_OFF_DIRECTION" property="cutOffDirection" jdbcType="VARCHAR" />
+    <result column="HISTORY_PROPOSED_LMT" property="historyProposedLmt" jdbcType="DECIMAL" />
+    <result column="IND_CD_RST" property="indCdRst" jdbcType="VARCHAR" />
+    
+    <result column="CREDIT_SCORE" property="creditScore" jdbcType="VARCHAR" />
+    <result column="IRB_SCORE"	property="irbScore" jdbcType="VARCHAR"/>
+    <result column="TRIGGER_TYPE"	property="triggerType" jdbcType="VARCHAR"/>
+    <result column="CREDIT_DECISION_RESULT" property="creditDecisionResult" jdbcType="VARCHAR" />
+    <result column="CREDIT_DECISION_DESC" property="creditDecisionDesc" jdbcType="VARCHAR" />
+    <result column="C1_CREDPCT" property="c1Credpct" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_A" property="custLevelTagA" jdbcType="VARCHAR" />
+    <result column="RATE_NAME" property="rateName" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_B" property="custLevelTagB" jdbcType="VARCHAR" />
+    <result column="REPAY_RATIO_VALUE" property="repayRationValue" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_C" property="custLevelTagC" jdbcType="VARCHAR" />
+    <result column="REPAY_FREE_VALUE" property="repayFreeValue" jdbcType="VARCHAR" />
+    <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+    <result column="POLICY_CODE1" property="policyCode1" jdbcType="VARCHAR" />
+    <result column="POLICY_CODE3" property="policyCode3" jdbcType="VARCHAR" />
+    <result column="VIGILANT_CUST" property="vigilantCust" jdbcType="VARCHAR" />
+    <result column="SPECIAL_CUST" property="specialCust" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_D" property="custLevelTagD" jdbcType="VARCHAR" /> 
+    <result column="RATE_VALUE_LOSE_DATE" property="rateValueLoseDate" jdbcType="VARCHAR" />
+	<result column="C4_ABTYPE" property="c4Abtype" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    SD_ID, APP_ID, CRT_TIME, PROPOSED_LMT, APP_SCORE, APP_SCORE_LVL, REVOLVING_LMT, APP_CHANNEL, 
+    OP_ACCT_DT, SUPPLEMENT_RST, SUPPLEMENT_RST_DSCP, FQZ_RST, FQZ_RST_DESP, CP_RST, CP_RST_DESP, 
+    PBOC_RST, PBOC_RST_FIN, APP_SCORE_RST, APP_SCORE_RST_FIN, CIF_AGE, IS_HAVE_PBOC, 
+    IS_HAVE_LOANCARD, TT_PAY_RATE, PAY, PAY_DUE, REVOLVING_LABEL, CIF_LABEL, LOWEST_PAY_AMT_LABEL, 
+    FREE_PAY_TERM_LABEL, ACCFUND_INCOME, COMFIRM_AMT, ADB_AMT, CS_LOAN_AMT, CITY_TYP, 
+    AVG_MOB, ONE_CARD_MOB, RISK_LVL, APP_LABLE, CARD_ACTIV_TIMES, MAX_RC_CRIDIT_LMT, 
+    MAX_RC_CHARE_LMT, MAX_RC_CARD_MOB, MAX_CS_LOAN_MOB, HAVE_CC_USE_RECORD, HAVE_CL_USE_RECORD, 
+    INCOME_AMT, OTHER_BANK_AMT, PAY_AMT, EDU_AMT, HOUSE_AMT, CAR_AMT, OTHER_BANK_MAX_LMT, 
+    OTHER_BANK_CREDIT_LMT, IS_MASTER_CUST_APP, IS_NEW_CUST_APP, CUST_TYPE, IS_SPECIAL_CUST, 
+    GJM_CD, JUJ_CD, DTI, DL_LMT, CARDORLOANACCTSTATUSABL, CREDITCARD12MDUEABL, CREDITCARD3MDUEABL, 
+    CARDORLOAN3MDUEABL, LOANCARDDUEABL, LOAN12MDUEABL, LOAN3MDUEABL, NEWLOANCARDACCTCOUNTABL, 
+    LOANCARDAMTUSERATIOABL, CARDLOANSELECTCOUNTABL, CREDITCARDCOUNTABL, RZ_LABLE, IS_HX_EMP, 
+    IS_HX_XYK_EMP, TEMP_DECISIONRESULT, MAIN_ROLLING_LABEL, MAIN_ROLLING_RESULT, DECISION_RESULT, 
+    DECISION_DESP, INTEREST_RATE_PRODUCT, CUST_TYPE_DESP, RC_CC_CL_12M_NOT_ACTION, RZ_RESULT, 
+    RZ_DESP, LOANDUEABL, APP_SCORE_RST_DESP, APP_SCORE_RST_FIN_DESP, PBOC_RST_DESP, PBOC_RST_FIN_DESP, 
+    WF_RESULT, YSX_AMT, JINGDONG_AMT, CUT_OFF_DIRECTION, HISTORY_PROPOSED_LMT, IND_CD_RST
+    from OPAS_FICO_SD_BLAZE
+    where SD_ID = #{sdId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectSystemDecisionByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	   select s.APP_ID,
+	       s.CRT_TIME,
+	       s.app_score,
+         (select d.IRB_SCORE from OPAS_FICO_SCOREINFO_RESULT d where d.app_id = s.app_id) as IRB_SCORE,
+	       s.TRIGGER_TYPE,
+	       s.DECISION_RESULT,
+	       s.DECISION_DESP,
+	       s.PROPOSED_LMT,
+         (select o.CREDIT_DECISION_RESULT from OPAS_BZK_SYSRESULT_INFO o where o.app_id = s.app_id) as CREDIT_DECISION_RESULT,
+         (select o.CREDIT_DECISION_DESC from OPAS_BZK_SYSRESULT_INFO o where o.app_id = s.app_id) as CREDIT_DECISION_DESC,
+         (select p.prod_name from opas_param_card_product p where p.card_code = s.cp_rst) as Cp_Rst,
+	       s.SUPPLEMENT_RST,
+	       s.SUPPLEMENT_RST_DSCP,
+	       s.COMFIRM_AMT,
+	       s.DTI,
+	       s.DL_LMT,
+         (select e.C1_CREDPCT from OPAS_BIZ_INP_APPL_C2 e where e.APP_ID = s.app_id) as C1_CREDPCT,
+	       s.APP_LABLE,
+	       s.RZ_LABLE,
+	       s.RZ_LABLE_CODE,
+	       s.JUJ_CD,
+	       s.CIF_LABEL as cust_level_tag_a,
+       	   s.RATE_CODE as RATE_NAME,
+	       s.LOWEST_PAY_AMT_LABEL as cust_level_tag_b,
+	       return_Value(s.APP_ID,'2',s.LOWEST_PAY_AMT_LABEL) as REPAY_RATIO_VALUE,
+	       s.FREE_PAY_TERM_LABEL as cust_level_tag_c,
+	       return_Value(s.APP_ID,'3',s.FREE_PAY_TERM_LABEL) as repay_free_value,
+	       s.VIGILANT_CUST,s.SPECIAL_CUST,
+	       s.RATE_CODE_VALID_TIME as cust_level_tag_d,
+	       return_Value(s.APP_ID,'4','LLDMSXRQ') as RATE_VALUE_LOSE_DATE
+	       
+	  from OPAS_FICO_SD_BLAZE s
+    	where s.APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   select 
+    a.SD_ID, a.APP_ID, a.CRT_TIME, a.PROPOSED_LMT, a.APP_SCORE, a.APP_SCORE_LVL, a.REVOLVING_LMT, a.APP_CHANNEL, a.TRIGGER_TYPE,
+    a.OP_ACCT_DT, a.SUPPLEMENT_RST, a.SUPPLEMENT_RST_DSCP, a.FQZ_RST, a.FQZ_RST_DESP, a.CP_RST, a.CP_RST_DESP, 
+    a.PBOC_RST, a.PBOC_RST_FIN, a.APP_SCORE_RST, a.APP_SCORE_RST_FIN, a.CIF_AGE, a.IS_HAVE_PBOC, 
+    a.IS_HAVE_LOANCARD, a.TT_PAY_RATE, a.PAY, a.PAY_DUE, a.REVOLVING_LABEL, a.CIF_LABEL, a.LOWEST_PAY_AMT_LABEL, 
+    a.FREE_PAY_TERM_LABEL, a.ACCFUND_INCOME, a.COMFIRM_AMT, a.ADB_AMT, a.CS_LOAN_AMT, a.CITY_TYP, 
+    a.AVG_MOB, a.ONE_CARD_MOB, a.RISK_LVL, a.APP_LABLE, a.CARD_ACTIV_TIMES, a.MAX_RC_CRIDIT_LMT, 
+    a.MAX_RC_CHARE_LMT, a.MAX_RC_CARD_MOB, a.MAX_CS_LOAN_MOB, a.HAVE_CC_USE_RECORD, a.HAVE_CL_USE_RECORD, 
+    a.INCOME_AMT, a.OTHER_BANK_AMT, a.PAY_AMT, a.EDU_AMT, a.HOUSE_AMT, a.CAR_AMT, a.OTHER_BANK_MAX_LMT, 
+    a.OTHER_BANK_CREDIT_LMT, a.IS_MASTER_CUST_APP, a.IS_NEW_CUST_APP, a.CUST_TYPE, a.IS_SPECIAL_CUST, 
+    a.GJM_CD, a.JUJ_CD, a.DTI, a.DL_LMT, a.CARDORLOANACCTSTATUSABL, a.CREDITCARD12MDUEABL, a.CREDITCARD3MDUEABL, 
+    a.CARDORLOAN3MDUEABL, a.LOANCARDDUEABL, a.LOAN12MDUEABL, a.LOAN3MDUEABL, a.NEWLOANCARDACCTCOUNTABL, 
+    a.LOANCARDAMTUSERATIOABL, a.CARDLOANSELECTCOUNTABL, a.CREDITCARDCOUNTABL, a.RZ_LABLE, a.IS_HX_EMP, 
+    a.IS_HX_XYK_EMP, a.TEMP_DECISIONRESULT, a.MAIN_ROLLING_LABEL, a.MAIN_ROLLING_RESULT, a.DECISION_RESULT, 
+    a.DECISION_DESP, a.INTEREST_RATE_PRODUCT, a.CUST_TYPE_DESP, a.RC_CC_CL_12M_NOT_ACTION, a.RZ_RESULT, 
+    a.RZ_DESP, a.LOANDUEABL, a.APP_SCORE_RST_DESP, a.APP_SCORE_RST_FIN_DESP, a.PBOC_RST_DESP, a.PBOC_RST_FIN_DESP, 
+    a.WF_RESULT, a.YSX_AMT, a.JINGDONG_AMT, a.CUT_OFF_DIRECTION, a.HISTORY_PROPOSED_LMT, a.IND_CD_RST,
+    a.POLICY_CODE1,a.POLICY_CODE3,a.RZ_LABLE_CODE,b.C1_CREDPCT,c.prod_name,a.RATE_CODE as RATE_NAME,d.C4_ABTYPE
+    from OPAS_FICO_SD_BLAZE a
+	left join OPAS_BIZ_INP_APPL_C2 b on a.app_id=b.app_id
+	left join opas_param_card_product c on a.cp_rst = c.card_code
+	left join OPAS_BIZ_INP_APPL_C1 d on a.app_id=d.app_id
+    where a.APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByAppIdSea" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	select  APP_ID, PROPOSED_LMT from OPAS_FICO_SD_BLAZE 
+  	where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_FICO_SD_BLAZE
+    where SD_ID = #{sdId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.input.FicoSdBlaze" >
+    insert into OPAS_FICO_SD_BLAZE (SD_ID, APP_ID, CRT_TIME, 
+      PROPOSED_LMT, APP_SCORE, APP_SCORE_LVL, 
+      REVOLVING_LMT, APP_CHANNEL, OP_ACCT_DT, 
+      SUPPLEMENT_RST, SUPPLEMENT_RST_DSCP, FQZ_RST, 
+      FQZ_RST_DESP, CP_RST, CP_RST_DESP, 
+      PBOC_RST, PBOC_RST_FIN, APP_SCORE_RST, 
+      APP_SCORE_RST_FIN, CIF_AGE, IS_HAVE_PBOC, 
+      IS_HAVE_LOANCARD, TT_PAY_RATE, PAY, 
+      PAY_DUE, REVOLVING_LABEL, CIF_LABEL, 
+      LOWEST_PAY_AMT_LABEL, FREE_PAY_TERM_LABEL, ACCFUND_INCOME, 
+      COMFIRM_AMT, ADB_AMT, CS_LOAN_AMT, 
+      CITY_TYP, AVG_MOB, ONE_CARD_MOB, 
+      RISK_LVL, APP_LABLE, CARD_ACTIV_TIMES, 
+      MAX_RC_CRIDIT_LMT, MAX_RC_CHARE_LMT, MAX_RC_CARD_MOB, 
+      MAX_CS_LOAN_MOB, HAVE_CC_USE_RECORD, HAVE_CL_USE_RECORD, 
+      INCOME_AMT, OTHER_BANK_AMT, PAY_AMT, 
+      EDU_AMT, HOUSE_AMT, CAR_AMT, 
+      OTHER_BANK_MAX_LMT, OTHER_BANK_CREDIT_LMT, IS_MASTER_CUST_APP, 
+      IS_NEW_CUST_APP, CUST_TYPE, IS_SPECIAL_CUST, 
+      GJM_CD, JUJ_CD, DTI, 
+      DL_LMT, CARDORLOANACCTSTATUSABL, CREDITCARD12MDUEABL, 
+      CREDITCARD3MDUEABL, CARDORLOAN3MDUEABL, 
+      LOANCARDDUEABL, LOAN12MDUEABL, LOAN3MDUEABL, 
+      NEWLOANCARDACCTCOUNTABL, LOANCARDAMTUSERATIOABL, 
+      CARDLOANSELECTCOUNTABL, CREDITCARDCOUNTABL, 
+      RZ_LABLE, IS_HX_EMP, IS_HX_XYK_EMP, 
+      TEMP_DECISIONRESULT, MAIN_ROLLING_LABEL, MAIN_ROLLING_RESULT, 
+      DECISION_RESULT, DECISION_DESP, INTEREST_RATE_PRODUCT, 
+      CUST_TYPE_DESP, RC_CC_CL_12M_NOT_ACTION, RZ_RESULT, 
+      RZ_DESP, LOANDUEABL, APP_SCORE_RST_DESP, 
+      APP_SCORE_RST_FIN_DESP, PBOC_RST_DESP, PBOC_RST_FIN_DESP, 
+      WF_RESULT, YSX_AMT, JINGDONG_AMT, 
+      CUT_OFF_DIRECTION, HISTORY_PROPOSED_LMT, IND_CD_RST
+      )
+    values (#{sdId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}, 
+      #{proposedLmt,jdbcType=DECIMAL}, #{appScore,jdbcType=DECIMAL}, #{appScoreLvl,jdbcType=VARCHAR}, 
+      #{revolvingLmt,jdbcType=DECIMAL}, #{appChannel,jdbcType=VARCHAR}, #{opAcctDt,jdbcType=VARCHAR}, 
+      #{supplementRst,jdbcType=VARCHAR}, #{supplementRstDscp,jdbcType=VARCHAR}, #{fqzRst,jdbcType=VARCHAR}, 
+      #{fqzRstDesp,jdbcType=VARCHAR}, #{cpRst,jdbcType=VARCHAR}, #{cpRstDesp,jdbcType=VARCHAR}, 
+      #{pbocRst,jdbcType=VARCHAR}, #{pbocRstFin,jdbcType=VARCHAR}, #{appScoreRst,jdbcType=VARCHAR}, 
+      #{appScoreRstFin,jdbcType=VARCHAR}, #{cifAge,jdbcType=VARCHAR}, #{isHavePboc,jdbcType=VARCHAR}, 
+      #{isHaveLoancard,jdbcType=VARCHAR}, #{ttPayRate,jdbcType=DECIMAL}, #{pay,jdbcType=DECIMAL}, 
+      #{payDue,jdbcType=DECIMAL}, #{revolvingLabel,jdbcType=VARCHAR}, #{cifLabel,jdbcType=VARCHAR}, 
+      #{lowestPayAmtLabel,jdbcType=VARCHAR}, #{freePayTermLabel,jdbcType=VARCHAR}, #{accfundIncome,jdbcType=DECIMAL}, 
+      #{comfirmAmt,jdbcType=DECIMAL}, #{adbAmt,jdbcType=DECIMAL}, #{csLoanAmt,jdbcType=DECIMAL}, 
+      #{cityTyp,jdbcType=VARCHAR}, #{avgMob,jdbcType=DECIMAL}, #{oneCardMob,jdbcType=DECIMAL}, 
+      #{riskLvl,jdbcType=DECIMAL}, #{appLable,jdbcType=VARCHAR}, #{cardActivTimes,jdbcType=DECIMAL}, 
+      #{maxRcCriditLmt,jdbcType=DECIMAL}, #{maxRcChareLmt,jdbcType=DECIMAL}, #{maxRcCardMob,jdbcType=DECIMAL}, 
+      #{maxCsLoanMob,jdbcType=DECIMAL}, #{haveCcUseRecord,jdbcType=VARCHAR}, #{haveClUseRecord,jdbcType=VARCHAR}, 
+      #{incomeAmt,jdbcType=DECIMAL}, #{otherBankAmt,jdbcType=DECIMAL}, #{payAmt,jdbcType=DECIMAL}, 
+      #{eduAmt,jdbcType=DECIMAL}, #{houseAmt,jdbcType=DECIMAL}, #{carAmt,jdbcType=DECIMAL}, 
+      #{otherBankMaxLmt,jdbcType=DECIMAL}, #{otherBankSecondLmt,jdbcType=DECIMAL}, #{isMasterCustApp,jdbcType=VARCHAR}, 
+      #{isNewCustApp,jdbcType=VARCHAR}, #{custType,jdbcType=VARCHAR}, #{isSpecialCust,jdbcType=VARCHAR}, 
+      #{gjmCd,jdbcType=VARCHAR}, #{jujCd,jdbcType=VARCHAR}, #{dti,jdbcType=DECIMAL}, 
+      #{dlLmt,jdbcType=DECIMAL}, #{cardorloanacctstatusabl,jdbcType=VARCHAR}, #{creditcard12mdueabl,jdbcType=VARCHAR}, 
+      #{creditcard3mdueabl,jdbcType=VARCHAR}, #{cardorloan3mdueabl,jdbcType=VARCHAR}, 
+      #{loancarddueabl,jdbcType=VARCHAR}, #{loan12mdueabl,jdbcType=VARCHAR}, #{loan3mdueabl,jdbcType=VARCHAR}, 
+      #{newloancardacctcountabl,jdbcType=VARCHAR}, #{loancardamtuseratioabl,jdbcType=VARCHAR}, 
+      #{cardloanselectcountabl,jdbcType=VARCHAR}, #{creditcardcountabl,jdbcType=VARCHAR}, 
+      #{rzLable,jdbcType=VARCHAR}, #{isHxEmp,jdbcType=VARCHAR}, #{isHxXykEmp,jdbcType=VARCHAR}, 
+      #{tempDecisionresult,jdbcType=VARCHAR}, #{mainRollingLabel,jdbcType=VARCHAR}, #{mainRollingResult,jdbcType=VARCHAR}, 
+      #{decisionResult,jdbcType=VARCHAR}, #{decisionDesp,jdbcType=VARCHAR}, #{interestRateProduct,jdbcType=VARCHAR}, 
+      #{custTypeDesp,jdbcType=VARCHAR}, #{rcCcCl12mNotAction,jdbcType=VARCHAR}, #{rzResult,jdbcType=VARCHAR}, 
+      #{rzDesp,jdbcType=VARCHAR}, #{loandueabl,jdbcType=VARCHAR}, #{appScoreRstDesp,jdbcType=VARCHAR}, 
+      #{appScoreRstFinDesp,jdbcType=VARCHAR}, #{pbocRstDesp,jdbcType=VARCHAR}, #{pbocRstFinDesp,jdbcType=VARCHAR}, 
+      #{wfResult,jdbcType=VARCHAR}, #{ysxAmt,jdbcType=DECIMAL}, #{jingdongAmt,jdbcType=DECIMAL}, 
+      #{cutOffDirection,jdbcType=VARCHAR}, #{historyProposedLmt,jdbcType=DECIMAL}, #{indCdRst,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.input.FicoSdBlaze" >
+    insert into OPAS_FICO_SD_BLAZE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sdId != null" >
+        SD_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="crtTime != null" >
+        CRT_TIME,
+      </if>
+      <if test="proposedLmt != null" >
+        PROPOSED_LMT,
+      </if>
+      <if test="appScore != null" >
+        APP_SCORE,
+      </if>
+      <if test="appScoreLvl != null" >
+        APP_SCORE_LVL,
+      </if>
+      <if test="revolvingLmt != null" >
+        REVOLVING_LMT,
+      </if>
+      <if test="appChannel != null" >
+        APP_CHANNEL,
+      </if>
+      <if test="opAcctDt != null" >
+        OP_ACCT_DT,
+      </if>
+      <if test="supplementRst != null" >
+        SUPPLEMENT_RST,
+      </if>
+      <if test="supplementRstDscp != null" >
+        SUPPLEMENT_RST_DSCP,
+      </if>
+      <if test="fqzRst != null" >
+        FQZ_RST,
+      </if>
+      <if test="fqzRstDesp != null" >
+        FQZ_RST_DESP,
+      </if>
+      <if test="cpRst != null" >
+        CP_RST,
+      </if>
+      <if test="cpRstDesp != null" >
+        CP_RST_DESP,
+      </if>
+      <if test="pbocRst != null" >
+        PBOC_RST,
+      </if>
+      <if test="pbocRstFin != null" >
+        PBOC_RST_FIN,
+      </if>
+      <if test="appScoreRst != null" >
+        APP_SCORE_RST,
+      </if>
+      <if test="appScoreRstFin != null" >
+        APP_SCORE_RST_FIN,
+      </if>
+      <if test="cifAge != null" >
+        CIF_AGE,
+      </if>
+      <if test="isHavePboc != null" >
+        IS_HAVE_PBOC,
+      </if>
+      <if test="isHaveLoancard != null" >
+        IS_HAVE_LOANCARD,
+      </if>
+      <if test="ttPayRate != null" >
+        TT_PAY_RATE,
+      </if>
+      <if test="pay != null" >
+        PAY,
+      </if>
+      <if test="payDue != null" >
+        PAY_DUE,
+      </if>
+      <if test="revolvingLabel != null" >
+        REVOLVING_LABEL,
+      </if>
+      <if test="cifLabel != null" >
+        CIF_LABEL,
+      </if>
+      <if test="lowestPayAmtLabel != null" >
+        LOWEST_PAY_AMT_LABEL,
+      </if>
+      <if test="freePayTermLabel != null" >
+        FREE_PAY_TERM_LABEL,
+      </if>
+      <if test="accfundIncome != null" >
+        ACCFUND_INCOME,
+      </if>
+      <if test="comfirmAmt != null" >
+        COMFIRM_AMT,
+      </if>
+      <if test="adbAmt != null" >
+        ADB_AMT,
+      </if>
+      <if test="csLoanAmt != null" >
+        CS_LOAN_AMT,
+      </if>
+      <if test="cityTyp != null" >
+        CITY_TYP,
+      </if>
+      <if test="avgMob != null" >
+        AVG_MOB,
+      </if>
+      <if test="oneCardMob != null" >
+        ONE_CARD_MOB,
+      </if>
+      <if test="riskLvl != null" >
+        RISK_LVL,
+      </if>
+      <if test="appLable != null" >
+        APP_LABLE,
+      </if>
+      <if test="cardActivTimes != null" >
+        CARD_ACTIV_TIMES,
+      </if>
+      <if test="maxRcCriditLmt != null" >
+        MAX_RC_CRIDIT_LMT,
+      </if>
+      <if test="maxRcChareLmt != null" >
+        MAX_RC_CHARE_LMT,
+      </if>
+      <if test="maxRcCardMob != null" >
+        MAX_RC_CARD_MOB,
+      </if>
+      <if test="maxCsLoanMob != null" >
+        MAX_CS_LOAN_MOB,
+      </if>
+      <if test="haveCcUseRecord != null" >
+        HAVE_CC_USE_RECORD,
+      </if>
+      <if test="haveClUseRecord != null" >
+        HAVE_CL_USE_RECORD,
+      </if>
+      <if test="incomeAmt != null" >
+        INCOME_AMT,
+      </if>
+      <if test="otherBankAmt != null" >
+        OTHER_BANK_AMT,
+      </if>
+      <if test="payAmt != null" >
+        PAY_AMT,
+      </if>
+      <if test="eduAmt != null" >
+        EDU_AMT,
+      </if>
+      <if test="houseAmt != null" >
+        HOUSE_AMT,
+      </if>
+      <if test="carAmt != null" >
+        CAR_AMT,
+      </if>
+      <if test="otherBankMaxLmt != null" >
+        OTHER_BANK_MAX_LMT,
+      </if>
+      <if test="otherBankSecondLmt != null" >
+        OTHER_BANK_CREDIT_LMT,
+      </if>
+      <if test="isMasterCustApp != null" >
+        IS_MASTER_CUST_APP,
+      </if>
+      <if test="isNewCustApp != null" >
+        IS_NEW_CUST_APP,
+      </if>
+      <if test="custType != null" >
+        CUST_TYPE,
+      </if>
+      <if test="isSpecialCust != null" >
+        IS_SPECIAL_CUST,
+      </if>
+      <if test="gjmCd != null" >
+        GJM_CD,
+      </if>
+      <if test="jujCd != null" >
+        JUJ_CD,
+      </if>
+      <if test="dti != null" >
+        DTI,
+      </if>
+      <if test="dlLmt != null" >
+        DL_LMT,
+      </if>
+      <if test="cardorloanacctstatusabl != null" >
+        CARDORLOANACCTSTATUSABL,
+      </if>
+      <if test="creditcard12mdueabl != null" >
+        CREDITCARD12MDUEABL,
+      </if>
+      <if test="creditcard3mdueabl != null" >
+        CREDITCARD3MDUEABL,
+      </if>
+      <if test="cardorloan3mdueabl != null" >
+        CARDORLOAN3MDUEABL,
+      </if>
+      <if test="loancarddueabl != null" >
+        LOANCARDDUEABL,
+      </if>
+      <if test="loan12mdueabl != null" >
+        LOAN12MDUEABL,
+      </if>
+      <if test="loan3mdueabl != null" >
+        LOAN3MDUEABL,
+      </if>
+      <if test="newloancardacctcountabl != null" >
+        NEWLOANCARDACCTCOUNTABL,
+      </if>
+      <if test="loancardamtuseratioabl != null" >
+        LOANCARDAMTUSERATIOABL,
+      </if>
+      <if test="cardloanselectcountabl != null" >
+        CARDLOANSELECTCOUNTABL,
+      </if>
+      <if test="creditcardcountabl != null" >
+        CREDITCARDCOUNTABL,
+      </if>
+      <if test="rzLable != null" >
+        RZ_LABLE,
+      </if>
+      <if test="isHxEmp != null" >
+        IS_HX_EMP,
+      </if>
+      <if test="isHxXykEmp != null" >
+        IS_HX_XYK_EMP,
+      </if>
+      <if test="tempDecisionresult != null" >
+        TEMP_DECISIONRESULT,
+      </if>
+      <if test="mainRollingLabel != null" >
+        MAIN_ROLLING_LABEL,
+      </if>
+      <if test="mainRollingResult != null" >
+        MAIN_ROLLING_RESULT,
+      </if>
+      <if test="decisionResult != null" >
+        DECISION_RESULT,
+      </if>
+      <if test="decisionDesp != null" >
+        DECISION_DESP,
+      </if>
+      <if test="interestRateProduct != null" >
+        INTEREST_RATE_PRODUCT,
+      </if>
+      <if test="custTypeDesp != null" >
+        CUST_TYPE_DESP,
+      </if>
+      <if test="rcCcCl12mNotAction != null" >
+        RC_CC_CL_12M_NOT_ACTION,
+      </if>
+      <if test="rzResult != null" >
+        RZ_RESULT,
+      </if>
+      <if test="rzDesp != null" >
+        RZ_DESP,
+      </if>
+      <if test="loandueabl != null" >
+        LOANDUEABL,
+      </if>
+      <if test="appScoreRstDesp != null" >
+        APP_SCORE_RST_DESP,
+      </if>
+      <if test="appScoreRstFinDesp != null" >
+        APP_SCORE_RST_FIN_DESP,
+      </if>
+      <if test="pbocRstDesp != null" >
+        PBOC_RST_DESP,
+      </if>
+      <if test="pbocRstFinDesp != null" >
+        PBOC_RST_FIN_DESP,
+      </if>
+      <if test="wfResult != null" >
+        WF_RESULT,
+      </if>
+      <if test="ysxAmt != null" >
+        YSX_AMT,
+      </if>
+      <if test="jingdongAmt != null" >
+        JINGDONG_AMT,
+      </if>
+      <if test="cutOffDirection != null" >
+        CUT_OFF_DIRECTION,
+      </if>
+      <if test="historyProposedLmt != null" >
+        HISTORY_PROPOSED_LMT,
+      </if>
+      <if test="indCdRst != null" >
+        IND_CD_RST,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sdId != null" >
+        #{sdId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null" >
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proposedLmt != null" >
+        #{proposedLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="appScore != null" >
+        #{appScore,jdbcType=DECIMAL},
+      </if>
+      <if test="appScoreLvl != null" >
+        #{appScoreLvl,jdbcType=VARCHAR},
+      </if>
+      <if test="revolvingLmt != null" >
+        #{revolvingLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="appChannel != null" >
+        #{appChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="opAcctDt != null" >
+        #{opAcctDt,jdbcType=VARCHAR},
+      </if>
+      <if test="supplementRst != null" >
+        #{supplementRst,jdbcType=VARCHAR},
+      </if>
+      <if test="supplementRstDscp != null" >
+        #{supplementRstDscp,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRst != null" >
+        #{fqzRst,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRstDesp != null" >
+        #{fqzRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="cpRst != null" >
+        #{cpRst,jdbcType=VARCHAR},
+      </if>
+      <if test="cpRstDesp != null" >
+        #{cpRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRst != null" >
+        #{pbocRst,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRstFin != null" >
+        #{pbocRstFin,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRst != null" >
+        #{appScoreRst,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRstFin != null" >
+        #{appScoreRstFin,jdbcType=VARCHAR},
+      </if>
+      <if test="cifAge != null" >
+        #{cifAge,jdbcType=VARCHAR},
+      </if>
+      <if test="isHavePboc != null" >
+        #{isHavePboc,jdbcType=VARCHAR},
+      </if>
+      <if test="isHaveLoancard != null" >
+        #{isHaveLoancard,jdbcType=VARCHAR},
+      </if>
+      <if test="ttPayRate != null" >
+        #{ttPayRate,jdbcType=DECIMAL},
+      </if>
+      <if test="pay != null" >
+        #{pay,jdbcType=DECIMAL},
+      </if>
+      <if test="payDue != null" >
+        #{payDue,jdbcType=DECIMAL},
+      </if>
+      <if test="revolvingLabel != null" >
+        #{revolvingLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="cifLabel != null" >
+        #{cifLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestPayAmtLabel != null" >
+        #{lowestPayAmtLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="freePayTermLabel != null" >
+        #{freePayTermLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="accfundIncome != null" >
+        #{accfundIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="comfirmAmt != null" >
+        #{comfirmAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="adbAmt != null" >
+        #{adbAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="csLoanAmt != null" >
+        #{csLoanAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cityTyp != null" >
+        #{cityTyp,jdbcType=VARCHAR},
+      </if>
+      <if test="avgMob != null" >
+        #{avgMob,jdbcType=DECIMAL},
+      </if>
+      <if test="oneCardMob != null" >
+        #{oneCardMob,jdbcType=DECIMAL},
+      </if>
+      <if test="riskLvl != null" >
+        #{riskLvl,jdbcType=DECIMAL},
+      </if>
+      <if test="appLable != null" >
+        #{appLable,jdbcType=VARCHAR},
+      </if>
+      <if test="cardActivTimes != null" >
+        #{cardActivTimes,jdbcType=DECIMAL},
+      </if>
+      <if test="maxRcCriditLmt != null" >
+        #{maxRcCriditLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="maxRcChareLmt != null" >
+        #{maxRcChareLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="maxRcCardMob != null" >
+        #{maxRcCardMob,jdbcType=DECIMAL},
+      </if>
+      <if test="maxCsLoanMob != null" >
+        #{maxCsLoanMob,jdbcType=DECIMAL},
+      </if>
+      <if test="haveCcUseRecord != null" >
+        #{haveCcUseRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="haveClUseRecord != null" >
+        #{haveClUseRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeAmt != null" >
+        #{incomeAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherBankAmt != null" >
+        #{otherBankAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="payAmt != null" >
+        #{payAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="eduAmt != null" >
+        #{eduAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="houseAmt != null" >
+        #{houseAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="carAmt != null" >
+        #{carAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherBankMaxLmt != null" >
+        #{otherBankMaxLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherBankSecondLmt != null" >
+        #{otherBankSecondLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="isMasterCustApp != null" >
+        #{isMasterCustApp,jdbcType=VARCHAR},
+      </if>
+      <if test="isNewCustApp != null" >
+        #{isNewCustApp,jdbcType=VARCHAR},
+      </if>
+      <if test="custType != null" >
+        #{custType,jdbcType=VARCHAR},
+      </if>
+      <if test="isSpecialCust != null" >
+        #{isSpecialCust,jdbcType=VARCHAR},
+      </if>
+      <if test="gjmCd != null" >
+        #{gjmCd,jdbcType=VARCHAR},
+      </if>
+      <if test="jujCd != null" >
+        #{jujCd,jdbcType=VARCHAR},
+      </if>
+      <if test="dti != null" >
+        #{dti,jdbcType=DECIMAL},
+      </if>
+      <if test="dlLmt != null" >
+        #{dlLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cardorloanacctstatusabl != null" >
+        #{cardorloanacctstatusabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard12mdueabl != null" >
+        #{creditcard12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard3mdueabl != null" >
+        #{creditcard3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardorloan3mdueabl != null" >
+        #{cardorloan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancarddueabl != null" >
+        #{loancarddueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan12mdueabl != null" >
+        #{loan12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan3mdueabl != null" >
+        #{loan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="newloancardacctcountabl != null" >
+        #{newloancardacctcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancardamtuseratioabl != null" >
+        #{loancardamtuseratioabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardloanselectcountabl != null" >
+        #{cardloanselectcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcardcountabl != null" >
+        #{creditcardcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="rzLable != null" >
+        #{rzLable,jdbcType=VARCHAR},
+      </if>
+      <if test="isHxEmp != null" >
+        #{isHxEmp,jdbcType=VARCHAR},
+      </if>
+      <if test="isHxXykEmp != null" >
+        #{isHxXykEmp,jdbcType=VARCHAR},
+      </if>
+      <if test="tempDecisionresult != null" >
+        #{tempDecisionresult,jdbcType=VARCHAR},
+      </if>
+      <if test="mainRollingLabel != null" >
+        #{mainRollingLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="mainRollingResult != null" >
+        #{mainRollingResult,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionResult != null" >
+        #{decisionResult,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionDesp != null" >
+        #{decisionDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRateProduct != null" >
+        #{interestRateProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="custTypeDesp != null" >
+        #{custTypeDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="rcCcCl12mNotAction != null" >
+        #{rcCcCl12mNotAction,jdbcType=VARCHAR},
+      </if>
+      <if test="rzResult != null" >
+        #{rzResult,jdbcType=VARCHAR},
+      </if>
+      <if test="rzDesp != null" >
+        #{rzDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="loandueabl != null" >
+        #{loandueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRstDesp != null" >
+        #{appScoreRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRstFinDesp != null" >
+        #{appScoreRstFinDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRstDesp != null" >
+        #{pbocRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRstFinDesp != null" >
+        #{pbocRstFinDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="wfResult != null" >
+        #{wfResult,jdbcType=VARCHAR},
+      </if>
+      <if test="ysxAmt != null" >
+        #{ysxAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="jingdongAmt != null" >
+        #{jingdongAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cutOffDirection != null" >
+        #{cutOffDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="historyProposedLmt != null" >
+        #{historyProposedLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="indCdRst != null" >
+        #{indCdRst,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.input.FicoSdBlaze" >
+    update OPAS_FICO_SD_BLAZE
+    <set >
+      <if test="appId != null" >
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null" >
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proposedLmt != null" >
+        PROPOSED_LMT = #{proposedLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="appScore != null" >
+        APP_SCORE = #{appScore,jdbcType=DECIMAL},
+      </if>
+      <if test="appScoreLvl != null" >
+        APP_SCORE_LVL = #{appScoreLvl,jdbcType=VARCHAR},
+      </if>
+      <if test="revolvingLmt != null" >
+        REVOLVING_LMT = #{revolvingLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="appChannel != null" >
+        APP_CHANNEL = #{appChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="opAcctDt != null" >
+        OP_ACCT_DT = #{opAcctDt,jdbcType=VARCHAR},
+      </if>
+      <if test="supplementRst != null" >
+        SUPPLEMENT_RST = #{supplementRst,jdbcType=VARCHAR},
+      </if>
+      <if test="supplementRstDscp != null" >
+        SUPPLEMENT_RST_DSCP = #{supplementRstDscp,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRst != null" >
+        FQZ_RST = #{fqzRst,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRstDesp != null" >
+        FQZ_RST_DESP = #{fqzRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="cpRst != null" >
+        CP_RST = #{cpRst,jdbcType=VARCHAR},
+      </if>
+      <if test="cpRstDesp != null" >
+        CP_RST_DESP = #{cpRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRst != null" >
+        PBOC_RST = #{pbocRst,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRstFin != null" >
+        PBOC_RST_FIN = #{pbocRstFin,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRst != null" >
+        APP_SCORE_RST = #{appScoreRst,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRstFin != null" >
+        APP_SCORE_RST_FIN = #{appScoreRstFin,jdbcType=VARCHAR},
+      </if>
+      <if test="cifAge != null" >
+        CIF_AGE = #{cifAge,jdbcType=VARCHAR},
+      </if>
+      <if test="isHavePboc != null" >
+        IS_HAVE_PBOC = #{isHavePboc,jdbcType=VARCHAR},
+      </if>
+      <if test="isHaveLoancard != null" >
+        IS_HAVE_LOANCARD = #{isHaveLoancard,jdbcType=VARCHAR},
+      </if>
+      <if test="ttPayRate != null" >
+        TT_PAY_RATE = #{ttPayRate,jdbcType=DECIMAL},
+      </if>
+      <if test="pay != null" >
+        PAY = #{pay,jdbcType=DECIMAL},
+      </if>
+      <if test="payDue != null" >
+        PAY_DUE = #{payDue,jdbcType=DECIMAL},
+      </if>
+      <if test="revolvingLabel != null" >
+        REVOLVING_LABEL = #{revolvingLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="cifLabel != null" >
+        CIF_LABEL = #{cifLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestPayAmtLabel != null" >
+        LOWEST_PAY_AMT_LABEL = #{lowestPayAmtLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="freePayTermLabel != null" >
+        FREE_PAY_TERM_LABEL = #{freePayTermLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="accfundIncome != null" >
+        ACCFUND_INCOME = #{accfundIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="comfirmAmt != null" >
+        COMFIRM_AMT = #{comfirmAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="adbAmt != null" >
+        ADB_AMT = #{adbAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="csLoanAmt != null" >
+        CS_LOAN_AMT = #{csLoanAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cityTyp != null" >
+        CITY_TYP = #{cityTyp,jdbcType=VARCHAR},
+      </if>
+      <if test="avgMob != null" >
+        AVG_MOB = #{avgMob,jdbcType=DECIMAL},
+      </if>
+      <if test="oneCardMob != null" >
+        ONE_CARD_MOB = #{oneCardMob,jdbcType=DECIMAL},
+      </if>
+      <if test="riskLvl != null" >
+        RISK_LVL = #{riskLvl,jdbcType=DECIMAL},
+      </if>
+      <if test="appLable != null" >
+        APP_LABLE = #{appLable,jdbcType=VARCHAR},
+      </if>
+      <if test="cardActivTimes != null" >
+        CARD_ACTIV_TIMES = #{cardActivTimes,jdbcType=DECIMAL},
+      </if>
+      <if test="maxRcCriditLmt != null" >
+        MAX_RC_CRIDIT_LMT = #{maxRcCriditLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="maxRcChareLmt != null" >
+        MAX_RC_CHARE_LMT = #{maxRcChareLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="maxRcCardMob != null" >
+        MAX_RC_CARD_MOB = #{maxRcCardMob,jdbcType=DECIMAL},
+      </if>
+      <if test="maxCsLoanMob != null" >
+        MAX_CS_LOAN_MOB = #{maxCsLoanMob,jdbcType=DECIMAL},
+      </if>
+      <if test="haveCcUseRecord != null" >
+        HAVE_CC_USE_RECORD = #{haveCcUseRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="haveClUseRecord != null" >
+        HAVE_CL_USE_RECORD = #{haveClUseRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeAmt != null" >
+        INCOME_AMT = #{incomeAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherBankAmt != null" >
+        OTHER_BANK_AMT = #{otherBankAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="payAmt != null" >
+        PAY_AMT = #{payAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="eduAmt != null" >
+        EDU_AMT = #{eduAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="houseAmt != null" >
+        HOUSE_AMT = #{houseAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="carAmt != null" >
+        CAR_AMT = #{carAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherBankMaxLmt != null" >
+        OTHER_BANK_MAX_LMT = #{otherBankMaxLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="otherBankSecondLmt != null" >
+        OTHER_BANK_CREDIT_LMT = #{otherBankSecondLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="isMasterCustApp != null" >
+        IS_MASTER_CUST_APP = #{isMasterCustApp,jdbcType=VARCHAR},
+      </if>
+      <if test="isNewCustApp != null" >
+        IS_NEW_CUST_APP = #{isNewCustApp,jdbcType=VARCHAR},
+      </if>
+      <if test="custType != null" >
+        CUST_TYPE = #{custType,jdbcType=VARCHAR},
+      </if>
+      <if test="isSpecialCust != null" >
+        IS_SPECIAL_CUST = #{isSpecialCust,jdbcType=VARCHAR},
+      </if>
+      <if test="gjmCd != null" >
+        GJM_CD = #{gjmCd,jdbcType=VARCHAR},
+      </if>
+      <if test="jujCd != null" >
+        JUJ_CD = #{jujCd,jdbcType=VARCHAR},
+      </if>
+      <if test="dti != null" >
+        DTI = #{dti,jdbcType=DECIMAL},
+      </if>
+      <if test="dlLmt != null" >
+        DL_LMT = #{dlLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cardorloanacctstatusabl != null" >
+        CARDORLOANACCTSTATUSABL = #{cardorloanacctstatusabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard12mdueabl != null" >
+        CREDITCARD12MDUEABL = #{creditcard12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard3mdueabl != null" >
+        CREDITCARD3MDUEABL = #{creditcard3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardorloan3mdueabl != null" >
+        CARDORLOAN3MDUEABL = #{cardorloan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancarddueabl != null" >
+        LOANCARDDUEABL = #{loancarddueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan12mdueabl != null" >
+        LOAN12MDUEABL = #{loan12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan3mdueabl != null" >
+        LOAN3MDUEABL = #{loan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="newloancardacctcountabl != null" >
+        NEWLOANCARDACCTCOUNTABL = #{newloancardacctcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancardamtuseratioabl != null" >
+        LOANCARDAMTUSERATIOABL = #{loancardamtuseratioabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardloanselectcountabl != null" >
+        CARDLOANSELECTCOUNTABL = #{cardloanselectcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcardcountabl != null" >
+        CREDITCARDCOUNTABL = #{creditcardcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="rzLable != null" >
+        RZ_LABLE = #{rzLable,jdbcType=VARCHAR},
+      </if>
+      <if test="isHxEmp != null" >
+        IS_HX_EMP = #{isHxEmp,jdbcType=VARCHAR},
+      </if>
+      <if test="isHxXykEmp != null" >
+        IS_HX_XYK_EMP = #{isHxXykEmp,jdbcType=VARCHAR},
+      </if>
+      <if test="tempDecisionresult != null" >
+        TEMP_DECISIONRESULT = #{tempDecisionresult,jdbcType=VARCHAR},
+      </if>
+      <if test="mainRollingLabel != null" >
+        MAIN_ROLLING_LABEL = #{mainRollingLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="mainRollingResult != null" >
+        MAIN_ROLLING_RESULT = #{mainRollingResult,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionResult != null" >
+        DECISION_RESULT = #{decisionResult,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionDesp != null" >
+        DECISION_DESP = #{decisionDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRateProduct != null" >
+        INTEREST_RATE_PRODUCT = #{interestRateProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="custTypeDesp != null" >
+        CUST_TYPE_DESP = #{custTypeDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="rcCcCl12mNotAction != null" >
+        RC_CC_CL_12M_NOT_ACTION = #{rcCcCl12mNotAction,jdbcType=VARCHAR},
+      </if>
+      <if test="rzResult != null" >
+        RZ_RESULT = #{rzResult,jdbcType=VARCHAR},
+      </if>
+      <if test="rzDesp != null" >
+        RZ_DESP = #{rzDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="loandueabl != null" >
+        LOANDUEABL = #{loandueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRstDesp != null" >
+        APP_SCORE_RST_DESP = #{appScoreRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="appScoreRstFinDesp != null" >
+        APP_SCORE_RST_FIN_DESP = #{appScoreRstFinDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRstDesp != null" >
+        PBOC_RST_DESP = #{pbocRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="pbocRstFinDesp != null" >
+        PBOC_RST_FIN_DESP = #{pbocRstFinDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="wfResult != null" >
+        WF_RESULT = #{wfResult,jdbcType=VARCHAR},
+      </if>
+      <if test="ysxAmt != null" >
+        YSX_AMT = #{ysxAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="jingdongAmt != null" >
+        JINGDONG_AMT = #{jingdongAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cutOffDirection != null" >
+        CUT_OFF_DIRECTION = #{cutOffDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="historyProposedLmt != null" >
+        HISTORY_PROPOSED_LMT = #{historyProposedLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="indCdRst != null" >
+        IND_CD_RST = #{indCdRst,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SD_ID = #{sdId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.input.FicoSdBlaze" >
+    update OPAS_FICO_SD_BLAZE
+    set APP_ID = #{appId,jdbcType=VARCHAR},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      PROPOSED_LMT = #{proposedLmt,jdbcType=DECIMAL},
+      APP_SCORE = #{appScore,jdbcType=DECIMAL},
+      APP_SCORE_LVL = #{appScoreLvl,jdbcType=VARCHAR},
+      REVOLVING_LMT = #{revolvingLmt,jdbcType=DECIMAL},
+      APP_CHANNEL = #{appChannel,jdbcType=VARCHAR},
+      OP_ACCT_DT = #{opAcctDt,jdbcType=VARCHAR},
+      SUPPLEMENT_RST = #{supplementRst,jdbcType=VARCHAR},
+      SUPPLEMENT_RST_DSCP = #{supplementRstDscp,jdbcType=VARCHAR},
+      FQZ_RST = #{fqzRst,jdbcType=VARCHAR},
+      FQZ_RST_DESP = #{fqzRstDesp,jdbcType=VARCHAR},
+      CP_RST = #{cpRst,jdbcType=VARCHAR},
+      CP_RST_DESP = #{cpRstDesp,jdbcType=VARCHAR},
+      PBOC_RST = #{pbocRst,jdbcType=VARCHAR},
+      PBOC_RST_FIN = #{pbocRstFin,jdbcType=VARCHAR},
+      APP_SCORE_RST = #{appScoreRst,jdbcType=VARCHAR},
+      APP_SCORE_RST_FIN = #{appScoreRstFin,jdbcType=VARCHAR},
+      CIF_AGE = #{cifAge,jdbcType=VARCHAR},
+      IS_HAVE_PBOC = #{isHavePboc,jdbcType=VARCHAR},
+      IS_HAVE_LOANCARD = #{isHaveLoancard,jdbcType=VARCHAR},
+      TT_PAY_RATE = #{ttPayRate,jdbcType=DECIMAL},
+      PAY = #{pay,jdbcType=DECIMAL},
+      PAY_DUE = #{payDue,jdbcType=DECIMAL},
+      REVOLVING_LABEL = #{revolvingLabel,jdbcType=VARCHAR},
+      CIF_LABEL = #{cifLabel,jdbcType=VARCHAR},
+      LOWEST_PAY_AMT_LABEL = #{lowestPayAmtLabel,jdbcType=VARCHAR},
+      FREE_PAY_TERM_LABEL = #{freePayTermLabel,jdbcType=VARCHAR},
+      ACCFUND_INCOME = #{accfundIncome,jdbcType=DECIMAL},
+      COMFIRM_AMT = #{comfirmAmt,jdbcType=DECIMAL},
+      ADB_AMT = #{adbAmt,jdbcType=DECIMAL},
+      CS_LOAN_AMT = #{csLoanAmt,jdbcType=DECIMAL},
+      CITY_TYP = #{cityTyp,jdbcType=VARCHAR},
+      AVG_MOB = #{avgMob,jdbcType=DECIMAL},
+      ONE_CARD_MOB = #{oneCardMob,jdbcType=DECIMAL},
+      RISK_LVL = #{riskLvl,jdbcType=DECIMAL},
+      APP_LABLE = #{appLable,jdbcType=VARCHAR},
+      CARD_ACTIV_TIMES = #{cardActivTimes,jdbcType=DECIMAL},
+      MAX_RC_CRIDIT_LMT = #{maxRcCriditLmt,jdbcType=DECIMAL},
+      MAX_RC_CHARE_LMT = #{maxRcChareLmt,jdbcType=DECIMAL},
+      MAX_RC_CARD_MOB = #{maxRcCardMob,jdbcType=DECIMAL},
+      MAX_CS_LOAN_MOB = #{maxCsLoanMob,jdbcType=DECIMAL},
+      HAVE_CC_USE_RECORD = #{haveCcUseRecord,jdbcType=VARCHAR},
+      HAVE_CL_USE_RECORD = #{haveClUseRecord,jdbcType=VARCHAR},
+      INCOME_AMT = #{incomeAmt,jdbcType=DECIMAL},
+      OTHER_BANK_AMT = #{otherBankAmt,jdbcType=DECIMAL},
+      PAY_AMT = #{payAmt,jdbcType=DECIMAL},
+      EDU_AMT = #{eduAmt,jdbcType=DECIMAL},
+      HOUSE_AMT = #{houseAmt,jdbcType=DECIMAL},
+      CAR_AMT = #{carAmt,jdbcType=DECIMAL},
+      OTHER_BANK_MAX_LMT = #{otherBankMaxLmt,jdbcType=DECIMAL},
+      OTHER_BANK_CREDIT_LMT = #{otherBankSecondLmt,jdbcType=DECIMAL},
+      IS_MASTER_CUST_APP = #{isMasterCustApp,jdbcType=VARCHAR},
+      IS_NEW_CUST_APP = #{isNewCustApp,jdbcType=VARCHAR},
+      CUST_TYPE = #{custType,jdbcType=VARCHAR},
+      IS_SPECIAL_CUST = #{isSpecialCust,jdbcType=VARCHAR},
+      GJM_CD = #{gjmCd,jdbcType=VARCHAR},
+      JUJ_CD = #{jujCd,jdbcType=VARCHAR},
+      DTI = #{dti,jdbcType=DECIMAL},
+      DL_LMT = #{dlLmt,jdbcType=DECIMAL},
+      CARDORLOANACCTSTATUSABL = #{cardorloanacctstatusabl,jdbcType=VARCHAR},
+      CREDITCARD12MDUEABL = #{creditcard12mdueabl,jdbcType=VARCHAR},
+      CREDITCARD3MDUEABL = #{creditcard3mdueabl,jdbcType=VARCHAR},
+      CARDORLOAN3MDUEABL = #{cardorloan3mdueabl,jdbcType=VARCHAR},
+      LOANCARDDUEABL = #{loancarddueabl,jdbcType=VARCHAR},
+      LOAN12MDUEABL = #{loan12mdueabl,jdbcType=VARCHAR},
+      LOAN3MDUEABL = #{loan3mdueabl,jdbcType=VARCHAR},
+      NEWLOANCARDACCTCOUNTABL = #{newloancardacctcountabl,jdbcType=VARCHAR},
+      LOANCARDAMTUSERATIOABL = #{loancardamtuseratioabl,jdbcType=VARCHAR},
+      CARDLOANSELECTCOUNTABL = #{cardloanselectcountabl,jdbcType=VARCHAR},
+      CREDITCARDCOUNTABL = #{creditcardcountabl,jdbcType=VARCHAR},
+      RZ_LABLE = #{rzLable,jdbcType=VARCHAR},
+      IS_HX_EMP = #{isHxEmp,jdbcType=VARCHAR},
+      IS_HX_XYK_EMP = #{isHxXykEmp,jdbcType=VARCHAR},
+      TEMP_DECISIONRESULT = #{tempDecisionresult,jdbcType=VARCHAR},
+      MAIN_ROLLING_LABEL = #{mainRollingLabel,jdbcType=VARCHAR},
+      MAIN_ROLLING_RESULT = #{mainRollingResult,jdbcType=VARCHAR},
+      DECISION_RESULT = #{decisionResult,jdbcType=VARCHAR},
+      DECISION_DESP = #{decisionDesp,jdbcType=VARCHAR},
+      INTEREST_RATE_PRODUCT = #{interestRateProduct,jdbcType=VARCHAR},
+      CUST_TYPE_DESP = #{custTypeDesp,jdbcType=VARCHAR},
+      RC_CC_CL_12M_NOT_ACTION = #{rcCcCl12mNotAction,jdbcType=VARCHAR},
+      RZ_RESULT = #{rzResult,jdbcType=VARCHAR},
+      RZ_DESP = #{rzDesp,jdbcType=VARCHAR},
+      LOANDUEABL = #{loandueabl,jdbcType=VARCHAR},
+      APP_SCORE_RST_DESP = #{appScoreRstDesp,jdbcType=VARCHAR},
+      APP_SCORE_RST_FIN_DESP = #{appScoreRstFinDesp,jdbcType=VARCHAR},
+      PBOC_RST_DESP = #{pbocRstDesp,jdbcType=VARCHAR},
+      PBOC_RST_FIN_DESP = #{pbocRstFinDesp,jdbcType=VARCHAR},
+      WF_RESULT = #{wfResult,jdbcType=VARCHAR},
+      YSX_AMT = #{ysxAmt,jdbcType=DECIMAL},
+      JINGDONG_AMT = #{jingdongAmt,jdbcType=DECIMAL},
+      CUT_OFF_DIRECTION = #{cutOffDirection,jdbcType=VARCHAR},
+      HISTORY_PROPOSED_LMT = #{historyProposedLmt,jdbcType=DECIMAL},
+      IND_CD_RST = #{indCdRst,jdbcType=VARCHAR}
+    where SD_ID = #{sdId,jdbcType=VARCHAR}
+  </update>
+  <!-- 业务字典查询刚性扣减城市 -->
+  <select id="selectGxkjCity" resultType="String" >
+ 	 	select a.dict_detail_code as cityCode from opas_ap_dict_detail a 
+		where a.dict_id =(select b.dict_id from (select d.dict_id,rownum from opas_ap_dict d where d.dict_code='BZDL') b
+		 where rownum=1) 
+  </select>
+  
+   <select id="selectCreateTime"  parameterType="java.lang.String" resultType="java.lang.String">
+  	  select  a.CRT_TIME from opas_fico_ydj_blaze a
+  	  <where>
+			a.APP_ID = #{appId,jdbcType=VARCHAR} and rownum = 1
+	  </where>
+	</select>
+</mapper>

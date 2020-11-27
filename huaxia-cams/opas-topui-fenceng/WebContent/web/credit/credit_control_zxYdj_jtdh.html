@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>征信页面功能</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/modify/modify.js"></script>
+<!-- <link rel="stylesheet" href="../../css/index/index.css" type="text/css"></link> -->
+<script type="text/javascript">
+/******获取url地址中的参数并封装成对象begin*************************/
+var url=location.search;
+var theRequest=new Object();
+if(url.indexOf("?")!=-1){
+	var str=url.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+}
+var appId=theRequest.appId;//获取流程号
+var ydjFlag=theRequest.ydjFlag;//易达金标示
+var userCode=theRequest.userCode;//用户登录名 
+var appProd=theRequest.appProd;//获取 父页面的申请卡片产品变量 
+var matchingCardFlag=theRequest.matchingCardFlag;//套卡标识  
+var submitType="";//提报类型 ，提报时要用到该参数 
+var zxQueue= window.opener.zxQueue;//当前是征信的哪个队列  0未完成 1已完成 。。。
+var meuoFlag=theRequest.meuoFlag;//菜单标示（1：为征信、2为征审合一）
+var bigSaveButtonFlag=false;//是否操作 大保存按钮 的标志
+var comingZxCommit=false;//作为是否进行征信提交的标志 
+var zidongSubmit='0';
+if(theRequest.zidongSubmit){
+zidongSubmit=theRequest.zidongSubmit;//自动推送标志1：为推送。0为不推送
+}
+var team="0";//集体电核标记
+if(theRequest.team){
+	team = theRequest.team;
+}
+var backFlag='0';//审批退回标识用于 提交时使用 
+if(theRequest.backFlag){
+	backFlag=theRequest.backFlag;
+}
+var currentZxIndex=0;//征信 自动追加功能控制  （队列中打开多个页面后再回到第一个页面操作 出现的问题）
+if(theRequest.currentZxIndex){
+	currentZxIndex=theRequest.currentZxIndex;
+}
+//控制 tab点击 是否触发 加载页面
+var liLeft0='';
+var liLeft1='';
+var liLeft2='';
+var liLeft3='';
+var liLeft4='';
+var liLeft5='';
+var liLeft6='';
+var liRtght0='';
+var liRtght1='';
+var liRtght2='';
+var liRtght3='';
+/******获取url地址中的参数并封装成对象end*************************/
+$(function(){
+	//征审合一是，征信页面隐藏“自动推送”按钮
+	if(meuoFlag=="2"){
+		$("#zsheHide").hide();
+	}
+	if(ydjFlag=='2'){//标准卡 
+	//	$("#credit_control_right0").html('<iframe name="rightIframe0" id="rightIframe0" style="border: 0; width: 100%; height: 100%"  src="../credit/credit_investigation_zxBzk.html?appId='+appId+'"></iframe>');
+	}else if(ydjFlag=='1'){//易达金 
+		$("#credit_control_right0")[0].innerHTML=('<iframe name="rightIframe0" id="rightIframe0" style="border: 0; width: 100%; height: 100%"  src="../credit/credit_investigation_zxYdj_readOnly.html?appId='+appId+'"></iframe>');
+	}
+	
+	if(ydjFlag=='2'){//标准卡 
+		$("#credit_control_left0")[0].innerHTML=('<iframe name="leftIframe0" id="leftIframe0" style="border: 0; width: 100%; height: 100%"  src="../common/bzk_system_decision_view.html?appId='+appId+'"></iframe>');
+	}else if(ydjFlag=='1'){//易达金 
+		$("#credit_control_left0")[0].innerHTML=('<iframe name="leftIframe0" id="leftIframe0" style="border: 0; width: 100%; height: 100%"  src="../common/ydj_system_decision_view.html?appId='+appId+'"></iframe>');
+	}
+	//申请表信息 
+	liLeft3='1';
+	$("#credit_control_left3")[0].innerHTML=('<iframe name="leftIframe3" id="leftIframe3" style="border: 0; width: 100%; height: 100%"  src="../common/apply_info_view_readonly_ydj.html?appId='+appId+'"></iframe>');	
+	//加载  审批操作人（易达金）下拉框 
+	if(meuoFlag=="1"){
+			$cf.ajax({
+			 url:'/opas-naps/findZxExamineOperationPerson.json',    
+			 onSuccess : function(response) {
+				var resultList = response.RSP_BODY.listMap;
+				$('#zxExamineOperationPerson').combobox({
+					data:resultList,
+				    valueField:'dictDetailCode',
+				    textField:'dictDetailName',
+				    width:100,
+				    onLoadSuccess:function(){
+				    //	var val=$(this).combobox("getData");
+				    //	$(this).combobox("select",'');
+				    }
+				}); 
+			}
+		});
+		$("#zidongPushCheckbox").click(function(){//自动推送的控制 
+		  if(window.opener.isChoseZiDongTuiSong){
+			if($(this).is(":checked")){
+				window.opener.isChoseZiDongTuiSong='1';
+			}else{
+				window.opener.isChoseZiDongTuiSong='0';
+			}
+	      }
+		});
+		if(window.opener.isChoseZiDongTuiSong){//自动推送的控制 
+			if(window.opener.isChoseZiDongTuiSong=='1'){
+				$("#zidongPushCheckbox").attr('checked',true);
+			}
+		}
+	}
+	var liLeft =document.getElementById("credit_control_leftTab").getElementsByTagName("li");
+	for(var i=0;i<liLeft.length;i++){
+		liLeft[i].number=i;
+		liLeft[i].onclick=function(){loadCurrentPageLeft(this);};
+	}
+	var liRtght =document.getElementById("credit_control_rightTab").getElementsByTagName("li");
+	for(var i=0;i<liRtght.length;i++){
+		liRtght[i].number=i;
+		liRtght[i].onclick=function(){loadCurrentPageRight(this);};
+	}
+}); 
+/**
+ * 加载页面 左边 所选择的当前tab页
+ */
+function loadCurrentPageLeft(currentObject){
+	var number=currentObject.number;
+	var currObj=currentObject;
+	if(number==0){
+	//$("#credit_control_left0").html('<iframe name="leftIframe0" id="leftIframe0" style="border: 0; width: 100%; height: 100%"  src="../common/system_decision_view_ydj.html"></iframe>');
+	}else if(number==1&&liLeft1==''){
+		liLeft1='1';
+	$("#credit_control_left1").html('<iframe name="leftIframe1" id="leftIframe1" style="border: 0; width: 100%; height: 100%"  src="../common/thirdparty_summary_ydj_view.html?appId='+appId+'"></iframe>');
+	}else if(number==2&&liLeft2==''){
+		//增强信息采集 
+		 liLeft2='1';
+		if(appProd=='0085'){//商品易达金 
+			$("#credit_control_left2")[0].innerHTML=('<iframe name="leftIframe2" id="leftIframe2" style="border: 0; width: 100%; height: 100%"  src="../shenpi/patchbolt_spyinfo.html?appId='+appId+'"></iframe>');	
+		}else{//非商品易达金
+			$("#credit_control_left2")[0].innerHTML=('<iframe name="leftIframe2" id="leftIframe2" style="border: 0; width: 100%; height: 100%"  src="../shenpi/ydj_enhance_collect_view.html?appId='+appId+'"></iframe>');	
+		}
+	} else if(number==3&&liLeft3==''){
+		/* //申请表信息 
+		liLeft3='1';
+		$("#credit_control_left3")[0].innerHTML=('<iframe name="leftIframe3" id="leftIframe3" style="border: 0; width: 100%; height: 100%"  src="../common/apply_info_view.html?appId='+appId+'"></iframe>');	 */
+	} else if(number==4&&liLeft4==''){
+		liLeft4='1';
+	$("#credit_control_left4").html('<iframe name="leftIframe4" id="leftIframe4" style="border: 0; width: 100%; height: 100%"  src="../credit/credit_check_detailed.html?appId='+appId+'"></iframe>');	
+	}else if(number==5&&liLeft5==''){
+		liLeft5='1';
+	$("#credit_control_left5").html('<iframe name="leftIframe5" id="leftIframe5" style="border: 0; width: 100%; height: 100%"  src="../credit/submit_reply.html?appId='+appId+'"></iframe>');
+	}/* else if(number==5&&liLeft6==''){
+		liLeft6='1';
+	$("#credit_control_left61").html('<iframe name="leftIframe6" id="leftIframe6" style="border: 0; width: 100%; height: 100%"  src="../collect/ydj_enhance_collect_view.html?appId='+appId+'"></iframe>');
+	
+	}	 */
+}
+/**
+ * 加载页面 右边 所选择的当前tab页
+ */
+function loadCurrentPageRight(currentObject){
+	var number=currentObject.number;
+	var currObj=currentObject;
+	
+	if(number==0&&liRtght0==''){
+		/* liRtght0=='1';
+		if(ydjFlag=='2'){//标准卡 
+			$("#credit_control_right0").html('<iframe name="rightIframe0" id="rightIframe0" style="border: 0; width: 100%; height: 100%"  src="../common/credit_investigation_notes.html?appId='+appId+'"></iframe>');
+		}else if(ydjFlag=='1'){//易达金 
+			$("#credit_control_right0").html('<iframe name="rightIframe0" id="rightIframe0" style="border: 0; width: 100%; height: 100%"  src="../common/system_credit_zj.html?appId='+appId+'"></iframe>');
+		} */
+	}else if(number==1&&liRtght1==''){
+		//加载提交补件 页面 
+		liRtght1='1';
+		if(ydjFlag=='2'){
+			//$("#credit_control_right1").html('<iframe name="rightIframe1" id="rightIframe1" style="border: 0; width: 100%; height: 100%"  src="../credit/patchbolt.html?appId='+appId+'"></iframe>');
+		}else if(ydjFlag=='1'){
+			$("#credit_control_right1")[0].innerHTML=('<iframe name="rightIframe1" id="rightIframe1" style="border: 0; width: 100%; height: 100%"  src="../credit/patchbolt_search_ydj.html?appId='+appId+'"></iframe>');
+		}
+	}/* else if(number==2&&liRtght2==''){
+		liRtght2='2';
+	$("#credit_control_right2").html('<iframe name="rightIframe2" id="rightIframe2" style="border: 0; width: 100%; height: 100%" src=""></iframe>');
+	} */else if(number==2&&liRtght3==''){
+		liRtght3='3';
+		$("#credit_control_right3").html('<iframe name="rightIframe3" id="rightIframe3" style="border: 0; width: 100%; height: 100%"  src="../credit/credit_cheat_submit_ReadOnly.html?appId='+appId+'"></iframe>');
+	}
+}
+function openWin(){
+	if(zxQueue=='4'){//挂起队列 
+		$.messager.alert('提示','申请件已挂起，不得提报.','warning');
+		return ;
+	}
+	window.open('creditSubmitNewspaper.html',"newWindow",'height=150,width=300,toolbar=0,menubar=0,scrollbars=0,resizable=0,location=0,status=0,top=400,left=400');
+}
+//提交
+function creditControlSubmit(){
+	if(zxQueue=='4'){//挂起队列 
+		$.messager.alert('提示','申请件已挂起，不得提交.','warning');
+		return ;
+	}else if(zxQueue=='1'){//已完成队列 
+		$.messager.alert('提示','申请件已完成，不得提交.','warning');
+		return ;
+	}else if(zxQueue=='2'){//待补件队列 
+	/* 	var patchboltTwoWindow=document.getElementById("rightIframe1").contentWindow;
+	if(patchboltTwoWindow!=null){
+		var isChoseReasonCommit=false;//待补件队列 大提交 是否  此页面进行了补件原因选择 
+		var isChoseReasonSaveCommit=false;//待补件队列 大提交 是否  此页面进行了补件原因选择 并进行了保存操作 
+		isChoseReasonCommit=patchboltTwoWindow.isChoseReasonCommit;
+		isChoseReasonSaveCommit=patchboltTwoWindow.isChoseReasonSaveCommit;
+		if(isChoseReasonCommit&&isChoseReasonSaveCommit){}else{
+			$.messager.alert('提示','请进行提交补件页面，原因选择确认操作。','warning');
+			return ;
+		}
+	}else{
+		$.messager.alert('提示','请进行提交补件页面，原因选择确认操作。','warning');
+		return ;
+	} */
+	var choosePatchBoltTwoReason=true;//表示 没进行，提交补件页面 原因选择确认操作
+		$cf.ajax({
+			url:"/opas-naps/findPatchBoltTwoReasonJudge.json",
+			data:{'appId':appId},
+			async:false,
+			onSuccess:function(data){
+				if(data.RSP_BODY.success){
+					choosePatchBoltTwoReason=false;
+				}	
+			}
+		});
+	    if(choosePatchBoltTwoReason){
+	    	$.messager.alert('提示','请进行提交补件页面，原因选择确认操作。','warning');
+		   return ;
+	    }
+	}
+	 var qualityCheckingIsStop=false;//是否质检叫停 
+	 var qualityCheckingUser="";//质检 外包 指定用户 
+		//判断此申请件 是否被质检 叫停 
+		$cf.ajax({
+			url:"/opas-naps/select_QualityChecking.json",
+			data:{'appId':appId},
+			async:false,
+			onSuccess:function(data){
+				if(data.RSP_BODY.isSuccess){
+				var	stopFlag=data.RSP_BODY.qualityChecking.stopFlag;//0保存 1质检 2叫停 
+				var	employeeFlag=data.RSP_BODY.qualityChecking.employeeFlag;//1 外包 
+				var	crtUser=data.RSP_BODY.qualityChecking.crtUser;
+				if(stopFlag=="2"){
+					$.messager.alert("提示", "此申请件已被质检叫停不允许提交.", "warning");
+					qualityCheckingIsStop=true;
+				}
+				//质检  外包  这个件就指定给  crtUser 这个人 （ 若 进行了指定特定审批人操作 则按指定特定审批人的流程来）
+				if(stopFlag=="1"&&employeeFlag=="1"){
+					qualityCheckingUser=crtUser;
+				}
+				}
+			}
+		});
+	    if(qualityCheckingIsStop){
+		   return ;
+	    }
+	var jsondata = {};
+	jsondata.check_delStatus='1';//征信 未完成、退回    提交   修改人工处理状态   变为已完成 
+	jsondata.check_ydjFlag=ydjFlag;
+	jsondata.check_number=appId; 
+	jsondata.userCode=userCode;
+	jsondata.appId=appId;
+	jsondata.ydjFlag=ydjFlag;//'WaitNode_kr6l5';
+	jsondata.check_meuoFlag=meuoFlag;
+	jsondata.matchingCardFlag=matchingCardFlag;
+	jsondata.appProd=appProd;//商品易达金 
+	var updateFlag = false;
+	if(meuoFlag=="2"){//政审合一 
+		updateFlag = document.getElementById("leftIframe3").contentWindow.zshyFlag;
+		if(updateFlag){
+			innerJcCheck(appId);
+			jsondata.zshyInnerCheck = "1";
+		}else{
+			jsondata.zshyInnerCheck = "0";
+		}
+	}else{
+		jsondata.zshyInnerCheck = "0";
+	}
+	var specialExamineUser=$("#zxExamineOperationPerson").combobox('getValue');
+	if(meuoFlag=="2"){//政审合一 提交给当前人 
+		jsondata.specialExamineUser='2-'+userCode+'-'+userCode;
+	}else{
+		if(qualityCheckingUser!=null&&qualityCheckingUser!=""&&qualityCheckingUser!=undefined){
+			jsondata.specialExamineUser='2-'+userCode+'-'+qualityCheckingUser;//质检非外包 提交类似 指定特定审批人逻辑 ，  指定给质检的 crtUser
+		}else if(specialExamineUser!=null&&specialExamineUser!=undefined&&specialExamineUser!=""){
+			jsondata.specialExamineUser='2-'+userCode+'-'+specialExamineUser;//进行字符串的拼接    2-userCode-specialExamineUser  指定特定审批人 
+		   //	jsondata.specialExamineUser=specialExamineUser;//,"nodeId":"WaitNode_kr6l5"};
+		}else{
+			if(backFlag=='4'){//退回队列 
+				jsondata.specialExamineUser='5-'+userCode+'-'+''; // 5-userCode-""退回队列提交
+			}else{
+				jsondata.specialExamineUser='1-'+userCode+'-'+''; // 1-userCode-""普通提交
+			}
+		}
+	}
+ 	  $cf.ajax({
+		url : "/opas-naps/credit_submit.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+				//征审合一 代码添加 add xzg
+				if(meuoFlag=="2"){
+					window.opener.reload();
+					var zshyResult = data.RSP_BODY.zshyResult;
+					var allot = data.RSP_BODY.applyAllot;
+					if(allot!=null && ydjFlag=="1"){
+						if(!updateFlag && allot.zshyInnerCheck =="1"){
+							updateFlag = true;
+						}
+					}
+					if(zshyResult=="1"){
+						if(ydjFlag=="2"){
+							//判断当前件是否需呀进行内部交叉检测
+							if(updateFlag){
+								alert("当前件由于需要进行内部交叉检测，故需要关闭当前页");
+								window.close();
+							}else{
+								location.href = "../audit/bzk_credit_approve_main.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=2&zidongSubmit="+zidongSubmit;
+							}
+						}else{
+							if(allot.matchingCardFlag=="1"){
+								location.href = "credit_control_zxBzk.html?appId="+allot.appId+"&ydjFlag=1&userCode="+userCode+"&matchingCardFlag="+allot.matchingCardFlag+"&appProd="+allot.appProd+"&meuoFlag=2&zidongSubmit="+zidongSubmit;
+							}else{
+								location.href = "credit_control_zxYdj.html?appId="+allot.appId+"&ydjFlag=1&userCode="+userCode+"&matchingCardFlag="+allot.matchingCardFlag+"&appProd="+allot.appProd+"&meuoFlag=2&zidongSubmit="+zidongSubmit;
+							}
+						}
+					}else if(zshyResult=="11"){//调用审批
+						//判断当前件是否需呀进行内部交叉检测
+						if(updateFlag){
+							alert("当前件由于需要进行内部交叉检测，故需要关闭当前页");
+							window.close();
+						}else{
+							if(ydjFlag=="2"){
+								location.href = "../audit/bzk_credit_approve_main.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=2&zidongSubmit="+zidongSubmit;
+							}else{
+								if(matchingCardFlag=="1"){
+									location.href = "../audit/ydjFk_credit_approve_main.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=2&zidongSubmit="+zidongSubmit;
+								}else{
+									location.href = "../audit/ydj_credit_approve_main.html?appId="+appId+"&userId="+userCode+"&check_meuoFlag=2&zidongSubmit="+zidongSubmit;
+								}
+							}
+						}
+					}else if(zshyResult=="2"){
+						alert("二次决策--直接拒绝");
+						window.close();
+					}else{
+						alert("二次决策--fico响应执行决策为空！");
+						window.close();
+					}
+				}else{
+					$.messager.alert('提示',data.RSP_BODY.msg,'warning');
+					afterSubmitRefreshParentPage();
+				}
+			} else {
+				$.messager.alert('提示',data.RSP_BODY.msg,'warning');
+				return ;
+			}
+		}
+	}); 
+	
+	
+}
+//提交成功后 刷新父页面  
+function afterSubmitRefreshParentPage(){
+	//自动推送 
+	if($("#zidongPushCheckbox").is(":checked")){
+	      window.opener.isZiDongTuiSong=true;   
+		//ziDongZhuiJiaAfterSubmit();
+	}
+	window.opener.reload();
+	//为了屏蔽ie的 小弹框提示 
+	var newWin=window.open("","_parent","");
+	newWin.close();
+}
+//调用 小页面的 保存方法 
+function creditControlZxYdjSave(){
+	var openPageMessage='';
+	if(liLeft3!='1'){
+		openPageMessage+="请先打开申请表信息页面;<br/><br/>";
+	}
+	if( liLeft2!='1'){
+		openPageMessage+="请先打开增强信息采集页面;";
+	}
+	if(liLeft3!='1'||liLeft2!='1'){
+		comingZxCommit=false;
+		$.messager.alert('提示',openPageMessage,'warning');
+		return ;
+	}
+	if(meuoFlag!="2"){
+	//每次 对 父页面的 自动追加 进行重新赋值  以保证下次推送正确
+	window.opener.ziDongZhuiJiaIndex=currentZxIndex;
+	}
+	bigSaveButtonFlag=true;
+	var applyTableWindow=null;//申请表信息页面 
+	var informationCollectionWindow=null;//增强信息采集页面 
+	var applyTableWindowIsSuccess=false;
+	var informationCollectionWindowIsSuccess=false;
+	var creditInvestigationIsSuccess=false;
+	var applyTableWindowIsCanCommit=false;//申请表信息，出现警告也可强制提交 
+	var creditInvestigationIsCanCommit=false;//征信调查，出现警告也可强制提交 
+	var message="";//"已执行保存操作。请查看";//提示信息
+	if(liLeft2=='1'){// 征信 易达金   增强信息采集 tab页 保存 
+		if(appProd=='0085'){//商品易达金  
+			informationCollectionWindow=document.getElementById("leftIframe2").contentWindow;
+			//setTimeout(function(){
+			informationCollectionWindow.onSave();
+			//},1*20);
+		}else{//非商品易达金 
+			informationCollectionWindow=document.getElementById("leftIframe2").contentWindow;
+			//setTimeout(function(){
+			informationCollectionWindow.fnSave('frm_enhance_collect', appId);
+			//},1*20);
+		}
+	}
+	if(liLeft3=='1'){// 征信 易达金   申请表信息  tab页 保存 
+		applyTableWindow=document.getElementById("leftIframe3").contentWindow;
+		//setTimeout(function(){
+		applyTableWindow.checkPageData();
+		//},1*300);
+	}
+	//征信调查tab 
+	var creditInvestigationWindow=document.getElementById("rightIframe0").contentWindow;
+	//setTimeout(function(){
+		creditInvestigationWindow.onBizInpApplC1(); // 征信 易达金   征信调查  tab页 保存 
+	//},1*800);
+	//setTimeout(function(){
+		if(applyTableWindow!=null){//申请表信息 
+		applyTableWindowIsSuccess=applyTableWindow.isSaveSuccess;
+		applyTableWindowIsCanCommit=applyTableWindow.isCanCommit;
+		
+		}
+		if(informationCollectionWindow!=null){//增强信息采集 
+			informationCollectionWindowIsSuccess=informationCollectionWindow.isSaveSuccess;
+		}
+		creditInvestigationIsSuccess=creditInvestigationWindow.isSaveSuccess;//征信调查页面保存成功与否 标识 
+		creditInvestigationIsCanCommit=creditInvestigationWindow.isCanCommit;
+		var openPageIsSuccess=true;//默认  打开的页面都保存成功
+		if(applyTableWindow!=null&&!applyTableWindowIsSuccess){
+			//	openPageIsSuccess=false;
+			message+="  <font color='red' size='2' >申请表信息页面: </font>" +applyTableWindow.waringMessage+'<br><br>';
+		}
+		if(informationCollectionWindow!=null&&!informationCollectionWindowIsSuccess){
+			openPageIsSuccess=false;
+			message+="  <font color='red' size='2' >增强信息采集页面: </font>" +informationCollectionWindow.waringMessage+'<br><br>';
+		}
+		if(creditInvestigationWindow!=null&&!creditInvestigationIsSuccess){
+			//openPageIsSuccess=false;
+			message+="  <font color='red' size='2' >征信调查页面: </font>" +creditInvestigationWindow.waringMessage;
+		}
+		bigSaveButtonFlag=false;
+		if(applyTableWindowIsCanCommit&&creditInvestigationIsCanCommit){//处理申请表页面 处理关键修改信息逻辑 
+		if(openPageIsSuccess){
+			var systemDecisionWindow=document.getElementById("leftIframe0").contentWindow;//系统决策 
+			var cardCheckMes=systemDecisionWindow.getCertifinoVailudZxSubmit();//身份证有效期校验 
+			var cardCheckNullMes=applyTableWindow.getFlagNullVailudZxSubmit(); //身份证有效期校验为空时 的校验 
+			if(!applyTableWindowIsSuccess||!creditInvestigationIsSuccess){//申请表信息有警告 
+				if(comingZxCommit){//如果正在进行征信提交   则保存后走提交逻辑 
+					resetSaveCommitVariables();
+					if(cardCheckMes=="空"&&cardCheckNullMes=="0"){
+						message+="  <font color='red' size='2' >ID有效期系统检查结果为“空”</font>";
+					}
+					if(cardCheckMes=="已过期"){
+						message+="  <font color='red' size='2' >ID有效期系统检查结果为“已过期”</font>";
+					}
+					$.messager.confirm({
+						width:400,
+						height:200,
+						title:"<font color='red' size='2.5' >请确认，是否强制提交</font>",
+						msg:message,fn:function(r){
+						if(r){//忽略 申请表信息页面的 警告 强制提交 
+								creditControlSubmit();
+								resetSaveCommitVariables();
+								return ;
+						}else{
+							resetSaveCommitVariables();
+							return ;
+						}
+					}
+					});
+				}else{
+					$.messager.show({
+						title:'我的消息',
+						msg:message,
+						showType:'slide',
+						width:400,
+						height:200,
+						draggable:true,
+						collapsible:true,
+						timeout:0,
+						style:{
+							right:'',
+							top:document.body.scrollTop+document.documentElement.scrollTop,
+							bottom:''
+						}
+					});
+					resetSaveCommitVariables();
+					return ;
+				}
+			}else{
+			$.messager.show({
+				title:'我的消息',
+				msg:"主键区保存成功.",
+				showType:'slide',
+				width:200,
+				height:100,
+				draggable:true,
+				collapsible:true,
+				timeout:800
+			});
+			if(comingZxCommit){//如果正在进行征信提交   则保存后走提交逻辑 
+				resetSaveCommitVariables();
+				var idCheckPass=false;//系统决策Id校验是否通过 
+				if(cardCheckMes=="空"&&cardCheckNullMes=="0"){
+					message+="  <font color='red' size='2' >ID有效期系统检查结果为“空”</font>";
+					idCheckPass=true;
+				}
+				if(cardCheckMes=="已过期"){
+					message+="  <font color='red' size='2' >ID有效期系统检查结果为“已过期”</font>";
+					idCheckPass=true;
+				}
+				if(idCheckPass){//没验证通过
+					$.messager.confirm({
+						width:400,
+						height:200,
+						title:"<font color='red' size='2.5' >请确认，是否强制提交</font>",
+						msg:message,fn:function(r){
+						if(r){//忽略 申请表信息页面的 警告 强制提交 
+								creditControlSubmit();
+								return ;
+						}else{
+							return ;
+						}
+					}
+					});
+				}else{
+				creditControlSubmit();
+				return;
+				}
+			}
+		 }
+		}else{
+		$.messager.show({
+			title:'我的消息',
+			msg:message,
+			showType:'slide',
+			width:400,
+			height:200,
+			draggable:true,
+			collapsible:true,
+			timeout:0,
+			style:{
+				right:'',
+				top:document.body.scrollTop+document.documentElement.scrollTop,
+				bottom:''
+			}
+		});
+		resetSaveCommitVariables();
+		return ;
+		}
+	}else{
+		$.messager.show({
+			title:'我的消息',
+			msg:message,
+			showType:'slide',
+			width:400,
+			height:200,
+			draggable:true,
+			collapsible:true,
+			timeout:0,
+			style:{
+				right:'',
+				top:document.body.scrollTop+document.documentElement.scrollTop,
+				bottom:''
+			}
+		});
+		resetSaveCommitVariables();
+		return ;
+	}
+	//},1*1860);
+}
+//重置 保存提交 用到的成员变量 
+function resetSaveCommitVariables(){
+	bigSaveButtonFlag=false;
+	comingZxCommit=false;
+}
+//征信页面提报功能 
+function creditSubmitNewsPaperZx(){
+	var jsondata = {};
+		jsondata.check_number=appId; 
+		jsondata.check_submitType=submitType;
+		jsondata.check_SubmitStatus="1"
+		jsondata.check_ydjFlag=ydjFlag;
+		jsondata.userCode=userCode;
+		//alert(jsondata.userCode);
+	$cf.ajax({
+		url : "/opas-naps/creditSubmit_newspaper.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+				$.messager.alert('征信提报提示',"提报成功。",'warning');
+				window.opener.reload(); 
+				var newWin=window.open("","_parent","");
+				newWin.close();
+			} else {
+				$.messager.alert('征信提报提示',"提报失败。",'warning');
+				return ;
+			}
+		}
+	});
+}
+//征信提交  保存成功后再提交 
+function creditControlZxCommitAfterSave(){
+	comingZxCommit=true;
+	creditControlZxYdjSave();
+}
+
+function showViewCreditControl(){
+	window.open("../win/image_new/imgShow.html?appId=" + appId,"newWindow");	
+}
+//调用内部交叉检测
+function innerJcCheck(appId){
+	//征信提交，内部交叉检测
+	$cf.ajax({
+		url : "/opas-naps/innerJcCheck.json",
+		data : {
+			"appId" : appId
+		},
+		onSuccess : function(resData) {
+			
+		}
+	});
+}
+</script>
+
+</head>
+<body id="n09000_body" class="easyui-layout">
+<div data-options="region:'west',split:true,noheader:true,border:false" style="width:50%;">
+		<div id="credit_control_leftTab" class="easyui-tabs" data-options="border:false"  style="height: 100%; width: 100%;">
+
+			<div id="credit_control_left0" title="系统决策" ></div>
+			<div id="credit_control_left1" title="征信信息" ></div>
+			<div id="credit_control_left2" title="增强信息采集" ></div>
+			<div id="credit_control_left3" title="申请表信息" ></div>
+			<!-- <div id="credit_control_left3" title="征信调查注记" ></div> -->
+			<div id="credit_control_left4" title="征信调查查看" ></div>		
+			<div id="credit_control_left5" title="提报回复查看" ></div>	
+	</div>
+	</div>
+	<div data-options="region:'east',split:true,noheader:true,border:false" style="width:50%;">
+		<div id="credit_control_rightTab" class="easyui-tabs" data-options="border:false"  style="height: 100%; width: 100%;">
+			<div id="credit_control_right0" title="征信调查"></div>
+			<div id="credit_control_right1" title="提交补件"></div>	
+			<!-- <div id="credit_control_right2" title="增强信息采集"></div>	 -->
+			<div id="credit_control_right3" title="欺诈提报"></div>
+	</div>
+	</div>
+	<!-- 按钮区 -->
+	<div id="n09000_tool" data-options="region:'south',split:false,noheader:true,border:false" style="height:35px;text-align:center;margin-top:7px">
+		<!-- <input onclick="creditControlZxYdjSave();" type="button" value="保 存" />&nbsp; -->
+		<!-- <input onclick="openWin();" type="button" value="提 报" />&nbsp; -->
+		<input onclick="creditControlUpdateMessageRecord();" type="button" value="信息修改记录" />&nbsp;
+		<input onclick="showViewCreditControl();" type="button" value="影像显示" />&nbsp;
+	</div>
+	<!-- 申请表信息修改查看 -->
+	<div id="applyDealView" class="easyui-window" title="申请表信息修改查看" style="width: 98%;height:670px;" data-options="iconCls:'icon-search',maximized:false,modal:true,closed:true">
+			<div id="tb_applyDealView"></div>
+	</div>
+</body>
+</html>

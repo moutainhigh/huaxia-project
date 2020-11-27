@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://www.huateng.com/schema/ics-core"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context   
+    					http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx   
+    					http://www.springframework.org/schema/tx/spring-tx.xsd
+    					http://www.huateng.com/schema/ics-core http://www.huateng.com/schema/ics-core.xsd
+    					http://www.springframework.org/schema/aop
+    					http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="com.huaxia.opas" />
+
+	<!-- <context:property-placeholder location="file:D:/HUAXIA/huaxia-configuration/host.properties" /> -->
+	<context:property-placeholder location="file:/app/opas/conf/host.properties" />
+
+	<!-- 业务库 开始 -->
+
+	<!-- 加密算法配置 -->
+	<bean id="dataSourceProperties" class="com.huaxia.opas.util.PropertiesEncryptFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="user">${username1}</prop>
+				<prop key="password">${password1}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 数据源配置 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="properties" ref="dataSourceProperties" />
+		<property name="driverClass" value="${driver1}" />
+		<property name="jdbcUrl" value="${url1}" />
+		<!-- <property name="user" value="${username1}" /> -->
+		<property name="initialPoolSize" value="${initialPoolSize1}"/>
+		<property name="maxPoolSize" value="${maxPoolSize1}" />
+		<property name="minPoolSize" value="${minPoolSize1}" />
+		<property name="acquireIncrement" value="${acquireIncrement}" />
+	   	<property name="breakAfterAcquireFailure" value="${breakAfterAcquireFailure}" />
+		<property name="idleConnectionTestPeriod" value="${idleConnectionTestPeriod}" />
+		<property name="maxIdleTimeExcessConnections" value="${maxIdleTimeExcessConnections}" />
+		<property name="maxIdleTime" value="${maxIdleTime}" />
+		<property name ="maxStatements" value="0"/>
+		<property name="checkoutTimeout" value="${checkoutTimeout}" />
+		<property name="unreturnedConnectionTimeout" value="${unreturnedConnectionTimeout}" />
+		<property name="acquireRetryAttempts" value="${acquireRetryAttempts}" />
+		<!-- <property name="numHelperThreads" value="${numHelperThreads}" /> -->
+		<!-- <property name="debugUnreturnedConnectionStackTraces" value="${debugUnreturnedConnectionStackTraces}" /> -->
+	</bean>
+
+	<!-- 命名SQL配置 -->
+	<bean id="sqlMap" class="com.huateng.neofp.service.sqlmap.impl.SqlMapFactoryBean">
+		<qualifier value="main" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:config/sqlmap/Configuration.xml" />
+		<property name="mappingLocations" value="classpath*:config/sqlmap/**/*-Mapping.xml" />
+	</bean>
+
+	<!-- SQL执行器配置：ETL工具使用 -->
+	<bean id="sqlExecutor" class="com.huaxia.opas.dao.common.sqlmap.SqlExecutor">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMap" ref="sqlMap" />
+	</bean>
+
+	<!-- AOP数据库事物配置 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+			<tx:method name="remove*" propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+			<tx:method name="merge*" propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+			<tx:method name="*" propagation="NOT_SUPPORTED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	<!-- wdb 生命周期分批插入事务单独控制 selfInsert-->
+	<aop:config>
+		<aop:pointcut id="allService"
+			expression="execution(* com.huaxia.opas.service..*.*(..)) and !execution(* com.huaxia.opas.service..*.self*(..)) " />
+		<aop:advisor pointcut-ref="allService" advice-ref="txAdvice" />
+	</aop:config>
+
+	<!-- 业务库 结束 -->
+		<!-- 流程节点 -->
+	<bean id="commonProperties" class="com.huaxia.opas.util.CommonProperties" init-method="init">
+		<property name="property">
+			<props>
+				<prop key="nodeId_lr_ydj">${nodeId_lr_ydj}</prop>
+				<prop key="nodeId_sc_ydj">${nodeId_sc_ydj}</prop>
+				<prop key="nodeId_sp_ydj">${nodeId_sp_ydj}</prop>
+				<prop key="nodeId_gd_ydj">${nodeId_gd_ydj}</prop>
+				<prop key="nodeId_lr_bzk">${nodeId_lr_bzk}</prop>
+				<prop key="nodeId_sc_bzk">${nodeId_sc_bzk}</prop>
+				<prop key="nodeId_sp_bzk">${nodeId_sp_bzk}</prop>
+				<prop key="nodeId_gd_bzk">${nodeId_gd_bzk}</prop>
+				<prop key="process_IP">${process_IP}</prop>
+				<prop key="BPM_BZK_START_METHOD">${BPM_BZK_START_METHOD}</prop>
+				<prop key="BPM_YDJ_START_METHOD">${BPM_YDJ_START_METHOD}</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="jdbcUtil" class="com.huaxia.opas.util.JdbcUtil" init-method="init">
+		<property name="property">
+			<props>
+				<prop key="url1">${url1}</prop>
+				<prop key="username1">${username1}</prop>
+				<prop key="password1">${password1}</prop>
+				<prop key="driver1">${driver1}</prop>
+				<prop key="jedisUri">${jedisUri}</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 处理魏锦峰的连接回收 -->
+	<tx:advice id="ruletxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="query*" propagation="NOT_SUPPORTED"  read-only="true"/>
+			<tx:method name="select*" propagation="NOT_SUPPORTED"  read-only="true"/>
+			<tx:method name="get*" propagation="NOT_SUPPORTED"  read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	<!-- 控制rule-->
+	<aop:config>
+		<aop:pointcut id="ruleService"
+			expression="execution(* com.huaxia.opas.dao.rule..*.*(..))" />
+		<aop:advisor pointcut-ref="ruleService" advice-ref="ruletxAdvice" />
+	</aop:config>
+	
+	
+	<!-- 工作流加密算法配置 -->
+	<bean id="dataSourceProperties_wk" class="com.huaxia.opas.util.PropertiesEncryptFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="user">${username_wk}</prop>
+				<prop key="password">${password_wk}</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 工作流数据源 jpc0522 -->
+	<bean id="dataSource_workflow" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="properties" ref="dataSourceProperties_wk" />
+		<property name="driverClass" value="${driver_wk}" />
+		<property name="jdbcUrl" value="${url_wk}" />
+		<property name="initialPoolSize" value="${initialPoolSize_wk}"/>
+		<property name="maxPoolSize" value="${maxPoolSize_wk}" />
+		<property name="minPoolSize" value="${minPoolSize_wk}" />
+		<property name="maxIdleTime" value="${maxIdleTime_wk}" />
+		<property name="acquireIncrement" value="${acquireIncrement_wk}" />
+	   	<property name="breakAfterAcquireFailure" value="${breakAfterAcquireFailure}" />
+		<property name="idleConnectionTestPeriod" value="${idleConnectionTestPeriod}" />
+		<property name="maxIdleTimeExcessConnections" value="${maxIdleTimeExcessConnections}" />
+		<property name ="maxStatements" value="0"/>
+		<property name="checkoutTimeout" value="${checkoutTimeout}" />
+		<property name="unreturnedConnectionTimeout" value="${unreturnedConnectionTimeout}" />
+	</bean>
+	
+	<!-- 工作流命名SQL配置 jpc0522-->
+	<bean id="sqlMapWorkflow" class="com.huateng.neofp.service.sqlmap.impl.SqlMapFactoryBean">
+		<!-- <qualifier value="main" /> -->
+		<property name="dataSource" ref="dataSource_workflow" />
+		<property name="configLocation" value="classpath:config/sqlmap/Configuration.xml" />
+		<property name="mappingLocations" value="classpath*:config/sqlmap/Workflow-Mapping.xml" />
+	</bean>
+	
+	<!-- AOP数据库事物配置 -->
+	<bean id="transactionManager_wk"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource_workflow" />
+	</bean>
+
+	<tx:advice id="txAdvice_wk" transaction-manager="transactionManager_wk">
+		<tx:attributes>
+			<tx:method name="insert" propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+			<tx:method name="*" propagation="NOT_SUPPORTED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="allService_wk"
+			expression="execution(* com.huaxia.opas.service.workflow..*.*(..))" />
+		<aop:advisor pointcut-ref="allService_wk" advice-ref="txAdvice_wk" />
+	</aop:config>
+</beans>

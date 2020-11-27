@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankPublicInfoDao">
+   <!-- 保存公共信息概要信息数据 PC04/pc04Data -->
+   <insert id="insertPublicInfoData" parameterType="com.huaxia.opas.domain.pboc.ppo.PC04data" >
+    INSERT INTO PBOC_PUBLIC_INFO_DATA (UUID, APP_ID, GGXN_TYPE_COUNT, 
+      CRT_TIME)
+    values (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PC040S01,jdbcType=VARCHAR}, 
+      SYSDATE)
+   </insert>
+   <!-- 保存公共信息概要信息 PC040H 集合 -->
+   <insert id="insertPublicInfoDelList" parameterType="java.util.List" >
+    INSERT INTO PBOC_PUBLIC_INFO_DEL (UUID, APP_ID, GGXN_TYPE, 
+      RECORD_COUNT, INVOLVE_MONEY, CRT_TIME
+      )
+      <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+	    	SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.PC040D01,jdbcType=VARCHAR}, 
+      		#{item.PC040S02,jdbcType=VARCHAR}, #{item.PC040J01,jdbcType=VARCHAR}, SYSDATE
+		FROM DUAL
+	  </foreach>
+   </insert>
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApUserRole">
+
+	<resultMap id="ApUserRoleResultMap" type="com.huaxia.opas.domain.system.ApUserRole">
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="DATE" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="DATE" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+	</resultMap>
+
+	<insert id="insertApUserRole" parameterType="com.huaxia.opas.domain.system.ApUserRole">
+		insert into
+		OPAS_AP_USER_ROLE
+		(USER_ID,ROLE_ID,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_USER,LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL)
+		values (
+		#{userId,jdbcType=VARCHAR},
+		#{roleId,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{batchDate,jdbcType=DATE},
+		'0',
+		'00'
+		)
+	</insert>
+
+	<insert id="insertApUserRoleSelective" parameterType="com.huaxia.opas.domain.system.ApUserRole">
+		insert into OPAS_AP_USER_ROLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">USER_ID,</if>
+			<if test="roleId != null">ROLE_ID,</if>
+			CRT_DATE,
+			CRT_TIME,
+			<if test="crtUser != null">CRT_USER,</if>
+			<if test="lstUpdUser != null">LST_UPD_USER,</if>
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			<if test="batchDate != null">BATCH_DATE,</if>
+			REC_STATUS,
+			SCR_LEVEL
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">#{userId,jdbcType=VARCHAR},</if>
+			<if test="roleId != null">#{roleId,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">#{lstUpdUser,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="batchDate != null">#{batchDate,jdbcType=DATE},</if>
+			'0',
+			'00'
+		</trim>
+	</insert>
+
+	<delete id="deleteApUserRoleByRoleIdAndUserId" parameterType="com.huaxia.opas.domain.system.ApUserRole">
+		delete from OPAS_AP_USER_ROLE
+		where ROLE_ID =
+		#{roleId,jdbcType=VARCHAR}
+		and USER_ID = #{userId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateApUserRole" parameterType="com.huaxia.opas.domain.system.ApUserRole">
+		update OPAS_AP_USER_ROLE
+		<set>
+			USER_ID = #{userId,jdbcType=VARCHAR},
+			ROLE_ID =
+			#{roleId,jdbcType=VARCHAR},
+			LST_UPD_USER =
+			#{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			BATCH_DATE =
+			#{batchDate,jdbcType=DATE}
+		</set>
+		where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+		and USER_ID =
+		#{userId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateApUserRoleSelective" parameterType="com.huaxia.opas.domain.system.ApUserRole">
+		update OPAS_AP_USER_ROLE
+		<set>
+			<if test="userId != null">USER_ID = #{userId,jdbcType=VARCHAR},</if>
+			<if test="roleId != null">ROLE_ID = #{roleId,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null">BATCH_DATE = #{batchDate,jdbcType=DATE}</if>
+		</set>
+		where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+		and USER_ID =
+		#{userId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryApUserRoleByRoleIdAndUserId" parameterType="com.huaxia.opas.domain.system.ApUserRole"
+		resultMap="ApUserRoleResultMap">
+		select * from OPAS_AP_USER_ROLE
+		where ROLE_ID =
+		#{roleId,jdbcType=VARCHAR}
+		and USER_ID = #{userId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryApUserRoleByUserId" parameterType="com.huaxia.opas.domain.system.ApUserRole"
+		resultMap="ApUserRoleResultMap">
+		select * from OPAS_AP_USER_ROLE
+		where USER_ID =
+		#{userId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteApUserRoleByUserId" parameterType="com.huaxia.opas.domain.system.ApUserRole">
+		delete from
+		OPAS_AP_USER_ROLE
+		where USER_ID = #{userId,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="deleteApUserRoleByRoleId" parameterType="com.huaxia.opas.domain.system.ApUserRole">
+	delete from
+	OPAS_AP_USER_ROLE
+	where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

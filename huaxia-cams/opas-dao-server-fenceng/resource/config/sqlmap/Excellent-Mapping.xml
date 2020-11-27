@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="Excellent">
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="ExcellentResultMap" type="com.huaxia.opas.domain.decision.ExcellentCompanyList">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="company_Name" property="companyName" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="certifi_No" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="START_TIME" property="startTime" jdbcType="VARCHAR" />
+		<result column="STOP_TIME" property="stopTime" jdbcType="VARCHAR" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="crt_Time" property="crtTime" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryExcellentList" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList"
+		resultMap="ExcellentResultMap">
+		select
+			AUTO_ID, company_name, name, certifi_no, phone, START_TIME,
+			STOP_TIME, CURR_STATUS, CRT_TIME
+		from OPAS_EXCELLENT_COMPANY_LIST
+		<where>
+			<if test="companyName != null and companyName !='' ">
+				AND company_name LIKE '${companyName}%'
+			</if>
+			<if test="name != null and name !='' ">
+				AND name LIKE '${name}%'
+			</if>
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND certifi_no LIKE '${certifiNo}%'
+			</if>
+			<if test="phone != null and phone !='' ">
+				AND phone LIKE '${phone}%'
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND CURR_STATUS LIKE '${currStatus}%'
+			</if>
+		</where>
+		ORDER BY CRT_TIME desc
+	</select>
+	<!-- 统计数量 -->
+	<select id="queryExcellentCount" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_EXCELLENT_COMPANY_LIST
+		<where>
+			<if test="companyName != null and companyName !='' ">
+				AND company_name LIKE '${companyName}%'
+			</if>
+			<if test="name != null and name !='' ">
+				AND name LIKE '${name}%'
+			</if>
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND certifi_no LIKE '${certifiNo}%'
+			</if>
+			<if test="phone != null and phone !='' ">
+				AND phone LIKE '${phone}%'
+			</if>
+			<if test="currStatus != null and currStatus !='' ">
+				AND CURR_STATUS LIKE '${currStatus}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteExcellent" parameterType="java.util.List">
+		delete from
+		OPAS_EXCELLENT_COMPANY_LIST
+		where auto_id in
+		<foreach collection="ids" open="(" close=")" item="autoId"
+			separator=",">
+			#{autoId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 批量启用 -->
+	<update id="excellentStatusOK" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList">
+		update OPAS_EXCELLENT_COMPANY_LIST
+		<set>
+			CURR_STATUS = '1',
+			START_TIME = SYSDATE,
+		</set>
+		where auto_id in
+		<foreach collection="ids" open="(" close=")" item="autoId"
+			separator=",">
+			#{autoId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 批量禁用 -->
+	<update id="excellentStatusStop" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList">
+		update OPAS_EXCELLENT_COMPANY_LIST
+		<set>
+			CURR_STATUS = '0',
+			STOP_TIME = SYSDATE,
+		</set>
+		where auto_id in
+		<foreach collection="ids" open="(" close=")" item="autoId"
+			separator=",">
+			#{autoId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 查询status -->
+	<select id="queryExcellentStatus" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select CURR_STATUS from OPAS_EXCELLENT_COMPANY_LIST where
+		auto_id=#{autoId,jdbcType=VARCHAR}
+	</select>
+	<!-- 修改 -->
+	<update id="updateExcellent" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList">
+		UPDATE OPAS_EXCELLENT_COMPANY_LIST
+		<set>
+			NAME = #{name,jdbcType=VARCHAR},
+			company_name	= #{companyName,jdbcType=VARCHAR},
+			certifi_no = #{certifiNo,jdbcType=VARCHAR},
+			phone = #{phone,jdbcType=VARCHAR},
+			CURR_STATUS = #{currStatus,jdbcType=CHAR},
+			START_TIME = #{startTime,jdbcType=DATE},
+			STOP_TIME = #{stopTime,jdbcType=DATE},
+			CRT_TIME = SYSDATE
+		</set>
+		where auto_id = #{autoId,jdbcType=CHAR}
+	</update>
+	
+	<!-- 查询数据是否已存在 -->
+	<select id="checkIsExistExcellent" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList"
+		resultMap="ExcellentResultMap">
+		select auto_id from
+		OPAS_EXCELLENT_COMPANY_LIST
+		where name = #{name} and
+		company_name = #{companyName} and 
+		certifi_no = #{certifiNo} AND phone = #{phone}
+	</select>
+	
+	<!-- 添加 启用 -->
+	<insert id="insertExcellent" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList">
+		insert into
+		OPAS_EXCELLENT_COMPANY_LIST
+		(AUTO_ID,
+		name,
+		company_name,
+		certifi_no,
+		phone,
+		START_TIME,
+		STOP_TIME,
+		CRT_TIME,
+		CURR_STATUS
+		)
+		values(
+		#{autoId,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{certifiNo,jdbcType=VARCHAR},
+		#{phone,jdbcType=VARCHAR},
+		#{startTime,jdbcType=DATE},
+		#{stopTime,jdbcType=DATE},
+		SYSDATE,
+		#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+	
+	
+	<!-- 添加 启用 -->
+	<insert id="insertExcellentUpload" parameterType="com.huaxia.opas.domain.decision.ExcellentCompanyList">
+		insert into
+		OPAS_EXCELLENT_COMPANY_LIST
+		(AUTO_ID,
+		NAME,
+		COMPANY_NAME,
+		certifi_no,
+		PHONE,
+		START_TIME,
+		STOP_TIME,
+		CRT_TIME,
+		CURR_STATUS)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.companyName,jdbcType=VARCHAR},
+			#{item.certifiNo,jdbcType=VARCHAR},
+			#{item.phone,jdbcType=VARCHAR},
+			#{item.startTime,jdbcType=DATE},
+			#{item.stopTime,jdbcType=DATE},
+			SYSDATE,
+			'1'
+			from dual)
+		</foreach>
+	</insert>
+</mapper>

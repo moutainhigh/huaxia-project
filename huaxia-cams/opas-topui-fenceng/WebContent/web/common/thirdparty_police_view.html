@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>公安部身份信息核查详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId = GetQueryString("appId");
+		var c = new Array("0:非失信被执行人","1:失信被执行人");//
+		var policeDetailForm=$("#policeDetailForm");
+		//var imageSrc="/opas-naps/PolicePhoto.json?identity_no="+window.opener.txt_identity_no;//txt_identity_no 父页面的全局变量 
+		var imageSrc="/opas-naps/PolicePhoto.json?appId="+appId;  
+		//var imageSrc="/opas-naps/PolicePhoto.json?identity_no=Chrysanthemum";//txt_identity_no 父页面的全局变量 
+		$("#policeImageSrc").attr("src",imageSrc);//给img标签附上 src属性 
+		$cf.ajax({
+			data : {
+				"appId" : appId,
+				"cardFlag":"0"
+				
+			},
+			url : "/opas-naps/police_detail_query_info.json",
+			onSuccess : function(res) {
+				var jsonpoliceXpInfo = res.RSP_BODY.policeXpInfo;
+				var policeXpInfo = eval('(' +jsonpoliceXpInfo+ ')');
+				$('#police_xp_info').form("load", policeXpInfo);
+				
+				var jsoncpoliceDetail = res.RSP_BODY.applyPoliceDetail;
+				var policeDetailjson = eval('(' +jsoncpoliceDetail+ ')');
+				policeDetailForm.form("load", policeDetailjson);
+				
+				var recStatusValue = policeDetailjson.recStatusValue;
+				if("01"==recStatusValue){
+					$("#recStatusValue").val("完全匹配");
+				}else if("02"==recStatusValue){
+					$("#recStatusValue").val("有效期不一致");
+				}else if("03"==recStatusValue){
+					$("#recStatusValue").val("出生日期不一致");
+				}else if("04"==recStatusValue){
+					$("#recStatusValue").val("英文姓名不一致");
+				}else if("11"==recStatusValue){
+					$("#recStatusValue").val("无匹配结果或多项不一致");
+				}else{
+					$("#recStatusValue").val(policeDetailjson.searchResult);//查询状态
+				}
+			}
+		});	
+		$('#datalist').datagrid({    
+		    url:'/opas-naps/police_detail_list.json',
+	    	queryParams: {
+	    		appId: appId
+	    	}
+		});
+	});
+	
+	function valueChange(oldVal,arr){
+		var len = arr.length;
+		if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+			for(var i=0;i<len;i++){
+				var temp=arr[i].split(":");
+				if(oldVal==temp[0]){
+					return temp[1];
+				}
+			}
+		}
+		return oldVal;
+	}
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend>公安部身份信息核查详细结果</legend>
+	<form id="policeDetailForm">
+		<table class="formtable" style="width:98%">
+			<tr>
+				<td colspan="4" align="center">公安部身份信息核查详细结果</td>
+			</tr>
+			<tr >
+				<td>姓名:</td>
+				<td><input type="text" name="name" id="name"  disabled="disabled"/></td>
+				<td rowspan="4" width="130" height="200" align="center"><img  id="policeImageSrc" alt="photo" width="130"height="200"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>证件号码:</td>
+				<td><input type="text" name="identityNo" id="identityNo"  disabled="disabled"/></td>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td>查询状态:</td>
+				<td>
+				<input type="text" name="recStatusValue" id="recStatusValue"  disabled="disabled"/>
+				<input type="hidden" name="recStatus" id="recStatus"/></td>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td>返回的证件号码:</td>
+				<td><input type="text" name="identityNoCheckRst" id="identityNoCheckRst"  disabled="disabled"/></td>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td>返回的证件姓名:</td>
+				<td><input type="text" name="nameCheckRst" id="nameCheckRst"  disabled="disabled"/></td>
+				
+				
+				<td>曾用名：</td>
+				<td><input type="text" name="oldName" id="oldName"  disabled="disabled"/></td>
+ 			</tr>
+			<tr>
+				<td>性别：</td>
+				<td><input type="text" name="gender" id="gender"  disabled="disabled"/></td>
+				<td>民族：</td>
+				<td><input type="text" name="nationality" id="nationality"  disabled="disabled"/></td>
+			</tr>
+			<tr>
+				<td>出生日期：</td>
+				<td><input type="text" name="birthDay" id="birthDay"  disabled="disabled"/></td>
+				<td>出生地：</td>
+				<td><input type="text" name="birthHomeProvCity" id="birthHomeProvCity"  disabled="disabled"/></td>
+			</tr>
+			<tr>
+				<td>行政区划：</td>
+				<td><input type="text" name="belongHomeProvCity" id="belongHomeProvCity"  disabled="disabled"/></td>
+				<td>省市（县）区名称：</td>
+				<td><input type="text" name="birthHomeProvCity" id="birthHomeProvCity"  disabled="disabled"/></td>
+			</tr>
+			<tr>
+				<td>家庭住址：</td>
+				<td colspan="3"><input type="text" name="address" id="address"  disabled="disabled" style="width:98%"/></td>
+			</tr>
+			<tr>
+				<td>派出所：</td>
+				<td colspan="3"><input type="text" name="pcsMc" id="pcsMc"  disabled="disabled" style="width:98%"/></td>
+			</tr>
+			<tr>
+				<td>婚姻状况：</td>
+				<td><input type="text" name="maritalStatus" id="maritalStatus"  disabled="disabled"/></td>
+				<td>籍贯：</td>
+				<td><input type="text" name="jgssxhomeProvCity" id="jgssxhomeProvCity"  disabled="disabled"/></td>
+			</tr>
+			<tr>
+				<td>教育程度：</td>
+				<td colspan="3"><input type="text" name="eduDegree" id="eduDegree"  disabled="disabled" style="width:98%"/></td>
+			</tr>
+			<tr>
+				<td>服务处所：</td>
+				<td colspan="3"><input type="text" name="srvsLocation" id="srvsLocation"  disabled="disabled" style="width:98%"/></td>
+			</tr>
+		</table>
+	</form>
+</fieldset>	
+<fieldset>
+	<legend>公安部身份信息核查详细结果</legend>
+	<table id="datalist"  class="easyui-datagrid" style="width: 98%"
+		 data-options="rownumbers:true,nowrap:false,fitColumns:true,method:'post'">
+			<thead>
+					<tr>
+					<th field="casecode" width="20%" >案号</th>
+					<th field="gistunit" width="20%" >执行法院</th>
+					<th field="performance" width="20%" >被执行人的履行情况</th>
+					<th field="disreputtypename" width="20%" >失信被执行人行为具体情况</th>
+					<th field="publishdate" width="18%" >发布时间</th>
+					</tr>
+				</thead>
+			</table>
+</fieldset>			
+<fieldset>
+	<legend>PAD人像比对详细结果</legend>
+	<form id="police_xp_info">
+		<table class="formtable" style="width:98%">
+			<tr >
+				<td>姓名:</td>
+				<td><input type="text" name="xm" id="xm"  disabled="disabled"/></td>
+				
+				<td>姓名核查结果:</td>
+				<td><input type="text" name="resultXm" id="resultXm"  disabled="disabled"/></td>
+			</tr>
+			<tr>
+				<td>公民身份号码:</td>
+				<td><input type="text" name="gmsfhm" id="gmsfhm"  disabled="disabled"/></td>
+				<td>公民身份号码核查结果:</td>
+				<td><input type="text" name="resultGmsfhm" id="resultGmsfhm"  disabled="disabled"/></td>
+			</tr>
+			<tr>
+				<td>系统分析结果:</td>
+				<td><input type="text" name="resultFx" id="resultFx"  disabled="disabled"/></td>
+				<td>比对分数：</td>
+				<td><input type="text" name="resultFs" id="resultFs"  disabled="disabled"/></td>
+ 			</tr>
+ 			<tr>
+ 				<td>具体原因:</td>
+				<td><input type="text" id="errorMessage" name="errorMessage"
+						readonly="readonly" style="width: 600px display=none" /></td>
+				<td></td>
+				<td></td>
+ 			</tr>
+ 			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+ 			</tr>
+		</table>
+	</form>
+</fieldset>			
+</body>
+</html>

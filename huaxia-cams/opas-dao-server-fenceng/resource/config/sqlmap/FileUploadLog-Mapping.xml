@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FileUploadLog">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.system.FileUploadLog">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="FILE_ID" property="fileId" jdbcType="VARCHAR" />
+		<result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+		<result column="OPERAT_type" property="operatType" jdbcType="VARCHAR" />
+		<result column="OPERAT_CODE" property="operatCode" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_DATE" property="operatDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > id, file_id, file_name, OPERAT_type, OPERAT_CODE, 
+		OPERATOR, OPERAT_DATE </sql> -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		ID,FILE_ID,FILE_NAME,OPERAT_type,OPERAT_CODE,OPERAT_CODE,OPERATOR,OPERAT_DATE
+		from OPAS_FILE_UPLOAD_LOG
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="queryFileCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_FILE_UPLOAD u
+		where
+		1=1
+		<if test="fileName != null and fileName !='' ">
+			AND u.FILE_NAME LIKE '%${fileName}%'
+		</if>
+		<if test="bigCategory != null and bigCategory !='' ">
+			AND u.BIG_CATEGORY = #{bigCategory}
+		</if>
+
+		<if test="smallCategory != null and smallCategory !='' ">
+			AND u.SMALL_CATEGORY = #{smallCategory}
+		</if>
+		<if test="uploadDateStr != null and uploadDateStr !='' ">
+			AND to_char(u.UPLOAD_DATE,'yyyy-MM-dd') = #{uploadDateStr}
+		</if>
+	</select>
+	<select id="queryFileList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		ID,FILE_ID,FILE_NAME,OPERAT_type,OPERAT_CODE,OPERAT_CODE,OPERATOR,OPERAT_DATE
+		from OPAS_FILE_UPLOAD_LOG
+		where FILE_ID = #{fileId,jdbcType=VARCHAR} order by OPERAT_DATE desc 
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_FILE_UPLOAD_LOG
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.system.FileUploadLog">
+		insert into OPAS_FILE_UPLOAD_LOG (ID, FILE_ID, FILE_NAME,
+		OPERAT_TYPE, OPERAT_CODE, OPERATOR,
+		OPERAT_DATE)
+		values (#{id,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR},
+		#{fileName,jdbcType=VARCHAR},
+		#{operatType,jdbcType=VARCHAR}, #{operatCode,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},
+		#{operatDate,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.system.FileUploadLog">
+		insert into OPAS_FILE_UPLOAD_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="fileId != null">
+				file_id,
+			</if>
+			<if test="fileName != null">
+				file_name,
+			</if>
+			<if test="operatType != null">
+				OPERAT_type,
+			</if>
+			<if test="operatCode != null">
+				OPERAT_CODE,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="operatDate != null">
+				OPERAT_DATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="fileId != null">
+				#{fileId,jdbcType=VARCHAR},
+			</if>
+			<if test="fileName != null">
+				#{fileName,jdbcType=VARCHAR},
+			</if>
+			<if test="operatType != null">
+				#{operatType,jdbcType=VARCHAR},
+			</if>
+			<if test="operatCode != null">
+				#{operatCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="operatDate != null">
+				#{operatDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.system.FileUploadLog">
+		update OPAS_FILE_UPLOAD_LOG
+		<set>
+			<if test="fileId != null">
+				file_id = #{fileId,jdbcType=VARCHAR},
+			</if>
+			<if test="fileName != null">
+				file_name = #{fileName,jdbcType=VARCHAR},
+			</if>
+			<if test="operatType != null">
+				OPERAT_type = #{operatType,jdbcType=VARCHAR},
+			</if>
+			<if test="operatCode != null">
+				OPERAT_CODE = #{operatCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				OPERATOR = #{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="operatDate != null">
+				OPERAT_DATE = #{operatDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.system.FileUploadLog">
+		update OPAS_FILE_UPLOAD_LOG
+		set file_id = #{fileId,jdbcType=VARCHAR},
+		file_name = #{fileName,jdbcType=VARCHAR},
+		OPERAT_type = #{operatType,jdbcType=VARCHAR},
+		OPERAT_CODE = #{operatCode,jdbcType=VARCHAR},
+		OPERATOR = #{operator,jdbcType=VARCHAR},
+		OPERAT_DATE = #{operatDate,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

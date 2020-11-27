@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Workflow">
+	<resultMap id="topbpmTmpExecutionMap" type="java.util.Map">
+		<result column="SUBJECT_" property="appId" jdbcType="VARCHAR" />
+		<result column="EXECUTION_ID" property="executionId" jdbcType="VARCHAR" />
+		<result column="WEB_APPLICATION_ID" property="webApplicationId" jdbcType="VARCHAR" />
+		<result column="STATUS_" property="status" jdbcType="VARCHAR" />
+		<result column="ACTIVITY_NAME_" property="activityName" jdbcType="VARCHAR" />
+		<result column="PRIORITY" property="priority" jdbcType="VARCHAR" />
+		<result column="dbid_" property="dbid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="topbpmExpMessageMap" type="java.util.Map">
+		<result column="expmessage_" property="expMessage" javaType="String" />
+	</resultMap>
+	<select id="selectWorkflow" parameterType="com.huaxia.opas.domain.workflow.Workflow"
+		resultType="com.huaxia.opas.domain.workflow.Workflow">
+		select a.node_name_ name, count(1) count
+		from topbpm_j_process p
+		inner join topbpm_j_activity a on p.dbid_ = a.hproci_
+		and a.node_name_ not like 'DecisionNode%'
+		<where>
+			<if test="startTime != null and startTime !='' ">
+				AND p.start_ <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				AND p.start_ <![CDATA[<=]]> #{endTime}
+			</if>
+			<if test="status != null and status !='' ">
+				AND p.status_ = #{status}
+			</if>
+			<if test="packageid != null and packageid !='' ">
+				AND p.packageid_ = #{packageid}
+			</if>
+		</where>
+		group by a.node_name_  order by 2 desc 
+	</select>
+	
+	<select id="selectCount" parameterType="com.huaxia.opas.domain.workflow.Workflow" resultType="int">
+		select 
+			count(1) 
+		from 
+			(select 
+				a.node_name_ name, count(1) count
+			from topbpm_j_process p
+			inner join topbpm_j_activity a on p.dbid_ = a.hproci_
+				and a.node_name_ not like 'DecisionNode%'
+			<where>
+				<if test="startTime != null and startTime !='' ">
+					AND p.start_ <![CDATA[>=]]> #{startTime}
+				</if>
+				<if test="endTime != null and endTime !='' ">
+					AND p.start_ <![CDATA[<=]]> #{endTime}
+				</if>
+				<if test="status != null and status !='' ">
+					AND p.status_ = #{status}
+				</if>
+				<if test="packageid != null and packageid !='' ">
+					AND p.packageid_ = #{packageid}
+				</if>
+			</where>
+			group by a.node_name_)
+	</select>
+	
+	<!-- 梯队环节条码展示  与人工环节条码显示合并20201022-->
+	<select id="queryTopbpmExceSolveAppidCount"  resultType="int">
+		select count(1) from (
+			select *
+				 from (select a.app_id as appId,
+				               a.curr_node as currNode,
+				               a.status,
+				               a.solve,
+				               c.operate_desc as operateDesc,
+				               ROW_NUMBER() over(partition by c.app_id order by c.CRT_DATE desc) as row_sort
+				          from opas_topbpm_exception_appid a, opas_apply_life_cicle c 
+		    where a.app_id = c.app_id
+			<if test="queryAppid != null and queryAppid !='' ">
+				AND a.app_id = #{queryAppid}
+			</if>
+			<if test='queryStatus != null and queryStatus !="" and queryStatus =="T" '>
+				AND a.status = 'T'
+			</if>
+			<if test='queryStatus != null and queryStatus !="" and queryStatus =="R" '>
+				AND a.status != 'T'
+			</if>
+			<if test="solveorNot != null and solveorNot !='' ">
+				AND a.solve = #{solveorNot}
+			</if>			
+				         
+				         )
+			where row_sort = 1 
+			<if test="operateDesc != null and operateDesc !='' ">
+				AND operateDesc = #{operateDesc}
+			</if>
+		)			
+	</select >
+	<select id="queryTopbpmExceSolveAppid" parameterType="java.util.Map" resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select *
+			 from (select a.app_id as appId,
+			               a.curr_node as currNode,
+			               a.status,
+			               a.solve,
+			               c.operate_desc as operateDesc,
+			               ROW_NUMBER() over(partition by c.app_id order by c.CRT_DATE desc) as row_sort
+			          from opas_topbpm_exception_appid a, opas_apply_life_cicle c 
+	    where a.app_id = c.app_id
+		<if test="queryAppid != null and queryAppid !='' ">
+			AND a.app_id = #{queryAppid}
+		</if>
+		<if test='queryStatus != null and queryStatus !="" and queryStatus =="T" '>
+			AND a.status = 'T'
+		</if>
+		<if test='queryStatus != null and queryStatus !="" and queryStatus =="R" '>
+			AND a.status != 'T'
+		</if>
+		<if test="solveorNot != null and solveorNot !='' ">
+			AND a.solve = #{solveorNot}
+		</if>			
+			         
+			         )
+		where row_sort = 1  
+		<if test="operateDesc != null and operateDesc !='' ">
+			AND operateDesc = #{operateDesc}
+		</if>	
+		order by solve desc
+		
+	</select>
+	<!-- 人工环节条码展示 -->
+	<!-- <select id="queryTopbpmExceSolveArtiAppidCount"  resultType="int">
+		select count(1) from opas_topbpm_exception_appid
+		<where>
+				<if test="queryStatus != null and queryStatus !='' ">
+					AND status != 'T' 
+				</if>
+				<if test="solveorNot != null and solveorNot !='' ">
+					AND solve = #{solveorNot}
+				</if>
+			</where>
+	</select >
+	<select id="queryTopbpmExceSolveArtiAppid"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select app_id as appId,curr_node as currNode ,status,solve from opas_topbpm_exception_appid 
+		<where>
+				<if test="queryAppid != null and queryAppid !='' ">
+					AND app_id = #{queryAppid}
+				</if>
+				<if test="queryStatus != null and queryStatus !='' ">
+					AND status != 'T'
+				</if>
+				<if test="solveorNot != null and solveorNot !='' ">
+					AND solve = #{solveorNot}
+				</if>
+			</where>
+		order by solve desc
+	</select> -->
+	<!-- 手动更改梯队条码处理状态 20200904 -->
+	<update id="updateTierAppidStatus" parameterType="java.util.Map">
+		update opas_topbpm_exception_appid  set solve=#{solveorNot} where app_id=#{appId}
+	</update>
+	<!-- 手动更改梯队条码处理状态 20200904 -->
+	<update id="updateWeiguidangAppidStatus" parameterType="java.util.Map">
+		update opas_input_unfinished_appid  set solve=#{solveorNot} where app_id=#{appId}
+	</update>
+	<!-- 自动环节条码展示 -->
+	<select id="queryTopbpmExceSolveAutoAppidCount"  resultType="int">
+		select count(1) from  topbpm_j_processexception e 
+		<where>
+				<if test="queryAppid != null and queryAppid !='' ">
+					AND e.subject_ = #{queryAppid}
+				</if>
+				<if test="queryStatus != null and queryStatus !='' ">
+					AND e.status_ =#{queryStatus}
+				</if>
+				<if test="currNode != null and currNode !='' ">
+					AND e.nodeid_ =#{currNode}
+				</if>
+		</where>
+	</select >
+	<select id="queryTopbpmExceSolveAutoAppid"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select e.dbid_  as dbid, e.subject_ as appId,e.nodeid_ as currNode, e.createddatetime_ as crtTime ,e.status_ as exceptionStatus ,'查看' as expMessage from  topbpm_j_processexception e
+		<where>
+				<if test="queryAppid != null and queryAppid !='' ">
+					AND e.subject_ = #{queryAppid}
+				</if>
+				<if test="queryStatus != null and queryStatus !='' ">
+					AND e.status_ =#{queryStatus}
+				</if>
+				<if test="currNode != null and currNode !='' ">
+					AND e.nodeid_ =#{currNode}
+				</if>
+		</where>
+		order by e.createddatetime_ desc
+	</select>
+	<!-- 根据条码查询process表 20200822-->
+	<select id="queryTopbpmProcessByAppidCount"  resultType="int">
+		select count(1)
+		    from (select p.subject_ as appId,
+		               a.node_name_ as currNode,
+		               a.activity_name_ as activityName,
+		               p.dbid_ as dbid,
+		               p.status_ as exceptionStatus,
+		               a.start_ as crtTime,
+		               ROW_NUMBER() over(partition by a.hproci_ order by a.start_ desc) as row_sort
+		          from topbpm_j_process p
+		          left join topbpm_j_activity a on p.dbid_ = a.hproci_
+		        <where>
+					<if test="queryAppid != null and queryAppid !='' ">
+						AND p.subject_ = #{queryAppid}
+					</if>
+					<if test="queryStatus != null and queryStatus !='' ">
+						AND p.status_ =#{queryStatus}
+					</if>
+				</where>
+		        
+		        ) t
+	</select >
+	<select id="queryTopbpmProcessByAppid"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select *
+		    from (select p.subject_ as appId,
+		               a.node_name_ as currNode,
+		               a.activity_name_ as activityName,
+		               p.dbid_ as dbid,
+		               p.status_ as exceptionStatus,
+		               a.start_ as crtTime,
+		               ROW_NUMBER() over(partition by a.hproci_ order by a.start_ desc) as row_sort
+		          from topbpm_j_process p
+		          left join topbpm_j_activity a on p.dbid_ = a.hproci_
+		        <where>
+					<if test="queryAppid != null and queryAppid !='' ">
+						AND p.subject_ = #{queryAppid}
+					</if>
+					<if test="queryStatus != null and queryStatus !='' ">
+						AND p.status_ =#{queryStatus}
+					</if>
+				</where>
+		        
+		        ) t
+	 	where t.row_sort = 1 order by crtTime desc
+	</select>
+	<!-- 查询topbpm_j_activity表 20200902-->
+	<select id="queryActivityInfoCount"  resultType="int">
+		select  count(1) from topbpm_j_activity  a  where a.hproci_ = #{hproci} 
+	</select >
+	<select id="queryActivityInfo"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select  a.dbid_ as dbid,a.node_name_ as currNode,a.activity_name_ as activityName,a.start_ as crtTime,a.status_ as status from topbpm_j_activity  a  where a.hproci_ = #{hproci} order by a.start_ desc
+	</select>
+	<!-- 查询topbpm_j_processvariable表 20200902-->
+	<select id="queryProcessvariableInfoCount"  resultType="int">
+		select count(1) from topbpm_j_processvariable a where a.hproci_ = #{hproci} 
+	</select >
+	<select id="queryProcessvariableInfo"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select a.dbid_ as dbid ,a.varname_ as varName ,a.value_ as value  from topbpm_j_processvariable a where a.hproci_ = #{hproci} 
+	</select>
+	<!-- 查询topbpm_j_processvariable_t表 20200902-->
+	<select id="queryProcessvariable_tInfoCount"  resultType="int">
+		 select count(1)　from topbpm_j_processvariable_t a  where a.execution_ = #{execution}
+	</select >
+	<select id="queryProcessvariable_tInfo"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select a.dbid_ as dbid,a.key_ as key,a.string_value_ as stringValue　from topbpm_j_processvariable_t a  where a.execution_ = #{execution}
+	</select>
+	<!-- 查询topbpm_j_process_t表 20200902-->
+	<select id="queryProcess_tDetailCount"  resultType="int">
+		 select count(1)　from  topbpm_j_process_t  t  where t.dbid_ = #{dbid}
+	</select >
+	<select id="queryProcess_tDetail"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select t.dbid_ as dbid,t.activityname_ as activityName　from  topbpm_j_process_t  t  where t.dbid_ = #{dbid}
+	</select>
+	<!--更改  topbpm_j_processvariable表 20200904-->
+	<update id="updateProcessvariableInfo" parameterType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		update topbpm_j_processvariable a set a.value_ =#{value}  where a.dbid_ = #{dbid} and varname_ = 'ruleOpt'
+	</update>
+	<!--更改  topbpm_j_processvariable_t表 20200904-->
+	<update id="updateProcessvariable_tInfo" parameterType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		update topbpm_j_processvariable_t a set a.string_value_ = #{stringValue} where a.dbid_ = #{dbid}  and a.key_ = 'ruleOpt'
+	</update>
+	<!--更改  topbpm_j_process表 20200904-->
+	<update id="updateProcess_tInfo" parameterType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		update topbpm.topbpm_j_process_t  t   set t.activityname_ = #{activityName} where t.dbid_=#{dbid}
+	</update>
+	
+	<insert id="insertTopbpmTmpExecution" parameterType="java.lang.String">
+	insert into topbpm_tmp_execution
+	  select id_,
+	         (select dbid from topbpm_webapplication where rownum = 1),
+	         0,
+	         activity_name_,
+	         0,
+	         sys_guid()
+	    from (select p.id_,
+	                 a.activity_name_,
+	                 ROW_NUMBER() over(partition by a.hproci_ order by a.start_ desc) as row_sort
+	            from topbpm_j_process p, topbpm_j_activity a
+	           where p.dbid_ = a.hproci_
+	             and p.status_ = 1
+	             and a.activity_name_ like 'WaitNode%'
+	             and p.subject_ = #{appId}) t
+	   where t.row_sort = 1
+	</insert>
+	
+	<insert id="insertExceptionTopbpmTmpExecution" parameterType="java.lang.String">
+	insert into topbpm_tmp_execution
+		select id_,
+	       (select dbid from topbpm_webapplication where rownum = 1),
+	       512,
+	       activity_name_,
+	       0,
+	       sys_guid()
+	
+	  	from (select p.id_,
+	               a.activity_name_,
+	               ROW_NUMBER() over(partition by a.hproci_ order by a.start_ desc) as row_sort
+	          from topbpm_j_process p, topbpm_j_activity a
+	         where p.dbid_ = a.hproci_
+	           and p.status_ = 512
+	           and p.subject_ = #{appId}
+	        ) t
+	 	where t.row_sort = 1
+	</insert>
+	<!-- 特殊情况插入推进表 20200818 -->
+	<insert id="insertExceptionTopbpmTmpExecutionSpecial" parameterType="java.util.Map">
+	insert into topbpm_tmp_execution
+		select (case when (#{executionId} is null or trim(#{executionId})='') then  id_ else #{executionId} end) ,
+	       (select dbid from topbpm_webapplication where rownum = 1),
+	       #{status},
+	       activity_name_,
+	       0,
+	       sys_guid()
+	
+	  	from (select p.id_,
+	  			   (case
+                    when (#{activityName} is null or
+                         trim (#{activityName}) ='') then
+                    a.activity_name_
+                    else
+                    #{activityName}
+                  end) activity_name_,
+	               ROW_NUMBER() over(partition by a.hproci_ order by a.start_ desc) as row_sort
+	          from topbpm_j_process p, topbpm_j_activity a
+	         where p.dbid_ = a.hproci_
+	           and p.subject_ = #{appId}
+	        ) t
+	 	where t.row_sort = 1
+	</insert>
+	<!-- 梯队节点更改处理状态 -->
+	<update id="updateTopbpmExceSolve"  parameterType="java.lang.String">
+		update  opas_topbpm_exception_appid d set d.solve='1' where d.app_id = #{appId}
+	</update>
+	<!-- 自动节点更改异常状态  暂时没用-->
+	<update id="updateTopbpmException"  parameterType="java.lang.String">
+		update topbpm_j_processexception e set e.status_ =  1 where e.subject_ =  #{appId} 
+	</update>
+	<!--更改错误的异常状态  20200717  -->
+	<update id="updateErrorExceptionStatus" >
+		update topbpm_j_processexception e
+        set e.status_ = 1
+     	where e.dbid_ in (select e.dbid_
+                         from topbpm_j_processexception e
+                         join topbpm_j_process p on p.dbid_ = e.hproci_
+                                                and p.status_ != 512
+                                                and e.status_ = 0
+                       union
+                       select e.dbid_
+                         from topbpm_j_processexception e
+                        where not exists (select 1
+                                 from topbpm_j_process p
+                                where p.dbid_ = e.hproci_)
+                          and e.status_ = 0
+                       
+                       )
+	</update>
+	<!--更改指定的异常状态  20200804  -->
+	<update id="updateAppointErrorExceptionStatus"  parameterType="java.lang.String">
+		update topbpm_j_processexception e set e.status_ =  #{queryStatus} where e.dbid_ = #{dbid} 
+	</update>
+	<!--更改指定条码process表状态 20200824 -->
+	<update id="updateAppointErrorProcessStatus"  parameterType="java.lang.String">
+		update topbpm_j_process e set e.status_ =  #{queryStatus} where e.dbid_ = #{dbid} 
+	</update>
+	
+	<!-- 未归档条码展示 20200630  20200904修改 -->
+	<select id="queryWeiguidangAppidCount"  resultType="int">
+		select count(1)
+		  from (select a.app_id as appId,
+		               a.crt_time as crtTime,
+		               a.solve,
+		               c.operate_desc as currNode
+		          from opas_input_unfinished_appid a,
+		               (select a.app_id, a.operate_desc
+		                  from opas_apply_life_cicle a
+		                 where (a.app_id, a.crt_date) in
+		                       (select b.app_id, max(b.crt_date)
+		                          from opas_apply_life_cicle b
+		                         where a.app_id = b.app_id
+		                         group by b.app_id)) c
+		         where a.app_id = c.app_id
+		         order by a.crt_time)
+		<where>
+			<if test="queryAppid != null and queryAppid !='' ">
+						AND appId = #{queryAppid}
+			</if>
+			<if test="solveorNot != null and solveorNot !='' ">
+					AND solve = #{solveorNot}
+			</if>
+		</where>
+	</select >
+	<!-- 未归档新增关联生命周期最新节点 20200904 -->
+	<select id="queryWeiguidangAppid"  resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select appId, crtTime, solve, currNode
+		  from (select a.app_id as appId,
+		               a.crt_time as crtTime,
+		               a.solve,
+		               c.operate_desc as currNode
+		          from opas_input_unfinished_appid a,
+		               (select a.app_id, a.operate_desc
+		                  from opas_apply_life_cicle a
+		                 where (a.app_id, a.crt_date) in
+		                       (select b.app_id, max(b.crt_date)
+		                          from opas_apply_life_cicle b
+		                         where a.app_id = b.app_id
+		                         group by b.app_id)) c
+		         where a.app_id = c.app_id
+		         order by a.crt_time)
+		<where>
+			<if test="queryAppid != null and queryAppid !='' ">
+					AND appId = #{queryAppid}
+			</if>
+			<if test="solveorNot != null and solveorNot !='' ">
+					AND solve = #{solveorNot}
+			</if>
+		</where>
+	</select>
+	<!-- 推进表详细页面添加 20200729 -->
+	<select id="queryTopbpmTmpExecutionAppidDetail" resultMap="topbpmTmpExecutionMap">
+		  select p.subject_,
+		       e.execution_id,
+		       e.web_application_id,
+		       e.status_,
+		       e.activity_name_,
+		       e.priority,
+		       e.dbid_
+		  from topbpm_tmp_execution e, topbpm_j_process p
+		  where e.execution_id = p.id_
+		   and e.execution_id = #{executionId}
+	</select>
+	<!-- 异常详情页面添加 20200804 -->
+	<select id="queryTopbpmExpMessageDetail" resultMap="topbpmExpMessageMap">
+		SELECT e.expmessage_   FROM TOPBPM_J_PROCESSEXCEPTION  e where e.dbid_ = #{dbid}
+	</select>
+	<update id="updateTopbpmTmpExecutionDetail" parameterType="java.util.Map">
+		update topbpm_tmp_execution e
+		<set>
+			<if test="executionId != null and executionId !='' ">
+					execution_id = #{executionId},
+			</if>
+			<if test="webApplicationId != null and webApplicationId !='' ">
+					web_application_id = #{webApplicationId},
+			</if>
+			<if test="status != null and status !='' ">
+					status_ = #{status},
+			</if>
+			<if test="activityName != null and activityName !='' ">
+					activity_name_ = #{activityName},
+			</if>
+			<if test="priority != null and priority !='' ">
+					priority = #{priority},
+			</if>
+			<if test="dbid != null and dbid !='' ">
+					dbid_ = #{dbid},
+			</if>
+		</set>
+		   where e.execution_id = #{executionId}
+	</update>
+	<delete id="deleteTopbpmTmpExecutionDetail" parameterType="java.util.Map">
+		delete from  topbpm_tmp_execution e  where e.execution_id = #{executionId}
+	</delete>
+	<select id="queryTopbpmTmpExecutionAppid" resultType="com.huaxia.opas.domain.workflow.WorkflowCallback">
+		select (select p.subject_　　from topbpm_j_process p
+	         where p.id_ = e.execution_id) as appId,
+		       execution_id as executionId,
+		       web_application_id as webApplicationId,
+		       status_ as status,
+		       activity_name_ as activityName,
+		       priority,
+		       dbid_ as dbid
+  		from topbpm_tmp_execution e
+		<where>
+			<if test="executionId != null and executionId !='' ">
+					AND execution_id = #{executionId}
+			</if>
+			<if test="webApplicationId != null and webApplicationId !='' ">
+					AND web_application_id = #{webApplicationId}
+			</if>
+			<if test="status != null and status !='' ">
+					AND status_ = #{status}
+			</if>
+			<if test="activityName != null and activityName !='' ">
+					AND activity_name_ = #{activityName}
+			</if>
+			<if test="priority != null and priority !='' ">
+					AND priority = #{priority}
+			</if>
+			<if test="dbid != null and dbid !='' ">
+					AND dbid_ = #{dbid}
+			</if>
+			<if test="appId != null and appId !=''  ">
+					AND execution_id = (select * from (select p.id_ from topbpm_j_process p where p.subject_ =#{appId} order by p.start_ desc )where  rownum = 1)
+			</if>
+		</where>
+	</select>
+	<select id="queryTopbpmTmpExecutionAppidCount" resultType="int">
+		select count(1) from topbpm_tmp_execution e 
+		<where>
+			<if test="executionId != null and executionId !='' ">
+					AND execution_id = #{executionId}
+			</if>
+			<if test="webApplicationId != null and webApplicationId !='' ">
+					AND web_application_id = #{webApplicationId}
+			</if>
+			<if test="status != null and status !='' ">
+					AND status_ = #{status}
+			</if>
+			<if test="activityName != null and activityName !='' ">
+					AND activity_name_ = #{activityName}
+			</if>
+			<if test="priority != null and priority !='' ">
+					AND priority = #{priority}
+			</if>
+			<if test="dbid != null and dbid !='' ">
+					AND dbid_ = #{dbid}
+			</if>
+			<if test="appId != null and appId !=''  ">
+					AND execution_id = (select * from (select p.id_ from topbpm_j_process p where p.subject_ =#{appId} order by p.start_ desc )where  rownum = 1)
+			</if>
+		</where>
+	</select>
+	
+	
+</mapper>

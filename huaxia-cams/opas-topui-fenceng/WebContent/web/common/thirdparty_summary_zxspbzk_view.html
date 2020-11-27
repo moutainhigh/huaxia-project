@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>征信信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript"
+	src="../../topui/jquery/default/jquery.min.js"></script>
+<script type="text/javascript"
+	src="../../topui/easyui/default/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="../../topui/easyui/default/jquery.query.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<style type="text/css">
+.font-red {
+	color: #FF0000;
+}
+
+.font-black {
+	color: #000;
+}
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	background-color: #E6F0FF;
+	color: #003476;
+}
+
+.dvi-table input {
+	color: blue;
+	disabled: disabled;
+	height: 14px;
+	width: 100%;
+	line-height: 14px;
+	margin-top: 0px;
+	border-top-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	text-align: center;
+	font-size: 12px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table td {
+	padding: 0px 0px;
+	font-size: 12px;
+}
+
+.positionhead {
+	height: 14px;
+	line-height: 14px;
+	background: #02bafa;
+	border: 1px #26bbdb solid;
+	border-radius: 2px;
+	display: inline-block;
+	text-decoration: none;
+	margin-top: 0px;
+	text-align: center;
+	font-size: 12px;
+	outline: none;
+}
+/** 快速定位内容区 */
+#ksdw_area {
+    top: 40px;
+	width: 100%;
+	height: 90%;
+	overflow-y: auto;
+	position: absolute;
+}
+</style>
+<script type="text/javascript">
+	function GetQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+	function getUrlVlue(k){
+		var url = window.location.href;
+		url = url.replace("?","?&").split("&");
+		var re = "";
+		for (i=1;i<url.length;i++){
+			if(url[i].indexOf(k+"=") == 0){
+				re = url[i].replace(k+"=","");
+			}
+		}
+		return re;
+	}
+	var txt_identity_no = "";//身份证号
+	var pboc_cid = '{"cellphone":"cellphone","ccomp_phone":"cCompPhone","communication_addr":"communicationAddr","company1":"company1","comp_addr1":"compAddr1","update_req_time1":"infoUpdTime1","frs_cred_crd_issue_mon":"frsCredCrdIssueMon","pay_comp":"payComp","info_upd_time":"infoUpdTime","pay_status":"payStatus","personCompRate":"personCompRate","monthly_deposit":"monthlyDeposit","no_pd_card_bank_max_credit_lim":"noPdCardBankMaxCreditLim","company2":"company2","comp_addr2":"compAddr2","update_req_time2":"infoUpdTime2","case_status":"case_status","common_err_status":"common_err_status","loan_or_credit_acct_status":"loan_or_credit_acct_status","opas_pboc_public_adminpunish1":"opas_pboc_public_adminpunish1","opas_pboc_public_adminpunish2":"opas_pboc_public_adminpunish2","loan_accounts_count":"loan_accounts_count"}';
+	var bank_cid = '{"phone_num1":"phone_num1","comp_addr1":"comp_addr1","company1":"company1","info_upd_time1":"info_upd_time1","unit_phone1":"unit_phone1","communication_addr":"communication_addr","first_yw_grant_month":"first_yw_grant_month","single_bank_max_credit":"single_bank_max_credit","pay_comp":"pay_comp","pay_status":"pay_status","monthly_deposit":"monthly_deposit","person_deposit_rate":"person_deposit_rate","info_upd_time":"info_upd_time","phone_num2":"phone_num2","comp_addr2":"comp_addr2","company2":"company2","update_req_time2":"update_req_time2","unit_phone2":"unit_phone2","case_status":"case_status","common_err_status":"common_err_status","loan_or_credit_acct_status":"loan_or_credit_acct_status","opas_pboc_public_adminpunish1":"opas_pboc_public_adminpunish1","opas_pboc_public_adminpunish2":"opas_pboc_public_adminpunish2","loan_accounts_count":"loan_accounts_count","loan_accounts_count1":"loan_accounts_count1"}';
+	var c_pboc = JSON.parse(pboc_cid);
+	var c_bank = JSON.parse(bank_cid);
+	function fnFillPBOC(o) {
+		$.each(c_pboc, function(n, v) {
+			/* console.log(eval('o.' + v)); */
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+	function fnFillBANK(o) {
+		/* console.log(o) */
+		$.each(c_bank, function(n, v) {
+			/* console.log(eval('o.' + v)); */
+			$('#txt_' + n + '_new').val(eval('o.' + v));
+		});
+	}
+	var police_cid = '{"name":"name","identity_no":"identityNo","identity_no_check_rst":"identityNoCheckRst","old_name":"oldName","jgssx_home_prov_city":"jgssxHomeProvCity","belong_home_prov_city":"belongHomeProvCity","srvs_location":"srvsLocation","birth_home_prov_city":"birthHomeProvCity"}';
+	var c_police = JSON.parse(police_cid);
+	
+	function fnFillPolice(o) {
+		$.each(c_police, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+	
+	//公安附卡
+	var policeF_cid = '{"name":"name","identityNo":"identityNo","identityNoCheckRst":"identityNoCheckRst"}';
+	var c_policef = JSON.parse(policeF_cid);
+	function fnFillPolicef(o) {
+		$.each(c_policef, function(n, v) {
+			$(n).val(eval('o.' + v));
+		});
+	}
+
+	//var credit100_cid = '{"id_abnormal":"slIdAbnormal","id_bank_lost":"slIdBankLost","id_nbank_p2p_bad":"slIdNbankP2pFraud","id_nbank_p2p_lost":"slIdNbankP2pLost","id_nbank_p2p_refuse":"slIdNbankP2pRefuse","id_slIdCourtBad":"slIdCourtBad","id_p2p_bad":"slIdP2pBad"}';
+	//var credit100_cidCell = '{"cell_slCellBankFraud":"slCellBankFraud","cell_bank_lost":"slCellBankLost","cell_nbank_p2p_bad":"slCellNbankP2pBad","cell_p2p_bad":"slCellP2pBad"}';
+	var credit100_cid = '{"slIdBankBad":"slIdBankBad","slIdBankLost":"slIdBankLost","slIdBankFraud":"slIdBankFraud","slIdCourtBad":"slIdCourtBad","slIdNbankP2pLost":"slIdNbankP2pLost","slIdNbankP2pRefuse":"slIdNbankP2pRefuse","slIdCourtExecuted":"slIdCourtExecuted"}';
+	var credit100_cidCell = '{"slCellBankLost":"slCellBankLost","slCellBankBad":"slCellBankBad","slCellBankFraud":"slCellBankFraud"}';
+	var c_credit100 = JSON.parse(credit100_cid);
+	var c_credit100Cell = JSON.parse(credit100_cidCell);
+
+	function fnFillCredit100(o, flag) {
+		if ("IdDate" == flag) {
+			$.each(c_credit100, function(n, v) {
+				var value = '';
+				var v = eval('o.' + v);
+				if (v == null) {
+					value = '';
+				} else if (v == '0') {
+					value = '本人直接命中';
+				} else if (v == '1') {
+					value = '一度关系命中';
+				} else if (v == '2') {
+					value = '二度关系命中';
+				} else {
+					value = v;
+				}
+				$('#' + n).val(value);
+			});
+		}
+		if ("CellDate" == flag) {
+			$.each(c_credit100Cell, function(n, v) {
+				var value = '';
+				var v = eval('o.' + v);
+				if (v == null) {
+					value = '';
+				} else if (v == '0') {
+					value = '本人直接命中';
+				} else if (v == '1') {
+					value = '一度关系命中';
+				} else if (v == '2') {
+					value = '二度关系命中';
+				} else {
+					value = v;
+				}
+				$('#' + n).val(value);
+			});
+		}
+	}
+
+	var education_cid = '{"user_name":"userName","education_degree":"educationDegree","study_style":"studyStyle","education_approach":"dstudyStyle","graduate":"graduate","speciality_name":"specialityName","graduate_time":"graduateTime","study_result":"studyResult","query_result":"searchStatus","identitycard":"identitycard"}';
+	var c_education = JSON.parse(education_cid);
+
+	function fnFillEducation(o) {
+		$.each(c_education, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+	var ant_cid = '{"zm_score":"zmScore","ivs_score":"ivsScore","ant_name":"descriptionName","cert_no":"descriptionCertno","ant_mobile":"descriptionPhone","ant_address":"descriptionAddr","ant_type":"riskTypes"}';
+	var c_ant = JSON.parse(ant_cid);
+
+	function fnFillAnt(o) {
+		$.each(c_ant, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+
+	/*	var sid = [ 'pboc', 'police', 'ant', 'credit100', 'education' ];
+
+	function fnInitStyle(sid) {
+		$.each(sid, function(i, v) {
+			$('#' + v + '_summary_area table tr td:even').css('width', '140')
+					.css('text-align', 'right').css('padding-right', '10px')
+					.css('font', 'normal 12px Arial');
+		});
+	} */
+
+	function fnLoadPBOC(appId) {
+		$cf.ajax({
+			url : '/opas-naps/pboc_summary_query_zxspbzk.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyPbocSummary;
+					var o = JSON.parse(result);
+					fnFillPBOC(o);
+					var v = $('#txt_loan_or_credit_acct_status').val();
+					var x = $('#txt_common_err_status').val();
+					var y = $('#txt_case_status').val();
+					//公积金-缴费状态 
+					var txt_pay_status = $('#txt_pay_status').val();
+					if (txt_pay_status != null && txt_pay_status != "") {
+						$('#txt_pay_status').val(
+								txt_pay_status.split("|")[txt_pay_status
+										.split("|").length - 1]);
+					}
+					if ($.trim(v).length != 0) {
+						//$('#txt_loan_or_credit_acct_status').val(v.split("|")[v.split("|").length-1]);
+						$('#credit_acct_status').addClass("font-red");
+					} else if ($.trim(v).length == 0) {
+						$('#common_err').addClass("font-black");
+					}
+					if ($.trim(x).length != 0) {
+						$('#common_err').addClass("font-red");
+					} else if ($.trim(x).length == 0) {
+						$('#common_err').addClass("font-black");
+					}
+					if ($.trim(y) == "是") {
+						$('#case_sta').addClass("font-red");
+					} else {
+						$('#case_sta').addClass("font-black");
+					}
+					//变红  贷款当前逾期总额
+					var txt_opas_pboc_public_adminpunish1 = $(
+							'#txt_opas_pboc_public_adminpunish1').val();
+					if (txt_opas_pboc_public_adminpunish1 != null
+							&& txt_opas_pboc_public_adminpunish1 != ""
+							&& txt_opas_pboc_public_adminpunish1 != "0") {
+						$('#txt_opas_pboc_public_adminpunish1_span').addClass(
+								"font-red");
+					}
+					//变红  信用卡当前逾期总额
+					var txt_opas_pboc_public_adminpunish2 = $(
+							'#txt_opas_pboc_public_adminpunish2').val();
+					if (txt_opas_pboc_public_adminpunish2 != null
+							&& txt_opas_pboc_public_adminpunish2 != ""
+							&& txt_opas_pboc_public_adminpunish2 != "0") {
+						$('#txt_opas_pboc_public_adminpunish2_span').addClass(
+								"font-red");
+					}
+					//变红  到期未结清贷款笔数
+					var txt_expire_unclear_count = $(
+							'#txt_expire_unclear_count').val();
+					if (txt_expire_unclear_count != null
+							&& txt_expire_unclear_count != ""
+							&& txt_expire_unclear_count != "0") {
+						$('#txt_expire_unclear_count_span')
+								.addClass("font-red");
+					}
+					var txt_loan_accounts_count = $('#txt_loan_accounts_count').val();
+					if (txt_loan_accounts_count>="5") {
+						$("#txt_loan_accounts_count_span").addClass("font-red");
+					}
+				}
+			}
+		});
+	}
+	
+    /* 二代人行js */
+    function fnLoadBANK(appId) {
+		$cf.ajax({
+			url : '/opas-naps/bank_summary_query_zxspbzk.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyPbocSummary;
+					var o = JSON.parse(result);
+					if(o == null){
+					     $('#bank_summary_area').hide();
+					       return;	
+						}
+					var queryed_cert_type = o["queryed_cert_type"];
+					if(queryed_cert_type == "10"){
+						$('#pboc_summary_area').hide();
+					}else{
+						$('#bank_summary_area').hide();
+						return;
+					}
+					fnFillBANK(o);
+					var v = $('#txt_loan_or_credit_acct_status_new').val();
+					var x = $('#txt_common_err_status_new').val();
+					//var y = $('#txt_case_status').val();
+					//公积金-缴费状态 
+					var txt_pay_status = $('#txt_pay_status_new').val();
+					if (txt_pay_status != null && txt_pay_status != "") {
+						$('#txt_pay_status_new').val(txt_pay_status);
+					}
+					if ($.trim(v).length != 0) {
+						//$('#txt_loan_or_credit_acct_status').val(v.split("|")[v.split("|").length-1]);
+						$('#credit_acct_status_new').addClass("font-red");
+					} else if ($.trim(v).length == 0) {
+						$('#common_err_new').addClass("font-black");
+					}
+					if ($.trim(x).length != 0) {
+						$('#common_err_new').addClass("font-red");
+					} else if ($.trim(x).length == 0) {
+						$('#common_err_new').addClass("font-black");
+					}
+					/* if ($.trim(y) == "是") {
+						$('#case_sta').addClass("font-red");
+					} else {
+						$('#case_sta').addClass("font-black");
+					} */
+					//变红  贷款当前逾期总额
+					var txt_opas_pboc_public_adminpunish1 = $(
+							'#txt_opas_pboc_public_adminpunish1_new').val();
+					if (txt_opas_pboc_public_adminpunish1 != null
+							&& txt_opas_pboc_public_adminpunish1 != ""
+							&& txt_opas_pboc_public_adminpunish1 != "0") {
+						$('#txt_opas_pboc_public_adminpunish1_span_new').addClass(
+								"font-red");
+					}
+					//变红  信用卡当前逾期总额
+					var txt_opas_pboc_public_adminpunish2 = $(
+							'#txt_opas_pboc_public_adminpunish2_new').val();
+					if (txt_opas_pboc_public_adminpunish2 != null
+							&& txt_opas_pboc_public_adminpunish2 != ""
+							&& txt_opas_pboc_public_adminpunish2 != "0") {
+						$('#txt_opas_pboc_public_adminpunish2_span_new').addClass(
+								"font-red");
+					}
+					//贷记卡
+					var txt_loan_accounts_count = $('#txt_loan_accounts_count_new').val();
+					if (parseInt(txt_loan_accounts_count)>=10) {
+						$("#txt_loan_accounts_count_span_new").addClass("font-red");
+					}
+					//贷款
+					var txt_loan_accounts_count1 = $('#txt_loan_accounts_count1_new').val();
+					if (parseInt(txt_loan_accounts_count1)>=5) {
+						$("#txt_loan_accounts_count1_span_new").addClass("font-red");
+					}
+					//变红  到期未结清贷款笔数
+					/* var txt_expire_unclear_count = $(
+							'#txt_expire_unclear_count').val();
+					if (txt_expire_unclear_count != null
+							&& txt_expire_unclear_count != ""
+							&& txt_expire_unclear_count != "0") {
+						$('#txt_expire_unclear_count_span')
+								.addClass("font-red");
+					}
+					var txt_loan_accounts_count = $('#txt_loan_accounts_count').val();
+					if (txt_loan_accounts_count>="5") {
+						$("#txt_loan_accounts_count_span").addClass("font-red");
+					} */
+				}
+			}
+		});
+	}// 最近一次月度表现信息段 PD01C 
+
+	function fnLoadPolice(appId,cardFlag) {
+		$cf.ajax({
+			url : '/opas-naps/police_summary_query.json',
+			data : {
+				'appId' : appId,
+				'cardFlag' : cardFlag
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.applyPoliceSummary;
+ 				var o = JSON.parse(result);
+ 				fnFillPolice(o);
+ 				var resultStr = eval('(' + result + ')');
+ 				var resultRx = response.RSP_BODY;
+ 				if(resultRx.resultRx == '不一致'){
+ 					$("#resultRx").attr("style","color:red");
+ 				}
+ 				$('#police_summary_area').form("load", resultRx);
+				var c1Idtype = resultStr.c1Idtype;
+				//1主附同申 2单独申请附卡3单独申请主卡
+				var c1c2Flag = resultStr.c1c2Flag;
+				
+				if ("04"==c1Idtype||"07"==c1Idtype){
+					var result = o.identityNoCheckRst;
+					if(result=="01"){
+						$("#txt_identity_no_check_rst").val("完全匹配");
+					}else if (result=="04"||result=="03"||result=="02"){
+						$("#txt_identity_no_check_rst").val("不完全匹配");
+						$("#txt_identity_no_check_rst").attr("style","color:red");
+					}else if (result=="11"){
+						$("#txt_identity_no_check_rst").val("未知");
+						$("#txt_identity_no_check_rst").attr("style","color:red");
+					} else {
+						if("1"==c1c2Flag||"3"==c1c2Flag){
+	 						$("#txt_identity_no_check_rst").attr("style","background-color:red");
+// 							$('#identityZ').addClass("font-red");
+						}
+					} 
+				}else {
+					//修改一下颜色   add by ddh   
+					if(!(o.identityNoCheckRst =="完全匹配" || o.identityNoCheckRst == "未查询")){
+						$("#txt_identity_no_check_rst").attr("style","color:red");
+					}
+				}
+				
+ 			}
+ 		});
+ 	}
+    //附属卡公安信息
+    function fnLoadPoliceF(appId,cardFlag) {
+ 		$cf.ajax({
+ 			url : '/opas-naps/police_summary_query.json',
+ 			data : {
+ 				'appId' : appId,
+ 				'cardFlag' : cardFlag
+ 			},
+ 			onSuccess : function(response) {
+				var result = response.RSP_BODY.applyPoliceSummary;
+				var o = JSON.parse(result);
+				fnFillPolicef(o);
+				var resultStr = eval('(' + result + ')');
+				$('#policeSummary').form("load", resultStr);
+				 //修改一下颜色   add by ddh   
+				var c1Idtype = resultStr.c1Idtype;
+				//1主附同申 2单独申请附卡3单独申请主卡
+				var c1c2Flag = resultStr.c1c2Flag;
+				if ("04"==c1Idtype||"07"==c1Idtype){
+					var result = o.identityNoCheckRst;
+					if(result=="01"){
+						$("#identityNoCheckRst").val("完全匹配");
+					}else if (result=="04"||result=="03"||result=="02"){
+						$("#identityNoCheckRst").val("不完全匹配");
+						$("#identityNoCheckRst").attr("style","color:red");
+					}else if (result=="11"){
+						$("#identityNoCheckRst").val("未知");
+						$("#identityNoCheckRst").attr("style","color:red");
+					} else{
+						if("1"==c1c2Flag||"2"==c1c2Flag){
+							//变色
+							$("#identityNoCheckRst").attr("style","background-color:red");
+//							$("#identityNoCheckRst").attr("style","color:red");
+						}
+					} 
+				}else {
+					//修改一下颜色   add by ddh   
+					if(!(resultStr.identityNoCheckRst =="完全匹配")){
+						$("#identityNoCheckRst").attr("style","color:red");
+					}
+				}
+ 			}
+ 		});
+ 	}
+     
+	
+	function fnLoadCredit100(appId) {
+		$cf.ajax({
+			url : '/opas-naps/credit100_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				//add by qingfeng.xiu 20190218 17:50 百融查询结果
+				$("#br_query_result").val(response.RSP_BODY.searchStatus);
+				if (response.RSP_BODY.success) {
+					if (response.RSP_BODY.IdDate) {
+						var result = response.RSP_BODY.applyCredit100Id;
+						var o = JSON.parse(result);
+						fnFillCredit100(o, "IdDate");
+					}
+					if (response.RSP_BODY.CellDate) {
+						var result = response.RSP_BODY.applyCredit100Cell;
+						var o = JSON.parse(result);
+						fnFillCredit100(o, "CellDate");
+					}
+				}
+			}
+		});
+	}
+
+	function fnLoadEducation(appId) {
+		$cf.ajax({
+			url : '/opas-naps/education_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyEducationSummary;
+					var o = JSON.parse(result);
+					fnFillEducation(o);
+				}
+			}
+		});
+	}
+	function fnLoadAnt(appId) {
+		$cf.ajax({
+			url : '/opas-naps/ant_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyAntSummary;
+					var o = JSON.parse(result);
+					fnFillAnt(o);
+					var antObject = eval('(' + result + ')');
+					if (antObject.codeNameEnglish == "1") {
+						$("#txt_ant_name").attr("style", "background:red;");
+					}
+					if (antObject.codeCertnoEnglish == "1") {
+						$("#txt_cert_no").attr("style", "background:red;");
+					}
+					if (antObject.codePhoenEnglish == "1") {
+						$("#txt_ant_mobile").attr("style", "background:red;");
+					}
+					if (antObject.codeAddrEnglish == "1") {
+						$("#txt_ant_address").attr("style", "background:red;");
+					}
+				}
+			}
+		});
+	}
+	//查看二代人行详情 
+	function showDetailBank(str) {
+		var isOutsourcing;
+		try{
+			$cf.ajax({
+				  url : '/opas-naps/query_userinfo.json',
+				  async: false,
+				  data : {"appId":appId,"userCode":userCode},
+				  onSuccess : function(response) {
+					isOutsourcing = response.RSP_BODY.isOutsourcing;
+				}
+			}); 
+		}catch(e){
+			window.open("thirdparty_" + str + "_view.html?appId=" + appId +"&userCode=" + userCode, "",
+					"resizable=no,toolbar=no,location=no,left=0,top=0,width="
+							+ (screen.availWidth - 10) + ",height="
+							+ (screen.availHeight - 70));
+		}
+		if(isOutsourcing != undefined && isOutsourcing != null && isOutsourcing != "" && isOutsourcing == "1"){
+			window.open("thirdparty_detail_bank4out_view.html?appId=" + appId +"&userCode=" + userCode, "",
+					"resizable=no,toolbar=no,location=no,left=0,top=0,width="
+							+ (screen.availWidth - 10) + ",height="
+							+ (screen.availHeight - 70));
+		}else{
+			window.open("thirdparty_" + str + "_view.html?appId=" + appId +"&userCode=" + userCode, "",
+					"resizable=no,toolbar=no,location=no,left=0,top=0,width="
+							+ (screen.availWidth - 10) + ",height="
+							+ (screen.availHeight - 70));
+		}
+	}
+	function showDetail(str) {
+		if (str == "police") {//公安摘要信息
+			txt_identity_no = $("#txt_identity_no").val();
+		}
+		
+		window.open("thirdparty_" + str + "_view.html?appId=" + appId +"&userCode=" + userCode, "",
+				"resizable=no,toolbar=no,location=no,left=0,top=0,width="
+						+ (screen.availWidth - 10) + ",height="
+						+ (screen.availHeight - 70));
+	}
+	function setPositionAbsolute(top) {
+		document.getElementById("quickPosition").style.top = top + "px";
+	}
+    //加载宝信汽车数据源信息
+    function fnLoadBxVehicle(appId){
+		$cf.ajax({
+			url : '/opas-naps/queryBxVerhicleCheckInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					var formData = eval('(' + data.RSP_BODY.htmlMap + ')');
+					$('#bx_verhicle_info_form').form("load", formData);
+				}
+			}
+		});
+    }
+	//加载 天御分信息 
+	function fnLoadTianYuSummary(appId) {
+		$cf.ajax({
+			url : '/opas-naps/queryTianYuSummaryInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$('#tianYuSummaryinfoForm').form("load",
+							data.RSP_BODY.tianYuSummary);
+				}
+			}
+		});
+	}
+	//加载企业行业信息
+	function fnLoadQiye(appId) {
+		$cf.ajax({
+			url : '/opas-naps/queryQiyeInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$('#qiyeinfoForm').form("load", data.RSP_BODY.qiYeCode);
+					var entStatus = data.RSP_BODY.qiYe.entstatus;
+					if (entStatus != "在营（开业）" && entStatus != "开业"
+							&& entStatus != "存续" && entStatus != "正常"
+							&& entStatus != "正常执业" && entStatus != "正常经营") {
+						$("#entStatus").attr("style", "background:red;");
+					}
+					$('#qiyeinfoForm').form("load", data.RSP_BODY.qiYe);
+				}
+			}
+		});
+	}
+	
+	//联通地址类信息
+	function fnLoadUnicomAddress(appId) {
+		$cf.ajax({
+			url : '/opas-naps/queryUnicomAddress.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					var result = data.RSP_BODY.unAddressInfo;
+					var success = result.success;
+					if (result!=null&&result!=""){
+						var responseCode = result.responseCode;
+						if (responseCode =="00"||responseCode =="14"||responseCode =="16") {
+							result.success="查询成功";
+						} else {
+							result.success="查询失败";
+						} 
+					} else {
+						result.success="未发起查询";
+					}
+					$('#unicomAddressInfoForm').form("load", result);
+				}
+			}
+		});
+	}
+	
+	//加载通讯运营商 
+	function fnLoadTxOperator(appId){
+		
+		$cf.ajax({
+			url : '/opas-naps/queryTxOperSummaryInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					var txOperator=data.RSP_BODY.txOperatorSummary;
+					  if(txOperator!=null&&txOperator!=""){
+						
+						  var resultData = txOperator.resultData;
+							
+							if(resultData=="A"){
+								txOperator.resultData="0-6月";
+							}
+							if(resultData=="B"){
+								txOperator.resultData="6-12月";
+							}
+							if(resultData=="C"){
+								txOperator.resultData="12-24月";
+							}
+							if(resultData=="D"){
+								txOperator.resultData="24月及以上";
+							}
+							if(resultData=="1"){
+								txOperator.resultData="0-3月";
+							}
+		                    if(resultData=="2"){
+		                    	txOperator.resultData="3-6月";
+							}
+							if(resultData=="3"){
+								txOperator.resultData="6-12月";
+							}
+							if(resultData=="4"){
+								txOperator.resultData="12-24月";
+							}
+							if(resultData=="5"){
+								txOperator.resultData="24月及以上";
+							}
+							if(resultData=="6"){
+								txOperator.resultData="系统无记录";
+							}
+							if(resultData=="-1"){
+								txOperator.resultData="异常状态";
+							}
+	
+					  }else{  
+						  txOperator=new Object();
+						  txOperator.resultData="未发起查询";
+					  }
+				  $('#txOperatorInfoForm').form("load", txOperator);
+				  
+				}
+			}
+		});
+	}
+	
+	//杭州区域数据 
+	function fnLoadHzGjjxx(appId){
+		
+		if ('22' != appId.substring(8,10)) {
+			document.getElementById('hzGjjxx').style.display='none';
+			document.getElementById('hzgjj').style.display='none';
+		} else { 
+			$cf.ajax({
+				url : '/opas-naps/queryHzGjjxxInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					document.getElementById('hzGjjxx').style.display='';
+					document.getElementById("hzgjj").style.display='';
+					if (data.RSP_BODY.success) {
+						$('#hzGjjxxForm').form("load", data.RSP_BODY.gjjxxInfo);
+					}
+				}
+			});
+		}
+	}
+	
+	//加载业务字典
+	//$cf.loadAllDict();
+ 	$cf.loadAllDictOnly('XMYLZ_BPD,');
+	$cf.loadAllDictOnly('XMYLZ_ISS,');
+	$cf.loadAllDictOnly('XMYLZ_IOJ,');
+	$cf.loadAllDictOnly('XMYLZ_RMA,');
+	$cf.loadAllDictOnly('PYPCR_TR,');
+	//加载厦门易联众社保
+ 	function fnLoadYLZSecurity(appId){
+		if ('36' != appId.substring(8,10)) {
+			document.getElementById('xiaMenYLZ').style.display='none';
+			document.getElementById("ylz").style.display='none';
+		} else {
+			$cf.ajax({
+				url : '/opas-naps/queryYLZInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+						document.getElementById('xiaMenYLZ').style.display='';
+						document.getElementById("ylz").style.display='';
+						if (data.RSP_BODY.success) {
+							$('#xiaMenYLZSocialSecurity').form("load", data.RSP_BODY.ylz);
+							
+							var beginPaymentDate = data.RSP_BODY.ylz.beginPaymentDate;
+							var insuredStatus = data.RSP_BODY.ylz.insuredStatus;
+							var companyName = data.RSP_BODY.ylz.companyName;
+							var isOnJob = data.RSP_BODY.ylz.isOnJob;
+							var latestPaymentDate = data.RSP_BODY.ylz.latestPaymentDate;
+							var repaymentAbility = data.RSP_BODY.ylz.repaymentAbility;
+							// 当前单位初缴日期、当前参保状态、单位名称、是否在职 
+							// 当前单位初缴日期
+							if (beginPaymentDate == '-2' || beginPaymentDate == '-3') {
+								$('#beginPaymentDate').val($cf.getDictDetailName('XMYLZ_BPD',beginPaymentDate));
+								$('#beginPaymentDate').addClass("font-red");
+							} else {
+								$('#beginPaymentDate').val($cf.getDictDetailName('XMYLZ_BPD',beginPaymentDate));
+							}
+							// 当前参保状态
+							if (insuredStatus == '-2') {
+								$('#insuredStatus').val($cf.getDictDetailName('XMYLZ_ISS',insuredStatus));
+								$('#insuredStatus').addClass("font-red");
+							} else {
+								$('#insuredStatus').val($cf.getDictDetailName('XMYLZ_ISS',insuredStatus));
+							}
+							
+							// 单位名称
+							if (companyName == '-2') {
+								$('#companyName').val("查无此人参保信息");
+								$('#companyName').addClass("font-red");
+							} else if (companyName == '-5') {
+								$('#companyName').val("城乡居民当前单位初缴日期标识");
+							} else if (companyName == '-1') {
+								$('#companyName').val("暂停参保/终止参保");
+							} else {
+								$('#companyName').val(companyName);
+							}
+							
+							// 是否在职
+							if (isOnJob == '-2') {
+								$('#isOnJob').val($cf.getDictDetailName('XMYLZ_IOJ',isOnJob));
+								$('#isOnJob').addClass("font-red");
+							} else {
+								$('#isOnJob').val($cf.getDictDetailName('XMYLZ_IOJ',isOnJob));
+							}
+							
+							// 还款能力
+							if(repaymentAbility == '-2'){
+								$('#repaymentAbility').val($cf.getDictDetailName('XMYLZ_RMA',repaymentAbility));
+								$('#repaymentAbility').addClass("font-red");
+							} else {
+								$('#repaymentAbility').val($cf.getDictDetailName('XMYLZ_RMA',repaymentAbility));
+							}
+							
+							// 最近一次缴费日期
+							if (latestPaymentDate == '-3') {
+								$('#latestPaymentDate').val("查无此人缴费信息");
+							} else if (latestPaymentDate == '3个月以上') {
+								$('#latestPaymentDate').val("最近一次缴费日期为近3个月之外");
+							} else if (latestPaymentDate == '-2') {
+								$('#latestPaymentDate').val("查无此人参保信息");
+							}else {
+								$('#latestPaymentDate').val(latestPaymentDate);
+							}
+						}
+				}
+			});
+		}
+	}
+
+	//厦门
+	function fnLoadXMPersonal(appId){
+		
+		if ('36' != appId.substring(8,10)) {
+			document.getElementById('xmPersonalInfo').style.display='none';
+			document.getElementById('xm').style.display='none';
+		} else {
+			$cf.ajax({
+				url : '/opas-naps/queryXMPersonal.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					document.getElementById('xmPersonalInfo').style.display='';
+					document.getElementById("xm").style.display='';
+					if (data.RSP_BODY.success) {
+						var gjj = data.RSP_BODY.gjjxxInfo;
+						
+						$('#xmPersonalInfoForm').form("load", data.RSP_BODY.gjjxxInfo);
+						if("01"==gjj.grzhzt){
+							$('#grzhzt').val("正常");
+						}else if ("02"==gjj.grzhzt){
+							$('#grzhzt').val("封存");
+						}else if ("03"==gjj.grzhzt){
+							$('#grzhzt').val("合并销户");
+						}else if ("04"==gjj.grzhzt){
+							$('#grzhzt').val("外部转出销户");
+						}else if ("05"==gjj.grzhzt){
+							$('#grzhzt').val("提取销户");
+						}else if ("06"==gjj.grzhzt){
+							$('#grzhzt').val("冻结");
+						}else if ("99"==gjj.grzhzt){
+							$('#grzhzt').val("其他");
+						}
+						$('#dwmc').val(getStr(gjj.dwmc));
+						$('#yjce').val(getStr(gjj.yjce));
+						$('#grjcbl').val(getStr(gjj.grjcbl));
+						$('#dwjcbl').val(getStr(gjj.dwjcbl));
+						
+					}
+				}
+			});
+		}
+	}
+	
+	
+	//加载深圳鹏元个人社保
+	function fnLoadPYPCR(appId){
+		
+		if ('32' != appId.substring(8,10)) {
+			document.getElementById('shenZhenPYPCR').style.display='none';
+			document.getElementById('pypcr').style.display='none';
+		} else {
+			$cf.ajax({
+				url : '/opas-naps/queryPYPCRInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					document.getElementById('shenZhenPYPCR').style.display='';
+					document.getElementById("pypcr").style.display='';
+					if (data.RSP_BODY.success) {
+						$('#shenZhenPYIndividualSocialSecurity').form("load", data.RSP_BODY.pypcr);
+						$('#treatResult')
+							.val($cf.getDictDetailName('PYPCR_TR',data.RSP_BODY.pypcr.treatResult));
+					}
+				}
+			});
+		}
+	}
+	//加载深圳鹏元高信分 
+	function fnLoadPYPWSL(appId){
+		
+		if ('32' != appId.substring(8,10)) {
+			document.getElementById('shenZhenPYPWSL').style.display='none';
+			document.getElementById('pypwsl').style.display='none';
+		} else {
+			$cf.ajax({
+				url : '/opas-naps/queryPYPWSLInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					document.getElementById("shenZhenPYPWSL").style.display='';
+					document.getElementById("pypwsl").style.display='';
+					if (data.RSP_BODY.success) {
+						$('#shenZhenPYPointsHigher').form("load", data.RSP_BODY.pypwsl);
+					}
+				}
+			});
+		}
+	}
+	
+	
+	//温州区域数据 fnLoadWzGrGjjzl
+	function fnLoadWzGrGjjzl(appId){
+		if ('26' != appId.substring(8,10)) {
+			document.getElementById('wzGrGjjzl').style.display='none';
+			document.getElementById('wzGjj').style.display='none';
+		} else { 
+			$cf.ajax({
+				url : '/opas-naps/queryWzgjjInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					document.getElementById("wzGrGjjzl").style.display='';
+					document.getElementById("wzGjj").style.display='';
+					if (data.RSP_BODY.success) {
+						$('#wzGrGjjzlForm').form("load", data.RSP_BODY.gjjxxInfo);
+					}
+				}
+			});
+		}
+	}
+	
+	
+	//银川公积金数据
+	function fnLoadYcInfo(appId){
+		
+		if ('63' != appId.substring(8,10)) {
+			document.getElementById('ycInfo').style.display='none';
+			document.getElementById('ycGjj').style.display='none';
+		} else {
+			$cf.ajax({
+				url : '/opas-naps/queryYcInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					document.getElementById("ycInfo").style.display='';
+					document.getElementById("ycGjj").style.display='';
+					if (data.RSP_BODY.success) {
+						$('#ycInfoForm').form("load", data.RSP_BODY.gjjxxInfo);
+						var gjj = data.RSP_BODY.gjjxxInfo;
+						$('#stdgjjgrsc').val(getStr1(gjj.stdgjjgrsc));
+						$('#stdgjjgram').val(getStr1(gjj.stdgjjgram));
+						$('#stdgjjdwsc').val(getStr1(gjj.stdgjjdwsc)); 
+						if("00"==gjj.stdcmpjczt){
+							$('#stdcmpjczt').val("待审批");
+						}else if ("01"==gjj.stdcmpjczt){
+							$('#stdcmpjczt').val("职工开户");
+						}else if ("11"==gjj.stdcmpjczt){
+							$('#stdcmpjczt').val("正常汇缴");
+						}else if ("21"==gjj.stdcmpjczt){
+							$('#stdcmpjczt').val("封存状态");
+						}else if ("31"==gjj.stdcmpjczt||"32"==gjj.stdcmpjczt||"33"==gjj.stdcmpjczt||"34"==gjj.stdcmpjczt){
+							$('#stdcmpjczt').val("销户状态");
+						}
+					}
+				}
+			});
+		}
+	}
+
+	//以竖线分割取第一个有效数据
+	function  getStr1(str){
+		var strs = str.split("|");
+		var comp = "";
+		for(var i = 0; i < strs.length; i++){
+			if(""!=strs[i].replace(/\s/g,"")){
+				if(strs[0]=='0'||strs[0]=='0.00'){
+					comp=strs[1];
+				}else {
+					comp=strs[0];
+				}
+				break;
+			} 
+		}
+		return comp;
+	}
+	
+	
+	//以竖线分割取第一个有效数据
+	function  getStr(str){
+		var strs = str.split("|");
+		var comp = "";
+		for(var i = 0; i < 2; i++){
+			/* if(""!=strs[i].replace(/\s/g,"")){ */
+			comp=strs[1];
+			break;
+			/* } */
+		}
+		return comp;
+	}
+		
+	//可信SFRZ_BASE_DATA
+	function fnLoadSfrzBaseData(appId) {
+		$cf.ajax({
+			url : '/opas-naps/querySfrzBaseData.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					var result = data.RSP_BODY.SfrzBase;
+					var authResult = result.authResult;
+					if ("B"==appId.substring(6,7)){
+						if (authResult!=null&&authResult!=""&&authResult!=undefined){
+							authResult = authResult.substring(0,1);
+							if (authResult =='0') {
+								$('#authResult').val("一致");
+							} else if(authResult =='5'){
+								$('#authResult').val("不一致");
+								$("#authResult").attr("style","color:red");
+							} else {
+								$('#authResult').val("查询未成功");
+							}
+						} 
+					}else {
+						$('#authResult').val("未发起查询");
+					}
+					
+				}
+			}
+		});
+	}
+
+	//宁波
+	function fnLoadNbBase(appId){
+		if ('25' != appId.substring(8,10)) {
+			document.getElementById('NbBase').style.display='none';
+			document.getElementById('nb').style.display='none';
+		} else  {
+			$cf.ajax({
+				url : '/opas-naps/queryNbBaseInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					document.getElementById("NbBase").style.display='';
+					document.getElementById("nb").style.display='';
+					if (data.RSP_BODY.success) {
+						console.log(data.RSP_BODY)
+						$('#nbBaseInfo').form("load", data.RSP_BODY.SfrzBase);
+						var base = data.RSP_BODY.SfrzBase;
+						if(base.ybzt=='参保缴费'||base.ylzt=='参保缴费'){
+							$('#cbzt').val("缴交");
+						} else {
+							$('#cbzt').val("其他");
+						}
+						if(base.zdsswfaj=='是'||base.sflrhmd=='是'){
+							$('#blxx').val("排查");
+							$("#blxx").attr("style","color:red");
+						} else {
+							$('#blxx').val("无");
+						}
+					}
+				}
+			});
+		}
+	}
+</script>
+</head>
+<body >
+	<!-- 快速定位区 开始  left:1px;height:10px;-->
+	<div id="quickPosition" style="position: fixed; z-index: 1; text-align: left;">
+		<a href="#A" class="positionhead" >人行摘要信息</a>
+		<a href="#B" class="positionhead" >公安摘要信息</a>
+		<a href="#C" class="positionhead" >蚂蚁摘要信息</a>
+		<a href="#D" class="positionhead" >百融摘要信息</a>
+		<a href="#E" class="positionhead" >学历摘要信息</a>
+		<a href="#F" class="positionhead" >车辆核查信息</a>
+		<a href="#G" class="positionhead" >天御摘要信息</a>
+		<a href="#H" class="positionhead" >企业及行业信息</a>
+		<a id="hzgjj" href="#N" class="positionhead">杭州惠民</a>
+		<a href="#M" class="positionhead" >联通地址信息</a>
+		<a href="#I" class="positionhead" >通讯运营商摘要信息</a>
+		<a id="ylz" href="#J" class="positionhead" >厦门易联众社保</a>
+		<a id="pypcr" href="#K" class="positionhead" >深圳鹏元个人社保</a>
+		<a id="pypwsl" href="#L" class="positionhead" >深圳鹏元高信分</a>
+		<a id="ycGjj" href="#Y" class="positionhead" >银川公积金数据信息</a>
+		<a id="wzGjj" href="#W" class="positionhead" >温州区域数据信息</a>
+		<a id="xm" href="#N" class="positionhead" >厦门公积金</a>
+		<a id="nb" href="#NB" class="positionhead" >宁波社保</a>
+	</div>
+	<div id="ksdw_area">
+		<div id="pboc_summary_area">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="A" >人行摘要信息</span>
+				</legend>
+				<table>
+					<tr>
+						<td>手机号码</td>
+						<td><input type="text" id="txt_cellphone" readonly="readonly" /></td>
+						<td>单位电话</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_ccomp_phone" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位名称1</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_company1" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位地址1</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_comp_addr1" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>更新时间1</td>
+						<td><input type="text" id="txt_update_req_time1"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位名称2</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_company2" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位地址2</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_comp_addr2" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>更新时间2</td>
+						<td><input type="text" id="txt_update_req_time2"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>通讯地址</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_communication_addr" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>首张贷记卡发卡月份</td>
+						<td><input type="text" id="txt_frs_cred_crd_issue_mon"
+							readonly="readonly" /></td>
+						<td>贷记卡单家行最高授信额度</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_no_pd_card_bank_max_credit_lim" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>公积金-缴交单位</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_pay_comp" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>公积金-缴费状态</td>
+						<td><input type="text" id="txt_pay_status"
+							readonly="readonly" /></td>
+						<td>公积金-缴交金额</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_monthly_deposit" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>公积金-缴交比例</td>
+						<td><input type="text" id="txt_personCompRate"
+							readonly="readonly" /></td>
+						<td>公积金-更新时间</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_info_upd_time" readonly="readonly" /></td>
+					</tr>
+					<!--公共信息明细是否异常有值显示强制执行/行政处罚/欠税/民事判决/养老保险金缴存/养老保险金发放记录，没值该项不显示-->
+					<tr>
+						<td><span id="common_err">公共信息明细是否异常</span></td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_common_err_status" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td><span id="txt_opas_pboc_public_adminpunish2_span">信用卡当前逾期总额</span></td>
+						<td><input type="text" id="txt_opas_pboc_public_adminpunish2"
+							readonly="readonly" /></td>
+						<td><span id="txt_opas_pboc_public_adminpunish1_span">贷款当前逾期总额</span></td>
+						<td><input type="text" style="width: 227px"
+							id="txt_opas_pboc_public_adminpunish1" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td><span id="case_sta">是否列入失信被执行人名单</span></td>
+						<td><input type="text" id="txt_case_status"
+							readonly="readonly" /></td>
+						<td><span id="credit_acct_status">信用卡状态异常</span></td>
+						<td><input type="text" style="width: 227px"
+							id="txt_loan_or_credit_acct_status" readonly="readonly" /></td>
+					</tr>
+					<tr>
+					<td><span id="txt_loan_accounts_count_span">贷款账户数</span></td>
+					<td><input type="text" id="txt_loan_accounts_count"
+						readonly="readonly" /></td>
+					<td></td>
+					<td></td>
+				</tr>
+				</table>
+				<p align="center">
+					<a href='javascript:showDetail("detail_pboc");'>查看详情</a>
+					<!-- <a href='javascript:showDetailBank("detail_bank");'>二代查看详情</a> -->
+				</p>
+			</fieldset>
+		</div>
+		<!-- ------------------------------- 二代人行摘要信息start ------------------------------------- -->
+		<div id="bank_summary_area">
+			<fieldset style="font-size: 13px">
+				<legend>
+					<span id="A" >二代人行摘要信息</span>
+				</legend>
+				<table>
+					<tr>
+						<td>手机号码1</td>
+						<td><input type="text" id="txt_phone_num1_new" readonly="readonly" /></td>
+						<td>手机号码2</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_phone_num2_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位名称1</td>
+						<td><input type="text" 
+							id="txt_company1_new" readonly="readonly" /></td>
+							<td>单位电话1</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_unit_phone1_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位地址1</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_comp_addr1_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>更新时间1</td>
+						<td><input type="text" id="txt_info_upd_time1_new"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位名称2</td>
+						<td><input type="text" id="txt_company2_new" readonly="readonly" /></td>
+							<td>单位电话2</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_unit_phone2_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>单位地址2</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_comp_addr2_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>更新时间2</td>
+						<td><input type="text" id="txt_update_req_time2_new"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>通讯地址</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_communication_addr_new" readonly="readonly" /></td>
+					</tr> 
+					<tr>
+						<td>首张贷记卡发卡月份</td>
+						<td><input type="text" id="txt_first_yw_grant_month_new"
+							readonly="readonly" /></td>
+						<td>贷记卡单家行最高授信额度</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_single_bank_max_credit_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>公积金-缴交单位</td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_pay_comp_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>公积金-缴费状态</td>
+						<td><input type="text" id="txt_pay_status_new"
+							readonly="readonly" /></td>
+						<td>公积金-缴交金额</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_monthly_deposit_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>公积金-缴交比例</td>
+						<td><input type="text" id="txt_person_deposit_rate_new"
+							readonly="readonly" /></td>
+						<td>公积金-更新时间</td>
+						<td><input type="text" style="width: 227px"
+							id="txt_info_upd_time_new" readonly="readonly" /></td>
+					</tr>
+					<!--公共信息明细是否异常有值显示强制执行/行政处罚/欠税/民事判决/养老保险金缴存/养老保险金发放记录，没值该项不显示-->
+					<tr>
+						<td><span id="common_err_new">公共信息明细是否异常</span></td>
+						<td colspan="3"><input type="text" style="width: 500px"
+							id="txt_common_err_status_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td><span id="txt_opas_pboc_public_adminpunish2_span_new">信用卡当前逾期总额</span></td>
+						<td><input type="text" id="txt_opas_pboc_public_adminpunish2_new"
+							readonly="readonly" /></td>
+						<td><span id="txt_opas_pboc_public_adminpunish1_span_new">贷款当前逾期总额</span></td>
+						<td><input type="text" style="width: 227px"
+							id="txt_opas_pboc_public_adminpunish1_new" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<!-- <td><span id="case_sta">是否列入失信被执行人名单</span></td>
+						<td><input type="text" id="txt_case_status"
+							readonly="readonly" /></td> -->
+						<td><span id="credit_acct_status_new">信用卡状态异常</span></td>
+						<td><input type="text" style="width: 227px"
+							id="txt_loan_or_credit_acct_status_new" readonly="readonly" /></td>
+							<td></td>
+							<td></td>
+					</tr>
+					<tr>
+					<td><span id="txt_loan_accounts_count_span_new">贷记卡账户数</span></td>
+					<td><input type="text" id="txt_loan_accounts_count_new"
+						readonly="readonly" /></td>
+						<td><span id="txt_loan_accounts_count1_span_new">贷款账户数</span></td>
+					<td><input type="text" id="txt_loan_accounts_count1_new"
+						readonly="readonly" /></td>
+					
+				</tr>
+					<!-- <tr>
+					<td><span colspan="4" id="txt_loan_accounts_count_span">我行个人贷款情况：</span></td>
+				</tr> --> 
+				</table>
+				<p align="center">
+					<!-- <a href='javascript:showDetail("detail_pboc");'>查看详情</a> -->
+					<a href='javascript:showDetailBank("detail_bank");'>二代查看详情</a>
+				</p>
+			</fieldset>
+		</div>
+		<!-- -------------------------------二代人行摘要信息end------------------------------------- -->
+		<div id="police_summary_area">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span  id="B">主卡公安摘要信息</span>
+				</legend>
+				<table>
+					<tr>
+						<td>姓名</td>
+						<td><input type="text" id="txt_name" readonly="readonly"
+							style="width: 160px" /></td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;证件号码</td>
+						<td><input type="text" id="txt_identity_no"
+							readonly="readonly" style="width: 160px" /></td>
+					</tr>
+					<tr>
+						<td style="text-align: left;">增强公安查询状态</td>
+						<td><span id="identityZ"><input type="text" id="txt_identity_no_check_rst" name = "txt_identity_no_check_rst"
+							readonly="readonly" style="width: 160px" /></span></td>
+						<td>PAD人像比对</td>
+						<td><input type="text" id="resultRx" name="resultRx"
+							readonly="readonly" style="width: 160px" />
+					</tr>
+				</table>
+				<p align="center">
+					<a href='javascript:showDetail("police");'>查看详情</a>
+				</p>
+			</fieldset>
+		</div>
+
+		<div id="policeSummaryArea">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span  id="B1">附属卡公安摘要信息</span>
+				</legend>
+				<form id="policeSummary">
+					<table>
+						<tr>
+							<td>姓名</td>
+							<td><input type="text" id="name" name="name" readonly="readonly"
+								style="width: 160px" /></td>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;证件号码</td>
+							<td><input type="text" id="identityNo" name="identityNo"
+								readonly="readonly" style="width: 160px" /></td>
+						</tr>
+						<tr>
+							<td style="text-align: left;"><span id="identityF">增强公安查询状态</span></td>
+							<td><input type="text" id="identityNoCheckRst" name="identityNoCheckRst"
+								readonly="readonly" style="width: 160px" /></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("policeF");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="sfrzBaseData">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="M">可信验证信息</span>
+				</legend>
+				<form id="sfrzBaseDataForm">
+					<table>
+						<tr>
+							<td>主卡可信身份信息验证结果: <input id="authResult" name="authResult"
+								style="width: 150px" type="text" readonly="readonly" />
+							</td>
+							<td></td>
+						</tr>
+					</table>
+				</form>
+			</fieldset>
+		</div>
+
+		<div id="credit100_summary_area">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="D">百融摘要信息</span>
+				</legend>
+				<table>
+					<tr>
+						<td>查询结果</td>
+						<td><input type="text" id="br_query_result"
+							readonly="readonly" /></td>
+						<!-- <td colspan="4"></td> -->
+					</tr>
+					<tr>
+						<td>身份证检查命中：</td>
+						<td colspan="5"></td>
+					</tr>
+					<tr>
+						<td>不良：</td>
+						<td><input type="text" id="slIdBankBad" readonly="readonly" /></td>
+						<td>失联：</td>
+						<td><input type="text" id="slIdBankLost" readonly="readonly" /></td>
+						<td>资信不佳：</td>
+						<td><input type="text" id="slIdBankFraud" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>法院失信：</td>
+						<td><input type="text" id="slIdCourtBad" readonly="readonly" /></td>
+						<td>P2P失联：</td>
+						<td><input type="text" id="slIdNbankP2pLost"
+							readonly="readonly" /></td>
+						<td>P2P拒绝：</td>
+						<td><input type="text" id="slIdNbankP2pRefuse"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>法院被执行人：</td>
+						<td><input type="text" id="slIdCourtExecuted"
+							readonly="readonly" /></td>
+						<td colspan="4"></td>
+					</tr>
+					<tr>
+						<td>手机检查命中：</td>
+						<td colspan="5"></td>
+					</tr>
+					<tr>
+						<td>失联：</td>
+						<td><input type="text" id="slCellBankLost"
+							readonly="readonly" /></td>
+						<td>不良：</td>
+						<td><input type="text" id="slCellBankBad" readonly="readonly" /></td>
+						<td>资信不佳：</td>
+						<td><input type="text" id="slCellBankFraud"
+							readonly="readonly" /></td>
+					</tr>
+				</table>
+				<p align="center">
+					<a href='javascript:showDetail("credit100");'>查看详情</a>
+				</p>
+			</fieldset>
+		</div>
+
+		<div id="education_summary_area">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="E">学历摘要信息</span>
+				</legend>
+				<table>
+				<tr>
+					<td>查询结果</td>
+					<td><input type="text" id="txt_query_result"
+						readonly="readonly" /></td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td>姓名</td>
+					<td><input type="text" id="txt_user_name" readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;证件号</td>
+					<td><input type="text" id="txt_identitycard"
+						readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;院校名称</td>
+					<td><input type="text" id="txt_graduate"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>毕业年份</td>
+					<td><input type="text" id="txt_graduate_time"
+						readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;学历层次</td>
+					<td><input type="text" id="txt_education_degree" readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;学习形式</td>
+					<td><input type="text" id="txt_education_approach"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>毕业结论</td>
+					<td><input type="text" id="txt_study_result"
+						readonly="readonly" /></td>
+					<td colspan="4"></td>
+				</tr>
+			</table>
+				<p align="center">
+					<a href='javascript:showDetail("education");'>查看详情</a>
+				</p>
+			</fieldset>
+		</div>
+		<div id = "bx_verhicle_info_area">
+		  <fieldset style="font-size: 12px">
+			<legend>
+				<span id="F">车辆核查信息</span>
+			</legend>
+			<form id="bx_verhicle_info_form">
+				<table>
+					<tr>
+						<td>查询结果:<input name="queryResult" style="width: 254px"
+							type="text" readonly="readonly" />
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;车龄判定范围:<input name="vehicleAgeRange"
+							style="width: 221px" type="text" readonly="readonly" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">非营业个人车辆风险价值: <input name="vehicleValue"
+							style="width: 479px" type="text" readonly="readonly" />
+						</td>
+					</tr>
+				</table>
+				<p align="center">
+						<a href='javascript:showDetail("verhicle");'>查看详情</a>
+				</p>
+			</form>
+		  </fieldset>
+		</div>
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span id="G">天御摘要信息</span>
+			</legend>
+			<form id="tianYuSummaryinfoForm">
+				<table>
+					<tr>
+						<td>查询结果: <input name="queryResult" style="width: 230px"
+							type="text" readonly="readonly" />
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;天御分: <input name="riskScore"
+							style="width: 221px" type="text" readonly="readonly" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">风险代码: <input name="riskCodeCombine"
+							style="width: 510px" type="text" readonly="readonly" />
+						</td>
+					</tr>
+				</table>
+			</form>
+		</fieldset>
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span id="H">企业及行业信息</span>
+			</legend>
+			<form id="qiyeinfoForm">
+				<table>
+					<tr>
+						<td>查询结果:</td>
+						<td><input name="code" style="width: 205px" type="text"
+							readonly="readonly" /></td>
+						<td>经营状态:</td>
+						<td><input id="entStatus" name="entstatus"
+							style="width: 229px" type="text" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>企业名称:</td>
+						<td colspan="3"><input name="entname" style="width: 514px"
+							type="text" readonly="readonly" /></td>
+					</tr>
+
+					<tr>
+						<td>法定代表人/负责人/执行事务合伙人:</td>
+						<td colspan="3"><input name="frname" style="width: 514px"
+							type="text" readonly="readonly" /></td>
+
+					</tr>
+					<tr>
+						<td>注册资本(万元):</td>
+						<td><input name="regcap" style="width: 205px" type="text"
+							readonly="readonly" /></td>
+						<td>注册资本币种:</td>
+						<td><input name="regcapcur" style="width: 229px" type="text"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>联系人电话:</td>
+						<td><input name="tel" style="width: 205px" type="text"
+							readonly="readonly" /></td>
+						<td>员工人数:</td>
+						<td><input name="empnum" style="width: 229px" type="text"
+							readonly="readonly" /></td>
+					</tr>
+					<tr>
+
+						<td>企业(机构)类型:</td>
+						<td colspan="3"><input name="enttype" style="width: 514px"
+							type="text" readonly="readonly" /></td>
+					</tr>
+					<tr>
+						<td>住址:</td>
+						<td colspan="3"><input name="dom" style="width: 514px"
+							type="text" readonly="readonly" /></td>
+					</tr>
+				</table>
+				<p align="center">
+					<a href='javascript:showDetail("qiYeinfo");'>查看详情</a>
+				</p>
+			</form>
+		</fieldset>
+		
+		<div id="hzGjjxx">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="N">杭州区域数据</span>
+				</legend>
+				<form id="hzGjjxxForm">
+					<table style="width: 100%">
+						<caption align="top">杭州惠民</caption>
+						<tr>
+							<td>公积金缴存单位：</td>
+							<td><input id="deptName" name="deptName"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td>公积金缴存状态：</td>
+							<td><input id="status" name="status"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>公积金最近缴存年月：</td>
+							<td><input id="payYm" name="payYm" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>公积金个人缴存基数：</td>
+							<td><input id="payBase" name="payBase"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+					<table style="width: 100%">
+						<caption align="top">婚姻信息</caption>
+						<tr>
+							<td width="117px">登记类型：</td>
+							<td align="left"><input id="businesstype" name="businesstype"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("hzgjj");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="txOperatorInfoForm">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="I">通讯运营商摘要信息</span>
+				</legend>
+			<p align="left">
+					入网时长(月):<input name="resultData" type="text" readonly="readonly">
+			</p>
+			</fieldset>
+		</div>
+		<div id="xiaMenYLZ">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="J">厦门易联众社保</span>
+				</legend>
+				<form id="xiaMenYLZSocialSecurity">
+					<table style="width: 100%">
+						<tr>
+							<td>单位名称：</td>
+							<td><input id="companyName"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td>是否在职：</td>
+							<td><input id="isOnJob"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>当前参保状态：</td>
+							<td><input id="insuredStatus" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>还款能力：</td>
+							<td><input id="repaymentAbility"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>当前单位初缴日期：</td>
+							<td><input id="beginPaymentDate" style="width: 205px"
+								type="text" readonly="readonly"/></td>
+							<td>最近一次缴费日期：</td>
+							<td><input id="latestPaymentDate"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>查询状态：</td>
+							<td><input name="queryStatus" 
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="xmPersonalInfo">
+			<fieldset style="font-size: 13px">
+				<legend>
+					<span id="K">厦门公积金数据</span>
+				</legend>
+				<form id="xmPersonalInfoForm">
+					<table style="width: 100%;height: 22px"><!--  border="1" role="2" -->
+						<tr>
+							<td>单位名称：</td>
+							<td><input name="dwmc"  id="dwmc" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>个人账户状态：</td>
+							<td><input name="grzhzt" id="grzhzt"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>初缴日期：</td>
+							<td><input name="cjrq" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>月缴存额：</td>
+							<td><input name="yjce" id="yjce"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>个人缴存比例：</td>
+							<td><input name="grjcbl" id="grjcbl" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>单位缴存比例：</td>
+							<td><input name="dwjcbl" id="dwjcbl"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>缴至日期：</td>
+							<td><input name="jzrq" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>最近一次缴费日期：</td>
+							<td><input name="zjjjrq"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("xminfo");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="shenZhenPYPCR">
+			<fieldset style="font-size: 13px">
+				<legend>
+					<span id="K">深圳鹏元个人社保</span>
+				</legend>
+				<form id="shenZhenPYIndividualSocialSecurity">
+					<table style="width: 100%;height: 22px"><!--  border="1" role="2" -->
+						<tr>
+							<td>当前参保状态：</td>
+							<td><input name="currentStatus" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>信息获取日期：</td>
+							<td><input name="infoDatePCR"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>最近一次缴保单位名称：</td>
+							<td><input name="lastUnitName" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>最近实际费基数：</td>
+							<td><input name="factInsurePay"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>子报告查询状态：</td>
+							<td><input id="treatResult" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>参保单位类型：</td>
+							<td><input name="unitTypePCR"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("pyinfo");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="NbBase">
+			<fieldset style="font-size: 13px">
+				<legend>
+					<span id="NB">宁波社保区域数据</span>
+				</legend>
+				<form id="nbBaseInfo">
+					<table style="width: 100%">
+						<tr>
+							<td>参保单位：</td>
+							<td><input name="cbdw" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>参保状态：</td>
+							<td><input name="cbzt" id="cbzt"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>当前参保单位缴交时间：</td>
+							<td><input name="jfqx" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>参保基数：</td>
+							<td><input name="cbjs"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>最近一次缴费日期：</td>
+							<td><input name="zhycjjsj" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>不良信息：</td>
+							<td><input name="blxx" id="blxx"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("nbbase");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div> 
+		
+		<div id="shenZhenPYPWSL">
+			<fieldset style="font-size: 13px">
+				<legend>
+					<span id="L">深圳鹏元高信分</span>
+				</legend>
+				<form id="shenZhenPYPointsHigher">
+					<table style="width: 100%">
+						<tr>
+							<td>评估结果(分值)：</td>
+							<td><input name="score" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>风险等级：</td>
+							<td><input name="grade"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>标签： </td>
+							<td><textarea name="label" rows="3" cols="2"
+								style="width: 206px" readonly="readonly" ></textarea>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="wzGrGjjzl">
+			<fieldset style="font-size: 13px">
+				<legend>
+					<span id="W">温州区域数据</span>
+				</legend>
+				<form id="wzGrGjjzlForm">
+					<table style="width: 100%">
+						<tr>
+							<td>单位名称：</td>
+							<td><input name="dwmc" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>账户状态：</td>
+							<td><input name="zt"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>缴至年月： </td>
+							<td><input name="ssny"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td>缴存基数： </td>
+							<td><input name="gze"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("wzGjj");'>查看详情</a>
+					</p>
+					
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="ycInfo">
+			<fieldset style="font-size: 13px">
+				<legend>
+					<span id="Y">银川公积金数据</span>
+				</legend>
+				<form id="ycInfoForm">
+					<table style="width: 100%">
+						<tr>
+							<td>单位名称：</td>
+							<td><input name="stdcmpnm" style="width: 205px"
+								type="text" readonly="readonly" /></td>
+							<td>个人账户状态：</td>
+							<td><input name="stdcmpjczt" id="stdcmpjczt" 
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>初缴日期： </td>
+							<td><input name="stdgjjstdt"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td>月缴存额： </td>
+							<td><input name="stdgjjgram" id="stdgjjgram"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>个人缴存比例： </td>
+							<td><input name="stdgjjgrsc" id="stdgjjgrsc"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td>单位缴存比例： </td>
+							<td><input name="stdgjjdwsc" id="stdgjjdwsc"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td>缴至日期： </td>
+							<td><input name="stdgjjendt"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+							<td>最近一次缴费日期： </td>
+							<td><input name="stdgjjltdt"
+								style="width: 205px" type="text" readonly="readonly" /></td>
+						</tr>
+					</table>
+				</form>
+			</fieldset>
+		</div>
+		
+		<div id="unicomAddress">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="M">联通地址信息</span>
+				</legend>
+				<form id="unicomAddressInfoForm">
+					<table>
+						<tr>
+							<td>查询状态: <input id="success" name="success"
+								style="width: 150px" type="text" readonly="readonly" />
+							</td>
+							<td>校验结果: <input id="responseResultDesc" name="responseResultDesc"
+								style="width: 440px" type="text" readonly="readonly" />
+							</td>
+						</tr>
+					</table>
+					<p align="center">
+						<a href='javascript:showDetail("unAddress");'>查看详情</a>
+					</p>
+				</form>
+			</fieldset>
+		</div>
+			
+		<div id="ant_summary_area">
+			<fieldset style="font-size: 12px">
+				<legend>
+					<span id="C">蚂蚁摘要信息</span>
+				</legend>
+				<p align="center">
+					<a href='javascript:showDetail("ant");'>查看详情</a>
+				</p>
+			</fieldset>
+		</div>
+		
+	</div>
+</body>
+<script type="text/javascript">
+	/* function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	} */
+	
+	var url = location.href;
+	var appId = GetQueryString("appId");
+	var userCode = parent.userCode;
+	var ydjFlag = "";
+	var matchingCardFlag="";
+	if (parent.ydjFlag) {
+		ydjFlag = parent.ydjFlag;
+	}
+	matchingCardFlag = parent.matchingCardFlag;
+	if (ydjFlag == "1"&&matchingCardFlag=="1") {
+		var weihao=appId.substring(15,16);
+		if(weihao=="1"){
+			appId = appId.substring(0, 15) + "2";
+		}else{
+			appId = appId.substring(0, 15) + "1";
+		}
+	}
+	$(function() {
+		//	alert("gaohuiappId"+appId);
+		// 初始化页面样式
+		//fnInitStyle(sid);
+		// 获取申请件信息
+		//var appId = GetQueryString("appId");
+		/* var parent = window.parent;
+		//var appId = parent.applyId.value;
+		var appId = "1523241990021511"; */
+		if (appId != '') {
+			appId = $.trim(appId);
+		}
+		// 加载人行摘要信息
+		fnLoadPBOC(appId);
+
+		// 加载二代人行摘要信息
+		fnLoadBANK(appId);
+		
+		// 加载公安摘要信息
+		fnLoadPolice(appId,'0');
+		// 加载附属卡公安摘要信息
+		fnLoadPoliceF(appId,'1');
+		// 加载百融摘要信息
+		fnLoadCredit100(appId);//'1512241611P10141'
+		// 加载学历摘要信息
+		fnLoadEducation(appId);//'1234567891234565'
+		//加载蚂蚁摘要信息
+		fnLoadAnt(appId);//'1601240945P00101'
+		//	var imageZxSpBzkSrc="/app/opas/police/"+$("#txt_identity_no").val()+".jpg";//身份证号为依据查 图片的路径 
+		//加载 腾讯天御分 
+		fnLoadTianYuSummary(appId);
+		//加载企业行业信息
+		fnLoadQiye(appId);
+		//联通地址类信息
+		fnLoadUnicomAddress(appId);
+		//加载通讯运营商信息
+		fnLoadTxOperator(appId);
+		//加载厦门易联众社保
+		fnLoadYLZSecurity(appId);
+		//加载深圳鹏元个人社保
+		fnLoadPYPCR(appId);
+		//加载深圳鹏元高信分 
+		fnLoadPYPWSL(appId);
+		//加载宝信车辆信息
+		fnLoadBxVehicle(appId);
+		//加载杭州公积金信息
+		fnLoadHzGjjxx(appId);
+		//厦门
+		fnLoadXMPersonal(appId);
+		fnLoadSfrzBaseData(appId);
+		//宁波社保
+		fnLoadNbBase(appId);
+		//温州区域数据wz_gr_gjjzl
+		fnLoadWzGrGjjzl(appId);
+		//银川公积金数据yc_info
+		fnLoadYcInfo(appId);
+	});
+</script>
+</html>

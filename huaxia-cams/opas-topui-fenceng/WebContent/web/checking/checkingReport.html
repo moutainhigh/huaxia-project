@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<div id="reportTypeCondition" style="padding: 10px; text-align: center";>
+		<form id="reportTypeForm">
+ 		<br><br><br>
+ 		<div align='center'><label>选择时间</label>
+ 		<input id="startDate" name="startDate" class="easyui-datebox" style="width:150px;" 
+ 			data-options="required:true"/> -
+ 		<input id="endDate" name="endDate" class="easyui-datebox" style="width:150px;"
+ 			data-options="required:true"/>
+ 		</div>
+		  <br><br><br>
+		质检报表下载:
+		<input id="fileName" class="alsptwo" name="fileName" readonly='readonly'  style='width:350px;border:0px;font-style: italic;'></input>
+	 	<a href="javascript:void(0)" onclick="downloadCheckingReport()">下载</a>
+	 	</form>
+	</div>
+</body>
+<script type="text/javascript">
+	var reportTypeForm = $("#reportTypeForm");
+	function downloadCheckingReport(){
+		var jsondata = getFormData(reportTypeForm.serializeArray());
+		var startDate = jsondata.startDate;
+		var endDate = jsondata.endDate;
+		
+		if((startDate==null||startDate=="")||(endDate==null||endDate=="")){
+			alert("所选日期不能为空！");
+			return;
+		}
+		
+		//时间间隔判断
+		var sDate = new Date(startDate);
+		var eDate = new Date(endDate);
+ 		var flag = false;
+		if (eDate.getFullYear() - sDate.getFullYear()>1){
+			flag = true;
+		}else if (eDate.getFullYear() - sDate.getFullYear()==0){
+			if(eDate.getMonth() - sDate.getMonth()>1){
+				flag = true;
+			}else if(eDate.getMonth()-sDate.getMonth()==1){
+				if(eDate.getDate()-sDate.getDate()>=1){
+					flag = true;
+				}
+			}
+		} else if(eDate.getFullYear()-sDate.getFullYear()==1){
+			if(eDate.getMonth()+12 - sDate.getMonth()>1){
+				flag = true;
+			}else if(eDate.getDate()-sDate.getDate()>=1){
+				flag = true;
+			}
+		}
+		if(flag){
+			alert('质检报表时间段间隔必须一个月以内');
+			return;
+		}
+		
+		var fileName = startDate + " ~ " +endDate +".xls"
+		$("#fileName").val(fileName);
+		location.href = "/opas-naps/common/QualityCheckingDownServlet.json?startDate="+startDate+"&endDate="+endDate
+				+"&fileName="+fileName;
+	}
+	
+	//获取表单数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+</script>

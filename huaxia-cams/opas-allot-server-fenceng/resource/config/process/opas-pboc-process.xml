@@ -1,0 +1,275 @@
+<x:beans xmlns:x="http://www.springframework.org/schema/beans"
+	xmlns="http://www.huateng.com/schema/ics-core" xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.huateng.com/schema/ics-core http://www.huateng.com/schema/ics-core.xsd">
+
+	<!-- 规则层级配置页面 -->
+	<process id="queryMappingRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="queryMappingRule"></action>
+		</actions>
+	</process>
+	<process id="saveMappingRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="saveMappingRule"></action>
+		</actions>
+	</process>
+	<process id="updateMappingRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="updateMappingRule"></action>
+		</actions>
+	</process>
+	<process id="delMappingRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="delMappingRule"></action>
+		</actions>
+	</process>
+	<process id="queryAllotTime" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="queryAllotTime"></action>
+		</actions>
+	</process>
+	<process id="saveAllotTime" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="saveAllotTime"></action>
+		</actions>
+	</process>
+	<process id="updateAllotTime" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="updateAllotTime"></action>
+		</actions>
+	</process>
+	<process id="delAllotTime" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="delAllotTime"></action>
+		</actions>
+	</process>
+	<!-- 规则页面 -->
+	<process id="queryAllotRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="queryAllotRule"></action>
+		</actions>
+	</process>
+	<process id="saveAllotRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="saveAllotRule"></action>
+		</actions>
+	</process>
+	<process id="updateAllotRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="updateAllotRule"></action>
+		</actions>
+	</process>
+	<process id="delAllotRule" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="delAllotRule"></action>
+		</actions>
+	</process>
+	<process id="saveAutoNumber" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="saveAutoNumber"></action>
+		</actions>
+	</process>
+	<!-- 队列  增删改查 -->
+	<process id="queryCreditDict" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="queryCreditDict"></action>
+		</actions>
+	</process>
+	<process id="queryAllotQueue" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="queryAllotQueue"></action>
+		</actions>
+	</process>
+	<process id="saveAllotQueue" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="saveAllotQueue"></action>
+		</actions>
+	</process>
+	<process id="updateAllotQueue" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="updateAllotQueue"></action>
+		</actions>
+	</process>
+	<process id="delAllotQueue" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="delAllotQueue"></action>
+		</actions>
+	</process>
+	<!-- 自动开关保存或取消 -->
+	 <process id="saveOrUpdateSwitch" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="switchAction" operations="saveOrUpdateSwitch"></action>
+		</actions>
+	</process> 
+	<!-- 查询 -->
+	 <process id="queryAllotSwitch" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="switchAction" operations="queryAllotSwitch"></action>
+		</actions>
+	</process> 
+	<!-- 检测批量提交开关方法-wenyh -->
+	<process id="checkBatchSwitch" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="switchAction" operations="checkBatchSwitch"></action>
+		</actions>
+	</process>
+	<!--手动分件 池  队列 组  待分配件查询-->
+	<process id="countAppId" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="countAppId"></action>
+		</actions>
+	</process> 
+	<process id="countQueueApply" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="countQueueApply"></action>
+		</actions>
+	</process>
+	<process id="countGroupApply" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="countGroupApply"></action>
+		</actions>
+	</process> 
+	<process id="countTodayApp" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="countTodayApp"></action>
+		</actions>
+	</process> 
+	<!--手动分件 分件  -->
+	<process id="queryAppByConditions" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="queryAppByConditions"></action>
+		</actions>
+	</process>
+	<process id="shareAppByConditions" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="shareAppByConditions"></action>
+		</actions>
+	</process>
+	<!-- 手动分件到队列或组 组员 -->
+	<process id="handQueueOrGroup" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="handQueueOrGroup"></action>
+		</actions>
+	</process> 
+	<!-- 队列 及组 组员展示 -->
+	<process id="showAllotQueue" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="showAllotQueue"></action>
+		</actions>
+	</process> 
+	<process id="showAllotGroup" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="showAllotGroup"></action>
+		</actions>
+	</process> 
+	<process id="showAllotUser" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="showAllotUser"></action>
+		</actions>
+	</process> 
+	<!-- 团办号 推广机构  推广人员  查询 -->
+	<process id="findC4Batch" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="findC4Batch"></action>
+		</actions>
+	</process>
+	<process id="findC5JCType" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="findC5JCType"></action>
+		</actions>
+	</process>
+	<process id="findC5AbCode" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="findC5AbCode"></action>
+		</actions>
+	</process>
+	<process id="findC4AbUser" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="findC4AbUser"></action>
+		</actions>
+	</process>
+	<!-- 审查 征信  审批 批量 -->
+	<process id="batchFico" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="batchFico"></action>
+		</actions>
+	</process> 
+	<!-- 转移 -->
+	<process id="transferApply" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="transferAction" operations="transferApply"></action>
+		</actions>
+	</process> 
+	<!-- 回收 -->
+	 <process id="recoveryApply" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="transferAction" operations="recoveryApply"></action>
+		</actions>
+	</process> 
+	<!-- 转移、回收数量查询 -->
+	<process id="fnChaXunId" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="transferAction" operations="fnChaXunId"></action>
+		</actions>
+	</process> 
+	<!-- 挂起  解挂  全局 备注 -->
+	 <process id="handUp" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotCommonAction" operations="handUp"></action>
+		</actions>
+	</process> 
+	<process id="release" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotCommonAction" operations="release"></action>
+		</actions>
+	</process>
+	<process id="remark" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotCommonAction" operations="remark"></action>
+		</actions>
+	</process>
+	<process id="update_autoStatus" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotCommonAction" operations="updateAutoStatus"></action>
+		</actions>
+	</process>
+	<!-- 批量隐藏 -->
+	<process id="batchUpdateSynFlag" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="allotHandAction" operations="batchUpdateSynFlag"></action>
+		</actions>
+	</process> 
+	<!-- 自动分件查询-->
+	<process id="countAutoApp" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="autoAction" operations="countAutoApp"></action>
+		</actions>
+	</process> 
+	<!-- 根据条件查询征信规则分配数量方法-wenyh -->
+	<process id="queryCreditRuleAllotNumber" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="ruleAction" operations="queryCreditRuleAllotNumber"></action>
+		</actions>
+	</process> 
+	<!-- 待进入人工列表查询-wenyh-start -->
+	<process id="queryListDataByShareTime" template="queryTran" interceptors="defaultInterceptors">
+		<actions>
+			<action id="action" ref="waitingEnterAction" operations="queryListDataByShareTime" />
+		</actions>
+	</process>
+	<process id="countAppIdByShareTime" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="waitingEnterAction" operations="countAppIdByShareTime"></action>
+		</actions>
+	</process>
+	<process id="countAppIdByYdjFlag" template="queryTran" interceptors="defaultInterceptors" >
+		<actions>
+			<action id="action" ref="waitingEnterAction" operations="countAppIdByYdjFlag"></action>
+		</actions>
+	</process>
+	<!-- 待进入人工列表查询-wenyh-end -->
+	
+</x:beans>
+    

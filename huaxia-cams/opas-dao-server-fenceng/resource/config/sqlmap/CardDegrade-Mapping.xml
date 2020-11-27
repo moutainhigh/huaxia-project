@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--卡产品降级数据库处理-->
+<!-- @author liudi -->
+<mapper namespace="CardDegrade">
+
+	<resultMap id="CardDegradeResultMap" type="com.huaxia.opas.domain.sysparm.CardDegrade">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CARD_CODE" property="cardCode" jdbcType="VARCHAR" />
+		<result column="CARD_NAME" property="cardName" jdbcType="VARCHAR" />
+		<result column="DEGRADE_CARDNO" property="degradeCardNo" jdbcType="VARCHAR" />
+		<result column="DEGRADE_CARDNAME" property="degradeCardName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+	<resultMap id="ProductCodeResultMap" type="com.huaxia.opas.domain.sysparm.ProductCode">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CARD_CODE" property="productCode" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="productName" jdbcType="VARCHAR" />
+	</resultMap> 
+	
+<!--添加状态为Start-->
+	<insert id="insertCardDegrade1" parameterType="com.huaxia.opas.domain.sysparm.CardDegrade">
+		insert into
+		OPAS_CARD_DEGRADE_PARAM
+		(AUTO_ID,CARD_CODE,CARD_NAME,DEGRADE_CARDNO,DEGRADE_CARDNAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{cardCode,jdbcType=VARCHAR},
+		#{cardName,jdbcType=VARCHAR},
+		#{degradeCardNo,jdbcType=VARCHAR},
+		#{degradeCardName,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+<!--添加状态为End-->
+	<insert id="insertCardDegrade2" parameterType="com.huaxia.opas.domain.sysparm.CardDegrade">
+		insert into
+		OPAS_CARD_DEGRADE_PARAM
+		(AUTO_ID,CARD_CODE,CARD_NAME,DEGRADE_CARDNO,DEGRADE_CARDNAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{cardCode,jdbcType=VARCHAR},
+		#{cardName,jdbcType=VARCHAR},
+		#{degradeCardNo,jdbcType=VARCHAR},
+		#{degradeCardName,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+<!--删除-->
+	<delete id="deleteCardDegradeById" parameterType="java.lang.String">
+		delete from
+		OPAS_CARD_DEGRADE_PARAM
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+<!--修改-->
+	<update id="updateCardDegrade" parameterType="com.huaxia.opas.domain.sysparm.CardDegrade">
+		update OPAS_CARD_DEGRADE_PARAM
+		<set>
+			CARD_NAME = #{cardName,jdbcType=VARCHAR},
+			DEGRADE_CARDNAME = #{degradeCardName,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!--卡产品降级件数查询-->
+	<select id="queryCardDegradeCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_CARD_DEGRADE_PARAM
+		<where>
+			<if test="cardCode != null and cardCode !='' ">
+				AND CARD_CODE LIKE '%${cardCode}%'
+			</if>
+			<if test="cardName != null and cardName !='' ">
+				AND CARD_NAME LIKE '%${cardName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+	
+<!--卡产品件数查询-->
+	<select id="queryProductCodeCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE LIKE '%${productCode}%'
+			</if>
+			<if test="productName != null and productName !='' ">
+				AND PROD_NAME LIKE '%${productName}%'
+			</if>
+		</where>
+	</select>
+	
+<!--卡产品降级信息查询-->
+	<select id="queryCardDegrade1" parameterType="com.huaxia.opas.domain.sysparm.CardDegrade"
+		resultMap="CardDegradeResultMap">
+		select
+		AUTO_ID,CARD_CODE,CARD_NAME,DEGRADE_CARDNO,DEGRADE_CARDNAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_CARD_DEGRADE_PARAM
+		<where>
+			<if test="cardCode != null and cardCode !='' ">
+				AND CARD_CODE LIKE '%${cardCode}%'
+			</if>
+			<if test="cardName != null and cardName !='' ">
+				AND CARD_NAME LIKE '%${cardName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by CARD_CODE
+	</select>
+
+<!--点击查询后，触发卡产品降级信息查询和排序功能-->
+	<select id="queryCardDegrade2" parameterType="java.util.Map"
+		resultMap="CardDegradeResultMap">
+		select
+		AUTO_ID,CARD_CODE,CARD_NAME,DEGRADE_CARDNO,DEGRADE_CARDNAME,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE 
+		from OPAS_CARD_DEGRADE_PARAM
+		<where>
+			<if test="cardCode != null and cardCode !='' ">
+				AND CARD_CODE LIKE '%${cardCode}%'
+			</if>
+			<if test="cardName != null and cardName !='' ">
+				AND CARD_NAME LIKE '%${cardName}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CARD_CODE
+		</if>
+	</select>
+	
+<!-- 卡产品详细信息查询 -->
+	<select id="queryProductCode" parameterType="com.huaxia.opas.domain.sysparm.ProductCode"
+		resultMap="ProductCodeResultMap">
+		select
+		AUTO_ID,CARD_CODE,PROD_NAME
+		from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE LIKE '%${productCode}%'
+			</if>
+			<if test="productName != null and productName !='' ">
+				AND PROD_NAME LIKE '%${productName}%'
+			</if>
+		</where>
+	</select>
+
+<!--查询卡产品信息和卡产品降级信息是否重复-->
+	<select id="queryCardDegrade3" parameterType="com.huaxia.opas.domain.sysparm.CardDegrade"
+		resultMap="CardDegradeResultMap">
+		select
+		CARD_CODE,DEGRADE_CARDNO
+		from OPAS_CARD_DEGRADE_PARAM
+		<where>
+			<if test="cardCode != null and cardCode !='' ">
+				AND CARD_CODE = #{cardCode}
+			</if>
+			<if test="degradeCardNo != null and degradeCardNo !='' ">
+				AND DEGRADE_CARDNO = #{degradeCardNo}
+			</if>
+		</where>
+	</select>
+	
+	<!--查询卡产品信息以及该卡的降级产品 by xzg-->
+	<select id="queryCardDegradeAndDegreeCard" parameterType="java.lang.String"
+		resultMap="CardDegradeResultMap">
+		select AUTO_ID,
+		               CARD_CODE,
+		               CARD_NAME,
+		               DEGRADE_CARDNO,
+		               DEGRADE_CARDNAME,
+		               STATUS,
+		               START_DATE,
+		               STOP_DATE,
+		               CRT_USER,
+		               CRT_DATE,
+		               LST_UPD_USER,
+		               LST_UPD_DATE
+         from OPAS_CARD_DEGRADE_PARAM
+         start with card_code = #{cardCode} and STATUS = '1'
+         connect by card_code = prior degrade_cardno
+	</select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.pboc.mapper.HistoryQueryMapper">
+
+	<resultMap id="result_Base" type="HistoryQuery">
+		<result column="REPORT_NO" property="reportNo" jdbcType="VARCHAR" />
+		<result column="REPORT_TIME" property="reportTime" jdbcType="VARCHAR" />
+		<result column="IDENTITY_CARD_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="REVIEW_TIME" property="queryTime" jdbcType="VARCHAR" />
+		<result column="UNIQUE_RELID" property="uniqueId" jdbcType="VARCHAR" />
+	
+	</resultMap>
+
+    
+	<!-- 分页总数 -->
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM BANK_REPORT_MARK_INFO 
+		<where>
+        	<if test="certNo != null">
+        		 IDENTITY_CARD_NO = #{certNo} 
+        	</if>
+        </where>
+	
+	</select>
+	<!-- 分页记录-->
+	<select id="selectListByPage" parameterType="java.util.Map"
+	resultMap="result_Base">
+	SELECT UNIQUE_RELID,REPORT_NO,REPORT_TIME,IDENTITY_CARD_NO,REVIEW_TIME,RN FROM
+	(SELECT UNIQUE_RELID,REPORT_NO,REPORT_TIME,IDENTITY_CARD_NO,REVIEW_TIME,ROWNUM RN FROM
+	(SELECT 
+	B.UNIQUE_RELID,
+	B.REPORT_NO,
+	B.REPORT_TIME,
+	B.IDENTITY_CARD_NO,
+	T.REVIEW_TIME
+	FROM
+	BANK_REPORT_MARK_INFO  B
+	LEFT JOIN PBOC_TRN_SINGLE_REVIEW T
+	ON B.UNIQUE_RELID = T.TRN_ID
+	<where>
+      	<if test="certNo != null">
+      		 B.IDENTITY_CARD_NO = #{certNo}
+      	</if>
+     </where>
+	ORDER BY 
+	B.REPORT_TIME DESC
+    ) A
+	WHERE ROWNUM <![CDATA[ <= ]]>
+	#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+	(#{pageNo} - 1) * #{pageSize}
+
+   </select>
+
+</mapper>

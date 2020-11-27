@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblArchiveBatch" class="easyui-datagrid" title="归档批次信息列表"
+		style="width: 98%"
+		data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/archive_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#arBatchCondion'">
+		<thead>
+			<tr>
+				<th field="fileId" width="10%" align="center" checkbox="true">记录Id</th>
+				<th field="operate" width="20%" align="center" data-options="formatter:formatOper">操作</th>
+				<th field="fileNo" width="40%" >归档编号</th>
+				<th field="fileApp" width="20%">归档件数</th>
+				<th field="fileOperator" width="10%" align="center">归档员</th>
+				<th field="fileTime" width="25%" align="center" formatter="gridDateFormat2">归档时间</th>	
+			</tr>
+		</thead>
+	</table>
+	<div id="arBatchCondion" style="padding: 10px; text-align: center;">
+		<form id="seachBatchForm">
+			归档编号: <input class="easyui-textbox" style="width: 200px" name="fileNo" id="fileNo"> 
+			归档日期: <input class="easyui-datebox" style="width: 110px" name="fileTime" id="fileTime" formatter="formatDate">
+			<a href="javascript:common.searchTbl('seachBatchForm','tblArchiveBatch');" class="easyui-linkbutton" iconCls="icon-search">查询</a>&nbsp;
+		</form>
+	</div>
+
+	<div id="detailWin" class="easyui-window" title="" style="width: 900px; height: 600px;" data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="detailTitleForm">
+			<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>归档编号:</td>
+					<td><input class="easyui-validatebox textbox" id="fileNo_detail" type="text"  style="background:#CCCCCC" readonly="readonly" ></input> </td>
+				
+					<td>归档员:</td>
+					<td><input class="easyui-validatebox textbox" id="fileOperator_detail" type="text" style="background:#CCCCCC" readonly="readonly" name="fileOperator"></input></td>
+				
+					<td>归档时间:</td>
+					<td>
+					<input class="easyui-validatebox textbox" id="fileTime_detail" type="text" style="width: 200px;background:#CCCCCC" readonly="readonly" name="fileTime"></input>
+					</td>
+				</tr>
+			</table>
+		</form>
+		
+		
+		
+		<!-- <div class="easyui-layout" data-options="fit:true"> -->
+			<!-- <div data-options="region:'center'"> -->
+				<table id="tblDetail" class="easyui-datagrid"
+					data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#detailsCondion'">
+					<thead>
+						<tr>
+							<th field="appId" width="25%" >流水号</th>
+							<th field="custName" width="20%">客户姓名</th>
+							<th field="credNo" width="20%" align="center">证件号码</th>
+							<th field="spreadorganCode" width="20%" align="center">推广机构代码</th>
+							<th field="appResult" width="15%" align="center" formatter="formatResult">审批结论</th>
+						</tr>
+					</thead>
+				</table>
+				<div id="detailsCondion" style="padding: 2px 5px;">
+					<form id="seachDetailForm">
+						 申请书流水号: <input class="easyui-textbox"  style="width: 110px" name="appId" id="appId"> 
+						 客户姓名: <input class="easyui-textbox" style="width: 110px" name="custName" id="custName">
+						 证件号: <input class="easyui-textbox" style="width: 110px" name="credNo" id="credNo">
+						<a href="javascript:common.searchTbl('seachDetailForm','tblDetail');" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+						<br>
+				 		推广机构代码: <input class="easyui-textbox" style="width: 110px" name="spreadorganCode" id="spreadorganCode">
+				 		审批结论: <select class="easyui-combobox" style="width: 110px" name="appResult" id="appResult">
+				 			<option value="">--请选择--</option>
+							<option value="0">批准</option>
+							<option value="1">拒绝</option>
+							</select>
+						<input type="hidden" name="fileNo" id="fileNo"/>
+					</form>
+				</div>
+			<!-- </div> -->
+		<!-- </div> -->
+		
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('detailWin')">返 &nbsp;&nbsp;回</a>
+		</div>
+	</div>
+
+
+</body>
+<script>
+var detailTitleForm = $("#detailTitleForm");
+var tblArchiveBatch = $("#tblArchiveBatch");
+	//查看明细
+	function formatOper(val, row, index) {
+		
+		/* return "<a name='detailQuery' href=javascript:common.openWinTbl('detailWin','tblArchiveBatch','tblDetail','/opas-manual-authorize/arDetails_list.json','fileNo');>查看明细</a>"; */
+		return "<a name='detailQuery' href=javascript:openWinTbl('detailWin','tblArchiveBatch','tblDetail','/opas-naps/arDetails_list.json','fileNo');>查看明细</a>";
+	}
+	
+	function formatResult(val, row, index) {
+		if (val == "0") {
+			return "批准";
+		} else if (val == "1") {
+			return "拒绝";
+		} else {
+			return val;
+		}
+	}
+
+	function setData() {
+		tblArchiveBatch.datagrid("reload");
+		var archiveObj = tblArchiveBatch.datagrid("getSelected");
+		archiveObj.fileTime = dateFormat(archiveObj.fileTime);  
+		
+		/* detailTitleForm.form("load", archiveObj); */
+		$('#fileNo_detail').val(archiveObj.fileNo);
+		$('#fileOperator_detail').val(archiveObj.fileOperator);
+		$('#fileTime_detail').val(archiveObj.fileTime);
+		$('#fileNo_con').val(archiveObj.fileNo);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled"); 
+	}
+	
+	
+	/**
+	 * 弹出框打开并给参数赋值
+	 * @param winName 窗体名称
+	 * @param tblName 表格名称
+	 * @param tarTblName 子表格名称
+	 * @param tarUrl 请求url
+	 * @param tarParam 隐藏域
+	 */
+	openWinTbl = function(winName, tblName, tarTblName, tarUrl, tarParam) {
+		setData(); 
+		var tblObj = $("#" + tblName + "");
+		var tblDetail = $("#" + tarTblName + "");
+		winObj = $("#" + winName + "");
+		var row = tblObj.datagrid("getSelected");
+		var fileNo = row.fileNo;
+		var paramObj = document.getElementsByName(tarParam);
+		for (var i = 0; i < paramObj.length; i++) {
+			paramObj[i].value = fileNo;
+		}
+		winObj.window({
+			closed : false
+		});
+		var quryParam = {};
+		quryParam[tarParam] = fileNo;
+		tblDetail.datagrid({
+			url : tarUrl,
+			queryParams : quryParam
+		});
+	}
+
+	//格式化CST格式时间字符串
+	function dateFormat(strDate) {   
+	  if(null==strDate || ""==strDate){  
+	      return "";  
+	  }  
+	  var dateStr=strDate.trim().split(" ");  
+	  var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	  var date = new Date(Date.parse(strGMT));  
+	  var y = date.getFullYear();  
+	  var m = date.getMonth() + 1;    
+	  m = m < 10 ? ('0' + m) : m;  
+	  var d = date.getDate();    
+	  d = d < 10 ? ('0' + d) : d;  
+	  var h = date.getHours();  
+	  h = h < 10 ? ('0' + h) : h;  
+	  var minute = date.getMinutes();    
+	  minute = minute < 10 ? ('0' + minute) : minute;  
+	  var second = date.getSeconds();  
+	  second = second < 10 ? ('0' + second) : second;  
+	    
+	  return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	};  
+	
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+</script>
+</html>

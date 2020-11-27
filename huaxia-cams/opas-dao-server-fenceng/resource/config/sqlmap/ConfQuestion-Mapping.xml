@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="ConfQuestion">
+
+	<resultMap id="ConfQuestionResultMap" type="com.huaxia.opas.domain.sysparm.ConfQuestion">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="QUESTION_LEVEL" property="questionLevel"
+			jdbcType="VARCHAR" />
+		<result column="QUESTION_DESC" property="questionDesc"
+			jdbcType="VARCHAR" />
+		<result column="FROM_TABLE_DESC" property="fromTableDesc"
+			jdbcType="VARCHAR" />
+		<result column="FROM_FIELD_DESC" property="fromFelDesc"
+			jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="USER_FLAG" property="userFlag" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+
+	</resultMap>
+
+	<!-- 添加 -->
+	<insert id="insertConfQuestion" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion">
+		insert into
+		OPAS_CONF_QUESTION (
+		AUTO_ID,
+		QUESTION_LEVEL,
+		QUESTION_DESC,
+		FROM_TABLE_DESC,
+		FROM_FIELD_DESC,
+		CRT_DATE,
+		CRT_USER,
+		LST_UPD_TIME,
+		LST_UPD_USER,
+		USER_FLAG,
+		STATUS)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{questionLevel,jdbcType=VARCHAR},
+		#{questionDesc,jdbcType=VARCHAR},
+		#{fromTableDesc,jdbcType=VARCHAR},
+		#{fromFelDesc,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{crtUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		#{userFlag,jdbcType=CHAR},
+		#{status,jdbcType=CHAR}
+		)
+	</insert>
+
+	<!--删除 -->
+	<delete id="deleteConfQuestion" parameterType="java.util.List">
+		delete from OPAS_CONF_QUESTION
+		where AUTO_ID in
+		<foreach collection="list" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<!-- 修改 -->
+	<update id="updateConfQuestion" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion">
+		update OPAS_CONF_QUESTION
+		<set>
+			QUESTION_LEVEL = #{questionLevel,jdbcType=VARCHAR},
+			QUESTION_DESC = #{questionDesc,jdbcType=VARCHAR},
+			FROM_TABLE_DESC = #{fromTableDesc,jdbcType=VARCHAR},
+			FROM_FIELD_DESC = #{fromFelDesc,jdbcType=VARCHAR},
+			LST_UPD_TIME = CURRENT_DATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			USER_FLAG = #{userFlag,jdbcType=CHAR},
+			STATUS = #{status,jdbcType=CHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 查询 -->
+	<select id="queryConfQuestionForList" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion"
+		resultMap="ConfQuestionResultMap">
+		select AUTO_ID,
+			   STATUS,
+			   USER_FLAG,
+			   QUESTION_LEVEL,
+			   QUESTION_DESC,
+			   CRT_DATE,
+			   CRT_USER,
+			   LST_UPD_TIME,
+			   LST_UPD_USER,
+			   FROM_TABLE_DESC,
+			   FROM_FIELD_DESC
+		from OPAS_CONF_QUESTION 
+		where AUTO_ID is not null 
+			<if test="questionLevel != '' and questionLevel != null">
+				AND QUESTION_LEVEL LIKE '%${questionLevel}%'
+			</if>
+			<if test="fromTableDesc != '' and fromTableDesc != null">
+				AND FROM_TABLE_DESC LIKE '%${fromTableDesc}%'
+			</if>
+			<if test="crtDate != '' and crtDate != null">
+				 AND 
+					(   CRT_DATE 
+						BETWEEN 
+						#{crtDate}
+						AND
+						(select #{crtDate} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="userFlag != '' and userFlag != null">
+				AND USER_FLAG LIKE '%${userFlag}%'
+			</if>
+			<if test="fromFelDesc != '' and fromFelDesc != null">
+				AND FROM_FIELD_DESC LIKE '%${fromFelDesc}%'
+			</if>
+				<if test="questionDesc != '' and questionDesc != null">
+				AND QUESTION_DESC LIKE '%${questionDesc}%'
+			</if>
+		order by CRT_DATE desc
+	</select>
+
+	<select id="queryConfQuestionCount" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion"
+		resultType="java.lang.Integer">
+		select count(1) 
+		from OPAS_CONF_QUESTION
+		  where AUTO_ID is not null 
+			<if test="questionLevel != '' and questionLevel != null">
+				AND QUESTION_LEVEL LIKE '%${questionLevel}%'
+			</if>
+			<if test="fromTableDesc != '' and fromTableDesc != null">
+				AND FROM_TABLE_DESC LIKE '%${fromTableDesc}%'
+			</if>
+			<if test="crtDate != '' and crtDate != null">
+				 AND 
+					(   CRT_DATE 
+						BETWEEN 
+						#{crtDate}
+						AND
+						(select #{crtDate} + (INTERVAL '23:59:59'hour to second) from dual)
+					)			 
+			</if>
+			<if test="userFlag != '' and userFlag != null">
+				AND USER_FLAG LIKE '%${userFlag}%'
+			</if>
+			<if test="fromFelDesc != '' and fromFelDesc != null">
+				AND FROM_FIELD_DESC LIKE '%${fromFelDesc}%'
+			</if>
+			<if test="questionDesc != '' and questionDesc != null">
+				AND QUESTION_DESC LIKE '%${questionDesc}%'
+			</if>
+		
+	</select>
+
+	<!-- 批量启用 -->
+	<update id="confQuestionsetStatusOK" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion">
+		update OPAS_CONF_QUESTION
+		<set>
+			STATUS = '1',
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_TIME = SYSDATE
+		</set>
+		where AUTO_ID in
+		<foreach collection="ids" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<!-- 批量禁用 -->
+	<update id="confQuestionsetStatusNO" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion">
+		update OPAS_CONF_QUESTION
+		<set>
+			STATUS = '0',
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_TIME = SYSDATE
+		</set>
+		where AUTO_ID in
+		<foreach collection="ids" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+		
+	<!-- 上传 -->
+	<insert id="insertConfQuestionList" parameterType="java.util.List">
+		insert into OPAS_CONF_QUESTION (
+		AUTO_ID,
+		USER_FLAG,
+		QUESTION_LEVEL,
+		QUESTION_DESC,
+		STATUS,
+		FROM_TABLE_DESC,
+		FROM_FIELD_DESC,
+		CRT_USER,
+		CRT_DATE)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.userFlag,jdbcType=CHAR},
+			#{item.questionLevel,jdbcType=VARCHAR},
+			#{item.questionDesc,jdbcType=VARCHAR},
+			#{item.status,jdbcType=CHAR},
+			#{item.fromTableDesc,jdbcType=VARCHAR},
+			#{item.fromFelDesc,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR},
+			CURRENT_DATE
+			from dual)
+		</foreach>
+	</insert>
+	
+	<!-- 查询历史记录 -->
+	<select id="queryConfQuestionHistoryCount" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion"
+		resultType="java.lang.Integer">
+		select count(1) 
+		from OPAS_CONF_QUESTION_HISTORY t1
+		where t1.AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryConfQuestionHistoryList" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion"
+		resultMap="ConfQuestionResultMap">
+		select t1.HISTORY_ID,
+			   t1.AUTO_ID,
+			   t1.STATUS,
+			   t1.USER_FLAG,
+			   t1.QUESTION_LEVEL,
+			   t1.QUESTION_DESC,
+			   t1.FROM_TABLE_DESC,
+			   t1.FROM_FIELD_DESC,
+			   t1.CRT_DATE,
+			   t1.CRT_USER,
+			   t1.LST_UPD_TIME,
+			   t1.LST_UPD_USER
+		from OPAS_CONF_QUESTION_HISTORY t1
+		where t1.AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		order by LST_UPD_TIME desc
+	</select>
+	
+	<!-- 添加历史修改记录表 -->
+	<insert id="insertConfQuestionHistoryList" parameterType="java.util.List">
+		insert into OPAS_CONF_QUESTION_HISTORY 
+	 	(HISTORY_ID,
+	 	AUTO_ID,
+	 	QUESTION_LEVEL,
+	 	QUESTION_DESC,
+	 	FROM_TABLE_DESC,
+	 	FROM_FIELD_DESC,
+	 	CRT_DATE,
+	 	CRT_USER,
+	 	LST_UPD_TIME,
+	 	LST_UPD_USER,
+	 	USER_FLAG,
+	 	STATUS) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+				(SELECT
+			 		#{item.historyId,jdbcType=VARCHAR},	    
+					#{item.autoId,jdbcType=VARCHAR},
+					#{item.questionLevel,jdbcType=VARCHAR},
+					#{item.questionDesc,jdbcType=VARCHAR},
+					#{item.fromTableDesc,jdbcType=VARCHAR},
+					#{item.fromFelDesc,jdbcType=VARCHAR},
+					#{item.crtDate,jdbcType=TIMESTAMP},
+					#{item.crtUser,jdbcType=VARCHAR},
+					CURRENT_DATE,
+					#{item.lstUpdUser,jdbcType=VARCHAR},
+					#{item.userFlag,jdbcType=CHAR},
+					#{item.status,jdbcType=CHAR}
+				FROM dual)
+		</foreach>
+	</insert>
+	
+	<!-- 查询修改的部分 -->
+	<select id="queryUpdateConfQuestion" parameterType="com.huaxia.opas.domain.sysparm.ConfQuestion"
+		resultMap="ConfQuestionResultMap">
+		select AUTO_ID,
+			   STATUS,
+			   USER_FLAG,
+			   QUESTION_LEVEL,
+			   QUESTION_DESC,
+			   FROM_TABLE_DESC,
+			   FROM_FIELD_DESC,
+			   CRT_DATE,
+			   CRT_USER,
+			   LST_UPD_TIME,
+			   LST_UPD_USER
+		from   OPAS_CONF_QUESTION 
+		<where>
+			<if test="autoId != '' and autoId != null">
+				AND AUTO_ID = #{autoId,jdbcType=VARCHAR} 
+			</if>
+			<if test="ids != '' and ids != null">
+			    AND AUTO_ID in
+		    	<foreach collection="ids" open="(" close=")" item="id" separator=",">
+			     #{id,jdbcType=VARCHAR}
+		    	</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

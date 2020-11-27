@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.nciic.mapper.SimplifyPoliceSingleMapper">
+
+	<resultMap id="result_Base" type="SimplifyPoliceSingle">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="UPD_TIME" property="updTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!--单条实时查询 提交数据 -->
+	<insert id="insertObject" parameterType="SimplifyPoliceSingle">
+		INSERT INTO NCIIC_POLICE_SINGLE (
+			UUID,CRT_TIME,CRT_USER,TRN_ID,CERT_NO,NAME,QUERY_STATUS
+		) VALUES (
+			SYS_GUID(),SYSDATE,#{crtUser},#{trnId},#{certNo},#{name},#{queryStatus}
+		)
+	</insert>
+	
+	<update id="updateStatus" parameterType="SimplifyPoliceSingle">
+		UPDATE NCIIC_POLICE_SINGLE SET QUERY_STATUS = #{queryStatus} WHERE TRN_ID = #{trnId}
+	</update>
+
+</mapper>

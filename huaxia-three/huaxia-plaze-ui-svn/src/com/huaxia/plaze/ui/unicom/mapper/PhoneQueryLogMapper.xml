@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.unicom.mapper.PhoneQueryLogMapper">
+
+
+	<resultMap id="result_log" type="PhoneQueryLog">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LOG_ID" property="logId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="QUERY_MODE" property="queryMode" jdbcType="VARCHAR" />
+		<result column="QUERY_RESULT" property="queryResult" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="STAFF_CERT_NO" property="staffCertNo" jdbcType="VARCHAR" />
+		<result column="CERT_TYPE" property="certType" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+		<result column="MAC" property="mac" jdbcType="VARCHAR" />
+		<result column="COMPAY" property="compay" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 插入记录 -->
+	<insert id="savePhoneQueryLog" parameterType="com.huaxia.plaze.ui.unicom.domain.PhoneQueryLog">
+	INSERT INTO
+	UNICOM_PHONE_QUERY_LOG(
+	UUID,
+	CRT_TIME,
+	CRT_USER,
+	LOG_ID,
+	TRN_ID,
+	QUERY_MODE,
+	QUERY_RESULT,
+	STAFF_NAME,
+	STAFF_CERT_NO,
+	CERT_TYPE,
+	CERT_NO,
+	NAME,
+	MOBILE,
+	IP,
+	MAC,
+	COMPAY
+	) VALUES (
+	SYS_GUID(),
+	SYSDATE,
+	#{crtUser},
+	SYS_GUID(),
+	#{trnId},
+	#{queryMode},
+	#{queryResult},
+	#{staffName},
+	#{staffCertNo},
+	#{certType},
+	#{certNo},
+	#{name},
+	#{mobile},
+	#{ip},
+	#{mac},
+	#{compay}
+	)
+	</insert>
+
+	<!-- 分页总数 -->
+	<select id="selectLogListCountByPage" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM UNICOM_PHONE_QUERY_LOG
+		<where>
+			<if test="name != null">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="queryModle != null">
+				AND QUERY_MODE=#{queryModle}
+			</if>
+			<if test="crtNo != null">
+				AND CERT_NO LIKE '%${crtNo}%'
+			</if>
+			<if test="mobile != null">
+				AND MOBILE LIKE '%${mobile}%'
+			</if>
+			<if test="StaffCertName != null">
+				AND CRT_USER LIKE '%${StaffCertName}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 分页记录 -->
+	<select id="selectLogListByPage" parameterType="java.util.Map"
+		resultMap="result_log">
+		SELECT CRT_USER,CRT_TIME,NAME,MOBILE,CERT_NO,QUERY_MODE,COMPAY,RN FROM
+		(SELECT
+		CRT_USER,CRT_TIME,NAME,MOBILE,CERT_NO,QUERY_MODE,COMPAY,ROWNUM RN FROM
+		(SELECT
+		CRT_USER,
+		TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		AS CRT_TIME,
+		NAME,
+		MOBILE,
+		CERT_NO,
+		QUERY_MODE,
+		COMPAY
+		FROM
+		UNICOM_PHONE_QUERY_LOG
+		<where>
+			<if test="name != null">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="queryModle != null">
+				AND QUERY_MODE=#{queryModle}
+			</if>
+			<if test="crtNo != null">
+				AND CERT_NO LIKE '%${crtNo}%'
+			</if>
+			<if test="mobile != null">
+				AND MOBILE LIKE '%${mobile}%'
+			</if>
+			<if test="StaffCertName != null">
+				AND CRT_USER LIKE '%${StaffCertName}%'
+			</if>
+		</where>
+		ORDER BY
+		CRT_TIME DESC
+		) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+
+	</select>
+</mapper>

@@ -1,0 +1,410 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="font-size: 12px;">
+	<div style="width: 99%; font-size: 12px;">
+		<form id="searchForm">
+			<div style="padding: 10px">
+				条形码 <input class="easyui-textbox" style="width: 120px" name="appId" id="appId" > 
+				归档日期 <input class="easyui-datebox" name="toArchiveTime1" id="toArchiveTime1" 
+						style="width: 150px;"  value="" /> -
+						 <input class="easyui-datebox" name="toArchiveTime2" id="toArchiveTime2" 
+						style="width: 150px;"  value="" />
+				审核结果 <select class="easyui-combobox" name="approveResult" editable="false" style="width:150px">
+							<option value="" selected="selected">---请选择---<option>
+							<option value="2">未处理</option>
+							<option value="0">批准</option>
+							<option value="1">拒绝</option>
+						</select>
+				拒绝码 <select class="easyui-combobox"  name="refuseCode" id="refuseCode"  editable="false" style="width:150px" dict_type=""
+							data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+						</select>
+				违例码 <select class="easyui-combobox" name="violateCode" id="violateCode"  style="width:150px" dict_type="ZDVIOLATECODE1" 
+						 	data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+						</select>
+				过件码 <select class="easyui-combobox" name="blockCode" editable="false" style="width:100px">
+							<option value="">---请选择---</option>
+							<option value="101">101</option>
+							<option value="901">901</option>
+							<option value="S100">S100</option>
+							<option value="L100">L100</option>
+							<option value="L900">L900</option>
+							<option value="M100">M100</option>
+							<option value="M900">M900</option>
+							<option value="H100">H100</option>
+							<option value="H900">H900</option>
+							<option value="YJ100">YJ100</option>
+							<option value="YJ900">YJ900</option>
+							<option value="900Y">900Y</option>
+							<option value="400A">400A</option>
+						</select>
+				帐户类型<select class="easyui-combobox" name="ydjFlag" editable="false" style="width:150px">
+						<option value="">---请选择---</option>
+						<option value="1">易达金</option>
+						<option value="2">标准卡</option>
+					</select>
+				<br><br><br>
+				检查情况<select class="easyui-combobox" name="checkCondition" editable="false" style="width:150px">
+							<option value="">---请选择---</option>
+							<option value="1">已查-系统</option>
+							<option value="2">已查-专项</option>
+							<option value="3">已查-自查</option>
+							<option value="4">已查-核销</option>
+						</select>
+				审查员 <input class="easyui-textbox" style="width: 120px"	name="examiner" id="examiner"  readonly="readonly">
+					 <input class="easyui-textbox" style="width: 120px"	name="examinerCode" id="examinerCode">
+					   <a herf="#" class="easyui-linkbutton" id="" onclick="chooseOperator('examiner');" >选择</a>
+				征信员 <input class="easyui-textbox" style="width: 120px"	name="crediter" id="crediter" readonly="readonly">
+					<input class="easyui-textbox" style="width: 120px"	name="crediterCode" id="crediterCode" >
+					   <a herf="#" class="easyui-linkbutton" id="" onclick="chooseOperator('crediter');" >选择</a>
+				审批员 <input class="easyui-textbox" style="width: 120px"	name="auditor" id="auditor"  readonly="readonly">
+					<input class="easyui-textbox" style="width: 120px"	name="auditorCode" id="auditorCode" >
+					   <a herf="#" class="easyui-linkbutton" id="" onclick="chooseOperator('auditor');" >选择</a>
+				征审合一员 <input class="easyui-textbox" style="width: 120px"	name="totalOperator" id="totalOperator"  readonly="readonly">
+					 <input class="easyui-textbox" style="width: 120px"	name="totalOperatorCode" id="totalOperatorCode" >
+					   <a herf="#" class="easyui-linkbutton" id="" onclick="chooseOperator('totalOperator');" >选择</a>&nbsp;&nbsp;
+				<a href="javascript:searchTbl('searchForm','tblSearch');"
+				class="easyui-linkbutton" iconCls="icon-search">搜索</a>
+			</div>
+		</form>
+	</div>	
+	<div style="margin: 0px 0px 0px 10px; width: 100%">
+		<table id="tblSearch" class="easyui-datagrid" style="width: 98%" 
+		data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[20, 50, 200],fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#searchForm'">
+			<thead>
+				<tr>
+					<th field="operat" checkbox="true" width="5%">操作</th>
+					<th field="appId" align="left" data-options="formatter:formatAppId" width="15%">流水号</th>
+					<th field="custName" align="left" width="15%">客户姓名</th>
+					<th field="cardNum" align="left" width="15%">证件号码</th>
+					<th field="childCardName" align="left" width="10%">附属卡姓名</th>
+					<th field="currStatus" align="left" data-options="formatter:statusView" width="8%">当前状态</th>
+					<th field="flag" align="left"  width="8%" hidden="true">当前状态</th>
+					<th field="record" align="left" width="5%">录音</th>
+					<th field="ydjFlag" align="left"  hidden="true" width="5%"></th>
+					<th field="appProd" align="left" hidden="true" width="5%"></th>
+					<th field="matchingCardFlag" align="left" hidden="true" width="5%"></th>
+					<th field="applicationFlag" hidden="true" width="1%"></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+	<div id="winChoose" class="easyui-window"  title="操作员选择"
+		style="width: 680px; height: 520px" top="10px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="choose" method="post">
+			<table id="tblChoose" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:15,pageList:[15],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,method:'post',toolbar:'#positionCodeCondion1'">
+				<thead frozen="true">
+				<tr>
+					<th field="autoId" width="5%" align="center" checkbox="true"></th>
+					<th field="userCode" width="25%" align="center">登录名</th>
+					<th field="userName" width="35%" align="center">姓名</th>
+					<th field="department" width="35%" align="center">部门</th>
+				</tr>
+				</thead>
+			</table>
+		</form>
+		<div id="positionCodeCondion1" style="padding: 2px 5px;">
+			<form id="seachPositionCodeForm1" align="center">
+				登录名: <input class="easyui-textbox" style="width: 120px"
+					name="userCode" id="userCode">
+				姓名: <input class="easyui-textbox" style="width: 150px"
+					name="userName" id="userName">
+				<div style="text-align: center; padding: 5px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryOperator()" >查询 </a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="sureOperator()">确定</a>
+				</div>
+			</form>
+		</div>
+<!-- 			<a herf="#" class="easyui-linkbutton" id="" onclick="sureOperator();" >确定</a> -->
+	</div>
+</body>
+<script type="text/javascript">
+// 	$cf.loadAllDict();//加载数据字典
+// 	var userCodeId = "";
+	var searchForm = $("#searchForm");
+	var tblSearch = $("tblSearch");
+	$(function(){
+		$("#examinerCode").next().hide();
+		$("#crediterCode").next().hide();
+		$("#auditorCode").next().hide();
+		$("#totalOperatorCode").next().hide();
+		$cf.ajax({
+			url:"/opas-naps/query_reasonCode.json",
+			onSuccess:function(data){
+				var refuseCodeList =  data.RSP_BODY.refuseCodeList;
+				var violateCodeList = data.RSP_BODY.violateCodeList;
+				//拒绝码
+				fnCodeNameValue(refuseCodeList,'refuseCode',"");
+				//违例码
+				fnCodeNameValue(violateCodeList,'violateCode',"");
+			}
+		})
+	})
+	//自定义业务字典
+	function fnCodeNameValue(list,obj,noselect){
+		var dictData="[{dictDetailCode:'',dictDetailName:'---请选择---'},";
+		for(var i = 0;i<list.length;i++){
+			var code = list[i].reasonCode;
+			var name = code +"~"+list[i].reasonDesc;
+			if(noselect!=null&&noselect==code){
+				if(i < list.length-1){
+					dictData = dictData+"{dictDetailCode:'"+code+"',"+
+					"dictDetailName:'"+name+"',selected:"+true+"},";
+				}else if(i==list.length-1){
+					dictData = dictData+"{dictDetailCode:'"+code+"',"+
+					"dictDetailName:'"+name+"',selected:"+true+"}]";
+				}	
+			}else{
+				if(i < list.length-1){
+					dictData = dictData+"{dictDetailCode:'"+code+"',"+
+					"dictDetailName:'"+name+"'},";
+				}else if(i==list.length-1){
+					dictData = dictData+"{dictDetailCode:'"+code+"',"+
+					"dictDetailName:'"+name+"'}]";
+				}	
+			}
+		}
+		//自定义下拉框
+		if(list.length>0){
+			dictData = eval('('+dictData+')');
+			$("#"+obj).combobox({    
+			    valueField:'dictDetailCode',    
+			    textField:'dictDetailName',
+			    data:dictData
+			});
+		}
+	}
+
+	var userRecord ;
+	function searchTbl(formName, tblName) {
+		var tblObj = $("#" + tblName + "");
+		var formObj = $("#" + formName + "");
+		$("#tblSearch").datagrid("loadData",{total:0,rows:[]});
+		$("#tblSearch").datagrid("clearSelections");
+		var examinerValue = $('#examiner').textbox('getValue');
+		var crediterValue = $('#crediter').textbox('getValue');
+		var auditorValue = $('#auditor').textbox('getValue');
+		var totalOperatorValue = $('#totalOperator').textbox('getValue');
+		
+		if(examinerValue==""){
+			$('#examinerCode').textbox('setValue',"");
+		}
+		if(crediterValue==""){
+			$('#crediterCode').textbox('setValue',"");
+		}
+		if(auditorValue==""){
+			$('#auditorCode').textbox('setValue',"");
+		}
+		if(totalOperatorValue==""){
+			$('#totalOperatorCode').textbox('setValue',"");
+		}
+		var data = formObj.serializeArray();
+		//限定输入条件查询
+		var flag = true;
+		for(var i = 0 ;i < data.length; i++){
+			if(i!=7&&data[i].value!=''){
+				flag=false;
+			}
+		}
+		if(flag){
+			alert("请至少输入一项查询条件(帐户类型不能作为唯一查询条件)");
+			return;
+		}
+		var jsonData = common.formToJson(data);
+		if(jsonData['refuseCode']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		if(jsonData['violateCode']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		if(jsonData['blockCode']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		if(jsonData['approveResult']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+
+		if(jsonData['checkCondition']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		
+		if(jsonData['auditorCode']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		
+		if(jsonData['crediterCode']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		if(jsonData['totalOperatorCode']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		if(jsonData['examinerCode']!=''&&(jsonData['toArchiveTime1']==''||jsonData['toArchiveTime2']=='')){
+			alert("请继续选择归档时间进行查询");
+			return;
+		}
+		userRecord = examinerValue+";"+crediterValue+";"+auditorValue+";"+totalOperatorValue;
+		jsonData['groupFlag'] = '0';
+		var opts = tblObj.datagrid("options");
+		opts.url = '/opas-naps/qualityChecking_list.json';
+		tblObj.datagrid("reload", jsonData);
+	}
+	
+	function statusView(val, row, index){
+		var applicationFlag = row.applicationFlag;
+		var flag = row.flag;
+		if(val == "01"&& applicationFlag < 1){
+			return "录入环节";
+		}
+		if(val == "02"&& applicationFlag < 1){
+			return "征信环节";
+		}
+		if(val == "03"&& applicationFlag < 1){
+			return "审批环节";
+		}
+		if(val == "04"&& flag == '2'){
+			return "归档环节";
+		}
+		if(val == "04"&& flag == '4'){
+			return "待归档";
+		}
+		if(val == "05"&& applicationFlag < 1){
+			return "提报环节";
+		}else{
+			return "归档环节";
+		}
+	}
+	
+
+	var winChoose = $("#winChoose");
+	var tblChoose=$("#tblChoose");
+	var userUuid = $cf.getStore("userRelInfo", "index").userInfo.userId;
+	var operatorFlag = "";//区分什么操作员的标识
+	
+	tblChoose.datagrid({
+		idField:'userCode'
+	})
+	function chooseOperator(paramValue){
+		$("#positionCodeCondion1").form("clear");
+		$("#tblChoose").datagrid("loadData",{total:0,rows:[]});
+		$("#tblChoose").datagrid("clearSelections");
+		winChoose.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false
+		});
+		var opts = tblChoose.datagrid("options");
+		opts.url = "/opas-naps/examiner_listOfChecker.json";
+		if(paramValue == 'examiner'){	//审查员选择
+			var paramData = {"roleCode":"DE"};
+			operatorFlag = "1";
+		}
+		if(paramValue == 'crediter'){	//征信员选择
+			var paramData = {"roleCode":"CI"};
+			operatorFlag = "2";
+		}
+		if(paramValue == 'auditor'){	//审批员选择
+			var paramData = {"roleCode":"L"};
+			operatorFlag = "3";
+		}
+		if(paramValue == 'totalOperator'){	//政审和一员选择
+			var paramData = {"roleCode":"HY"};
+			operatorFlag = "4";
+		}
+		tblChoose.datagrid("reload",paramData);
+	}
+	
+	function queryOperator(){
+		var userCode = $("#userCode").textbox("getValue");
+		var userName = $("#userName").textbox("getValue");
+		var roleCode = "";
+		if(operatorFlag=='1'){
+			roleCode = "DE" ;
+		}
+		if(operatorFlag=='2'){
+			roleCode = "CI" ;
+		}
+		if(operatorFlag=='3'){
+			roleCode = "L" ;
+		}
+		if(operatorFlag=='4'){
+			roleCode = "HY" ;
+		}
+		var opts = tblChoose.datagrid("options");
+		opts.url = "/opas-naps/examiner_listOfChecker.json";
+		var jsonData = {"userCode":userCode,"userName":userName,"roleCode":roleCode};
+		tblChoose.datagrid("reload",jsonData);
+	}
+	
+	function sureOperator(){
+		winChoose.window({
+			closed:true
+		});
+		var chooseOpt = tblChoose.datagrid("getSelections");
+		var userName="";
+		var userCode="";
+		for(var i = 0;i < chooseOpt.length;i++){
+			 userName =userName + "," + chooseOpt[i].userName ;
+			 userCode = userCode + "," + chooseOpt[i].userCode;
+		}
+		userName = userName.substr("1");
+		userCode = userCode.substr("1");
+		if(operatorFlag == "1"){
+			$("#examiner").textbox('setValue',userName);
+			$("#examinerCode").textbox('setValue',userCode);
+		}
+		if(operatorFlag == "2"){
+			$("#crediter").textbox('setValue',userName);
+			$("#crediterCode").textbox('setValue',userCode);
+		}
+		if(operatorFlag == "3"){
+			$("#auditor").textbox('setValue',userName);
+			$("#auditorCode").textbox('setValue',userCode);
+		}
+		if(operatorFlag == "4"){
+			$("#totalOperator").textbox('setValue',userName);
+			$("#totalOperatorCode").textbox('setValue',userCode);
+		}
+	}
+
+	function formatAppId(val,row,index){
+		var appId = val + "";
+		return "<a href=javascript:getInfo();>"+appId+"</a>";
+	}
+	
+	function getInfo(){
+		var infoObj = $("#tblSearch").datagrid("getSelected");
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+		var appId = infoObj["appId"]; 
+		var ydjFlag = infoObj["ydjFlag"]; 
+		var appProd = infoObj.appProd;  //商品易达金85 , 其它：80,82,83,84 
+		var matchingCardFlag = infoObj.matchingCardFlag;
+		if(ydjFlag=="1"){//1为易达金
+			if(matchingCardFlag=='1'){
+				window.open("checking_zxBzk.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&appProd="+appProd+"&matchingCardFlag="+matchingCardFlag+"&userId="+userUuid+"&userRecord="+userRecord);
+			}else{
+				window.open("checking_zxYdj.html?appId="+appId+"&ydjFlag="+ydjFlag+"&appProd="+appProd+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&userId="+userUuid+"&userRecord="+userRecord);
+			}
+		}else {//2为非易达金
+			window.open("checking_zxBzk.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userCode+"&matchingCardFlag="+matchingCardFlag+"&userId="+userUuid+"&userRecord="+userRecord);
+		}
+	}
+</script>
+</html>

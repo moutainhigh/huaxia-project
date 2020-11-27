@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblThdErrList" title="三方数据查询异常信息列表" class="easyui-datagrid"
+		style="width: 98%;height:650px;"
+		data-options="pageSize:50,pageList:[50,100,200],rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',url:'/opas-naps/thdDataErrMsg.json',method:'post',toolbar:'#positionCodeCondion'">
+		<thead><!--  -->
+			<tr>
+				<th field="autoId" width="7%" align="center" checkbox="true">唯一Id</th>
+				<th field="taskStatus" align="center" hidden="true"></th>
+				<th field="errorCode" align="center" hidden="true"></th>
+				<th field="taskType" width="19%" align="center" formatter="taskTypeStatus">三方数据名称</th>
+				<th field="errDetail" width="19%" align="center"  data-options="formatter:getErrDetail">异常响应详情</th><!--  -->
+				<th field="appId" width="19%" align="center">条形码</th>
+				<th field="failureNum" width="14%" align="center">查询失败次数</th>
+				<th field="timeStamp" width="18%" align="center"
+					formatter="gridDateFormat2">创建时间</th>
+				<th field="aa" width="7%" align="center" data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			三方数据名称: 
+			<select class="easyui-combobox" style="width: 125px" id="taskType" editable="false" name="taskType">
+				<option value="" selected="selected">------请选择------</option>
+				<option value="000100">人行查询</option>
+				<option value="000200">公安查询</option>
+				<option value="F00200">附卡公安查询</option>
+				<option value="000202">外国人公安查询</option>
+				<option value="F00202">外国人附卡公安查询</option>
+				<option value="000203">港澳公安查询</option>
+				<option value="F00203">港澳附卡公安查询</option>
+				<option value="000204">台湾公安查询</option>
+				<option value="F00204">台湾附卡公安查询</option>
+				<option value="000201">人像比对查询</option>
+				<option value="000300">学历查询</option>
+				<option value="000400">百融征信查询</option>
+				<option value="001000">腾讯天域分查询</option>
+				<option value="001100">手机实名制查询</option>
+				<option value="001200">企业及行业信息查询</option>
+				<option value="001101">通讯运营商查询</option>
+				<option value="000500">海航信息查询</option>
+				<option value="001400">Fico评分查询</option>
+				<option value="001500">多头借贷(同盾)信息查询</option>
+				<option value="001601">深圳鹏元个人信用报告查询</option>
+				<option value="001602">深圳鹏元个人高信分查询</option>
+				<option value="001700">厦门易联众规则查询</option>
+				<option value="001800">杭州区域数据规则查询</option>
+				<option value="001900">保信汽车规则查询</option>
+				<option value="000700">互联网多头借贷(百融)信息查询</option>
+				<option value="000600">51易达金信息查询</option>
+				<option value="001102">联通工作地址类信息查询</option>
+				<option value="001103">联通居住地址类信息查询</option>
+				<option value="002000">厦门公积金规则查询</option>
+				<option value="002100">可信身份认证规则查询</option>
+				<option value="F02100">附卡可信身份认证规则查询</option>
+				<option value="002200">温州区域数据规则查询</option>
+				<option value="002300">银川区域数据规则查询</option>
+				<option value="002500">宁波区域数据规则查询</option>
+				<option value="000205">失效身份认证数据规则查询</option>
+				<option value="010001">智能语音规则查询</option>
+			</select>
+			异常响应详情: 
+			<select class="easyui-combobox" style="width: 125px" id="taskStatus" editable="false" name="taskStatus">
+				<option value="" selected="selected">------请选择------</option>
+				<option value="1">单笔请求开始</option>
+				<option value="6">复制异常</option>
+				<option value="8">解析异常</option>
+				<option value="12">入库异常</option>				
+				<option value="3">参数错误</option>
+				<option value="7">对方服务响应异常</option>
+				<option value="11">报文响应码异常</option>
+				<option value="13">单笔报文无返回异常</option>
+			</select>
+			条形码: <input class="easyui-textbox" style="width: 140px" name="appId">
+			开始日期：<input class="easyui-datebox" name="startDate" id="startDate" style="width: 100px;" editable="false">
+			结束日期：<input class="easyui-datebox" name="endDate" id="endDate" style="width: 100px;" editable="false">
+		</form>
+		<div class="area-function">
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblThdErrList');"
+				class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a href="javascript:requeryList();" class="easyui-linkbutton" iconCls="icon-save">批量重查</a>
+			<a href="javascript:passList();" class="easyui-linkbutton" iconCls="icon-ok">批量流转</a>
+
+		</div>
+	</div>
+	
+</body>
+<script>
+	var tblThdErrList = $("#tblThdErrList");
+	
+	function formatOper(val, row, index){
+		if(val==0){
+			return "";
+		}else{
+			return "<a href='javascript:requery(\""+row.taskType+"\",\""+row.taskStatus+"\",\""+row.appId+"\")';>重查</a>&nbsp;<a href=javascript:pass(\""+row.taskType+"\",\""+row.taskStatus+"\",\""+row.appId+"\");>流转</a>";
+		}
+	}
+	function taskTypeStatus(val, row, index) {
+		if (val == '000100') {
+			return "人行查询";
+		} else if (val == '000200') {
+			return "公安查询";
+		} else if (val == 'F00200') {
+			return "附卡公安查询";
+		} else if (val == '000202') {
+			return "外国人公安查询";
+		} else if (val == 'F00202') {
+			return "外国人附卡公安查询";
+		} else if (val == '000203') {
+			return "港澳公安查询";
+		} else if (val == 'F00203') {
+			return "港澳附卡公安查询";
+		} else if (val == '000204') {
+			return "台湾公安查询";
+		} else if (val == 'F00204') {
+			return "台湾附卡公安查询";
+		} else if (val == '000201') {
+			return "人像比对查询";
+		} else if (val == '000300') {
+			return "学历查询";
+		} else if (val == '000400') {
+			return "百融征信查询";
+		} else if (val == '001000') {
+			return "腾讯天域分查询";
+		} else if (val == '001100') {
+			return "手机实名制查询";
+		} else if (val == '001200') {
+			return "企业及行业信息查询";
+		} else if (val == '001101') {
+			return "通讯运营商查询";
+		} else if (val == '000500') {
+			return "海航信息查询";
+		} else if (val == '001400') {
+			return "Fico评分查询";
+		} else if (val == '001500') {
+			return "多头借贷(同盾)信息查询";
+		} else if (val == '001601') {
+			return "深圳鹏元个人信用报告查询";
+		} else if (val == '001602') {
+			return "深圳鹏元个人高信分查询";
+		} else if (val == '001700') {
+			return "厦门易联众规则查询";
+		} else if (val == '001800') {
+			return "杭州区域数据规则查询";
+		} else if (val == '001900') {
+			return "保信汽车规则查询";
+		} else if (val == '000700') {
+			return "互联网多头借贷(百融)信息查询";
+		} else if (val == '000600') {
+			return "51易达金规则信息查询";
+		} else if (val == '001102') {
+			return "联通工作地址类信息查询";
+		} else if (val == '001103') {
+			return "联通居住地址类信息查询";
+		} else if (val == '002100') {
+			return "可信身份认证规则查询";
+		} else if (val == 'F02100') {
+			return "附卡可信身份认证规则查询";
+		} else if (val == '002200') {
+			return "温州区域数据规则查询";
+		} else if (val == '002300') {
+			return "银川区域数据规则查询";
+		} else if (val == '002000') {
+			return "厦门公积金规则查询";
+		} else if (val == '002500') {
+			return "宁波区域数据规则查询";
+		} else if (val == '000205') {
+			return "失效身份认证数据规则查询";
+		} else if (val == '010001') {
+			return "智能语音规则查询";
+		} 
+	}
+	function getErrDetail(val, row, index){
+		if(val==0){
+			return "";
+		}else{
+			var taskStatusStr;
+			switch(row.taskStatus){
+				case '3': taskStatusStr = "参数错误";
+				break;
+				case '7': taskStatusStr = "对方服务响应异常";
+				break;
+				case '11': taskStatusStr = "报文响应码异";
+				break;
+				case '1': taskStatusStr = "单笔请求开始";
+					break;
+				case '6': taskStatusStr = "复制异常";
+					break;
+				case '8': taskStatusStr = "解析异常";
+					break;
+				case '12': taskStatusStr = "入库异常";
+					break;
+				case '13': taskStatusStr = "单笔报文无返回异常";
+					break;
+				default: taskStatusStr = "暂未定义此异常信息";
+					break;
+				}
+			var errcode = row.errorCode==null?'':row.errorCode;
+		 	var errdetail = taskStatusStr+'  '+errcode;
+			return errdetail;
+		}
+	} 
+	
+	
+	
+	function requery(taskType,taskStatus,appId) {
+		 var aaa=new Array();
+		 var obj =new Object();
+		 obj.taskType=taskType;
+		 obj.taskStatus=taskStatus;
+		 obj.appId=appId;
+		 aaa.push(obj);
+	  
+		$.messager.confirm('信息', '您正在进行重查操作是否继续进行?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/thdErrMsgRequery.json",
+					data : {
+						"errMsg":aaa
+						},
+					onSuccess : function(infoObj) {
+
+						top.$cf.showMsg("数据重查成功！");
+						tblThdErrList.datagrid("reload");
+					}
+				});
+			}
+		});
+	
+	}
+	function requeryList() {
+		var errMsg = tblThdErrList.datagrid("getSelections");
+		if(errMsg.length==0){
+			$.messager.alert("信息", "请选中至少一条记录");
+		}else{
+			$.messager.confirm('信息', '您正在进行重查操作是否继续进行?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/thdErrMsgRequery.json",
+						data : {
+							"errMsg":errMsg
+							},
+						onSuccess : function(infoObj) {
+	
+							top.$cf.showMsg("数据重查成功！");
+							tblThdErrList.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+	}
+	function pass(taskType,taskStatus,appId) {
+		 var aaa=new Array();
+		 var obj =new Object();
+		 obj.taskType=taskType;
+		 obj.taskStatus=taskStatus;
+		 obj.appId=appId;
+		 aaa.push(obj);
+	  
+		$.messager.confirm('信息', '是否跳过三方信息查询,向下流转?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/thdErrMsgPassData.json",
+					data : {
+						"errMsg":aaa
+						},
+					onSuccess : function(infoObj) {
+						top.$cf.showMsg("数据流转成功！");
+						tblThdErrList.datagrid("reload");
+					}
+				});
+			}
+		});
+	}
+	function passList() {
+		var errMsg = tblThdErrList.datagrid("getSelections");
+		if(errMsg.length==0){
+			$.messager.alert("信息", "请选中至少一条记录");
+		}else{
+			$.messager.confirm('信息', '是否跳过三方信息查询,向下流转?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/thdErrMsgPassData.json",
+						data : {
+							"errMsg":errMsg
+							},
+						onSuccess : function(infoObj) {
+							top.$cf.showMsg("数据流转成功！");
+							tblThdErrList.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+	}
+	
+
+
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	
+	
+</script>

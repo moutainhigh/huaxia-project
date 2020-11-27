@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.AuthorizeLogMapper">
+
+	<resultMap id="result_BaseLog" type="AuthorizeLog">
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="ACTION" property="action" jdbcType="VARCHAR" />
+		<result column="USER_ACCT" property="account" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_LOG_LOGIN
+		<where>
+        	<if test="account != null">
+        		AND USER_ACCT LIKE '${account}%'
+        	</if>
+        	<if test="staffName != null">
+        		AND STAFF_NAME LIKE '${staffName}%'
+        	</if>
+        	<if test="certNo != null">
+        		AND CERT_NO LIKE '${certNo}%'
+        	</if>
+        	<if test="action != null">
+        		AND ACTION LIKE '${action}%'
+        	</if>
+        	<if test="startTime != null">
+        		AND CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+        	</if>
+        	<if test="endTime != null">
+        		AND CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+        	</if>
+        </where>
+	</select>
+	
+	<select id="selectListByPage" parameterType="java.util.Map" resultMap="result_BaseLog">
+		SELECT TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,ACTION,USER_ACCT,STAFF_NAME,CERT_NO,IP
+		  FROM (SELECT ROWNUM RN,T.CRT_TIME,T.ACTION,T.USER_ACCT,T.STAFF_NAME,T.CERT_NO,T.IP
+		          FROM (SELECT CRT_TIME,ACTION,USER_ACCT,STAFF_NAME,CERT_NO,IP
+		                  FROM SYS_LOG_LOGIN
+		                <where>
+		                	<if test="account != null">
+				        		AND USER_ACCT LIKE '${account}%'
+				        	</if>
+				        	<if test="staffName != null">
+				        		AND STAFF_NAME LIKE '${staffName}%'
+				        	</if>
+				        	<if test="certNo != null">
+				        		AND CERT_NO LIKE '${certNo}%'
+				        	</if>
+				        	<if test="action != null">
+				        		AND ACTION LIKE '${action}%'
+				        	</if>
+				        	<if test="startTime != null">
+				        		AND CRT_TIME <![CDATA[ >= ]]> TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+				        	</if>
+				        	<if test="endTime != null">
+				        		AND CRT_TIME <![CDATA[ <= ]]> TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+				        	</if>
+		                </where>
+		                ORDER BY CRT_TIME DESC) T
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		 WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	  ORDER BY CRT_TIME DESC
+	</select>
+	
+	<insert id="insert" parameterType="AuthorizeLog">
+		INSERT INTO SYS_LOG_LOGIN (
+			UUID,CRT_TIME,CRT_USER,ACTION,USER_ACCT,STAFF_NAME,CERT_NO,IP
+		) VALUES (
+			SYS_GUID(),SYSDATE,'SYSTEM',
+			#{action,jdbcType=VARCHAR},
+			#{account,jdbcType=VARCHAR},
+			#{staffName,jdbcType=VARCHAR},
+			#{certNo,jdbcType=VARCHAR},
+			#{ip,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+</mapper>

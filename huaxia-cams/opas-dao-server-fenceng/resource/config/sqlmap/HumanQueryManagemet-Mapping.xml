@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="humanQueryManagemet">
+
+	<resultMap id="HumanQueryManagemet" type="com.huaxia.opas.domain.credit.HumanQueryManagemet">
+		<result column="AUTO_ID" 			property="hu_autoId" 			jdbcType="VARCHAR" />
+		<result column="AUTO_MAX" 			property="hu_autoMax" 			jdbcType="VARCHAR" />
+		<result column="MANUAL_MAX" 		property="hu_manualMax" 		jdbcType="VARCHAR" />
+		<result column="TOTAL_MAX" 			property="hu_totalMax" 			jdbcType="VARCHAR" />
+		<result column="AUTO_START_TIME" 	property="hu_autoStartTime" 	jdbcType="VARCHAR" />
+		<result column="AUTO_END_TIME" 		property="hu_autoEndTime" 		jdbcType="VARCHAR" />
+		<result column="MANUAL_START_TIME" 	property="hu_manualStartTime" 	jdbcType="VARCHAR" />
+		<result column="MANUAL_END_TIME" 	property="hu_manualEndTime" 	jdbcType="VARCHAR" />
+		<result column="CRT_DATE" 			property="hu_crtDate" 			jdbcType="VARCHAR" />
+		<result column="CRT_USER" 			property="hu_crtUser" 			jdbcType="VARCHAR" />
+		
+		
+		<result column="LIFEQUERY" 			property="lifeQuery" 			jdbcType="VARCHAR"/>
+		<result column="LIFEQUERYFLAG" 		property="lifeQueryFlag" 		jdbcType="VARCHAR"/>		
+		
+	</resultMap>
+	
+	
+	<!--查询 人行本年查询上限数设置表-->  
+	<select id="selectOpasApPeopleBank_maxCount" resultMap="HumanQueryManagemet">
+			SELECT 
+				AUTO_ID,
+				AUTO_MAX,
+				MANUAL_MAX,
+				TOTAL_MAX,
+			 	AUTO_START_TIME,
+			 	AUTO_END_TIME,
+			 	MANUAL_START_TIME,
+				MANUAL_END_TIME
+				FROM OPAS_AP_PEOPLEBANK_MAXCOUNT   
+	</select>
+	
+	
+	<!--删除 人行本年查询上限数设置表-->
+	<delete id="deleteOpasApPeopleBank_maxCount" >
+    	DELETE FROM OPAS_AP_PEOPLEBANK_MAXCOUNT
+  	</delete>	
+	
+	
+	<insert id="saveOpasApPeopleBank_maxCount" parameterType="com.huaxia.opas.domain.credit.HumanQueryManagemet">
+		INSERT INTO OPAS_AP_PEOPLEBANK_MAXCOUNT 
+		(AUTO_ID,AUTO_MAX,MANUAL_MAX,TOTAL_MAX,AUTO_START_TIME,AUTO_END_TIME,MANUAL_START_TIME,MANUAL_END_TIME,CRT_DATE,CRT_USER)
+		values(
+			#{hu_autoId,jdbcType=VARCHAR},
+			#{hu_autoMax,jdbcType=VARCHAR},
+			#{hu_manualMax,jdbcType=VARCHAR},
+			#{hu_totalMax,jdbcType=VARCHAR},
+			#{hu_autoStartTime,jdbcType=VARCHAR},
+			#{hu_autoEndTime,jdbcType=VARCHAR},	
+			#{hu_manualStartTime,jdbcType=VARCHAR},
+			#{hu_manualEndTime,jdbcType=VARCHAR},
+			#{hu_crtDate,jdbcType=VARCHAR},
+			#{hu_crtUser,jdbcType=VARCHAR}
+			)
+	</insert> 
+	
+	
+	
+	
+	<!--人行年限类型查询 -->
+	<select id="selectHumanQueryLifeType" parameterType="java.lang.String"  resultMap="HumanQueryManagemet">
+			SELECT COUNT(1) AS LIFEQUERY,CASE WHEN T.INCOMINGDATA_TYPE='1' THEN 'SD' ELSE 'ZD' END AS LIFEQUERYFLAG
+			FROM TASK_THIRD_PARTS_SUCCESS T WHERE T.TASK_TYPE='01' GROUP BY T.INCOMINGDATA_TYPE   
+	</select>	
+	
+	
+	
+	
+	
+</mapper>

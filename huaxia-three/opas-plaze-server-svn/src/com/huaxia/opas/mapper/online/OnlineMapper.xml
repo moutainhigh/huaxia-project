@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.online.OnlineMapper">
+
+	<select id="getCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM TRD_OPERATOR_ONLINE WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+	
+	<insert id="insert" parameterType="com.huaxia.opas.domain.online.Online">
+		INSERT INTO TRD_OPERATOR_ONLINE (
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			APP_ID,
+			CODE,
+			RESULT_DATA,
+			RESULT_DESC
+		) VALUES (
+			sys_guid(),
+			sysdate,
+			#{CRT_USER, jdbcType = VARCHAR},
+			#{APP_ID, jdbcType = CHAR},
+			#{CODE, jdbcType = VARCHAR},
+			#{RESULT_DATA, jdbcType = VARCHAR},
+			#{RESULT_DESC, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+</mapper>

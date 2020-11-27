@@ -1,0 +1,430 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>授信审批</title>
+
+<script type="text/javascript" src="../../../topui/topui.js"></script>
+<script type="text/javascript" src="../../../js/author/common.js"></script>
+<script type="text/javascript" src="../../../js/common/json2.js"></script>
+<!-- <script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script> -->
+<link href="../../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../../css/shouye_style1.css" type="text/css"></link>
+</head>
+	<body>
+	<div class="easyui-layout" style="width: 100%; height: 760px;">
+		<!-- 快速定位区 开始 -->
+		<div data-options="region:'north',title:'快速定位'" style="height: 100px; padding:10px;">
+		<a href="#C"class="easyui-linkbutton">客户基本信息</a>
+		<a href="#D"class="easyui-linkbutton">系统决策结果</a>
+		<a href="#E"class="easyui-linkbutton">参考数据</a>
+		<a href="#K"class="easyui-linkbutton">人工干预额度与参考信息</a>
+		<a href="#M"class="easyui-linkbutton">审批操作</a>
+		</div>
+		<!-- 快速定位区 结束 -->
+		<div data-options="region:'center'" style="padding:10px;">
+		<form  id="custBaseInfoForm">
+		<div>
+		<fieldset>
+			<legend><span id="C">客户基本信息</span></legend>
+				<table id="tbCustInfo" class="formtable" style="padding: 10px; text-align: center;">
+					<tr>
+						<td>申请流水号:</td>
+						<td><input name="appId" id="appId" class="easyui-textbox" disabled="true"/></td>
+						<td>客户姓名:</td>
+						<td><input name="custName" id="custName" class="easyui-textbox" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td>申请卡种:</td>
+						<td><select class="easyui-combobox"
+									style="width: 170px" name="applyCard" id="applyCard"
+									dict_type="ALLOT_APPPROD"
+									data-options="required:true,editable:false,valueField:'dictDetailCode',textField:'dictDetailName'" disabled="true"></select>
+						<!-- <input name="applyCard" id="applyCard" class="easyui-textbox" disabled="true"/> -->
+						</td>
+						<td>预筛选额度:</td>
+						<td><input name="preSellimit" id="preSellimit" class="easyui-textbox" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td>是否愿意降级:</td>
+						<td><!-- <input name="isAgreeDegrade" id="isAgreeDegrade" class="easyui-textbox" disabled="true"/> -->
+							<select id="isAgreeDegrade" style="width: 170px" name="isAgreeDegrade" class="easyui-combobox" disabled="disabled">
+								<option value=""></option>
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+						</td>
+						<td>拒绝附属卡:</td>
+						<td><input name="refuseChildcard" id="refuseChildcard" type="checkbox" value="1" disabled="disabled"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="D">系统决策结果</span></legend>
+				<table class="formtable">
+					<tr>
+						<td>决策时间:</td>
+						<td><input name="crtTime" id="crtTime" class="easyui-datebox" disabled="true"/></td>
+						<td>主卡决策结果:</td> 
+						<td><input name="decisionResult" id="decisionResult" class="easyui-textbox" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td>主卡审批结果描述:</td>
+						<td><input name="decisionDesp" id="decisionDesp" class="easyui-textbox" disabled="true"/></td>
+						<td>系统授信产品:</td>
+						<td><input name="jcShouxinProduct" id="jcShouxinProduct" class="easyui-textbox" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td>附属卡决策结果:</td>
+						<td><input name="supplementRst" id="supplementRst" class="easyui-textbox" disabled="true"/></td>
+						<td>附属卡审批结果描述:</td> 
+						<td><input name="supplementRstDscp" id="supplementRstDscp" class="easyui-textbox" disabled="true"/></td>
+					</tr>
+					<tr>
+						<td>征信结果（过件码）:</td>
+						<td><input name="gjm" id="gjm" class="easyui-textbox" disabled="true"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>		
+		<div class="area-show" id="warninglistDiv">
+		<fieldset>
+			<legend><span id="E">warning list</span></legend>
+				<table class="formtable">
+					<tr>
+						<td>warning list:</td>
+						<td colspan="3"><textarea name="warningList" id="warningList" style="height:170px;width:450px" disabled="true"></textarea></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>	
+	</form>
+	<form id="bizApprovalHisForm">
+		<div>
+		<fieldset>
+			<legend><span id="M">审批操作</span></legend>
+				<table class="formtable">
+					<tr>
+						<td><input id = "radio_pizhun" name="approveResult" type="radio" value="1" onclick="showDiv('radio_pizhun')" checked="true">批准</td><td></td>
+						<td><input id = "radio_jujue" name="approveResult" type="radio" value="0" onclick="showDiv('radio_jujue')">拒绝</td><td></td>
+					</tr>
+				</table>
+				<div id = "pizhun" style="display:true">
+					<table class="formtable">
+						<tr>
+							<td>授信产品</td>
+							<td><!-- <input name="approveCreditProduct" id="approveCreditProduct" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="approveCreditProduct" 
+									style="width: 120px;"  name="approveCreditProduct" required="true"
+									data-options="valueField:'dictDetailCode',textField:'dictDetailName'">
+								</select>
+							</td>
+							<td>授信额度</td>
+							<td><input name="approveCreditLimit" style="width: 120px;" id="approveCreditLimit" class="easyui-textbox" required="true"/></td>
+							<td align="left">(千元)</td>
+						</tr>
+						<tr>
+							<td>政策码1</td>
+							<td><!-- <input name="policyCode1" id="policyCode1" class="easyui-textbox" required="true"/> -->
+							<select class="easyui-combobox" id="policyCode1" 
+								style="width: 120px;" editable="false" name="policyCode1" 
+								dict_type="ZDPOLICYCODE1" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'" required="true"></select><em>*</em>
+							</td>
+							<td>违例码1</td>
+							<td><!-- <input name="violateCode1" id="violateCode1" class="easyui-textbox"/> -->
+							<select class="easyui-combobox" id="violateCode1" 
+								style="width: 120px;" editable="false" name="violateCode1" 
+								dict_type="ZDVIOLATECODE1" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+						</tr>
+						<tr>
+							<td>政策码2</td>
+							<td><!-- <input name="policyCode2" id="policyCode2" class="easyui-textbox"/> -->
+							<select class="easyui-combobox" id="policyCode2" 
+								style="width: 120px;" editable="false" name="policyCode2" 
+								dict_type="ZDPOLICYCODE2" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+							<td>违例码2</td>
+							<td><!-- <input name="violateCode2" id="violateCode2" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="violateCode2" 
+								style="width: 120px;" editable="false" name="violateCode2" 
+								dict_type="ZDVIOLATECODE2" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+						</tr>
+						<tr>
+							<td>政策码3</td>
+							<td><!-- <input name="policyCode3" id="policyCode3" class="easyui-textbox"/> -->
+							<select class="easyui-combobox" id="policyCode3" 
+								style="width: 120px;" editable="false" name="policyCode3" 
+								dict_type="ZDPOLICYCODE3" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+							<td>违例码3</td>
+							<td><!-- <input name="violateCode3" id="violateCode3" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="violateCode3" 
+								style="width: 120px;" editable="false" name="violateCode3" 
+								dict_type="ZDVIOLATECODE3" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+						</tr>
+						<tr>
+							<td>卡版面</td>
+							<td><!-- <input name="cardFaceCode" id="cardFaceCode" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="cardFaceCode" 
+								style="width: 120px;" editable="false" name="cardFaceCode" 
+								dict_type="ZDCARDFACECODE" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+							<td>年费类型</td>
+							<td><!-- <input name="yearFeeDerateType" id="yearFeeDerateType" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="yearFeeDerateType" 
+								style="width: 120px;" editable="false" name="yearFeeDerateType" 
+								dict_type="ZDYEARFEEDERATETYPE" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id = "jujue" style="display:none">
+					<table class="formtable">
+						<tr>
+							<td>拒绝码1</td>
+							<td><!-- <input name="refuseCode1" id="refuseCode1" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="refuseCode1" 
+								style="width: 120px;" editable="false" name="refuseCode1" 
+								dict_type="ZDREFUSECODE1" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+							<td>拒绝码2</td>
+							<td><!-- <input name="refuseCode2" id="refuseCode2" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="refuseCode2" 
+								style="width: 120px;" editable="false" name="refuseCode2" 
+								dict_type="ZDREFUSECODE2" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+						</tr>
+						<tr>
+							<td>拒绝码3</td>
+							<td><!-- <input name="refuseCode3" id="refuseCode3" class="easyui-textbox"/> -->
+								<select class="easyui-combobox" id="refuseCode3" 
+								style="width: 120px;" editable="false" name="refuseCode3" 
+								dict_type="ZDREFUSECODE3" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select>
+							</td>
+						</tr>
+						<tr>
+							<td>备注</td>
+							<td colspan="3"><textarea name="memo" id="jujue_memo" style="height:100px;width:450px" maxlength="200"></textarea></td>
+						</tr>
+					</table>
+				</div>
+		</fieldset>
+		</div>	
+		</form>
+	</div>
+	</div>
+</body>
+<script>
+	$cf.loadAllDict();//加载数据字典
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var appId;
+	//'2017030814135013';
+	//var appId = '2017030814135013';
+	var custBaseInfoForm = $("#custBaseInfoForm");
+	var isWuWangDian;
+	$(function(){
+		appId = GetQueryString("appId");
+		$cf.ajax({
+			url : "/opas-naps/querySystemApprovalResult.json",
+			data : {
+				"appId" : appId,
+				"flag" : "2"
+			},
+			onSuccess : function(dataRes) {
+				var cus = dataRes.RSP_BODY.custInfo;
+				var obj = dataRes.RSP_BODY.object;
+				var warning = dataRes.RSP_BODY.warningList;
+				var zcredit = dataRes.RSP_BODY.zcredit;
+				var gjm = dataRes.RSP_BODY.gjm;
+				var jcShouxinProduct = dataRes.RSP_BODY.jcShouxinProduct;
+				var bizApproval = dataRes.RSP_BODY.bizApproval;
+				var isAgreeDegrade = dataRes.RSP_BODY.isAgreeDegrade;
+				isWuWangDian = dataRes.RSP_BODY.isWuWangDian;
+				if(isWuWangDian==""||isWuWangDian==undefined){
+					$("#warninglistDiv").hide();
+				}else{
+					$("#warninglistDiv").show();
+				}
+				custBaseInfoForm.form("load",cus);
+				custBaseInfoForm.form("load",obj);
+				$("#warningList").val(warning);
+				$("#zcredit").val(zcredit);
+				$("#gjm").val(gjm);
+				$("#jcShouxinProduct").val(jcShouxinProduct);
+				$("#isAgreeDegrade").combobox('setValue',isAgreeDegrade);
+				var cardlist = dataRes.RSP_BODY.cardlist;
+				var approveCreditProduct = $("#approveCreditProduct");
+				//approveCreditProduct.clear();
+				var dictData="[";
+				for(var i = 0;i<cardlist.length;i++){
+					var code = cardlist[i].cardCode;
+					var name = cardlist[i].cardName;
+					if(i==cardlist.length-1){
+						dictData = dictData+"{dictDetailCode:'"+code+"',"+
+						"dictDetailName:'"+name+"'}]"
+					}else if(i==0){
+						dictData = dictData+"{dictDetailCode:'"+code+"',"+
+						"dictDetailName:'"+name+"',selected:"+true+"},"
+					}else{
+						dictData = dictData+"{dictDetailCode:'"+code+"',"+
+						"dictDetailName:'"+name+"'},"
+					}	
+				}
+				//自定义下拉框
+				dictData = eval('('+dictData+')');
+				$('#approveCreditProduct').combobox({    
+				    valueField:'dictDetailCode',    
+				    textField:'dictDetailName',
+				    data:dictData
+				});
+				$("#bizApprovalHisForm").form("load",bizApproval);
+				if(bizApproval.approveResult=='0'){
+					$("#jujue").show();
+					$("#pizhun").hide();
+					$("#radio_pizhun").prop("checked",false);
+					$("#radio_jujue").prop("checked",true);
+				}else{//批准
+					$("#pizhun").show();
+					$("#jujue").hide();
+					$("#radio_pizhun").prop("checked",true);
+					$("#radio_jujue").prop("checked",false);
+				}
+			}
+		});
+	});
+	/* 保存前纠错功能 */
+	function queryGlResult(){
+		//alert($("#refuseChildcard:checked").val());
+		var pz = $("input[name='approveResult']:checked").val();
+		if(pz=="1"){
+			var policyCode1  = $("#policyCode1").combobox('getValue');
+			if(policyCode1==null||policyCode1==""){
+				alert("选择批准时，政策码1必须填写");
+				return;
+			}
+		}else if(pz=="0"){
+			var refuseCode1  = $("#refuseCode1").combobox('getValue');
+			if(refuseCode1==null||refuseCode1==""){
+				alert("选择拒绝时，拒绝码1必须填写");
+				return;
+			}
+		}
+		var reqestData = {
+				"applyCard":$("#applyCard").val(),
+				"isWuWangDian":isWuWangDian,
+				"wlm":$("#violateCode1").combobox('getValue'),
+				"approveCreditLimit":$("#approveCreditLimit").val(),
+				"approveCreditProduct":$("#approveCreditProduct").combobox('getValue'),
+				"refuseCode1":$("#refuseCode1").combobox('getValue'),
+				"certifinoVailud":parent.getCertifinoVailud(),//ID有效期
+				"approveResult":pz
+		};
+		$cf.ajax({
+			url : "/opas-naps/queryGlResult.json",
+			data : {
+				"appId" : appId,
+				"userIdParam":parent.getUserId(),
+				"flag" : "2",
+				reqestData:reqestData
+			},
+			onSuccess : function(dataRes) {
+				var isSuccess = dataRes.RSP_BODY.isSuccess;
+				if(isSuccess==true){
+					debugger;
+					var msg = dataRes.RSP_BODY.msg;
+					var yes = dataRes.RSP_BODY.yes;
+					alert(msg);
+					if(yes=="0"){
+						alert(resMap.yes);
+						return;
+					}
+				}
+				if(confirm('是否依然选择保存提交')){
+					saveOrUpdateApprovalResult();
+				}else{
+					alert("不保存");
+				}
+			}
+		});
+	}
+	/* 保存提交 */
+	function saveOrUpdateApprovalResult(){
+		var reqestData = {
+				"gjm":$("#gjm").val(),
+				"warningList":$("#warningList").val(),
+				"manualLimit":$("#manualLimit").val(),
+				"preSellimit":$("#preSellimit").val(),
+				"isAgreeDegrade":$("#isAgreeDegrade").combobox('getValue'),
+				"refuseChildcard":$("#refuseChildcard:checked").val(),
+				"jcShouxinProduct":$("#jcShouxinProduct").val(),
+				"decisionResult":$("#decisionResult").val(),
+				"decisionDesp":$("#decisionDesp").val(),
+				"approveCreditProduct":$("#approveCreditProduct").combobox('getValue'),
+				"approveCreditLimit":$("#approveCreditLimit").val(),
+				"approveResult":$("input[name='approveResult']:checked").val(),
+				"policyCode1":$("#policyCode1").combobox('getValue'),
+				"violateCode1":$("#violateCode1").combobox('getValue'),
+				"policyCode2":$("#policyCode2").combobox('getValue'),
+				"violateCode2":$("#violateCode2").combobox('getValue'),
+				"policyCode3":$("#policyCode3").combobox('getValue'),
+				"violateCode3":$("#violateCode3").combobox('getValue'),
+				"pizhun_memo":$("#pizhun_memo").val(),
+				"refuseCode1":$("#refuseCode1").combobox('getValue'),
+				"refuseCode2":$("#refuseCode2").combobox('getValue'),
+				"refuseCode3":$("#refuseCode3").combobox('getValue'),
+				"jujue_memo":$("#jujue_memo").val(),
+				"yearFeeDerateType":$("#yearFeeDerateType").combobox('getValue'),
+				"cardFaceCode":$("#cardFaceCode").combobox('getValue')
+			};
+			$cf.ajax({
+				url : "/opas-naps/saveOrUpdateApprovalResult.json",
+				data : {
+					"appId" : appId,
+					"userIdParam":parent.getUserId(),
+					"flag" : "2",
+					"reqestData" : reqestData
+				},
+				onSuccess : function(dataRes) {
+					
+				}
+			});
+	}
+	function showDiv(obj){
+		if(obj=='radio_pizhun'){
+			$("#pizhun").show();
+			$("#jujue").hide();
+			//$("#radio_jujue").prop("checked",false);
+		}else if(obj=='radio_jujue'){
+			$("#jujue").show();
+			$("#pizhun").hide();
+			//$("#radio_pizhun").prop("checked",false);
+		}
+	}
+	//展示窗口
+	function showWin(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+</script>

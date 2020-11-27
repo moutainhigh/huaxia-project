@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="TelcheckAddnote" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="TEL_SOURCE" property="telSource" jdbcType="VARCHAR" />
+    <result column="TEL_TYPE" property="telType" jdbcType="VARCHAR" />
+    <result column="TEL_NO" property="telNo" jdbcType="VARCHAR" />
+    <result column="NOTE_OBJECT" property="noteObject" jdbcType="VARCHAR" />
+    <result column="TELCHECK_REUSLT" property="telcheckReuslt" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    
+     <!-- 注记信息变色标识 -->
+     <result column="COLOR_FLAG" property="colorFlag" jdbcType="CHAR" />
+     <!-- 集体电核标识 -->
+     <result column="TEAM_TELCHECK_STATUS" property="teamTelCheckStatus" jdbcType="CHAR" />
+     <result column="BIG_MEMO" property="bigMemo" jdbcType="CLOB" />
+     
+     <result column="higeMemo" property="higeMemo" jdbcType="VARCHAR" />
+     <!-- 补件标识 -->
+      <result column="TYPE_FLAG" property="typeFlag" jdbcType="CHAR" />
+      
+      <!-- 集体电核共用 uuid -->
+      <result column="TAL_ID" property="talId" jdbcType="VARCHAR" />
+      <result column="tabId" property="tabId" jdbcType="VARCHAR" />
+      <result column="WIN_ID" property="winId" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- <sql id="Base_Column_List" >
+    AUTO_ID, APP_ID, TEL_SOURCE, TEL_TYPE, TEL_NO, NOTE_OBJECT, TELCHECK_RESULT, MEMO, 
+    DEC_DATE, APPROVE_RESULT, POLICY_CODE, VIOLATION_CODE, PASS_CODE, REFUSE_CODE, INDUSTRY_CODE, 
+    CREDITER, APPROVER, BIRTHDATE, ID_EXPIRE_DATE, CRT_DATE, CRT_USER
+  </sql> -->
+  	<select id="queryList" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+    select 
+    AUTO_ID, APP_ID, TEL_SOURCE, TEL_TYPE, TEL_NO, NOTE_OBJECT, TELCHECK_RESULT, MEMO, TYPE_FLAG,
+    CRT_DATE, CRT_USER, TEAM_TELCHECK_STATUS,BIG_MEMO,COLOR_FLAG,TAL_ID
+    from OPAS_TELCHECK_ADDNOTE
+    where APP_ID = #{appId,jdbcType=VARCHAR} AND (TYPE_FLAG='2' OR TYPE_FLAG='4' OR TYPE_FLAG='5' OR TYPE_FLAG='5.5' OR TYPE_FLAG='6') 
+    and big_memo is not null
+    order by type_flag asc,crt_date asc
+	</select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, APP_ID, TEL_SOURCE, TEL_TYPE, TEL_NO, NOTE_OBJECT, TELCHECK_RESULT, MEMO, 
+    CRT_DATE, CRT_USER, TEAM_TELCHECK_STATUS,BIG_MEMO
+    from OPAS_TELCHECK_ADDNOTE
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_TELCHECK_ADDNOTE
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppId" parameterType="java.lang.String" >
+    delete from OPAS_TELCHECK_ADDNOTE
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+    insert into OPAS_TELCHECK_ADDNOTE (AUTO_ID, APP_ID, TEL_SOURCE, 
+      TEL_TYPE, TEL_NO, NOTE_OBJECT, 
+      TELCHECK_RESULT, MEMO, BIG_MEMO,CRT_DATE, CRT_USER,TYPE_FLAG,TAL_ID
+      )
+    values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{telSource,jdbcType=VARCHAR}, 
+      #{telType,jdbcType=VARCHAR}, #{telNo,jdbcType=VARCHAR}, #{noteObject,jdbcType=VARCHAR}, 
+      #{telcheckResult,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+       #{bigMemo,jdbcType=CLOB},
+      CURRENT_TIMESTAMP, #{crtUser,jdbcType=VARCHAR}, #{typeFlag,jdbcType=CHAR},#{talId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+    update OPAS_TELCHECK_ADDNOTE
+    set APP_ID = #{appId,jdbcType=VARCHAR},
+      TEL_SOURCE = #{telSource,jdbcType=VARCHAR},
+      TEL_TYPE = #{telType,jdbcType=VARCHAR},
+      TEL_NO = #{telNo,jdbcType=VARCHAR},
+      NOTE_OBJECT = #{noteObject,jdbcType=VARCHAR},
+      TELCHECK_RESULT = #{telcheckResult,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      BIG_MEMO = #{bigMemo,jdbcType=CLOB},
+      UPDATE_DATE = CURRENT_TIMESTAMP,
+      CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      COLOR_FLAG = #{colorFlag,jdbcType=CHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByAutoIdTelcheckAddnote" parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+    update OPAS_TELCHECK_ADDNOTE
+    set UPDATE_DATE = CURRENT_TIMESTAMP,
+      CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      COLOR_FLAG = #{colorFlag,jdbcType=CHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 集体电核 wangdebin-->
+   <insert id="insertPhone" parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+   	insert into  OPAS_TELCHECK_ADDNOTE  
+		(AUTO_ID, APP_ID, TEL_SOURCE, 
+	      TEL_TYPE, TEL_NO, NOTE_OBJECT, 
+	      TELCHECK_RESULT,TEAM_TELCHECK_STATUS,
+	       MEMO,BIG_MEMO, CRT_DATE, CRT_USER,
+	       TAL_ID,WIN_ID,TYPE_FLAG
+	     )
+    values ( #{autoId,jdbcType=VARCHAR}, 
+    		 #{appId,jdbcType=VARCHAR},
+     		 #{telSource,jdbcType=VARCHAR}, 
+		     #{telType,jdbcType=VARCHAR}, 
+		     #{telNo,jdbcType=VARCHAR}, 
+		     #{noteObject,jdbcType=VARCHAR}, 
+		     #{telcheckResult,jdbcType=VARCHAR}, 
+		     #{teamTelCheckStatus,jdbcType=CHAR},
+		     #{memo,jdbcType=VARCHAR},
+		     #{bigMemo,jdbcType=CLOB}, 
+		     CURRENT_TIMESTAMP, 
+		     #{crtUser,jdbcType=VARCHAR},
+		     #{talId,jdbcType=VARCHAR},
+		     #{winId,jdbcType=VARCHAR},
+		     #{typeFlag,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertTeamPhone" parameterType="java.util.List">
+  	<!-- 	<selectKey keyProperty="autoId" resultType="String" order="BEFORE">
+  				select replace(uuid(),'-','')
+  				from dual 
+  		</selectKey> -->
+		insert into  OPAS_TELCHECK_ADDNOTE  
+		(AUTO_ID, APP_ID, TEL_SOURCE, 
+	      TEL_TYPE, TEL_NO, NOTE_OBJECT, 
+	      TELCHECK_RESULT,TEAM_TELCHECK_STATUS,
+	       MEMO,BIG_MEMO, CRT_DATE, CRT_USER,
+	        TAL_ID,WIN_ID,TYPE_FLAG
+	     )
+	  	<foreach collection="list" item="item" index="index" separator="union all" > 
+	      	(select
+	      		#{item.autoId,jdbcType=VARCHAR},
+	      		#{item.appId,jdbcType=VARCHAR},
+				#{item.telSource,jdbcType=VARCHAR},
+				#{item.telType,jdbcType=VARCHAR},
+				#{item.telNo,jdbcType=VARCHAR},
+				#{item.noteObject,jdbcType=VARCHAR},
+				#{item.telcheckResult,jdbcType=VARCHAR},
+				#{item.teamTelCheckStatus,jdbcType=CHAR},
+				#{item.memo,jdbcType=VARCHAR},
+				#{item.bigMemo,jdbcType=CLOB},
+				#{item.crtDate,jdbcType=TIMESTAMP},
+				<!-- CURRENT_TIMESTAMP, -->
+				#{item.crtUser,jdbcType=VARCHAR},
+				#{item.talId,jdbcType=VARCHAR},
+		    	#{item.winId,jdbcType=VARCHAR},
+		    	#{item.typeFlag,jdbcType=CHAR}
+			from dual
+			)
+	    </foreach>
+	</insert>
+	<select id="selectTeamPhoneByList" parameterType="java.util.List" resultMap="BaseResultMap">
+		SELECT 
+		 AUTO_ID,APP_ID,BIG_MEMO, CRT_DATE
+		FROM OPAS_TELCHECK_ADDNOTE  
+		WHERE  TEAM_TELCHECK_STATUS='2' 
+		<if test="list != null and list.size()>0 ">
+			and  APP_ID IN
+			<foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+		            #{item}
+		    </foreach>
+		</if>
+	</select>
+	<!-- 同一批集体电核 --> 
+	<select id="selectTeamPhoneByWinId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT 
+		distinct TAL_ID as tabId,to_char(BIG_MEMO) as higeMemo , CRT_DATE,CRT_USER,WIN_ID
+		FROM OPAS_TELCHECK_ADDNOTE  
+		WHERE 
+		WIN_ID= #{winId,jdbcType=VARCHAR}
+		order by CRT_DATE 
+	</select>
+	<select id="selectCountByWinId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		count(distinct TAL_ID)
+		FROM OPAS_TELCHECK_ADDNOTE  
+		WHERE 
+		WIN_ID= #{winId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectCountByTabId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		count(1)
+		FROM OPAS_TELCHECK_ADDNOTE  
+		WHERE 
+		TAL_ID= #{talId,jdbcType=VARCHAR}
+	</select>
+	<update id="updateTeamPhoneByTabId" parameterType="java.util.Map" >
+		update   OPAS_TELCHECK_ADDNOTE
+		set 
+		BIG_MEMO = #{bigMemo,jdbcType=CLOB}
+		WHERE 
+		TAL_ID= #{talId,jdbcType=VARCHAR}
+	</update>
+	 <delete id="deleteByTabId" parameterType="java.util.Map" >
+		    delete from OPAS_TELCHECK_ADDNOTE
+		    where TAL_ID = #{tabId,jdbcType=VARCHAR} 
+ 	 </delete>
+ 	 <delete id="deleteByWinId" parameterType="java.util.Map" >
+		    delete from OPAS_TELCHECK_ADDNOTE
+		    where WIN_ID = #{winId,jdbcType=VARCHAR}
+ 	 </delete>
+	<update id="updateTeamPhone" parameterType="java.util.List">
+    	begin  
+        <foreach collection="list" item="item" index="index" separator=";" > 
+            update OPAS_TELCHECK_ADDNOTE tel
+            <set>
+            <if test="item.telSource !=null and item.telSource!=''">
+                tel.TEL_SOURCE = #{item.telSource}
+            </if>
+             <if test="item.telType !=null and item.telType!=''">
+                tel.TEL_TYPE = #{item.telType}
+            </if>
+             <if test="item.telNo !=null and item.telNo!=''">
+                tel.TEL_NO = #{item.telNo}
+            </if>
+             <if test="item.noteObject !=null and item.noteObject !=''">
+                tel.NOTE_OBJECT = #{item.noteObject}
+            </if>
+             <if test="item.telcheckResult !=null and item.telcheckResult !=''">
+                tel.TELCHECK_RESULT = #{item.telcheckResult}
+            </if>
+             <if test="item.teamTelCheckStatus !=null and item.teamTelCheckStatus !=''">
+                tel.TEAM_TELCHECK_STATUS = #{item.teamTelCheckStatus}
+            </if>
+             <if test="item.memo !=null and item.memo !=''">
+                tel.MEMO = #{item.memo}
+            </if>
+             <if test="item.bigMemo !=null and item.bigMemo !=''">
+                tel.BIG_MEMO = #{item.bigMemo}
+            </if>
+           		tel.CRT_DATE=CURRENT_DATE,
+            <if test="item.crtUser !=null and item.crtUser !=''">
+                tel.CRT_USER = #{item.crtUser}
+            </if>
+            </set>
+            where app.APP_ID = #{item.appId}
+            </foreach>
+        ;end;
+    </update> 
+    <!-- 王德彬 --> 
+   <resultMap id="PhoneSourceMap" type="java.util.Map" >
+     <result column="TEL_SOURCE_CODE" property="dictDetailCode" jdbcType="CHAR" />
+     <result column="TEL_SOURCE_DESC" property="dictDetailName" jdbcType="VARCHAR" />
+   </resultMap>
+   <select id="selectListPhoneSourceData" parameterType="java.util.Map" resultMap="PhoneSourceMap" >
+     SELECT t.TEL_SOURCE_CODE,t.TEL_SOURCE_DESC FROM OPAS_PARAM_PHONE_SOURCE t WHERE 
+      t.ACCT_TYPE1 = #{acctType1,jdbcType=VARCHAR}
+     <if test="status !=null and status !=''">
+       AND t.STATUS = #{status}
+     </if>
+     ORDER BY t.TEL_SOURCE_CODE
+   </select>
+   <resultMap id="PhoneTypeMap" type="java.util.Map" >
+     <result column="PHONE_TYPE" property="dictDetailCode" jdbcType="CHAR" />
+     <result column="PHONE_DESC" property="dictDetailName" jdbcType="VARCHAR" />
+   </resultMap>
+   <select id="selectListPhoneTypeData" parameterType="java.util.Map" resultMap="PhoneTypeMap" >
+     SELECT t.PHONE_TYPE,t.PHONE_DESC FROM OPAS_PARAM_PHONE t WHERE 
+     t.ACCT_TYPE = #{acctType,jdbcType=CHAR}
+     <if test="status !=null and status !=''">
+       AND t.STATUS = #{status}
+     </if>
+    ORDER BY t.PHONE_TYPE
+   </select>
+   <resultMap id="PhoneNoteObjectMap" type="java.util.Map" >
+     <result column="TEL_OBJECT_CODE" property="dictDetailCode" jdbcType="CHAR" />
+     <result column="TEL_OBJECT_DESC" property="dictDetailName" jdbcType="VARCHAR" />
+   </resultMap>
+   <select id="selectListPhoneNoteObjectData" parameterType="java.util.Map" resultMap="PhoneNoteObjectMap" >
+     SELECT t.TEL_OBJECT_CODE,t.TEL_OBJECT_DESC FROM OPAS_PARAM_VISIT_OBJECT t WHERE 
+     t.ACCT_TYPE = #{acctType,jdbcType=CHAR}
+     <if test="status !=null and status !=''">
+       AND t.STATUS = #{status}
+     </if>
+    ORDER BY t.TEL_OBJECT_CODE
+   </select>
+   <resultMap id="PhoneCheckResultMap" type="java.util.Map" >
+     <result column="TEL_CHK_CONCLUSION_CODE" property="dictDetailCode" jdbcType="CHAR" />
+     <result column="TEL_CHK_CONCLUSION_DESC" property="dictDetailName" jdbcType="VARCHAR" />
+   </resultMap>
+   <select id="selectListPhoneCheckResultData" parameterType="java.util.Map" resultMap="PhoneCheckResultMap" >
+     SELECT TRIM(t.TEL_CHK_CONCLUSION_CODE) AS TEL_CHK_CONCLUSION_CODE,t.TEL_CHK_CONCLUSION_DESC FROM OPAS_PARAM_PHONE_CONCLUSION t WHERE 
+     t.ACCT_TYPE = #{acctType,jdbcType=CHAR}
+     <if test="status !=null and status !=''">
+       AND t.STATUS = #{status}
+     </if>
+    ORDER BY t.TEL_CHK_CONCLUSION_CODE
+   </select>
+    <select id="queryListByTime" parameterType="java.util.Date" resultMap="BaseResultMap">
+	select
+	AUTO_ID, APP_ID, TEL_SOURCE, TEL_TYPE, TEL_NO, NOTE_OBJECT, TELCHECK_RESULT,MEMO,
+	CRT_DATE, CRT_USER, TEAM_TELCHECK_STATUS,BIG_MEMO
+	from OPAS_TELCHECK_ADDNOTE
+	where CRT_DATE = #{time} and rownum=1
+  </select>
+  
+   <resultMap id="PassCodeResultMap" type="java.util.Map" >
+     <result column="PHONE_CHK_PASS_CODE" property="dictDetailCode" jdbcType="CHAR" />
+   </resultMap>
+   <select id="selectlistPassCodeResult" parameterType="java.util.Map" resultMap="PassCodeResultMap">
+	select PHONE_CHK_PASS_CODE from OPAS_PHONE_CHK_PASS_CODE WHERE 1=1
+	<if test="status !=null and status !=''">
+       	AND STATUS = #{status}
+     </if>
+ 	<if test="acctType != null and acctType !='' ">
+		AND ACCT_TYPE1 = #{acctType,jdbcType=CHAR}
+	</if>
+  </select>
+  <delete id="deleteTelcheckAddNoteByTalId" parameterType="java.util.Map">
+		 DELETE FROM  OPAS_TELCHECK_ADDNOTE  WHERE TAL_ID = #{talId,jdbcType=VARCHAR}
+		 and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+    <update id="updateTelcheckAddNoteByTalId" parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+    UPDATE   OPAS_TELCHECK_ADDNOTE
+    <set>
+      <if test="telSource != null"> TEL_SOURCE = #{telSource,jdbcType=VARCHAR},</if>
+      <if test="telType != null">TEL_TYPE = #{telType,jdbcType=VARCHAR}, </if>
+      <if test="telNo != null"> TEL_NO = #{telNo,jdbcType=VARCHAR}, </if>
+      <if test="noteObject != null"> NOTE_OBJECT = #{noteObject,jdbcType=VARCHAR},</if>
+      <if test="telcheckResult != null"> TELCHECK_RESULT = #{telcheckResult,jdbcType=VARCHAR},</if>
+      <if test="memo != null"> MEMO = #{memo,jdbcType=VARCHAR},</if>
+      <if test="crtDate != null">CRT_DATE = #{crtDate,jdbcType=TIMESTAMP}, </if>
+      <if test="crtUser != null"> CRT_USER = #{crtUser,jdbcType=VARCHAR},</if>
+      <if test="updateDate != null"> UPDATE_DATE =CURRENT_TIMESTAMP,</if>
+      <if test="bigMemo != null"> BIG_MEMO = #{bigMemo,jdbcType=CLOB}, </if>
+      <if test="colorFlag != null"> COLOR_FLAG = #{colorFlag,jdbcType=CHAR}, </if>
+    </set>
+    WHERE TAL_ID = #{talId,jdbcType=VARCHAR}
+  </update>
+  
+  <resultMap id="T5eEsMiddleResultMap" type="com.huaxia.opas.domain.credit.T5eEsMiddle" >
+	   <result column="ID" property="id" jdbcType="VARCHAR" />
+	   <result column="EI" property="ei" jdbcType="VARCHAR" />
+	   <result column="CATEGORY" property="category" jdbcType="VARCHAR" />
+	   <result column="UPDATECATEGORY" property="updateCategory" jdbcType="VARCHAR" />
+	   <result column="SUB_CATEGORY" property="subCategory" jdbcType="VARCHAR" />
+	   <result column="UPDATED" property="updated" jdbcType="VARCHAR" />
+	   <result column="POSITION" property="position" jdbcType="VARCHAR" />
+	   <result column="TITLE" property="title" jdbcType="TIMESTAMP" />
+	   <result column="PLACE_OF_BIRTH" property="placeOfBirth" jdbcType="VARCHAR" />
+	   <result column="DOB" property="dob" jdbcType="VARCHAR" />
+	   <result column="DECEASED" property="deceased" jdbcType="VARCHAR" />
+	   <result column="COUNTRIES" property="countries" jdbcType="VARCHAR" />
+	   <result column="FIRST_NAME" property="firstName" jdbcType="VARCHAR" />
+	   <result column="LAST_NAME" property="lastName" jdbcType="VARCHAR" />
+	   <result column="ENTERED" property="entered" jdbcType="VARCHAR" />
+	   <result column="NO" property="no" jdbcType="VARCHAR" />
+	   <result column="PASSPORTS_NO" property="passportsNo" jdbcType="TIMESTAMP" />
+	   <result column="FULL_NAME" property="fullName" jdbcType="VARCHAR" />
+	   <result column="CARD_TYPE" property="cardType" jdbcType="VARCHAR" />
+	   <result column="CARD_NO" property="cardNo" jdbcType="VARCHAR" />
+	   <result column="CREATE_DT" property="createDt" jdbcType="VARCHAR" />
+	   <result column="LIST_SOURCE" property="listSource" jdbcType="VARCHAR" />
+	   <result column="CREATE_TM" property="createTm" jdbcType="VARCHAR" />
+	   <result column="ALIAS_NAME" property="altasName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="queryT5eEsMiddle" parameterType="java.util.Map"  resultMap="T5eEsMiddleResultMap">
+		select
+			ID,EI,CATEGORY,UPDATECATEGORY,SUB_CATEGORY,UPDATED,POSITION,TITLE,
+			PLACE_OF_BIRTH,DOB,DECEASED,COUNTRIES,FIRST_NAME,LAST_NAME,ENTERED,NO,
+			PASSPORTS_NO,FULL_NAME,CARD_TYPE,CARD_NO,CREATE_DT,LIST_SOURCE,CREATE_TM
+			ALIAS_NAME
+		from AML_T5E_ES_MIDDLE
+		where CARD_TYPE = #{cardType} and CARD_NO =  #{cardNo} and FULL_NAME= #{fullName} and rownum=1
+  </select>
+  
+</mapper>

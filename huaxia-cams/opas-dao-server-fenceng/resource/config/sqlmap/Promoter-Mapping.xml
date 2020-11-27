@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Promoter">
+
+	<resultMap id="PromoterResultMap" type="com.huaxia.opas.domain.sysparm.Promoter">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PROMOTER_NAME" property="promoterName" jdbcType="VARCHAR" />
+		<result column="PROMOTER_NO" property="promoterNo" jdbcType="VARCHAR" />
+		<result column="CERTIFI_TYPE" property="certifiType" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR" />
+		<result column="INFO_CHANNEL" property="infoChannel" jdbcType="CHAR" />
+		<result column="FRAUD_TYPE" property="fraudType" jdbcType="CHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="INVALID_TIME" property="invalidTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+	</resultMap>
+
+	<resultMap id="PromoterHisMap" type="com.huaxia.opas.domain.sysparm.PromoterHis">
+		<id column="KEY_ID" property="keyId" jdbcType="VARCHAR" />
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PROMOTER_NAME" property="promoterName" jdbcType="VARCHAR" />
+		<result column="PROMOTER_NO" property="promoterNo" jdbcType="VARCHAR" />
+		<result column="CERTIFI_TYPE" property="certifiType" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR" />
+		<result column="INFO_CHANNEL" property="infoChannel" jdbcType="CHAR" />
+		<result column="FRAUD_TYPE" property="fraudType" jdbcType="CHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="INVALID_TIME" property="invalidTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERATION" property="operation" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+	</resultMap>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="PromoterResultMap">
+		select
+			AUTO_ID,PROMOTER_NAME,PROMOTER_NO,CERTIFI_TYPE,CERTIFI_NO,MOBILE_NO,INFO_CHANNEL,FRAUD_TYPE
+			,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS
+		from OPAS_PROMOTER_RISKLIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="queryPromoterCount" parameterType="com.huaxia.opas.domain.sysparm.Promoter"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PROMOTER_RISKLIST
+		<where>		   
+			<if test="promoterName != null and promoterName !='' ">
+				AND PROMOTER_NAME LIKE '%${promoterName}%'
+			</if>
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="promoterNo != null and promoterNo !='' ">
+				AND PROMOTER_NO LIKE '%${promoterNo}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>	
+		</where>
+	</select>
+	
+	<select id="queryPromoterHisCount" parameterType="com.huaxia.opas.domain.sysparm.PromoterHis"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PROMOTER_RISKLIST_HIS
+		WHERE AUTO_ID = #{autoId}
+	</select>
+	
+	<select id="queryPromoterList" parameterType="com.huaxia.opas.domain.sysparm.Promoter"
+		resultMap="PromoterResultMap">
+		select AUTO_ID,PROMOTER_NAME,PROMOTER_NO,CERTIFI_TYPE,CERTIFI_NO,MOBILE_NO,INFO_CHANNEL,FRAUD_TYPE
+		,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS from OPAS_PROMOTER_RISKLIST
+		<where>		  
+			<if test="promoterName != null and promoterName !='' ">
+				AND PROMOTER_NAME LIKE '%${promoterName}%'
+			</if>
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND CERTIFI_NO LIKE '%${certifiNo}%'
+			</if>
+			<if test="promoterNo != null and promoterNo !='' ">
+				AND PROMOTER_NO LIKE '%${promoterNo}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+		</where>
+		order by CREATE_TIME desc
+	</select>
+	
+	<select id="queryPromoterHisList" parameterType="com.huaxia.opas.domain.sysparm.PromoterHis"
+		resultMap="PromoterHisMap">
+		select AUTO_ID,PROMOTER_NAME,PROMOTER_NO,CERTIFI_TYPE,CERTIFI_NO,MOBILE_NO,INFO_CHANNEL,FRAUD_TYPE
+		,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS,OPERATION from OPAS_PROMOTER_RISKLIST_HIS
+		WHERE AUTO_ID = #{autoId} 
+		order by OPERAT_TIME desc
+	</select>
+	
+	<insert id="insertPromoter" parameterType="com.huaxia.opas.domain.sysparm.Promoter">
+		insert into OPAS_PROMOTER_RISKLIST
+		(AUTO_ID,PROMOTER_NAME,PROMOTER_NO,CERTIFI_TYPE,CERTIFI_NO,MOBILE_NO,INFO_CHANNEL,FRAUD_TYPE
+		,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{promoterName,jdbcType=VARCHAR},
+		#{promoterNo,jdbcType=CHAR},
+		#{certifiType,jdbcType=VARCHAR},
+		#{certifiNo,jdbcType=VARCHAR},
+		#{mobileNo,jdbcType=VARCHAR},
+		#{infoChannel,jdbcType=CHAR},
+		#{fraudType,jdbcType=CHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{invalidTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{operator,jdbcType=VARCHAR},
+		#{operatTime,jdbcType=TIMESTAMP},
+		#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+	
+	<insert id="insertPromoterHis" parameterType="com.huaxia.opas.domain.sysparm.PromoterHis">
+		insert into OPAS_PROMOTER_RISKLIST_HIS
+		(KEY_ID,AUTO_ID,PROMOTER_NAME,PROMOTER_NO,CERTIFI_TYPE,CERTIFI_NO,MOBILE_NO,INFO_CHANNEL,FRAUD_TYPE
+		,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS,OPERATION)
+		values (
+		#{keyId,jdbcType=VARCHAR},
+		#{autoId,jdbcType=VARCHAR},
+		#{promoterName,jdbcType=VARCHAR},
+		#{promoterNo,jdbcType=CHAR},
+		#{certifiType,jdbcType=VARCHAR},
+		#{certifiNo,jdbcType=VARCHAR},
+		#{mobileNo,jdbcType=VARCHAR},
+		#{infoChannel,jdbcType=CHAR},
+		#{fraudType,jdbcType=CHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{invalidTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{operator,jdbcType=VARCHAR},
+		#{operatTime,jdbcType=TIMESTAMP},
+		#{currStatus,jdbcType=CHAR},
+		#{operation,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updatePromoter" parameterType="com.huaxia.opas.domain.sysparm.Promoter">
+		update OPAS_PROMOTER_RISKLIST
+		<set>
+			PROMOTER_NAME = #{promoterName,jdbcType=VARCHAR},
+			PROMOTER_NO = #{promoterNo,jdbcType=CHAR},
+			CERTIFI_TYPE = #{certifiType,jdbcType=CHAR},
+			CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+			MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+			INFO_CHANNEL = #{infoChannel,jdbcType=CHAR},
+			FRAUD_TYPE = #{fraudType,jdbcType=CHAR},
+			MEMO = #{memo,jdbcType=VARCHAR},
+			INVALID_TIME = #{invalidTime,jdbcType=TIMESTAMP},
+			CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+			CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+
+	</update>
+	
+	<delete id="deletePromoter" parameterType="java.lang.String">
+		delete from
+		OPAS_PROMOTER_RISKLIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="openPromoter" parameterType="com.huaxia.opas.domain.sysparm.Promoter">
+		update OPAS_PROMOTER_RISKLIST
+		<set>
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+			CURR_STATUS = 1
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="closePromoter" parameterType="com.huaxia.opas.domain.sysparm.Promoter">
+		update OPAS_PROMOTER_RISKLIST
+		<set>
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+			CURR_STATUS = 0
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insertPromoterImportFile" parameterType="java.util.ArrayList">
+		insert into OPAS_PROMOTER_RISKLIST
+		(AUTO_ID,PROMOTER_NAME,PROMOTER_NO,CERTIFI_TYPE,CERTIFI_NO,MOBILE_NO,INFO_CHANNEL,FRAUD_TYPE
+		,MEMO,INVALID_TIME,CREATE_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS)
+			<foreach collection="list" item="promoter" index="index"  separator="union all" >
+				(select
+				#{promoter.autoId,jdbcType=VARCHAR},
+				#{promoter.promoterName,jdbcType=VARCHAR},
+				#{promoter.promoterNo,jdbcType=CHAR},
+				#{promoter.certifiType,jdbcType=VARCHAR},
+				#{promoter.certifiNo,jdbcType=VARCHAR},
+				#{promoter.mobileNo,jdbcType=VARCHAR},
+				#{promoter.infoChannel,jdbcType=CHAR},
+				#{promoter.fraudType,jdbcType=CHAR},
+				#{promoter.memo,jdbcType=VARCHAR},
+				#{promoter.invalidTime,jdbcType=TIMESTAMP},
+				#{promoter.createTime,jdbcType=TIMESTAMP},
+				#{promoter.operator,jdbcType=VARCHAR},
+				#{promoter.operatTime,jdbcType=TIMESTAMP},
+				#{promoter.currStatus,jdbcType=CHAR}
+				from dual)
+		</foreach>
+	</insert>
+</mapper>

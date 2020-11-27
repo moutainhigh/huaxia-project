@@ -1,0 +1,56 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	
+	<div id="searchTableDiv"  title="表信息查询"  class="area-search"  style="width: 100%; height: 100%" >
+		<table>
+			<tr>
+				<td>
+					 &nbsp;&nbsp; 表名 : <input type="text" style="width: 250px" name="searchTable" id="searchTable"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:searchTable();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</td>
+			</tr>
+			<tr>
+			</tr>
+		</table>
+		<table id="searchTableTab" class="easyui-datagrid" style="width: 99%" data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:50,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,selectOnCheck:false,method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<!-- <th field="operateCode" width="10%" align="center" checkbox="true">员工姓名</th> -->
+					<th field="columnName" width="25%" align="center">表字段</th>				
+					<th field="comments" width="25%" align="center">字段中文</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</body>
+<script>
+	/* var d = new Date();
+	var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+	$('#exceptionDate').val(str); */
+	
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	
+	
+	var searchTableTab = $("#searchTableTab");
+	function searchTable(){
+		
+		var tableName = $('#searchTable').val();
+		tableName = tableName.replace(/\s+/g,"").toUpperCase();
+	
+		//url:'/opas-naps/searchTable.json',
+		var opts = $('#searchTableTab').datagrid("options");
+		opts.url = '/opas-naps/searchEveryTable.json';
+		var s={"tableName" : tableName};
+		$('#searchTableTab').datagrid("reload", s);
+	}
+	
+</script>

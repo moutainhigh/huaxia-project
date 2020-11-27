@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.huaxia.plaze.ui.fico.mapper.FicoBatchDetailMapper">
+	<resultMap id="result_batchDetail"
+		type="com.huaxia.plaze.ui.fico.domain.FicoBatchDetail">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_ID" property="batchFileId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="TOP_THREE_MOBILE" property="topThreeMobile" jdbcType="VARCHAR" />
+		<result column="INPUT_SYSDATE" property="inputSysDate" jdbcType="VARCHAR" />
+		<result column="UNIQUE_ID" property="uniqueID" jdbcType="VARCHAR" />
+		<result column="SEQUENCE_NUMBER" property="sequenceNumber" jdbcType="VARCHAR" />
+		<result column="ENCRYPTION_CERT_NO" property="encryptionCertNO" jdbcType="VARCHAR" />
+		<result column="ENCRYPTION_MOBILE" property="encryptionMobile" jdbcType="VARCHAR" />
+		<result column="QUERY_TIME" property="queryTime" jdbcType="VARCHAR" />
+		<result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+	</resultMap> 
+	<insert id="insertObject"
+		parameterType="com.huaxia.plaze.ui.fico.domain.FicoBatchDetail">
+		INSERT INTO FICO_TRN_BATCH_DETAIL (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_FILE_ID,
+		TRN_ID,
+		QUERY_STATUS,
+		CERT_NO,
+		MOBILE,
+		TOP_THREE_MOBILE,
+		INPUT_SYSDATE,
+		UNIQUE_ID,
+		SEQUENCE_NUMBER,
+		ENCRYPTION_CERT_NO ,
+		 ENCRYPTION_MOBILE 
+		)
+		values
+		(
+		SYS_GUID(),
+		SYSDATE,
+		#{crtUser, jdbcType = VARCHAR},
+		#{batchFileId, jdbcType = CHAR},
+		#{trnId, jdbcType = CHAR},
+		#{queryStatus, jdbcType = CHAR},
+		#{certNo, jdbcType = VARCHAR},
+		#{mobile, jdbcType = VARCHAR},
+		#{topThreeMobile, jdbcType = VARCHAR},
+		#{inputSysDate, jdbcType = VARCHAR},
+		#{uniqueID, jdbcType = VARCHAR},
+		#{sequenceNumber, jdbcType = VARCHAR},
+		#{encryptionCertNO, jdbcType = VARCHAR},
+		#{encryptionMobile, jdbcType = VARCHAR}
+		)
+	</insert>
+	<!-- 批次文件明细记录查询 -->
+	<select id="selectDetailListByPage" parameterType="string"
+	resultMap="result_batchDetail">
+		 SELECT 
+		UUID,
+		TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		CRT_USER,
+		BATCH_FILE_ID,
+		TRN_ID,
+		QUERY_STATUS,
+		CERT_NO,
+		MOBILE,
+		TOP_THREE_MOBILE,
+		INPUT_SYSDATE,
+		UNIQUE_ID,
+		SEQUENCE_NUMBER,
+		ENCRYPTION_CERT_NO ,
+		 ENCRYPTION_MOBILE        
+		 FROM FICO_TRN_BATCH_DETAIL 
+		 WHERE BATCH_FILE_ID=#{batchFileId}
+		  ORDER BY 
+		CRT_TIME DESC
+   </select>
+   
+    <select id="selectBatchListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		  SELECT 
+	Count(*)
+		FROM
+		FICO_TRN_BATCH_DETAIL T 
+      where t.BATCH_FILE_ID=#{batchFileId}
+	</select>
+	
+	<!-- 批次查询 -->
+	<select id="selectBatchListByPage" parameterType="java.util.Map"
+	resultMap="result_batchDetail">
+		SELECT  UUID,CRT_TIME,CRT_USER,BATCH_FILE_ID,TRN_ID,QUERY_STATUS,CERT_NO,MOBILE,TOP_THREE_MOBILE,INPUT_SYSDATE,UNIQUE_ID,SEQUENCE_NUMBER,ENCRYPTION_CERT_NO,ENCRYPTION_MOBILE,QUERY_TIME,RISK_LEVEL, RN FROM
+		(SELECT UUID,CRT_TIME,CRT_USER,BATCH_FILE_ID,TRN_ID,QUERY_STATUS,CERT_NO,MOBILE,TOP_THREE_MOBILE,INPUT_SYSDATE,UNIQUE_ID,SEQUENCE_NUMBER,ENCRYPTION_CERT_NO,ENCRYPTION_MOBILE,QUERY_TIME,RISK_LEVEL, ROWNUM RN FROM
+		(	
+		SELECT 
+		T.UUID,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		T.CRT_USER,
+		T.BATCH_FILE_ID,
+		T.TRN_ID,
+		T.QUERY_STATUS,
+		T.CERT_NO,
+		T.MOBILE,
+		T.TOP_THREE_MOBILE,
+		T.INPUT_SYSDATE,
+		T.UNIQUE_ID,
+		T.SEQUENCE_NUMBER,
+		T.ENCRYPTION_CERT_NO ,
+		T.ENCRYPTION_MOBILE,
+    TO_CHAR(T.SAS_TIME, 'YYYY-MM-DD HH24:MI:SS') QUERY_TIME,
+    T.RISK_LEVEL
+		FROM
+		FICO_TRN_BATCH_DETAIL T 
+		where t.BATCH_FILE_ID=#{batchFileId}
+		ORDER BY 
+		T.CRT_TIME DESC
+	    ) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+   </select>
+   
+     <select id="countNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(*) from FICO_TRN_BATCH_DETAIL where crt_time <![CDATA[ >= ]]> to_date(#{beginTime},'yyyy-mm-dd hh24:mi:ss') 
+ and   crt_time <![CDATA[ <= ]]> to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss') and RISK_LEVEL is not null
+	</select>
+</mapper>

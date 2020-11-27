@@ -1,0 +1,86 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<aop:aspectj-autoproxy />
+	<context:component-scan base-package="com.huaxia.plaze.aspect" />
+	<context:component-scan base-package="com.huaxia.plaze.ui.*.controller" />
+	<context:component-scan base-package="com.huaxia.plaze.common" />
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:plaze.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.huaxia.plaze.interceptor.FileUploadInterceptor">
+				<property name="fileMaxSize" value="12582912" />
+			</bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/login.do" />
+			<mvc:exclude-mapping path="/logout.do" />
+			<mvc:exclude-mapping path="/verify.do" />
+			<mvc:exclude-mapping path="/default/**" />
+			<mvc:exclude-mapping path="/change.do" />
+			<mvc:exclude-mapping path="/modify.do" />
+			<mvc:exclude-mapping path="/batch/quartz/**" />
+			<bean class="com.huaxia.plaze.interceptor.AuthorizeOperateIntercepter" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.huaxia.plaze.interceptor.MethodExecuteIntercepter" />
+		</mvc:interceptor>
+		<!-- 人行查询/找限制拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/pboc/single.*" />
+			<mvc:mapping path="/pboc/batch.*" />
+			<mvc:mapping path="/pboc/history.*" />
+			<bean class="com.huaxia.plaze.interceptor.PbocQueryLimitIntercepter" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+	<!-- 数据字典缓存支持 -->
+	<bean class="com.huaxia.plaze.cache.DictionarySupport" />
+	
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- <property name="maxUploadSize" value="12582912" /> -->
+		<property name="resolveLazily" value="true" />
+	</bean>
+	
+	<!-- 全局异常处理器 -->
+	<!-- <bean class="com.huaxia.plaze.interceptor.GlobalExceptionResolver" /> -->
+	<bean class="com.huaxia.plaze.exception.FileUploadHandlerExceptionResolver" />
+	
+	<!-- 获取spring容器上下文 -->
+	<bean class="com.huaxia.opas.util.SpringContextUtil" />
+	
+	<bean id="pbocFileHelper" class="com.huaxia.plaze.common.FileHelper">
+		<property name="fileStoreDirectory" value="${pboc.file_store_directory}" />
+	</bean>
+</beans>

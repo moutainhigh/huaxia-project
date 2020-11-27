@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd">
+    <!-- 组长调阅  经理调阅-->
+	<bean id="retrieveServiceImpl" class="com.huaxia.opas.service.retrieve.impl.RetrieveServiceImpl" />
+	<!-- 组长调阅  经理调阅 -->
+    
+    <!-- ########## 参数管理 # 开始 ########## -->
+    <!-- 业务字典大类 -->
+	<bean id="apDictServiceImpl" class="com.huaxia.opas.service.dict.impl.ApDictServiceImpl" />
+	<!-- 业务字典小类 -->
+	<bean id="apDictDetailServiceImpl" class="com.huaxia.opas.service.dict.impl.ApDictDetailServiceImpl" />
+	<!-- 预授信 -->
+	<bean id="preCreditParamServiceImpl" class="com.huaxia.opas.service.sysparm.impl.PreCreditParamServiceImpl"/>
+	<!-- PAD定位地址-wenyh -->
+	<bean id="padLocationAddressServiceImpl" class="com.huaxia.opas.service.sysparm.impl.PadLocationAddressServiceImpl"/>
+	<!-- 简项公安参数匹配 -->
+	<bean id="matchIdenityServiceImpl" class="com.huaxia.opas.service.sysparm.impl.MatchIdenityServiceImpl"/>
+	<!-- 推广员风险名单库 -->
+	<bean id="promoterRiskServiceImpl" class="com.huaxia.opas.service.sysparm.impl.PromoterRiskServiceImpl" />
+	<!-- 同业关注风险名单库 -->
+	<bean id="sameIndustryRiskServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SameIndustryRiskServiceImpl" />
+	<!-- 易达金存量客户电销名单 --> 
+	<bean id="stockcustTelSaleServiceImpl" class="com.huaxia.opas.service.sysparm.impl.StockcustTelSaleServiceImpl" />
+	<!-- MBA院校名单 -->
+	<bean id="MBASchoolServiceImpl" class="com.huaxia.opas.service.sysparm.impl.MBASchoolServiceImpl" />
+	<!-- 团办名单库 -->
+	<bean id="teamServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TeamServiceImpl" />
+	<!-- 地址风险类名单  shihuan-->
+	<bean id="addrRiskListServiceImpl" class="com.huaxia.opas.service.sysparm.impl.AddrRistListServiceImpl" />
+	<bean id="addrRistListHistoryServiceImpl" class="com.huaxia.opas.service.sysparm.impl.AddrRistListHistoryServiceImpl"/>
+	<!-- 用户审批卡种  用于用户添加时勾选审批卡中 shihuan -->
+	<bean id="userCardServiceImpl" class="com.huaxia.opas.service.sysparm.impl.UserCardServiceImpl"/>
+	<!-- 电话类风险名单 shihuan-->
+	<bean id="telRistListServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TelRistListServiceImpl" />
+	<bean id="telRistListHistoryServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TelRistListHistoryServiceImpl" />
+	<!-- 单位地址风险类名单 shihuan-->
+	<bean id="companyRiskServiceImpl" class="com.huaxia.opas.service.sysparm.impl.CompanyRiskServiceImpl" />
+	<!-- 重点院校名单 shihuan-->
+	<bean id="majorschoolListServiceImpl" class="com.huaxia.opas.service.sysparm.impl.MajorschoolListServiceImpl" />
+	<!-- 特殊项目名单 shihuan-->
+	<bean id="specialProjectServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SpecialProjectServiceImpl" />
+	<!-- 优质企业名单 shihuan-->
+	<bean id="goodCompanyListServiceImpl" class="com.huaxia.opas.service.sysparm.impl.GoodCompanyListServiceImpl" />
+	<!-- 目标企业名单 shihuan-->
+	<bean id="targetCompanyServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TargetCompanyServiceImpl" />
+	<!-- 导入查询历史记录 shihuan -->
+	<bean id="batchFileInfoServiceImpl" class="com.huaxia.opas.service.sysparm.impl.BatchFileInfoServiceImpl" />
+	<!-- CRM -->
+	<bean id="CRMCommonServiceImpl" class="com.huaxia.opas.service.crm.impl.CRMCommonServiceImpl" />
+	<!-- 客户信息 -->
+	<bean id="custBaseInfoServiceImpl" class="com.huaxia.opas.service.system.impl.CustBaseInfoServiceImpl" />
+	<!-- 柳迪 start-->
+	<!-- 欺诈结果原因码 -->
+	<bean id="fraudCodeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.FraudCodeServiceImpl"/>
+	<!-- 电核过件码 -->
+	<bean id="phoneChkPassCodeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.PhoneChkPassCodeServiceImpl"/>
+	<!-- 电话来源维护 -->
+	<bean id="telSourceServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TelSourceServiceImpl"/>
+	<!-- 照会对象维护 -->
+	<bean id="telObjectServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TelObjectServiceImpl"/>
+	<!-- 电话号码参数维护 -->
+	<bean id="telNoServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TelNoServiceImpl"/>
+	<!-- 电核结论维护 -->
+	<bean id="telChkConclusionServiceImpl" class="com.huaxia.opas.service.sysparm.impl.TelChkConclusionServiceImpl"/>
+	<!-- 审批原因代码维护 -->
+	<bean id="approveReasonCodeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.ApproveReasonCodeServiceImpl"/>
+	<!-- 政策码维护 -->
+	<bean id="policyServiceImpl" class="com.huaxia.opas.service.sysparm.impl.PolicyServiceImpl"/>
+	<!-- 配发卡维护 -->
+	<bean id="matchingCardServiceImpl" class="com.huaxia.opas.service.sysparm.impl.MatchingCardServiceImpl"/>
+	<!-- 卡产品维护 -->
+	<bean id="cardProductServiceImpl" class="com.huaxia.opas.service.sysparm.impl.CardProductServiceImpl"/>
+	<!-- 卡产品降级维护 -->
+	<bean id="cardDegradeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.CardDegradeServiceImpl"/>
+	<!-- 邮编区号维护 -->
+	<bean id="approveZipcodeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.ApproveZipcodeServiceImpl"/>
+	<!-- 利率差异化维护 -->
+	<bean id="sysparmRateServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SysparmRateServiceImpl"/>
+	<!-- 利率差异化配置 -->
+	<bean id="sysparmRateConfServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SysparmRateConfServiceImpl"/>
+	<!-- 最低还款额维护 -->
+	<bean id="sysparmRepayLimitServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SysparmRepayLimitServiceImpl"/>
+	<!-- 最低还款额配置 -->
+	<bean id="sysparmRepayLimitConfServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SysparmRepayLimitConfServiceImpl"/>
+	<!-- 免息还款期维护 -->
+	<bean id="sysparmRepayFreeTermServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SysparmRepayFreeTermServiceImpl"/>
+	<!-- 免息还款期配置 -->
+	<bean id="sysparmRepayFreeTermConfServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SysparmRepayFreeTermConfServiceImpl"/>
+	<!-- VVIP客户信息维护 -->
+	<bean id="vvipListServiceImpl" class="com.huaxia.opas.service.sysparm.impl.VvipListServiceImpl"/>
+	<!-- 柳迪 end-->
+	<!-- 李鹏飞start -->
+	<!-- WarningList -->
+	<bean id="warningServiceImpl" class="com.huaxia.opas.service.sysparm.impl.WarningServiceImpl" />
+	<!-- 余额转移 -->
+	<bean id="balanceServiceImpl" class="com.huaxia.opas.service.sysparm.impl.BalanceServiceImpl" />
+	<!-- 标准卡行职业收入 -->
+	<bean id="bzkIncomeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.BzkIncomeServiceImpl" />
+	<!-- 易达金卡行职业收入 -->
+	<bean id="ydjIncomeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.YdjIncomeServiceImpl" />
+	<!-- 征信问题库 -->
+	<bean id="confQuesionServiceImpl" class="com.huaxia.opas.service.sysparm.impl.ConfQuestionServiceImpl" />
+	<!-- 人员名单库 -->
+	<bean id="confRosterLibraryServiceImpl" class="com.huaxia.opas.service.sysparm.impl.ConfRosterLibraryServiceImpl" />
+	<!-- 网申合作商户 -->
+	<bean id="netCooperativeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.NetCooperativeServiceImpl" />
+	<!-- 李鹏飞end -->
+	<!-- 营销员白名单 -->
+	<bean id="marketerServiceImpl" class="com.huaxia.opas.service.sysparm.impl.MarketerServiceImpl" />
+	<bean id="excellentServiceImpl" class="com.huaxia.opas.service.sysparm.impl.ExcellentServiceImpl" />
+	<bean id="marktQRCodeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.MarktQRCodeServiceImpl" />
+	
+	<!-- ########## 参数管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 系统管理 # 开始 ########## -->
+	<bean id="apOrgServiceImpl" class="com.huaxia.opas.service.system.impl.ApOrgServiceImpl" />
+	<bean id="apUserServiceImpl" class="com.huaxia.opas.service.system.impl.ApUserServiceImpl" />
+	<bean id="apOnlineServiceImpl" class="com.huaxia.opas.service.system.impl.ApOnlineServiceImpl" />
+	<bean id="apUserOrgServiceImpl" class="com.huaxia.opas.service.system.impl.ApUserOrgServiceImpl" />
+	<bean id="apRoleServiceImpl" class="com.huaxia.opas.service.system.impl.ApRoleServiceImpl" />
+	<bean id="apUserRoleServiceImpl" class="com.huaxia.opas.service.system.impl.ApUserRoleServiceImpl" />
+	<bean id="apMenuServiceImpl" class="com.huaxia.opas.service.system.impl.ApMenuServiceImpl" />
+	<bean id="apRoleMenuServiceImpl" class="com.huaxia.opas.service.system.impl.ApRoleMenuServiceImpl" />
+	<bean id="operationLogServiceImpl" class="com.huaxia.opas.service.system.impl.OperationLogServiceImpl" />
+	<!-- ########## 系统管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 公共管理 # 开始 ########## -->
+	<!-- 文档上传 -->
+	<bean id="fileUploadServiceImpl" class="com.huaxia.opas.service.system.impl.FileUploadServiceImpl" />
+	<bean id="fileUploadLogServiceImpl" class="com.huaxia.opas.service.system.impl.FileUploadLogServiceImpl" />
+	<!-- 单位地址行政级别服务 -->
+	<bean id="queryAddressListServiceImpl" class="com.huaxia.opas.service.address.impl.QueryAddressListServiceImpl" />
+	<!-- 风险检查 -->
+	<bean id="riskCheckServiceImpl" class="com.huaxia.opas.service.riskcheck.impl.RiskCheckServiceImpl" />
+	<!-- 网申平台风险调查-wenyh -->
+	<bean id="wSPlatformRiskInvestServiceImpl" class="com.huaxia.opas.service.riskcheck.impl.WSPlatformRiskInvestServiceImpl" />
+	<!-- ########## 公共管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 提报管理 # 开始 ########## -->
+	<bean id="subReportServiceImpl" class="com.huaxia.opas.service.sysparm.impl.SubReportServiceImpl" />
+	<!-- 提报账户 -->
+	<bean id="submitReplyServiceImpl" class="com.huaxia.opas.service.credit.impl.SubmitReplyServiceImpl" />
+ 
+	<!-- ########## 提报管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 申请件管理 # 开始 ########## -->
+	<!-- 申请表信息 -->
+	<bean id="applyServiceImpl" class="com.huaxia.opas.service.apply.impl.ApplyServiceImpl" />
+	<!-- 申请表信息 -->
+	<bean id="applyRemarkServiceImpl" class="com.huaxia.opas.service.apply.impl.ApplyRemarkServiceImpl" />
+	<!-- 申请件查询-->
+	<bean id="applyInfoServiceImpl" class="com.huaxia.opas.service.apply.impl.ApplyInfoServiceImpl" />
+	<!-- 关键信息修改表 -->
+	<bean id="keyMessageModifyServiceImpl" class="com.huaxia.opas.service.report.impl.KeyMessageModifyServiceImpl" />
+	<!-- 申请件生命周期 -->
+	<bean id="applyLifeCicleServiceImpl" class="com.huaxia.opas.service.apply.impl.ApplyLifeCicleServiceImpl" />
+	<bean id="bizInpApplServiceImpl" class="com.huaxia.opas.service.apply.impl.BizInpApplServiceImpl" />
+	<!-- ########## 申请件管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 分件管理 # 开始 ########## -->
+	<bean id="allotApplyServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotApplyServiceImpl" />
+	<bean id="allotCommonServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotCommonServiceImpl" />
+	<bean id="allotMappingRuleServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotMappingRuleServiceImpl" />
+	<bean id="allotQueueServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotQueueServiceImpl" />
+	<bean id="allotRuleServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotRuleServiceImpl" />
+	<bean id="allotSwitchServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotSwitchServiceImpl" />
+	<bean id="ysTelcheckAddnoteServiceImpl" class="com.huaxia.opas.service.allot.impl.YsTelcheckAddnoteServiceImpl" />
+	<bean id="allotApplyHisServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotApplyHisServiceImpl" />
+	<bean id="reviewDecisionServiceImpl" class="com.huaxia.opas.service.allot.impl.ReviewDecisionServiceImpl" />
+	<bean id="workFlowServiceImpl" class="com.huaxia.opas.service.allot.impl.WorkFlowServiceImpl" />
+	<bean id="allotMethodServiceImpl" class="com.huaxia.opas.service.allot.impl.AllotMethodServiceImpl" />
+	<!-- 集体电核 -->
+	<bean id="teamPhoneServiceImpl" class="com.huaxia.opas.service.credit.impl.TeamPhoneServiceImpl" />
+	<!-- ########## 分件管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 录入审查环节 # 开始 ########## -->
+	<!-- 标准卡录入比对 -->
+	<bean id="revCompInfoServiceImpl" class="com.huaxia.opas.service.compare.impl.RevCompInfoServiceImpl" />
+	<bean id="testObjServiceImpl" class="com.huaxia.opas.service.compare.impl.TestObjServiceImpl" />
+	<!-- 标准卡增强信息采集 -->
+	<bean id="infoCollectServiceImpl" class="com.huaxia.opas.service.collect.impl.InfoCollectServiceImpl" />
+	<!-- ########## 录入审查环节 # 结束 ########## -->
+	
+	
+	<!-- ########## 征信调查环节 # 开始 ########## -->
+	<!-- 标准易达金增强信息采集 -->
+	<bean id="enhanceCollectServiceImpl" class="com.huaxia.opas.service.collect.impl.EnhanceCollectServiceImpl" />
+	<!-- 标准易达金增强信息工资计算 -->
+	<bean id="salaryComputeServiceImpl" class="com.huaxia.opas.service.collect.impl.SalaryComputeServiceImpl" />
+	<!-- 标准易达金增强信息工资可采纳项 -->
+	<bean id="salaryAdoptItemServiceImpl" class="com.huaxia.opas.service.collect.impl.SalaryAdoptItemServiceImpl" />
+	<!-- 商品易达金增强信息采集 -->
+	<bean id="patchboltSpyInfoServiceImpl" class="com.huaxia.opas.service.collect.impl.PatchboltSpyInfoServiceImpl" />
+	<!-- 征信调查查看 -->
+	<bean id="creditCheckSearchServiceImpl" class="com.huaxia.opas.service.credit.impl.CreditCheckSearchServiceImpl" />
+	<!-- ########## 征信调查环节 # 结束 ########## -->
+	
+	
+	<!-- ########## 审批授信环节 # 开始 ########## -->
+	<!-- ########## 审批授信环节 # 结束 ########## -->
+	
+	
+	<!-- ########## 归档管理 # 开始 ########## -->
+	<!-- 归档信息 -->
+	<bean id="arBatchServiceImpl" class="com.huaxia.opas.service.archive.impl.ArBatchServiceImpl" />
+	<!-- 待归档补件信息 -->
+	<bean id="suppArServiceImpl" class="com.huaxia.opas.service.archive.impl.SuppArServiceImpl" />
+	<!-- 归档队列信息 -->
+	<bean id="arQueueServiceImpl" class="com.huaxia.opas.service.archive.impl.ArQueueServiceImpl" />
+	<!-- 归档修改-->
+	<bean id="arEditServiceImpl" class="com.huaxia.opas.service.archive.impl.ArEditServiceImpl" />
+	<!-- 归档导出-->
+	<bean id="arExportServiceImpl" class="com.huaxia.opas.service.archive.impl.ArExportServiceImpl" />
+	<!-- 归档导出_文件导出模板-->
+	<bean id="loadOutTempltesBeanServiceImpl" class="com.huaxia.opas.service.archive.impl.LoadOutTempltesBeanServiceImpl" />
+	<!-- ########## 归档管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 补件管理 # 开始 ########## -->
+	<!-- 补件提交 -->
+	<bean id="patchboltServiceImpl" class="com.huaxia.opas.service.credit.impl.PatchboltServiceImpl" />
+	<!-- 捞件 -->
+	<bean id="fishingServiceImpl" class="com.huaxia.opas.service.report.impl.FishingServiceImpl" />
+	<!-- ########## 补件管理 # 结束 ########## -->
+	
+	
+	<!-- ########## 第三方接口 # 开始 ########## -->
+	<!-- 人行接口 -->
+	<bean id="pbocServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.PBOCServiceImpl" />
+	<bean id="bankServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.BankServiceImpl" />
+	<!-- 公安接口 -->
+	<bean id="policeServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.PoliceServiceImpl" />
+	<!-- 蚂蚁接口 -->
+	<bean id="antServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.AntServiceImpl" />
+	<!-- 中征信100接口 -->
+	<bean id="credit100ServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.Credit100ServiceImpl" />
+	<!-- 学历接口 -->
+	<bean id="educationServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.EducationServiceImpl" />
+	<!-- 51易达金接口 -->
+	<bean id="gjjServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.GjjServiceImpl" />
+	
+	<!--反欺诈 提报 复核 调查  审批  xiaoJianfeng-->
+	<bean id="creditCheckServiceImpl" class="com.huaxia.opas.service.credit.impl.CreditCheckServiceImpl" />
+	<!--人行征信查询匹配设置  xiaoJianfeng-->
+	<bean id="creditMatchingServiceImpl" class="com.huaxia.opas.service.credit.impl.CreditMatchingServiceImpl" />
+	<!-- 人行征信查询匹配设置、人行查询管理、学历查询匹配设置、学历查询管理  xiaoJianFeng-->
+	<bean id="educationHumanManagemetServiceImpl" class="com.huaxia.opas.service.credit.impl.EducationHumanManagemetServiceImpl" />
+	<!-- ########## 第三方接口 # 结束 ########## -->
+	
+	
+	<!-- ########## 报表管理 # 开始 ########## -->
+	<!-- 进件情况统计表 -->
+	<bean id="buyPieceSituationStatisticsServiceImpl" class="com.huaxia.opas.service.report.impl.BuyPieceSituationStatisticsServiceImpl" />
+	<!-- 网申合作平台数据统计清单-进件情况统计表-wenyh -->
+	<bean id="wsPlatformDataStatisticsServiceImpl" class="com.huaxia.opas.service.report.impl.WsPlatformDataStatisticsServiceImpl" />
+	
+	<!-- 利率差异化分析统计报表   -->
+	<bean id="interestRateDifferAnalysisStatisticsServiceImpl" class="com.huaxia.opas.service.report.impl.InterestRateDifferAnalysisStatisticsServiceImpl" />
+	<!-- 归档申请件明细表-->
+	<bean id="archiveApplicationFileDetailServiceImpl" class="com.huaxia.opas.service.report.impl.ArchiveApplicationFileDetailServiceImpl" />
+	<!-- 不同粒度进件情况统计表 -->
+	<bean id="differentGrainStatisticsServiceImpl" class="com.huaxia.opas.service.report.impl.DifferentGrainStatisticsServiceImpl" />
+	
+	<!-- 工作量统计报表 -->
+	<bean id="workloadStatisticsServiceImpl" class="com.huaxia.opas.service.report.impl.WorkloadStatisticsServiceImpl" />
+	<!-- 审批工作量统计表 -->
+	<bean id="applyStatisticsServiceImpl" class="com.huaxia.opas.service.report.impl.ApplyStatisticsServiceImpl" />
+	<!-- 查询人员信息下拉列表 -->
+	<bean id="queryOperatorMsgServiceImpl" class="com.huaxia.opas.service.report.impl.QueryOperatorMsgServiceImpl" />
+	
+	<!-- ########## 报表管理 # 开始 ########## -->
+	
+	
+	<!-- ########## 系统决策 # 开始 ########## -->
+	<bean id="sysDecisionServiceImpl" class="com.huaxia.opas.service.decision.impl.SysDecisionServiceImpl" />
+	<bean id="sysDecisionYdjServiceImpl" class="com.huaxia.opas.service.decision.impl.SysDecisionYdjServiceImpl" />
+	<bean id="sysDecisionCommonServiceImpl" class="com.huaxia.opas.service.decision.impl.SysDecisionCommonServiceImpl" />
+	<bean id="sysApprovalCommonServiceImpl" class="com.huaxia.opas.service.decision.impl.SysApprovalCommonServiceImpl" />
+	<bean id="sysButtonCommonServiceImpl" class="com.huaxia.opas.service.decision.impl.SysButtonCommonServiceImpl" />
+	<!-- ########## 系统决策 # 结束 ########## -->
+	<!-- 规则service配置 -->
+	<import resource = "classpath*:/config/model-service-rule.xml"/>
+	
+	<!-- 系统参数_身份类风险名单  luzhen.ou -->
+	<bean id="identityRiskService" class="com.huaxia.opas.service.sysparm.impl.IdentityRiskServiceImpl" />
+	<!-- 名单库管理_征信电话核查白名单  luzhen.ou -->
+	<bean id="creditTelcheckService" class="com.huaxia.opas.service.sysparm.impl.CreditTelcheckServiceImpl" />
+	<!-- 名单库管理_标准卡征信信息名单  luzhen.ou -->
+	<bean id="creditInfoService" class="com.huaxia.opas.service.sysparm.impl.CreditInfoServiceImpl" />
+	<!-- 名单库管理_内部风险信息名单  luzhen.ou -->
+	<bean id="innerRiskInfoService" class="com.huaxia.opas.service.sysparm.impl.InnerRiskInfoServiceImpl" />
+	<!-- 名单库管理_商户团办名单  luzhen.ou -->
+	<bean id="merchTeamdealService" class="com.huaxia.opas.service.sysparm.impl.MerchTeamdealServiceImpl" />
+	<!-- 名单库管理_商户团办名单  luzhen.ou -->
+	<bean id="teamdealService" class="com.huaxia.opas.service.sysparm.impl.TeamdealServiceImpl" />
+	<!-- 征信白名单 susha-->
+ 	<bean id="creditWhiteListServiceImpl" class="com.huaxia.opas.service.credit.impl.CreditWhiteListServiceImpl" />
+ 	<!-- 三方数据异常查询 -->
+ 	<bean id="thdErrDataServiceImpl" class="com.huaxia.opas.service.credit.impl.ThdErrDataServiceImpl" />
+	<!-- 客户基本信息表 -->
+ 	<bean id="baseCustInfoServiceImpl" class="com.huaxia.opas.service.baseinfo.impl.BaseCustInfoServiceImpl" />
+	<!-- 信审合一个人工作完成量统计 -->
+	<bean id="creditApplyStatisticServiceImpl" class="com.huaxia.opas.service.sysparm.impl.CreditApplyStatisticServiceImpl" />
+	<bean id="fileAppDetServiceImpl" class="com.huaxia.opas.service.archive.impl.FileAppDetServiceImpl" />
+	<!-- 质检 -->
+	<bean id="qualityCheckingServiceImpl" class="com.huaxia.opas.service.checking.impl.QualityCheckingServiceImpl" />
+
+	<!-- 车辆信息查询结果汇总报表 丁国峰 -->
+	<bean id="vehicleInfoSearchResultServiceImpl" class="com.huaxia.opas.service.report.impl.VehicleInfoSearchResultServiceImpl" />
+	<!-- 车辆信息查询结果明细报表 丁国峰 -->
+	<bean id="vehicleInfoSearchResultDetailServiceImpl" class="com.huaxia.opas.service.report.impl.VehicleInfoSearchResultDetailServiceImpl" />
+	<!-- FICO大数据查询 -->
+	<bean id="ficoResultServiceImpl" class="com.huaxia.opas.service.report.impl.FicoResultServiceImpl" />
+	<!-- 三方 查询限制规则 -->
+	<bean id="threeSearchLimitRuleServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.ThreeSearchLimitRuleServiceImpl" />
+	<!-- 三方 monitor 任务监控 丁国峰 -->
+	<bean id="monitor3rdServiceImpl" class="com.huaxia.opas.service.monitor.impl.Monitor3rdServiceImpl" />
+	<!-- 三方 monitor 日志监控 丁国峰 -->
+	<bean id="monitor3rdLogServiceImpl" class="com.huaxia.opas.service.monitor.impl.Monitor3rdLogServiceImpl" />
+	
+	<!-- 卡版面维护 -->
+	<bean id="cardLayoutServiceImpl" class="com.huaxia.opas.service.sysparm.impl.CardLayoutServiceImpl"/>
+	<!-- 第三方信审交互  Start gaoh-->
+	<!-- 第三方信审交互海航-->
+	<bean id="seaAirSfServiceImpl" class="com.huaxia.opas.service.tripartite.impl.SeaAirSfServiceImpl" />
+	<!-- 第三方信审交互  End gaoh-->
+	<!-- 腾讯天御分 -->
+	<bean id="tianYuServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.TianYuServiceImpl" />
+	<!-- 网申短表数字解读 -->
+	<bean id="szjdServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.SzjdServiceImpl" />
+	<!-- 企业行业信息查询部分 -->
+	<bean id="qiYeServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.QiYeServiceImpl" />
+	<!-- 厦门易联众社保信息查询部分 -->
+	<bean id="ylzServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.YLZServiceImpl" />
+	<!-- 深圳鹏元个人社保信息查询部分 -->
+	<bean id="pypcrServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.PYPCRServiceImpl" />
+	<!-- 深圳鹏元高信分信息查询部分 -->
+	<bean id="pypwslServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.PYPWSLServiceImpl" />
+	<!-- 通讯运营商 -->
+	<bean id="txOperatorServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.TxOperatorServiceImpl" />
+	<!-- 参数管理 风险联系人信息  wangtao -->
+	<bean id ="applyRiskInfoServiceImpl" class="com.huaxia.opas.service.sysparm.impl.ApplyRiskInfoServiceImpl"/>
+	<!--名单库管理  3311企业名单库 chenmeng -->
+	<bean id ="companyInfoServiceImpl" class="com.huaxia.opas.service.sysparm.impl.CompanyInfoServiceImpl"/>
+	<!-- avaya -->
+	<bean id="avayaAutoDialingServiceImpl" class="com.huaxia.opas.service.avaya.impl.AvayaAutoDialingServiceImpl" />
+	<bean id="avayaLogServiceImpl" class="com.huaxia.opas.service.avaya.impl.AvayaLogServiceImpl" />
+	<!-- chenmeng etcPad -->
+	<bean id="etcPadServiceImpl" class="com.huaxia.opas.service.compare.impl.EtcPadServiceImpl" />
+	<!-- 进件管理 -->
+	<bean id="inputChannelServiceImpl" class="com.huaxia.opas.service.channel.impl.InputChannelServiceImpl" />
+	<!-- 客群 职级替代收入 -->
+	<bean id="ydjCustomersIncomeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.YdjCustomersIncomeServiceImpl" />
+	<!--工作流节点查询 jpc0522 -->
+	<bean id ="workflowQuServiceImpl" class="com.huaxia.opas.service.workflow.impl.WorkflowQuServiceImpl"/>
+	<!--杭州公积金 -->
+	<bean id ="hzGjjServiceImpl" class="com.huaxia.opas.service.thirdparty.impl.HzGjjServiceImpl"/>
+    <!-- 参数管理 二维码名单维护 -->
+	<bean id="qrCodeServiceImpl" class="com.huaxia.opas.service.sysparm.impl.QRCodeServiceImpl" />
+	<bean id="hospitalServiceImpl" class="com.huaxia.opas.service.sysparm.impl.HospitalServiceImpl" />
+	<!-- 键值对配置 -->
+	<bean id="keyValueConfigureServiceImpl" class="com.huaxia.opas.service.system.impl.KeyValueConfigureServiceImpl" />
+	<!-- 拒绝码查询 -->
+	<bean id="bizApprovalServiceImpl" class="com.huaxia.opas.service.decision.impl.BizApprovalServiceImpl" />
+	<!-- 操作留痕 -->
+	<bean id="operaMarkServiceImpl" class="com.huaxia.opas.service.record.impl.OperaMarkServiceImpl" />
+	<!-- 参数管理_低风险客户名单库  liuwei -->
+	<bean id="lowRiskCustomersService" class="com.huaxia.opas.service.sysparm.impl.LowRiskCustomersServiceImpl" />
+	<!-- 导入查询低风险客户名单库历史记录 liuwei -->
+	<bean id="batchFileLowRiskInfoServiceImpl" class="com.huaxia.opas.service.sysparm.impl.BatchFileLowRiskInfoServiceImpl" />
+	<bean id="keyfiledResultServiceImpl" class="com.huaxia.opas.service.riskcheck.impl.KeyfiledResultServiceImpl" />
+	
+</beans>

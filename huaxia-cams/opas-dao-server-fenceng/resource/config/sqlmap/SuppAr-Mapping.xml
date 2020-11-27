@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SuppAr">
+
+	<resultMap id="SuppArResultMap" type="com.huaxia.opas.domain.archive.SuppArchive">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+		<result column="PATCH_CODE" property="patchCode" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="CRED_NO" property="credNo" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="FLAG" property="flag" jdbcType="CHAR" />
+		<result column="PATCH_STATUS" property="patchStatus" jdbcType="CHAR" />
+	</resultMap>
+
+	<insert id="insertFilePatchHis" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		insert into OPAS_FILE_PATCHBOLT_HIS
+		(AUTO_ID,APP_ID,CUST_NAME,PATCH_CODE,FLAG,CRED_NO,OPERAT_TIME,PATCH_STATUS)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{appId,jdbcType=VARCHAR},
+		#{custName,jdbcType=VARCHAR},
+		#{patchCode,jdbcType=CHAR},
+		#{flag,jdbcType=CHAR},
+		#{credNo,jdbcType=VARCHAR},
+		#{operatTime,jdbcType=TIMESTAMP},
+		#{patchStatus,jdbcType=CHAR}
+		)
+	</insert>
+
+	<select id="querySuppArList" parameterType="com.huaxia.opas.domain.archive.SuppArchive"
+		resultMap="SuppArResultMap">
+		select t2.CUST_NAME,t2.PATCH_CODE,t2.APP_ID,t2.CRED_NO,t2.OPERAT_TIME from
+		OPAS_FILE_PATCHBOLT_his t2
+		WHERE t2.flag = '1'
+		<if test="patchCode != null and patchCode !='' ">
+			AND t2.PATCH_CODE LIKE '%${patchCode}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND t2.CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND t2.CRED_NO LIKE '%${credNo}%'
+		</if>
+	</select>
+
+	<select id="querySuppArCount" parameterType="com.huaxia.opas.domain.archive.SuppArchive"
+		resultType="java.lang.Integer">
+		select count(1) from
+		OPAS_FILE_PATCHBOLT_his t2 
+		WHERE t2.flag = '1'
+		<if test="patchCode != null and patchCode !='' ">
+			AND t2.PATCH_CODE LIKE '%${patchCode}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND t2.CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND t2.CRED_NO LIKE '%${credNo}%'
+		</if>
+	</select>
+
+	<update id="updateSuppArFlag" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT_his
+		<set>
+			flag = '1',
+			operat_time = sysdate
+		</set>
+		where PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+		and flag != '2'
+	</update>
+	
+	<update id="updateSuppArFlag1" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT
+		<set>
+			flag = '1',
+			operat_time = sysdate
+		</set>
+		where PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+		and flag != '2'
+	</update>
+
+	<select id="querySuppArAllList" parameterType="com.huaxia.opas.domain.archive.SuppArchive"
+		resultMap="SuppArResultMap">
+		select CUST_NAME,PATCH_CODE,APP_ID,CRED_NO,OPERAT_TIME from
+		OPAS_FILE_PATCHBOLT_his
+		WHERE flag = '1'
+	</select>
+
+	<select id="querySuppArAllCount" parameterType="com.huaxia.opas.domain.archive.SuppArchive"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_FILE_PATCHBOLT_his
+		WHERE flag = '1'
+	</select>
+
+	<update id="updateSuppToAr" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT_his
+		<set>
+			flag = '2',
+			operat_time = sysdate
+		</set>
+		where PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateSuppToAr1" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT
+		<set>
+			flag = '2',
+			operat_time = sysdate
+		</set>
+		where PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateSuppToArAll" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT_his
+		<set>
+			flag = '2',
+			operat_time = sysdate
+		</set>
+		where flag = '1'
+		<if test="patchCode != null and patchCode !='' ">
+			AND PATCH_CODE LIKE '%${patchCode}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+	</update>
+	
+	<update id="updateSuppToArAll1" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT
+		<set>
+			flag = '2',
+			operat_time = sysdate
+		</set>
+		where flag = '1'
+		<if test="patchCode != null and patchCode !='' ">
+			AND PATCH_CODE LIKE '%${patchCode}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+	</update>
+
+	<update id="updateSuppToDel" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT_his
+		<set>
+			flag = '0',
+			operat_time = sysdate
+		</set>
+		where PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+		and flag = '1'
+	</update>
+
+	<update id="updateSuppToDel1" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT
+		<set>
+			flag = '0',
+			operat_time = sysdate
+		</set>
+		where PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+		and flag = '1'
+	</update>
+	
+	<select id="querySuccessList" parameterType="com.huaxia.opas.domain.archive.SuppArchive"
+		resultMap="SuppArResultMap">
+		select CUST_NAME,PATCH_CODE,APP_ID,CRED_NO from OPAS_FILE_PATCHBOLT_his
+		WHERE flag = '2'
+		<if test="patchCode != null and patchCode !='' ">
+			AND PATCH_CODE LIKE '%${patchCode}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+		<if test="operatTime != null and operatTime !='' ">
+			AND trunc(OPERAT_TIME) =  trunc(#{operatTime})
+		</if>
+	</select>
+	<!-- wangtao -->
+	<select id="queryFilePatchCodeCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_FILE_PATCHBOLT where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 一次补件或二次补件后对补件结果下结论   shihuan 2017-03-27 -->
+	<insert id="insertFilePatch" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		insert into OPAS_FILE_PATCHBOLT
+		(APP_ID,CUST_NAME,PATCH_CODE,FLAG,CRED_NO,OPERAT_TIME,PATCH_STATUS)
+		values (
+		#{appId,jdbcType=VARCHAR},
+		#{custName,jdbcType=VARCHAR},
+		#{patchCode,jdbcType=CHAR},
+		#{flag,jdbcType=CHAR},
+		#{credNo,jdbcType=VARCHAR},
+		#{operatTime,jdbcType=TIMESTAMP},
+		#{patchStatus,jdbcType=CHAR}
+		)
+	</insert>
+	
+	 <!--更新  wangtao -->
+	<update id="updateFilePatch" parameterType="com.huaxia.opas.domain.archive.SuppArchive">
+		update OPAS_FILE_PATCHBOLT 
+		<set>
+			CUST_NAME = #{custName,jdbcType=VARCHAR},
+			PATCH_CODE = #{patchCode,jdbcType=VARCHAR},
+			FLAG = #{flag,jdbcType=CHAR},
+			CRED_NO = #{credNo,jdbcType=VARCHAR},
+			OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+			PATCH_STATUS = #{patchStatus,jdbcType=CHAR}
+		</set>
+		where APP_ID = #{appId}
+	</update>
+	
+	<select id="queryCountByPatchCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(app_Id) from OPAS_FILE_PATCHBOLT_HIS where patch_code = #{patchCode,jdbcType=VARCHAR} 
+	</select>
+</mapper>

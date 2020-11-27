@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.pboc.mapper.SingleQueryMapper">
+
+	<resultMap id="result_Base" type="SingleQueryReview">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="UPD_TIME" property="updTime" jdbcType="VARCHAR" />
+		<result column="UPD_USER" property="updUser" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CERT_TYPE" property="certType" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="QUERY_TYPE" property="queryType" jdbcType="VARCHAR" />
+		<result column="QUERY_REASON" property="queryReason" jdbcType="VARCHAR" />
+		<result column="FILE_ID" property="fileId" jdbcType="VARCHAR" />
+		<result column="SOURCE_ID" property="sourceId" jdbcType="VARCHAR" />
+		<result column="REFUSE_REASON" property="refuseReason"
+			jdbcType="VARCHAR" />
+		<result column="REFUSE_TIME" property="refuseTime" jdbcType="VARCHAR" />
+		<result column="REVIEW_STATUS" property="reviewStatus"
+			jdbcType="VARCHAR" />
+		<result column="REVIEW_TIME" property="reviewTime" jdbcType="VARCHAR" />
+		<result column="QUERY_FROM" property="queryFrom" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="IMAGE_MATCH" property="imageMatch" jdbcType="VARCHAR" />
+		<!-- 冗余字段 -->
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="STAFF_CERT" property="staffCert" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!--提交复核 插入明细 -->
+	<insert id="insertObject" parameterType="SingleQueryReview">
+		<selectKey keyProperty="trnId" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into PBOC_TRN_SINGLE_REVIEW (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		NAME,
+		CERT_TYPE,
+		CERT_NO,
+		QUERY_TYPE,
+		QUERY_REASON,
+		FILE_ID,
+		SOURCE_ID,
+		REVIEW_STATUS,
+		REVIEW_TIME,
+		QUERY_FROM,
+		TRN_ID,
+		IMAGE_MATCH
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		#{name},
+		#{certType},
+		#{certNo},
+		#{queryType},
+		#{queryReason},
+		#{fileId},
+		#{sourceId},
+		#{reviewStatus},
+		#{reviewTime},
+		#{queryFrom},
+		#{trnId},
+		#{imageMatch}
+		)
+	</insert>
+	<!--单条查询复核 -->
+	<select id="selectListCountByPage" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PBOC_TRN_SINGLE_REVIEW T
+		LEFT JOIN
+		SYS_USER S ON
+		T.CRT_USER = S.USER_ACCT
+		WHERE T.REVIEW_STATUS=
+		#{reviewStatus}
+		AND T.QUERY_FROM = #{queryFrom}
+		AND S.TEAM= #{team}
+	</select>
+	<!--单条查询复核和单条复核退回的sql合并了 reviewStatus=0 是待复核 5是复核退回 -->
+	<select id="selectListByPage" parameterType="java.util.Map"
+		resultMap="result_Base">
+		SELECT * FROM
+		(SELECT A.*,ROWNUM RN FROM
+		(SELECT T.TRN_ID,
+		S.STAFF_ID,
+		S.STAFF_NAME,
+		S.CERT_NO AS STAFF_CERT,
+		T.CRT_USER,
+		TO_CHAR(T.CRT_TIME,
+		'YYYY-MM-DD HH24:MI:SS')
+		AS CRT_TIME,
+		T.NAME,
+		T.CERT_NO
+		<if test="reviewStatus == 0">
+			,T.QUERY_REASON
+			,T.SOURCE_ID
+			,T.QUERY_TYPE
+			,T.IMAGE_MATCH
+		</if>
+		<if test="reviewStatus == 5">
+			,TO_CHAR(T.REFUSE_TIME, 'YYYY-MM-DD HH24:MI:SS')
+			AS
+			REFUSE_TIME
+			,T.REFUSE_REASON
+		</if>
+		FROM
+		PBOC_TRN_SINGLE_REVIEW T
+		LEFT JOIN SYS_USER S ON
+		T.CRT_USER=S.USER_ACCT
+		where T.REVIEW_STATUS=#{reviewStatus}
+		AND
+		T.QUERY_FROM=#{queryFrom}
+		AND S.TEAM= #{team}
+		<if test="reviewStatus == 0">
+			ORDER BY T.CRT_TIME DESC
+		</if>
+		<if test="reviewStatus == 5">
+			ORDER BY T.REFUSE_TIME DESC
+		</if>
+		) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+
+	</select>
+	<!-- 单条查询复核页面批量通过 -->
+	<update id="updateBatchAgree" parameterType="java.util.Map">
+		UPDATE PBOC_TRN_SINGLE_REVIEW
+		SET
+		REVIEW_STATUS =#{reviewStatus},
+		REVIEW_TIME=SYSDATE,
+		UPD_TIME=SYSDATE,UPD_USER=#{updUser}
+		WHERE TRN_ID
+		IN
+		<foreach collection="idArray" separator="," open="(" close=")"
+			item="idArray">
+			#{idArray}
+		</foreach>
+	</update>
+	<!-- 单条查询复核页面批量退回 -->
+	<update id="updateBatchReject" parameterType="java.util.Map">
+		UPDATE PBOC_TRN_SINGLE_REVIEW
+		SET REVIEW_STATUS =#{reviewStatus},
+		REFUSE_REASON=#{refuseReason},
+		UPD_TIME=SYSDATE,
+		UPD_USER=#{updUser},
+		REFUSE_TIME=SYSDATE
+		WHERE TRN_ID IN
+		<foreach collection="idArray" separator="," open="(" close=")"
+			item="idArray">
+			#{idArray}
+		</foreach>
+	</update>
+	<!-- 单条查询复核页面单条通过 -->
+	<update id="updateSubmitAgree" parameterType="java.util.Map">
+		UPDATE
+		PBOC_TRN_SINGLE_REVIEW
+		SET REVIEW_STATUS =#{reviewStatus},
+		UPD_TIME=SYSDATE,
+		UPD_USER=#{updUser},
+		REVIEW_TIME=SYSDATE
+		WHERE TRN_ID
+		=#{id}
+	</update>
+	<!-- 单条查询复核页面单条退回 -->
+	<update id="updateSubmitReject" parameterType="java.util.Map">
+		UPDATE
+		PBOC_TRN_SINGLE_REVIEW
+		SET REVIEW_STATUS =#{reviewStatus},
+		REFUSE_REASON=#{refuseReason},
+		REFUSE_TIME=SYSDATE,
+		UPD_TIME=SYSDATE,
+		UPD_USER=#{updUser}
+		WHERE TRN_ID =#{id}
+	</update>
+	<!-- 批量查询复核页面的提交查询 -->
+	<update id="updateSubmitAgreeBatch" parameterType="java.util.Map">
+		UPDATE
+		PBOC_TRN_SINGLE_REVIEW
+		SET REVIEW_STATUS =#{reviewStatus},
+		UPD_TIME=SYSDATE,
+		UPD_USER=#{updUser},
+		REVIEW_TIME=SYSDATE
+		WHERE
+		FILE_ID
+		IN
+		(SELECT TB.FILE_ID
+		FROM PBOC_TRN_BATCH_REVIEW
+		TB WHERE
+		TB.BATCH_ID=
+		#{batchId})
+	</update>
+	<!-- 批次查询查询文件明细 -->
+	<select id="selectFileDetailCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PBOC_TRN_SINGLE_REVIEW T WHERE
+		T.FILE_ID=#{fileId}
+	</select>
+	<!-- 批次查询查询文件明细 -->
+	<select id="selectFileDetailListByPage" parameterType="java.util.Map"
+		resultMap="result_Base">
+		SELECT CERT_NO,NAME,CRT_TIME,REVIEW_TIME,TRN_ID,REVIEW_STATUS,RN FROM
+		(SELECT CERT_NO,NAME,CRT_TIME,REVIEW_TIME,TRN_ID,REVIEW_STATUS,ROWNUM
+		RN FROM
+		(SELECT
+		T.CERT_NO,
+		T.NAME,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD
+		HH24:MI:SS')
+		AS CRT_TIME,
+		TO_CHAR(T.REVIEW_TIME, 'YYYY-MM-DD
+		HH24:MI:SS')
+		AS REVIEW_TIME,
+		T.TRN_ID,
+		T.REVIEW_STATUS
+		FROM
+		PBOC_TRN_SINGLE_REVIEW T
+		WHERE T.FILE_ID=#{fileId}
+		ORDER BY T.CRT_TIME
+		DESC ) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+
+	</select>
+	<!-- 根据ID查明细 -->
+	<select id="selectObjectById" parameterType="java.lang.String"
+		resultMap="result_Base">
+		SELECT TRN_ID,NAME,CERT_NO,QUERY_REASON,QUERY_TYPE,CERT_TYPE,IMAGE_MATCH
+		FROM PBOC_TRN_SINGLE_REVIEW WHERE TRN_ID =#{id}
+	</select>
+	<!-- 单条复核退回 修改 -->
+	<update id="updateObject" parameterType="SingleQueryReview">
+		UPDATE
+		PBOC_TRN_SINGLE_REVIEW
+		SET NAME =#{name},
+		CERT_NO =#{certNo},
+		QUERY_REASON=#{queryReason},
+		REVIEW_STATUS=#{reviewStatus},
+		QUERY_TYPE=#{queryType},
+		CERT_TYPE=#{certType},
+		SOURCE_ID=#{sourceId},
+		UPD_USER=#{updUser},
+		UPD_TIME=SYSDATE,
+		IMAGE_MATCH=#{imageMatch}
+		WHERE TRN_ID=#{trnId}
+	</update>
+	<!-- 提交查询 查询在指定时间查询数量 -->
+	<select id="selectAllowCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM BANK_REPORT_MARK_INFO T
+		WHERE
+		T.CRT_TIME
+		BETWEEN
+		#{startTime}
+		AND
+		#{endTime}
+	</select>
+	<!-- 批量查询复核 退回 -->
+	<update id="updateSubmitRejectBatch" parameterType="java.util.Map">
+		UPDATE
+		PBOC_TRN_SINGLE_REVIEW
+		SET
+		REVIEW_STATUS =#{reviewStatus},
+		UPD_TIME=SYSDATE,
+		UPD_USER=#{updUser}
+		WHERE
+		FILE_ID IN
+		(SELECT TB.FILE_ID
+		FROM PBOC_TRN_BATCH_REVIEW
+		TB WHERE
+		TB.BATCH_ID= #{batchId})
+	</update>
+	<!-- 批量复核退回 修改 删除旧的 -->
+	<delete id="deleteReviewBybatchId" parameterType="java.lang.String">
+		delete FROM
+		PBOC_TRN_SINGLE_REVIEW
+		WHERE
+		FILE_ID IN
+		(SELECT TB.FILE_ID
+		FROM
+		PBOC_TRN_BATCH_REVIEW
+		TB WHERE
+		TB.BATCH_ID=#{oldBatchNo})
+	</delete>
+	<select id="selectUserStatusByTrnId" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_USER S LEFT JOIN PBOC_TRN_SINGLE_REVIEW T
+		ON
+		S.USER_ACCT = T.CRT_USER
+		WHERE S.STATUS = #{status} AND T.TRN_ID IN
+		<foreach collection="idArray" separator="," open="(" close=")"
+			item="idArray">
+			#{idArray}
+		</foreach>
+	</select>
+	<select id="selectCountByReferTime" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select NVL((select a.old_data + b.d_data
+  from (select sum(r.query_count) old_data
+          from rpt_query_count_day r
+         where r.source_code =  #{sourceCode}
+           and r.channel_code =  #{channelCode}
+           and r.query_date &gt; (select start_date
+                                 from CONF_QUERY_COUNT c
+                                where c.source_code =  #{sourceCode}
+                                  and c.channel_code = #{channelCode})
+           and r.query_date &lt; trunc(sysdate-1)) a,
+       (select count(1) d_data
+          from  BANK_REPORT_MARK_INFO a
+         where a.crt_time &gt;= trunc(sysdate - 1)
+           and SOURCE = #{source}) b),0) from dual
+	</select>
+</mapper>

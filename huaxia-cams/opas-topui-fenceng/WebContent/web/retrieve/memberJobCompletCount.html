@@ -1,0 +1,213 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div id="nemberJobComplet"  title="征信   组员工作完成量统计"  class="area-search"  style="width: 100%; height: 100%" >
+		<table>
+			<tr>
+				<td>
+					开始日期:<input class="easyui-datebox" style="width: 110px" name="startTime" id="startTime" />&nbsp;&nbsp;&nbsp;&nbsp;结束日期:<input class="easyui-datebox" style="width: 110px" name="endTime" id="endTime" />&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:querymemberJobCompletCount();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</td>
+			</tr>
+			<tr>
+			</tr>
+		</table>
+		<div class="area-tips">
+			<h3>&nbsp;&nbsp;<em class="member" id="member" style="color: red;"></em>&nbsp;&nbsp;名组员共完成&nbsp;&nbsp;<em class="completTotal" id="completTotal" style="color: red;"></em>&nbsp;&nbsp;件</h3>
+		</div>
+		<div  class="area-search" style="padding: 10px;">
+			<table id="nemberJobCompletTab" title="征信  组员工作情况统计"  class="easyui-datagrid" style="width: 98%" data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:50,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,selectOnCheck:false,method:'post',toolbar:'#positionCodeCondion'">
+		
+		<!-- <table id="nemberJobCompletTab" class="easyui-datagrid" style="width: 99%" data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,selectOnCheck:false,method:'post',toolbar:'#positionCodeCondion'">
+		 -->	<thead>
+				<tr>
+					<th field="staffName" width="10%" align="center">员工姓名</th>				
+					<th field="finishedStatus" width="10%" align="center">件数</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+	</div>
+</body>
+<script>
+	
+	var d = new Date();
+	var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+	$('#startTime').val(str);
+	$('#endTime').val(str);
+	
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	//征信
+	$(function(){
+		
+		querymemberJobCompletCount();
+		
+		$("#endTime").datebox('calendar').calendar({
+			validator:function(date){
+				if(date > new Date()){
+					return false;
+				}else{
+					return true;
+				}
+			}
+		});
+		$("#startTime").datebox('calendar').calendar({
+			validator:function(date){
+				if(date > new Date()){
+					return false;
+				}else{
+					return true;
+				}
+			}
+			});
+	});
+	
+	
+	function querymemberJobCompletCount(){
+		var startTime = $('#startTime').datebox("getValues");
+		var endTime = $('#endTime').datebox("getValues");
+		var groupId = GetQueryString("groupId");
+		var userCode = "";
+		if (typeof(groupId)=="undefined"||groupId==""||groupId==null){
+			userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;	
+		}
+		
+		$('#nemberJobCompletTab').datagrid({    
+		    url:'/opas-naps/memberJobCompletCount.json',
+	    	queryParams: {
+	    		"userId" : userCode,
+				"orgId" : groupId,
+				"currNode" : "02",
+				"startTime":startTime,
+				"endTime":endTime
+	    	},
+	    	onLoadSuccess:function(data){
+	    		$("#member").text(data.member);
+	    		$("#completTotal").text(data.completTotal);
+			}
+		});
+		
+		/* $cf.ajax({
+			url : "/opas-naps/memberJobCompletCount.json",
+			data : {
+				"userId" : userCode,
+				"orgId" : groupId,
+				"currNode" : "02",
+				"startTime" : startTime,
+				"endTime" : endTime
+			},
+			onSuccess : function(data) {
+				debugger;
+				if(data.RSP_BODY.fig == "true"){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#nemberJobCompletTab").datagrid("loadData", dataMap);
+					$("#nemberJobCompletTab").datagrid('getRows');
+					$("#member").text(data.RSP_BODY.member);
+					$("#completTotal").text(data.RSP_BODY.completTotal);
+				}else if(data.RSP_BODY.fig == "false"){
+					$("#member").text("0");
+					$("#completTotal").text("0");
+				}
+			}
+		}); */
+		
+		//debugger;
+		/* var endTime = $('#endTime').datebox("getValues");
+		var startTime = $('#startTime').datebox("getValues");
+		var d = new Date();
+		if((d.getMonth()+1) <= 9){
+			if(d.getDate() <= 9){
+				var strDate = d.getFullYear()+"-0"+(d.getMonth()+1)+"-0"+d.getDate();
+			}else{
+				var strDate = d.getFullYear()+"-0"+(d.getMonth()+1)+"-"+d.getDate();
+			}
+		}else{
+			var strDate = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+		}
+		
+		$cf.ajax({
+			url : "/opas-naps/memberJobCompletCount.json",
+			data : {
+				"startTime" : startTime,
+				"endTime" : endTime
+			},
+			onSuccess : function(data) {
+				debugger;
+				if(data.RSP_BODY.fig == "true"){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#nemberJobCompletTab").datagrid("loadData", dataMap);
+					$("#nemberJobCompletTab").datagrid('getRows');
+					$("#member").text(data.RSP_BODY.member);
+					$("#completTotal").text(data.RSP_BODY.completTotal);
+				}else if(data.RSP_BODY.fig == "false"){
+					$("#member").text("0");
+					$("#completTotal").text("0");
+				}
+			}
+		});   
+		 */
+		
+		/* if(strDate > startTime){
+			$cf.ajax({
+				url : "/opas-naps/memberJobCompletCount.json",
+				data : {
+					"startTime" : startTime,
+					"endTime" : endTime
+				},
+				onSuccess : function(data) {
+					debugger;
+					if(data.RSP_BODY.fig == "true"){
+						var dataMap = {
+							"rows" : data.RSP_BODY.rows,
+							"total" : data.RSP_BODY.total
+						};
+						$("#nemberJobCompletTab").datagrid("loadData", dataMap);
+						$("#nemberJobCompletTab").datagrid('getRows');
+						$("#member").text(data.RSP_BODY.member);
+						$("#completTotal").text(data.RSP_BODY.completTotal);
+					}else if(data.RSP_BODY.fig == "false"){
+						$("#member").text("0");
+						$("#completTotal").text("0");
+					}
+				}
+			});   
+		}else if(strDate == startTime){
+			var endTime = $('#endTime').datebox("getValues");
+			var startTime = $('#startTime').datebox("getValues");
+			$cf.ajax({
+				url : "/opas-naps/queryYesterdayComplete.json",
+				data : {
+					"startTime" : startTime,
+					"endTime" : endTime
+				},
+			onSuccess : function(data) {
+				var member = data.RSP_BODY.member;
+				var completTotal = data.RSP_BODY.completTotal;
+				if(data.RSP_BODY.fig == "true"){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#nemberJobCompletTab").datagrid("loadData", dataMap);
+					$("#nemberJobCompletTab").datagrid('getRows');
+				}
+			}
+			});
+		} */
+	}
+</script>
+

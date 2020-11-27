@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>预审情况详情</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.min.js"></script>
+<script type="text/javascript" 	src="../../topui/easyui/default/jquery.easyui.min.js"></script>
+
+<style type="text/css">
+#ksdw_area {
+	width: 100%;
+	height: 700px;
+	overflow-y: auto;
+	position: absolute;
+}
+
+fieldset {
+	margin: 10px;
+}
+
+.area-view caption {
+	padding: 5px 0;
+	text-align: center;
+	padding-left: 10px;
+	background: #ECECEC;
+	font-weight:700;
+}
+legend{
+    font-weight:700;
+}
+/* 标题 */
+.accordion {
+	padding: 5px 10px;
+	background: #95B8E7;
+	vertical-align: middle;
+}
+
+.accordion label {
+	display: block;
+	font: bold 12px sans-serif;
+}
+table.tableTdColor td{
+border: 1px solid #c0c0c0;
+}
+</style>
+</head>
+<body>
+		<div id="ksdw_area">
+			<!-- 预审调查查看 -->
+			<div class="accordion">
+				<legend>
+					<label id="A" >预审调查查看</label>
+				</legend>
+			</div>
+			<fieldset>
+				<div id="ysCheckList" style="width:100%;"></div>
+			</fieldset>
+			<!-- 预审提报回复 -->
+			<div class="accordion">
+				<legend>
+					<label id="B" >预审提报回复
+				</legend>
+			</div>
+			<fieldset>
+				<div id="ysTBHFList" style="width:100%;"></div>
+			</fieldset>
+			<!--预审补件情况 -->
+			<div class="accordion">
+				<legend>
+					<label id="C" >预审补件情况</label>
+				</legend>
+			</div>
+			<fieldset>
+			<form id="patchForm">
+			<table class="area-view">
+				<tr>
+					<td align="right"><input  type="checkbox" id="idCertify" value="1" name="idCertify"/></td>
+					<td>身份证明</td>
+					<td align="right"><input  type="checkbox" id="workCertify" value="1"  name="workCertify"/></td>
+					<td>工作证明</td>
+					
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="companyCertify" value="1"  name="companyCertify"/></td>
+					<td>企业核查证明</td>
+					<td align="right"><input  type="checkbox" id="educationCertify" value="1" name="educationCertify"/></td>
+					<td>学历证明</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="houseLoanCertify" value="1"  name="houseLoanCertify"/></td>
+					<td>房贷证明</td>
+					<td align="right"><input  type="checkbox" id="carLoanCertify" value="1"  name="carLoanCertify"/></td>
+					<td>车贷证明</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="cardCertify" value="1"  name="cardCertify"/></td>
+					<td>持卡证明</td>
+					<td align="right"><input  type="checkbox" id="existCertify" value="1"  name="existCertify"/></td>
+					<td>我行往来证明</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="provCertify" value="1"  name="provCertify"/></td>
+					<td>公积金证明</td>
+					<td align="right"><input  type="checkbox" id="secCertify" value="1"  name="secCertify"/></td>
+					<td>社保证明</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="houseCertify" value="1"  name="houseCertify"/></td>
+					<td>房产证明</td>
+					<td align="right"><input  type="checkbox" id="carCertify" value="1"  name="carCertify"/></td>
+					<td>车产证明</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="currAssetsCertify" value="1"  name="currAssetsCertify"/></td>
+					<td>流动资产证明</td>
+					<td align="right"><input  type="checkbox" id="incomeCertify" value="1"  name="incomeCertify"/></td>
+					<td>收入证明</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="indTaxResidentsCertify" value="1"  name="indTaxResidentsCertify"/></td>
+					<td>个人税收居民身份证明文件</td>
+					<td align="right"><input  type="checkbox" id="enolmentCertify" value="1"  name="enolmentCertify"/></td>
+					<td>在校学生证明文件</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="guaranteeLetter" value="1"  name="guaranteeLetter"/></td>
+					<td>担保函</td>
+					<td align="right"><input  type="checkbox" id="otherCertify" value="1"  name="otherCertify"/></td>
+					<td>其他</td>
+				</tr>
+				<tr>
+					<td align="right"><input  type="checkbox" id="isHavesign" value="1"  name="isHavesign"/></td>
+					<td>是否有签名</td>
+					<td align="right"><input  type="checkbox" id="nonAddfiles" value="1" name="nonAddfiles"/></td>
+					<td>未补充资料</td>
+				</tr>
+				<tr>
+			</table>
+			<table class="area-view">
+				<!-- 文档数据库表无以下字段 -->
+				<tr>
+					<td >补件结果：</td>
+					<td><input type="text" id="completedFlag" name="completedFlag" /></td>
+				</tr>
+				<tr>
+					<td >备注<span style="color: red">(最多50字)</span></td>
+					<td><textarea id="memo" name="memo" rows="" cols=""></textarea></td>
+				</tr>
+				<tr>
+					<td >分机号</td>
+					<td><input type="text"  id="optTelno" name="optTelno" ></input></td>
+				</tr>
+				<tr>
+					<td ><input type="checkbox" value="1" id="applyerCheckbox"   name="applyerCheckbox"/>&nbsp;&nbsp;&nbsp;申请人</td>
+					<td><input   id="applyer" name="applyer" type="text"></input></td>
+				</tr>
+				<tr>
+					<td ><input type="checkbox" value="1" id="promoterCheckbox" name="promoterCheckbox"/>&nbsp;&nbsp;&nbsp;推广人</td>
+					<td><input  id="promoter" name="promoter" type="text" ></input></td>
+				</tr>
+				<tr>
+					<td ><input type="checkbox" value="1" id="riskCheckbox"  name="riskCheckbox"/>&nbsp;&nbsp;&nbsp;风险</td>
+					<td><input  id="risk" name="risk"  type="text" /></td>
+				</tr>
+			</table>
+			</form>
+			</fieldset>
+			<!-- 资料审查 -->
+			<div class="accordion">
+				<legend>
+					<label id="D">资料审查</label>
+				</legend>
+			</div>
+			<fieldset>
+				<form id="resultInfoForm">
+				<table class="area-view">
+					<caption>资料类</caption>
+					<tr>
+						<td></td>
+						<td>客群标签</td>
+						<td></td>
+						<td>必附资料种类</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="industryCustomer2" name="industryCustomer"  value="1"></td>
+						<td>优质行业客户</td>
+						<td align="right"><input type="checkbox" id="idCertify2" name="idCertify"  value="1"></td>
+						<td>身份证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="companyCustomer2" name="companyCustomer"  value="1"></td>
+						<td>绩优企业客户</td>
+						<td align="right"><input type="checkbox" id="workCertify2" name="workCertify"  value="1"></td>
+						<td>工作证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="educationCustomer2" name="educationCustomer"  value="1"></td>
+						<td>学历客户</td>
+						<td align="right"><input type="checkbox" id="companyCertify2" name="companyCertify" value="1"></td>
+						<td>企业核查证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="houseLoanCustomer2" name="houseLoanCustomer"  value="1"></td>
+						<td>房贷客户</td>
+						<td align="right"><input type="checkbox" id="educationCertify2" name="educationCertify"  value="1"></td>
+						<td>学历证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="carLoanCustomer2" name="carLoanCustomer"  value="1"></td>
+						<td>车贷客户</td>
+						<td align="right"><input type="checkbox" id="houseLoanCertify2" name="houseLoanCertify"  value="1"></td>
+						<td>房贷证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="cardCustomer2" name="cardCustomer"  value="1"></td>
+						<td>持卡客户</td>
+						<td align="right"><input type="checkbox" id="carLoanCertify2" name="carLoanCertify"  value="1"></td>
+						<td>车贷证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="existCustomer2" name="existCustomer"  value="1"></td>
+						<td>我行往来客户</td>
+						<td align="right"><input type="checkbox" id="cardCertify2" name="cardCertify"  value="1"></td>
+						<td>持卡证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="provSecCustomer2" name="provSecCustomer"  value="1"></td>
+						<td>公积金/社保客户</td>
+						<td align="right"><input type="checkbox" id="existCertify2" name="existCertify"  value="1"></td>
+						<td>我行往来证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="registryCustomer2" name="registryCustomer"  value="1"></td>
+						<td>户籍客户</td>
+						<td align="right"><input type="checkbox" id="provCertify2" name="provCertify"  value="1"></td>
+						<td>公积金证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="fixedAssetsCustomer2" name="fixedAssetsCustomer"  value="1"></td>
+						<td>固定资产类客户</td>
+						<td align="right"><input type="checkbox" id="secCertify2" name="secCertify"  value="1"></td>
+						<td>社保证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="currAssetsCustomer2" name="currAssetsCustomer"  value="1"></td>
+						<td>流动资产类客户</td>
+						<td align="right"><input type="checkbox" id="houseCertify2" name="houseCertify"  value="1"></td>
+						<td>房产证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="incomeCustomer2" name="incomeCustomer"  value="1"></td>
+						<td>收入类客户</td>
+						<td align="right"><input type="checkbox" id="carCertify2" name="carCertify"  value="1"></td>
+						<td>车产证明</td>
+					</tr>
+					<tr>
+						<td align="right"><input type="checkbox" id="otherCustomer2" name="otherCustomer"  value="1"></td>
+						<td>其他</td>
+						<td align="right"><input type="checkbox" id="currAssetsCertify2" name="currAssetsCertify"  value="1"></td>
+						<td>流动资产证明</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td align="right"><input type="checkbox" id="incomeCertify2" name="incomeCertify"  value="1"></td>
+						<td>收入证明（连续近三个月）</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td align="right"><input type="checkbox" id="otherCertify2" name="otherCertify"  value="1"></td>
+						<td>其他</td>
+					</tr>
+				</table>
+				<table class="area-view">
+					<tr>
+						<td>预审结论：</td>
+						<td><input type="text" id="approveResult" name="approveResult"/></td>
+					</tr>
+					<tr>
+						<td>预审拒绝代码：</td>
+						<td><input type="text" id="approveCode" name="approveCode"/></td>
+					</tr>
+					<tr>
+						<td>申请信息修改:</td>
+						<td><input type="text" id="ysModifyLog" name="ysModifyLog"/></td>
+					</tr>
+				</table>
+				</form>
+			</fieldset>
+		</div>
+	<script type="text/javascript">
+		function GetQueryString(name){
+			 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+			 var r = window.location.search.substr(1).match(reg);
+			 if(r!=null) return unescape(r[2]);
+			 return null;
+		}
+		var ysCheckList=$("#ysCheckList");
+		var patchForm=$("#patchForm");
+		var resultInfoForm=$("#resultInfoForm");
+		var ysTBHFList=$("#ysTBHFList");
+		var appId;
+		var ydjFlag="2";
+		$(function(){
+			appId=GetQueryString("appId");
+			ydjFlag=GetQueryString("ydjFlag");
+		 	 $cf.ajax({
+				url : "/opas-naps/queryYsComments.json",
+				data : {"appId":appId},
+				onSuccess : function(data) {
+					var jsonpatchbolt = data.RSP_BODY.jsonpatchbolt;
+					var jsonysResultInfo = data.RSP_BODY.jsonysResultInfo;
+					var ysPatchboltStr= data.RSP_BODY.ysPatchboltStr;
+					if(ysPatchboltStr=='2'){//隐藏补件框
+						$("#patchForm").hide();
+					}else{
+						var patchboltjson = eval('(' +jsonpatchbolt+ ')');
+						patchForm.form("load", patchboltjson);
+						if(patchboltjson.completedFlag=='0'){
+							$("#completedFlag").val("补件未达");
+						}else if(patchboltjson.completedFlag=='1'){
+							$("#completedFlag").val("补件完成");
+						}else if(patchboltjson.completedFlag=='2'){
+							$("#completedFlag").val("PAD补件");
+						}else{
+							$("#completedFlag").val("");
+						}
+						if(patchboltjson.applyer!=null&&patchboltjson.applyer!=''){
+							$('input[name=applyerCheckbox]').prop("checked",true);
+						}
+						if(patchboltjson.promoter!=null&&patchboltjson.promoter!=''){
+							$('input[name=promoterCheckbox]').prop("checked",true);
+						}
+						if(patchboltjson.risk!=null&&patchboltjson.risk!=''){
+							$('input[name=riskCheckbox]').prop("checked",true);
+						}
+						$("#applyer").val(patchboltjson.c1Mobile);
+						$("#promoter").val(patchboltjson.c4Abphon);
+					}
+					var ysResultInfojson = eval('(' +jsonysResultInfo+ ')');
+					resultInfoForm.form("load", ysResultInfojson);
+					if(ysResultInfojson.approveResult=='1'){
+						$("#approveResult").val("批准");
+					}else if(ysResultInfojson.approveResult=='2'){
+						$("#approveResult").val("拒绝");
+					}else{
+						$("#approveResult").val("");
+					}
+					if(ysResultInfojson.ysModifyLog=='0'||ysResultInfojson.ysModifyLog==null
+							||ysResultInfojson.ysModifyLog==''){
+						$("#ysModifyLog").val("否");
+					}else{
+						$("#ysModifyLog").val("是");
+					}
+					setDisabled();
+				}
+			});  
+			//预审提报回复内容查看
+			ysTbhf();
+		  	$cf.ajax({
+				url : '/opas-naps/queryYsAddnote.json',
+				data : {"appId":appId},
+				onSuccess : function(respObj) {
+					var data=respObj.RSP_BODY.rows;
+					if(data){
+						var table=document.createElement("table");
+						table.style='white-space:nowrap;font-size:5px';
+						$(table).addClass("tableTdColor");
+						table.style="width:100%;";
+						var tr1=table.insertRow();
+						createDivInTd(tr1,"序号","30px","1","1");
+						createDivInTd(tr1,"详情","370px","1","1");
+						createDivInTd(tr1,"创建/修改日期","100px","1","1");
+						for(var i=0;i<data.length;i++){
+							var sortFlag=data[i]["sortFlag"];//预审结论为2资料审查页面有值
+							var approveResult=data[i]["approveResult"];//预审结论1批准 2拒绝
+							if(sortFlag=='2'&&approveResult=='1'){
+								data[i]["bigMemo"]="分行预审结论:批准";
+							}else if(sortFlag=='2'&&approveResult=='2'){
+								data[i]["bigMemo"]="分行预审结论:拒绝,拒绝码为"+data[i]["approveCode"];
+							}
+							if(data[i]["bigMemo"]==null||data[i]["bigMemo"]==''){
+								continue;
+							}
+							var tr2=table.insertRow();
+							createDivInTd(tr2,i+1,'30px','0',sortFlag);//序号
+							createDivInTd(tr2,data[i].bigMemo,'370px','2',sortFlag);//详情
+							createDivInTd(tr2,formatDate(data[i].crtDate),'100px','0',sortFlag);//创建、修改日期
+						}
+						$("#ysCheckList").html(table);
+					}
+				}
+			});  
+		});
+		/* fontType:0正常显示  1标题加黑  2textarea  sortFlag  2预审结论变色*/
+		function createDivInTd(tr,value,width,fontType,sortFlag){
+		    var td=tr.insertCell();
+		    td.style.textAlign='center';
+			td.style.width=width;
+			if(fontType=="0"||fontType=="1"){
+				td.innerHTML=value;
+			}else if(fontType=="2"){
+				var textarea=document.createElement("textarea"); 
+				textarea.style.width=width;
+				textarea.value=value;
+				textarea.readOnly='readOnly';
+				textarea.style.border='none';
+				/* if(sortFlag=='2'){
+					textarea.style.backgroundColor="pink";
+				} */
+				td.appendChild(textarea);
+			}
+		}
+		 //日期格式转换
+			 function formatDate(value) {
+				var str = getTaskTime(value);
+				if (str.indexOf('1970') >= 0) {
+					return '';
+				} else {
+					return str;
+				}
+			} 
+			//工具方法：格式化CST类型时间
+			function getTaskTime(strDate) {
+				if (null == strDate || "" == strDate) {
+					return "";
+				}
+				var dateStr = strDate.trim().split(" ");
+				var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+						+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+				var date = new Date(Date.parse(strGMT));
+				var y = date.getFullYear();
+				var m = date.getMonth() + 1;
+				m = m < 10 ? ('0' + m) : m;
+				var d = date.getDate();
+				d = d < 10 ? ('0' + d) : d;
+				var h = date.getHours();
+				h = h < 10 ? ('0' + h) : h;
+				var minute = date.getMinutes();
+				minute = minute < 10 ? ('0' + minute) : minute;
+				var second = date.getSeconds();
+				second = second < 10 ? ('0' + second) : second;
+				return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+						+ second;
+			};
+			function setDisabled(){//设置只读
+				$("form input,textarea").prop("disabled",true);
+			}
+			//查询预审提报回复内容
+			function ysTbhf(){
+				$cf.ajax({
+					url : '/opas-naps/queryYsSubmitReplyInfo.json',
+					data : {
+						'appId' : appId,
+						'ydjFlag' : ydjFlag
+					},
+					onSuccess : function(response) {
+						var resultMap = response.RSP_BODY.resultMap;
+						var o = eval('(' +resultMap+ ')');
+						var result = '';
+						if(resultMap.trim()=="{}"){
+							result+="<h3>无相关提报信息!</h3>";
+							ysTBHFList.html(result);
+						}
+						if(o.submitFraudList!=undefined){
+							result+="<h4>提报回复查看</h4>";
+							result+="<fieldset>";
+							result+="<legend><span id='f'>反欺诈</span></legend>";
+							for(var i = 0;i<o.submitFraudList.length;i++){
+								result+="<h9>"+(i+1)+"</h9>";
+								result+="<table>";
+								result += "<tr>";
+								if(o.submitFraudList[i].crtDate==undefined){
+									o.submitFraudList[i].crtDate="";
+								}
+								if(o.submitFraudList[i].crtUser==undefined){
+									o.submitFraudList[i].crtUser="";
+								}
+								if(o.submitFraudList[i].delStatus==undefined){
+									o.submitFraudList[i].delStatus="";
+								}
+								if(o.submitFraudList[i].investMemo==undefined){
+									o.submitFraudList[i].investMemo="";
+								}																							
+								if(o.submitFraudList[i].approvalMemo==undefined){
+									o.submitFraudList[i].approvalMemo="";
+								}
+								result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox'  style='font-size:10px;width:250px' name='crtDate' type='text' readonly='true' value='"+o.submitFraudList[i].crtDate+"'></input></td>";
+								result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='crtUser' style='font-size:10px;width:250px' type='text' readonly='true' value='"+o.submitFraudList[i].crtUser+"'></input></td>";
+								result += "</tr><tr>";
+								result += "<td style='font-size:10px'>结论:</td><td><textarea name='delStatus' style='font-size:10px;width:250px;height:60px;resize:none'   readonly='true'>"+o.submitFraudList[i].delStatus+"</textarea></td>";
+								result += "<td style='font-size:10px'>调查备注:</td><td><textarea name='investMemo' style='font-size:10px;width:250px;height:60px;resize:none'   readonly='true'>"+o.submitFraudList[i].investMemo+"</textarea></td>"
+								result += "</tr><tr>"; 
+								result += "<td style='font-size:10px'>审核备注:</td><td><textarea name='approvalMemo' style='font-size:10px;width:250px;height:60px;resize:none'   readonly='true'>"+o.submitFraudList[i].approvalMemo+"</textarea></td></tr>";
+								result+="</table>";
+							}
+							result+="</fieldset>";
+						}
+						if(o.checkReturnList!=undefined){
+							result+="<fieldset>";
+							result+="<legend><span id='f'>欺诈复核退回</span></legend>";
+							for(var i = 0;i<o.checkReturnList.length;i++){
+								result+="<h9>"+(i+1)+"</h9>";
+								result+="<table>";
+								result += "<tr>";
+								if(o.checkReturnList[i].crtDateCr==undefined){
+									o.checkReturnList[i].crtDateCr="";
+								}
+								if(o.checkReturnList[i].crtUserCr==undefined){
+									o.checkReturnList[i].crtUserCr="";
+								}
+								if(o.checkReturnList[i].delStatusCr==undefined){
+									o.checkReturnList[i].delStatusCr="";
+								}
+								if(o.checkReturnList[i].investMemoCr==undefined){
+									o.checkReturnList[i].investMemoCr="";
+								}																							
+								if(o.checkReturnList[i].approvalMemoCr==undefined){
+									o.checkReturnList[i].approvalMemoCr="";
+								}
+								result += " <td style='font-size:10px'>回复时间:</td><td><input class='easyui-datebox'  style='font-size:10px;width:250px' name='crtDateCr' type='text' readonly='true' value='"+o.checkReturnList[i].crtDateCr+"'></input></td>";
+								result += "<td style='font-size:10px'>操作员:</td><td><input class='easyui-textbox' name='crtUserCr' style='font-size:10px;width:250px' type='text' readonly='true' value='"+o.checkReturnList[i].crtUserCr+"'></input></td>";
+								result += "</tr><tr>";
+								result += "<td style='font-size:10px'>退回备注:</td><td><input class='easyui-textbox' name='checkMemo' style='font-size:10px;width:250px' type='text' readonly='true' value='"+o.checkReturnList[i].checkMemo+"'></input></td></tr>";
+								result+="</table>";
+							}
+							result+="</fieldset>";
+						}
+						ysTBHFList.html(result);
+					}
+				});
+			}
+	</script>
+</body>
+</html>

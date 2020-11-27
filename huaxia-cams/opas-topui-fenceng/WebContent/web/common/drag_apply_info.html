@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>捞件信息页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.searchdiv {
+	font-size: 10px;
+}
+</style>
+</head>
+<body style="font-size: 12px;">
+	<div style="width: 99%; font-size: 12px;" align="center">
+		<form id="seachForm">
+			<div
+				style="border: 1px solid rgb(149, 184, 231); border-image: none; width: 1364px; height: 30%; margin: 0px 0px 0px 10px">
+				<fieldset class="textbox combo"
+					style="left: 30px; margin: 5px 0 10px; width: 90%; height: 110px; padding: 0px 30px 10px 20px;">
+
+					<legend align="left">
+						<font size="2">申请件信息</font>
+					</legend>
+					<div style="padding: 10px" align="left">
+						申请流水号: <input class="easyui-textbox" style="width: 150px"
+							name="appId" id="appId" readonly="readonly"> 客户姓名: <input class="easyui-textbox"
+							style="width: 120px" name="custName" id="custName" readonly="readonly"> 证件号码: <input
+							class="easyui-textbox" style="width: 150px" name="credNo" id="credNo" readonly="readonly">
+
+						证件类型:<!--  <input class="easyui-textbox" style="width: 120px"
+							name="c1Idtype" id="c1Idtype" disabled> -->
+							 <select class="easyui-combobox" style="width: 110px"
+				name="c1Idtype" id="c1Idtype" dict_type="ZDSQRZJLX"
+				data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'" readonly="readonly"></select>
+					</div>
+					<div style="padding: 10px" align="left">
+						当前状态: <select class="easyui-combobox" style="width: 110px" name="status" id="status"  readonly="readonly">
+										<option value=''></option>
+										<option value="1">归档已分配</option>
+										<option value="0">归档待分配</option>
+								</select>
+				最后操作员: <input
+							class="easyui-textbox" style="width: 120px" name="operator" id="operator" readonly="readonly">
+							最后操作时间: <input type="text"
+							class="" style="width: 150px" name="operatTime" id="operatTime" readonly="readonly">
+					</div>
+				
+				</fieldset>
+			</div>
+		</form>
+		<div style="margin: 0px 0px 0px 10px; width: 800px" align="center">
+			<table id="tblSeach" class="easyui-datagrid" 
+				style="width: 99%;" data-options="remoteSort:false,rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[15,20,50],pageNumber:0,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#seachCondion'">
+				<thead>
+					<tr>
+		
+						<th field="crtDate" width="110px" align="left" />操作时间</th>
+						<th field="operater" width="100px" align="left"  />操作员</th>
+						<th field="operateDesc" width="170px" align="left"  />流程节点</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div align="center" style="padding: 0px 20px 10px 0px">
+		<!-- javascript:checkAndSearchTab('seachForm','tblSeach');  data-options="formatter:formatcrtDate" -->
+			<a href="javascript:checkAndSearchTab('seachForm','tblSeach');"
+				class="easyui-linkbutton" iconCls="icon-reload" >捞件</a>
+		</div>
+
+
+	</div>
+	<div id="dd"></div>
+	<div id="ddd"></div>
+</body>
+<script type="text/javascript">
+	var tblObj=$("#tblSeach");
+	var  dragInfoForm = $("#seachForm");
+	$(function() {
+		$cf.loadAllDict();
+		var url = location.href;
+		var appId = url.split("=")[1];
+		
+		var tblInfo = $("#tblSeach");
+		var opts = tblInfo.datagrid("options");
+		opts.url = '/opas-naps/query_node_info.json';
+		var data={"appId":appId};
+		tblInfo.datagrid("reload", data);
+		
+		$cf.ajax({
+			url : '/opas-naps/dragApply_info_view.json',
+			data : {'appId' : appId},
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var dragJson = ret.RSP_BODY.dragJsonString;
+				//var applyJson = ret.RSP_BODY.applyJsonString;
+				var InfoDragjson = eval('(' +dragJson+ ')');
+				//var InfoApplyjson = eval('(' +applyJson+ ')');
+				//InfoApplyjson = [{lstUpdDate:'123',operater:'xiaowen'},{lstUpdDate:'123',operater:'xiaowen'}];
+				dragInfoForm.form("load", InfoDragjson);
+				//tblObj.datagrid({data:InfoApplyjson});
+			}
+		});
+		
+		//var data = [{appId:'123',custName:'xiaowen'},{appId:'123',custName:'xiaowen'}];
+		//var opts = tblObj.datagrid({data:data});
+		/* opts.url = "/opas-naps/apply_info_load.json";
+		var s = {"appId" : appId};
+		tblObj.datagrid("reload", s); */
+	});
+	
+	function checkAndSearchTab(formName, tblName) {
+		//本方法自己拼装json串传给后台，注意前台多选框取值以及下拉框取值写法以及后台接收的写法
+		var appId = $("#appId").val();
+		var url = location.href;
+		var userCode = url.split("=")[2];
+		var listAppId=new Array();
+		var obj=new Object();
+		obj.appId=appId;
+		listAppId.push(obj);
+		$cf.ajax({
+			url : '/opas-naps/dragApply_operation.json',
+			data : {'userCode':userCode,"listAppId":listAppId},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("操作成功!");
+					alert("操作成功!");
+					window.close();
+					window.opener.location.reload();
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					return;
+				}
+			}
+		});
+	}
+	
+	function formatcrtDate(val, row, index){
+		//var currDate = formatDate(val);
+		  var date=new Date(val);
+		/*  var currDay=date.getDate();
+		var currMonth=date.getMonth()+1;
+		var currHour=date.getHours();
+		var currMinute=date.getMinutes();
+		var currSecond=date.getSeconds();
+		var currDate=date.getFullYear()+'-'+currMonth+'-'+currDay+' '+currHour+':'+currMinute+':'+currSecond;  */
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		var d = date.getDate();
+		var h = date.getHours();
+		var minute = date.getMinutes();
+		var second = date.getSeconds();
+		m = m < 10 ? ('0' + m) : m;
+		d = d < 10 ? ('0' + d) : d;
+		h = h < 10 ? ('0' + h) : h;
+		minute = minute < 10 ? ('0' + minute) : minute;
+		second = second < 10 ? ('0' + second) : second;
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+		+ second;
+	}
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if (str.indexOf('1970') >= 0) {
+			return '';
+		} else {
+			return str;
+		}
+	} 
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " CST+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		var d = date.getDate();
+		var h = date.getHours();
+		var minute = date.getMinutes();
+		var second = date.getSeconds();
+		m = m < 10 ? ('0' + m) : m;
+		d = d < 10 ? ('0' + d) : d;
+		h = h < 10 ? ('0' + h) : h;
+		minute = minute < 10 ? ('0' + minute) : minute;
+		second = second < 10 ? ('0' + second) : second;
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+				+ second;
+	}; 
+</script>
+</html>

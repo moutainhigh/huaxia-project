@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.l-btn-text {
+  display: inline-block;
+  vertical-align: top;
+  width: auto;
+  line-height: 24px;
+  font-size: 1em;
+  padding: 0;
+  margin: 0 4px;
+}
+</style>
+</head>
+<body style="padding: 10px;">
+	<table id="tblArQueue" class="easyui-datagrid" title="归档信息队列"
+		style="width: 98%;height:130%"
+		data-options="rownumbers:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/arQueueSearch_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#ArQueueCondion'">
+		<thead>
+			<tr>
+				<th field="fileId" width="10%" align="center" checkbox="true">记录Id</th>
+				<th field="appId" width="15%" align="center">流水号</th>
+				<th field="custName" width="10%" align="center">客户姓名</th>
+				<th field="credNo" width="15%" align="center">证件号码</th>
+				<th field="appResult" width="15%" align="center" formatter="formatResult">审批结果</th>	
+				<th field="operator" width="15%" align="center">最后操作员</th>
+				<th field="operatTime" width="23%" align="center" formatter="gridDateFormat2">最后操作时间</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="ArQueueCondion" style="padding: 10px;font-size: 15px;">
+	<fieldset class="textbox combo" style="left: 30px; margin: 5px 0 10px; width: 90%; height: 40px; padding: 0px 30px 10px 20px;">
+		<legend align="left">
+			<font size="2">扫件选项</font>
+		</legend>
+		<form id="getAppCodeForm" >	
+			输入申请流水号: <input style="width: 150px" type="text" 
+			name="appId_input" id="appId_input" type="text" onkeypress="var e=event||arguments.callee.caller.arguments[0];if(event.keyCode==13){getApp();return false;}else{}"> 
+			<a href="javascript:getApp()" class="easyui-linkbutton" iconCls="icon-search">获得申请件</a>&nbsp;			
+		</form>
+	</fieldset>
+		<form id="searchArQueueForm" >	
+	<fieldset class="textbox combo" style="left: 30px; margin: 5px 0 10px; width: 90%; height: 40px; padding: 0px 30px 10px 20px;">
+		<legend align="left">
+			<font size="2">查询选项</font>
+		</legend>
+			申请书流水号: &nbsp;<input class="easyui-textbox" style="width: 150px" name="appId" id="appId"> &nbsp;&nbsp;
+			客户姓名:&nbsp;<input class="easyui-textbox" style="width: 100px" name="custName" id="custName">&nbsp;&nbsp;
+			证件号:<input class="easyui-textbox" style="width: 150px" name="credNo" id="credNo">&nbsp;&nbsp;
+			审批结果:<select class="easyui-combobox" style="width: 80px" name="appResult" id="appResult"> &nbsp;&nbsp;
+							<option value="">--请选择--</option>
+							<option value="0">批准</option>
+							<option value="1">拒绝</option>
+							</select>&nbsp;&nbsp;
+			最后操作员:<input class="easyui-textbox" style="width: 100px" name="operator" id="operator"> 
+			<a href="javascript:common.searchTbl('searchArQueueForm','tblArQueue');" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+    </fieldset>
+	</form>
+	</div>
+	<div style="padding: 10px;" align="center">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="fileSelected()">归档选择的件</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="fileAll('searchArQueueForm')">归档以上所有件</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="giveUp()">放&nbsp;弃</a>
+	</div>
+		
+</body>
+<script>
+var tblArQueue = $("#tblArQueue");
+var getAppCodeForm = $("#getAppCodeForm");
+
+//输入框 小写变大写 
+function becomeUpperCase(obj){
+	obj.value=obj.value.toUpperCase();
+}
+
+//取得待归档件
+function getApp(){
+ 	var appCodeData = isRequired('getAppCodeForm');
+	if (appCodeData.appId_input == null || appCodeData.appId_input.trim() == "") {
+		$.messager.show({
+			title:'归档信息提示',
+			msg:'添加失败,申请件码不能为空!',
+			showType:'slide',
+			width:200,
+			height:150,
+			draggable:true,
+			collapsible:true,
+			timeout:2000,
+			style:{
+				top:'',
+				left:'',
+				right:0,
+				bottom:220
+			}
+		});
+		$("#appId_input").val('').focus();
+		return;
+	} 
+	
+	var jsondata = getFormData(getAppCodeForm.serializeArray());
+	$cf.ajax({
+		url : "/opas-naps/updateStatu_app.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				$.messager.show({
+					title:'归档信息提示',
+					msg:'添加成功!',
+					showType:'slide',
+					width:200,
+					height:150,
+					draggable:true,
+					collapsible:true,
+					timeout:2000,
+					style:{
+						top:'',
+						left:'',
+						right:0,
+						bottom:220
+					}
+				});
+				tblArQueue.datagrid("reload");
+				$("#appId_input").val('').focus();
+			}else if(data.RSP_BODY.isNull){
+				$.messager.show({
+					title:'归档信息提示',
+					msg:'无法获取该流水号对应的申请件,请检查申请件状态!',
+					showType:'slide',
+					width:200,
+					height:150,
+					draggable:true,
+					collapsible:true,
+					timeout:2000,
+					style:{
+						top:'',
+						left:'',
+						right:0,
+						bottom:220
+					}
+				});
+				$("#appId_input").val('').focus();
+			} else {
+				$.messager.alert("操作提示", "添加异常,原因:" + data.exMsg, "error");
+				return;
+			}
+		}
+	});	
+	$("#appId_input").val('');
+}
+	
+	//归档已选择的补件
+	function fileSelected(){
+		 var arQueueFiles = tblArQueue.datagrid("getSelections");
+		var appIds = [];
+		for (i = 0; i < arQueueFiles.length; i++){
+			appIds[i] = arQueueFiles[i].appId;
+		} 
+		if (appIds.length == 0) {
+			$.messager.alert("操作提示", "请勾选待归档件!");
+			return;
+		}
+		var datas = {
+				"appId" : appIds
+			};
+		$.messager.confirm('请您确认', '是否归档？', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/updAndInsArQueue.json",
+					data : datas,
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							$.messager.alert("操作提示","归档成功,归档编号是:"+data.RSP_BODY.fileNo);
+							/* top.$cf.showMsg("归档成功");
+							data.RSP_BODY.fileNo; */
+							tblArQueue.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "归档失败:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});
+	}
+	
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	//归档所有补件
+	function fileAll(targetForm){
+	var tarForm = $("#" + targetForm + "");
+	/* console.log(tarForm.serializeArray());
+	console.log(tarForm.serializeArray()); */
+	var jsondata = getFormData(tarForm.serializeArray());
+	$.messager.confirm('请您确认', '是否将列表中信息归档？', function(r) {
+		if (r) {
+	$cf.ajax({
+		url : "/opas-naps/updAndInsAll.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				$.messager.alert("操作提示", "归档成功,归档编号是:"+data.RSP_BODY.fileNo, "info", function() {
+					tblArQueue.datagrid("reload");
+				});
+			} else {
+				$.messager.alert("操作提示", "归档异常,原因:" + data.exMsg, "error");
+				return;
+			}
+		}
+	});
+		}
+	});
+	
+	}
+	
+	//将选中的补件在列表中取消
+	function giveUp(){
+		var queueFiles = tblArQueue.datagrid("getSelections");
+		var appIds = [];
+		for (i = 0; i < queueFiles.length; i++){
+			appIds[i] = queueFiles[i].appId;
+		} 
+		if (appIds.length == 0) {
+			$.messager.alert("操作提示", "请勾选待放弃信息!");
+			return;
+		}
+		var datas = {
+				"appId" : appIds
+			};
+		$cf.ajax({
+			url : "/opas-naps/giveUpFiles.json",
+			data : datas,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("放弃成功！");
+					tblArQueue.datagrid("reload");
+				} else {
+					$.messager.alert("操作提示", "放弃失败:" + data.exMsg, "error");
+					return;
+				}
+			}
+		});
+	}
+
+	function formatResult(val, row, index) {
+		if (val == "0") {
+			return "批准";
+		} else if (val == "1") {
+			return "拒绝";
+		} else {
+			return val;
+		}
+	}
+</script>
+</html>

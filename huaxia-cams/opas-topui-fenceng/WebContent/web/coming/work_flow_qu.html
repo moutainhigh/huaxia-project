@@ -1,0 +1,128 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>工作流节点数量查询</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<div id="workflowWinCondion" style="padding: 10px; text-align: center;">
+		<form id="seachForm">
+			<table>
+				<tr>
+					<td>卡类型：</td>
+					<td><select class="easyui-combobox" name="packageid"
+						id="packageid" editable="false" style="width: 150px;">
+							<option value="">---请选择---</option>
+							<option value="bzk">标准卡</option>
+							<option value="ydj">易达金</option>
+					</select></td>
+					<td>状态：</td>
+					<td><select class="easyui-combobox" name="status" id="status"
+						editable="false" style="width: 150px;">
+							<option value="">---请选择---</option>
+							<option value="1">流程未结束</option>
+							<option value="16">流程已结束</option>
+							<option value="512">流程异常</option>
+					</select></td>
+					<td>&nbsp;<a
+						href="javascript:checkAndSearchTab('seachForm','tblPost');"
+						class="easyui-linkbutton">查询</a></td>
+				</tr>
+				<tr>
+					<td>开始时间：</td>
+					<td><input class="easyui-datetimebox" id="startTime"
+						name="startTime" style="width: 150px; color: red;"
+						data-options="showSeconds:false" /></td>
+					<td>结束时间：</td>
+					<td><input class="easyui-datetimebox" id="endTime"
+						name="endTime" style="width: 150px; color: red;"
+						data-options="showSeconds:false" /></td>
+					<td>&nbsp;<a href="javascript:buttonClean()"
+						class="easyui-linkbutton">重置</a></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<table id="tblPost"  style="width: 99%; height: 560px;" iconCls="icon-save" ></table>
+</body>
+<script type="text/javascript">
+	var tblPost = $("#tblPost");
+	var seachForm = $("#seachForm");
+
+
+	function buttonClean() {
+		$('#packageid').combobox('clear');
+		$('#status').combobox('clear');
+		$('#seachForm').form('reset');
+	}
+
+	function checkAndSearchTab(formName, tblName) {
+		var jsonFrom=$('#seachForm').serializeArray();
+		var jsondata =overTrim(jsonFrom);
+		var s = {
+				"jsondata" : jsondata,
+			};
+		tblPost.datagrid({
+			url:'/opas-naps/selectWorkflow.json',
+			pageSize:20,
+			rownumbers:true,
+			singleSelect:true,
+			pagination:true,
+			fitColumns:true,
+			loadMsg:'数据加载中.....',
+			queryParams:s,
+			columns:[[{field:'name',title:'节点名称',width:100},{field:'count',title:'数量',width:100}]]
+		});
+
+	}
+
+	/* function getFormMulData(dataObject, flag) {
+		var jsonObject = '{';
+		var k = 0;
+		var selectList = new Array("packageid", "status");
+		$.each(dataObject,
+				function() {
+					k++;
+					var objName = this.name;
+					//避免重复
+					if (jsonObject.indexOf(objName) == -1) {
+						var objValue;
+						if (selectList.indexOf(objName) != '-1') {
+							if (flag == '2') {
+								objValue = $("#" + objName + "2").combobox(
+										"getValues");
+							} else {
+								objValue = $("#" + objName + "").combobox(
+										"getValues");
+							}
+						} else {
+							objValue = this.value;
+						}
+						jsonObject += '"' + objName + '":';
+						jsonObject += '"' + objValue + '"';
+						if (k < dataObject.length) {
+							jsonObject += ",";
+						}
+					}
+				});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	} */
+	
+	function overTrim(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value.trim();
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+</script>

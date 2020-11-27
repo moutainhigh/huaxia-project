@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="Marketer">
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="MarketerResultMap" type="com.huaxia.opas.domain.sysparm.Marketer">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="SPREAD_ORG" property="spreadOrg" jdbcType="VARCHAR" />
+		<result column="SPREAD_NO" property="spreadNo" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="VARCHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="VARCHAR" />
+		<result column="END_DATE" property="endDate" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryMarketersList" parameterType="com.huaxia.opas.domain.sysparm.Marketer"
+		resultMap="MarketerResultMap">
+		select
+			AUTO_ID, USER_NAME, SPREAD_ORG, SPREAD_NO, CRT_DATE, STATUS,
+			START_DATE, END_DATE, LST_UPD_DATE
+		from OPAS_MARKETER_LIST
+		<where>
+			<if test="userName != null and userName !='' ">
+				AND USER_NAME LIKE '${userName}%'
+			</if>
+			<if test="spreadOrg != null and spreadOrg !='' ">
+				AND SPREAD_ORG LIKE '${spreadOrg}%'
+			</if>
+			<if test="spreadNo != null and spreadNo !='' ">
+				AND SPREAD_NO LIKE '${spreadNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS LIKE '${status}%'
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+	<!-- 统计数量 -->
+	<select id="queryMarketersCount" parameterType="com.huaxia.opas.domain.sysparm.Marketer"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_MARKETER_LIST
+		<where>
+			<if test="userName != null and userName !='' ">
+				AND USER_NAME LIKE '${userName}%'
+			</if>
+			<if test="spreadOrg != null and spreadOrg !='' ">
+				AND SPREAD_ORG LIKE '${spreadOrg}%'
+			</if>
+			<if test="spreadNo != null and spreadNo !='' ">
+				AND SPREAD_NO LIKE '${spreadNo}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS LIKE '${status}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteMarketer" parameterType="java.util.List">
+		delete from
+		OPAS_MARKETER_LIST
+		where auto_id in
+		<foreach collection="ids" open="(" close=")" item="autoId"
+			separator=",">
+			#{autoId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 批量启用 -->
+	<update id="marketerStatusOK" parameterType="com.huaxia.opas.domain.sysparm.Marketer">
+		update OPAS_MARKETER_LIST
+		<set>
+			STATUS = '1',
+			START_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+		</set>
+		where auto_id in
+		<foreach collection="ids" open="(" close=")" item="autoId"
+			separator=",">
+			#{autoId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 批量禁用 -->
+	<update id="marketerStatusStop" parameterType="com.huaxia.opas.domain.sysparm.Marketer">
+		update OPAS_MARKETER_LIST
+		<set>
+			STATUS = '0',
+			END_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+		</set>
+		where auto_id in
+		<foreach collection="ids" open="(" close=")" item="autoId"
+			separator=",">
+			#{autoId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 查询status -->
+	<select id="queryMarketerStatus" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select status from OPAS_MARKETER_LIST where
+		auto_id=#{autoId,jdbcType=VARCHAR}
+	</select>
+	<!-- 修改 -->
+	<update id="updateMarketer" parameterType="com.huaxia.opas.domain.sysparm.Marketer">
+		update OPAS_MARKETER_LIST
+		<set>
+			USER_NAME = #{userName,jdbcType=VARCHAR},
+			SPREAD_ORG	= #{spreadOrg,jdbcType=VARCHAR},
+			SPREAD_NO = #{spreadNo,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			START_DATE = #{startDate,jdbcType=CHAR},
+			END_DATE = #{endDate,jdbcType=CHAR},
+			CRT_DATE = SYSDATE,
+		    LST_UPD_DATE = SYSDATE
+		</set>
+		where auto_id = #{autoId,jdbcType=CHAR}
+	</update>
+	
+	<!-- 查询数据是否已存在 -->
+	<select id="checkIsExistMarketer" parameterType="com.huaxia.opas.domain.sysparm.Marketer"
+		resultMap="MarketerResultMap">
+		select auto_id from
+		OPAS_MARKETER_LIST
+		where USER_NAME = #{userName} and
+		SPREAD_ORG = #{spreadOrg} and 
+		SPREAD_NO = #{spreadNo}
+	</select>
+	
+	<!-- 添加 启用 -->
+	<insert id="insertMarketer" parameterType="com.huaxia.opas.domain.sysparm.Marketer">
+		insert into
+		OPAS_MARKETER_LIST
+		(AUTO_ID,
+		USER_NAME,
+		SPREAD_ORG,
+		SPREAD_NO,
+		START_DATE,
+		END_DATE,
+		CRT_DATE,
+		STATUS,
+		LST_UPD_DATE
+		)
+		values(
+		#{autoId,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR},
+		#{spreadOrg,jdbcType=VARCHAR},
+		#{spreadNo,jdbcType=VARCHAR},
+		#{startDate,jdbcType=VARCHAR},
+		#{endDate,jdbcType=VARCHAR},
+		SYSDATE,
+		#{status,jdbcType=CHAR},
+	    SYSDATE
+		)
+	</insert>
+	
+	
+	<!-- 添加 启用 -->
+	<insert id="insertMarketerUpload" parameterType="com.huaxia.opas.domain.sysparm.Marketer">
+		insert into
+		OPAS_MARKETER_LIST
+		(AUTO_ID,
+		USER_NAME,
+		SPREAD_ORG,
+		SPREAD_NO,
+		START_DATE,
+		END_DATE,
+		CRT_DATE,
+		STATUS,
+		LST_UPD_DATE)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.userName,jdbcType=VARCHAR},
+			#{item.spreadOrg,jdbcType=VARCHAR},
+			#{item.spreadNo,jdbcType=VARCHAR},
+			#{item.startDate,jdbcType=DATE},
+			#{item.endDate,jdbcType=DATE},
+			SYSDATE,
+			'1',
+			SYSDATE
+			from dual)
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankPracticeQualifyRecordDao">
+	<!-- 保存执业资格记录信息段 PF07A   -->
+	<insert id="insertPracticeQualifyRecordInfo" parameterType="com.huaxia.opas.domain.pboc.ppq.PF07A" >
+    INSERT INTO OPAS_PBOC_PUBLIC_COMPETENCE (APP_ID, COMPETENCY_NAME, AWARD_ORG,
+      RANK, ORG_PLACE,
+      AWARD_DATE, EXP_DATE, REVOKE_DATE, 
+      CRT_USER, CRT_TIME, RELATE_ID)
+    VALUES (#{appId,jdbcType=CHAR}, #{PF07AQ01,jdbcType=VARCHAR}, #{PF07AQ02,jdbcType=VARCHAR}, 
+      #{PF07AD01,jdbcType=VARCHAR}, #{PF07AD02,jdbcType=VARCHAR}, 
+      #{PF07AR01,jdbcType=VARCHAR}, #{PF07AR02,jdbcType=VARCHAR}, #{PF07AR03,jdbcType=VARCHAR}, 
+      'SYSTEM', SYSDATE, #{relateId,jdbcType=VARCHAR})
+	</insert>
+	<!-- 保存执业资格记录的标注及声明信息段 PF07Z/PF07Zdata -->
+	<insert id="insertPracticeQualifyRecordPpqLabelState" parameterType="com.huaxia.opas.domain.pboc.ppq.PF07Zdata" >
+    INSERT INTO PBOC_PPQ_LABEL_STATE (UUID, APP_ID, COUNT, 
+      RELATE_ID, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PF07ZS01,jdbcType=VARCHAR}, 
+      #{relateId,jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	<!-- 保存执业资格记录的标注及声明信息 PF07Z/PF07ZH 集合 -->
+	<insert id="insertPracticeQualifyRecordPpqLabelStateInfoList" parameterType="java.util.List" >
+	INSERT INTO PBOC_PPQ_LABEL_STATE_INFO (UUID, APP_ID, TYPE, 
+      CONTENT, ADD_DATE, RELATE_ID, 
+      CRT_TIME)
+	<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT
+	  SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.PF07ZD01,jdbcType=VARCHAR}, 
+      #{item.PF07ZQ01,jdbcType=VARCHAR}, #{item.PF07ZR01,jdbcType=VARCHAR}, #{item.relateId,jdbcType=VARCHAR}, 
+      SYSDATE
+	  FROM DUAL
+	 </foreach>
+	</insert>
+</mapper>

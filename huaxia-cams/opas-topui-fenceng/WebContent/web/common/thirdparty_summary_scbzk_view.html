@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>征信信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<style type="text/css">
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	background-color: #E6F0FF;
+	color: #003476;
+}
+
+.dvi-table input {
+	color: blue;
+	disabled: disabled;
+	height: 14px;
+	width: 100%;
+	line-height: 14px;
+	margin-top: 0px;
+	border-top-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	text-align: center;
+	font-size: 12px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table td {
+	padding: 0px 0px;
+	font-size: 12px;
+}
+
+.positionhead {
+	height: 14px;
+	line-height: 14px;
+	background: #02bafa;
+	border: 1px #26bbdb solid;
+	border-radius: 2px;
+	display: inline-block;
+	text-decoration: none;
+	margin-top: 0px;
+	text-align: center;
+	font-size: 12px;
+	outline: none;
+}
+/** 快速定位内容区 */
+#ksdw_area {
+    top: 40px;
+	width: 100%;
+	height: 90%;
+	overflow-y: auto;
+	position: absolute;
+}
+</style>
+<script type="text/javascript">
+	var txt_identity_no = "";//身份证号 
+	var pboc_cid = '{"cellphone":"cellphone","ccomp_phone":"cCompPhone","resi_tel":"resiTel","communication_addr":"communicationAddr","query_req_time":"queryReqTime","company":"company","company2":"company2","compAddr":"compAddr","compAddr2":"compAddr2","infoUpdTime":"infoUpdTime","infoUpdTimeTwo":"infoUpdTimeTwo","frs_cred_crd_issue_mon":"frsCredCrdIssueMon","pay_comp_z":"payCompZ","info_upd_time_z":"infoUpdTimeZ","pay_status_z":"payStatusZ","personCompRate":"personCompRate","monthly_deposit_z":"monthlyDepositZ","pay_comp_y":"payCompY","info_upd_time_y":"infoUpdTimeY","pay_status_y":"payStatusY","person_pay_base_y":"personPayBaseY","cur_mapy_amt_y":"curMpayAmtY"}';
+	var c_pboc = JSON.parse(pboc_cid);
+
+	function fnFillPBOC(o) {
+		$.each(c_pboc, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+
+	var police_cid = '{"name":"name","identity_no":"identityNo","identity_no_check_rst":"identityNoCheckRst","old_name":"oldName","jgssx_home_prov_city":"jgssxHomeProvCity","belong_home_prov_city":"belongHomeProvCity","srvs_location":"srvsLocation","birth_home_prov_city":"birthHomeProvCity"}';
+	var c_police = JSON.parse(police_cid);
+
+	function fnFillPolice(o) {
+		$.each(c_police, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+
+	var credit100_cid = '{"slIdBankBad":"slIdBankBad","slIdBankLost":"slIdBankLost","slIdBankFraud":"slIdBankFraud","slIdCourtBad":"slIdCourtBad","slIdNbankP2pLost":"slIdNbankP2pLost","slIdNbankP2pRefuse":"slIdNbankP2pRefuse","slIdCourtExecuted":"slIdCourtExecuted"}';
+	var credit100_cidCell = '{"slCellBankLost":"slCellBankLost","slCellBankBad":"slCellBankBad","slCellBankFraud":"slCellBankFraud"}';
+	var c_credit100 = JSON.parse(credit100_cid);
+	var c_credit100Cell = JSON.parse(credit100_cidCell);
+
+	function fnFillCredit100(o, flag) {
+		if ("IdDate" == flag) {
+			$.each(c_credit100, function(n, v) {
+				var value = '';
+				var v = eval('o.' + v);
+				if (v == null) {
+					value = '';
+				} else if (v == '0') {
+					value = '本人直接命中';
+				} else if (v == '1') {
+					value = '一度关系命中';
+				} else if (v == '2') {
+					value = '二度关系命中';
+				} else {
+					value = v;
+				}
+				$('#' + n).val(value);
+			});
+		}
+		if ("CellDate" == flag) {
+			$.each(c_credit100Cell, function(n, v) {
+				var value = '';
+				var v = eval('o.' + v);
+				if (v == null) {
+					value = '';
+				} else if (v == '0') {
+					value = '本人直接命中';
+				} else if (v == '1') {
+					value = '一度关系命中';
+				} else if (v == '2') {
+					value = '二度关系命中';
+				} else {
+					value = v;
+				}
+				$('#' + n).val(value);
+			});
+		}
+	}
+
+	var education_cid = '{"user_name":"userName","education_degree":"educationDegree","study_style":"studyStyle","education_approach":"dstudyStyle","graduate":"graduate","speciality_name":"specialityName","graduate_time":"graduateTime","study_result":"studyResult","query_result":"searchStatus","identitycard":"identitycard"}';
+	var c_education = JSON.parse(education_cid);
+
+	function fnFillEducation(o) {
+		$.each(c_education, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+	var ant_cid = '{"zm_score":"zmScore","ivs_score":"ivsScore","ant_name":"descriptionName","cert_no":"descriptionCertno","ant_mobile":"descriptionPhone","ant_address":"descriptionAddr","ant_type":"riskTypes"}';
+	var c_ant = JSON.parse(ant_cid);
+
+	function fnFillAnt(o) {
+		$.each(c_ant, function(n, v) {
+			$('#txt_' + n).val(eval('o.' + v));
+		});
+	}
+
+	/* var sid = [ 'pboc', 'police', 'ant', 'credit100', 'education' ];
+
+	function fnInitStyle(sid) {
+		$.each(sid, function(i, v) {
+			$('#' + v + '_summary_area table tr td:even').css('width', '140')
+					.css('text-align', 'right').css('padding-right', '10px')
+					.css('font', 'normal 12px Arial');
+		});
+	} */
+
+	function fnLoadPBOC(appId) {
+		$cf.ajax({
+			url : '/opas-naps/pboc_summary_query_scbzk.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyPbocSummary;
+					var o = JSON.parse(result);
+					fnFillPBOC(o);
+					//公积金-缴费状态 
+					var txt_pay_status = $('#txt_pay_status_z').val();
+					if (txt_pay_status != null && txt_pay_status != "") {
+						$('#txt_pay_status_z').val(
+								txt_pay_status.split("|")[txt_pay_status
+										.split("|").length - 1]);
+					}
+					//养老保险金-缴费状态	
+					var txt_pay_status_y = $('#txt_pay_status_y').val();
+					if (txt_pay_status_y != null && txt_pay_status_y != "") {
+						$('#txt_pay_status_y').val(
+								txt_pay_status_y.split("|")[txt_pay_status_y
+										.split("|").length - 1]);
+					}
+
+				}
+			}
+		});
+	}
+
+	function fnLoadPolice(appId) {
+		$cf.ajax({
+			url : '/opas-naps/police_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyPoliceSummary;
+					var o = JSON.parse(result);
+					fnFillPolice(o);
+					var resultStr = eval('(' + result + ')');
+					/* var imageZxSpBzkSrc = "/opas-naps/PolicePhoto.json?appId="
+							+ appId; //identity_no="+resultStr.identityNo; //txt_identity_no 父页面的全局变量 
+					$("#policeImageZxSpBzkSrc").attr("src", imageZxSpBzkSrc);//给img标签附上 src属性  */
+					if(!(o.identityNoCheckRst =="完全匹配" || o.identityNoCheckRst == "库中无此号")){
+						$("#txt_identity_no_check_rst").attr("style","color:red");
+					}
+					
+					var resultRx = response.RSP_BODY;
+					if(resultRx.resultRx == '不一致'){
+						$("#resultRx").attr("style","color:red");
+					}
+					$('#police_summary_area').form("load", resultRx);
+				}
+			}
+		});
+	}
+
+	function fnLoadCredit100(appId) {
+		$cf.ajax({
+			url : '/opas-naps/credit100_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					if (response.RSP_BODY.IdDate) {
+						var result = response.RSP_BODY.applyCredit100Id;
+						var o = JSON.parse(result);
+						fnFillCredit100(o, "IdDate");
+					}
+					if (response.RSP_BODY.CellDate) {
+						var result = response.RSP_BODY.applyCredit100Cell;
+						var o = JSON.parse(result);
+						fnFillCredit100(o, "CellDate");
+					}
+				}
+			}
+		});
+	}
+
+	function fnLoadEducation(appId) {
+		$cf.ajax({
+			url : '/opas-naps/education_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyEducationSummary;
+					var o = JSON.parse(result);
+					fnFillEducation(o);
+				}
+			}
+		});
+	}
+	function fnLoadAnt(appId) {
+		$cf.ajax({
+			url : '/opas-naps/ant_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyAntSummary;
+					var o = JSON.parse(result);
+					fnFillAnt(o);
+					var antObject = eval('(' + result + ')');
+					if (antObject.codeNameEnglish == "1") {
+						$("#txt_ant_name").attr("style", "background:red;");
+					}
+					if (antObject.codeCertnoEnglish == "1") {
+						$("#txt_cert_no").attr("style", "background:red;");
+					}
+					if (antObject.codePhoenEnglish == "1") {
+						$("#txt_ant_mobile").attr("style", "background:red;");
+					}
+					if (antObject.codeAddrEnglish == "1") {
+						$("#txt_ant_address").attr("style", "background:red;");
+					}
+				}
+			}
+		});
+	}
+	//查看二代人行详情 
+	function showDetailBank(str) {
+		window.open("thirdparty_" + str + "_view.html?appId=" + appId.substring(0, 15) + "9", "",
+				"resizable=no,toolbar=no,location=no,left=0,top=0,width="
+						+ (screen.availWidth - 10) + ",height="
+						+ (screen.availHeight - 70));
+	}
+	function showDetail(str) {
+		if (str == "police") {//公安摘要信息
+			txt_identity_no = $("#txt_identity_no").val();
+		}
+		window.open("thirdparty_" + str + "_view.html?appId=" + appId, "",
+				"resizable=no,toolbar=no,location=no,left=0,top=0,width="
+						+ (screen.availWidth - 10) + ",height="
+						+ (screen.availHeight - 70));
+	}
+	function setPositionAbsolute(top) {
+		document.getElementById("quickPosition").style.top = top + "px";
+	}
+
+	//加载企业行业信息
+	function fnLoadQiye(appId) {
+		$cf.ajax({
+			url : '/opas-naps/queryQiyeInfo.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(data) {
+				if (data.RSP_BODY.success) {
+					$('#qiyeinfoForm').form("load", data.RSP_BODY.qiYeCode);
+					var entStatus = data.RSP_BODY.qiYe.entstatus;
+					if (entStatus != "在营（开业）" && entStatus != "开业"
+							&& entStatus != "存续" && entStatus != "正常"
+							&& entStatus != "正常执业" && entStatus != "正常经营") {
+						$("#entStatus").attr("style", "background:red;");
+					}
+					$('#qiyeinfoForm').form("load", data.RSP_BODY.qiYe);
+				}
+			}
+		});
+	}
+</script>
+</head>
+<body>
+	<!-- 快速定位区 开始 -->
+	<div id="quickPosition" style="position: fixed; z-index: 1; text-align: left;">
+		<a href="#A" class="positionhead" >人行摘要信息</a>
+		<a href="#B" class="positionhead" >公安摘要信息</a>
+		<a href="#C" class="positionhead" >蚂蚁摘要信息</a>
+		<a href="#D" class="positionhead" >百融摘要信息</a>
+		<a href="#E" class="positionhead" >学历摘要信息</a>
+		<a href="#F" class="positionhead" >车辆核查信息</a>
+		<a href="#G" class="positionhead" >天御摘要信息</a>
+		<a href="#H" class="positionhead" >企业及行业信息</a>
+		<a href="#I" class="positionhead" >通讯运营商摘要信息</a>
+	</div>
+	<div id="ksdw_area">
+	<div id="pboc_summary_area">
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span  id="A">人行摘要信息</span>
+			</legend>
+			<table>
+				<tr>
+					<td>手机号码</td>
+					<td><input type="text" id="txt_cellphone" readonly="readonly" /></td>
+					<td>查询时间</td>
+					<td><input type="text" style="width: 255px"
+						id="txt_query_req_time" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>住宅电话</td>
+					<td><input type="text" id="txt_resi_tel" readonly="readonly" /></td>
+					<td>单位电话</td>
+					<td><input type="text" style="width: 255px"
+						id="txt_ccomp_phone" readonly="readonly" /></td>
+				</tr>
+
+
+				<tr>
+					<td>单位名称1</td>
+					<td colspan="3"><input type="text" style="width: 500px"
+						id="txt_company" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>单位地址1</td>
+					<td colspan="3"><input type="text" style="width: 500px"
+						id="txt_compAddr" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>更新时间1</td>
+					<td><input type="text" id="txt_infoUpdTime"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>单位名称2</td>
+					<td colspan="3"><input type="text" style="width: 500px"
+						id="txt_company2" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>单位地址2</td>
+					<td colspan="3"><input type="text" style="width: 500px"
+						id="txt_compAddr2" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>更新时间2</td>
+					<td><input type="text" id="txt_infoUpdTimeTwo"
+						readonly="readonly" /></td>
+				</tr>
+
+
+
+				<!-- <tr>
+					<td>单位名称</td>
+					<td colspan="3"><input type="text"  style="width: 500px"
+					    id="txt_company" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>单位地址</td>
+					<td colspan="3"><input type="text"  style="width: 500px"
+						id="txt_comp_addr" readonly="readonly" /></td>
+				</tr> -->
+				<tr>
+					<td>通讯地址</td>
+					<td colspan="3"><input type="text" style="width: 500px"
+						id="txt_communication_addr" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>首张贷记卡发卡月份</td>
+					<td><input type="text" id="txt_frs_cred_crd_issue_mon"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>公积金-缴交单位</td>
+					<td colspan="3"><input type="text" style="width: 500px"
+						id="txt_pay_comp_z" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>公积金-缴费状态</td>
+					<td><input type="text" id="txt_pay_status_z"
+						readonly="readonly" /></td>
+					<td>公积金-缴交金额</td>
+					<td><input type="text" style="width: 255px"
+						id="txt_monthly_deposit_z" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>公积金-缴交比例</td>
+					<td><input type="text" id="txt_personCompRate"
+						readonly="readonly" /></td>
+					<td>公积金-更新时间</td>
+					<td><input type="text" style="width: 255px"
+						id="txt_info_upd_time_z" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>养老保险金-缴交单位</td>
+					<td colspan="3"><input type="text" style="width: 500px"
+						id="txt_pay_comp_y" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>养老保险金-缴费状态</td>
+					<td><input type="text" id="txt_pay_status_y"
+						readonly="readonly" /></td>
+					<td>养老保险金-月缴存额</td>
+					<td><input type="text" style="width: 255px"
+						id="txt_cur_mapy_amt_y" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>养老保险金-缴费基数</td>
+					<td><input type="text" id="txt_person_pay_base_y"
+						readonly="readonly" /></td>
+					<td>养老保险金-更新时间</td>
+					<td><input type="text" style="width: 255px"
+						id="txt_info_upd_time_y" readonly="readonly" /></td>
+				</tr>
+			</table>
+			<p align="center">
+				<a href='javascript:showDetail("detail_pboc");'>查看详情</a>
+			</p>
+			<h5>我行贷款</h5>
+			<div id="scBzk_view_datagrid"></div>
+		</fieldset>
+	</div>
+	
+	<div id="police_summary_area">
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span id="B">公安摘要信息</span>
+			</legend>
+			<table>
+				<tr>
+					<td>姓名</td>
+					<td><input type="text" id="txt_name" readonly="readonly"
+						style="width: 150px" /></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;证件号码</td>
+					<td><input type="text" id="txt_identity_no"
+						readonly="readonly" style="width: 150px" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;">增强公安查询状态</td>
+					<td><input type="text" id="txt_identity_no_check_rst"
+						readonly="readonly" style="width: 150px" /></td>
+					<td>PAD人像比对</td>
+					<td><input type="text" id="resultRx" name="resultRx"
+						readonly="readonly" style="width: 150px" /></td>
+				</tr>
+				
+			</table>
+			<p align="center">
+				<a href='javascript:showDetail("police");'>查看详情</a>
+			</p>
+		</fieldset>
+	</div>
+	<div id="credit100_summary_area">
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span id="D">百融摘要信息</span>
+			</legend>
+			<table>
+				<tr>
+					<td>身份证检查命中：</td>
+					<td colspan="5"></td>
+				</tr>
+				<tr>
+					<td>不良：</td>
+					<td><input type="text" id="slIdBankBad" readonly="readonly" /></td>
+					<td>失联：</td>
+					<td><input type="text" id="slIdBankLost" readonly="readonly" /></td>
+					<td>资信不佳：</td>
+					<td><input type="text" id="slIdBankFraud" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>法院失信：</td>
+					<td><input type="text" id="slIdCourtBad" readonly="readonly" /></td>
+					<td>P2P失联：</td>
+					<td><input type="text" id="slIdNbankP2pLost"
+						readonly="readonly" /></td>
+					<td>P2P拒绝：</td>
+					<td><input type="text" id="slIdNbankP2pRefuse"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>法院被执行人：</td>
+					<td><input type="text" id="slIdCourtExecuted"
+						readonly="readonly" /></td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td>手机检查命中：</td>
+					<td colspan="5"></td>
+				</tr>
+				<tr>
+					<td>失联：</td>
+					<td><input type="text" id="slCellBankLost" readonly="readonly" /></td>
+					<td>不良：</td>
+					<td><input type="text" id="slCellBankBad" readonly="readonly" /></td>
+					<td>资信不佳：</td>
+					<td><input type="text" id="slCellBankFraud"
+						readonly="readonly" /></td>
+				</tr>
+			</table>
+			<p align="center">
+				<a href='javascript:showDetail("credit100");'>查看详情</a>
+			</p>
+		</fieldset>
+	</div>
+
+	<div id="education_summary_area">
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span id="E">学历摘要信息</span>
+			</legend>
+			<table>
+				<tr>
+					<td>查询结果</td>
+					<td><input type="text" id="txt_query_result"
+						readonly="readonly" /></td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td>姓名</td>
+					<td><input type="text" id="txt_user_name" readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;证件号</td>
+					<td><input type="text" id="txt_identitycard"
+						readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;院校名称</td>
+					<td><input type="text" id="txt_graduate"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>毕业年份</td>
+					<td><input type="text" id="txt_graduate_time"
+						readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;学历层次</td>
+					<td><input type="text" id="txt_education_degree" readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;&nbsp;学习形式</td>
+					<td><input type="text" id="txt_education_approach"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>毕业结论</td>
+					<td><input type="text" id="txt_study_result"
+						readonly="readonly" /></td>
+					<td colspan="4"></td>
+				</tr>
+			</table>
+			<p align="center">
+				<a href='javascript:showDetail("education");'>查看详情</a>
+			</p>
+		</fieldset>
+	</div>
+	<div id = "bx_verhicle_info_area">
+	  <fieldset style="font-size: 12px">
+		<legend>
+			<span id="F">车辆核查信息</span>
+		</legend>
+		<form id="bx_verhicle_info_form">
+			<table>
+				<tr>
+					<td>查询结果:<input name="queryResult" style="width: 254px"
+						type="text" readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;车龄判定范围:<input name="vehicleAgeRange"
+						style="width: 221px" type="text" readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">非营业个人车辆风险价值: <input name="vehicleValue"
+						style="width: 479px" type="text" readonly="readonly" />
+					</td>
+				</tr>
+			</table>
+			<p align="center">
+					<a href='javascript:showDetail("verhicle");'>查看详情</a>
+			</p>
+		</form>
+	  </fieldset>
+	</div>
+	<fieldset style="font-size: 12px">
+		<legend>
+			<span id="G">天御摘要信息</span>
+		</legend>
+		<form id="tianYuSummaryinfoForm">
+			<table>
+				<tr>
+					<td>查询结果: <input name="queryResult" style="width: 220px"
+						type="text" readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;天御分: <input name="riskScore"
+						style="width: 230px" type="text" readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">风险代码: <input name="riskCodeCombine"
+						style="width: 509px" type="text" readonly="readonly" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</fieldset>
+
+	<fieldset style="font-size: 12px">
+		<legend>
+			<span id="H">企业及行业信息</span>
+		</legend>
+		<form id="qiyeinfoForm">
+			<table>
+				<tr>
+					<td>查询结果:</td>
+					<td><input name="code" style="width: 205px" type="text"
+						readonly="readonly" /></td>
+					<td>经营状态:</td>
+					<td><input id="entStatus" name="entstatus"
+						style="width: 229px" type="text" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>企业名称:</td>
+					<td colspan="3"><input name="entname" style="width: 514px"
+						type="text" readonly="readonly" /></td>
+				</tr>
+
+				<tr>
+					<td>法定代表人/负责人/执行事务合伙人:</td>
+					<td colspan="3"><input name="frname" style="width: 514px"
+						type="text" readonly="readonly" /></td>
+
+				</tr>
+				<tr>
+					<td>注册资本(万元):</td>
+					<td><input name="regcap" style="width: 205px" type="text"
+						readonly="readonly" /></td>
+					<td>注册资本币种:</td>
+					<td><input name="regcapcur" style="width: 229px" type="text"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>联系人电话:</td>
+					<td><input name="tel" style="width: 205px" type="text"
+						readonly="readonly" /></td>
+					<td>员工人数:</td>
+					<td><input name="empnum" style="width: 229px" type="text"
+						readonly="readonly" /></td>
+				</tr>
+				<tr>
+
+					<td>企业(机构)类型:</td>
+					<td colspan="3"><input name="enttype" style="width: 514px"
+						type="text" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>住址:</td>
+					<td colspan="3"><input name="dom" style="width: 514px"
+						type="text" readonly="readonly" /></td>
+				</tr>
+			</table>
+			<p align="center">
+				<a href='javascript:showDetail("qiYeinfo");'>查看详情</a>
+			</p>
+		</form>
+	</fieldset>
+	<div id="txOperatorInfoForm">
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span id="I">通讯运营商摘要信息</span>
+			</legend>
+		<p align="left">
+				入网时长(月):<input name="resultData" type="text" readonly="readonly">
+		</p>
+		</fieldset>
+	</div>
+	<div id="ant_summary_area">
+		<fieldset style="font-size: 12px">
+			<legend>
+				<span id="C">蚂蚁摘要信息</span>
+			</legend>
+			<!-- <table>
+				<tr>
+					<td>芝麻分</td>
+					<td><input type="text" 
+						id="txt_zm_score" readonly="readonly"  style="width: 270px"/></td>
+					<td>IVS分</td>
+					<td><input type="text"  
+						id="txt_ivs_score" readonly="readonly"  style="width: 296px"/></td>
+				</tr>
+				<tr>
+					<td>姓名</td>
+					<td colspan="3"><input  type="text"  style="width: 600px"
+						id="txt_ant_name" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>证件号</td>
+					<td colspan="3"><input  type="text"  style="width: 600px"
+						id="txt_cert_no" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>手机号</td>
+					<td colspan="3"><input  type="text"  style="width: 600px"
+						id="txt_ant_mobile" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>地址</td>
+					<td colspan="3"><input  type="text"  style="width: 600px"
+						id="txt_ant_address" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>风险类型</td>
+					<td colspan="3"><input type="text"  style="width: 600px"
+						id="txt_ant_type" readonly="readonly" /></td>
+				</tr>
+			</table> -->
+			<p align="center">
+				<a href='javascript:showDetail("ant");'>查看详情</a>
+			</p>
+		</fieldset>
+	</div>
+</div>
+	<script type="text/javascript">
+		/* function GetQueryString(name){
+			 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+			 var r = window.location.search.substr(1).match(reg);
+			 if(r!=null) return unescape(r[2]);
+			 return null;
+		} */
+		var url = location.href;
+		var appId = url.split("=")[1];//"1706191918P00181";//"1704010622P50561";//
+		$(function() {
+			//alert("gaohuiappId"+appId);
+			// 初始化页面样式
+			//	fnInitStyle(sid);
+			// 获取申请件信息
+			//var appId = GetQueryString("appId");
+			/* var parent = window.parent;
+			//var appId = parent.applyId.value;*/
+			if (appId != '') {
+				appId = $.trim(appId);
+			}
+			// 加载人行摘要信息
+			fnLoadPBOC(appId);
+			// 加载公安摘要信息
+			fnLoadPolice(appId);
+			// 加载百融摘要信息
+			fnLoadCredit100(appId);//'1512241611P10141'
+			// 加载学历摘要信息
+			fnLoadEducation(appId);//'1234567891234565'
+			//加载蚂蚁摘要信息
+			fnLoadAnt(appId);//'1601240945P00101'
+			var imageScBzkSrc = "/app/opas/police/"
+					+ $("#txt_identity_no").val() + "X.jpg";//身份证号为依据查 图片的路径 
+			$("#policeImageScBzkSrc").attr("src", imageScBzkSrc);//给img标签附上 src属性 
+			//加载 我行贷款 
+			loadScBzcViewDatagrid(appId);
+			//加载宝信车辆信息
+		    fnLoadBxVehicle(appId);
+			//加载 腾讯天御分 
+			fnLoadTianYuSummary(appId);
+			//加载企业行业信息
+			fnLoadQiye(appId);
+			//加载通讯运营商信息
+			fnLoadTxOperator(appId);
+			
+		});
+		/**
+		 *根据appId和“华夏银行” 加载 所需数据    gaohui
+		 */
+		function loadScBzcViewDatagrid(appId) {
+			$("#scBzk_view_datagrid").datagrid({
+				url : "/opas-naps/findScBzkMyBankLoan.json",
+				border : false,
+				nowrap : true,
+				autoRowHeight : false,
+				singleSelect : true,
+				rownumbers : true,
+				pagination : true,
+				pageSize : 5,
+				pageList : [ 5, 10, 15 ],
+				queryParams : {
+					"appId" : appId,
+					"myBank" : "华夏银行",
+					"messType" : "01"
+				},
+				columns : [ [ {
+					title : '贷款时间',
+					field : 'loanOrCreditIssuDate',
+					width : "200px",
+					halign : 'center'
+				}, {
+					title : '贷款本金',
+					field : 'loanOrCreditContAmt',
+					width : "200px",
+					halign : 'center'
+				}, {
+					title : '贷款状态',
+					field : 'loanOrCreditAcctStatus',
+					width : "180px",
+					halign : 'center',
+					formatter : function(value, currentRow, index) {
+						if (value != null && value != "") {
+							var val = value.split("|");
+							return val[val.length - 1];
+						} else {
+							return "";
+						}
+					}
+				} ] ]
+			});
+		}
+	    //加载宝信汽车数据源信息
+	    function fnLoadBxVehicle(appId){
+			$cf.ajax({
+				url : '/opas-naps/queryBxVerhicleCheckInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.success) {
+						var formData = eval('(' + data.RSP_BODY.htmlMap + ')');
+						$('#bx_verhicle_info_form').form("load", formData);
+					}
+				}
+			});
+	    }
+		//加载 天御分信息 
+		function fnLoadTianYuSummary(appId) {
+			$cf.ajax({
+				url : '/opas-naps/queryTianYuSummaryInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.success) {
+						$('#tianYuSummaryinfoForm').form("load",
+								data.RSP_BODY.tianYuSummary);
+					}
+				}
+			});
+		}
+		//加载通讯运营商 
+		function fnLoadTxOperator(appId){
+			
+			$cf.ajax({
+				url : '/opas-naps/queryTxOperSummaryInfo.json',
+				data : {
+					'appId' : appId
+				},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.success) {
+						var txOperator=data.RSP_BODY.txOperatorSummary;
+					  if(txOperator!=null&&txOperator!=""){
+						var resultData = txOperator.resultData;
+						
+						if(resultData=="A"){
+							txOperator.resultData="0-6月";
+						}
+						if(resultData=="B"){
+							txOperator.resultData="6-12月";
+						}
+						if(resultData=="C"){
+							txOperator.resultData="12-24月";
+						}
+						if(resultData=="D"){
+							txOperator.resultData="24月及以上";
+						}
+						if(resultData=="1"){
+							txOperator.resultData="0-3月";
+						}
+	                    if(resultData=="2"){
+	                    	txOperator.resultData="3-6月";
+						}
+						if(resultData=="3"){
+							txOperator.resultData="6-12月";
+						}
+						if(resultData=="4"){
+							txOperator.resultData="12-24月";
+						}
+						if(resultData=="5"){
+							txOperator.resultData="24月及以上";
+						}
+						if(resultData=="6"){
+							txOperator.resultData="系统无记录";
+						}
+						if(resultData=="-1"){
+							txOperator.resultData="异常状态";
+						}
+					  }else{
+						  txOperator=new Object();
+						  txOperator.resultData="未发起查询";
+					  }
+					  $('#txOperatorInfoForm').form("load", txOperator);
+					  
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>

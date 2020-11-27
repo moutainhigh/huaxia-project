@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.ResourceMapper">
+
+	<!-- <cache /> -->
+	
+	<resultMap id="result_BaseMenu" type="Menu">
+		<result column="RSRC_ID" property="id" jdbcType="CHAR" />
+		<result column="RSRC_NAME" property="name" jdbcType="VARCHAR" />
+		<result column="RSRC_URL" property="link" jdbcType="VARCHAR" />
+		<result column="RSRC_LEVEL" property="level" jdbcType="NUMERIC" />
+		<result column="RSRC_INDEX" property="index" jdbcType="NUMERIC" />
+		<result column="RSRC_PARENT_ID" property="pid" jdbcType="CHAR" />
+		<result column="RSRC_PARENT_NAME" property="pname" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_RESOURCE
+		<where>
+			RSRC_STATUS = '1'
+        	<if test="name != null">
+        		AND RSRC_NAME LIKE '${name}%'
+        	</if>
+        </where>
+	</select>
+	
+	<select id="selectListByPage" parameterType="java.util.Map" resultMap="result_BaseMenu">
+		SELECT RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID,RSRC_PARENT_NAME
+		  FROM (SELECT ROWNUM RN,RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID,RSRC_PARENT_NAME
+		          FROM (SELECT T1.RSRC_ID,T1.RSRC_NAME,T1.RSRC_URL,T1.RSRC_LEVEL,T1.RSRC_INDEX,T1.RSRC_PARENT_ID,T2.RSRC_NAME RSRC_PARENT_NAME
+		        		      FROM (SELECT RSRC_ID,MAX(RSRC_NAME) RSRC_NAME,MAX(RSRC_URL) RSRC_URL,MAX(RSRC_LEVEL) RSRC_LEVEL,MAX(RSRC_INDEX) RSRC_INDEX,MAX(RSRC_PARENT_ID) RSRC_PARENT_ID
+		        		              FROM SYS_RESOURCE
+		        		            <where>
+					                	RSRC_STATUS = '1'
+					                	<if test="name != null">
+					                		AND RSRC_NAME LIKE '${name}%'
+					                	</if>
+					                </where>
+		        		          GROUP BY RSRC_ID
+		        		  CONNECT BY PRIOR RSRC_PARENT_ID = RSRC_ID
+		        		          ORDER BY RSRC_ID) T1
+		        		  LEFT JOIN SYS_RESOURCE T2 ON T1.RSRC_PARENT_ID = T2.RSRC_ID) 
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		  WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+		  ORDER BY RSRC_ID
+	</select>
+	
+	<select id="selectObjectById" parameterType="java.lang.String" resultMap="result_BaseMenu">
+		SELECT T1.RSRC_ID,T1.RSRC_NAME,T1.RSRC_URL,T1.RSRC_LEVEL,T1.RSRC_INDEX,T1.RSRC_PARENT_ID,T2.RSRC_NAME RSRC_PARENT_NAME
+	      FROM (SELECT RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID,NULL RSRC_PARENT_NAME
+			      FROM SYS_RESOURCE
+				<where>
+					RSRC_STATUS = '1'
+		        	<if test="id != null">
+		        		AND RSRC_ID = #{id,jdbcType=CHAR}
+		        	</if>
+		        </where>
+		       ) T1 LEFT JOIN SYS_RESOURCE T2 ON T1.RSRC_PARENT_ID = T2.RSRC_ID
+	</select>
+	
+	<delete id="deleteObjectById" parameterType="java.lang.String">
+		DELETE FROM SYS_RESOURCE WHERE RSRC_ID = #{id,jdbcType=CHAR} AND RSRC_STATUS = '0'
+	</delete>
+	
+	<update id="updateObjectStatusByArguments" parameterType="java.lang.String">
+		UPDATE SYS_RESOURCE SET RSRC_STATUS = #{status,jdbcType=VARCHAR} WHERE RSRC_ID = #{id,jdbcType=CHAR}
+	</update>
+	
+	<select id="selectListCountByParentId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_RESOURCE WHERE RSRC_PARENT_ID = #{pid,jdbcType=CHAR} AND RSRC_STATUS = '1'
+	</select>
+	
+	<select id="selectList" resultMap="result_BaseMenu">
+		SELECT RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID,NULL RSRC_PARENT_NAME
+		  FROM SYS_RESOURCE 
+		 WHERE RSRC_STATUS = '1'
+	</select>
+	
+	<select id="selectListCountByPath" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_RESOURCE WHERE RSRC_URL = #{path,jdbcType=VARCHAR} WHERE RSRC_STATUS = '1'
+	</select>
+
+	<select id="selectChooseListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_RESOURCE
+		<where>
+			RSRC_STATUS = '1' AND RSRC_PARENT_ID IS NULL
+        	<if test="name != null">
+        		AND RSRC_NAME LIKE '${name}%'
+        	</if>
+        </where>
+	</select>
+	
+	<select id="selectChooseListByPage" parameterType="java.util.Map" resultMap="result_BaseMenu">
+		SELECT RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID,NULL RSRC_PARENT_NAME
+		  FROM (SELECT ROWNUM RN,RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID
+		          FROM (SELECT RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID
+		                  FROM SYS_RESOURCE
+		                <where>
+		                	RSRC_STATUS = '1' AND RSRC_PARENT_ID IS NULL
+		                	<if test="name != null">
+		                		AND RSRC_NAME LIKE '${name}%'
+		                	</if>
+		                </where>) T
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		 WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+	<select id="selectNextObjectByKey" parameterType="java.lang.String" resultMap="result_BaseMenu">
+		SELECT NVL(MAX(RSRC_LEVEL),2) RSRC_LEVEL, NVL((MAX(RSRC_INDEX) + 1),1) RSRC_INDEX
+		  FROM SYS_RESOURCE
+		 WHERE RSRC_PARENT_ID = #{id,jdbcType=CHAR}
+	</select>
+	
+	<insert id="insertObject" parameterType="Menu">
+		INSERT INTO SYS_RESOURCE (
+			UUID,CRT_TIME,CRT_USER,RSRC_ID,RSRC_NAME,RSRC_URL,RSRC_LEVEL,RSRC_INDEX,RSRC_PARENT_ID
+		) VALUES (
+			SYS_GUID(),SYSDATE,#{createUser,jdbcType=VARCHAR},SYS_GUID(),
+			#{name,jdbcType=VARCHAR},
+			#{link,jdbcType=VARCHAR},
+			#{level,jdbcType=NUMERIC},
+			#{index,jdbcType=NUMERIC},
+			#{pid,jdbcType=CHAR}
+		)
+	</insert>
+	
+	<select id="selectTreeList" resultMap="result_BaseMenu">
+		SELECT T1.RSRC_ID,T1.RSRC_NAME,T1.RSRC_URL,T1.RSRC_LEVEL,T1.RSRC_INDEX,T1.RSRC_PARENT_ID,T2.RSRC_NAME RSRC_PARENT_NAME
+		  FROM (SELECT RSRC_ID,
+		               MAX(RSRC_NAME) RSRC_NAME,
+		               MAX(RSRC_URL) RSRC_URL,
+		               MAX(RSRC_LEVEL) RSRC_LEVEL,
+		               MAX(RSRC_INDEX) RSRC_INDEX,
+		               MAX(RSRC_PARENT_ID) RSRC_PARENT_ID
+		          FROM SYS_RESOURCE
+		         WHERE RSRC_STATUS = '1'
+		         GROUP BY RSRC_ID
+		         CONNECT BY PRIOR RSRC_PARENT_ID = RSRC_ID
+		         ORDER BY RSRC_ID) T1
+		  LEFT JOIN SYS_RESOURCE T2 ON T1.RSRC_PARENT_ID = T2.RSRC_ID
+	</select>
+	
+	<update id="updateObject" parameterType="Menu">
+		UPDATE SYS_RESOURCE 
+		<set>
+			<if test="name != null">
+        		RSRC_NAME = #{name,jdbcType=CHAR},
+        	</if>
+        	<if test="link != null">
+        		RSRC_URL = #{link,jdbcType=CHAR},
+        	</if>
+        	<if test="level != null">
+        		RSRC_LEVEL = #{level,jdbcType=CHAR},
+        	</if>
+        	<if test="index != null">
+        		RSRC_INDEX = #{index,jdbcType=CHAR},
+        	</if>
+        	<if test="pid != null">
+        		RSRC_PARENT_ID = #{pid,jdbcType=CHAR},
+        	</if>
+		</set>
+		 WHERE RSRC_ID = #{id,jdbcType=CHAR}
+	</update>
+
+</mapper>

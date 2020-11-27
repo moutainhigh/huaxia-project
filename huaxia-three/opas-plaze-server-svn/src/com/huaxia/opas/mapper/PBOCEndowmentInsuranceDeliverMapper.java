@@ -1,0 +1,9 @@
+package com.huaxia.opas.mapper;
+
+import java.util.Map;
+
+public interface PBOCEndowmentInsuranceDeliverMapper {
+	
+	int insertBatch(Map<String, Object> parameters);
+ 
+}

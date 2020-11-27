@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="KeyValueConfigure">
+
+	<resultMap id="keyValueConfigureResultMap" type="com.huaxia.opas.domain.system.KeyValueConfigure">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="KEY_NAME" property="keyName" jdbcType="VARCHAR" />
+		<result column="VALUE_CONTENT" property="valueContent" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+		<result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+		<result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+		<result column="LST_UPD_DATE" jdbcType="TIMESTAMP" property="lstUpdDate" />
+				
+	</resultMap>
+
+	<select id="queryKeyValueConfigureList" parameterType="com.huaxia.opas.domain.system.KeyValueConfigure" resultMap="keyValueConfigureResultMap">
+		select * 
+		from OPAS_KEY_VALUE_CONFIGURE
+		<where>
+			<if test="keyName != null and keyName !='' ">
+				AND KEY_NAME LIKE '%${keyName}%'
+			</if>
+			<if test="valueContent != null and valueContent !='' ">
+				AND VALUE_CONTENT LIKE '%${valueContent}%'
+			</if>
+			<if test="remark != null and remark !='' ">
+				AND REMARK LIKE '%${remark}%'
+			</if>
+		</where>
+		order by KEY_NAME asc
+	</select>
+	
+	<select id="queryKeyValueConfigureCount" parameterType="com.huaxia.opas.domain.system.KeyValueConfigure" resultType="java.lang.Integer">
+		select count(*) 
+		from OPAS_KEY_VALUE_CONFIGURE
+		<where>
+			<if test="keyName != null and keyName !='' ">
+				AND KEY_NAME LIKE '%${keyName}%'
+			</if>
+			<if test="valueContent != null and valueContent !='' ">
+				AND VALUE_CONTENT LIKE '%${valueContent}%'
+			</if>
+			<if test="remark != null and remark !='' ">
+				AND REMARK LIKE '%${remark}%'
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertKeyValueConfigure" parameterType="com.huaxia.opas.domain.system.KeyValueConfigure">
+		insert into OPAS_KEY_VALUE_CONFIGURE
+		(AUTO_ID, KEY_NAME, VALUE_CONTENT, REMARK, CRT_USER, CRT_DATE)
+		values (
+			#{autoId, jdbcType=VARCHAR}, 
+			#{keyName, jdbcType=VARCHAR}, 
+			#{valueContent, jdbcType=VARCHAR}, 
+			#{remark, jdbcType=VARCHAR},
+			#{crtUser, jdbcType=VARCHAR},
+			CURRENT_DATE
+		)
+	</insert>
+	
+	<update id="updateKeyValueConfigure" parameterType="com.huaxia.opas.domain.system.KeyValueConfigure">
+		update OPAS_KEY_VALUE_CONFIGURE
+		<set>
+			KEY_NAME = #{keyName, jdbcType=VARCHAR},
+			VALUE_CONTENT = #{valueContent, jdbcType=VARCHAR},
+			REMARK = #{remark, jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser, jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE
+		</set>
+		where AUTO_ID = #{autoId, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryKeyValueConfigureById" parameterType="java.lang.String" resultMap="keyValueConfigureResultMap">
+		select * from OPAS_KEY_VALUE_CONFIGURE
+		where AUTO_ID = #{autoId, jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="queryKeyValueConfigureEqualCount" parameterType="com.huaxia.opas.domain.system.KeyValueConfigure" resultType="java.lang.Integer">
+		select count(*) 
+		from OPAS_KEY_VALUE_CONFIGURE
+		<where>
+			<if test="keyName != null and keyName !='' ">
+				AND KEY_NAME = '${keyName}'
+			</if>
+			<if test="valueContent != null and valueContent !='' ">
+				AND VALUE_CONTENT = '${valueContent}'
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据 键名称 或 值内容 查找 对应的 主键 autoId -->
+	<select id="queryAutoIdEqualByKeyOrValue" parameterType="com.huaxia.opas.domain.system.KeyValueConfigure" resultType="java.lang.String">
+		select *
+		from OPAS_KEY_VALUE_CONFIGURE
+		<where>
+			<if test="keyName != null and keyName !='' ">
+				AND KEY_NAME = '${keyName}'
+			</if>
+			<if test="valueContent != null and valueContent !='' ">
+				AND VALUE_CONTENT = '${valueContent}'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据  键名称 得到对的 值内容 -->
+	<select id="getValueContentByKeyName" parameterType="java.lang.String" resultType="java.lang.String">
+		select VALUE_CONTENT
+		from OPAS_KEY_VALUE_CONFIGURE
+		where KEY_NAME = #{keyName, jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据多个键名称 查询对应的 键值对集合 -->
+	<select id="getValueContentListByKeyName" parameterType="java.lang.String" resultMap="keyValueConfigureResultMap">
+		select KEY_NAME, VALUE_CONTENT, REMARK from OPAS_KEY_VALUE_CONFIGURE where KEY_NAME in
+		<foreach collection="array" item="keyName" index="index" open="(" separator="," close=")">
+		#{keyName}
+		</foreach>
+	</select>
+
+</mapper>

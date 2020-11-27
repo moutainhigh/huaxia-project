@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>网申合作平台数据统计清单</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:10px
+}
+</style>
+</head>
+<body>
+<div id="wsPlatformDataStatistics_center"  data-options="fit:true,boder:true">
+<div data-options="region='north',border:true,fit:true" style="overflow:auto;">
+ <form id="wsPlatformDataStatistics_form">
+ <table class="wsPlatformDataStatistics_tableForm datagrid-toolbar" style="width:100%;height:100%">
+  <tr>
+   <td><label class="alsp">开始时间</label><input id="wsPlatformDataStatistics_beginDate" name="beginDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+  var beginDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',beginDate);
+   $('#wsPlatformDataStatistics_table_beginDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;<label class="alsp">结束时间</label><input id="wsPlatformDataStatistics_endDate" name="endDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   var endDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',endDate);
+   $('#wsPlatformDataStatistics_table_endDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;&nbsp;
+   <label class="alsp">公司编码:</label> 
+   <input id="business"  name="business" class="easyui-combobox" editable="false" />   
+   <label class="alsp">模块编码:</label> 
+   <input id="module"  name="module" class="easyui-combobox" editable="false"/>
+   <a id="wsPlatformDataStatistics_searchButton" class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>&nbsp;
+   <a id="wsPlatformDataStatistics_cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+   </td>
+  </tr>
+ </table>
+ </form>
+ </div>
+ <div data-options="region:'center',border:true,fit:true">
+<!--  进件核准率统计表(按选择维度) -->
+<br><table><tr><td id="wsPlatformDataStatistics_table_beginDate" style="width:80px;"></td><td>至</td><td id="wsPlatformDataStatistics_table_endDate" style="width:80px;"></td></tr></table>
+<h4 align="center">进件情况统计表</h4><br> 
+ <table id="wsPlatformDataStatistics_datagrid" style="height: 400px"></table>
+ </div>
+</div>
+</body>
+<script type="text/javascript">
+	var wsPlatformDataStatistics_form=undefined;
+	var wsPlatformDataStatistics_datagrid=undefined;
+	$(function(){
+		wsPlatformDataStatistics_form=$('#wsPlatformDataStatistics_form');
+		$('#wsPlatformDataStatistics_searchButton').bind('click',function(){
+			wsPlatformDataStatistics_search();
+		});
+		$('#wsPlatformDataStatistics_cleanButton').bind('click',function(){
+			wsPlatformDataStatistics_clean();
+		});
+		
+		//获取公司编码
+		$cf.ajax({
+			url : '/opas-naps/query_businessNumber_list.json',
+			onSuccess : function(response) {
+				debugger;
+				var resultList = response.RSP_BODY.resultList;
+				var list = eval('(' +resultList+ ')');
+				$("#business").combobox({
+					data:list,
+					valueField:'businessNumber',
+					textField:'businessName',
+					
+					onSelect:function(rec){
+						//获取模块编码
+						$cf.ajax({
+							url : '/opas-naps/query_moduleNumber_list.json',
+							data : {
+								'businessNumber' : rec.businessNumber
+							},
+							onSuccess : function(response) {
+								var moduleList = response.RSP_BODY.moduleList;
+								var moduleList1 = eval('(' +moduleList+ ')');
+								$('#module').combobox({
+									data:moduleList1,
+									valueField:'moduleNumber',
+									textField:'moduleName'
+								});  
+							}
+						});
+					}
+				});
+			}
+		});
+		
+		wsPlatformDataStatistics_datagrid=$('#wsPlatformDataStatistics_datagrid').datagrid({
+			url:"/opas-naps/queryWsPlatformDataStatistics.json",
+			border:true,
+			animate:true,
+			singleSelect:false,
+			rownumbers:true,
+			columns:[[{
+				title:'日期',
+				field:'crtDate',
+				formatter:formatDate,
+				width:"15%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			},{
+				title:'进件数量',
+				field:'appcnt',
+				width:"10%",
+				halign:'center',
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true
+					}
+				}
+			}
+			]]
+		});
+	});
+	
+	//日期格式转换
+	function formatDate(value) {
+		var array = value.split(".");
+		var length=array.length;
+		var currentData="";
+		if(length>=2){
+			return array[0];
+		}else{
+			return value;
+		}
+	}
+	
+	function showWaringBox(message){
+		$.messager.alert('提示',message,'warning');
+	}
+	
+	function wsPlatformDataStatistics_search(){
+		var beginDate=$('#wsPlatformDataStatistics_beginDate').datebox('getValue');
+		var endDate=$('#wsPlatformDataStatistics_endDate').datebox('getValue');
+		if(beginDate==""||endDate==""){//没有选择起止时间
+			showWaringBox('请选择起止时间.');return null;
+		}
+		
+		var day = GetDateDiff(beginDate,endDate);
+		if (day>32){
+			alert("区间不能超过31天");
+			return;
+		}
+		
+		var paramArray=wsPlatformDataStatistics_form.serializeArray();
+		var jsondata =common.formToJson(paramArray);
+		wsPlatformDataStatistics_datagrid.datagrid('load',jsondata);
+		
+	}
+	
+	function GetDateDiff(startDate,endDate) {
+		var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+		var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+		var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+		return dates;
+	}
+	
+	function wsPlatformDataStatistics_clean(){
+		wsPlatformDataStatistics_datagrid.datagrid('load',{});
+		$('#wsPlatformDataStatistics_table_beginDate').html('');
+		$('#wsPlatformDataStatistics_table_endDate').html('');
+		wsPlatformDataStatistics_form.form('reset');
+	}
+	
+</script>
+</html>

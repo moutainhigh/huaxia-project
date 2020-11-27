@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MajorschoolList">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.sysparm.MajorschoolList">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="MAJORSCHOOL_NAME" property="majorschoolName"
+			jdbcType="VARCHAR" />
+		<result column="HIGHSCHOOL_TYPE" property="highschoolType"
+			jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > AUTO_ID, AREA, MAJORSCHOOL_NAME, HIGHSCHOOL_TYPE, 
+		OPERATOR, OPERAT_TIME, CURR_STATUS </sql> -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, AREA, MAJORSCHOOL_NAME, HIGHSCHOOL_TYPE, OPERATOR, OPERAT_TIME,
+		CURR_STATUS,CREATE_TIME
+		from OPAS_MAJORSCHOOL_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByCondtion" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	    select
+		AUTO_ID, AREA, MAJORSCHOOL_NAME, HIGHSCHOOL_TYPE, OPERATOR, OPERAT_TIME,
+		CURR_STATUS,CREATE_TIME
+		from OPAS_MAJORSCHOOL_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="majorschoolName != null and majorschoolName != ''" >
+	      and  MAJORSCHOOL_NAME LIKE '%${majorschoolName}%'
+	    </if>
+  	</select>
+	<select id="queryCountList" resultType="java.lang.Integer" parameterType="java.util.Map" >
+	    select count(1)
+	    from OPAS_MAJORSCHOOL_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="majorschoolName != null and majorschoolName != ''" >
+	      and  MAJORSCHOOL_NAME LIKE '%${majorschoolName}%'
+	    </if>
+  	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_MAJORSCHOOL_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.sysparm.MajorschoolList">
+		insert into OPAS_MAJORSCHOOL_LIST (AUTO_ID, AREA,
+		MAJORSCHOOL_NAME,
+		HIGHSCHOOL_TYPE, OPERATOR, OPERAT_TIME,
+		CURR_STATUS,CREATE_TIME)
+		values (#{autoId,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR},
+		#{majorschoolName,jdbcType=VARCHAR},
+		#{highschoolType,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},
+		#{operatTime,jdbcType=TIMESTAMP},
+		#{currStatus,jdbcType=CHAR},#{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.sysparm.MajorschoolList">
+		insert into OPAS_MAJORSCHOOL_LIST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="area != null">
+				AREA,
+			</if>
+			<if test="majorschoolName != null">
+				MAJORSCHOOL_NAME,
+			</if>
+			<if test="highschoolType != null">
+				HIGHSCHOOL_TYPE,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+			CREATE_TIME,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="majorschoolName != null">
+				#{majorschoolName,jdbcType=VARCHAR},
+			</if>
+			<if test="highschoolType != null">
+				#{highschoolType,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="operatTime != null">
+				#{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+			CURRENT_DATE,
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.sysparm.MajorschoolList">
+		update OPAS_MAJORSCHOOL_LIST
+		<set>
+			<if test="area != null">
+				AREA = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="majorschoolName != null">
+				MAJORSCHOOL_NAME = #{majorschoolName,jdbcType=VARCHAR},
+			</if>
+			<if test="highschoolType != null">
+				HIGHSCHOOL_TYPE = #{highschoolType,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				OPERATOR = #{operator,jdbcType=VARCHAR},
+			</if>
+			OPERAT_TIME = CURRENT_DATE,
+			<if test="currStatus != null">
+				CURR_STATUS = #{currStatus,jdbcType=CHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=CHAR},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.sysparm.MajorschoolList">
+		update OPAS_MAJORSCHOOL_LIST
+		set AREA = #{area,jdbcType=VARCHAR},
+		MAJORSCHOOL_NAME = #{majorschoolName,jdbcType=VARCHAR},
+		HIGHSCHOOL_TYPE = #{highschoolType,jdbcType=VARCHAR},
+		OPERATOR = #{operator,jdbcType=VARCHAR},
+		OPERAT_TIME = CURRENT_DATE,
+		CURR_STATUS = #{currStatus,jdbcType=CHAR},
+		CREATE_TIME = #{createTime,jdbcType=CHAR}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!--shihuan 2017-03-03 地址风险名单列表查询条数 -->
+	<select id="queryMajorSchooList" parameterType="com.huaxia.opas.domain.sysparm.MajorschoolList"
+		resultMap="BaseResultMap">
+		select
+		AUTO_ID,
+		AREA,
+		MAJORSCHOOL_NAME,
+		HIGHSCHOOL_TYPE,
+		OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,
+		CREATE_TIME
+		from OPAS_MAJORSCHOOL_LIST
+		where
+		1=1
+		<if test="area != null and area !='' ">
+			AND AREA LIKE '%${area}%'
+		</if>
+		<if test="majorschoolName != null and majorschoolName !='' ">
+			AND MAJORSCHOOL_NAME LIKE '%${majorschoolName}%'
+		</if>
+		<if test="highschoolType != null and highschoolType !='' ">
+			AND HIGHSCHOOL_TYPE LIKE '%${highschoolType}%'
+		</if>
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+		order by CREATE_TIME desc,to_number(ORDERBY_NO)
+	</select>
+
+	<!--shihuan 2017-03-03 地址风险名单列表查询条数 -->
+	<select id="queryMajorSchooCount" parameterType="com.huaxia.opas.domain.sysparm.MajorschoolList"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_MAJORSCHOOL_LIST
+		where
+		1=1
+		<if test="area != null and area !='' ">
+			AND AREA LIKE '%${area}%'
+		</if>
+		<if test="majorschoolName != null and majorschoolName !='' ">
+			AND MAJORSCHOOL_NAME LIKE '%${majorschoolName}%'
+		</if>
+		<if test="highschoolType != null and highschoolType !='' ">
+			AND HIGHSCHOOL_TYPE LIKE '%${highschoolType}%'
+		</if>
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+	</select>
+	<!--shihuan 2017-03-14 重点院校批量启动修改状态 1:启用 0:停用 -->
+	<update id="updateStartStatus" parameterType="java.lang.String">
+		update OPAS_MAJORSCHOOL_LIST
+		set CURR_STATUS = '1'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!--shihuan 2017-03-14 重点院校批量停用修改状态 1:启用 0:停用 -->
+	<update id="updateStopStatus" parameterType="java.lang.String">
+		update OPAS_MAJORSCHOOL_LIST
+		set CURR_STATUS = '0'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- shihuan 2017-03-14 添加历史修改记录表 -->
+	<insert id="insertHisSelective"
+		parameterType="com.huaxia.opas.domain.sysparm.MajorschoolListHistory">
+		insert into OPAS_MAJORSCHOOL_LIST_HISTORY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				ID,
+			</if>
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="area != null">
+				AREA,
+			</if>
+			<if test="majorschoolName != null">
+				MAJORSCHOOL_NAME,
+			</if>
+			<if test="highschoolType != null">
+				HIGHSCHOOL_TYPE,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				#{Id,jdbcType=VARCHAR},
+			</if>
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="majorschoolName != null">
+				#{majorschoolName,jdbcType=VARCHAR},
+			</if>
+			<if test="highschoolType != null">
+				#{highschoolType,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="operatTime != null">
+				#{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+			<if test="createTime != null">
+				sysdate,
+			</if>
+		</trim>
+	</insert>
+
+	<!--shihuan 2017-03-14 重点院校列表查询 -->
+	<select id="queryMajorSchoolHistory" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		ID,
+		AUTO_ID,
+		AREA,
+		MAJORSCHOOL_NAME,
+		HIGHSCHOOL_TYPE,
+		OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,
+		CREATE_TIME
+		from OPAS_MAJORSCHOOL_LIST_HISTORY
+		where AUTO_ID = #{autoId,jdbcType=CHAR}
+		order by OPERAT_TIME desc
+	</select>
+
+	<!--shihuan 2017-03-14 重点院校列表查询条数 -->
+	<select id="queryMajorSchoolHistoryCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_MAJORSCHOOL_LIST_HISTORY where
+		AUTO_ID = #{autoId,jdbcType=CHAR}
+	</select>
+
+	<!-- 批量导入 shihuan 2017-03-18 -->
+	<insert id="insertMajorSchUpload" parameterType="java.util.List">
+		insert into OPAS_MAJORSCHOOL_LIST(
+		AUTO_ID,
+		AREA,
+		MAJORSCHOOL_NAME,
+		HIGHSCHOOL_TYPE,
+		OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,
+		CREATE_TIME,
+		ORDERBY_NO)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.area,jdbcType=VARCHAR},
+			#{item.majorschoolName,jdbcType=VARCHAR},
+			#{item.highschoolType,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operatTime,jdbcType=TIMESTAMP},
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.orderByNo,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+	
+	<!--shihuan 2017-04-24 校验重点院校名称不能重复 -->
+	<select id="queryByMajorschoolName" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_MAJORSCHOOL_LIST where
+		MAJORSCHOOL_NAME = #{majorschoolName,jdbcType=VARCHAR}
+	</select>
+</mapper>

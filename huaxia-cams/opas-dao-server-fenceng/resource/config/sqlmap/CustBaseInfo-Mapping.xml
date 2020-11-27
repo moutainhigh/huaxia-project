@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="CustBaseInfo" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.system.CustBaseInfo" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="CHAR" />
+    <result column="NATIONAITY" property="nationaity" jdbcType="CHAR" />
+    <result column="AGE" property="age" jdbcType="DECIMAL" />
+    <result column="CERTIFI_TYPE" property="certifiType" jdbcType="CHAR" />
+    <result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+    <result column="WORK_COMPANY" property="workCompany" jdbcType="VARCHAR" />
+    <result column="OFFICE_TEL" property="officeTel" jdbcType="VARCHAR" />
+    <result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR" />
+    <result column="APPLY_CARD" property="applyCard" jdbcType="VARCHAR" />
+    <result column="POLICE_STATUS" property="policeStatus" jdbcType="CHAR" />
+    <result column="TEAMNO_ISMATCH" property="teamnoIsmatch" jdbcType="CHAR" />
+    <result column="IS_ONESELF_CUST" property="isOneselfCust" jdbcType="CHAR" />
+    <result column="IS_HAVECARD_CUST" property="isHavecardCust" jdbcType="CHAR" />
+    <result column="IS_HAVECARD_STANDARD" property="isHavecardStandard" jdbcType="CHAR" />
+    <result column="IS_PREFILTERCUST_STANDARD" property="isPrefiltercustStandard" jdbcType="CHAR" />
+    <result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, APP_ID, CUST_NAME, SEX, NATIONAITY, AGE, CERTIFI_TYPE, CERTIFI_NO, WORK_COMPANY, 
+    OFFICE_TEL, MOBILE_NO, APPLY_CARD, POLICE_STATUS, TEAMNO_ISMATCH, IS_ONESELF_CUST, 
+    IS_HAVECARD_CUST, IS_HAVECARD_STANDARD, IS_PREFILTERCUST_STANDARD, CRT_TIME, CRT_DATE, 
+    CRT_USER
+    from OPAS_CUST_BASEINFO
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_CUST_BASEINFO
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.system.CustBaseInfo" >
+    insert into OPAS_CUST_BASEINFO (AUTO_ID, APP_ID, CUST_NAME, 
+      SEX, NATIONAITY, AGE, CERTIFI_TYPE, 
+      CERTIFI_NO, WORK_COMPANY, OFFICE_TEL, 
+      MOBILE_NO, APPLY_CARD, POLICE_STATUS, 
+      TEAMNO_ISMATCH, IS_ONESELF_CUST, IS_HAVECARD_CUST, 
+      IS_HAVECARD_STANDARD, IS_PREFILTERCUST_STANDARD, 
+      CRT_TIME, CRT_DATE, CRT_USER
+      )
+    values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{custName,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=CHAR}, #{nationaity,jdbcType=CHAR}, #{age,jdbcType=DECIMAL}, #{certifiType,jdbcType=CHAR}, 
+      #{certifiNo,jdbcType=VARCHAR}, #{workCompany,jdbcType=VARCHAR}, #{officeTel,jdbcType=VARCHAR}, 
+      #{mobileNo,jdbcType=VARCHAR}, #{applyCard,jdbcType=VARCHAR}, #{policeStatus,jdbcType=CHAR}, 
+      #{teamnoIsmatch,jdbcType=CHAR}, #{isOneselfCust,jdbcType=CHAR}, #{isHavecardCust,jdbcType=CHAR}, 
+      #{isHavecardStandard,jdbcType=CHAR}, #{isPrefiltercustStandard,jdbcType=CHAR}, 
+      #{crtTime,jdbcType=TIMESTAMP}, #{crtDate,jdbcType=TIMESTAMP}, #{crtUser,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.system.CustBaseInfo" >
+    insert into OPAS_CUST_BASEINFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="custName != null" >
+        CUST_NAME,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="nationaity != null" >
+        NATIONAITY,
+      </if>
+      <if test="age != null" >
+        AGE,
+      </if>
+      <if test="certifiType != null" >
+        CERTIFI_TYPE,
+      </if>
+      <if test="certifiNo != null" >
+        CERTIFI_NO,
+      </if>
+      <if test="workCompany != null" >
+        WORK_COMPANY,
+      </if>
+      <if test="officeTel != null" >
+        OFFICE_TEL,
+      </if>
+      <if test="mobileNo != null" >
+        MOBILE_NO,
+      </if>
+      <if test="applyCard != null" >
+        APPLY_CARD,
+      </if>
+      <if test="policeStatus != null" >
+        POLICE_STATUS,
+      </if>
+      <if test="teamnoIsmatch != null" >
+        TEAMNO_ISMATCH,
+      </if>
+      <if test="isOneselfCust != null" >
+        IS_ONESELF_CUST,
+      </if>
+      <if test="isHavecardCust != null" >
+        IS_HAVECARD_CUST,
+      </if>
+      <if test="isHavecardStandard != null" >
+        IS_HAVECARD_STANDARD,
+      </if>
+      <if test="isPrefiltercustStandard != null" >
+        IS_PREFILTERCUST_STANDARD,
+      </if>
+      <if test="crtTime != null" >
+        CRT_TIME,
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE,
+      </if>
+      <if test="crtUser != null" >
+        CRT_USER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="nationaity != null" >
+        #{nationaity,jdbcType=CHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=DECIMAL},
+      </if>
+      <if test="certifiType != null" >
+        #{certifiType,jdbcType=CHAR},
+      </if>
+      <if test="certifiNo != null" >
+        #{certifiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="workCompany != null" >
+        #{workCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="officeTel != null" >
+        #{officeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileNo != null" >
+        #{mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCard != null" >
+        #{applyCard,jdbcType=VARCHAR},
+      </if>
+      <if test="policeStatus != null" >
+        #{policeStatus,jdbcType=CHAR},
+      </if>
+      <if test="teamnoIsmatch != null" >
+        #{teamnoIsmatch,jdbcType=CHAR},
+      </if>
+      <if test="isOneselfCust != null" >
+        #{isOneselfCust,jdbcType=CHAR},
+      </if>
+      <if test="isHavecardCust != null" >
+        #{isHavecardCust,jdbcType=CHAR},
+      </if>
+      <if test="isHavecardStandard != null" >
+        #{isHavecardStandard,jdbcType=CHAR},
+      </if>
+      <if test="isPrefiltercustStandard != null" >
+        #{isPrefiltercustStandard,jdbcType=CHAR},
+      </if>
+      <if test="crtTime != null" >
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtDate != null" >
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null" >
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.system.CustBaseInfo" >
+    update OPAS_CUST_BASEINFO
+    <set >
+      <if test="appId != null" >
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        CUST_NAME = #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="nationaity != null" >
+        NATIONAITY = #{nationaity,jdbcType=CHAR},
+      </if>
+      <if test="age != null" >
+        AGE = #{age,jdbcType=DECIMAL},
+      </if>
+      <if test="certifiType != null" >
+        CERTIFI_TYPE = #{certifiType,jdbcType=CHAR},
+      </if>
+      <if test="certifiNo != null" >
+        CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="workCompany != null" >
+        WORK_COMPANY = #{workCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="officeTel != null" >
+        OFFICE_TEL = #{officeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileNo != null" >
+        MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCard != null" >
+        APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+      </if>
+      <if test="policeStatus != null" >
+        POLICE_STATUS = #{policeStatus,jdbcType=CHAR},
+      </if>
+      <if test="teamnoIsmatch != null" >
+        TEAMNO_ISMATCH = #{teamnoIsmatch,jdbcType=CHAR},
+      </if>
+      <if test="isOneselfCust != null" >
+        IS_ONESELF_CUST = #{isOneselfCust,jdbcType=CHAR},
+      </if>
+      <if test="isHavecardCust != null" >
+        IS_HAVECARD_CUST = #{isHavecardCust,jdbcType=CHAR},
+      </if>
+      <if test="isHavecardStandard != null" >
+        IS_HAVECARD_STANDARD = #{isHavecardStandard,jdbcType=CHAR},
+      </if>
+      <if test="isPrefiltercustStandard != null" >
+        IS_PREFILTERCUST_STANDARD = #{isPrefiltercustStandard,jdbcType=CHAR},
+      </if>
+      <if test="crtTime != null" >
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="crtUser != null" >
+        CRT_USER = #{crtUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.system.CustBaseInfo" >
+    update OPAS_CUST_BASEINFO
+    set APP_ID = #{appId,jdbcType=VARCHAR},
+      CUST_NAME = #{custName,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=CHAR},
+      NATIONAITY = #{nationaity,jdbcType=CHAR},
+      AGE = #{age,jdbcType=DECIMAL},
+      CERTIFI_TYPE = #{certifiType,jdbcType=CHAR},
+      CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+      WORK_COMPANY = #{workCompany,jdbcType=VARCHAR},
+      OFFICE_TEL = #{officeTel,jdbcType=VARCHAR},
+      MOBILE_NO = #{mobileNo,jdbcType=VARCHAR},
+      APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+      POLICE_STATUS = #{policeStatus,jdbcType=CHAR},
+      TEAMNO_ISMATCH = #{teamnoIsmatch,jdbcType=CHAR},
+      IS_ONESELF_CUST = #{isOneselfCust,jdbcType=CHAR},
+      IS_HAVECARD_CUST = #{isHavecardCust,jdbcType=CHAR},
+      IS_HAVECARD_STANDARD = #{isHavecardStandard,jdbcType=CHAR},
+      IS_PREFILTERCUST_STANDARD = #{isPrefiltercustStandard,jdbcType=CHAR},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+      CRT_USER = #{crtUser,jdbcType=VARCHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+</mapper>

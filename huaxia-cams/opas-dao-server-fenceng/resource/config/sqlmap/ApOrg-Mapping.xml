@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApOrg">
+
+	<resultMap id="ApOrgResultMap" type="com.huaxia.opas.domain.system.ApOrg">
+		<result column="ORG_ID" property="orgId" jdbcType="VARCHAR" />
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="ORG_ADDR" property="orgAddr" jdbcType="VARCHAR" />
+		<result column="ORG_LEVEL" property="orgLevel" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="ZIPCODE" property="zipcode" jdbcType="VARCHAR" />
+		<result column="LINK_MAN" property="linkMan" jdbcType="VARCHAR" />
+		<result column="LINK_TEL" property="linkTel" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="DATE" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="DATE" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insertApOrg" parameterType="com.huaxia.opas.domain.system.ApOrg">
+		insert into OPAS_AP_ORG
+		(ORG_ID,ORG_NAME,ORG_ADDR,ORG_LEVEL,STATUS,ZIPCODE,LINK_MAN,LINK_TEL,EMAIL,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_USER,LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL,ORG_NO)
+		values (
+		#{orgId,jdbcType=VARCHAR},
+		#{orgName,jdbcType=VARCHAR},
+		#{orgAddr,jdbcType=VARCHAR},
+		#{orgLevel,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		#{zipcode,jdbcType=VARCHAR},
+		#{linkMan,jdbcType=VARCHAR},
+		#{linkTel,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{batchDate,jdbcType=DATE},
+		'0',
+		'00',
+		#{orgNo,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<insert id="insertApOrgSelective" parameterType="com.huaxia.opas.domain.system.ApOrg">
+		insert into OPAS_AP_ORG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orgId != null">ORG_ID,</if>
+			<if test="orgName != null">ORG_NAME,</if>
+			<if test="orgAddr != null">ORG_ADDR,</if>
+			<if test="orgLevel != null">ORG_LEVEL,</if>
+			<if test="status != null">STATUS,</if>
+			<if test="zipcode != null">ZIPCODE,</if>
+			<if test="linkMan != null">LINK_MAN,</if>
+			<if test="linkTel != null">LINK_TEL,</if>
+			<if test="email != null">EMAIL,</if>
+			CRT_DATE,
+			CRT_TIME,
+			<if test="crtUser != null">CRT_USER,</if>
+			<if test="lstUpdUser != null">LST_UPD_USER,</if>
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			<if test="batchDate != null">BATCH_DATE,</if>
+			REC_STATUS,
+			SCR_LEVEL,
+			<if test="orgNo != null">ORG_NO</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orgId != null">#{orgId,jdbcType=VARCHAR},</if>
+			<if test="orgName != null">#{orgName,jdbcType=VARCHAR},</if>
+			<if test="orgAddr != null">#{orgAddr,jdbcType=VARCHAR},</if>
+			<if test="orgLevel != null">#{orgLevel,jdbcType=VARCHAR},</if>
+			<if test="status != null">#{status,jdbcType=CHAR},</if>
+			<if test="zipcode != null">#{zipcode,jdbcType=VARCHAR},</if>
+			<if test="linkMan != null">#{linkMan,jdbcType=VARCHAR},</if>
+			<if test="linkTel != null">#{linkTel,jdbcType=VARCHAR},</if>
+			<if test="email != null">#{email,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">#{lstUpdUser,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="batchDate != null">#{batchDate,jdbcType=DATE},</if>
+			'0',
+			'00',
+			<if test="orgNo != null">#{orgNojdbcType=VARCHAR}</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteApOrgByOrgId" parameterType="java.lang.String">
+		delete from
+		OPAS_AP_ORG
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateApOrg" parameterType="com.huaxia.opas.domain.system.ApOrg">
+		update OPAS_AP_ORG
+		<set>
+			ORG_NAME = #{orgName,jdbcType=VARCHAR},
+			ORG_ADDR =
+			#{orgAddr,jdbcType=VARCHAR},
+			ORG_LEVEL = #{orgLevel,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			ZIPCODE =
+			#{zipcode,jdbcType=VARCHAR},
+			LINK_MAN = #{linkMan,jdbcType=VARCHAR},
+			LINK_TEL = #{linkTel,jdbcType=VARCHAR},
+			EMAIL =
+			#{email,jdbcType=VARCHAR},
+			LST_UPD_USER =
+			#{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			BATCH_DATE =
+			#{batchDate,jdbcType=DATE},
+			ORG_NO = #{orgNo,jdbcType=VARCHAR}
+		</set>
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateApOrgSelective" parameterType="com.huaxia.opas.domain.system.ApOrg">
+		update OPAS_AP_ORG
+		<set>
+			<if test="orgName != null">ORG_NAME = #{orgName,jdbcType=VARCHAR},</if>
+			<if test="orgAddr != null">ORG_ADDR = #{orgAddr,jdbcType=VARCHAR},</if>
+			<if test="orgLevel != null">ORG_LEVEL = #{orgLevel,jdbcType=VARCHAR},</if>
+			<if test="status != null">STATUS = #{status,jdbcType=CHAR},</if>
+			<if test="zipcode != null">ZIPCODE = #{zipcode,jdbcType=VARCHAR},</if>
+			<if test="linkMan != null">LINK_MAN = #{linkMan,jdbcType=VARCHAR},</if>
+			<if test="linkTel != null">LINK_TEL = #{linkTel,jdbcType=VARCHAR},</if>
+			<if test="email != null">EMAIL = #{email,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null">BATCH_DATE = #{batchDate,jdbcType=DATE},</if>
+			<if test="orgNo != null">ORG_NO = #{orgNo,jdbcType=VARCHAR}</if>
+		</set>
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="queryApOrgByOrgId" parameterType="java.lang.String"
+		resultMap="ApOrgResultMap">
+		select * from OPAS_AP_ORG
+		where ORG_ID =
+		#{orgId,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="queryOrgList" parameterType="com.huaxia.opas.domain.system.ApOrg"
+		resultMap="ApOrgResultMap">
+		select * from OPAS_AP_ORG
+		<where>
+			<if test="orgName != null and orgName !='' ">
+				AND ORG_NAME LIKE '%${orgName}%'
+			</if>
+			<if test="orgNo != null and orgNo !='' ">
+				AND ORG_NO LIKE '%${orgNo}%'
+			</if>
+		</where>
+		order by CRT_TIME desc
+	</select>
+
+	<select id="queryOrgCount" parameterType="com.huaxia.opas.domain.system.ApOrg"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_ORG
+		<where>
+			<if test="orgName != null and orgName !='' ">
+				AND ORG_NAME LIKE '%${orgName}%'
+			</if>
+			<if test="orgNo != null and orgNo !='' ">
+				AND ORG_NO LIKE '%${orgNo}%'
+			</if>
+		</where>
+	</select>
+
+	<select id="queryUserOrg" parameterType="java.lang.String"
+		resultMap="ApOrgResultMap">
+		select org.ORG_ID,org.ORG_NAME from OPAS_AP_ORG
+		org,OPAS_AP_USER_ORG userOrg
+		where userOrg.USER_ID =
+		#{userId,jdbcType=VARCHAR} and org.ORG_ID=userOrg.ORG_ID
+
+	</select>
+
+	<select id="queryOrgCountByOrgNo" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) from OPAS_AP_ORG
+		where ORG_NO =
+		#{orgNo,jdbcType=VARCHAR}
+	</select>
+	<select id="queryOrgByOrgNo" parameterType="java.lang.String"
+		resultMap="ApOrgResultMap">
+		select
+         ORG_ID,ORG_NAME,ORG_ADDR,ORG_LEVEL,STATUS,ZIPCODE,LINK_MAN,
+         LINK_TEL,EMAIL,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_USER,LST_UPD_DATE,
+         LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL,ORG_NO from OPAS_AP_ORG
+		where ORG_NO =
+		#{orgNo,jdbcType=VARCHAR}
+	</select>
+	<update id="updateBranchAppOrgCodeByInsideAppNo" parameterType="java.util.Map">
+		update OPAS_AP_ORG
+		<set>
+			<if test="orgName != null">ORG_NAME = #{orgName,jdbcType=VARCHAR},</if>
+			<if test="orgAddr != null">ORG_ADDR = #{orgAddr,jdbcType=VARCHAR},</if>
+			<if test="orgLevel != null">ORG_LEVEL = #{orgLevel,jdbcType=VARCHAR},</if>
+			<if test="status != null">STATUS = #{status,jdbcType=CHAR},</if>
+			<if test="zipcode != null">ZIPCODE = #{zipcode,jdbcType=VARCHAR},</if>
+			<if test="linkMan != null">LINK_MAN = #{linkMan,jdbcType=VARCHAR},</if>
+			<if test="linkTel != null">LINK_TEL = #{linkTel,jdbcType=VARCHAR},</if>
+			<if test="email != null">EMAIL = #{email,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null">BATCH_DATE = #{batchDate,jdbcType=DATE},</if>
+			<if test="orgNo != null">ORG_NO = #{orgNo,jdbcType=VARCHAR}</if>
+		</set>
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+
+	</update>
+	<select id="queryOrgByLevel" parameterType="java.lang.String"
+		resultMap="ApOrgResultMap">
+		select org_id,org_name from opas_ap_org where ORG_LEVEL =
+		'4'
+	</select>
+
+	<!-- 用户筛选条件  组别  shihuan  2017-04-14 -->
+	<select id="queryOrgForUser" resultMap="ApOrgResultMap">
+		select ORG_NAME,ORG_ID from OPAS_AP_ORG order by ORG_NAME
+	</select>
+	
+	<!-- 添加时校验  机构名称不能相同  shihuan  2017-04-24 -->
+	<select id="queryOrgName" parameterType="java.lang.String"
+			resultType="java.lang.Integer" >
+		select count(1) from OPAS_AP_ORG where ORG_NAME = #{orgName,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- zlb -->
+	<select id="queryApOrg" resultType="java.util.Map">
+		select ORG_ID,ORG_NAME from OPAS_AP_ORG 
+	</select>
+	
+	<!-- 根据组级别查询组数据-wenyh-2020-10-20 -->
+	<select id="selectOrgByOrgLevel" parameterType="java.util.Map" resultMap="ApOrgMap">
+		SELECT t.ORG_NAME,t.ORG_NO FROM OPAS_AP_ORG t WHERE 1 = 1 
+		<if test="orgLevel != null">
+			AND t.ORG_LEVEL = #{orgLevel,jdbcType=VARCHAR}
+		</if>
+		ORDER BY t.CRT_TIME ASC
+	</select>
+	<resultMap id="ApOrgMap" type="java.util.Map">
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+</mapper>

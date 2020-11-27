@@ -1,0 +1,119 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div id="memberjobecxceptioncountDiv"  title="组员工作连续性异常统计"  class="area-search"  style="width: 100%; height: 100%" >
+		<table>
+			<tr>
+				<td>
+					日期:<input class="easyui-datebox" style="width: 110px" name="exceptionDate" id="exceptionDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:memberJobEcxceptionCount();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</td>
+			</tr>
+			<tr>
+			</tr>
+		</table>
+		<table id="memberjobecxceptioncountTab" class="easyui-datagrid" style="width: 99%" data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,selectOnCheck:false,method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<th field="operateCode" width="10%" align="center" checkbox="true">员工姓名</th>
+					<th field="operateName" width="10%" align="center">员工姓名</th>				
+					<th field="sysDate" width="10%" align="center">异常日期</th>
+					<th field="sumTime" width="10%" align="center" data-options="formatter:ecxceptionDetail">工作连续性异常统计</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div id="ecxceptionDetailDiv"  class="easyui-window" title="组员工作连续性异常统计  明细查看" style="width: 750px; height: 350px" top="45px" data-options="iconCls:'icon-save',modal:true,closed:true">
+		<table id="ecxceptionDetailTab" class="easyui-datagrid" style="width: 99%" >
+			<thead>
+				<tr>
+					<th field="id" width="5%" align="center" checkbox="true">ID</th>	
+					<th field="dateStr" width="25%" align="center">异常日期</th>		
+					<th field="exceptionTime" width="35%" align="center">时间段</th>	
+					<th field="exceptionsTime" width="15%" align="center">时长</th>						
+				</tr>
+			</thead>
+		</table>
+	</div>
+</body>
+<script>
+	var d = new Date();
+	var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+	$('#exceptionDate').val(str);
+	
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	
+	$(function(){
+		memberJobEcxceptionCount();
+	});
+	
+	function ecxceptionDetail(val, row, index) {
+		return "<a href=javascript:ecxceptionDetailInfo();>"+val+"</a>";
+	}
+	
+	var memberjobecxceptioncountTab = $("#memberjobecxceptioncountTab");
+	var ecxceptionDetailWindow = $("#ecxceptionDetailDiv");
+	var ecxceptionDetailTab = $("#ecxceptionDetailTab");
+	var groupId = "";
+	var userCode = "";
+	function memberJobEcxceptionCount(){
+		
+		groupId = GetQueryString("groupId");
+		var startTime = GetQueryString("managerTime");	
+		if (typeof(groupId)=="undefined"||groupId==""||groupId==null){
+			userCode=$cf.getStore("userRelInfo","index").userInfo.userCode;
+		}
+		var exceptionDate = $('#exceptionDate').datebox('getValues');
+		//url:'/opas-naps/memberJobEcxceptionCount.json',
+		var opts = $('#memberjobecxceptioncountTab').datagrid("options");
+		opts.url = '/opas-naps/memberJobEcxceptionCount.json';
+		var s={"orgId" : groupId,
+			"userCode":userCode,
+			"exceptionDate":exceptionDate,
+			"startTime":startTime};
+		$('#memberjobecxceptioncountTab').datagrid("reload", s);
+	}
+	
+	function ecxceptionDetailInfo(){
+		var memberjobecxceptioncountJob = memberjobecxceptioncountTab.datagrid("getSelected");
+		var user = memberjobecxceptioncountJob.operateCode;
+		var exceptionDate = $('#exceptionDate').datebox('getValues');
+		$cf.ajax({
+			url : "/opas-naps/memberJobEcxceptionDetail.json",
+			data : {
+				"userCode" : user,
+				"exceptionDate":exceptionDate
+			},
+			onSuccess : function(data) {
+				//console.log(data);
+				if(data.RSP_BODY.fig == true){
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$("#ecxceptionDetailTab").datagrid("loadData", dataMap);
+					$("#ecxceptionDetailTab").datagrid('getRows');
+					ecxceptionDetailWindow.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false,
+					}); 
+				}else if(data.RSP_BODY.fig == false){
+					var messager = data.RSP_BODY.messager;
+					$.messager.alert("操作提示", messager);
+					return false;
+				}else {
+					$.messager.alert("操作提示", "未知错误！");
+				}
+			}
+		}); 
+	}
+</script>

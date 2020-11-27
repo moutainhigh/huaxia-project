@@ -1,0 +1,537 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/jquery/default/jquery.min.js"></script>
+<script type="text/javascript" src="../../topui/jquery/default/jquery.watermark.js"></script>
+<script type="text/javascript" src="../../topui/easyui/default/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../topui/easyui/default/jquery.query.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.js"></script>
+<style type="text/css">
+body{padding:0;margin:0;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif;background-color:#E6F0FF;color:#003476;overflow: auto;}
+h1, h2, h3, h4, h5, h6 {
+    font-size: 15px;
+	text-align: center;
+}
+.dvi-table input {color:blue;
+	disabled:disabled;
+	height:14px;
+	width: 100%;
+	line-height:14px;
+	margin-top:0px;
+	border-top-style:none;
+	border-left-style:none;
+	border-right-style:none;
+	border-bottom-style:none;
+	text-align:center;
+	font-size: 12px;
+}
+table {
+	border-collapse: collapse;
+}
+table td {
+	padding: 0px 0px;
+}
+table.tableTdColor td{
+border: 1px solid #c0c0c0;
+text-align:center;
+background-color:white;
+}
+</style>
+</head>
+<body style="padding:10px;">
+	<h2 >个人信用报告<br>（授信机构版）</h2>
+			<h3 >一 、个人基本信息</h3>
+		  	<div id="phonenum"  style="width: 98%">
+		  	
+		</div>
+		<div id="JobInfo" style="width: 98%"></div>
+		
+		<h3 >二 、个人贷款情况</h3>
+		<div id="ProInfo" style="width: 98%"></div>
+		<div id="ProInfo1" style="width: 98%"></div>
+	
+<script>
+var url1=location.search;
+var theRequest=new Object();
+if(url1.indexOf("?")!=-1){
+	var str=url1.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+}
+var userCode=theRequest.userCode;//用户登录名 
+
+var url = location.href;
+var appId = theRequest.appId;//"171201B921P57351";//
+if (appId != '') {
+	appId = $.trim(appId);
+}
+	var infoCollForm=$("#infoCollForm");
+	
+	var roleObj={"appId":appId,"userCode":userCode};
+	
+	
+	$(function(){
+		 //手机号码
+		$cf.ajax({
+			url : '/opas-naps/residenceInfo_phone_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+					table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					 createInputInTd(td,"编号",'12.5%',"1");
+					 createInputInTd(td,"手机号码",'50.1%',"1");
+					 createInputInTd(td,"信息更新日期",'37.4%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,int2+1+"",'12.5%',"1");
+						createInputInTd(td,needDataInt2["phoneNum"],'50.1%',"0");
+						createInputInTd(td,needDataInt2["updateDate"],'37.4%',"0");
+					}
+					$('#phonenum').html(table);  // 重新载入当前页面数据  
+				}
+			}
+		}); 
+		
+		//职业信息
+	  	$cf.ajax({
+			url : '/opas-naps/proessionInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.proessionInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"编号",'12.5%',"1");
+					createInputInTd(td,"工作单位",'50.1%',"1");
+					createInputInTd(td,"单位电话",'18.6%',"1");
+					createInputInTd(td,"信息更新日期",'18.6%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,int2+1+"",'12.5%',"1");
+					createInputInTd(td,needDataInt2["company"],'50.1%',"0");
+					createInputInTd(td,needDataInt2["unitphone"],'18.6%',"0");
+					createInputInTd(td,needDataInt2["infoUpdTime"],'18.6%',"0");
+				}
+				
+				$('#JobInfo').html(table);  // 重新载入当前页面数据  
+				}
+			}
+		}); 
+		
+	
+			 //
+			$cf.ajax({
+				url : '/opas-naps/queryDezx4Person.json',
+				data : roleObj,
+				//async:false,
+				onSuccess : function(response) {
+					var result = response.RSP_BODY.queryCreditInfo;
+					var result1 = response.RSP_BODY.queryCreditInfo1;
+					
+					var table=document.createElement("table");
+						table.style='width:100%;';
+					var table1=document.createElement("table");
+						table1.style='width:100%;';
+					if(result!= undefined && JSON.parse(result)){
+						var data = JSON.parse(result);
+						var tr=table.insertRow();
+						var td=tr.insertCell();
+						 createInputInTd(td,"我行个人贷款情况",'100%',"7");
+						 createInputInTd(td,"编号",'10%',"1");
+						 createInputInTd(td,"发放日期",'15%',"1");
+						 createInputInTd(td,"账户状态",'15%',"1");
+						 createInputInTd(td,"机构类型",'30%',"1");
+						 createInputInTd(td,"发放金额",'15%',"1");
+						 createInputInTd(td,"贷款类型",'15%',"1");
+						for (var int2 = 0; int2 < data.length; int2++) {
+							var needDataInt2=data[int2];
+							var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+							if(organType=="B10811000H0001"){
+								organType="华夏银行股份有限公司";
+							}
+							var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+							var borrowMoney = replaceUndefined(needDataInt2["borrowMoney"]);
+							var servType = replaceUndefined(needDataInt2["servType"]);
+							var accoutType = replaceUndefined(needDataInt2["accountType"]);
+							var accountStatusb = replaceUndefined(needDataInt2["accountStatusb"]);
+							var accountStatusd = replaceUndefined(needDataInt2["accountStatusd"]);
+							var accountStatus = "";
+							var accoCreditLimit = replaceUndefined(needDataInt2["accoCreditLimit"]);
+							if(accoutType != null && accoutType != ""){
+								if(accoutType == "R1"){
+									borrowMoney = accoCreditLimit;
+								}
+								if((accountStatusb != null && accountStatusb != "") && (accountStatusd == null || accountStatusd == "")){
+									if(accoutType == "R1"){
+										accountstatus = getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusb"]));	
+								}else if(accoutType == "R4"){
+									accountstatus = getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusb"]));	
+							}else if(accoutType != null && accoutType == "D1"){
+								accountstatus = getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusb"]));
+							  }
+							}else if((accountStatusd != null && accountStatusd != "") && (accountStatusb == null || accountStatusb == "")){
+								if(accoutType == "R1"){
+									accountstatus = getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusd"]));	
+							}else if(accoutType == "R4"){
+								accountstatus = getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusd"]));	
+						}else if(accoutType != null && accoutType == "D1"){
+							accountstatus = getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusd"]));
+						  }
+						}else if((accountStatusd != null && accountStatusd != "") && (accountStatusb != null && accountStatusb != "")){
+							if(accoutType == "R1"){
+								accountstatus = getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusd"]))+"|"+getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusb"]));	
+						}else if(accoutType == "R4"){
+							accountstatus = getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusd"]))+"|"+getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusb"]));	
+					}else if(accoutType != null && accoutType == "D1"){
+						accountstatus = getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusd"]))+"|"+getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusb"]));
+					  }
+					}
+				}
+							 
+							createInputInTd(td,int2+1+"",'10%',"1");
+							createInputInTd(td,replaceUndefined(needDataInt2["klDate"]),'15%',"0");
+							createInputInTd(td,accountstatus,'15%',"0");
+							createInputInTd(td,organType,'30%',"0");
+							createInputInTd(td,borrowMoney,'15%',"0");
+							createInputInTd(td,getServType(servType),'15%',"0");
+						}
+						$('#ProInfo').html(table);  // 重新载入当前页面数据  
+					}
+					
+					if(result1!= undefined && JSON.parse(result1)){
+						var tr=table1.insertRow();
+						var td=tr.insertCell();
+						var data1 = JSON.parse(result1);
+						 createInputInTd(td,"他行个人贷款情况",'100%',"7");
+						 createInputInTd(td,"编号",'10%',"1");
+						 createInputInTd(td,"发放日期",'15%',"1");
+						 createInputInTd(td,"账户状态",'15%',"1");
+						 createInputInTd(td,"机构类型",'30%',"1");
+						 createInputInTd(td,"发放金额",'15%',"1");
+						 createInputInTd(td,"贷款类型",'15%',"1");
+						for (var int2 = 0; int2 < data1.length; int2++) {
+							var needDataInt2=data1[int2];
+							var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+							var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+							var borrowMoney = replaceUndefined(needDataInt2["borrowMoney"]);
+							var servType = replaceUndefined(needDataInt2["servType"]);
+							organType=getOrgType(organType)+organCode;
+							var accoutType = replaceUndefined(needDataInt2["accountType"]);
+							var accountStatusb = replaceUndefined(needDataInt2["accountStatusb"]);
+							var accountStatusd = replaceUndefined(needDataInt2["accountStatusd"]);
+							var accountStatus = "";
+							var accoCreditLimit = replaceUndefined(needDataInt2["accoCreditLimit"]);
+							if(accoutType != null && accoutType != ""){
+								if(accoutType == "R1"){
+									borrowMoney = accoCreditLimit;
+								}
+								if((accountStatusb != null && accountStatusb != "") && (accountStatusd == null || accountStatusd == "")){
+									if(accoutType == "R1"){
+										accountstatus = getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusb"]));	
+								}else if(accoutType == "R4"){
+									accountstatus = getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusb"]));	
+							}else if(accoutType != null && accoutType == "D1"){
+								accountstatus = getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusb"]));
+							  }
+							}else if((accountStatusd != null && accountStatusd != "") && (accountStatusb == null || accountStatusb == "")){
+								if(accoutType == "R1"){
+									accountstatus = getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusd"]));	
+							}else if(accoutType == "R4"){
+								accountstatus = getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusd"]));	
+						}else if(accoutType != null && accoutType == "D1"){
+							accountstatus = getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusd"]));
+						  }
+						}else if((accountStatusd != null && accountStatusd != "") && (accountStatusb != null && accountStatusb != "")){
+							if(accoutType == "R1"){
+								accountstatus = getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusd"]))+"|"+getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatusb"]));	
+						}else if(accoutType == "R4"){
+							accountstatus = getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusd"]))+"|"+getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatusb"]));	
+					}else if(accoutType != null && accoutType == "D1"){
+						accountstatus = getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusd"]))+"|"+getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatusb"]));
+					  }
+					}
+				}
+							 
+							createInputInTd(td,int2+1+"",'10%',"1");
+							createInputInTd(td,replaceUndefined(needDataInt2["klDate"]),'15%',"0");
+							createInputInTd(td,accountstatus,'15%',"0");
+							createInputInTd(td,organType,'30%',"0");
+							createInputInTd(td,borrowMoney,'15%',"0");
+							createInputInTd(td,getServType(servType),'15%',"0");
+						}
+						$('#ProInfo1').html(table1);  // 重新载入当前页面数据  
+					}
+				}
+			}); 
+			 
+			 
+			 
+	});
+   $cf.loadAllDictOnly('PERSONAL_JDZHHKZT_R1_BANK,PERSONAL_JDZHHKZT_R2_BANK,PERSONAL_JDZHHKZT_R3_BANK,PERSONAL_JDZHHKZT_D1_R4_BANK,XZQH_BANK,SJGG_AREA_NAME_BANK,CURRENCY_BANK,FENSHUYXYS_BANK,ZFGJJ_JFZT_BANK,PERSONAL_SXEDUYT_BANK,QYJD_YWDL_BANK,JYZK_BANK,XWDM_BANK,XUDM_BANK,HYZK_BANK,SEX_BANK,PERSONAL_IDENTITY_TYPE_BANK,JYZG_DJDM_BANK,ORG_TYPE_BANK,PERSONAL_JDTS_BANK,PERSONAL_DKFFXS_BANK,DXJFZH_JFZT_BANK,XGHK_ZRRLX_BANK,CXYY_BANK,FIVE_CLASSIFY_BANK,PERSONAL_JDJY_HKPL_BANK,PERSONAL_JDJY_GTJK_BANK,PERSONAL_JDJY_HKFS_BANK,PERSONAL_JDJY_DBFS_BANK,PERSONAL_JDZHZT_R4_BANK,PERSONAL_JDZHZT_R1_BANK,PERSONAL_JDZHZT_D1_BANK,PERSONAL_JDZHZT_R2_R3_BANK,PERSONAL_JDZHZT_C1_BANK,PERSONAL_JDJY_YWZL_BANK,DXJF_YWLX_BANK,HFF_YWLX_BANK,ACHIEVEMENT_BANK,DUTY_BANK,GMJJ_BANK,JOB_BANK,UNIT_NATURE_BANK,LIVE_CON_BANK,DBJZ_RYLB_BANK,MSPJ_JAFS_BANK,QZZX_JAFS_BANK,');
+// 机构类型BANK
+   function getOrgType(value){
+ 		 var name = "";
+ 		 name =  $cf.getDictDetailName('ORG_TYPE_BANK',value);
+ 		 return name;
+  }
+   /*在指定td标签 创建input标签 并赋值 */
+   function createInputInTd(td,value,width,fontType){
+	   td.style.width=width;
+	var input=document.createElement("input");
+	input.type='text';
+	if(value){
+		var val=value.toString().split("|");
+		input.value= val[val.length-1];
+	}else if(value == 0){
+		var val=value.toString().split("|");
+		input.value= val[val.length-1];
+	}else{
+		input.value="";
+	}
+	input.style.width=width;
+	input.style.fontSize='12px';
+	input.style.textAlign='center';
+	if(fontType=="1"){
+		input.style.fontWeight='bold';
+	}
+	if(fontType=="0"){
+		input.style.color='blue';
+	}
+	input.readOnly='readOnly';
+	td.appendChild(input);
+   }
+   /*在指定td标签 创建Div标签 并赋值 */
+   function createDivInTd(td,value,width,fontType){
+   	td.style.width=width;
+   	var div=document.createElement("div");
+   	div.style.class="word-wrap:break-word;overflow:hidden;"
+   	div.style.fontSize='12px';
+   	if(value){
+   		var textNode=document.createElement('p');
+   		textNode.innerHTML=value;
+   		div.appendChild(textNode);
+   	}else{
+   		//div.appendChild(document.createTextNode(""+typeValue));
+   	}
+   	/* input.style.width=width;
+   	input.style.fontSize='12px';
+   	input.style.textAlign='center'; */
+   	if(fontType=="1"){
+   		div.style.fontWeight='bold';
+   		div.style.color='black';
+   	}
+   	if(fontType=="0"){
+   		div.style.color='blue';
+   	}
+   	div.readOnly='readOnly';
+   	td.appendChild(div);
+   }
+   function replaceUndefined(value){
+	   value = value==undefined?"":value;
+	   if(value== "2099-12-31"){
+			 value ="长期有效";
+		 }
+	   return value;
+   }
+ //信贷交易明细 业务种类个人
+   function getServType(value){
+  	 var name = "";
+  	 name =  $cf.getDictDetailName('PERSONAL_JDJY_YWZL_BANK',value);
+  	 return name;
+  	 /* if(servType == "11"){
+  		   return "个人住房商业贷款";
+  	   }else if(servType == "12"){
+  		   return "个人商用房（含商住两用）贷款";
+  	   }else if(servType == "13"){
+  		   return "个人住房公积金贷款";
+  	   }else if(servType == "21"){
+  		   return "个人汽车消费贷款";
+  	   }else if(servType == "31"){
+  		   return "个人助学贷款";
+  	   }else if(servType == "32"){
+  		   return "国家助学贷款";
+  	   }else if(servType == "33"){
+  		   return "商业助学贷款";
+  	   }else if(servType == "41"){
+  		   return "个人经营性贷款";
+  	   }else if(servType == "51"){
+  		   return "农户贷款";
+  	   }else if(servType == "52"){
+  		   return "经营性农户贷款";
+  	   }else if(servType == "53"){
+  		   return "消费性农户贷款";
+  	   }else if(servType == "91"){
+  		   return "其他个人消费贷款";
+  	   }else if(servType == "99"){
+  		   return "其他贷款";
+  	   }else if(servType == "71"){
+  		   return "准贷记卡";
+  	   }else if(servType == "81"){
+  		   return "贷记卡";
+  	   }else if(servType == "82"){
+  		   return "大额专项分期卡";
+  	   }else if(servType == "41"){
+  		   return "个人经营性贷款";
+  	   }else if(servType == "61"){
+  		   return "约定购回式证券交易";
+  	   }else if(servType == "62"){
+  		   return "股票质押式回购交易";
+  	   }else if(servType == "63"){
+  		   return "融资融券业务";
+  	   }else if(servType == "64"){
+  		   return "其他证券类融资";
+  	   }else if(servType == "92"){
+  		   return "融资租赁业务";
+  	   }else if(servType == "A1"){
+  		   return "资产处置";
+  	   }else if(servType == "B1"){
+  		   return "代偿债务";
+  	   }else {
+  		   return "";
+  	   } */
+   }
+   //账户状态 C1
+   function getAccountStatus4C1(value){
+  	 var name = "";
+  	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_C1_BANK',value);
+  	 return name;
+  	/*  if(accountStatus == "1"){
+  		   return "催收";
+  	   }else if(accountStatus == "2"){
+  		   return "结束";
+  	   }else {
+  		   return "";
+  	   } */
+   }
+   //账户状态 R2R3
+   function getAccountStatus4R23(value){
+  	 var name = "";
+  	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_R2_R3_BANK',value);
+  	 return name;
+  	/*  if(accountStatus == "1"){
+  		   return "正常";
+  	   }else if(accountStatus == "2"){
+  		   return "冻结";
+  	   }else if(accountStatus == "8"){
+  		   return "司法追偿";
+  	   }else if(accountStatus == "3"){
+  		   return "止付";
+  	   }else if(accountStatus == "31"){
+  		   return "银行止付";
+  	   }else if(accountStatus == "4"){
+  		   return "销户";
+  	   }else if(accountStatus == "5"){
+  		   return "呆账";
+  	   }else if(accountStatus == "6"){
+  		   return "未激活";
+  	   }else {
+  		   return "";
+  	   } */
+   }
+  //账户状态 d1
+   function getAccountStatus4D1(value){
+  	 var name = "";
+  	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_D1_BANK',value);
+  	 if(name == null || name == undefined){
+  		 return value;
+  	 }
+  	 return name;
+  	 /* if(accountStatus == "1"){
+  		   return "正常";
+  	   }else if(accountStatus == "2"){
+  		   return "逾期";
+  	   }else if(accountStatus == "3"){
+  		   return "结清";
+  	   }else if(accountStatus == "4"){
+  		   return "呆账";
+  	   }else if(accountStatus == "5"){
+  		   return "转出";
+  	   }else if(accountStatus == "6"){
+  		   return "担保物不足";
+  	   }else if(accountStatus == "7"){
+  		   return "强制平仓";
+  	   }else if(accountStatus == "8"){
+  		   return "司法追偿";
+  	   }else {
+  		   return "";
+  	   } */
+   }
+  //账户状态 r1
+   function getAccountStatus4R1(value){
+  	 var name = "";
+  	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_R1_BANK',value);
+  	 return name;
+  	 /* if(accountStatus == "1"){
+  		   return "正常";
+  	   }else if(accountStatus == "2"){
+  		   return "逾期";
+  	   }else if(accountStatus == "3"){
+  		   return "结清";
+  	   }else if(accountStatus == "4"){
+  		   return "呆账";
+  	   }else if(accountStatus == "5"){
+  		   return "银行止付";
+  	   }else if(accountStatus == "6"){
+  		   return "担保物不足";
+  	   }else if(accountStatus == "8"){
+  		   return "司法追偿";
+  	   }else {
+  		   return "";
+  	   } */
+   }
+  //账户状态 r1
+   function getAccountStatus4R4(value){
+  	 var name = "";
+  	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_R4_BANK',value);
+  	 return name;
+  	 /* if(accountStatus == "1"){
+  		   return "正常";
+  	   }else if(accountStatus == "2"){
+  		   return "逾期";
+  	   }else if(accountStatus == "3"){
+  		   return "结清";
+  	   }else if(accountStatus == "4"){
+  		   return "呆账";
+  	   }else if(accountStatus == "5"){
+  		   return "银行止付";
+  	   }else if(accountStatus == "8"){
+  		   return "司法追偿";
+  	   }else {
+  		   return "";
+  	   } */
+   }
+</script>
+
+<script type="text/javascript">
+$cf.ajax({
+	  url : '/opas-naps/query_userinfo.json',
+	data : roleObj,
+	//async:false,
+	onSuccess : function(response) {
+		var username = response.RSP_BODY.user;
+		//var data = JSON.parse(result);
+		$('body').watermark({
+			texts : [ username==undefined?"":username ], //水印文字
+			textColor : "#d2d2d2", //文字颜色
+			textFont : '14px 微软雅黑', //字体
+			width : 100, //水印文字的水平间距
+			height : 100, //水印文字的高度间距（低于文字高度会被替代）
+			textRotate : -30
+		//-90到0， 负数值，不包含-90
+		});
+	}
+}); 
+</script>
+
+</html>

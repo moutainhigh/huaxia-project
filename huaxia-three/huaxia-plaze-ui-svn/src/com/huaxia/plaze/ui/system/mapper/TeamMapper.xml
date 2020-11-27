@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.TeamMapper">
+
+	<resultMap id="result_BaseTeam" type="Team">
+		<result column="TEAM_ID" property="teamId" jdbcType="CHAR" />
+		<result column="TEAM_NAME" property="teamName" jdbcType="VARCHAR" />
+		<result column="TEAM_DESC" property="teamDesc" jdbcType="VARCHAR" />
+		<result column="TEAM_STATUS" property="teamStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_TEAM
+		<where>
+        	<if test="teamName != null">
+        		AND TEAM_NAME LIKE '${teamName}%'
+        	</if>
+        </where>
+	</select>
+	
+	<select id="selectListByPage" parameterType="java.util.Map" resultMap="result_BaseTeam">
+		SELECT TEAM_ID,TEAM_NAME,TEAM_DESC,TEAM_STATUS 
+		  FROM (SELECT ROWNUM RN,T.TEAM_ID,T.TEAM_NAME,T.TEAM_DESC,TEAM_STATUS 
+		          FROM (SELECT TEAM_ID,TEAM_NAME,TEAM_DESC,TEAM_STATUS 
+		                  FROM SYS_TEAM
+		                <where>
+		                	<if test="teamName != null">
+		                		AND TEAM_NAME LIKE '${teamName}%'
+		                	</if>
+		                </where>) T
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		 WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+	<select id="selectListCountByMapping" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_TEAM T1, SYS_TEAM_RESOURCE T2, SYS_RESOURCE T3
+		 WHERE T1.TEAM_ID = T2.TEAM_ID
+		   AND T3.RSRC_ID = T2.RSRC_ID
+		   AND T1.TEAM_ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateStatusById" parameterType="java.lang.String">
+		UPDATE SYS_TEAM SET TEAM_STATUS = '0' WHERE TEAM_ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectAllList" resultMap="result_BaseTeam">
+		SELECT TEAM_ID,TEAM_NAME,TEAM_DESC,TEAM_STATUS FROM SYS_TEAM
+	</select>
+	
+	<insert id="insert" parameterType="Team">
+		INSERT INTO SYS_TEAM (
+			UUID,CRT_TIME,CRT_USER,TEAM_ID,TEAM_NAME,TEAM_DESC
+		) VALUES (
+			SYS_GUID(),SYSDATE,#{createUser,jdbcType=VARCHAR},SYS_GUID(),
+			#{teamName,jdbcType=VARCHAR},
+			#{teamDesc,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="Team">
+		UPDATE SYS_TEAM
+		<set>
+		   <if test="teamName != null">
+		       TEAM_NAME = #{teamName,jdbcType=VARCHAR},
+		   </if>
+   		   <if test="teamDesc != null">
+		       TEAM_DESC = #{teamDesc,jdbcType=VARCHAR},
+		   </if>
+		   <if test="teamStatus != null">
+		       TEAM_STATUS = #{teamStatus,jdbcType=CHAR},
+		   </if>
+		 </set>
+		 WHERE TEAM_ID = #{teamId,jdbcType=CHAR}
+	</update>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_BaseTeam">
+		SELECT TEAM_ID,TEAM_NAME,TEAM_DESC,TEAM_STATUS FROM SYS_TEAM WHERE TEAM_ID = #{id,jdbcType=CHAR}
+	</select>
+	
+</mapper>

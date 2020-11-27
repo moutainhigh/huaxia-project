@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasLoansMsg">
+
+	
+	<select id="queryLoansQueryBzkMsg"  parameterType="java.lang.String" resultType="java.lang.String">
+  	  select IS_QUERY_DEBIT_INF from opas_fico_sd_blaze
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	
+	<select id="queryLoansQueryYdjMsg"  parameterType="java.lang.String" resultType="java.lang.String">
+  	  select IS_QUERY_DEBIT_INF from opas_fico_ydj_blaze
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+	  </where>
+	</select>
+	
+	
+	<resultMap id="dateAndCountLimitMap" type="java.util.Map">
+	    <result column="LIMIT_START_DATE" jdbcType="DATE" property="limitStartDate" />
+	    <result column="LIMIT_END_DATE" jdbcType="DATE" property="limitEndDate" />
+	    <result column="LIMIT_QUERY_COUNT" jdbcType="DECIMAL" property="limitQueryCount" />
+	  </resultMap>
+	  
+	<select id="queryDateAndCountLimit" resultMap="dateAndCountLimitMap">
+		SELECT LIMIT_START_DATE, LIMIT_END_DATE, LIMIT_QUERY_COUNT FROM  CONF_QUERY_LIMIT_RECORD_COUNT 
+        WHERE  LIMIT_MODULE_TYPE = '0003'
+	</select>
+	
+	<select id="queryLoansCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT sum(QUERY_HIT_COUNT) FROM  rpt_mulbor_day f
+		WHERE 
+		f.COUNT_TIME &gt;= (select LIMIT_START_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0003')  
+		AND   f.COUNT_TIME &lt;= (select LIMIT_END_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0003')
+	</select>
+	
+	<select id="queryTodayLoansCount" parameterType="java.util.Date" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  MULBOR_BASE 
+		WHERE 
+		CRT_TIME &gt;= trunc(sysdate)  AND   CRT_TIME &lt;  trunc(sysdate)+1 
+		AND  SUCCESS='true' AND EXT_SEARCH_RESULT='0'
+	</select>
+	
+	<select id="queryLoansMsg"  resultType="java.lang.String">
+  	  select rule_setting_value from CONF_QUERY_TYPE_RULE where B_RULE_TYPE = '0003'  and flag_active = '1'
+
+	</select>
+	
+	 <resultMap id="ruleContentMap" type="java.util.Map">
+	    <result column="input_trader" jdbcType="VARCHAR" property="inputTrader" />
+	    <result column="channel" jdbcType="VARCHAR" property="channel" />
+	    <result column="city" jdbcType="VARCHAR" property="city" />
+	  </resultMap>
+	
+	<select id="queryRuleContent"   resultMap="ruleContentMap">
+		SELECT input_trader,channel,city FROM CONF_QUERY_LIMIT_RULE WHERE B_RULE_TYPE = '0003' ORDER BY CRT_TIME desc
+	</select>
+</mapper>

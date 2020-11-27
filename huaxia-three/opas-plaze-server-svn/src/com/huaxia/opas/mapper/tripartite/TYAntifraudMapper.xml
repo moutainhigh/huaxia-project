@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.tripartite.TYAntifraudMapper">
+
+  <select id="selectCountByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM OPAS_TIANYU_ANTIFRAUD_DATA  WHERE  APP_ID = #{appId, jdbcType = CHAR}
+  </select>
+  
+  <insert id="insertTyData" parameterType="com.huaxia.opas.domain.tripartite.TYAntifraudData" >
+    INSERT INTO OPAS_TIANYU_ANTIFRAUD_DATA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="codeDesc != null" >
+        CODEDESC,
+      </if>
+      <if test="found != null" >
+        FOUND,
+      </if>
+      <if test="idFound != null" >
+        IDFOUND,
+      </if>
+      <if test="message != null" >
+        MESSAGE,
+      </if>
+      <if test="riskScore != null" >
+        RISKSCORE,
+      </if>
+        CRT_TIME
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      SYS_GUID(),
+      <if test="appId != null" >
+        #{appId,jdbcType=CHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="codeDesc != null" >
+        #{codeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="found != null" >
+        #{found,jdbcType=DECIMAL},
+      </if>
+      <if test="idFound != null" >
+        #{idFound,jdbcType=DECIMAL},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="riskScore != null" >
+        #{riskScore,jdbcType=DECIMAL},
+      </if>
+      SYSDATE
+    </trim>
+  </insert>
+  <insert id="insertBatchTyRisk" parameterType="java.util.List" >
+    INSERT INTO OPAS_TIANYU_ANTIFRAUD_RISKINFO (ID, APP_ID, RISKCODE, 
+      RISKCODEVALUE, CRT_TIME)
+     <foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+		  SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.riskCode,jdbcType=VARCHAR}, 
+          #{item.riskCodeValue,jdbcType=VARCHAR}, SYSDATE
+		FROM  DUAL
+	</foreach>
+  </insert>
+</mapper>

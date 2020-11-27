@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.DictionaryMapper">
+
+	<resultMap id="result_SelectAllDictionaries" type="Dictionary">
+		<result column="GROUP_CODE" property="groupCode" jdbcType="VARCHAR" />
+		<result column="GROUP_NAME" property="groupName" jdbcType="VARCHAR" />
+		<result column="DICT_CODE" property="dictCode" jdbcType="VARCHAR" />
+		<result column="DICT_NAME" property="dictName" jdbcType="VARCHAR" />
+		<result column="DICT_INDEX" property="dictIndex" jdbcType="NUMERIC" />
+	</resultMap>
+	
+	<select id="selectList" resultMap="result_SelectAllDictionaries">
+		SELECT T1.DICT_CODE GROUP_CODE,
+		       T1.DICT_NAME GROUP_NAME,
+		       T2.DICT_CODE DICT_CODE,
+		       T2.DICT_NAME,
+		       T2.DICT_INDEX
+		  FROM SYS_DICT T1, SYS_DICT T2
+		 WHERE T1.DICT_ID = T2.PARENT_ID
+		   AND T1.ACTIVE_STATUS = 1
+		 ORDER BY T1.DICT_CODE, T2.DICT_INDEX
+	</select>
+		<select id="selectListByDictCode" parameterType='string' resultMap="result_SelectAllDictionaries">
+		SELECT DICT_CODE,DICT_NAME FROM SYS_DICT SY 
+		WHERE SY.PARENT_ID=(SELECT DICT_ID FROM SYS_DICT S WHERE S.DICT_CODE =#{groupCode})
+	</select>
+	
+	<select id="selectName" parameterType='map' resultType="string">
+		SELECT 
+		DICT_NAME 
+		FROM SYS_DICT SY 
+		WHERE SY.PARENT_ID=(SELECT DICT_ID FROM SYS_DICT S WHERE S.DICT_CODE =#{groupCode})
+	    AND DICT_CODE=#{dictCode}
+	</select>
+
+</mapper>

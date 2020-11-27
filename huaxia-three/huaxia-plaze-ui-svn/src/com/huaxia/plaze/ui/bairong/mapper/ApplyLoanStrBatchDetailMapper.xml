@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.huaxia.plaze.ui.bairong.mapper.ApplyLoanStrBatchDetailMapper">
+	<resultMap id="result_Base"
+		type="com.huaxia.plaze.ui.bairong.domain.ApplyLoanStrBatchDetail">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_ID" property="batchFileId" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="CERT_TYPE" property="certType" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="QUERY_TIME" property="queryTime" jdbcType="VARCHAR" />
+		<result column="CARD_ACCOUNT" property="cardAccount" jdbcType="VARCHAR" />
+		<result column="QUERY_SEQ" property="sequence" jdbcType="NUMERIC" />	
+	</resultMap>
+	<!-- 批次文件明细记录查询 -->
+	<select id="selectBatchDetailListByPage" parameterType="string"
+		resultMap="result_Base">
+		SELECT T.QUERY_SEQ, T.CERT_NO,T.NAME,T.TRN_ID,T.MOBILE,T.CARD_ACCOUNT,
+		TO_CHAR(T.CRT_TIME,
+		'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		TO_CHAR(T.QUERY_TIME, 'YYYY-MM-DD
+		HH24:MI:SS') QUERY_TIME,
+		T.QUERY_STATUS
+		FROM
+		BAIRONG_ALS_TRN_BATCH_DETAIL T
+		WHERE T.BATCH_FILE_ID=#{batchFileId}
+		ORDER BY
+		T.QUERY_SEQ ASC
+	</select>
+
+	<insert id="insertObject"
+		parameterType="com.huaxia.plaze.ui.bairong.domain.ApplyLoanStrBatchDetail">
+		INSERT INTO BAIRONG_ALS_TRN_BATCH_DETAIL (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_FILE_ID,
+		TRN_ID,
+		CERT_TYPE,
+		CERT_NO,
+		NAME,
+		MOBILE,
+		QUERY_STATUS,
+		CARD_ACCOUNT,
+		QUERY_SEQ
+		)
+		values
+		(
+		SYS_GUID(),
+		SYSDATE,
+		#{crtUser, jdbcType = VARCHAR},
+		#{batchFileId, jdbcType = CHAR},
+		#{trnId, jdbcType = CHAR},
+		#{certType,
+		jdbcType = VARCHAR},
+		#{certNo, jdbcType = VARCHAR},
+		#{name, jdbcType = VARCHAR},
+		#{mobile, jdbcType = VARCHAR},
+		#{queryStatus, jdbcType = CHAR},
+		#{cardAccount, jdbcType = VARCHAR},
+		#{sequence, jdbcType = NUMERIC}
+		)
+	</insert>
+
+</mapper>

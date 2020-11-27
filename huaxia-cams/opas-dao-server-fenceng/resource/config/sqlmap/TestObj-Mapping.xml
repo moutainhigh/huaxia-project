@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TestObj">
+
+	<resultMap id="ApDictResultMap" type="com.huaxia.opas.domain.dict.ApDict">
+		<result column="num" property="num" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="age" property="age" jdbcType="VARCHAR" />
+		<result column="score" property="score" jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="insertList" parameterType="java.util.List">
+		insert into Test_Obj (num,name,age,score)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.num,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.age,jdbcType=VARCHAR},
+			#{item.score,jdbcType=VARCHAR} 
+			from dual)
+		</foreach>
+	</insert>
+</mapper>
+
+	

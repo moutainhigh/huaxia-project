@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>CRM展示信息</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<script type="text/javascript" src="../../js/decision/crm_info_view.js"></script>
+</head>
+<body>
+<div style="overflow-y:scroll;height: 800px; width: 99%;">
+ <form id="CRM_view">
+	<div id="p" class="easyui-panel" title="基本信息"     
+        style="width:100%;padding:10px;background:#fafafa;"   
+        data-options="iconCls:'icon-save',collapsible:true">   
+	   <table style="padding:10px;">
+	   	<tr>
+	   		<td align="right">客户ID：</td>
+	   		<td><input name="custid" id="custid" class="easyui-textbox"/></td>
+	   		<td align="right">客户姓名：</td>
+	   		<td><input name="custname" id="custname" class="easyui-textbox"/></td>
+	   		<td align="right">籍贯：</td>
+	   		<td><input name="originplace" id="originplace" class="easyui-textbox"/></td>
+	   		<td align="right">是否我行员工：</td>
+	   		<td><input name="isemp" id="isemp" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">证件类型：</td>
+	   		<td><input name="certtype" id="certtype" class="easyui-textbox"/></td>
+	   		<td align="right">出生日期：</td>
+	   		<td><input name="borndate" id="borndate" class="easyui-datebox"/></td>
+	   		<td align="right">民族：</td>
+	   		<td><input name="nation" id="nation" class="easyui-textbox"/></td>
+	   		<td align="right">是否免打扰：</td>
+	   		<td><input name="isDisturb" id="isDisturb" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">证件号码：</td>
+	   		<td><input name="certno" id="certno" class="easyui-textbox"/></td>
+	   		<td align="right">出生日期阴历：</td>
+	   		<td><input name="lunarcal" id="lunarcal" class="easyui-datebox"/></td>
+	   		<td align="right">国籍：</td>
+	   		<td><input name="country" id="country" class="easyui-textbox"/></td>
+	   		<td align="right">联系时间：</td>
+	   		<td><input name="conttime" id="conttime" class="easyui-datebox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">转换后的证件号码：</td>
+	   		<td><input name="certnonew" id="certnonew" class="easyui-textbox"/></td>
+	   		<td align="right">联系手机：</td>
+	   		<td><input name="mobilephone" id="mobilephone" class="easyui-textbox"/></td>
+	   		<td align="right">教育程度：</td>
+	   		<td><input name="educationstatus" id="educationstatus" class="easyui-textbox"/></td>
+	   		<td align="right">客户转介绍关系：</td>
+	   		<td><input name="custman" id="custman" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">证件有效期：</td>
+	   		<td><input name="validat" id="validat" class="easyui-datebox"/></td>
+	   		<td align="right">联系电话：</td>
+	   		<td><input name="phone" id="phone" class="easyui-textbox"/></td>
+	   		<td align="right">联系地址：</td>
+	   		<td colspan="3"><input name="addr" id="addr" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">开户分行：</td>
+	   		<td><input name="branch" id="branch" class="easyui-textbox"/></td>
+	   		<td align="right">住宅固定电话：</td>
+	   		<td><input name="homephone" id="homephone" class="easyui-textbox"/></td>
+	   		<td align="right">邮政编码：</td>
+	   		<td colspan="3"><input name="opostcode" id="opostcode" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">开户支行：</td>
+	   		<td><input name="subbranch" id="subbranch" class="easyui-textbox"/></td>
+	   		<td align="right">EMAIL：</td>
+	   		<td><input name="emailaddr" id="emailaddr" class="easyui-textbox"/></td>
+	   		<td align="right">住宅地址：</td>
+	   		<td colspan="3"><input name="homeaddr" id="homeaddr" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">客户状态：</td>
+	   		<td><input name="status" id="status" class="easyui-textbox"/></td>
+	   		<td align="right">数据日期：</td>
+	   		<td><input name="dDate1" id="dDate1" class="easyui-datebox"/></td>
+	   		<td align="right">住宅邮政编码：</td>
+	   		<td colspan="3"><input name="homepostcode" id="homepostcode" class="easyui-textbox"/></td>
+	   	</tr>
+	   
+	   </table>
+	</div><br>
+	<div id="p" class="easyui-panel" title="职业信息"     
+        style="width:100%;padding:10px;background:#fafafa;"   
+        data-options="iconCls:'icon-save',collapsible:true">   
+	   <table>
+	   	<tr>
+	   		<td align="right">工作单位：</td>
+	   		<td><input name="company" id="company" class="easyui-textbox"/></td>
+	   		<td align="right">现单位工龄：</td>
+	   		<td><input name="workage" id="workage" class="easyui-datebox"/></td>
+	   		<td align="right">年收入：</td>
+	   		<td><input name="yearincome" id="yearincome" class="easyui-textbox"/></td>
+	   		<td align="right">传真：</td>
+	   		<td><input name="fax" id="fax" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">单位性质：</td>
+	   		<td><input name="compnat" id="compnat" class="easyui-textbox"/></td>
+	   		<td align="right">公司固定电话：</td>
+	   		<td><input name="busphone" id="busphone" class="easyui-textbox"/></td>
+	   		<td align="right">单位地址：</td>
+	   		<td colspan="3"><input name="busaddr" id="busaddr" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">行业类别：</td>
+	   		<td><input name="indtype" id="indtype" class="easyui-textbox"/></td>
+	   		<td align="right">职业：</td>
+	   		<td><input name="profession" id="profession" class="easyui-textbox"/></td>
+	   		<td align="right">单位邮政编码：</td>
+	   		<td colspan="3"><input name="buspostcode" id="buspostcode" class="easyui-textbox"/></td>
+	   	</tr>
+	   	<tr>
+	   		<td align="right">工作岗位：</td>
+	   		<td><input name="workpost" id="workpost" class="easyui-textbox"/></td>
+	   		<td align="right">职务：</td>
+	   		<td><input name="dutie" id="dutie" class="easyui-textbox"/></td>
+	   		<td align="right">数据日期：</td>
+	   		<td><input name="dDate1" id="dDate1" class="easyui-datebox"/></td>
+	   		<td align="right"></td>
+	   		<td></td>
+	   	</tr>
+	   </table>  
+	</div><br>
+	<div id="p" class="easyui-panel" title="汇总信息"     
+        style="width:100%;padding:10px;background:#fafafa;"   
+        data-options="iconCls:'icon-save',collapsible:true">   
+	    <table>
+		    <tr>
+		   		<td align="right">最早开户时间：</td>
+		   		<td><input name="opendate" id="opendate" class="easyui-datebox"/></td>
+		   		<td align="right">近3个月金融可用总资产日均余额：</td>
+		   		<td><input name="threeMonthTotalAvg" id="threeMonthTotalAvg" class="easyui-textbox"/></td>
+		   	</tr>
+		    <tr>
+		   		<td align="right">金融资产总额：</td>
+		   		<td><input name="aum" id="aum" class="easyui-textbox"/></td>
+		   		<td align="right">金融资产可用总额：</td>
+		   		<td><input name="useAum" id="useAum" class="easyui-textbox"/></td>
+		   		<td align="right">每月还款额合计：</td>
+		   		<td><input name="sumRepayMent" id="sumRepayMent" class="easyui-textbox"/></td>
+		   		<td align="right">ETC签约：</td>
+		   		<td><input name="etcSign" id="etcSign" class="easyui-textbox"/></td>
+		   	</tr>
+		    <tr>
+		   		<td align="right">金融资产总额月日均：</td>
+		   		<td><input name="aumMavg" id="aumMavg" class="easyui-textbox"/></td>
+		   		<td align="right">金融资产可用总额月日均：</td>
+		   		<td><input name="useAumMavg" id="useAumMavg" class="easyui-textbox"/></td>
+		   		<td align="right">贷款负债：</td>
+		   		<td><input name="loandebtbal" id="loandebtbal" class="easyui-textbox"/></td>
+		   		<td align="right">代发工资签约：</td>
+		   		<td><input name="payrollSign" id="payrollSign" class="easyui-textbox"/></td>
+		   	</tr>
+		    <tr>
+		   		<td align="right">金融资产总额季日均：</td>
+		   		<td><input name="aumQavg" id="aumQavg" class="easyui-textbox"/></td>
+		   		<td align="right">金融资产可用总额季日均：</td>
+		   		<td><input name="useAumQavg" id="useAumQavg" class="easyui-textbox"/></td>
+		   		<td align="right">贷款笔数：</td>
+		   		<td><input name="loanNum" id="loanNum" class="easyui-textbox"/></td>
+		   		<td align="right">个人网银签约版：</td>
+		   		<td><input name="netbankQySign" id="netbankQySign" class="easyui-textbox"/></td>
+		   	</tr>
+		    <tr>
+		   		<td align="right">金融资产总额年日均：</td>
+		   		<td><input name="aumYavg" id="aumYavg" class="easyui-textbox"/></td>
+		   		<td align="right">金融资产可用总额年日均：</td>
+		   		<td><input name="useAumYavg" id="useAumYavg" class="easyui-textbox"/></td>
+		   		<td align="right">贷款授信总额：</td>
+		   		<td><input name="credlmt" id="credlmt" class="easyui-textbox"/></td>
+		   		<td align="right">个人网银证书版：</td>
+		   		<td><input name="netbankZsSign" id="netbankZsSign" class="easyui-textbox"/></td>
+		   	</tr>
+		    <tr>
+		   		<td align="right">近3个月储蓄存款日均余额：</td>
+		   		<td><input name="threeMonthPushMoneyAvg" id="threeMonthPushMoneyAvg" class="easyui-textbox"/></td>
+		   		<td align="right">近3个月理财日均余额：</td>
+		   		<td><input name="threeMMonthLcAvg" id="threeMMonthLcAvg" class="easyui-textbox"/></td>
+		   		<td align="right">当前贷款余额合计：</td>
+		   		<td><input name="sumLoanBal" id="sumLoanBal" class="easyui-textbox"/></td>
+		   	</tr>
+		    <tr>
+		   		<td align="right">数据日期：</td>
+		   		<td><input name="dDate3" id="dDate3" class="easyui-datebox"/></td>
+		   		<td align="right">数据日期：</td>
+		   		<td><input name="dDate3" id="dDate3" class="easyui-datebox"/></td>
+		   		<td align="right">数据日期：</td>
+		   		<td><input name="dDate4" id="dDate4" class="easyui-datebox"/></td>
+		   		<td align="right">数据日期:</td>
+		   		<td><input name="dDate5" id="dDate5" class="easyui-datebox"/></td>
+		   	</tr>
+	    </table>
+	</div><br>
+	<div id="p" class="easyui-panel" title="资产类业务明细"     
+        style="width:100%;padding:10px;background:#fafafa;"   
+        data-options="iconCls:'icon-save',collapsible:true,collapsed:true">   
+	    <table>
+	    	<tr>
+	    		<td align="right">金融资产总额：</td>
+	    		<td><input name="aum" id="aum2" class="easyui-textbox"/></td>
+	    		<td align="right">金融资产总额月日均：</td>
+	    		<td><input name="aumMavg" id="aumMavg2" class="easyui-textbox"/></td>
+	    		<td align="right">金融资产总额季日均：</td>
+	    		<td><input name="aumQavg" id="aumQavg2" class="easyui-textbox"/></td>
+	    		<td align="right">金融资产总额年日均：</td>
+	    		<td><input name="aumYavg" id="aumYavg2" class="easyui-textbox"/></td>
+	    	</tr>
+	    	<tr>
+	    		<td align="right">金融资产可用总额：</td>
+	    		<td><input name="useAum" id="useAum2" class="easyui-textbox"/></td>
+	    		<td align="right">金融资产可用总额月日均：</td>
+	    		<td><input name="useAumMavg" id="useAumMavg2" class="easyui-textbox"/></td>
+	    		<td align="right">金融资产可用总额季日均：</td>
+	    		<td><input name="useAumQavg" id="useAumQavg2" class="easyui-textbox"/></td>
+	    		<td align="right">金融资产可用总额年日均：</td>
+	    		<td><input name="useAumYavg" id="useAumYavg2" class="easyui-textbox"/></td>
+	    	</tr>
+	    	<tr>
+	    		<td align="right">数据日期：</td>
+	    		<td><input name="" id=""/></td>
+	    		<td align="right">数据日期：</td>
+	    		<td><input name="" id=""/></td>
+	    		<td align="right">数据日期：</td>
+	    		<td><input name="" id=""/></td>
+	    		<td align="right">数据日期：</td>
+	    		<td><input name="" id=""/></td>
+	    	</tr>
+		    	<tr>
+	    		<td align="right">最高余额：</td>
+	    		<td><input name="highBal" id="highBal" class="easyui-textbox"/></td>
+	    		<td align="right">余额最高日期：</td>
+	    		<td><input name="highbalDate" id="highbalDate" class="easyui-datebox"/></td>
+	    		<td align="right">数据日期：</td>
+	    		<td><input name="dDate2" id="dDate2" class="easyui-datebox"/></td>
+	    		<td align="right"></td>
+	    		<td></td>
+	    	</tr>
+	    </table>  
+	     <table id="jiejika" title="借记卡" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:false,singleSelect:true,fitColumns:true,method:'post'">
+			<thead>
+				<tr>
+					<th field="cardno" width="10%">卡号</th>
+					<th field="cardLevel" width="20%">卡等级</th>
+					<th field="cardType" width="10%">标准卡种类</th>
+					<th field="jiejika_status" width="10%" align="center">卡状态</th>
+					<th field="opendate" width="10%" align="center">发卡日期</th>
+					<th field="enddate" width="10%" align="center">到期日</th>
+					<th field="brid" width="10%" align="center">发卡分行</th>
+					<th field="subbrid" width="10%">发卡支行</th>
+					<th field="dDate6" width="10%">数据日期</th>
+				</tr>
+			</thead>
+		</table>
+	     <table id="wangyin" title="网银" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:false,singleSelect:true,fitColumns:true,method:'post'">
+			<thead>
+				<tr>
+					<th field="signDate" width="10%">网银签约日期</th>
+					<th field="ebankStatus" width="20%">网银状态</th>
+					<th field="ebankType" width="10%">网银类型</th>
+					<th field="cardid" width="10%" align="center">卡号</th>
+					<th field="signChannel" width="10%" align="center">签约渠道</th>
+					<th field="openBr" width="10%" align="center">开户落地机构</th>
+					<th field="signType" width="10%" align="center">签约业务</th>
+					<th field="activateDate" width="10%">激活时间</th>
+					<th field="dDate7" width="10%">数据日期</th>
+				</tr>
+			</thead>
+		</table>
+		<table>
+			<tr><td colspan="8" align="center">代发工资</td></tr>
+			<tr>
+				<td align="right">签约时间：</td>
+				<td><input name="signDate2" id="signDate2" class="easyui-datebox"/></td>
+				<td align="right">最后一次代发日期：</td>
+				<td><input name="lDate" id="lDate" class="easyui-datebox"/></td>
+				<td align="right">代发单位名称：</td>
+				<td><input name="comName" id="comName"/></td>
+				<td align="right">当前累计代发笔数：</td>
+				<td><input name="dkdjnum" id="dkdjnum"/></td>
+			</tr>
+			<tr>
+				<td align="right">当前累计代发金额：</td>
+				<td><input name="dkdjamt" id="dkdjamt"/></td>
+				<td align="right">代发华夏卡存款余额：</td>
+				<td><input name="dfhxDeptbal" id="dfhxDeptbal"/></td>
+				<td align="right">代发华夏卡金融总资产：</td>
+				<td><input name="dfhxAum" id="dfhxAum"/></td>
+				<td align="right">卡号：</td>
+				<td><input name="cardno2" id="cardno2"/></td>
+			</tr>
+			<tr>
+				<td align="right">本月代发笔数：</td>
+				<td><input name="dkdjnumM" id="dkdjnumM"/></td>
+				<td align="right">本月代发金额：</td>
+				<td><input name="dkdjamtM" id="dkdjamtM"/></td>
+				<td align="right">本年累计代发笔数：</td>
+				<td><input name="dkdjnumY" id="dkdjnumY"/></td>
+				<td align="right">本年累计代发金额：</td>
+				<td><input name="dkdjamtY" id="dkdjamtY"/></td>
+			</tr>
+			<tr>
+				<td align="right">数据日期：</td>
+				<td><input name="dDate8" id="dDate8" class="easyui-datebox"/></td>
+				<td align="right"></td>
+				<td></td>
+				<td align="right"></td>
+				<td></td>
+				<td align="right"></td>
+				<td></td>
+			</tr>
+		</table>
+	</div><br>
+	<div id="p" class="easyui-panel" title="负债类业务明细"     
+        style="width:100%;padding:10px;background:#fafafa;"   
+        data-options="iconCls:'icon-save',collapsible:true,collapsed:true">   
+	    <table id="daikuan" title="贷款业务" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:false,singleSelect:true,fitColumns:true,method:'post'">
+			<thead>
+				<tr>
+					<th field="prodClass" >产品大类</th>
+					<th field="prodClass" >产品子类</th>
+					<th field="prodName" >贷款名称</th>
+					<th field="loanTerm" >贷款期限</th>
+					<th field="issueDt">贷款发放日</th>
+					<th field="enddate" >贷款到期日</th>
+					<th field="isDue">是否逾期</th>
+					<th field="fiveClass">五级分类</th>
+					<th field="isSettl">是否结清</th>
+					<th field="payType">还款方式</th>
+					<th field="repayment">本月需还款金额</th>
+					<th field="credlimt">授信额度</th>
+					<th field="usablelimit">授信余额</th>
+					<th field="credgd">贷款发放额</th>
+					<th field="loanBal">贷款余额</th>
+					<th field="cnyLoanBal">人民币贷款余额</th>
+					<th field="openDate">开户日期</th>
+					<th field="overdue">当前罚息</th>
+					<th field="overdueNum">当期逾期期数</th>
+					<th field="tOverdueNum">累计逾期期数</th>
+					<th field="overdueDay">逾期天数</th>
+					<th field="guartype">担保方式</th>
+					<th field="oweintBal">欠息余额</th>
+					<th field="payInte">当期还款利息</th>
+					<th field="payCapital">当期还款本金</th>
+					<th field="interestBal">剩余未还利息</th>
+					<th field="capitalBal">剩余未还本金</th>
+					<th field="mustPayInte">当期应还款利息</th>
+					<th field="mustPayCapital">当期应还款本金</th>
+					<th field="collCost">抵押品价值</th>
+					<th field="collRate">抵押率</th>
+					<th field="loanRate">贷款利率</th>
+					<th field="accStatus">账户状态</th>
+					<th field="firPay">首付款</th>
+					<th field="currency">币种</th>
+					<th field="psDueDt">还款日期</th>
+					<th field="dDate">数据日期</th>
+				</tr>
+			</thead>
+		</table>  
+	    <table id="danbao" title="担保业务" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:false,singleSelect:true,fitColumns:true,method:'post'">
+			<thead>
+				<tr>
+					<th field="grntClass" width="10%">担保业务种类</th>
+					<th field="grntAmt" width="20%">担保金额</th>
+					<th field="grntBdate" width="10%">担保起期</th>
+					<th field="grntEdate" width="10%" align="center">担保止期</th>
+					<th field="loanStatus" width="10%" align="center">贷款状态</th>
+					<th field="riskLevel" width="10%" align="center">贷款风险分级</th>
+					<th field="dDate9" width="10%">数据日期</th>
+				</tr>
+			</thead>
+		</table>
+	</div><br>
+	<div id="p" class="easyui-panel" title="签约业务明细"     
+        style="width:100%;padding:10px;background:#fafafa;"   
+        data-options="iconCls:'icon-save',collapsible:true,collapsed:true">   
+		<table>
+			<tr>
+				<td align="right">ETC：</td>
+				<td><input name="etcSign" id="etcSign"/></td>
+				<td align="right">凭证国债签约：</td>
+				<td><input name="bondsign" id="bondsign"/></td>
+				<td align="right">信用卡：</td>
+				<td><input name="crCardsign" id="crCardsign"/></td>
+				<td align="right">E商宝：</td>
+				<td><input name="ebusiSign" id="ebusiSign"/></td>
+			</tr>
+			<tr>
+				<td align="right">代发工资：</td>
+				<td><input name="payrollSign" id="payrollSign"/></td>
+				<td align="right">保险签约：</td>
+				<td><input name="inssign" id="inssign"/></td>
+				<td align="right">营销活动终端：</td>
+				<td><input name="posSign" id="posSign"/></td>
+				<td align="right">信用卡自扣还款：</td>
+				<td><input name="crcardautoSign" id="crcardautoSign"/></td>
+			</tr>
+			<tr>
+				<td align="right">个人网银签约版：</td>
+				<td><input name="netbankQySign" id="netbankQySign"/></td>
+				<td align="right">第三方存管签约：</td>
+				<td><input name="tpccsign" id="tpccsign"/></td>
+				<td align="right">T营销活动终端：</td>
+				<td><input name="tposSing" id="tposSing"/></td>
+				<td align="right">无卡支付：</td>
+				<td><input name="nocardPaySign" id="nocardPaySign"/></td>
+			</tr>
+			<tr>
+				<td align="right">个人网银证书版：</td>
+				<td><input name="netbankZsSign" id="netbankZsSign"/></td>
+				<td align="right">信托签约：</td>
+				<td><input name="trustsign" id="trustsign"/></td>
+				<td align="right">电话银行：</td>
+				<td><input name="phonebankSign" id="phonebankSign"/></td>
+				<td align="right">银联网上支付：</td>
+				<td><input name="upNetpaySign" id="upNetpaySign"/></td>
+			</tr>
+			<tr>
+				<td align="right">定期签约：</td>
+				<td><input name="fixeddepsign" id="fixeddepsign"/></td>
+				<td align="right">贵金属：</td>
+				<td><input name="goldsign" id="goldsign"/></td>
+				<td align="right">ATM跨行转账：</td>
+				<td><input name="atmIbtSign" id="atmIbtSign"/></td>
+				<td align="right">电子支付：</td>
+				<td><input name="elepaySign" id="elepaySign"/></td>
+			</tr>
+			<tr>
+				<td align="right">活期签约：</td>
+				<td><input name="currsign" id="currsign"/></td>
+				<td align="right">外汇买卖：</td>
+				<td><input name="whtranssign" id="whtranssign"/></td>
+				<td align="right">手机银行：</td>
+				<td><input name="mphoneSign" id="mphoneSign"/></td>
+				<td align="right">银联无卡支付：</td>
+				<td><input name="upNocardpaySign" id="upNocardpaySign"/></td>
+			</tr>
+			<tr>
+				<td align="right">理财签约：</td>
+				<td><input name="finsign" id="finsign"/></td>
+				<td align="right">稳盈灵通账户：</td>
+				<td><input name="wyltsing" id="wyltsing"/></td>
+				<td align="right">短信通知：</td>
+				<td><input name="messageSign" id="messageSign"/></td>
+				<td align="right">代缴费：</td>
+				<td><input name="billsign" id="billsign"/></td>
+			</tr>
+			<tr>
+				<td align="right">基金签约：</td>
+				<td><input name="fundsign" id="fundsign"/></td>
+				<td align="right">国际结算：</td>
+				<td><input name="intaccontsign" id="intaccontsign"/></td>
+				<td align="right">约定转存：</td>
+				<td><input name="conDepositSign" id="conDepositSign"/></td>
+				<td align="right">存抵贷业务：</td>
+				<td><input name="dtolSign" id="dtolSign"/></td>
+			</tr>
+			<tr>
+				<td align="right">稳盈灵通账户：</td>
+				<td><input name="wyltsing" id="wyltsing"/></td>
+				<td align="right">个人贷款：</td>
+				<td><input name="lnsSign" id="lnsSign"/></td>
+				<td align="right">支付宝卡通：</td>
+				<td><input name="treaCardSign" id="treaCardSign"/></td>
+				<td align="right">数据日期：</td>
+				<td><input name="dDate5" id="dDate5" class="easyui-datebox"/></td>
+			</tr>
+		</table>
+	</div><br>
+</form>
+</div>
+</body>
+</html>

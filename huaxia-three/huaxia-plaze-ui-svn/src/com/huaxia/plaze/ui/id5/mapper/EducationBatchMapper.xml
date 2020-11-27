@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.id5.mapper.EducationBatchMapper">
+
+	<resultMap id="result_Base" type="EducationBatch">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_ID" property="batchId" jdbcType="VARCHAR" />
+		<result column="BATCH_RECORD_SIZE" property="batchRecordSize"
+			jdbcType="VARCHAR" />
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 插入明细 -->
+	<insert id="insertDetail" parameterType="EducationBatchDetail">
+		INSERT INTO
+		ID5_EDU_TRN_BATCH_DETAIL (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_FILE_ID,
+		TRN_ID,
+		CERT_NO,
+		NAME,
+		QUERY_STATUS
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		#{batchFileId},
+		SYS_GUID(),
+		#{certNo},
+		#{name},
+		#{queryStatus}
+
+		)
+	</insert>
+	<!--插入导入文件明细 -->
+	<insert id="insertFileDetail" parameterType="EducationBatchFile">
+		INSERT INTO
+		ID5_EDU_TRN_BATCH_FILE (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_ID,
+		BATCH_FILE_ID,
+		BATCH_FILE_NAME,
+		BATCH_FILE_RECORD_SIZE
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		#{batchId},
+		#{batchFileId},
+		#{batchFileName},
+		#{batchFileRecordSize}
+		)
+	</insert>
+	<!--插入导入 批次 -->
+	<insert id="insertBatch" parameterType="EducationBatch">
+		INSERT INTO
+		ID5_EDU_TRN_BATCH (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_ID,
+		BATCH_RECORD_SIZE
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		#{batchId},
+		#{batchRecordSize}
+		)
+	</insert>
+	<select id="selectBatchListCountByPage" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ID5_EDU_TRN_BATCH
+	</select>
+	
+	<!-- 批次查询 -->
+	<select id="selectBatchListByPage" parameterType="java.util.Map"
+		resultMap="result_Base">
+		SELECT BATCH_ID,CRT_TIME,BATCH_RECORD_SIZE,STAFF_ID,STAFF_NAME, RN
+		FROM
+		(SELECT BATCH_ID,CRT_TIME,BATCH_RECORD_SIZE,STAFF_ID,STAFF_NAME,ROWNUM RN
+		FROM
+		(SELECT
+		T.BATCH_ID,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		AS CRT_TIME,
+		T.BATCH_RECORD_SIZE,
+		S.STAFF_ID,
+		S.STAFF_NAME
+		FROM
+		ID5_EDU_TRN_BATCH T
+		LEFT JOIN SYS_USER S ON T.CRT_USER=S.USER_ACCT
+		ORDER BY
+		T.CRT_TIME DESC
+		) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+	<resultMap id="result_file" type="EducationBatchFile">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_ID" property="batchFileId" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_NAME" property="batchFileName"
+			jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_RECORD_SIZE" property="batchFileRecordSize"
+			jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 批次文件查询 -->
+	<select id="selectFileDetail" parameterType="string" resultMap="result_file">
+		SELECT T.BATCH_FILE_ID,T.BATCH_FILE_NAME,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		T.BATCH_FILE_RECORD_SIZE,S.STAFF_ID,
+		S.STAFF_NAME
+		FROM ID5_EDU_TRN_BATCH_FILE T
+		LEFT JOIN SYS_USER S ON T.CRT_USER=S.USER_ACCT
+		WHERE T.BATCH_ID=#{batchId}
+	</select>
+	<resultMap id="result_detail" type="EducationBatchDetail">
+		<result column="CERT_NO" property="certNo" jdbcType="CHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="QUERY_TIME" property="queryTime" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 批次文件明细查询 -->
+	<select id="selectDetail" parameterType="string" resultMap="result_detail">
+		SELECT T.CERT_NO,T.NAME,T.QUERY_STATUS,T.TRN_ID,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		TO_CHAR(T.QUERY_TIME, 'YYYY-MM-DD HH24:MI:SS') QUERY_TIME
+		FROM ID5_EDU_TRN_BATCH_DETAIL T
+		WHERE T.BATCH_FILE_ID=#{batchFileId}
+
+	</select>
+	<select id="selectBatchCountByParams" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ID5_EDU_TRN_BATCH_DETAIL
+		WHERE (QUERY_STATUS ='1' or QUERY_STATUS ='0')
+	    AND  CRT_TIME 
+	    BETWEEN #{startTime}
+	    AND  #{endTime}
+
+	</select>
+
+</mapper>

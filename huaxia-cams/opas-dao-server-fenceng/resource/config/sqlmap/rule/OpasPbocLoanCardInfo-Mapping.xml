@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasPbocLoanCardInfo">
+<!-- 	  <resultMap id="loanOrCreditCardMsgMap" type="java.util.Map">
+	    <result column="LOAN_OR_CREDIT_ACCT_STATUS" jdbcType="VARCHAR" property="loanOrCreditAcctStatus" />
+	    <result column="OVER_DUE_CUR_OVER_DUE_AMT" jdbcType="VARCHAR" property="overDueAmt" />
+	  </resultMap>
+	  
+	<select id="selectloanOrCreditMsgByAppId" parameterType="java.lang.String" resultMap="loanOrCreditCardMsgMap">
+		select LOAN_OR_CREDIT_ACCT_STATUS,OVER_DUE_CUR_OVER_DUE_AMT from OPAS_PBOC_LOAN_CARD_INFO
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		</where>
+	</select> -->
+	
+  <resultMap id="debitCardMsgMap" type="java.util.Map">
+    <result column="LOAN_OR_CREDIT_ACCT_STATUS" jdbcType="VARCHAR" property="creditAcctStatus" />
+    <result column="OVER_DUE_CUR_OVER_DUE_AMT" jdbcType="VARCHAR" property="overDueAmt" />
+    <result column="LOAN_OR_CREDIT_ISSU_DATE" jdbcType="VARCHAR" property="loanOrCreditIssuDate" />
+    <result column="mess_type" jdbcType="VARCHAR" property="messType" />
+  </resultMap>
+	
+	<select id="selectDebitCardMsgByAppId" parameterType="java.lang.String" resultMap="debitCardMsgMap">
+		select LOAN_OR_CREDIT_ACCT_STATUS,LOAN_OR_CREDIT_ISSU_DATE,OVER_DUE_CUR_OVER_DUE_AMT,mess_type from OPAS_PBOC_LOAN_CARD_INFO
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR}<!--  and mess_type = '02' -->
+		</where>
+	</select>
+	
+	<!-- 人行账户有无贷款、贷记卡、准贷记卡信息 -->
+  <select id="selectDebitMsgCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT  count(app_ID)	FROM OPAS_PBOC_LOAN_CARD_INFO 
+		 <where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		 </where>
+	</select>
+	<!-- 查询人行所有贷记卡当前逾期的逾期金额 -->
+  <select id="selectOverdueCountByAppId" parameterType="java.lang.String" resultType="java.lang.Double">
+			select sum(over_due_cur_over_due_amt) from OPAS_PBOC_LOAN_CARD_INFO where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<!--  查询人行最新的贷记卡中最大的当前逾期金额-->	
+
+	<select id="selectLateOverdueCountByAppId" parameterType="java.lang.String" resultType="java.lang.Double">
+		select (case  when OVER_DUE_CUR_OVER_DUE_AMT is null then 0 else  to_number(OVER_DUE_CUR_OVER_DUE_AMT) end) OVER_DUE_AMT from opas_pboc_loan_card_info   
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		</where>
+		AND mess_type = '02' and LOAN_OR_CREDIT_ISSU_DATE is not null order by  LOAN_OR_CREDIT_ISSU_DATE desc, OVER_DUE_AMT desc
+	</select>
+	
+	
+  	<!--  查询人行最新的贷记卡中最大的额度使用率-->	
+ 
+	<select id="selectLateOverdueAmtRateByAppId" parameterType="java.lang.String" resultType="java.lang.Double">
+		select (case  when LOAN_OR_CREDIT_CONT_AMT  is null then -1 when LOAN_OR_CREDIT_CONT_AMT =0 then -1 else decode(DEB_CARD_PAY_OVERDRAFT_AMT,null,0,DEB_CARD_PAY_OVERDRAFT_AMT)/LOAN_OR_CREDIT_CONT_AMT  end) AMTRATE  from opas_pboc_loan_card_info   
+		<where>
+			APP_ID = #{appId,jdbcType=VARCHAR}
+		</where>
+		AND mess_type = '02' and LOAN_OR_CREDIT_ISSU_DATE is not null order by  LOAN_OR_CREDIT_ISSU_DATE desc ,AMTRATE  desc
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.cams.modules.unicom.mapper.UnicomAddressMapper">
+
+	<select id="selectCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM UNICOM_ADDRESS_INFO 
+		WHERE APP_ID = #{appId, jdbcType=CHAR}
+		AND API_KEY = #{apikey, jdbcType=CHAR}
+	</select>
+
+	<insert id="saveUnicomAddress" parameterType="com.huaxia.cams.modules.unicom.domain.UnicomAddress">
+		INSERT INTO UNICOM_ADDRESS_INFO (
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			APP_ID,
+			API_KEY,
+			SUCCESS,
+			RESPONSE_CODE,
+			RESPONSE_DESC,
+			RESPONSE_RESULT,
+			RESPONSE_RESULT_DESC,
+			CARRIER,
+			MOBILE,
+			TRN_ID
+		) VALUES (
+			sys_guid(),
+			sysdate,
+			#{crtUser, jdbcType = VARCHAR},
+			#{appId, jdbcType = CHAR},
+			#{apiKey, jdbcType = VARCHAR},
+			#{success, jdbcType = VARCHAR},
+			#{responseCode, jdbcType = VARCHAR},
+			#{responseDesc, jdbcType = VARCHAR},
+			#{responseResult, jdbcType = VARCHAR},
+			#{responseResultDesc, jdbcType = VARCHAR},
+			#{carrier, jdbcType = VARCHAR},
+			#{mobile, jdbcType = VARCHAR},
+			#{trn_id, jdbcType = VARCHAR}	
+		)
+	
+	</insert>
+</mapper>

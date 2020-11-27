@@ -1,0 +1,4341 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/jquery/default/jquery.min.js"></script>
+<script type="text/javascript" src="../../topui/jquery/default/jquery.watermark.js"></script>
+<script type="text/javascript" src="../../topui/easyui/default/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../topui/easyui/default/jquery.query.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.js"></script>
+<style type="text/css">
+body{padding:0;margin:0;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif;background-color:#E6F0FF;color:#003476;overflow: auto;}
+h1, h2, h3, h4, h5, h6 {
+    font-size: 15px;
+	text-align: center;
+}
+.dvi-table input {color:blue;
+	disabled:disabled;
+	height:14px;
+	width: 100%;
+	line-height:14px;
+	margin-top:0px;
+	border-top-style:none;
+	border-left-style:none;
+	border-right-style:none;
+	border-bottom-style:none;
+	text-align:center;
+	font-size: 12px;
+}
+table {
+	border-collapse: collapse;
+}
+table td {
+	padding: 0px 0px;
+}
+table.tableTdColor td{
+border: 1px solid #c0c0c0;
+text-align:center;
+background-color:white;
+}
+</style>
+</head>
+<body style="padding:10px;">
+	<h2 >个人信用报告<br>（授信机构版）</h2>
+		<form id="infoCollForm" >
+		<table class="dvi-table" border="1" style="width:98%;margin-bottom:30px">
+			<tr style="font-size: 13px" align="center">
+				<td colspan="3" >报告编号:<a id="reportNo" ></a> </td>
+				<td colspan="2" >报告时间:<a id="reportTime" ></a></td>
+			</tr>
+			<tr style="font-size:13px ">
+				<th >被查询者姓名</th>
+				<th>被查询者证件类型</th>
+				<th>被查询者证件号码</th>
+				<th>查询机构</th>
+				<th>查询原因</th>
+			</tr>
+			<tr>
+				<td><input type="text" id="queryedName"
+					name="queryedName" readonly="readonly" /></td>
+				<td><input type="text" id="queryedCertType" name="queryedCertType" readonly="readonly" /></td>
+				<td><input type="text" id="queryedCertNo" name="queryedCertNo" readonly="readonly" /></td>
+				<td><input type="text" id="queryOrg"
+					name="queryOrg" readonly="readonly" /></td>
+				<td><input type="text" id="qryReason"
+					name="qryReason" readonly="readonly" /></td>
+			</tr>
+		</table>
+		<div id="otherBaseInfo"  style="width: 98%;margin-bottom:30px">
+		</div>
+		<div id="antiFraudInfo"  style="width: 98%;margin-bottom:30px">
+		</div>
+		<table class="dvi-table" border="1" style="width:98%">
+			<tr style="font-size: 15px" align="center">
+				<td>异议信息提示</td>
+			</tr>
+			<tr style="font-size:13px " align="center">
+			<td>信息主体度信用报告内容提出了<a id="dissentHintInfo"></a>笔异议且正在处理中,请浏览时注意阅读相关内容</td>
+			</tr>
+		</table>
+			<h3 >一 、个人基本信息</h3>
+			<h3 >(一)身份信息</h3>
+		  	<table class="dvi-table" style="width:98%" border="" >
+		  			<tr style="font-size: 13px" align="center">
+		  				<th>性別</th>
+		  				<th>出生日期</th>
+		  				<th>婚姻状况</th>
+		  				<th >学历</th>
+		  				<th>学位</th>
+		  				<th>就业状况</th>
+		  				<th >国籍</th>
+		  				<th>电子邮箱</th>
+		  			</tr>
+		  			<tr align="center">
+		  				<td><input type="text" id="gender" name="gender"  readonly="readonly" /></td>
+		  				<td><input type="text" id="birthDay" name="birthDay"  readonly="readonly" /></td>
+		  				<td><input type="text" id="maritalStatus" name="maritalStatus"  readonly="readonly"/></td>
+		  				<td><input type="text"  id="residencyStatus" name="residencyStatus"  readonly="readonly"/></td>
+		  				<td><input type="text" id="degree" name="degree"  readonly="readonly"/></td>
+		  				<td><input type="text" id="workStatus" name="workStatus"  readonly="readonly"/></td>
+		  				<td><input type="text" id="nationality" name="nationality"  readonly="readonly"/></td> 
+		  				<td><input type="text" id="email" name="email"  readonly="readonly"/></td>
+		  				
+	  				</tr>
+		  			<tr style="font-size: 13px" >
+		  				<th colspan="4">通讯地址</th>
+		  				<th colspan="4">户籍地址</th>
+		  			</tr>
+		  			<tr >
+		  				<td colspan="4" ><input type="text" id="communicationAddr" name="communicationAddr"  readonly="readonly"  style="font-size: 13px"/></td>
+		  				<td  colspan="4"><input type="text" id="domicileAddr" name="domicileAddr"  readonly="readonly" style="font-size: 13px"/></td>
+		  			</tr>
+		  			<!-- <tr style="font-size: 13px" >
+		  			    <th>编号</th>
+		  				<th colspan="3">手机号码</th>
+		  				<th colspan="4">信息更新日期</th>
+		  			</tr> -->
+		  	</table>
+		  	<div id="phonenum"  style="width: 98%">
+		</div>
+		  	<h3>(二)配偶信息</h3>
+		  	<table class="dvi-table" style="width:98%" border="">
+		  		
+		  		<thead>
+		  			<tr align="center" style="font-size: 13px">
+		  				<th>姓名</th>
+		  				<th>证件类型</th>
+		  				<th>证件号码</th>
+		  				<th>工作单位</th>
+		  				<th>联系电话</th>
+		  			</tr>
+		  		</thead>
+		  		<tbody>
+		  			<tr align="center">
+		  				<td><input type="text" id="mateName"  name="mateName"  readonly="readonly"/></td>
+		  				<td><input type="text" id="mateCertType" name="mateCertType"  readonly="readonly"/></td>
+		  				<td><input type="text" id="mateCertNo" name="mateCertNo"  readonly="readonly"/></td>
+		  				<td><input type="text" id="mateCompany" name="mateCompany"  readonly="readonly"/></td>
+		  				<td><input type="text" id="mateContactTel" name="mateContactTel"  readonly="readonly"/></td>
+		  			</tr>
+		  		</tbody>
+		  	</table>
+		 <h3>(三)居住信息</h3>
+		<div id="tblRole"  style="width: 98%">
+		</div>
+		<h3>(四)职业信息</h3>
+		 <div id="ProInfo" style="width: 98%"></div>
+		 <div id="JobInfo" style="width: 98%"></div>
+		</form>	
+			<h3>
+				二 、信息概要
+			</h3>	
+			<h3>（一）个人信用报告"数字解读"</h3>
+			<table class="dvi-table" style="width:98%" border="">
+		  		
+		  		<thead>
+		  			<tr align="center" style="font-size: 13px">
+		  				<th>数字解读</th>
+		  				<th>相对位置</th>
+		  				<th>说明</th>
+		  			</tr>
+		  		</thead>
+		  		<tbody id="CreditGradeInfo">
+		  		</tbody>
+		  	</table>
+			<h3>（二）信贷交易信息提示</h3>
+		 <div id="MessageInfo" >
+		</div>
+		
+	
+		
+		
+		<h3>(三)信贷交易违约信息概要</h3>
+		<div id="RecoveryInfo"  style="width:98%;margin-bottom:30px">
+		</div>
+		<form id="infoForm" >
+	 	<table class="dvi-table" border="" style="width:98%;margin-bottom:30px">
+			<thead>
+				<tr style="font-size: 13px" >
+					<th colspan="2" style="font-size: 13px ">呆账信息汇总</th>
+				<tr style="font-size: 13px" align="center">
+					<td >账户数</td>
+					<td>余额</td>
+				</tr>
+				<tr style="font-size: 13px" align="center">
+					<td >
+					
+					<input type="text" 
+						id="accountCount" name="accountCount"  readonly="readonly"/></td>
+					<td><input type="text" 
+						id="balance" name="balance"  readonly="readonly"/></td>
+				</tr>
+				
+				
+			</thead>
+		</table> 
+	   </form> 
+		<div id="OverDraftInfo" style="width:98%;margin-bottom:30px">
+		</div>
+	
+		
+		  		<h3>(四)信贷交易授信及负债信息概要</h3>
+		<form id="NoRevolveInfo">
+		<table class="dvi-table" style="width:98%;margin-bottom:30px" border="">
+			<tr style="font-size: 13px" align="center">
+				<td colspan='5'>非循环贷账户信息汇总</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td>管理机构数</td>	
+				<td>账户数</td>			
+				<td>授信总额</td>				
+				<td>余额</td>				
+				<td>最近6个月平均应还款</td>	
+			</tr>
+			<tr style="font-size: 13px" align="center">	
+				<td><input type="text" 
+					id="manageOrganCount" name="manageOrganCount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="accountCount" name="accountCount"
+					readonly="readonly" /></td>			
+				<td><input type="text" 
+					id="creditTotalAmount" name="creditTotalAmount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="balance" name="balance"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="recent6MSAVGYHK" name="recent6MSAVGYHK"
+					readonly="readonly" /></td>				
+			</tr>
+		</table>
+		</form>
+		<form id="RevolveLimInfo">
+		<table class="dvi-table" style="width:98%;margin-bottom:30px" border="">
+			<tr style="font-size: 13px" align="center">
+				<td colspan='5'>循环额度下分账户信息汇总</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td>管理机构数</td>	
+				<td>账户数</td>			
+				<td>授信总额</td>				
+				<td>余额</td>				
+				<td>最近6个月平均应还款</td>	
+			</tr>
+			<tr style="font-size: 13px" align="center">	
+				<td><input type="text" 
+					id="manageOrganCount" name="manageOrganCount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="accountCount" name="accountCount"
+					readonly="readonly" /></td>			
+				<td><input type="text" 
+					id="creditTotalAmount" name="creditTotalAmount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="balance" name="balance"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="recent6MSAVGYHK" name="recent6MSAVGYHK"
+					readonly="readonly" /></td>				
+			</tr>
+		</table>
+		</form>
+		<form id="RevolveInfo">
+		<table class="dvi-table" style="width:98%;margin-bottom:30px" border="">
+			<tr style="font-size: 13px" align="center">
+				<td colspan='5'>循环贷账户信息汇总</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td>管理机构数</td>	
+				<td>账户数</td>			
+				<td>授信总额</td>				
+				<td>余额</td>				
+				<td>最近6个月平均应还款</td>	
+			</tr>
+			<tr style="font-size: 13px" align="center">	
+				<td><input type="text" 
+					id="manageOrganCount" name="manageOrganCount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="accountCount" name="accountCount"
+					readonly="readonly" /></td>			
+				<td><input type="text" 
+					id="creditTotalAmount" name="creditTotalAmount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="balance" name="balance"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="recent6MSAVGYHK" name="recent6MSAVGYHK"
+					readonly="readonly" /></td>				
+			</tr>
+		</table>
+		</form>
+		<form id="CreditInfo">
+		<table class="dvi-table" style="width:98%;margin-bottom:30px" border="">
+			<tr style="font-size: 13px" align="center">
+				<td colspan='7'>贷记卡账户信息汇总</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td>发卡机构数</td>	
+				<td>账户数</td>			
+				<td>授信总额</td>				
+				<td>单家机构最高授信额</td>		
+				<td>单家机构最低授信额</td>	
+				<td>已用额度</td>			
+				<td>最近6个月平均使用额度</td>	
+			</tr>
+			<tr style="font-size: 13px" align="center">	
+				<td><input type="text" 
+					id="fkOrganCount" name="fkOrganCount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="accountCount" name="accountCount"
+					readonly="readonly" /></td>			
+				<td><input type="text" 
+					id="creditTotalAmount" name="creditTotalAmount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="singleBankMaxCredit" name="singleBankMaxCredit"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="singleBankMinCredit" name="singleBankMinCredit"
+					readonly="readonly" /></td>		
+				<td><input type="text" 
+				id="usedLimit" name="usedLimit"
+				readonly="readonly" /></td>	
+				<td><input type="text" 
+				id="recent6MSAVGSYED" name="recent6MSAVGSYED"
+				readonly="readonly" /></td>			
+			</tr>
+		</table>
+		</form>
+		<form id="SemiCreditInfo">
+		<table class="dvi-table" style="width:98%;margin-bottom:30px" border="">
+			<tr style="font-size: 13px" align="center">
+				<td colspan='7'>准贷记卡账户信息汇总</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td>发卡机构数</td>	
+				<td>账户数</td>			
+				<td>授信总额</td>				
+				<td>单家机构最高授信额</td>		
+				<td>单家机构最低授信额</td>	
+				<td>透支余额</td>			
+				<td>最近6个月平均透支余额</td>	
+			</tr>
+			<tr style="font-size: 13px" align="center">	
+				<td><input type="text" 
+					id="fkOrganCount" name="fkOrganCount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="accountCount" name="accountCount"
+					readonly="readonly" /></td>			
+				<td><input type="text" 
+					id="creditTotalAmount" name="creditTotalAmount"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="singleBankMaxCredit" name="singleBankMaxCredit"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="singleBankMinCredit" name="singleBankMinCredit"
+					readonly="readonly" /></td>		
+				<td><input type="text" 
+				id="overDueBalance" name="overDueBalance"
+				readonly="readonly" /></td>	
+				<td><input type="text" 
+				id="recent6MSAVGTZYE" name="recent6MSAVGTZYE"
+				readonly="readonly" /></td>			
+			</tr>
+		</table>
+		</form>
+		<form id="RepayInfo">
+		<table class="dvi-table" style="width:98%;margin-bottom:30px" border="">
+			<tr style="font-size: 13px" align="center">
+				<td colspan='6'>相关还款责任信息汇总</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td colspan='6'>为个人</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td colspan='3'>担保责任</td>
+				<td colspan='3'>其他相关还款责任</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td>账户数</td>
+				<td>担保金额</td>			
+				<td>余额</td>				
+				<td>账户数</td>
+				<td>担保金额</td>			
+				<td>余额</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">	
+				<td><input type="text" 
+					id="accountCount11" name="accountCount11"
+					readonly="readonly" /></td>	
+					<td><input type="text" 
+					id="repayDutyMoney11" name="repayDutyMoney11"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="balance11" name="balance11"
+					readonly="readonly" /></td>			
+				<td><input type="text" 
+					id="accountCount19" name="accountCount19"
+					readonly="readonly" /></td>				
+					
+				<td><input type="text" 
+				id="repayDutyMoney19" name="repayDutyMoney19"
+				readonly="readonly" /></td>	
+				<td><input type="text" 
+					id="balance19" name="balance19"
+					readonly="readonly" /></td>	
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td colspan='6'>为企业</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td colspan='3'>担保责任</td>
+				<td colspan='3'>其他相关还款责任</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">
+				<td>账户数</td>
+				<td>担保金额</td>			
+				<td>余额</td>				
+				<td>账户数</td>
+				<td>担保金额</td>			
+				<td>余额</td>
+			</tr>
+			<tr style="font-size: 13px" align="center">	
+				<td><input type="text" 
+					id="accountCount21" name="accountCount21"
+					readonly="readonly" /></td>		
+					<td><input type="text" 
+					id="repayDutyMoney21" name="repayDutyMoney21"
+					readonly="readonly" /></td>				
+				<td><input type="text" 
+					id="balance21" name="balance21"
+					readonly="readonly" /></td>			
+						
+				<td><input type="text" 
+					id="accountCount29" name="accountCount29"
+					readonly="readonly" /></td>				
+					
+				<td><input type="text" 
+				id="repayDutyMoney29" name="repayDutyMoney29"
+				readonly="readonly" /></td>	
+				<td><input type="text" 
+					id="balance29" name="balance29"
+					readonly="readonly" /></td>	
+			</tr>
+		</table>
+		</form>
+			<h3 >
+				（五）非信贷交易信息概要
+			</h3>
+	<div id="ArrgepayInfo" style="width: 98%;"></div>
+	<h3>（六）公共信息概要</h3>
+	<div id="PublicInfo" style="width: 98%;">
+	</div>
+<h3>（七）查询记录概要</h3>
+	<div id="LastQueryRecInfo" style="width: 98%;"></div>
+	<div id="QueryInfoNew"  style="width: 98%;"></div>
+	<h3>三 信贷交易信息明细</h3>	
+	<h3>（一）被追偿信息</h3>
+	<div id="BzcInfo" style="width: 100%"></div>
+	 <h3>（二）非循环贷账户</h3>
+	<div id="FxhdInfo">
+	</div>
+	<h3>（三）循环额度下分账户</h3>
+	 <div id="XhedInfo" >
+	</div> 
+	 <h3>（四）循环贷账户</h3>
+	<div id="XhdInfo">
+	</div>
+	<h3>（五）贷记卡账户</h3>
+	<div id="DjkInfo">
+	</div>
+	
+	<h3>（六）准贷记卡账户</h3>
+	<div id="ZdjkInfo">
+	</div>
+
+<h3>（七）相关还款责任信息</h3>
+<h3>有相关还款责任的个人借款</h3>
+<div id="Dk4PersonInfo"></div>
+
+<h3>有相关还款责任的企业借款</h3>
+<div id="Dk4GroupInfo"></div>
+
+<h3>（八）授信协议信息</h3>
+<div id="SxxyInfo"></div>
+
+<h3>四 非信贷交易信息明细</h3>
+<h5>后付费记录</h5>
+<div id="HffInfo"></div>
+	<h3>
+	五 公共信息明细
+	</h3>
+	<h5>（一） 欠税记录</h5>
+	<div id="ArrearageInfo" style="width: 98%;">
+	</div>
+	<div id="ArrearageInfo1" style="width: 98%;">
+	</div>
+	<h5>（二）民事判决记录</h5>
+	<div id="JudgmentInfo" style="width: 98%;">
+	</div>
+	<div id="Judgment1Info" style="width: 98%;">
+	</div>
+	<div id="Judgment1Info1" style="width: 98%;">
+	</div>
+	<h5>（三）强制执行记录</h5>
+	<div id="ForceInfo" style="width: 98%;">
+	</div>
+	<div id="Force1Info" style="width: 98%;">
+	</div>
+	<div id="Force1Info1" style="width: 98%;">
+	</div>
+	<h5>（四）行政处罚记录</h5>
+	<div id="PenaltyInfo" style="width: 98%;">
+	</div>
+	<div id="PenaltyInfo1" style="width: 98%;">
+	</div>
+	<h5>（五）住房公积金参缴记录</h5>
+	<div id="HousingInfo" style="width: 98%;">
+	</div>
+	<div id="HousingInfo1" style="width: 98%;">
+	</div>
+	<h5>（六）低保救助记录</h5>
+	<div id="LowHouseholdInfo" style="width: 98%;">
+	</div>
+	<div id="LowHouseholdInfo1" style="width: 98%;">
+	</div>
+	<h5>（七）执业资格记录</h5>
+	<div id="OccupationInfo" style="width: 98%;">
+	</div>
+	<div id="OccupationInfo1" style="width: 98%;">
+	</div>
+	<h5>（八）行政奖励记录</h5>
+	<div id="AwardInfo" style="width: 98%;" ></div>
+	<div id="AwardInfo1" style="width: 98%;" ></div>
+		<h3>六 本人声明</h3>
+	<div id="AnnounceInfo" style="width: 98%;">
+	</div>
+		<h3>七 异议标注 </h3>
+	<div id="DissentInfo" style="width: 98%;">
+	</div>
+		
+			<h3>八 查询记录</h3>
+		<div id="ReCreditInfo" style="width: 98%;">
+		</div>
+			<h3>报告说明</h3>
+				
+			
+	<table   style=" font-size: 11px;font-color:black; width: 98%">
+		 
+		  <thead>
+		  		<tr>
+		  			<td >1. 本报告由中国人民银行征信中心出具，依据截至报告时点的个人征信系统记录的信息生成。除查询记录外，其他信息均由相关机构提供，征信中心不保证其真实性和准确性，但承诺在信息汇总、加工、整合的全过程中保持客观、中立的地位.</td>
+		  		</tr>
+		  		<tr>
+		  			<td>2. 本报告中的“数字解读”仅供使用本信用报告的银行等授信机构参考，授信机构应自行承担使用“数字解读”的相关法律责任。</td>
+		  		</tr>
+		  		<tr>
+		  			<td>3. “数字解读”将信用报告内容解读为一个数值，是对信用主体未来信贷违约可能性的预测，其取值范围为 0 到 1000，
+							分值越高，违约可能性越低；“相对位置”是信用主体的数字解读值在全部人群中的百分比排序位置，比如“>50%”
+							代表该数字解读值高于 50%的信用主体；“说明”中的“影响因素”是影响信用主体获得更高数字解读值的原因，
+							根据当前信用报告的实际情况给出，最多有两条。“数字解读”显示为“--”的，仅代表无法根据当前信用报告内
+							容给出数字解读值，并无其他含义。无法给出数字解读值的具体原因见“说明”;</td>
+		  		</tr>
+		  		<tr>
+		  		 	<td>4. 本报告的信贷交易信息提示中，“业务类型”为“其他” 的汇总信息不包含“资产处置” 和“垫款” 业务。</td>
+		  		</tr>
+		  		<tr>
+		  			<td>5. 本报告中如果没有“信贷交易违约信息概要”信息，说明信用主体最近 5 年内没有连续逾期。</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+		  		6. 对于存在授信限额的协议信息，信息主体的可用额度需结合“授信协议信息” 中的授信额度、 授信限额信息和余额进行估算。
+		  		</td>
+		  		</tr>
+
+                   <tr>
+		  			<td>7. 本报告中的信贷交易授信及负债信息概要展示的信息是指未结清/未销户的授信及负债信息。
+		  			</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+8. 本报告的借贷交易明细信息中，循环贷账户的到期日期是指账户授信额度的到期日期。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+9. 本报告的借贷交易明细信息中，借贷账户展示最近 5 年的还款情况，包括当前还款状态和当前逾期总额。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+10.对于通过自助渠道办理的“小额、 高频” 业务，金融机构将合并报送相关账户，展示在本报告的借贷交易明细信息
+中； 此时账户的还款方式为“不区分还款方式”，该账户的还款频率统一约定为“月”，“还款期数”按月计算， 其
+还款信息按月进行观测和更新。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+11.本报告中的逾期准贷记卡账户是指该账户 60 天以上的透支行为。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+12.本报告中的还款期数为“--”是指该账户是非分期还款。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+13.本报告不展示 5 年前已经结束的违约行为，以及 5 年前的欠税记录、强制执行记录、民事判决记录、行政处罚记
+录、电信欠费记录。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+14.机构说明是数据提供机构对具体业务添加的特别说明信息。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+15.本人声明是信息主体对信用报告中的信息所附注的简要说明，信用主体对本人声明的真实性负责。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+16.异议标注是征信中心添加的，用于说明信用主体对信用报告中的哪些信息有异议。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+17.本报告内容涉及个人隐私，查询者应依法使用、妥善保管。因使用不当造成个人信息泄露的，征信中心将不承担相
+关责任。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+18.本报告中所有金额（除“有相关还款责任的企业借款”中的金额外）均为人民币金额，参照查询日前一天的汇率。
+</td>
+		  		</tr>
+		  		<tr>
+		  			<td>
+19.本报告整合了数据提供机构以信息主体不同证件报送的信息
+</td>
+		  		</tr>
+		  </thead>
+		  
+		</table>
+		<div id="windaijika"></div>
+		</body>
+<script>
+var url1=location.search;
+var theRequest=new Object();
+if(url1.indexOf("?")!=-1){
+	var str=url1.substr(1);
+	var strs=str.split("&");
+	for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+	}
+}
+var userCode=theRequest.userCode;//用户登录名 
+
+var url = location.href;
+var appId = theRequest.appId;//"171201B921P57351";//
+if (appId != '') {
+	appId = $.trim(appId);
+}
+	var infoCollForm=$("#infoCollForm");
+	
+	var roleObj={"appId":appId,"userCode":userCode};
+	var loanGuaranteeObj={"appId":appId,"guaranteeType":"1"};//对外贷款担保   GUARANTEE_TYPE 担保类型 1
+	var creditCardGuaranteeObj={"appId":appId,"guaranteeType":"2"};//对外信用卡担保    GUARANTEE_TYPE 担保类型 2
+	var daikuanObj={"appId":appId,"messType":"01"};
+	var daijikaObj={"appId":appId,"messType":"02"};
+	var zdaijikaObj={"appId":appId,"messType":"03"};
+	//var seq="";
+	
+	$(function(){
+		//查询基本信息
+		$cf.ajax({
+			url : '/opas-naps/pbocInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryBaseInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				infoCollForm.form("load", InfoCollectjson);
+				$('#reportNo').text(InfoCollectjson.reportNo);
+				$('#reportTime').text(InfoCollectjson.reportTime);
+				$('#queryedName').val(getQueryedName(InfoCollectjson.queryedName));
+				$('#queryedCertNo').val(getQueryedCertNo(InfoCollectjson.queryedCertNo));
+				
+				$('#mateName').val(getQueryedName(InfoCollectjson.mateName));
+				$('#mateCertNo').val(getQueryedCertNo(InfoCollectjson.mateCertNo));
+				
+				$('#queryedCertType').val(getCertType(InfoCollectjson.queryedCertType));
+				$('#mateCertType').val(getCertType(InfoCollectjson.mateCertType));
+				$('#qryReason').val(getQryReason(InfoCollectjson.qryReason));
+				$('#gender').val(getGender(InfoCollectjson.gender));
+				$('#maritalStatus').val(getMaritalStatus(InfoCollectjson.maritalStatus));
+				$('#nationality').val(getSJGG(InfoCollectjson.nationality));
+				$('#residencyStatus').val(getResidencyStatus(InfoCollectjson.residencyStatus));
+				$('#degree').val(getDegree(InfoCollectjson.degree));
+				$('#workStatus').val(getWorkStatus(InfoCollectjson.workStatus));
+				//queryOrg
+				if(InfoCollectjson.queryOrg != undefined && InfoCollectjson.queryOrg == "B10811000H0001"){
+					$('#queryOrg').val("华夏银行股份有限公司");
+				}
+				//给单选框赋值，后台给前台传递一个对象
+				var infoCollect = ret.RSP_BODY.infoCollect;
+				var educationDegreestr = infoCollect.educationDegree;
+				$("[value='" + educationDegreestr + "']").attr("checked", true);
+				
+				//设置有值的输入框只读
+				$("input[type='text']").each(function(){
+					var val=$(this).val();
+					if(val!==null&&val!==undefined&&val!==""){
+						$(this).attr("readonly","readonly");
+					}
+				});
+				
+				//设置有值的单选框只读（循环单选框选中的值，如果值不为空，找到这个值对应的name属性，然后把所有name等于这个的元素设置为只读）
+				$("input[type='radio']:checked").each(function(){
+					var val=$(this).val();
+					if(val!==null&&val!==undefined&&val!==""){
+						var name=$(this).attr("name");
+						$("input[name='"+name+"']").attr("disabled","true");
+					}
+				});
+			}
+		});
+		
+		
+		//其他信息
+		$cf.ajax({
+			url : '/opas-naps/otherBaseInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+					table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"其他证件信息",'100%',"1");
+					createInputInTd(td,"证件类型",'50%',"1");
+					createInputInTd(td,"证件号码",'50%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,getCertType(needDataInt2["identityType"]),'50%',"0");
+						createInputInTd(td,needDataInt2["identityNum"],'50%',"0");
+					}
+					$('#otherBaseInfo').html(table);  // 重新载入当前页面数据  
+				}
+			}
+		});
+		
+		//反欺诈警示
+		$cf.ajax({
+			url : '/opas-naps/antiFraudInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+					table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					   createInputInTd(td,"防欺警示",'100%',"1");
+						var needDataInt2=data[0];
+						var mark = "";
+						if(needDataInt2 != undefined){
+							var mark = needDataInt2["mark"];
+						}
+						if(mark=="1"){
+							createInputInTd(td,"信息主体申请设置防欺诈警示，联系电话:"+replaceUndefined(needDataInt2["phone"]),'100%',"0");
+						}else{
+							createInputInTd(td,"",'100%',"0");
+						}
+						createInputInTd(td,"生效日期",'50%',"1");
+						createInputInTd(td,"截至日期",'50%',"1");
+						if(needDataInt2 != undefined){
+						createInputInTd(td,needDataInt2["identityType"],'50%',"0");
+						createInputInTd(td,needDataInt2["identityNum"],'50%',"0");
+					$('#antiFraudInfo').html(table);  // 重新载入当前页面数据  
+				}
+			}
+			}
+		});
+		//意义信息提示
+		 $cf.ajax({
+			url : '/opas-naps/dissentHintInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var dissentCount ="0";
+				$('#dissentHintInfo').html(dissentCount);  // 重新载入当前页面数据 
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					   createInputInTd(td,"防欺警示",'100%',"1");
+						var needDataInt2=data[0];
+						var dissentCount = "";
+						if(needDataInt2 != undefined){
+							dissentCount = needDataInt2["dissentCount"];
+						}
+						}
+						
+					$('#dissentHintInfo').html(dissentCount);  // 重新载入当前页面数据  
+				}
+		}); 
+		 //手机号码
+		$cf.ajax({
+			url : '/opas-naps/residenceInfo_phone_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+					table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					 createInputInTd(td,"编号",'12.5%',"1");
+					 createInputInTd(td,"手机号码",'37.4%',"1");
+					 createInputInTd(td,"信息更新日期",'50.1%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,int2+1+"",'12.5%',"1");
+						createInputInTd(td,needDataInt2["phoneNum"],'37.4%',"0");
+						createInputInTd(td,needDataInt2["updateDate"],'50.1%',"0");
+					}
+					$('#phonenum').html(table);  // 重新载入当前页面数据  
+				}
+			}
+		}); 
+		//居住信息
+		$cf.ajax({
+			url : '/opas-naps/residenceInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+					table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"编号",'4%',"1");
+					createInputInTd(td,"居住地址",'45%',"1");
+					createInputInTd(td,"住宅电话",'21%',"1");
+					createInputInTd(td,"居住状况",'20%',"1");
+					createInputInTd(td,"信息更新日期",'10%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,int2+1+"",'4%',"1");
+						createInputInTd(td,needDataInt2["residentAddr"],'45%',"0");
+						createInputInTd(td,needDataInt2["homephone"],'21%',"0");
+						createInputInTd(td,getResideState(showSplitChinese(needDataInt2["resideState"],null,null)),'20%',"0");
+						createInputInTd(td,needDataInt2["infoUpdTime"],'10%',"0");
+					}
+					$('#tblRole').html(table);  // 重新载入当前页面数据  
+				}
+			}
+		});
+		
+		//职业信息
+	  	$cf.ajax({
+			url : '/opas-naps/proessionInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.proessionInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+				$(table).addClass("tableTdColor");
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createDivInTd(td,"编号",'55px',"1");
+					var td=tr.insertCell();
+					createDivInTd(td,"工作单位",'410px',"1");
+					var td=tr.insertCell();
+					createDivInTd(td,"单位性质",'410px',"1");
+					var td=tr.insertCell();
+					createDivInTd(td,"单位地址",'410px',"1");
+					var td=tr.insertCell();
+					createDivInTd(td,"单位电话",'100px',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createDivInTd(td,int2+1+"",'55px',"1");
+					var td=tr.insertCell();
+					createDivInTd(td,needDataInt2["company"],'410px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,getUnitCharacter(needDataInt2["unitcharacter"]),'410px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,needDataInt2["compAddr"],'410px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,needDataInt2["unitphone"],'100px',"0");
+				}
+				var table1=document.createElement("table");
+				table1.style='width:100%;';
+				$(table1).addClass("tableTdColor");
+				var tr=table1.insertRow();
+				var td=tr.insertCell();
+				createDivInTd(td,"编号",'55px',"1");
+				var td=tr.insertCell();
+				createDivInTd(td,"职业",'400px',"1");
+				var td=tr.insertCell();
+				createDivInTd(td,"行业",'400px',"1");
+				var td=tr.insertCell();
+				createDivInTd(td,"职务",'120px',"1");
+				var td=tr.insertCell();
+				createDivInTd(td,"职称",'100px',"1");
+				var td=tr.insertCell();
+				createDivInTd(td,"进入本单位年份",'150px',"1");
+				var td=tr.insertCell();
+				createDivInTd(td,"信息更新日期",'150px',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var tr=table1.insertRow();
+					var td=tr.insertCell();
+					createDivInTd(td,int2+1+"",'55px',"1");
+					var td=tr.insertCell();
+					createDivInTd(td,getJob(needDataInt2["job"]),'400px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,getiIndustryType(needDataInt2["industryType"]),'400px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,getOccupationCode(needDataInt2["occupationCode"]),'120px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,getTechnicalTitle(needDataInt2["technicalTitle"]),'100px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,needDataInt2["curCompWorkStatY"],'150px',"0");
+					var td=tr.insertCell();
+					createDivInTd(td,needDataInt2["infoUpdTime"],'150px',"0");
+				}
+				$('#JobInfo').html(table1);  // 重新载入当前页面数据  
+				$('#ProInfo').html(table);  // 重新载入当前页面数据  
+				}
+			}
+		}); 
+	  
+		 //（一）信息提示 
+	  	$cf.ajax({
+		  	url : '/opas-naps/messageInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var html="";
+			if(data){
+   				html += '<table class="dvi-table" style="width:98%;margin-bottom:30px" border="" ><tr align="center" style="font-size: 13px">'+
+					'<th colspan="2">业务类型</th><th>账户数</th><th>首笔贷款发放月份</th></tr>';
+					var flag = "";
+   				for (var int2 = 0; int2 < data.length; int2++) {
+   					var needDataInt2=data[int2];
+   					html += '<tr>';
+   					 if(needDataInt2["serviceDl"]!=flag){
+   						html += '<td rowspan="'+replaceUndefined(needDataInt2["count"])+'"><input type="text"  value="'+replaceUndefined(needDataInt2["serviceDl"])+'"  readonly="readonly"/></td>';
+   					} 
+   					flag = replaceUndefined(needDataInt2["serviceDl"]);
+   					//html += '<td><input type="text"  value="'+needDataInt2["serviceDl"]+'"  readonly="readonly"/></td>';
+   					 
+   					html += '<td><input type="text"  value="'+replaceUndefined(needDataInt2["serviceType"])+'"  readonly="readonly"/></td>'+
+   					        '<td><input type="text"  value="'+replaceUndefined(needDataInt2["accountCount"])+'"  readonly="readonly"/></td>'+
+   					        '<td><input type="text"  value="'+replaceUndefined(needDataInt2["firstYwGrantMonth"])+'"  readonly="readonly"/></td></tr>';
+   				}
+   				html += '</table>';
+   				$('#MessageInfo').html(html);
+				/* 
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				//var td1=tr.insertCell();
+				//td.rowspan='2';
+				//createInputInTd(td,"业务大类",'25%',"1");
+				createInputInTd(td,"业务类型",'65%',"1");
+				createInputInTd(td,"账户数",'15%',"1");
+				createInputInTd(td,"首笔贷款发放月份",'20%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,needDataInt2["serviceDl"],'25%',"0");
+					createInputInTd(td,needDataInt2["serviceType"],'40%',"0");
+					createInputInTd(td,needDataInt2["accountCount"],'15%',"0");
+					createInputInTd(td,needDataInt2["firstYwGrantMonth"],'20%',"0");
+				}
+				$('#MessageInfo').html(table);    // 重新载入当前页面数据  
+			 */}
+			}
+		}); 
+		 //RecoveryInfo 
+	  	 $cf.ajax({
+		  	url : '/opas-naps/recoveryInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				//var td1=tr.insertCell();
+				//td.rowspan='2';
+				//createInputInTd(td,"业务大类",'25%',"1");
+				createInputInTd(td,"被追偿信息汇总",'100%',"1");
+				createInputInTd(td,"业务类型",'50%',"1");
+				createInputInTd(td,"账户数",'20%',"1");
+				createInputInTd(td,"余额",'30%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,needDataInt2["serviceType"],'50%',"0"); 
+					createInputInTd(td,needDataInt2["accountCount"],'20%',"0");
+					createInputInTd(td,needDataInt2["balance"],'30%',"0");
+				}
+				$('#RecoveryInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		});  
+	  	 //OverDraftInfo
+	  	 $cf.ajax({
+		  	url : '/opas-naps/overDraftInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryResideInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				//var td1=tr.insertCell();
+				//td.rowspan='2';
+				//createInputInTd(td,"业务大类",'25%',"1");
+				createInputInTd(td,"逾期(透支)信息汇总",'100%',"1");
+				createInputInTd(td,"账户类型",'25%',"1");
+				createInputInTd(td,"账户数",'10%',"1");
+				createInputInTd(td,"月份数",'10%',"1");
+				createInputInTd(td,"单月最高逾期/透支总额",'30%',"1");
+				createInputInTd(td,"最长逾期/透支月数",'25%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,needDataInt2["accountType"],'25%',"0");
+					createInputInTd(td,needDataInt2["accountCount"],'10%',"0");
+					createInputInTd(td,needDataInt2["monthCount"],'10%',"0");
+					createInputInTd(td,needDataInt2["singlemMaxOverdueSum"],'30%',"0");
+					createInputInTd(td,needDataInt2["maxOverdueMonthCount"],'25%',"0");
+				}
+				$('#OverDraftInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		});  
+		//呆账信息汇总 
+	  var infoForm=$("#infoForm");
+	  $cf.ajax({
+			url : '/opas-naps/overdueInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryOverdueInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				infoForm.form("load", InfoCollectjson);
+			}
+		});  
+	//授信及负责信息概要	  
+	  var CreditForm=$("#CreditInfo");
+	//非循环贷账户信息汇总   
+	$cf.ajax({
+			url : '/opas-naps/noRevolve_summary_query.json',
+			data : roleObj,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#NoRevolveInfo").form("load", InfoCollectjson);
+			}
+		}); 
+	//循环额度下分账户信息汇总 	  
+	$cf.ajax({
+			url : '/opas-naps/revolveLim_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#RevolveLimInfo").form("load", InfoCollectjson);
+			}
+		}); 
+	//循环贷账户信息汇总		 
+	$cf.ajax({
+			url : '/opas-naps/revolve_summary_query.json',
+			data : roleObj,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#RevolveInfo").form("load", InfoCollectjson);
+			}
+		}); 
+	//贷记卡账户信息汇总
+	  $cf.ajax({
+			url : '/opas-naps/creditInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#CreditInfo").form("load", InfoCollectjson);
+			}
+		});  
+	  
+	//准贷记卡账户信息汇总 SemiCredit
+	  $cf.ajax({
+			url : '/opas-naps/semiCredit_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#SemiCreditInfo").form("load", InfoCollectjson);
+			}
+		});  
+	//相关还款责任汇总 
+	 $cf.ajax({
+			url : '/opas-naps/Repay11_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#RepayInfo").form("load", InfoCollectjson);
+			}
+		});  
+	 $cf.ajax({
+			url : '/opas-naps/Repay19_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#RepayInfo").form("load", InfoCollectjson);
+			}
+		});  
+	 $cf.ajax({
+			url : '/opas-naps/Repay21_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#RepayInfo").form("load", InfoCollectjson);
+			}
+		});  
+	 $cf.ajax({
+			url : '/opas-naps/Repay29_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsoninfoCollect = ret.RSP_BODY.queryCreditInfo;
+				var InfoCollectjson = eval('(' +jsoninfoCollect+ ')');
+				$("#RepayInfo").form("load", InfoCollectjson);
+			}
+		});  
+		  //后付费业务欠费信息汇总 
+	  	$cf.ajax({  
+		 	 url : '/opas-naps/arrgepayInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"后付费业务欠费信息汇总",'100%',"1");
+				createInputInTd(td,"业务类型",'35%',"1");
+				createInputInTd(td,"账户数",'35%',"1");
+				createInputInTd(td,"欠费金额",'30%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,getHffServType(needDataInt2["hffServType"]),'35%',"0");
+					createInputInTd(td,needDataInt2["arrearageCount"],'35%',"0");
+					createInputInTd(td,needDataInt2["arrearageMoney"],'30%',"0");
+				}
+				$('#ArrgepayInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		}); 
+	  	
+	  //公共信息汇总  PublicInfo
+	  	$cf.ajax({  
+		 	 url : '/opas-naps/publicInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"公共信息汇总",'100%',"1");
+				createInputInTd(td,"信息类型",'35%',"1");
+				createInputInTd(td,"记录数",'35%',"1");
+				createInputInTd(td,"涉及金额",'30%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,needDataInt2["ggxnType"],'35%',"0");
+					createInputInTd(td,needDataInt2["recordCount"],'35%',"0");
+					createInputInTd(td,needDataInt2["involveMoney"],'30%',"0");
+				}
+				$('#PublicInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		}); 
+	  	
+	  //上一次查询记录  LastQueryRecInfo
+	  	$cf.ajax({  
+		 	 url : '/opas-naps/lastQueryRecInfo_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"上一次查询记录",'100%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var lastQueryOrganType = needDataInt2["lastQueryOrganType"];
+					var lastQueryOrganCode = needDataInt2["lastQueryOrganCode"];
+					if(lastQueryOrganCode=="B10811000H0001"){
+						lastQueryOrganType="华夏银行股份有限公司";
+					}else{
+						lastQueryOrganType=getOrgType(lastQueryOrganType)+'&quot;'+organCode+'&quot;';
+					}
+					createInputInTd(td,needDataInt2["lastQueryDate"],'35%',"0");
+					createInputInTd(td,lastQueryOrganType,'35%',"0");
+					createInputInTd(td,getQryReason(needDataInt2["lastQueryReason"]),'30%',"0");
+				}
+				$('#LastQueryRecInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		}); 
+	  //最近 1 个月内的查询机构数  QueryInfoNew
+	  	$cf.ajax({  
+		 	 url : '/opas-naps/queryInfoNew_summary_query.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"最近1个月内的查询机构数",'23%',"1");
+				createInputInTd(td,"最近1个月内的查询次数",'34%',"1");
+				createInputInTd(td,"最近2年内的查询次数",'43%',"1");
+				createInputInTd(td,"贷款审批",'11%',"1");
+				createInputInTd(td,"信用卡审批",'12%',"1");
+				createInputInTd(td,"贷款审批",'11%',"1");
+				createInputInTd(td,"信用卡审批",'12%',"1");
+				createInputInTd(td,"本人查询",'11%',"1");
+				createInputInTd(td,"贷后管理",'11%',"1");
+				createInputInTd(td,"担保资格审查",'16%',"1");
+				createInputInTd(td,"特约商户实名审查",'16%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,needDataInt2["queryOrg1MSum2"],'11%',"0");
+					createInputInTd(td,needDataInt2["queryOrg1MSum3"],'12%',"0");
+					createInputInTd(td,needDataInt2["queryRec1MSum2"],'11%',"0");
+					createInputInTd(td,needDataInt2["queryRec1MSum3"],'12%',"0");
+					createInputInTd(td,needDataInt2["queryRec1MSum4"],'11%',"0");
+					createInputInTd(td,needDataInt2["queryRec2YSum1"],'11%',"0");
+					createInputInTd(td,needDataInt2["queryRec2YSum5"],'16%',"0");
+					createInputInTd(td,needDataInt2["queryRec2YSum6"],'16%',"0");
+				}
+				$('#QueryInfoNew').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		}); 
+	  	 //被追偿信息  BzcInfo
+	  	$cf.ajax({  
+		 	 url : '/opas-naps/queryC1Info_summary_query.json',
+			data : roleObj,
+			 //async: false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				htmlContent_BzcInfo = '';
+			if(data){
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var k = int2+1;
+					var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+					var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+					if(organCode=="B10811000H0001"){
+						organType="华夏银行股份有限公司";
+					}else{
+						organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+					}
+					htmlContent_BzcInfo += '<h4 style="float:left" >账户'+k+'</h4><table class="dvi-table" style="width:98%" border="">'+
+								'<tr align="center" style="font-size: 13px">'+
+								'<th>管理机构</th>'+
+								'<th>业务种类</th>'+
+								'<th>债权接收日期</th>'+
+								'<th>债权金额</th>'+
+								'<th>债权转移时的还款状态</th></tr>'+
+								'<tr align="center">'+
+							    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+					            '<td><input type="text"  value="'+getServType(replaceUndefined(needDataInt2["servType"]))+'"  readonly="readonly"/></td>'+
+					            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["klDate"])+'"  readonly="readonly"/></td>'+
+					            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["borrowMoney"])+'"  readonly="readonly"/></td>'+
+					            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["assignDevtRepayStatus"])+'"  readonly="readonly"/></td></tr>'+
+					            '</table><table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th colspan="5" >截至'+replaceUndefined(needDataInt2["neaarestRepayDate"])+'</th></tr>'+
+					            '<tr align="center" style="font-size: 13px"><th>账户状态</th>'+
+								'<th colspan="2">余额</th>'+
+								'<th colspan="2">最近一次还款日期</th></tr>'+	  //ACCOUNT_STATUS
+					            '<tr><td><input type="text"  value="'+getAccountStatus4C1(replaceUndefined(needDataInt2["accountStatus"]))+'"  readonly="readonly"/></td>'+
+					            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["balance"])+'"  readonly="readonly"/></td>'+
+					            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["neaarestRepayDate"])+'"  readonly="readonly"/></td></tr>'+
+					            '<tr align="center" style="font-size: 13px"><th>转出月份</th>'+
+								'<th colspan="2">还款状态</th>'+
+								'<th colspan="2">最近一次还款金额</th></tr>'+	
+					            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["zcMonth"])+'"  readonly="readonly"/></td>'+
+					            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["repayStatus"])+'"  readonly="readonly"/></td>'+
+					            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["nearestRepayMoney"])+'"  readonly="readonly"/></td></tr>'+
+					            '<tr align="center" style="font-size: 13px"><th>关闭日期</th>'+
+								'<th colspan="2">五级分类</th>'+
+								'<th colspan="2">信息报告日期</th></tr>'+	
+					            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["closeDate"])+'"  readonly="readonly"/></td>'+
+					            '<td colspan="2"><input type="text"  value="'+getFiveClassify(replaceUndefined(needDataInt2["fiveClassify"]))+'"  readonly="readonly"/></td>'+
+					            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["infoReportDate"])+'"  readonly="readonly"/></td></tr></table>'; 
+					            
+				  
+					            htmlContent_BzcInfo += getSpetradInfo(needDataInt2["relateId"]);
+					            htmlContent_BzcInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PDA_LABEL_STATE_INFO');
+				}
+				$('#BzcInfo').html(htmlContent_BzcInfo);
+			}
+			}
+		});
+	  //非循环贷账户  FxhdInfo
+	  	$cf.ajax({  
+		 	 url : '/opas-naps/queryD1Info_summary_query.json',
+			data : roleObj,
+			 //async: false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+			  htmlContent_FxhdInfo = '';
+			if(data){
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var k = int2+1;
+					var servManageOrganCode=needDataInt2["servManageOrganCode"]==undefined?"":needDataInt2["servManageOrganCode"];
+					var accountMark=needDataInt2["accountMark"]==undefined?"":needDataInt2["accountMark"];
+					var klDate=needDataInt2["klDate"]==undefined?"":needDataInt2["klDate"];
+					var dueDate=needDataInt2["dueDate"]==undefined?"":needDataInt2["dueDate"];
+					var borrowMoney=needDataInt2["borrowMoney"]==undefined?"":needDataInt2["borrowMoney"];
+					var currency=needDataInt2["currency"]==undefined?"":needDataInt2["currency"];
+					var servType=needDataInt2["servType"]==undefined?"":needDataInt2["servType"];
+					var guarantyType=needDataInt2["guarantyType"]==undefined?"":needDataInt2["guarantyType"];
+					var repaymentPeroids=needDataInt2["repaymentPeroids"]==undefined?"":needDataInt2["repaymentPeroids"];
+					var repaymentFrequemcy=needDataInt2["repaymentFrequemcy"]==undefined?"":needDataInt2["repaymentFrequemcy"];
+					var modeOfRepayment=needDataInt2["modeOfRepayment"]==undefined?"":needDataInt2["modeOfRepayment"];
+					var commonDebitCreditMark=needDataInt2["commonDebitCreditMark"]==undefined?"":needDataInt2["commonDebitCreditMark"];
+					var accountType=needDataInt2["accountType"]==undefined?"":needDataInt2["accountType"];
+					var balance=needDataInt2["balance"]==undefined?"":needDataInt2["balance"];
+					var neaarestRepayDate=needDataInt2["neaarestRepayDate"]==undefined?"":needDataInt2["neaarestRepayDate"];
+					var creditProtoclMark=needDataInt2["creditProtoclMark"]==undefined?"":needDataInt2["creditProtoclMark"];
+					var k = int2+1;
+					var mark = '（授信协议标识：'+replaceUndefined(needDataInt2["creditProtoclMark"])+')';
+					if(needDataInt2["creditProtoclMark"]==undefined){
+						mark = '';
+					}
+					var loan = '（'+getLoanDistributeForm(replaceUndefined(needDataInt2["loanDistributeForm"]))+')';
+					if(needDataInt2["loanDistributeForm"]==undefined){
+						loan = '';
+					}
+					mark+=loan;
+					var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+					var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+					if(organCode=="B10811000H0001"){
+						organType="华夏银行股份有限公司";
+					}else{
+						organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+						accountMark = "******";
+					}
+					htmlContent_FxhdInfo += '<h4 style="float:left" >账户'+k+''+mark+'</h4><table class="dvi-table" style="width:98%" border="">'+
+					'<tr align="center" style="font-size: 13px">'+
+					'<th>管理机构</th>'+
+					'<th>账户标识</th>'+
+					'<th>开立日期</th>'+
+					'<th>到期日期</th>'+
+					'<th>借款金额</th>'+
+					'<th>账户币种</th></tr>'+
+					'<tr align="center">'+
+				    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+accountMark+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+klDate+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+replaceUndefined(dueDate)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+borrowMoney+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getCurrency(currency)+'"  readonly="readonly"/></td></tr>';
+	
+		            htmlContent_FxhdInfo +=  '<tr align="center" style="font-size: 13px">'+
+					'<th>业务种类</th>'+
+					'<th>担保方式</th>'+
+					'<th>还款期数</th>'+
+					'<th>还款频率</th>'+
+					'<th>还款方式</th>'+
+					'<th>共同借款标志</th></tr>'+
+					'<tr align="center">'+
+				    '<td><input type="text"  value="'+getServType(servType)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getGuarantyType(guarantyType)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+repaymentPeroids+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getRepaymentFrequemcy(repaymentFrequemcy)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getModeOfRepayment(modeOfRepayment)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getCommonDebitCreditMark(commonDebitCreditMark)+'"  readonly="readonly"/></td></tr></table>';
+		            htmlContent_FxhdInfo += getNearestMInfo(needDataInt2["relateId"],'D1');
+		            //截止日期 
+					 var jzDate = replaceUndefined(needDataInt2["infoReportDate"])>=replaceUndefined(needDataInt2["neaarestRepayDate"])?replaceUndefined(needDataInt2["infoReportDate"]):"";
+					 htmlContent_FxhdInfo +=  '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th colspan="5" >最新表现信息段</th></tr>'+
+		            '<tr align="center" style="font-size: 13px"><th>账户状态</th>'+
+					'<th colspan="2">余额</th>'+
+					'<th colspan="2">最近一次还款日期</th></tr>'+	
+		            '<tr><td><input type="text"  value="'+getAccountStatus4D1(replaceUndefined(needDataInt2["accountStatus"]))+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["balance"])+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["neaarestRepayDate"])+'"  readonly="readonly"/></td></tr>'+
+		            '<tr align="center" style="font-size: 13px"><th>转出月份</th>'+
+					'<th colspan="2">还款状态</th>'+
+					'<th colspan="2">最近一次还款金额</th></tr>'+	
+		            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["zcMonth"])+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+getRepayStatusR4D1(replaceUndefined(needDataInt2["repayStatus"]))+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["nearestRepayMoney"])+'"  readonly="readonly"/></td></tr>'+
+		            '<tr align="center" style="font-size: 13px"><th>关闭日期</th>'+
+					'<th colspan="2">五级分类</th>'+
+					'<th colspan="2">信息报告日期</th></tr>'+	
+		            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["closeDate"])+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+getFiveClassify(replaceUndefined(needDataInt2["fiveClassify"]))+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["infoReportDate"])+'"  readonly="readonly"/></td></tr></table>'; 
+		            
+		        
+		            htmlContent_FxhdInfo += getLatest5YInfo(needDataInt2["relateId"]);
+		            htmlContent_FxhdInfo += getLatest24MonthInfo(needDataInt2["relateId"]);
+		            htmlContent_FxhdInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PDA_LABEL_STATE_INFO');
+		            htmlContent_FxhdInfo += getSpetradInfo(needDataInt2["relateId"]);
+		            htmlContent_FxhdInfo += getSpecialEvent(needDataInt2["relateId"]);
+				}
+				$('#FxhdInfo').html(htmlContent_FxhdInfo);
+			}
+			}
+		});
+	  //-------
+	  //循环额度下分账户  XhedInfo
+	  	$cf.ajax({  
+		 	 url : '/opas-naps/queryR4Info_summary_query.json',
+			data : roleObj,
+			 //async: false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+			  htmlContent_XhedInfo = '';
+			if(data){
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var k = int2+1;
+					var servManageOrganCode=needDataInt2["servManageOrganCode"]==undefined?"":needDataInt2["servManageOrganCode"];
+					var accountMark=needDataInt2["accountMark"]==undefined?"":needDataInt2["accountMark"];
+					var klDate=needDataInt2["klDate"]==undefined?"":needDataInt2["klDate"];
+					var dueDate=needDataInt2["dueDate"]==undefined?"":needDataInt2["dueDate"];
+					var borrowMoney=needDataInt2["borrowMoney"]==undefined?"":needDataInt2["borrowMoney"];
+					var currency=needDataInt2["currency"]==undefined?"":needDataInt2["currency"];
+					var servType=needDataInt2["servType"]==undefined?"":needDataInt2["servType"];
+					var guarantyType=needDataInt2["guarantyType"]==undefined?"":needDataInt2["guarantyType"];
+					var repaymentPeroids=needDataInt2["repaymentPeroids"]==undefined?"":needDataInt2["repaymentPeroids"];
+					var repaymentFrequemcy=needDataInt2["repaymentFrequemcy"]==undefined?"":needDataInt2["repaymentFrequemcy"];
+					var modeOfRepayment=needDataInt2["modeOfRepayment"]==undefined?"":needDataInt2["modeOfRepayment"];
+					var commonDebitCreditMark=needDataInt2["commonDebitCreditMark"]==undefined?"":needDataInt2["commonDebitCreditMark"];
+					var accountType=needDataInt2["accountType"]==undefined?"":needDataInt2["accountType"];
+					var balance=needDataInt2["balance"]==undefined?"":needDataInt2["balance"];
+					var neaarestRepayDate=needDataInt2["neaarestRepayDate"]==undefined?"":needDataInt2["neaarestRepayDate"];
+					var creditProtoclMark=needDataInt2["creditProtoclMark"]==undefined?"":needDataInt2["creditProtoclMark"];
+					var k = int2+1;
+					var mark = '（授信协议标识：'+replaceUndefined(needDataInt2["creditProtoclMark"])+')';
+					if(needDataInt2["creditProtoclMark"]==undefined){
+						mark = '';
+					}
+					var loan = '（'+getLoanDistributeForm(replaceUndefined(needDataInt2["loanDistributeForm"]))+')';
+					if(needDataInt2["loanDistributeForm"]==undefined){
+						loan = '';
+					}
+					mark+=loan;
+					var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+					var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+					if(organCode=="B10811000H0001"){
+						organType="华夏银行股份有限公司";
+					}else{
+						organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+						accountMark = "******";
+					}
+					htmlContent_XhedInfo += '<h4 style="float:left" >账户'+k+''+mark+'</h4><table class="dvi-table" style="width:98%" border="">'+
+					'<tr align="center" style="font-size: 13px">'+
+					'<th>管理机构</th>'+
+					'<th>账户标识</th>'+
+					'<th>开立日期</th>'+
+					'<th>到期日期</th>'+
+					'<th>借款金额</th>'+
+					'<th>账户币种</th></tr>'+
+					'<tr align="center">'+
+				    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+accountMark+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+klDate+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+replaceUndefined(dueDate)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+borrowMoney+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getCurrency(currency)+'"  readonly="readonly"/></td></tr>';
+                
+		            htmlContent_XhedInfo +=  '<tr align="center" style="font-size: 13px">'+
+					'<th>业务种类</th>'+
+					'<th>担保方式</th>'+
+					'<th>还款期数</th>'+
+					'<th>还款频率</th>'+
+					'<th>还款方式</th>'+
+					'<th>共同借款标志</th></tr>'+
+					'<tr align="center">'+
+				    '<td><input type="text"  value="'+getServType(servType)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getGuarantyType(guarantyType)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+repaymentPeroids+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getRepaymentFrequemcy(repaymentFrequemcy)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getModeOfRepayment(modeOfRepayment)+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+getCommonDebitCreditMark(commonDebitCreditMark)+'"  readonly="readonly"/></td></tr></table>';
+		            htmlContent_XhedInfo += getNearestMInfo(needDataInt2["relateId"],'R4');	
+		            //截止日期 
+					 var jzDate = replaceUndefined(needDataInt2["infoReportDate"])>=replaceUndefined(needDataInt2["neaarestRepayDate"])?replaceUndefined(needDataInt2["infoReportDate"]):"";
+					 htmlContent_XhedInfo +='<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th colspan="5" >最新表现信息段</th></tr>'+
+		            '<tr align="center" style="font-size: 13px"><th>账户状态</th>'+
+					'<th colspan="2">余额</th>'+
+					'<th colspan="2">最近一次还款日期</th></tr>'+	
+		            '<tr><td><input type="text"  value="'+getAccountStatus4R4(replaceUndefined(needDataInt2["accountStatus"]))+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["balance"])+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["neaarestRepayDate"])+'"  readonly="readonly"/></td></tr>'+
+		            '<tr align="center" style="font-size: 13px"><th>转出月份</th>'+
+					'<th colspan="2">还款状态</th>'+
+					'<th colspan="2">最近一次还款金额</th></tr>'+	
+		            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["zcMonth"])+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+getRepayStatusR4D1(replaceUndefined(needDataInt2["repayStatus"]))+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["nearestRepayMoney"])+'"  readonly="readonly"/></td></tr>'+
+		            '<tr align="center" style="font-size: 13px"><th>关闭日期</th>'+
+					'<th colspan="2">五级分类</th>'+
+					'<th colspan="2">信息报告日期</th></tr>'+	
+		            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["closeDate"])+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+getFiveClassify(replaceUndefined(needDataInt2["fiveClassify"]))+'"  readonly="readonly"/></td>'+
+		            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["infoReportDate"])+'"  readonly="readonly"/></td></tr></table>'; 
+		            
+		        
+		            htmlContent_XhedInfo += getLatest5YInfo(needDataInt2["relateId"]);
+		            htmlContent_XhedInfo += getLatest24MonthInfo(needDataInt2["relateId"]);
+		            htmlContent_XhedInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PDA_LABEL_STATE_INFO');
+		            htmlContent_XhedInfo += getSpetradInfo(needDataInt2["relateId"]);
+				}
+				$('#XhedInfo').html(htmlContent_XhedInfo);
+			}
+			}
+		});
+	  //-------
+		  //循环贷账户  XhdInfo
+		  	$cf.ajax({  
+			 	 url : '/opas-naps/queryR1Info_summary_query.json',
+				data : roleObj,
+				 //async: false,
+				onSuccess : function(response) {
+					var result = response.RSP_BODY.queryCreditInfo;
+					var data = JSON.parse(result);
+				  htmlContent_XhdInfo = '';
+				if(data){
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						var servManageOrganCode=needDataInt2["servManageOrganCode"]==undefined?"":needDataInt2["servManageOrganCode"];
+						var klDate=needDataInt2["klDate"]==undefined?"":needDataInt2["klDate"];
+						var dueDate=needDataInt2["dueDate"]==undefined?"":needDataInt2["dueDate"];
+						var borrowMoney=needDataInt2["borrowMoney"]==undefined?"":needDataInt2["borrowMoney"];
+						var currency=needDataInt2["currency"]==undefined?"":needDataInt2["currency"];
+						var servType=needDataInt2["servType"]==undefined?"":needDataInt2["servType"];
+						var guarantyType=needDataInt2["guarantyType"]==undefined?"":needDataInt2["guarantyType"];
+						var repaymentPeroids=needDataInt2["repaymentPeroids"]==undefined?"":needDataInt2["repaymentPeroids"];
+						var repaymentFrequemcy=needDataInt2["repaymentFrequemcy"]==undefined?"":needDataInt2["repaymentFrequemcy"];
+						var modeOfRepayment=needDataInt2["modeOfRepayment"]==undefined?"":needDataInt2["modeOfRepayment"];
+						var commonDebitCreditMark=needDataInt2["commonDebitCreditMark"]==undefined?"":needDataInt2["commonDebitCreditMark"];
+						var accountType=needDataInt2["accountType"]==undefined?"":needDataInt2["accountType"];
+						var balance=needDataInt2["balance"]==undefined?"":needDataInt2["balance"];
+						var neaarestRepayDate=needDataInt2["neaarestRepayDate"]==undefined?"":needDataInt2["neaarestRepayDate"];
+						var creditProtoclMark=needDataInt2["creditProtoclMark"]==undefined?"":needDataInt2["creditProtoclMark"];
+						var k = int2+1;
+						var mark = '（授信协议标识：'+replaceUndefined(needDataInt2["creditProtoclMark"])+')';
+						if(needDataInt2["creditProtoclMark"]==undefined){
+							mark = '';
+						}
+						var loan = '（'+getLoanDistributeForm(replaceUndefined(needDataInt2["loanDistributeForm"]))+')';
+						if(needDataInt2["loanDistributeForm"]==undefined){
+							loan = '';
+						}
+						mark+=loan;      
+						var accountMark = replaceUndefined(needDataInt2["accountMark"]);
+						var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+						var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+						if(organCode=="B10811000H0001"){
+							organType="华夏银行股份有限公司";
+						}else{
+							organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+							accountMark = "******";
+						}
+						htmlContent_XhdInfo += '<h4 style="float:left" >账户'+k+''+mark+'</h4><table class="dvi-table" style="width:98%" border="">'+
+						'<tr align="center" style="font-size: 13px">'+
+						'<th>管理机构</th>'+
+						'<th>账户标识</th>'+
+						'<th>开立日期</th>'+
+						'<th>到期日期</th>'+
+						'<th>账户授信额度</th>'+
+						'<th>账户币种</th></tr>'+
+						'<tr align="center">'+
+					    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+accountMark+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+klDate+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+replaceUndefined(dueDate)+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["accoCreditLimit"])+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+getCurrency(currency)+'"  readonly="readonly"/></td></tr>';
+			            htmlContent_XhdInfo +=  '<tr align="center" style="font-size: 13px">'+
+						'<th>业务种类</th>'+
+						'<th>担保方式</th>'+
+						'<th>还款期数</th>'+
+						'<th>还款频率</th>'+
+						'<th>还款方式</th>'+
+						'<th>共同借款标志</th></tr>'+
+						'<tr align="center">'+
+					    '<td><input type="text"  value="'+getServType(servType)+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+getGuarantyType(guarantyType)+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+repaymentPeroids+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+getRepaymentFrequemcy(repaymentFrequemcy)+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+getModeOfRepayment(modeOfRepayment)+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+getCommonDebitCreditMark(commonDebitCreditMark)+'"  readonly="readonly"/></td></tr></table>';
+			            htmlContent_XhdInfo += getNearestMInfo(needDataInt2["relateId"],'R1');	
+			            //截止日期 
+						 var jzDate = replaceUndefined(needDataInt2["infoReportDate"])>=replaceUndefined(needDataInt2["neaarestRepayDate"])?replaceUndefined(needDataInt2["infoReportDate"]):"";
+						 htmlContent_XhdInfo +='<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th colspan="5" >最新表现信息段</th></tr>'+
+			            '<tr align="center" style="font-size: 13px"><th>账户状态</th>'+
+						'<th colspan="2">余额</th>'+
+						'<th colspan="2">最近一次还款日期</th></tr>'+	
+			            '<tr><td><input type="text"  value="'+getAccountStatus4R1(replaceUndefined(needDataInt2["accountStatus"]))+'"  readonly="readonly"/></td>'+
+			            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["balance"])+'"  readonly="readonly"/></td>'+
+			            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["neaarestRepayDate"])+'"  readonly="readonly"/></td></tr>'+
+			            '<tr align="center" style="font-size: 13px"><th>转出月份</th>'+
+						'<th colspan="2">还款状态</th>'+
+						'<th colspan="2">最近一次还款金额</th></tr>'+	
+			            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["zcMonth"])+'"  readonly="readonly"/></td>'+
+			            '<td colspan="2"><input type="text"  value="'+getRepayStatusR1(replaceUndefined(needDataInt2["repayStatus"]))+'"  readonly="readonly"/></td>'+
+			            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["nearestRepayMoney"])+'"  readonly="readonly"/></td></tr>'+
+			            '<tr align="center" style="font-size: 13px"><th>关闭日期</th>'+
+						'<th colspan="2">五级分类</th>'+
+						'<th colspan="2">信息报告日期</th></tr>'+	
+			            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["closeDate"])+'"  readonly="readonly"/></td>'+
+			            '<td colspan="2"><input type="text"  value="'+getFiveClassify(replaceUndefined(needDataInt2["fiveClassify"]))+'"  readonly="readonly"/></td>'+
+			            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["infoReportDate"])+'"  readonly="readonly"/></td></tr></table>'; 
+			            
+			        
+			            htmlContent_XhdInfo += getLatest5YInfo(needDataInt2["relateId"]);
+			            htmlContent_XhdInfo += getLatest24MonthInfo(needDataInt2["relateId"]);
+			            htmlContent_XhdInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PDA_LABEL_STATE_INFO');
+			            htmlContent_XhdInfo += getSpetradInfo(needDataInt2["relateId"]);
+					}
+					$('#XhdInfo').html(htmlContent_XhdInfo);
+				}
+				}
+			});
+		  	 //-------
+			  //贷记卡账户  DjkInfo
+			  	$cf.ajax({  
+				 	 url : '/opas-naps/queryR2Info_summary_query.json',
+					data : roleObj,
+					//async:false,
+					onSuccess : function(response) {
+						var result = response.RSP_BODY.queryCreditInfo;
+						var data = JSON.parse(result);
+					  htmlContent_DjkInfo = '';
+					if(data){
+						for (var int2 = 0; int2 < data.length; int2++) {
+							var needDataInt2=data[int2];
+							if(int2==3){
+								//break;
+							}
+							var k = int2+1;
+							var servType=needDataInt2["servType"]==undefined?"":needDataInt2["servType"];
+							var guarantyType=needDataInt2["guarantyType"]==undefined?"":needDataInt2["guarantyType"];
+							var repaymentPeroids=needDataInt2["repaymentPeroids"]==undefined?"":needDataInt2["repaymentPeroids"];
+							var repaymentFrequemcy=needDataInt2["repaymentFrequemcy"]==undefined?"":needDataInt2["repaymentFrequemcy"];
+							var modeOfRepayment=needDataInt2["modeOfRepayment"]==undefined?"":needDataInt2["modeOfRepayment"];
+							var commonDebitCreditMark=needDataInt2["commonDebitCreditMark"]==undefined?"":needDataInt2["commonDebitCreditMark"];
+							var accountType=needDataInt2["accountType"]==undefined?"":needDataInt2["accountType"];
+							var balance=needDataInt2["balance"]==undefined?"":needDataInt2["balance"];
+							var neaarestRepayDate=needDataInt2["neaarestRepayDate"]==undefined?"":needDataInt2["neaarestRepayDate"];
+							var creditProtoclMark=needDataInt2["creditProtoclMark"]==undefined?"":needDataInt2["creditProtoclMark"];
+							var mark = '（授信协议标识：'+replaceUndefined(needDataInt2["creditProtoclMark"])+')';
+							if(needDataInt2["creditProtoclMark"]==undefined){
+								mark = '';
+							}
+							var loan = '（'+getLoanDistributeForm(replaceUndefined(needDataInt2["loanDistributeForm"]))+')';
+							if(needDataInt2["loanDistributeForm"]==undefined){
+								loan = '';
+							}
+							mark+=loan;
+							var accountMark = replaceUndefined(needDataInt2["accountMark"]);
+							var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+							var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+							if(organCode=="B10811000H0001"){
+								organType="华夏银行股份有限公司";
+							}else{
+								organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+								accountMark = "******";
+							}
+							htmlContent_DjkInfo += '<h4 style="float:left" >账户'+k+''+mark+'</h4><table class="dvi-table" style="width:98%" border="">'+
+							'<tr align="center" style="font-size: 13px">'+
+							'<th>发卡机构</th>'+
+							'<th>账户标识</th>'+
+							'<th>开立日期</th>'+
+							'<th>账户授信额度</th>'+
+							'<th>共享授信额度</th>'+
+							'<th>币种</th><th>业务种类</th><th>担保方式</th></tr>'+   
+							'<tr align="center">'+
+						    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+accountMark+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["klDate"])+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["accoCreditLimit"])+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["shareCreditLimit"])+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+getCurrency(replaceUndefined(needDataInt2["currency"]))+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+getServType(replaceUndefined(needDataInt2["servType"]))+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+getGuarantyType(replaceUndefined(needDataInt2["guarantyType"]))+'"  readonly="readonly"/></td></tr></table>';
+				            htmlContent_DjkInfo += getNearestMInfo(needDataInt2["relateId"],'R23');
+			//截止日期 
+			// var jzDate = replaceUndefined(needDataInt2["infoReportDate"])>=replaceUndefined(needDataInt2["neaarestRepayDate"])?replaceUndefined(needDataInt2["infoReportDate"]):"";
+			 if(replaceUndefined(needDataInt2["accountStatus"])=="6"){
+				 htmlContent_DjkInfo +=  '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th>最新表现信息段</th></tr>'+
+				                  '<tr><td><input type="text"  value="账户状态为未激活" readonly="readonly"/></td></tr></table>';
+			 }else{
+				 htmlContent_DjkInfo +=  '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th colspan="5" >最新表现信息段</th></tr>'+
+				            '<tr align="center" style="font-size: 13px"><th>账户状态</th>'+
+							'<th colspan="2">余额</th>'+
+							'<th colspan="2">最近一次还款日期</th></tr>'+	
+				            '<tr><td><input type="text"  value="'+getAccountStatus4R23(replaceUndefined(needDataInt2["accountStatus"]))+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["balance"])+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["neaarestRepayDate"])+'"  readonly="readonly"/></td></tr>'+
+				            '<tr align="center" style="font-size: 13px"><th>转出月份</th>'+
+							'<th colspan="2">还款状态</th>'+
+							'<th colspan="2">最近一次还款金额</th></tr>'+	
+				            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["zcMonth"])+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+getRepayStatusR2(replaceUndefined(needDataInt2["repayStatus"]))+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["nearestRepayMoney"])+'"  readonly="readonly"/></td></tr>'+
+				            '<tr align="center" style="font-size: 13px"><th>关闭日期</th>'+
+							'<th colspan="2">五级分类</th>'+
+							'<th colspan="2">信息报告日期</th></tr>'+	
+				            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["closeDate"])+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+getFiveClassify(replaceUndefined(needDataInt2["fiveClassify"]))+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["infoReportDate"])+'"  readonly="readonly"/></td></tr></table>'; 
+			 }     
+				        
+			 htmlContent_DjkInfo += getLatest5YInfo(needDataInt2["relateId"]);
+			 htmlContent_DjkInfo += getLatest24MonthInfo(needDataInt2["relateId"]);
+			 htmlContent_DjkInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PDA_LABEL_STATE_INFO');
+			 htmlContent_DjkInfo += getDezxInfo(needDataInt2["relateId"]);
+			 htmlContent_DjkInfo += getSpetradInfo(needDataInt2["relateId"]);
+			 htmlContent_DjkInfo += getSpecialEvent(needDataInt2["relateId"]);
+						}
+						$('#DjkInfo').html(htmlContent_DjkInfo);
+					}
+					}
+				});
+			  	 //准贷记卡账户  ZdjkInfo
+			  	$cf.ajax({  
+				 	 url : '/opas-naps/queryR3Info_summary_query.json',
+					data : roleObj,
+					//async:false,
+					onSuccess : function(response) {
+						var result = response.RSP_BODY.queryCreditInfo;
+						var data = JSON.parse(result);
+					  htmlContent_ZdjkInfo = '';
+					if(data){
+						for (var int2 = 0; int2 < data.length; int2++) {
+							var needDataInt2=data[int2];
+							if(int2==3){
+								//break;
+							}
+							var k = int2+1;
+							var servType=needDataInt2["servType"]==undefined?"":needDataInt2["servType"];
+							var guarantyType=needDataInt2["guarantyType"]==undefined?"":needDataInt2["guarantyType"];
+							var repaymentPeroids=needDataInt2["repaymentPeroids"]==undefined?"":needDataInt2["repaymentPeroids"];
+							var repaymentFrequemcy=needDataInt2["repaymentFrequemcy"]==undefined?"":needDataInt2["repaymentFrequemcy"];
+							var modeOfRepayment=needDataInt2["modeOfRepayment"]==undefined?"":needDataInt2["modeOfRepayment"];
+							var commonDebitCreditMark=needDataInt2["commonDebitCreditMark"]==undefined?"":needDataInt2["commonDebitCreditMark"];
+							var accountType=needDataInt2["accountType"]==undefined?"":needDataInt2["accountType"];
+							var balance=needDataInt2["balance"]==undefined?"":needDataInt2["balance"];
+							var neaarestRepayDate=needDataInt2["neaarestRepayDate"]==undefined?"":needDataInt2["neaarestRepayDate"];
+							var creditProtoclMark=needDataInt2["creditProtoclMark"]==undefined?"":needDataInt2["creditProtoclMark"];
+							var mark = '（授信协议标识：'+replaceUndefined(needDataInt2["creditProtoclMark"])+')';
+							if(needDataInt2["creditProtoclMark"]==undefined){
+								mark = '';
+							}
+							var loan = '（'+getLoanDistributeForm(replaceUndefined(needDataInt2["loanDistributeForm"]))+')';
+							if(needDataInt2["loanDistributeForm"]==undefined){
+								loan = '';
+							}
+							mark+=loan;
+							var accountMark = replaceUndefined(needDataInt2["accountMark"]);
+							var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+							var organCode = replaceUndefined(needDataInt2["servManageOrganCode"]);
+							if(organCode=="B10811000H0001"){
+								organType="华夏银行股份有限公司";
+							}else{
+								organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+								accountMark = "******";
+							}
+							htmlContent_ZdjkInfo += '<h4 style="float:left" >账户'+k+''+mark+'</h4><table class="dvi-table" style="width:98%" border="">'+
+							'<tr align="center" style="font-size: 13px">'+
+							'<th>发卡机构</th>'+
+							'<th>账户标识</th>'+
+							'<th>开立日期</th>'+
+							'<th>账户授信额度</th>'+
+							'<th>共享授信额度</th>'+
+							'<th>币种</th><th>业务种类</th><th>担保方式</th></tr>'+
+							'<tr align="center">'+
+						    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+accountMark+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["klDate"])+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["accoCreditLimit"])+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["shareCreditLimit"])+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+getCurrency(replaceUndefined(needDataInt2["currency"]))+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+getServType(replaceUndefined(needDataInt2["servType"]))+'"  readonly="readonly"/></td>'+
+				            '<td><input type="text"  value="'+getGuarantyType(replaceUndefined(needDataInt2["guarantyType"]))+'"  readonly="readonly"/></td></tr></table>';
+				            htmlContent_ZdjkInfo += getNearestMInfo(needDataInt2["relateId"],'R23'); 
+		  //截止日期 
+			// var jzDate = replaceUndefined(needDataInt2["infoReportDate"])>=replaceUndefined(needDataInt2["neaarestRepayDate"])?replaceUndefined(needDataInt2["infoReportDate"]):"";
+			 if(replaceUndefined(needDataInt2["accountStatus"])=="6"){
+				 htmlContent_ZdjkInfo +=  '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th>最新表现信息段</th></tr>'+
+				                  '<tr><td><input type="text"  value="账户状态为未激活" readonly="readonly"/></td></tr></table>';
+			 }else{
+				 htmlContent_ZdjkInfo +=  '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><th colspan="5" >最新表现信息段</th></tr>'+
+				            '<tr align="center" style="font-size: 13px"><th>账户状态</th>'+
+							'<th colspan="2">余额</th>'+
+							'<th colspan="2">最近一次还款日期</th></tr>'+	
+				            '<tr><td><input type="text"  value="'+getAccountStatus4R23(replaceUndefined(needDataInt2["accountStatus"]))+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["balance"])+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["neaarestRepayDate"])+'"  readonly="readonly"/></td></tr>'+
+				            '<tr align="center" style="font-size: 13px"><th>转出月份</th>'+
+							'<th colspan="2">还款状态</th>'+
+							'<th colspan="2">最近一次还款金额</th></tr>'+	
+				            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["zcMonth"])+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+getRepayStatusR3(replaceUndefined(needDataInt2["repayStatus"]))+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["nearestRepayMoney"])+'"  readonly="readonly"/></td></tr>'+
+				            '<tr align="center" style="font-size: 13px"><th>关闭日期</th>'+
+							'<th colspan="2">五级分类</th>'+
+							'<th colspan="2">信息报告日期</th></tr>'+	
+				            '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["closeDate"])+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+getFiveClassify(replaceUndefined(needDataInt2["fiveClassify"]))+'"  readonly="readonly"/></td>'+
+				            '<td colspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["infoReportDate"])+'"  readonly="readonly"/></td></tr></table>'; 
+			 }
+				        
+			 htmlContent_ZdjkInfo += getLatest5YInfo(needDataInt2["relateId"]);
+			 htmlContent_ZdjkInfo += getLatest24MonthInfo(needDataInt2["relateId"]);
+			 htmlContent_ZdjkInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PDA_LABEL_STATE_INFO');
+			 htmlContent_ZdjkInfo += getSpetradInfo(needDataInt2["relateId"]);
+						}
+						$('#ZdjkInfo').html(htmlContent_ZdjkInfo);
+					}
+					}
+				});
+			  	 //有相关还款责任的个人借款  Dk4PersonInfo
+			  	$cf.ajax({  
+				 	 url : '/opas-naps/queryDezx4PersonInfo_summary_query.json',
+					data : roleObj,
+					//async:false,
+					onSuccess : function(response) {
+						var result = response.RSP_BODY.queryCreditInfo;
+						var data = JSON.parse(result);
+						htmlContent_Dk4PersonInfo = '';
+					if(data){
+						for (var int2 = 0; int2 < data.length; int2++) {
+							var needDataInt2=data[int2];
+							var k = int2+1;
+							var servManageOrgan = needDataInt2["servManageOrgan"]==undefined?"":needDataInt2["servManageOrgan"];
+							var servType = needDataInt2["servType"]==undefined?"":needDataInt2["servType"];
+							var openDate = needDataInt2["openDate"]==undefined?"":needDataInt2["openDate"];
+							var expireDate = needDataInt2["expireDate"]==undefined?"":needDataInt2["expireDate"];
+							var repayDutyManType = needDataInt2["repayDutyManType"]==undefined?"":needDataInt2["repayDutyManType"];
+							var pepayDutyMoney = needDataInt2["pepayDutyMoney"]==undefined?"":needDataInt2["pepayDutyMoney"];
+							var currency = needDataInt2["currency"]==undefined?"":needDataInt2["currency"];
+							var guaranteePactSerial = needDataInt2["guaranteePactSerial"]==undefined?"":needDataInt2["guaranteePactSerial"];
+							var balance = needDataInt2["balance"]==undefined?"":needDataInt2["balance"];
+							var fiveClassify = needDataInt2["fiveClassify"]==undefined?"":needDataInt2["fiveClassify"];
+							var repayStatus = needDataInt2["repayStatus"]==undefined?"":needDataInt2["repayStatus"];
+							var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+							var organCode = replaceUndefined(needDataInt2["servManageOrgan"]);
+							if(organCode=="B10811000H0001"){
+								organType="华夏银行股份有限公司";
+							}else{
+								organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+							}
+							htmlContent_Dk4PersonInfo += '<h4 style="float:left" >账户'+k+'</h4><table class="dvi-table" style="width:98%" border="">'+
+										'<tr align="center" style="font-size: 13px">'+
+										'<th>管理机构</th>'+
+										'<th>业务种类</th>'+
+										'<th>开立日期</th>'+
+										'<th>到期日期</th>'+
+										'<th>责任人类型</th>'+ 
+										'<th>还款责任金额</th>'+
+										'<th>币种</th>'+
+										'<th>保证合同编号</th></tr>'+
+										'<tr align="center">'+
+									    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getServType(servType)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+openDate+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(expireDate)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getRepayDutyManType(repayDutyManType)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+pepayDutyMoney+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getCurrency(currency)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+guaranteePactSerial+'"  readonly="readonly"/></td></tr>'+
+							            '<tr align="center" style="font-size: 13px"><th colspan="8" >截至'+replaceUndefined(needDataInt2["infoReportDate"])+'</th></tr>'+
+							            '<tr align="center" style="font-size: 13px">'+
+										'<th colspan="2">余额</th>'+
+										'<th colspan="3">五级分类</th>'+
+										'<th colspan="3">还款状态</th></tr>'+	
+							            '<tr><td colspan="2"><input type="text"  value="'+balance+'"  readonly="readonly"/></td>'+
+							            '<td colspan="3"><input type="text"  value="'+getFiveClassify(fiveClassify)+'"  readonly="readonly"/></td>'+
+							            '<td colspan="3"><input type="text"  value="'+repayStatus+'"  readonly="readonly"/></td></tr>';
+							            htmlContent_Dk4PersonInfo +='</table>';
+							            htmlContent_Dk4PersonInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PCR_LABEL_STATE_INFO');
+						}
+						
+						$('#Dk4PersonInfo').html(htmlContent_Dk4PersonInfo);
+					}
+					}
+				});
+			  //有相关还款责任的企业借款  Dk4GroupInfo
+			  	$cf.ajax({  
+				 	 url : '/opas-naps/queryDezx4GroupInfo_summary_query.json',
+					data : roleObj,
+					//async:false,
+					onSuccess : function(response) {
+						var result = response.RSP_BODY.queryCreditInfo;
+						var data = JSON.parse(result);
+						htmlContent_Dk4GroupInfo = '';
+					if(data){
+						for (var int2 = 0; int2 < data.length; int2++) {
+							var needDataInt2=data[int2];
+							var k = int2+1;
+							var servManageOrgan = needDataInt2["servManageOrgan"]==undefined?"":needDataInt2["servManageOrgan"];
+							var servType = needDataInt2["servType"]==undefined?"":needDataInt2["servType"];
+							var openDate = needDataInt2["openDate"]==undefined?"":needDataInt2["openDate"];
+							var expireDate = needDataInt2["expireDate"]==undefined?"":needDataInt2["expireDate"];
+							var repayDutyManType = needDataInt2["repayDutyManType"]==undefined?"":needDataInt2["repayDutyManType"];
+							var pepayDutyMoney = needDataInt2["pepayDutyMoney"]==undefined?"":needDataInt2["pepayDutyMoney"];
+							var currency = needDataInt2["currency"]==undefined?"":needDataInt2["currency"];
+							var guaranteePactSerial = needDataInt2["guaranteePactSerial"]==undefined?"":needDataInt2["guaranteePactSerial"];
+							var balance = needDataInt2["balance"]==undefined?"":needDataInt2["balance"];
+							var fiveClassify = needDataInt2["fiveClassify"]==undefined?"":needDataInt2["fiveClassify"];
+							var overDueMonthNum = needDataInt2["overDueMonthNum"]==undefined?"":needDataInt2["overDueMonthNum"];
+							var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+							var organCode = replaceUndefined(needDataInt2["servManageOrgan"]);
+							if(organCode=="B10811000H0001"){
+								organType="华夏银行股份有限公司";
+							}else{
+								organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+							}
+							htmlContent_Dk4GroupInfo += '<h4 style="float:left" >账户'+k+'</h4><table class="dvi-table" style="width:98%" border="">'+
+										'<tr align="center" style="font-size: 13px">'+
+										'<th>管理机构</th>'+
+										'<th>业务种类</th>'+
+										'<th>开立日期</th>'+
+										'<th>到期日期</th>'+
+										'<th>责任人类型</th>'+
+										'<th>还款责任金额</th>'+
+										'<th>币种</th>'+
+										'<th>保证合同编号</th></tr>'+
+										'<tr align="center">'+
+										'<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getServType4Company(servType)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+openDate+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(expireDate)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getRepayDutyManType(repayDutyManType)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+pepayDutyMoney+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getCurrency(currency)+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+guaranteePactSerial+'"  readonly="readonly"/></td></tr>'+
+							            '<tr align="center" style="font-size: 13px"><th colspan="8" >截至'+replaceUndefined(needDataInt2["infoReportDate"])+'</th></tr>'+
+							            '<tr align="center" style="font-size: 13px">'+
+										'<th colspan="2">余额</th>'+
+										'<th colspan="3">五级分类</th>'+
+										'<th colspan="3">逾期月数</th></tr>'+	
+							            '<tr  ><td colspan="2"><input type="text"  value="'+balance+'"  readonly="readonly"/></td>'+
+							            '<td colspan="3"><input type="text"  value="'+getFiveClassify(fiveClassify)+'"  readonly="readonly"/></td>'+
+							            '<td colspan="3"><input type="text"  value="'+overDueMonthNum+'"  readonly="readonly"/></td></tr>';
+							            htmlContent_Dk4GroupInfo +='</table>';
+							            htmlContent_Dk4GroupInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PCR_LABEL_STATE_INFO');
+						}
+						
+						$('#Dk4GroupInfo').html(htmlContent_Dk4GroupInfo);
+					}
+					}
+				});
+			  	 //授信协议信息  SxxyInfo
+			  	$cf.ajax({  
+				 	 url : '/opas-naps/queryPcaInfo_summary_query.json',
+					data : roleObj,
+					//async:false,
+					onSuccess : function(response) {
+						var result = response.RSP_BODY.queryCreditInfo;
+						var data = JSON.parse(result);
+						htmlContent_SxxyInfo = '';
+					if(data){
+						for (var int2 = 0; int2 < data.length; int2++) {
+							var needDataInt2=data[int2];
+							var organType = replaceUndefined(needDataInt2["servManageOrganType"]);
+							var organCode = replaceUndefined(needDataInt2["servManageOrgan"]);
+							if(organCode=="B10811000H0001"){
+								organType="华夏银行股份有限公司";
+							}else{
+								organType=getOrgType(organType)+'&quot;'+organCode+'&quot;';
+							}
+							var k = int2+1;
+							htmlContent_SxxyInfo += '<h4 style="float:left">授信协议'+k+'</h4><table class="dvi-table" style="width:98%" border="">'+
+										'<tr align="center" style="font-size: 13px">'+
+										'<th>管理机构</th>'+
+										'<th>授信协议标识</th>'+
+										'<th>生效日期</th>'+
+										'<th>到期日期</th>'+
+										'<th>授信额度用途</th></tr>'+
+										'<tr align="center">'+
+									    '<td><input type="text"  value="'+organType+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["creditProtoclMark"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["effectDate"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["expireDate"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getPersonalSexDuty(replaceUndefined(needDataInt2["creditLimitPurpose"]))+'"  readonly="readonly"/></td>'+
+							            '<tr align="center" style="font-size: 13px">'+
+										'<th>授信额度</th>'+
+										'<th>授信限额</th>'+
+										'<th>授信限额编号</th>'+
+										'<th>已用额度</th>'+
+										'<th>币种</th></tr>'+
+										'<tr align="center">'+
+									    '<td><input type="text"  value="'+replaceUndefined(needDataInt2["creditLimit"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["creditQuota"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["creditQuotaSerial"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["usedLimit"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getCurrency(replaceUndefined(needDataInt2["currency"]))+'"  readonly="readonly"/></td></tr>';
+							            htmlContent_SxxyInfo +='</table>';
+						htmlContent_SxxyInfo += getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PCA_LABEL_STATE_INFO');
+						}
+						$('#SxxyInfo').html(htmlContent_SxxyInfo);
+					}
+					}
+				});
+			  //后付费信息  HffInfo
+			  	$cf.ajax({  
+				 	 url : '/opas-naps/queryTelpaymentInfo_summary_query.json',
+					data : roleObj,
+					//async:false,
+					onSuccess : function(response) {
+						var result = response.RSP_BODY.queryCreditInfo;
+						var data = JSON.parse(result);
+						htmlContent_HffInfo = '';
+					if(data){
+						for (var int2 = 0; int2 < data.length; int2++) {
+							var needDataInt2=data[int2];
+							var k = int2+1;
+							htmlContent_HffInfo += '<h4 style="float:left" >账户'+k+'</h4><table class="dvi-table" style="width:98%" border="">'+
+										'<tr align="center" style="font-size: 13px">'+
+										'<th>机构名称</th>'+
+										'<th>业务类型</th>'+
+										'<th>业务开通日期</th>'+
+										'<th>当前缴费状态</th>'+
+										'<th>当前欠费金额</th>'+
+										'<th>记账年月</th></tr>'+
+										'<tr align="center">'+
+									    '<td><input type="text"  value="'+replaceUndefined(needDataInt2["telecomFacilitator"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getBusiType(replaceUndefined(needDataInt2["busiType"]))+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["busiOpnDate"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+getCurPayStat(replaceUndefined(needDataInt2["curPayStat"]))+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["curDebtAmt"])+'"  readonly="readonly"/></td>'+
+							            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["tallyYm"])+'"  readonly="readonly"/></td>';
+							            htmlContent_HffInfo +='</table>';
+						    var i = 0;///prest24Mpay.length;
+							var o = 2;
+							if(m != "01"){
+								o = 3;
+							}
+							var prest24Mpay = replaceUndefined(needDataInt2["Prest24Mpay"]);
+						    var fDate =replaceUndefined(needDataInt2["tallyYm"]);
+						    var fullDate = fDate.split("-");
+						    var m = parseInt(fullDate[1])+1;
+					        /* if(prest24Mpay.length<24 && prest24Mpay.length>12){
+					        	m = m-(prest24Mpay.length-12)+1;
+					        	0 = 2;
+					        }else if(prest24Mpay.length<12){
+					        	m = 
+					        } */
+					        if(m<10){
+					        	m="0"+m;
+					        }if(m==13){
+					        	m="01";
+					        }
+					        var y = parseInt(fullDate[0])-o+1;
+					        var bef = y+"-"+m;
+					        htmlContent_HffInfo += '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px"><td colspan="13">'+bef+'-'+fDate+'的缴费记录</td></tr><tr align="center" style="font-size: 13px">'+
+				                            '<th> </th>'+
+											'<th>1</th>'+
+											'<th>2</th>'+
+											'<th>3</th>'+
+											'<th>4</th>'+
+											'<th>5</th>'+
+											'<th>6</th>'+
+											'<th>7</th>'+
+											'<th>8</th>'+
+											'<th>9</th>'+
+											'<th>10</th><th>11</th><th>12</th></tr>';
+							
+                            var ht1 ="";
+						    var ht2 ="";
+							var ht3 ="";
+							var htmlContent5="";
+							for(var int3 = 0; int3 < o; int3++) {
+								if(int3==0){
+								ht1 += '<tr align="center" style="font-size: 13px"><td><input type="text"  value="'+y+'"  readonly="readonly"/></td>';
+								if(m == "01" ){
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "02" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "03" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "04" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "05" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "06" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "07" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "08" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "09" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "10" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "11" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								if(m == "12" ){
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									ht1 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									i++;
+								}
+								ht1 +='</tr>';
+								}else{
+								    htmlContent5 = "";
+								    var y1 = null;
+								    if(int3==1){
+								    	y1=y+1;
+								    }else{
+								    	y1=y+2;
+								    }
+									htmlContent5 += '<tr align="center" style="font-size: 13px"><td><input type="text"  value="'+y1+'"  readonly="readonly"/></td>';
+									if(m == "01" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "02" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "03" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "04" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "05" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "06" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "07" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "08" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "09" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "10" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "11" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									if(m == "12" || int3 > 0){
+										htmlContent5 += '<td><input type="text"  value="'+replaceUndefined(prest24Mpay.charAt(i))+'"  readonly="readonly"/></td>';
+									}else{
+										htmlContent5 += '<td><input type="text"  value=""  readonly="readonly"/></td>';
+									}
+									i++;
+									htmlContent5 +='</tr>';
+									if(int3==1){
+									ht2+=htmlContent5;
+									}else{
+									ht3+=htmlContent5;
+									}
+								}
+								
+							}
+							var ht5 = getPdaLabelStateInfo(needDataInt2["relateId"],'PBOC_PND_LABEL_STATE_INFO');
+							htmlContent_HffInfo +=ht3+ht2+ht1+ht5+'</table>';
+							}
+							$('#HffInfo').html(htmlContent_HffInfo);
+					}
+					}
+				});
+	  //-------
+		  
+		 //欠税记录 
+		  $cf.ajax({
+			  url : '/opas-naps/arrearageInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.arrearageInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"编号",'4%',"1");
+				createInputInTd(td,"主管税务机关",'36%',"1");
+				createInputInTd(td,"欠税总额",'30%',"1");
+				createInputInTd(td,"欠税统计日期",'30%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,int2+1+"",'4%',"1");
+					createInputInTd(td,needDataInt2["taxOrgName"],'36%',"0");
+					createInputInTd(td,needDataInt2["outstdTaxesAmtSum"],'30%',"0");
+					createInputInTd(td,needDataInt2["outstdTaxStatDt"],'30%',"0");
+				}
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_POT_LABEL_STATE_INFO');
+				$('#ArrearageInfo').html(ht5); 
+				$('#ArrearageInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		});  
+		  
+		  //民事判决记录
+		  $cf.ajax({
+			  url : '/opas-naps/judgmentInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.judgmentInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"编号",'4%',"1");
+				createInputInTd(td,"立案法院",'30%',"1");
+				createInputInTd(td,"案由",'25%',"1");
+				createInputInTd(td,"立案日期",'16%',"1");
+				createInputInTd(td,"结案方式",'25%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					
+					createInputInTd(td,int2+1+"",'4%',"1");
+					createInputInTd(td,needDataInt2["regCourt"],'30%',"0");
+					createInputInTd(td,needDataInt2["caseReason"],'25%',"0");
+					createInputInTd(td,needDataInt2["regDate"],'16%',"0");
+					createInputInTd(td,getMSPJ(showSplitChinese(needDataInt2["closeCaseWay"],null,null)),'25%',"0");
+				}
+				$('#JudgmentInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		});
+		//民事判决记录
+		  $cf.ajax({
+			  url : '/opas-naps/judgmentInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.judgmentInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"编号",'4%',"1");
+				createInputInTd(td,"判决/调解结果",'30%',"1");
+				createInputInTd(td,"判决/调解生效日期",'25%',"1");
+				createInputInTd(td,"诉讼标的",'16%',"1");
+				createInputInTd(td,"诉讼标的金额",'25%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,int2+1+"",'4%',"1");
+					createInputInTd(td,needDataInt2["judgMediateRst"],'30%',"0");
+					createInputInTd(td,needDataInt2["judgMediateEffctDt"],'25%',"0");
+					createInputInTd(td,needDataInt2["lawObject"],'16%',"0");
+					createInputInTd(td,needDataInt2["lawObjectAmt"],'25%',"0");
+				}
+				$('#Judgment1Info').html(table);    // 重新载入当前页面数据  
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_PCJ_LABEL_STATE_INFO');
+				$('#Judgment1Info1').html(ht5); 
+			}
+			}
+		});
+		  //强制执行记录
+		  $cf.ajax({
+			  url : '/opas-naps/forceInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.forceInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"编号",'4%',"1");
+				createInputInTd(td,"执行法院",'36%',"1");
+				createInputInTd(td,"执行案由",'35%',"1");
+				createInputInTd(td,"立案日期",'12%',"1");
+				createInputInTd(td,"结案方式",'13%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,int2+1+"",'4%',"1");
+					createInputInTd(td,needDataInt2["executeCourt"],'36%',"0");
+					createInputInTd(td,needDataInt2["executeCaseRsn"],'35%',"0");
+					createInputInTd(td,needDataInt2["regDate"],'12%',"0");
+					createInputInTd(td,getQZZX(showSplitChinese(needDataInt2["closeCaseWay"],null,null)),'13%',"0");
+				}
+				$('#ForceInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		});  
+		//强制执行记录
+		  $cf.ajax({
+			  url : '/opas-naps/forceInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.forceInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"编号",'4%',"1");
+				createInputInTd(td,"案件状态",'16%',"1");
+				createInputInTd(td,"结案日期",'15%',"1");
+				createInputInTd(td,"申请执行标的",'15%',"1");
+				createInputInTd(td,"申请执行标的价值",'20%',"1");
+				createInputInTd(td,"已执行标的",'15%',"1");
+				createInputInTd(td,"已执行标的价值",'15%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,int2+1+"",'4%',"1");
+					createInputInTd(td,needDataInt2["caseStatus"],'16%',"0");
+					createInputInTd(td,needDataInt2["closeCaseDate"],'15%',"0");
+					createInputInTd(td,needDataInt2["applyExeObj"],'15%',"0");
+					createInputInTd(td,needDataInt2["applyExeObjAmt"],'20%',"0");
+					createInputInTd(td,needDataInt2["alreadyExeObj"],'15%',"0");
+					createInputInTd(td,needDataInt2["alreadyExeObjAmt"],'15%',"0");
+				}
+				$('#Force1Info').html(table);    // 重新载入当前页面数据  
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_PCE_LABEL_STATE_INFO');
+				$('#Force1Info1').html(ht5);
+			}
+			}
+		});  
+		  //行政处罚记录
+		  $cf.ajax({
+			  url : '/opas-naps/penaltyInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.penaltyInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"编号",'4%',"1");
+				createInputInTd(td,"处罚机构",'26%',"1");
+				createInputInTd(td,"处罚内容",'20%',"1");
+				createInputInTd(td,"处罚金额",'10%',"1");
+				createInputInTd(td,"生效日期",'14%',"1");
+				createInputInTd(td,"截止日期",'14%',"1");
+				createInputInTd(td,"行政复议结果",'12%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,int2+1+"",'4%',"1");
+					createInputInTd(td,needDataInt2["punishOrganiz"],'26%',"0");
+					createInputInTd(td,needDataInt2["punishContent"],'20%',"0");
+					createInputInTd(td,needDataInt2["punishAmt"],'10%',"0");
+					createInputInTd(td,needDataInt2["effectDate"],'14%',"0");
+					createInputInTd(td,needDataInt2["endDate"],'14%',"0");
+					createInputInTd(td,needDataInt2["adReviewResult"],'12%',"0");
+				}
+				$('#PenaltyInfo').html(table);    // 重新载入当前页面数据  
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_PAP_LABEL_STATE_INFO');
+				$('#PenaltyInfo1').html(ht5);
+			}
+			}
+		});  
+		//住房公积金参缴记录  
+		  $cf.ajax({
+			  url : '/opas-naps/housingInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.housingInfo;
+				var data = JSON.parse(result);
+				var htmlContent_gjj = '';
+				if(data){
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						htmlContent_gjj += '<table class="dvi-table" style="width:100%;" border="">'+
+									'<tr align="center" style="font-size: 13px">'+
+									'<th>参缴地</th>'+
+									'<th>参缴日期</th>'+
+									'<th>初缴月份</th>'+
+									'<th>缴至月份</th>'+
+									'<th>缴费状态</th>'+
+									'<th>月缴存额</th>'+
+									'<th>个人缴存比例</th>'+
+									'<th>单位缴存比例</th></tr>'+
+									'<tr align="center">'+
+								    '<td><input type="text"  value="'+getXZQH(replaceUndefined(needDataInt2["joinSoclInsuPl"]))+'"  readonly="readonly"/></td>'+
+						            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["joinSoclInsuDt"])+'"  readonly="readonly"/></td>'+
+						            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["firstDepositYm"])+'"  readonly="readonly"/></td>'+
+						            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["payYm"])+'"  readonly="readonly"/></td>'+
+						            '<td><input type="text"  value="'+getPayStatus(replaceUndefined(needDataInt2["payStatus"]))+'"  readonly="readonly"/></td>'+
+						            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["monthlyDeposit"])+'"  readonly="readonly"/></td>'+
+						            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["personDepositRate"])+'"  readonly="readonly"/></td>'+
+						            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["compDepositRate"])+'"  readonly="readonly"/></td></tr>'+
+						            '<tr align="center" style="font-size: 13px">'+
+									'<th colspan="7">缴存单位</th>'+
+									'<th>信息更新日期</th>'+
+									'<tr align="center">'+
+								    '<td colspan="7"><input type="text"  value="'+replaceUndefined(needDataInt2["payComp"])+'"  readonly="readonly"/></td>'+
+						            '<td ><input type="text"  value="'+replaceUndefined(needDataInt2["infoUpdTime"])+'"  readonly="readonly"/></td></tr>';
+						            htmlContent_gjj +='</table>';
+					}
+				$('#HousingInfo').html(htmlContent_gjj);    // 重新载入当前页面数据  
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_PHF_LABEL_STATE_INFO');
+				$('#HousingInfo1').html(ht5);
+				}
+			}
+		});  
+		  
+  
+		  
+		  
+		   
+		  
+	//低保救助记录	  
+		  $cf.ajax({
+			  url : '/opas-naps/lowHouseholdInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.lowHouseholdInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"编号",'4%',"1");
+					createInputInTd(td,"人员类别",'14%',"1");
+					createInputInTd(td,"所在地",'22%',"1");
+					createInputInTd(td,"工作单位",'22%',"1");
+					createInputInTd(td,"家庭月收入",'9%',"1");
+					createInputInTd(td,"申请日期",'10%',"1");
+					createInputInTd(td,"批准日期",'10%',"1");
+					createInputInTd(td,"信息更新日期",'9%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,int2+1+"",'4%',"1");
+						createInputInTd(td,getPersonnelType(showSplitChinese(needDataInt2["personnelType"],null,null)),'14%',"0");
+						createInputInTd(td,getXZQH(needDataInt2["place"]),'22%',"0");
+						createInputInTd(td,needDataInt2["company"],'22%',"0");
+						createInputInTd(td,needDataInt2["homeMincome"],'9%',"0");
+						createInputInTd(td,needDataInt2["appDate"],'10%',"0");
+						createInputInTd(td,needDataInt2["passDate"],'10%',"0");
+						createInputInTd(td,needDataInt2["infoUpdTime"],'9%',"0");
+					}
+				$('#LowHouseholdInfo').html(table);    // 重新载入当前页面数据  
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_PBS_LABEL_STATE_INFO');
+				$('#LowHouseholdInfo1').html(ht5);
+				}
+			}
+		});  
+		  
+		  $cf.ajax({
+			  url : '/opas-naps/occupationInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.occupationInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"编号",'4%',"1");
+					createInputInTd(td,"执业资格名称",'14%',"1");
+					createInputInTd(td,"等级",'20%',"1");
+					createInputInTd(td,"获得日期",'8%',"1");
+					createInputInTd(td,"到期日期",'8%',"1");
+					createInputInTd(td,"吊销日期",'10%',"1");
+					createInputInTd(td,"颁发机构",'16%',"1");
+					createInputInTd(td,"机构所在地",'20%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,int2+1+"",'4%',"1");
+						createInputInTd(td,needDataInt2["competencyName"],'14%',"0");
+						createInputInTd(td,getRank(showSplitChinese(needDataInt2["rank"],null,null)),'20%',"0");
+						createInputInTd(td,needDataInt2["awardDate"],'8%',"0");
+						createInputInTd(td,needDataInt2["expDate"],'8%',"0");
+						createInputInTd(td,needDataInt2["revokeDate"],'10%',"0");
+						createInputInTd(td,needDataInt2["awardOrg"],'16%',"0");
+						createInputInTd(td,getXZQH(needDataInt2["orgPlace"]),'20%',"0");
+					}
+				$('#OccupationInfo').html(table);    // 重新载入当前页面数据  
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_PPQ_LABEL_STATE_INFO');
+				$('#OccupationInfo1').html(ht5);
+				}
+			}
+		}); 
+		  //行政奖励记录
+		  $cf.ajax({
+			  url : '/opas-naps/awardInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.awardInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"编号",'4%',"1");
+					createInputInTd(td,"奖励机构",'22%',"1");
+					createInputInTd(td,"奖励内容",'38%',"1");
+					createInputInTd(td,"生效日期",'18%',"1");
+					createInputInTd(td,"截止日期",'18%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,int2+1+"",'4%',"1");
+						createInputInTd(td,needDataInt2["rewardOrg"],'22%',"0");
+						createInputInTd(td,needDataInt2["rewardContent"],'38%',"0");
+						createInputInTd(td,needDataInt2["effectDate"],'18%',"0");
+						createInputInTd(td,needDataInt2["endDate"],'18%',"0");
+					}
+				$('#AwardInfo').html(table);    // 重新载入当前页面数据  
+				var ht5 = getPdaLabelStateInfo1(needDataInt2["relateId"],'PBOC_PAH_LABEL_STATE_INFO');
+				$('#AwardInfo1').html(ht5);
+				}
+			}
+		});
+		  
+		   
+		  //五、本人申明
+		  $cf.ajax({
+			url : '/opas-naps/announceInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.announceInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"编号",'4%',"1");
+					createInputInTd(td,"声明内容",'66%',"1");
+					createInputInTd(td,"添加日期",'30%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						createInputInTd(td,int2+1+"",'4%',"1");
+						createInputInTd(td,needDataInt2["declareContent"],'66%',"0");
+						createInputInTd(td,needDataInt2["addDate"],'30%',"0");
+					}
+				$('#AnnounceInfo').html(table);    // 重新载入当前页面数据  
+				}
+			}
+		});  
+		//信贷审批查询记录明细
+		  $cf.ajax({
+			  url : '/opas-naps/QueryRecordInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+				if(data){
+					var tr=table.insertRow();
+					var td=tr.insertCell();
+					createInputInTd(td,"编号",'4%',"1");
+					createInputInTd(td,"查询日期",'33%',"1");
+					createInputInTd(td,"查询机构",'31%',"1");
+					createInputInTd(td,"查询原因",'32%',"1");
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						var organType = replaceUndefined(needDataInt2["queryOrgType"]);
+						var organCode = replaceUndefined(needDataInt2["queryOrg"]);
+						if(organCode=="B10811000H0001"){
+							organType="华夏银行股份有限公司";
+						}else{
+							organType=getOrgType(organType)+'"'+organCode+'"';
+						}
+						createInputInTd(td,int2+1+"",'4%',"1");
+						createInputInTd(td,needDataInt2["qryDate"],'33%',"0");
+						createInputInTd(td,organType,'31%',"0");
+						createInputInTd(td,getQryReason(showSplitChinese(needDataInt2["qryReason"]),null,null),'32%',"0");
+					}
+				$('#ReCreditInfo').html(table);    // 重新载入当前页面数据  
+				}
+			}
+		});  
+		  //个人信用报告数字解读
+		  $cf.ajax({
+			  url : '/opas-naps/creditGradeInfo_summary_query2.json',
+			  data : roleObj,
+			  //async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.creditGradeInfo;
+				var data = JSON.parse(result);
+				var col = 1;data.length;
+			 if(data){
+				var htmContent_szjd = '';
+				var flag="";
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var numberRead = needDataInt2["numberRead"];
+					var oppositePosition = needDataInt2["oppositePosition"];
+					var descContent = needDataInt2["descContent"];
+					htmContent_szjd += '<tr>';
+  					 if(needDataInt2["fl"]!=flag){
+  						htmContent_szjd += '<td rowspan="'+needDataInt2["count"]+'"><input type="text"  value="'+numberRead+'"  readonly="readonly"/></td>'+
+						'<td rowspan="'+needDataInt2["count"]+'"><input type="text"  value="'+oppositePosition+'"  readonly="readonly"/></td>';
+  					} 
+  					flag = needDataInt2["fl"];
+					htmContent_szjd += '<td><input type="text"  value="'+getDescContent(descContent)+'"  readonly="readonly"/></td>';
+					htmContent_szjd += '</tr>';
+					//col--;
+				}
+				$('#CreditGradeInfo').html(htmContent_szjd);    // 重新载入当前页面数据  
+			} 
+			
+			}
+		}); 
+		  
+		// [6] 异议标注
+		  $cf.ajax({
+			  url : '/opas-naps/dissentInfo_summary_query2.json',
+			data : roleObj,
+			//async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.dissentInfo;
+				var data = JSON.parse(result);
+				var table=document.createElement("table");
+				table.style='width:100%;';
+			if(data){
+				var tr=table.insertRow();
+				var td=tr.insertCell();
+				createInputInTd(td,"编号",'4%',"1");
+				createInputInTd(td,"声明内容",'66%',"1");
+				createInputInTd(td,"添加日期",'30%',"1");
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					createInputInTd(td,int2+1+"",'4%',"1");
+					createInputInTd(td,needDataInt2["declareContent"],'66%',"0");
+					createInputInTd(td,needDataInt2["addDate"],'30%',"0");
+				}
+				$('#DissentInfo').html(table);    // 重新载入当前页面数据  
+			}
+			}
+		});  
+		  
+		 
+		
+		  
+	});
+ 
+	function opWind() {
+		var seq = $("#tbldaijika").datagrid("getSelected").recSeq;
+		var m60OverDueStrMonth = $("#tbldaijika").datagrid("getSelected").m60OverDueStrMonth;
+		var m60OverDueEndMonth = $("#tbldaijika").datagrid("getSelected").m60OverDueEndMonth;
+		 var opts = $.extend({
+			title : m60OverDueStrMonth+'——'+m60OverDueEndMonth+'的逾期记录',
+			showType : 'show',
+			showSpeed : 400,
+			top :$(document).scrollTop(),//($(window).height()-($(document).scrollTop()+500)),
+			modal : false,
+			onOpen : function() {
+				$.messager.progress('close');
+			},
+			onClose : function() {
+				processInsNo = "";
+				$(this).dialog('destroy');
+				$(this).appendTo($("body"));
+			}
+		}, {}); 
+	 	opts.content = '<iframe id="" src="../common/loan_card_info4.html?seq='+seq+'"  allowTransparency="true" scrolling="auto" width="750px" height="500px" frameBorder="0" ></iframe>';
+		$('#windaijika').dialog(opts);
+		var src = $('div>iframe').attr("src");
+		$('#windaijika').dialog('refresh'); 
+		//$('#windaijika').window('Vcenter');
+		/* var path="../common/loan_card_info4.html?seq="+seq;
+		$("#windaijika").dialog({
+			title: m60OverDueStrMonth+'——'+m60OverDueEndMonth+'的逾期记录',
+			closed:true,
+			width: 400,    
+		    height: 200,
+		    modal: true,
+			autoOpen:false
+		});
+		$("#windaijika").dialog('open');
+		$("#windaijika").dialog('refresh',path); */
+	}
+	
+	function formatseq(val, row, index) {
+		if(val!=null&&val!=undefined&&val!=""){
+			return "<a href=javascript:opWind();>查看</a>";
+		}else{
+			return "";
+		}
+	} 
+	//对数据进行 分割 去掉 | 前的数据  如：1|自置  分割为  自置 
+	function showSplitChinese(value, row, index) {
+		if(value!=null&&value!=""){
+			var val=value.split("|");
+			return val[val.length-1];
+		}else{
+			return "";
+		}
+	} 
+	/*在指定td标签 创建input标签 并赋值 */
+   function createInputInTd(td,value,width,fontType){
+	   td.style.width=width;
+	var input=document.createElement("input");
+	input.type='text';
+	if(value){
+		var val=value.toString().split("|");
+		input.value= val[val.length-1];
+	}else if(value == 0){
+		var val=value.toString().split("|");
+		input.value= val[val.length-1];
+	}else{
+		input.value="";
+	}
+	input.style.width=width;
+	input.style.fontSize='12px';
+	input.style.textAlign='center';
+	if(fontType=="1"){
+		input.style.fontWeight='bold';
+	}
+	if(fontType=="0"){
+		input.style.color='blue';
+	}
+	input.readOnly='readOnly';
+	td.appendChild(input);
+   }
+   /*在指定td标签 创建Div标签 并赋值 */
+   function createDivInTd(td,value,width,fontType){
+   	td.style.width=width;
+   	var div=document.createElement("div");
+   	div.style.class="word-wrap:break-word;overflow:hidden;"
+   	div.style.fontSize='12px';
+   	if(value){
+   		var textNode=document.createElement('p');
+   		textNode.innerHTML=value;
+   		div.appendChild(textNode);
+   	}else{
+   		//div.appendChild(document.createTextNode(""+typeValue));
+   	}
+   	/* input.style.width=width;
+   	input.style.fontSize='12px';
+   	input.style.textAlign='center'; */
+   	if(fontType=="1"){
+   		div.style.fontWeight='bold';
+   		div.style.color='black';
+   	}
+   	if(fontType=="0"){
+   		div.style.color='blue';
+   	}
+   	div.readOnly='readOnly';
+   	td.appendChild(div);
+   }
+   function getLatest5YInfo(relateid){
+	   var html='';
+	   var roleObj={"appId":relateid};
+	   $cf.ajax({  
+ 		 	 url : '/opas-naps/queryLatest5Y_summary_query.json',
+ 		 	 async: false,
+ 			data : roleObj,
+ 			onSuccess : function(response) {
+ 				var result = response.RSP_BODY.queryCreditInfo;
+ 				var data = JSON.parse(result);
+ 			if(data){
+ 				for (var int2 = 0; int2 < 1; int2++) {
+ 					var needDataInt2=data[int2];
+ 					html += '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px">'+
+					'<th colspan="13">'+replaceUndefined(needDataInt2["startYearMonth"])+'-'+replaceUndefined(needDataInt2["endYearMonth"])+'的还款记录</th></tr>';
+					html += '<tr align="center" style="font-size: 13px">'+
+					'<th></th>'+
+				'<th>1</th>'+
+				'<th>2</th>'+
+				'<th>3</th>'+
+				'<th>4</th>'+
+				'<th>5</th>'+
+				'<th>6</th>'+
+				'<th>7</th>'+
+				'<th>8</th>'+
+				'<th>9</th>'+
+				'<th>10</th><th>11</th><th>12</th></tr>';
+ 				}
+ 				for (var int2 = data.length-1; int2 >=0; int2--) {
+ 					var needDataInt2=data[int2];
+ 					var o1 =needDataInt2["m1"]==undefined?"":needDataInt2["m1"].split("-")[0];
+ 					var o2 =needDataInt2["m2"]==undefined?"":needDataInt2["m2"].split("-")[0];
+ 					var o3 =needDataInt2["m3"]==undefined?"":needDataInt2["m3"].split("-")[0];
+ 					var o4 =needDataInt2["m4"]==undefined?"":needDataInt2["m4"].split("-")[0];
+ 					var o5 =needDataInt2["m5"]==undefined?"":needDataInt2["m5"].split("-")[0];
+ 					var o6 =needDataInt2["m6"]==undefined?"":needDataInt2["m6"].split("-")[0];
+ 					var o7 =needDataInt2["m7"]==undefined?"":needDataInt2["m7"].split("-")[0];
+ 					var o8 =needDataInt2["m8"]==undefined?"":needDataInt2["m8"].split("-")[0];
+ 					var o9 =needDataInt2["m9"]==undefined?"":needDataInt2["m9"].split("-")[0];
+ 					var o10 =needDataInt2["m10"]==undefined?"":needDataInt2["m10"].split("-")[0];
+ 					var o11 =needDataInt2["m11"]==undefined?"":needDataInt2["m11"].split("-")[0];
+ 					var o12 =needDataInt2["m12"]==undefined?"":needDataInt2["m12"].split("-")[0];
+ 					var m1 =needDataInt2["m1"]==undefined?"":needDataInt2["m1"].split("-")[1];
+ 					var m2 =needDataInt2["m2"]==undefined?"":needDataInt2["m2"].split("-")[1];
+ 					var m3 =needDataInt2["m3"]==undefined?"":needDataInt2["m3"].split("-")[1];
+ 					var m4 =needDataInt2["m4"]==undefined?"":needDataInt2["m4"].split("-")[1];
+ 					var m5 =needDataInt2["m5"]==undefined?"":needDataInt2["m5"].split("-")[1];
+ 					var m6 =needDataInt2["m6"]==undefined?"":needDataInt2["m6"].split("-")[1];
+ 					var m7 =needDataInt2["m7"]==undefined?"":needDataInt2["m7"].split("-")[1];
+ 					var m8 =needDataInt2["m8"]==undefined?"":needDataInt2["m8"].split("-")[1];
+ 					var m9 =needDataInt2["m9"]==undefined?"":needDataInt2["m9"].split("-")[1];
+ 					var m10 =needDataInt2["m10"]==undefined?"":needDataInt2["m10"].split("-")[1];
+ 					var m11 =needDataInt2["m11"]==undefined?"":needDataInt2["m11"].split("-")[1];
+ 					var m12 =needDataInt2["m12"]==undefined?"":needDataInt2["m12"].split("-")[1];
+ 					html +='<tr><td rowspan="2"><input type="text"  value="'+replaceUndefined(needDataInt2["year"])+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o1+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o2+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o3+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o4+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o5+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o6+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o7+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o8+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o9+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o10+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o11+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+o12+'"  readonly="readonly"/></td></tr>';	
+		            html +='<tr>'+
+		            '<td><input type="text"  value="'+m1+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m2+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m3+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m4+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m5+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m6+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m7+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m8+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m9+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m10+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m11+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+m12+'"  readonly="readonly"/></td></tr>';
+ 				}
+ 				html += '</table>';
+ 			   }
+ 			 }
+          });
+	   return html;
+   }
+   //最近24个月还款状态信息段  除C1以外其他账户
+   function getLatest24MonthInfo(relateid){/* 
+	   var html = "";
+	   var roleObj={"appId":relateid};
+	   $cf.ajax({  
+		 	 url : '/opas-naps/queryLatest24Month_summary_query.json',
+		 	async:false,
+			data : roleObj,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				if(data==undefined){
+					return html;
+				}
+				if(data){
+	   				for (var int2 = 0; int2 < 1; int2++) {
+	   					var needDataInt2=data[int2];
+	   				html += '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px">'+
+   					'<th colspan="13">'+replaceUndefined(needDataInt2["startYearMonth"])+'-'+replaceUndefined(needDataInt2["endYearMonth"])+'的还款记录</th></tr>';
+	   				html += '<tr align="center" style="font-size: 13px">'+
+   					'<th></th>'+
+					'<th>1</th>'+
+					'<th>2</th>'+
+					'<th>3</th>'+
+					'<th>4</th>'+
+					'<th>5</th>'+
+					'<th>6</th>'+
+					'<th>7</th>'+
+					'<th>8</th>'+
+					'<th>9</th>'+
+					'<th>10</th><th>11</th><th>12</th></tr>';
+	   				}
+	   				for (var int2 = data.length-1; int2 >=0 ; int2--) {
+	   					var needDataInt2=data[int2];
+	   					var o1 =needDataInt2["m1"]==undefined?"":needDataInt2["m1"];
+	   					var o2 =needDataInt2["m2"]==undefined?"":needDataInt2["m2"];
+	   					var o3 =needDataInt2["m3"]==undefined?"":needDataInt2["m3"];
+	   					var o4 =needDataInt2["m4"]==undefined?"":needDataInt2["m4"];
+	   					var o5 =needDataInt2["m5"]==undefined?"":needDataInt2["m5"];
+	   					var o6 =needDataInt2["m6"]==undefined?"":needDataInt2["m6"];
+	   					var o7 =needDataInt2["m7"]==undefined?"":needDataInt2["m7"];
+	   					var o8 =needDataInt2["m8"]==undefined?"":needDataInt2["m8"];
+	   					var o9 =needDataInt2["m9"]==undefined?"":needDataInt2["m9"];
+	   					var o10 =needDataInt2["m10"]==undefined?"":needDataInt2["m10"];
+	   					var o11 =needDataInt2["m11"]==undefined?"":needDataInt2["m11"];
+	   					var o12 =needDataInt2["m12"]==undefined?"":needDataInt2["m12"];
+	   					html +='<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["year"])+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o1+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o2+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o3+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o4+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o5+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o6+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o7+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o8+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o9+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o10+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o11+'"  readonly="readonly"/></td>'+
+			            '<td><input type="text"  value="'+o12+'"  readonly="readonly"/></td></tr>';	
+			           
+	   				}
+	   				html += '</table>';
+	   			   }
+				
+			}
+	   }); */
+	   return "";
+   }
+   //特殊事件说明信息  D1/R2
+   function getSpecialEvent(relateid){
+	   var html='';
+	   var roleObj={"appId":relateid};
+	   $cf.ajax({  
+		 	 url : '/opas-naps/querySpecialEvent_summary_query.json',
+			data : roleObj,
+			async: false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				if(data){
+	   				for (var int2 = 0; int2 < 1; int2++) {
+	   					var needDataInt2=data[int2];
+	   				html += '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px">'+
+   					'<th>特殊事件说明</th></tr>';
+	   				}
+	   				for (var int2 = 0; int2 < data.length; int2++) {
+	   					var needDataInt2=data[int2];
+	   					var type = needDataInt2["type"]==undefined?"":needDataInt2["type"];
+	   					if(type!=undefined && type == "11"){
+	   						type = '信用卡因调整账单日本月不出单';
+	   					}else if(type!=undefined && type == "12"){
+	   						type = '已注销信用卡账户重启';
+	   					}else{
+	   						type = '';
+	   					}
+	   					html += '<tr><td><input type="text"  value="'+type+'"  readonly="readonly"/></td></tr>';	
+			           
+	   				}
+	   				html += '</table>';
+	   				
+	   			   }
+			}
+	   });
+	   return html;
+   }
+   //特殊交易    所有账户
+    function getSpetradInfo(relateid){
+    	var htmlContent = '';
+	   var roleObj={"appId":relateid};
+	   $cf.ajax({  
+ 		 	 url : '/opas-naps/querySpetradInfo_summary_query.json',
+ 			data : roleObj,
+ 			async: false,
+ 			onSuccess : function(response) {
+ 				var result = response.RSP_BODY.queryCreditInfo;
+ 				var data = JSON.parse(result);
+ 				htmlContent += '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px">'+
+      	        '<th>特殊交易类型</th>'+
+				'<th>发生日期</th>'+
+				'<th>变更月数</th><th>发生金额</th><th>明细记录</th></tr>';	
+ 			if(data){
+ 				for (var int2 = 0; int2 < data.length; int2++) {
+ 					var needDataInt2=data[int2];
+ 					htmlContent += '<tr><td><input type="text"  value="'+getType(replaceUndefined(needDataInt2["type"]))+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["occurDate"])+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["changinMonths"])+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["occurAmt"])+'"  readonly="readonly"/></td>'+
+		            '<td><input type="text"  value="'+replaceUndefined(needDataInt2["detailRec"])+'"  readonly="readonly"/></td></tr>';	
+ 				}
+ 				htmlContent +='</table>';
+ 			   }
+ 			
+ 			 }
+          });
+	   return htmlContent;
+   } 
+   //大额专项分期信息  R2
+   function getDezxInfo(relateid){
+	   var html ='';
+	   var roleObj={"appId":relateid};
+	   $cf.ajax({  
+		 	 url : '/opas-naps/queryDezxInfo_summary_query.json',
+			data : roleObj,
+			async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				if(data){
+	   				for (var int2 = 0; int2 < data.length; int2++) {
+	   					html += '<table class="dvi-table" style="width:98%" border=""><tr align="center" style="font-size: 13px">'+
+	   					'<th colspan="4">大额专项分期信息</th></tr>'+
+	   					'<tr align="center" style="font-size: 13px"><td>大额专项分期额度</td>'+
+	   					'<td>分期额度生效日期</td>'+
+	   					'<td>分期额度到期日期</td>'+
+	   					'<td>已用分期金额</td></tr>';
+	   					var needDataInt2=data[int2];
+	   					html += '<tr><td><input type="text"  value="'+replaceUndefined(needDataInt2["fqed"])+'"  readonly="readonly"/></td>'+	
+	   					        '<td><input type="text"  value="'+replaceUndefined(needDataInt2["fqedEffectDate"])+'"  readonly="readonly"/></td>'+
+	   					        '<td><input type="text"  value="'+replaceUndefined(needDataInt2["fqedExpireDate"])+'"  readonly="readonly"/></td>'+
+	   					        '<td><input type="text"  value="'+replaceUndefined(needDataInt2["usedFqMoney"])+'"  readonly="readonly"/></td>';
+	   				}
+	   				html += '</table>';
+	   				
+	   			   }
+			}
+	   });
+	   return html;
+   }
+ //标注及声明信息段    所有账户
+   function getPdaLabelStateInfo(relateid,table){
+	   var roleObjPdaLabel={"appId":relateid,"table":table};
+	   var tablePdaLabelState = '';
+	   $cf.ajax({
+		 	 url : '/opas-naps/queryStateInfo_summary_query.json',
+			data : roleObjPdaLabel,
+			async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+			
+				if(data){
+				tablePdaLabelState = '<table class="dvi-table" style="width:98%" border="">';
+				for (var int2 = 0; int2 < data.length; int2++) {
+					var needDataInt2=data[int2];
+					var smlx = needDataInt2["type"]; //声明类型 
+					var smmc = ""; //声明名称 
+					if( smlx == "1" || smlx == "01"){
+						smmc = "异议标注";
+					}
+					if( smlx == "2" || smlx == "02"){
+						smmc = "特殊标注";
+					}
+					if( smlx == "3" || smlx == "03"){
+						smmc = "本人声明";
+					}
+					if( smlx == "4" || smlx == "04"){
+						smmc = "机构说明";
+					}
+					if( smlx == "5" || smlx == "05"){
+						smmc = "征信中心说明";
+					}
+					tablePdaLabelState +='<tr align="center" style="font-size: 13px">'+
+					'<td>'+smmc+'</td>'+'<td>添加日期</td></tr>'+
+					'<tr align="center" style="font-size: 13px">'+
+					'<td>'+replaceUndefined(needDataInt2["content"])+'</td>'+'<td>'+replaceUndefined(needDataInt2["addDate"])+'</td></tr>';
+				}
+				tablePdaLabelState+='</table>';
+				} 
+			}
+	   });
+	   return tablePdaLabelState ;
+   }
+ //标注及声明信息段    所有账户
+   function getPdaLabelStateInfo1(relateid,table){
+	 return '';
+ }
+// 最近一次月度表现信息段 PD01C 
+   function getNearestMInfo(relateid,zhStatus){
+	   var tableNearestMInfo = '';
+	   $cf.ajax({
+		 	 url : '/opas-naps/queryNearestMInfo_summary_query.json',
+			data : {"appId":relateid},
+			async:false,
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.queryCreditInfo;
+				var data = JSON.parse(result);
+				if(data){
+					for (var int2 = 0; int2 < data.length; int2++) {
+						var needDataInt2=data[int2];
+						 tableNearestMInfo = '<table class="dvi-table" style="width:98%" border="">';
+						 //最新还款记录日期 
+						 var zdr = '结算/应还款日';
+						 var zxhkjlDate = replaceUndefined(needDataInt2["infoReportDate"])>=replaceUndefined(needDataInt2["settleDueDate"])?replaceUndefined(needDataInt2["infoReportDate"]):"";
+						var accountStatus = replaceUndefined(needDataInt2["accountStatus"]);
+						if(zhStatus =="D1"){
+							accountStatus = getAccountStatus4D1(accountStatus);
+						}else if(zhStatus =="R1"){
+							accountStatus = getAccountStatus4R1(accountStatus);
+						}else if(zhStatus =="R23"){
+							accountStatus = getAccountStatus4R23(accountStatus);
+							zdr = '账单日';
+						}else if(zhStatus =="R4"){
+							accountStatus = getAccountStatus4R4(accountStatus);
+						}
+						   tableNearestMInfo += '<tr align="center" style="font-size: 13px"><td colspan="5" >截至'+zxhkjlDate+'</td></tr><tr align="center" style="font-size: 13px">'+
+							'<td>月份</td>'+'<td>账户状态</td>'+
+							'<td>余额</td>'+
+							'<td>已用额度</td>'+
+							'<td>未出单的大额专项分期余额</td>'+'</tr>';
+							 
+							 tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+ 
+								'<td>'+replaceUndefined(needDataInt2["month"])+'</td>'+
+								'<td>'+accountStatus+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["balance"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["usedLimit"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["unissuDezxFqye"])+'</td>'+
+								 '</tr>';
+							tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+
+								'<td>五级分类</td>'+'<td>剩余还款期数</td>'+
+								'<td>'+zdr+'</td>'+
+								'<td>本月应还款</td>'+
+								'<td>本月实还款</td>'+'</tr>';
+									 
+							 tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+ 
+								'<td>'+getFiveClassify(replaceUndefined(needDataInt2["fiveClassify"]))+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["remanentRepayPeriods"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["settleDueDate"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["thisMonthDue"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["thisMonthActualPay"])+'</td>'+
+								'</tr>'; 
+							tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+
+								'<td>最近一次还款日期</td>'+'<td>当前逾期期数</td>'+
+								'<td>当前逾期总额</td>'+
+								'<td>逾期31—60天未还本金</td>'+
+								'<td>逾期61－90天未还本金</td>'+'</tr>';
+									 
+							 tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+ 
+								'<td>'+replaceUndefined(needDataInt2["nearestRepayDate"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["curOverDuePeriods"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["curOverDueTotal"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["overDue3160NRepayCapital"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["overDue6190NRepayCapital"])+'</td>'+
+								'</tr>'; 
+							tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+
+								'<td>逾期91－180天未还本金</td>'+'<td>逾期180天以上未还本金</td>'+
+								'<td>透支180天以上未付余额</td>'+
+								'<td>最近6个月平均使用额度</td>'+
+								'<td>最近6个月平均透支余额</td>'+'</tr>';
+									 
+							 tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+ 
+								'<td>'+replaceUndefined(needDataInt2["overDue91180NRepayCapital"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["overDue180AddNRepayCapital"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["overDraft180AddNpayBalan"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["Recent6mAvgUseLimit"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["Recent6mAvgOverBalance"])+'</td>'+
+								'</tr>';  
+							 tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+
+								'<td>最大使用额度</td>'+'<td>最大透支余额</td>'+
+								'<td>信息报告日期</td>'+
+								'<td> </td>'+
+								'<td> </td>'+'</tr>';
+									 
+							 tableNearestMInfo += '<tr align="center" style="font-size: 13px">'+ 
+								'<td>'+replaceUndefined(needDataInt2["maxUseLimit"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["maxOverDraftBalance"])+'</td>'+
+								'<td>'+replaceUndefined(needDataInt2["infoReportDate"])+'</td>'+
+								'<td></td>'+
+								'<td></td>'+
+								'</tr>';
+				}
+				
+				}
+			}
+	   });
+	   return tableNearestMInfo ;
+    }
+
+   //去掉数值不存在时返显的undifined 
+   function replaceUndefined(value){
+	   value = value==undefined?"":value;
+	   if(value== "2099-12-31"){
+			 value ="长期有效";
+		 }
+	   return value;
+   }
+   //判断到期日期
+  /*  function replaceUndefined(value){
+	     var v = value;
+		 if(value!=undefined && value== "2099-12-31"){
+			 v ="长期有效";
+		 }
+		 return v;
+} */
+   $cf.loadAllDictOnly('PERSONAL_JDZHHKZT_R1_BANK,PERSONAL_JDZHHKZT_R2_BANK,PERSONAL_JDZHHKZT_R3_BANK,PERSONAL_JDZHHKZT_D1_R4_BANK,XZQH_BANK,SJGG_AREA_NAME_BANK,CURRENCY_BANK,FENSHUYXYS_BANK,ZFGJJ_JFZT_BANK,PERSONAL_SXEDUYT_BANK,QYJD_YWDL_BANK,JYZK_BANK,XWDM_BANK,XUDM_BANK,HYZK_BANK,SEX_BANK,PERSONAL_IDENTITY_TYPE_BANK,JYZG_DJDM_BANK,ORG_TYPE_BANK,PERSONAL_JDTS_BANK,PERSONAL_DKFFXS_BANK,DXJFZH_JFZT_BANK,XGHK_ZRRLX_BANK,CXYY_BANK,FIVE_CLASSIFY_BANK,PERSONAL_JDJY_HKPL_BANK,PERSONAL_JDJY_GTJK_BANK,PERSONAL_JDJY_HKFS_BANK,PERSONAL_JDJY_DBFS_BANK,PERSONAL_JDZHZT_R4_BANK,PERSONAL_JDZHZT_R1_BANK,PERSONAL_JDZHZT_D1_BANK,PERSONAL_JDZHZT_R2_R3_BANK,PERSONAL_JDZHZT_C1_BANK,PERSONAL_JDJY_YWZL_BANK,DXJF_YWLX_BANK,HFF_YWLX_BANK,ACHIEVEMENT_BANK,DUTY_BANK,GMJJ_BANK,JOB_BANK,UNIT_NATURE_BANK,LIVE_CON_BANK,DBJZ_RYLB_BANK,MSPJ_JAFS_BANK,QZZX_JAFS_BANK,');
+   //还款状态R1
+   function getRepayStatusR1(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('PERSONAL_JDZHHKZT_R1_BANK',value);
+	   return name;
+   }
+   //还款状态R2
+   function getRepayStatusR2(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('PERSONAL_JDZHHKZT_R2_BANK',value);
+	   return name;
+   }
+   //还款状态R3
+   function getRepayStatusR3(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('PERSONAL_JDZHHKZT_R3_BANK',value);
+	   return name;
+   }
+   //还款状态R4-D1
+   function getRepayStatusR4D1(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('PERSONAL_JDZHHKZT_D1_R4_BANK',value);
+	   return name;
+   }
+   //说明
+    function getDescContent(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('FENSHUYXYS_BANK',value);
+	   return name;
+   }
+   //居住状态
+   function getResideState(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('LIVE_CON_BANK',value);
+	   return name;
+	   /* if(resideState == "1"){
+		   return "自置";
+	   }else if(resideState == "2"){
+		   return "按揭";
+	   }else if(resideState == "3"){
+		   return "亲属楼宇";
+	   }else if(resideState == "4"){
+		   return "集体宿舍";
+	   }else if(resideState == "5"){
+		   return "租房";
+	   }else if(resideState == "6"){
+		   return "共有住宅";
+	   }else if(resideState == "7"){
+		   return "其他";
+	   }else if(resideState == "11"){
+		   return "自有";
+	   }else if(resideState == "12"){
+		   return "借住";
+	   }else if(resideState == "9"){
+		   return "未知";
+	   }else {
+		   return "";
+	   } */
+   }
+   //单位性质
+   function getUnitCharacter(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('UNIT_NATURE_BANK',value);
+	   return name;
+	  /*  if(unitcharacter == "10"){
+		   return "机关、事业单位";
+	   }else if(unitcharacter == "20"){
+		   return "国有企业";
+	   }else if(unitcharacter == "30"){
+		   return "外资企业";
+	   }else if(unitcharacter == "40"){
+		   return "个体、私营企业";
+	   }else if(unitcharacter == "50"){
+		   return "其他（包括三资企业、民营企业、民间团体等）";
+	   }else if(unitcharacter == "99"){
+		   return "未知";
+	   }else {
+		   return "";
+	   } */
+   }
+ //职业
+   function getJob(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('JOB_BANK',value);
+	   return name;
+	   /* if(job == "0"){
+		   return "国家机关、党群组织、企业、事业单位负责人";
+	   }else if(job == "1"){
+		   return "专业技术人员";
+	   }else if(job == "3"){
+		   return "办事人员和有关人员";
+	   }else if(job == "4"){
+		   return "商业、服务业人员";
+	   }else if(job == "5"){
+		   return "农、林、牧、渔、水利业生产人员";
+	   }else if(job == "6"){
+		   return "生产、运输设备操作人员及有关人员";
+	   }else if(job == "X"){
+		   return "军人";
+	   }else if(job == "Y"){
+		   return "不便分类的其他从业人员";
+	   }else if(job == "Z"){
+		   return "未知";
+	   }else {
+		   return "";
+	   } */
+   }
+ //行业
+   function getiIndustryType(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('GMJJ_BANK',value);
+	   return name;
+	   /* if(industryType == "10"){
+		   return "机关、事业单位";
+	   }else if(industryType == "20"){
+		   return "国有企业";
+	   }else if(industryType == "30"){
+		   return "外资企业";
+	   }else if(industryType == "40"){
+		   return "个体、私营企业";
+	   }else if(industryType == "50"){
+		   return "其他（包括三资企业、民营企业、民间团体等）";
+	   }else if(industryType == "99"){
+		   return "未知";
+	   }else {
+		   return "";
+	   } */
+   }
+ //职务
+   function getOccupationCode(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('DUTY_BANK',value);
+	   return name;
+	   /* if(occupationCode == "1"){
+		   return "高级领导";
+	   }else if(occupationCode == "2"){
+		   return "中级领导";
+	   }else if(occupationCode == "3"){
+		   return "一般员工";
+	   }else if(occupationCode == "4"){
+		   return "其他";
+	   }else if(occupationCode == "9"){
+		   return "未知";
+	   }else {
+		   return "";
+	   } */
+   }
+ //职称
+   function getTechnicalTitle(value){
+	   var name = "";
+	   name =  $cf.getDictDetailName('ACHIEVEMENT_BANK',value);
+	   return name;
+	   /* if(technicalTitle == "0"){
+		   return "无";
+	   }else if(technicalTitle == "1"){
+		   return "高级";
+	   }else if(technicalTitle == "2"){
+		   return "中级";
+	   }else if(technicalTitle == "3"){
+		   return "初级";
+	   }else if(technicalTitle == "9"){
+		   return "未知";
+	   }else {
+		   return "";
+	   } */
+   }
+ //后付费业务类型
+ function getHffServType(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('HFF_YWLX_BANK',value);
+	 return name;
+	 /* if(hffServType == "1"){
+		   return "电信业务";
+	   }else {
+		   return "";
+	   } */
+ }
+ 
+ //非信贷交易信息明细 后付费业务类型
+ function getBusiType(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('DXJF_YWLX_BANK',value);
+	 return name;
+	 /* if(busiType == "1"){
+		   return "固定电话";
+	   }else if(busiType == "2"){
+		   return "移动电话";
+	   }else if(busiType == "3"){
+		   return "互联网接入";
+	   }else if(busiType == "4"){
+		   return "数据专线及集群业务";
+	   }else if(busiType == "5"){
+		   return "卫星业务";
+	   }else if(busiType == "6"){
+		   return "组合业务";
+	   }else if(busiType == "0"){
+		   return "其他业务";
+	   }else {
+		   return "";
+	   } */
+ }
+//信贷交易明细 业务种类企业 
+ function getServType4Company(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('QYJD_YWDL_BANK',value);
+	 return name;
+}
+//个人授信额度用途代码BANK
+function getPersonalSexDuty(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_SXEDUYT_BANK',value);
+	 return name;
+}
+ //信贷交易明细 业务种类个人
+ function getServType(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_JDJY_YWZL_BANK',value);
+	 return name;
+	 /* if(servType == "11"){
+		   return "个人住房商业贷款";
+	   }else if(servType == "12"){
+		   return "个人商用房（含商住两用）贷款";
+	   }else if(servType == "13"){
+		   return "个人住房公积金贷款";
+	   }else if(servType == "21"){
+		   return "个人汽车消费贷款";
+	   }else if(servType == "31"){
+		   return "个人助学贷款";
+	   }else if(servType == "32"){
+		   return "国家助学贷款";
+	   }else if(servType == "33"){
+		   return "商业助学贷款";
+	   }else if(servType == "41"){
+		   return "个人经营性贷款";
+	   }else if(servType == "51"){
+		   return "农户贷款";
+	   }else if(servType == "52"){
+		   return "经营性农户贷款";
+	   }else if(servType == "53"){
+		   return "消费性农户贷款";
+	   }else if(servType == "91"){
+		   return "其他个人消费贷款";
+	   }else if(servType == "99"){
+		   return "其他贷款";
+	   }else if(servType == "71"){
+		   return "准贷记卡";
+	   }else if(servType == "81"){
+		   return "贷记卡";
+	   }else if(servType == "82"){
+		   return "大额专项分期卡";
+	   }else if(servType == "41"){
+		   return "个人经营性贷款";
+	   }else if(servType == "61"){
+		   return "约定购回式证券交易";
+	   }else if(servType == "62"){
+		   return "股票质押式回购交易";
+	   }else if(servType == "63"){
+		   return "融资融券业务";
+	   }else if(servType == "64"){
+		   return "其他证券类融资";
+	   }else if(servType == "92"){
+		   return "融资租赁业务";
+	   }else if(servType == "A1"){
+		   return "资产处置";
+	   }else if(servType == "B1"){
+		   return "代偿债务";
+	   }else {
+		   return "";
+	   } */
+ }
+ //账户状态 C1
+ function getAccountStatus4C1(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_C1_BANK',value);
+	 return name;
+	/*  if(accountStatus == "1"){
+		   return "催收";
+	   }else if(accountStatus == "2"){
+		   return "结束";
+	   }else {
+		   return "";
+	   } */
+ }
+ //账户状态 R2R3
+ function getAccountStatus4R23(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_R2_R3_BANK',value);
+	 return name;
+	/*  if(accountStatus == "1"){
+		   return "正常";
+	   }else if(accountStatus == "2"){
+		   return "冻结";
+	   }else if(accountStatus == "8"){
+		   return "司法追偿";
+	   }else if(accountStatus == "3"){
+		   return "止付";
+	   }else if(accountStatus == "31"){
+		   return "银行止付";
+	   }else if(accountStatus == "4"){
+		   return "销户";
+	   }else if(accountStatus == "5"){
+		   return "呆账";
+	   }else if(accountStatus == "6"){
+		   return "未激活";
+	   }else {
+		   return "";
+	   } */
+ }
+//账户状态 d1
+ function getAccountStatus4D1(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_D1_BANK',value);
+	 if(name == null || name == undefined){
+		 return value;
+	 }
+	 return name;
+	 /* if(accountStatus == "1"){
+		   return "正常";
+	   }else if(accountStatus == "2"){
+		   return "逾期";
+	   }else if(accountStatus == "3"){
+		   return "结清";
+	   }else if(accountStatus == "4"){
+		   return "呆账";
+	   }else if(accountStatus == "5"){
+		   return "转出";
+	   }else if(accountStatus == "6"){
+		   return "担保物不足";
+	   }else if(accountStatus == "7"){
+		   return "强制平仓";
+	   }else if(accountStatus == "8"){
+		   return "司法追偿";
+	   }else {
+		   return "";
+	   } */
+ }
+//账户状态 r1
+ function getAccountStatus4R1(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_R1_BANK',value);
+	 return name;
+	 /* if(accountStatus == "1"){
+		   return "正常";
+	   }else if(accountStatus == "2"){
+		   return "逾期";
+	   }else if(accountStatus == "3"){
+		   return "结清";
+	   }else if(accountStatus == "4"){
+		   return "呆账";
+	   }else if(accountStatus == "5"){
+		   return "银行止付";
+	   }else if(accountStatus == "6"){
+		   return "担保物不足";
+	   }else if(accountStatus == "8"){
+		   return "司法追偿";
+	   }else {
+		   return "";
+	   } */
+ }
+//账户状态 r1
+ function getAccountStatus4R4(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_JDZHZT_R4_BANK',value);
+	 return name;
+	 /* if(accountStatus == "1"){
+		   return "正常";
+	   }else if(accountStatus == "2"){
+		   return "逾期";
+	   }else if(accountStatus == "3"){
+		   return "结清";
+	   }else if(accountStatus == "4"){
+		   return "呆账";
+	   }else if(accountStatus == "5"){
+		   return "银行止付";
+	   }else if(accountStatus == "8"){
+		   return "司法追偿";
+	   }else {
+		   return "";
+	   } */
+ }
+ //担保方式
+ function getGuarantyType(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('PERSONAL_JDJY_DBFS_BANK',value);
+	 return name;
+	/*  if(guarantyType == "1"){
+		   return "质押";
+	   }else if(guarantyType == "2"){
+		   return "抵押";
+	   }else if(guarantyType == "3"){
+		   return "保证";
+	   }else if(guarantyType == "4"){
+		   return "信用/免担保";
+	   }else if(guarantyType == "5"){
+		   return "组合(含保证)";
+	   }else if(guarantyType == "6"){
+		   return "组合（不含保证）";
+	   }else if(guarantyType == "7"){
+		   return "农户联保";
+	   }else if(guarantyType == "9"){
+		   return "其他";
+	   }else {
+		   return "";
+	   } */
+ }
+ //还款方式
+  function getModeOfRepayment(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('PERSONAL_JDJY_HKFS_BANK',value);
+		 return name;
+	  /* if(modeOfRepayment == "11"){
+		   return "分期等额本息";
+	   }else if(modeOfRepayment == "12"){
+		   return "分期等额本金";
+	   }else if(modeOfRepayment == "13"){
+		   return "到期还本分期结息";
+	   }else if(modeOfRepayment == "14"){
+		   return "等比累进分期还款";
+	   }else if(modeOfRepayment == "15"){
+		   return "等额累进分期还款";
+	   }else if(modeOfRepayment == "19"){
+		   return "其他类型分期还款";
+	   }else if(modeOfRepayment == "21"){
+		   return "到期一次还本付息";
+	   }else if(modeOfRepayment == "22"){
+		   return "预先付息到期还本";
+	   }else if(modeOfRepayment == "23"){
+		   return "随时还";
+	   }else if(modeOfRepayment == "29"){
+		   return "其他";
+	   }else if(modeOfRepayment == "31"){
+		   return "按期结息，到期还本";
+	   }else if(modeOfRepayment == "32"){
+		   return "按期结息，自由还本";
+	   }else if(modeOfRepayment == "33"){
+		   return "按期计算还本付息";
+	   }else if(modeOfRepayment == "39"){
+		   return "循环贷款下其他还款方式";
+	   }else if(modeOfRepayment == "90"){
+		   return "不区分还款方式";
+	   }else {
+		   return "";
+	   } */
+ }
+ //共同借款标志
+  function getCommonDebitCreditMark(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('PERSONAL_JDJY_GTJK_BANK',value);
+		 return name;
+	  /* if(commonDebitCreditMark == "0"){
+		   return "无";
+	   }else if(commonDebitCreditMark == "1"){
+		   return "主借款人";
+	   }else if(commonDebitCreditMark == "2"){
+		   return "从借款人";
+	   }else {
+		   return "";
+	   } */
+ }
+//还款频率
+  function getRepaymentFrequemcy(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('PERSONAL_JDJY_HKPL_BANK',value);
+		 return name;
+	 /*  if(repaymentFrequemcy == "0"){
+		   return 	"无";
+	   }else if(repaymentFrequemcy == "01"){
+		   return "日";
+	   }else if(repaymentFrequemcy == "02"){
+		   return "周";
+	   }else if(repaymentFrequemcy == "03"){
+		   return "月";
+	   }else if(repaymentFrequemcy == "04"){
+		   return "季";
+	   }else if(repaymentFrequemcy == "05"){
+		   return "半年";
+	   }else if(repaymentFrequemcy == "06"){
+		   return "年";
+	   }else if(repaymentFrequemcy == "07"){
+		   return "一次性";
+	   }else if(repaymentFrequemcy == "08"){
+		   return "不定期";
+	   }else if(repaymentFrequemcy == "12"){
+		   return "旬";
+	   }else if(repaymentFrequemcy == "13"){
+		   return "双周";
+	   }else if(repaymentFrequemcy == "14"){
+		   return "双月";
+	   }else if(repaymentFrequemcy == "99"){
+		   return "其他";
+	   }else {
+		   return "";
+	   } */
+ }
+ //五级分类
+ function getFiveClassify(value){
+	 var name = "";
+	 name =  $cf.getDictDetailName('FIVE_CLASSIFY_BANK',value);
+	 return name;
+	 /* if(fiveClassify == "1"){
+		   return "正常";
+	   }else if(fiveClassify == "2"){
+		   return "关注";
+	   }else if(fiveClassify == "3"){
+		   return "次级";
+	   }else if(fiveClassify == "4"){
+		   return "可疑";
+	   }else if(fiveClassify == "5"){
+		   return "损失";
+	   }else if(fiveClassify == "9"){
+		   return "未分类";
+	   }else {
+		   return "";
+	   }  */
+ }
+ //查询原因
+  function getQryReason(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('CXYY_BANK',value);
+		 return name;
+	  /* if(qryReason == "01"){
+		   return "贷后管理";
+	   }else if(qryReason == "02"){
+		   return "贷款审批";
+	   }else if(qryReason == "03"){
+		   return "信用卡审批";
+	   }else if(qryReason == "08"){
+		   return "担保资格审查";
+	   }else if(qryReason == "09"){
+		   return "司法调查";
+	   }else if(qryReason == "16"){
+		   return "公积金提取复核查询";
+	   }else if(qryReason == "18"){
+		   return "股指期货开户";
+	   }else if(qryReason == "19"){
+		   return "特约商户实名审查";
+	   }else if(qryReason == "20"){
+		   return "保前审查";
+	   }else if(qryReason == "21"){
+		   return "保后管理";
+	   }else if(qryReason == "22"){
+		   return "法人代表、负责人、高管等资信审查";
+	   }else if(qryReason == "23"){
+		   return "客户准入资格审查";
+	   }else if(qryReason == "24"){
+		   return "融资审批";
+	   }else if(qryReason == "25"){
+		   return "资信审查";
+	   }else if(qryReason == "26"){
+		   return "额度审批";
+	   }else {
+		   return "";
+	   } */
+ }
+ //责任人类型
+  function getRepayDutyManType(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('XGHK_ZRRLX_BANK',value);
+		 return name;
+	  /* if(repayDutyManType == "1"){
+		   return "共同借款人";
+	   }else if(repayDutyManType == "2"){
+		   return "保证人";
+	   }else if(repayDutyManType == "3"){
+		   return "票据承兑人";
+	   }else if(repayDutyManType == "4"){
+		   return "应收账款债务人";
+	   }else if(repayDutyManType == "5"){
+		   return "供应链中核心企业";
+	   }else if(repayDutyManType == "9"){
+		   return "其他";
+	   }else {
+		   return "";
+	   }  */
+ }
+ //当前缴费状态
+  function getCurPayStat(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('DXJFZH_JFZT_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+ // 住房公积金缴费状态代码BANK
+  function getPayStatus(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('ZFGJJ_JFZT_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+//-------------------------------------------------------------------------------------
+//币种  暂无
+  function getCurrency(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('CURRENCY_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+//国籍  暂无
+  function getSJGG(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('SJGG_AREA_NAME_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+//个人贷款发放形式
+  function getLoanDistributeForm(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('PERSONAL_DKFFXS_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+//特殊交易类型
+  function getType(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('PERSONAL_JDTS_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+// 机构类型BANK
+  function getOrgType(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('ORG_TYPE_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+// 职业资格等级代码BANK 执业资格记录-等级
+  function getRank(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('JYZG_DJDM_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+ //中华人民共和国行政区划代码   暂无
+   function getXZQH(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('XZQH_BANK',value);
+		 return name;
+	  /* if(curPayStat == "1"){
+		   return "欠费";
+	   }else if(curPayStat == "0"){
+		   return "正常";
+	   }else {
+		   return "";
+	   }  */
+ }
+ //证件类型
+   function getCertType(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('PERSONAL_IDENTITY_TYPE_BANK',value);
+		 return name;
+	  
+ }
+
+   //姓名
+    function getQueryedName(value){
+	   var d = value;
+	   var g = value;
+	   var h = value;
+	   var k = value;
+	   if(value != null && value.length > 1){
+		if(value.length <= 2){  //正常姓  2字
+		    value = d.substr(0,1) + getStar(g.length,1);
+			return value;
+		}else if(value.length >= 3)  //复姓  新疆人 正常三字
+			value = d.substr(0,1) + getStar(g.length,2)+h.substr(k.length-1,1);
+		return value;
+	   }
+		return value;   
+	  
+ } 
+   function getStar(len,num){
+	  var str = "";
+	   if(len>num){
+   for (var m = 0; m< len-num; m++){
+	   str = str + "*";
+   }
+   return str;
+	   }
+	   return str;
+   }
+   //屏蔽证件号
+   function getQueryedCertNo(value){
+	   var d = value;
+	   var g = value;
+	   var h = value;
+	   var k = value;
+	   if(value != null && value.length > 4){
+		   	value = d.substr(0,2) + getStar(g.length,4)+k.substr(h.length-2,2);
+		   	return value;
+	   }
+	   return value;
+   }
+ //性别
+   function getGender(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('SEX_BANK',value);
+		 return name;
+	  
+ }
+ //婚姻状况
+   function getMaritalStatus(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('HYZK_BANK',value);
+		 return name;
+	  
+ }
+ //学历
+   function getResidencyStatus(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('XUDM_BANK',value);
+		 return name;
+	  
+ }
+ //学位
+   function getDegree(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('XWDM_BANK',value);
+		 return name;
+	  
+ }
+ //就业状况
+   function getWorkStatus(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('JYZK_BANK',value);
+		 return name;
+	  
+ }
+   //人员类别
+   function getPersonnelType(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('DBJZ_RYLB_BANK',value);
+		 return name;
+	  
+ }
+   
+   //民事判决记录-结案方式
+   function getMSPJ(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('MSPJ_JAFS_BANK',value);
+		 return name;
+	  
+ }
+   // 强制执行结案方式代码BANK-结案方式
+   function getQZZX(value){
+		 var name = "";
+		 name =  $cf.getDictDetailName('QZZX_JAFS_BANK',value);
+		 return name;
+	  
+ }
+ 
+</script>
+
+<script type="text/javascript">
+$cf.ajax({
+	  url : '/opas-naps/query_userinfo.json',
+	data : roleObj,
+	//async:false,
+	onSuccess : function(response) {
+		var username = response.RSP_BODY.user;
+		//var data = JSON.parse(result);
+		$('body').watermark({
+			texts : [ username==undefined?"":username ], //水印文字
+			textColor : "#d2d2d2", //文字颜色
+			textFont : '14px 微软雅黑', //字体
+			width : 100, //水印文字的水平间距
+			height : 100, //水印文字的高度间距（低于文字高度会被替代）
+			textRotate : -30
+		//-90到0， 负数值，不包含-90
+		});
+	}
+}); 
+</script>
+
+</html>

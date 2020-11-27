@@ -1,0 +1,3284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApplyInformation">
+
+	<!-- 主卡进件信息 -->
+	<resultMap id="resultApplyList" type="java.util.Map">
+		<id column="INSIDE_APP_NO" jdbcType="VARCHAR" property="insideAppNo" />
+		<result column="APP_BANK" jdbcType="NUMERIC" property="appBank" />
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="APP_PROD" jdbcType="VARCHAR" property="appProd" />
+		<result column="APP_FLAG" jdbcType="NUMERIC" property="appFlag" />
+		<result column="APP_FLOWST" jdbcType="NUMERIC" property="appFlowst" />
+		<result column="APP_CODE" jdbcType="NUMERIC" property="appCode" />
+		<result column="APP_ACCTYP" jdbcType="VARCHAR" property="appAcctyp" />
+		<result column="C1_BRNCH" jdbcType="NUMERIC" property="c1Brnch" />
+		<result column="C1_CARDNBR" jdbcType="VARCHAR" property="c1Cardnbr" />
+		<result column="C1_IDTYPE" jdbcType="VARCHAR" property="c1Idtype" />
+		<result column="C1_IDNBR" jdbcType="VARCHAR" property="c1Idnbr" />
+		<result column="C1_SECNBR" jdbcType="VARCHAR" property="c1Secnbr" />
+		<result column="C1_CNAME" jdbcType="VARCHAR" property="c1Cname" />
+		<result column="C1_ENAME" jdbcType="VARCHAR" property="c1Ename" />
+		<result column="C1_GENDER" jdbcType="VARCHAR" property="c1Gender" />
+		<result column="C1_BIRTH" jdbcType="DATE" property="c1Birth" />
+		<result column="C1_NATION" jdbcType="VARCHAR" property="c1Nation" />
+		<result column="C1_MARST" jdbcType="VARCHAR" property="c1Marst" />
+		<result column="C1_EDUCLS" jdbcType="VARCHAR" property="c1Educls" />
+		<result column="C1_TITLE" jdbcType="VARCHAR" property="c1Title" />
+		<result column="C1_TELVL" jdbcType="VARCHAR" property="c1Telvl" />
+		<result column="C1_HMARE" jdbcType="VARCHAR" property="c1Hmare" />
+		<result column="C1_HMTEL" jdbcType="VARCHAR" property="c1Hmtel" />
+		<result column="C1_MOBILE" jdbcType="VARCHAR" property="c1Mobile" />
+		<result column="C1_EMAIL" jdbcType="VARCHAR" property="c1Email" />
+		<result column="C1_FAX" jdbcType="VARCHAR" property="c1Fax" />
+		<result column="C1_CLASS" jdbcType="VARCHAR" property="c1Class" />
+		<result column="C1_HMADD1" jdbcType="VARCHAR" property="c1Hmadd1" />
+		<result column="C1_HMADD2" jdbcType="VARCHAR" property="c1Hmadd2" />
+		<result column="C1_HMADD3" jdbcType="VARCHAR" property="c1Hmadd3" />
+		<result column="C1_HMADD4" jdbcType="VARCHAR" property="c1Hmadd4" />
+
+		<!-- <result column="C1_HMADD_TOTAL" jdbcType="VARCHAR" property="c1HmaddTotal" 
+			/> -->
+		<result column="C1_COADD_TOTAL" jdbcType="VARCHAR" property="c1CoaddTotal" />
+
+		<result column="C1_HMPOST" jdbcType="VARCHAR" property="c1Hmpost" />
+		<result column="C1_HMST" jdbcType="VARCHAR" property="c1Hmst" />
+		<result column="C1_HMYR" jdbcType="NUMERIC" property="c1Hmyr" />
+		<result column="C1_HLOAN" jdbcType="NUMERIC" property="c1Hloan" />
+		<result column="C1_IDADD1" jdbcType="VARCHAR" property="c1Idadd1" />
+		<result column="C1_IDADD2" jdbcType="VARCHAR" property="c1Idadd2" />
+		<result column="C1_IDADD3" jdbcType="VARCHAR" property="c1Idadd3" />
+		<result column="C1_IDADD4" jdbcType="VARCHAR" property="c1Idadd4" />
+		<result column="C1_IDPOST" jdbcType="VARCHAR" property="c1Idpost" />
+		<result column="C1_ESTADD1" jdbcType="VARCHAR" property="c1Estadd1" />
+		<result column="C1_ESTADD2" jdbcType="VARCHAR" property="c1Estadd2" />
+		<result column="C1_ESTADD3" jdbcType="VARCHAR" property="c1Estadd3" />
+		<result column="C1_ESTADD4" jdbcType="VARCHAR" property="c1Estadd4" />
+		<result column="C1_ESTPOST" jdbcType="NUMERIC" property="c1Estpost" />
+		<result column="C1_CARBRND" jdbcType="VARCHAR" property="c1Carbrnd" />
+		<result column="C1_CARDATE" jdbcType="DATE" property="c1Cardate" />
+		<result column="C1_CARNBR" jdbcType="VARCHAR" property="c1Carnbr" />
+		<result column="C1_CARST" jdbcType="VARCHAR" property="c1Carst" />
+		<result column="C1_COADD1" jdbcType="VARCHAR" property="c1Coadd1" />
+		<result column="C1_COADD2" jdbcType="VARCHAR" property="c1Coadd2" />
+		<result column="C1_COADD3" jdbcType="VARCHAR" property="c1Coadd3" />
+		<result column="C1_COADD4" jdbcType="VARCHAR" property="c1Coadd4" />
+		<result column="C1_COPOST" jdbcType="VARCHAR" property="c1Copost" />
+		<result column="C1_CONAME" jdbcType="VARCHAR" property="c1Coname" />
+		<result column="C1_CODEPT" jdbcType="VARCHAR" property="c1Codept" />
+		<result column="C1_CODUTY" jdbcType="VARCHAR" property="c1Coduty" />
+		<result column="C1_COCODE" jdbcType="VARCHAR" property="c1Cocode" />
+		<result column="C1_COBUSCD" jdbcType="VARCHAR" property="c1Cobuscd" />
+		<result column="C1_COKIND" jdbcType="VARCHAR" property="c1Cokind" />
+		<result column="C1_COLEVL" jdbcType="VARCHAR" property="c1Colevl" />
+		<result column="C1_COTEL" jdbcType="VARCHAR" property="c1Cotel" />
+		<result column="C1_COEXT" jdbcType="VARCHAR" property="c1Coext" />
+		<result column="C1_COYR" jdbcType="NUMERIC" property="c1Coyr" />
+		<result column="C1_EARN" jdbcType="NUMERIC" property="c1Earn" />
+		<result column="C1_FCONAME" jdbcType="VARCHAR" property="c1Fconame" />
+		<result column="C1_FCODEPT" jdbcType="VARCHAR" property="c1Fcodept" />
+		<result column="C1_FCOTITL" jdbcType="VARCHAR" property="c1Fcotitl" />
+		<result column="C1_FCOTEL" jdbcType="VARCHAR" property="c1Fcotel" />
+		<result column="C1_FCOYR" jdbcType="NUMERIC" property="c1Fcoyr" />
+		<result column="C1_FOREANN" jdbcType="NUMERIC" property="c1Foreann" />
+		<result column="C1_DEPEND" jdbcType="NUMERIC" property="c1Depend" />
+		<result column="C1_BUSISER" jdbcType="VARCHAR" property="c1Busiser" />
+		<result column="C1_PROMQU" jdbcType="VARCHAR" property="c1Promqu" />
+		<result column="C1_PROMAN" jdbcType="VARCHAR" property="c1Proman" />
+		<result column="C1_REID" jdbcType="VARCHAR" property="c1Reid" />
+		<result column="C1_RENAME" jdbcType="VARCHAR" property="c1Rename" />
+		<result column="C1_RETELAR" jdbcType="VARCHAR" property="c1Retelar" />
+		<result column="C1_RETEL" jdbcType="VARCHAR" property="c1Retel" />
+		<result column="C1_RESHIP" jdbcType="VARCHAR" property="c1Reship" />
+		<result column="C1_REMOBIL" jdbcType="VARCHAR" property="c1Remobil" />
+		<result column="C1_XID1" jdbcType="VARCHAR" property="c1Xid1" />
+		<result column="C1_XNAME1" jdbcType="VARCHAR" property="c1Xname1" />
+		<result column="C1_XTELAR1" jdbcType="VARCHAR" property="c1Xtelar1" />
+		<result column="C1_XTEL1" jdbcType="VARCHAR" property="c1Xtel1" />
+		<result column="C1_XSHIP1" jdbcType="VARCHAR" property="c1Xship1" />
+		<result column="C1_XCOMP1" jdbcType="VARCHAR" property="c1Xcomp1" />
+		<result column="C1_XMOBIL1" jdbcType="VARCHAR" property="c1Xmobil1" />
+		<result column="C1_XID2" jdbcType="VARCHAR" property="c1Xid2" />
+		<result column="C1_XNAME2" jdbcType="VARCHAR" property="c1Xname2" />
+		<result column="C1_XTELAR2" jdbcType="VARCHAR" property="c1Xtelar2" />
+		<result column="C1_XTEL2" jdbcType="VARCHAR" property="c1Xtel2" />
+		<result column="C1_XSHIP2" jdbcType="VARCHAR" property="c1Xship2" />
+		<result column="C1_XCOMP2" jdbcType="VARCHAR" property="c1Xcomp2" />
+		<result column="C1_XMOBIL2" jdbcType="VARCHAR" property="c1Xmobil2" />
+		<result column="C1_SPIDTYP" jdbcType="VARCHAR" property="c1Spidtyp" />
+		<result column="C1_SPIDNBR" jdbcType="VARCHAR" property="c1Spidnbr" />
+		<result column="C1_SPNAME" jdbcType="VARCHAR" property="c1Spname" />
+		<result column="C1_SPMOBIL" jdbcType="VARCHAR" property="c1Spmobil" />
+		<result column="C1_SPCNAME" jdbcType="VARCHAR" property="c1Spcname" />
+		<result column="C1_SPCDEPT" jdbcType="VARCHAR" property="c1Spcdept" />
+		<result column="C1_SPCDUTY" jdbcType="VARCHAR" property="c1Spcduty" />
+		<result column="C1_SPCTEL" jdbcType="VARCHAR" property="c1Spctel" />
+		<result column="C1_SPCEXT" jdbcType="VARCHAR" property="c1Spcext" />
+		<result column="C1_SPEARN" jdbcType="NUMERIC" property="c1Spearn" />
+		<result column="C2_OBNKNO" jdbcType="NUMERIC" property="c2Obnkno" />
+		<result column="C2_RELCOMP" jdbcType="VARCHAR" property="c2Relcomp" />
+		<result column="C2_SIGNCK" jdbcType="VARCHAR" property="c2Signck" />
+		<result column="C2_IDDT1" jdbcType="DATE" property="c2Iddt1" />
+		<result column="C2_ISDP1" jdbcType="VARCHAR" property="c2Isdp1" />
+		<result column="C2_NATNCD1" jdbcType="VARCHAR" property="c2Natncd1" />
+		<result column="C2_IDDT3" jdbcType="DATE" property="c2Iddt3" />
+		<result column="C2_ISDP3" jdbcType="VARCHAR" property="c2Isdp3" />
+		<result column="C2_NATNCD3" jdbcType="VARCHAR" property="c2Natncd3" />
+		<result column="C2_REVS2" jdbcType="VARCHAR" property="c2Revs2" />
+		<result column="C3_IDTYPE" jdbcType="VARCHAR" property="c3Idtype" />
+		<result column="C3_IDNBR" jdbcType="VARCHAR" property="c3Idnbr" />
+		<result column="C3_CNAME" jdbcType="VARCHAR" property="c3Cname" />
+		<result column="C3_ENAME" jdbcType="VARCHAR" property="c3Ename" />
+		<result column="C3_GENDER" jdbcType="VARCHAR" property="c3Gender" />
+		<result column="C3_BIRTH" jdbcType="DATE" property="c3Birth" />
+		<result column="C3_NATION" jdbcType="VARCHAR" property="c3Nation" />
+		<result column="C3_MARST" jdbcType="VARCHAR" property="c3Marst" />
+		<result column="C3_EDUCLS" jdbcType="VARCHAR" property="c3Educls" />
+		<result column="C3_HMARE" jdbcType="VARCHAR" property="c3Hmare" />
+		<result column="C3_HMTEL" jdbcType="VARCHAR" property="c3Hmtel" />
+		<result column="C3_MOBILE" jdbcType="VARCHAR" property="c3Mobile" />
+		<result column="C3_RESVD1" jdbcType="VARCHAR" property="c3Resvd1" />
+		<result column="C3_RESVD2" jdbcType="VARCHAR" property="c3Resvd2" />
+		<result column="C3_RESVD3" jdbcType="VARCHAR" property="c3Resvd3" />
+		<result column="C3_RESVD4" jdbcType="VARCHAR" property="c3Resvd4" />
+		<result column="C3_RESVD5" jdbcType="VARCHAR" property="c3Resvd5" />
+		<result column="C3_RESVD6" jdbcType="VARCHAR" property="c3Resvd6" />
+		<result column="C3_EMAIL" jdbcType="VARCHAR" property="c3Email" />
+		<result column="C3_CONAME" jdbcType="VARCHAR" property="c3Coname" />
+		<result column="C3_CODEPT" jdbcType="VARCHAR" property="c3Codept" />
+		<result column="C3_CODUTY" jdbcType="VARCHAR" property="c3Coduty" />
+		<result column="C3_COCODE" jdbcType="VARCHAR" property="c3Cocode" />
+		<result column="C3_TITLE" jdbcType="VARCHAR" property="c3Title" />
+		<result column="C3_COKIND" jdbcType="VARCHAR" property="c3Cokind" />
+		<result column="C3_COTEL" jdbcType="VARCHAR" property="c3Cotel" />
+		<result column="C3_COEXT" jdbcType="VARCHAR" property="c3Coext" />
+		<result column="C3_COYR" jdbcType="NUMERIC" property="c3Coyr" />
+		<result column="C3_EARN" jdbcType="NUMERIC" property="c3Earn" />
+		<result column="C3_ACCTNBR" jdbcType="VARCHAR" property="c3Acctnbr" />
+		<result column="C3_GUAMT" jdbcType="NUMERIC" property="c3Guamt" />
+		<result column="C3_TYPE" jdbcType="VARCHAR" property="c3Type" />
+		<result column="C3_GREF" jdbcType="VARCHAR" property="c3Gref" />
+		<result column="C3_GREL" jdbcType="VARCHAR" property="c3Grel" />
+		<result column="C4_CACCNBR" jdbcType="VARCHAR" property="c4Caccnbr" />
+		<result column="C4_CPAYMOD" jdbcType="VARCHAR" property="c4Cpaymod" />
+		<result column="C4_FACCNBR" jdbcType="VARCHAR" property="c4Faccnbr" />
+		<result column="C4_FPAYMOD" jdbcType="VARCHAR" property="c4Fpaymod" />
+		<result column="C4_OTHCARD" jdbcType="VARCHAR" property="c4Othcard" />
+		<result column="C4_OTHTYPE" jdbcType="VARCHAR" property="c4Othtype" />
+		<result column="C4_OTHCRED" jdbcType="NUMERIC" property="c4Othcred" />
+		<result column="C4_PAYCRED" jdbcType="NUMERIC" property="c4Paycred" />
+		<result column="C4_CCREDIT" jdbcType="NUMERIC" property="c4Ccredit" />
+		<result column="C4_FCREDIT" jdbcType="NUMERIC" property="c4Fcredit" />
+		<result column="C4_SOURCE" jdbcType="VARCHAR" property="c4Source" />
+		<result column="C4_APBATCH" jdbcType="VARCHAR" property="c4Apbatch" />
+		<result column="C4_ABACCES" jdbcType="VARCHAR" property="c4Abacces" />
+		<result column="C4_ABBRNCH" jdbcType="VARCHAR" property="c4Abbrnch" />
+		<result column="C4_ABUSER" jdbcType="VARCHAR" property="c4Abuser" />
+		<result column="C4_ABNAME" jdbcType="VARCHAR" property="c4Abname" />
+		<result column="C4_RECNAME" jdbcType="VARCHAR" property="c4Recname" />
+		<result column="C4_RECCARD" jdbcType="VARCHAR" property="c4Reccard" />
+		<result column="C4_RECEMP" jdbcType="VARCHAR" property="c4Recemp" />
+		<result column="C4_RELSHIP" jdbcType="VARCHAR" property="c4Relship" />
+		<result column="C4_RELMOD" jdbcType="VARCHAR" property="c4Relmod" />
+		<result column="C4_CYCDATE" jdbcType="NUMERIC" property="c4Cycdate" />
+		<result column="C4_CYCADD1" jdbcType="VARCHAR" property="c4Cycadd1" />
+		<result column="C4_CYCADD2" jdbcType="VARCHAR" property="c4Cycadd2" />
+		<result column="C4_BNAME" jdbcType="VARCHAR" property="c4Bname" />
+		<result column="C4_PINREQ" jdbcType="NUMERIC" property="c4Pinreq" />
+		<result column="C4_MESSREQ" jdbcType="NUMERIC" property="c4Messreq" />
+		<result column="C4_SMSAMT" jdbcType="NUMERIC" property="c4Smsamt" />
+		<result column="C4_SIGN_FLAG" jdbcType="VARCHAR" property="c4SignFlag" />
+		<result column="C4_REVS2" jdbcType="VARCHAR" property="c4Revs2" />
+		<result column="C4_STMCODE" jdbcType="VARCHAR" property="c4Stmcode" />
+		<result column="C4_GTOC" jdbcType="NUMERIC" property="c4Gtoc" />
+		<result column="C4_DOWNPD" jdbcType="VARCHAR" property="c4Downpd" />
+		<result column="C4_RUSHFLG" jdbcType="NUMERIC" property="c4Rushflg" />
+		<result column="C4_RUSHFEE" jdbcType="NUMERIC" property="c4Rushfee" />
+		<result column="C4_VCODE" jdbcType="VARCHAR" property="c4Vcode" />
+		<result column="C4_VRCODE" jdbcType="NUMERIC" property="c4Vrcode" />
+		<result column="C4_VCCRED" jdbcType="NUMERIC" property="c4Vccred" />
+		<result column="C4_VFCRED" jdbcType="NUMERIC" property="c4Vfcred" />
+		<result column="C4_VPACRED" jdbcType="NUMERIC" property="c4Vpacred" />
+		<result column="C4_CDESPMD" jdbcType="VARCHAR" property="c4Cdespmd" />
+		<result column="C4_CARDCST" jdbcType="NUMERIC" property="c4Cardcst" />
+		<result column="C4_CDESPLC" jdbcType="NUMERIC" property="c4Cdesplc" />
+		<result column="C4_VERCODE" jdbcType="VARCHAR" property="c4Vercode" />
+		<result column="C4_LYSRV" jdbcType="VARCHAR" property="c4Lysrv" />
+		<result column="C4_LYFEE" jdbcType="VARCHAR" property="c4Lyfee" />
+		<result column="C4_EXFLAG" jdbcType="VARCHAR" property="c4Exflag" />
+		<result column="C4_EXCODE" jdbcType="VARCHAR" property="c4Excode" />
+		<result column="C4_EXRTDT" jdbcType="NUMERIC" property="c4Exrtdt" />
+		<result column="C4_EXACCT" jdbcType="VARCHAR" property="c4Exacct" />
+		<result column="C4_CHFLAG" jdbcType="VARCHAR" property="c4Chflag" />
+		<result column="C4_BUEMB" jdbcType="VARCHAR" property="c4Buemb" />
+		<result column="C4_EMPNO" jdbcType="VARCHAR" property="c4Empno" />
+		<result column="C4_RISKCD" jdbcType="VARCHAR" property="c4Riskcd" />
+		<result column="C4_PIN1" jdbcType="VARCHAR" property="c4Pin1" />
+		<result column="C4_SRVCD1" jdbcType="VARCHAR" property="c4Srvcd1" />
+		<result column="C4_GIFTNO" jdbcType="VARCHAR" property="c4Giftno" />
+		<result column="C4_PSNID1" jdbcType="VARCHAR" property="c4Psnid1" />
+		<result column="C4_SYSFLG" jdbcType="VARCHAR" property="c4Sysflg" />
+		<result column="C4_GIFTN2" jdbcType="VARCHAR" property="c4Giftn2" />
+		<result column="C4_OTHCD4" jdbcType="VARCHAR" property="c4Othcd4" />
+		<result column="C4_OTHTYP4" jdbcType="VARCHAR" property="c4Othtyp4" />
+		<result column="C4_OTHEXP4" jdbcType="NUMERIC" property="c4Othexp4" />
+		<result column="C4_OBNKNM" jdbcType="VARCHAR" property="c4Obnknm" />
+		<result column="C4_RA" jdbcType="VARCHAR" property="c4Ra" />
+		<result column="C4_SC" jdbcType="VARCHAR" property="c4Sc" />
+		<result column="C4_SN" jdbcType="NUMERIC" property="c4Sn" />
+		<result column="C4_CLYN1" jdbcType="VARCHAR" property="c4Clyn1" />
+		<result column="C4_OTHCRQ" jdbcType="NUMERIC" property="c4Othcrq" />
+		<result column="C4_MUMPFL" jdbcType="NUMERIC" property="c4Mumpfl" />
+		<result column="C4_FCONM2" jdbcType="VARCHAR" property="c4Fconm2" />
+		<result column="C4_FCOYR2" jdbcType="NUMERIC" property="c4Fcoyr2" />
+		<result column="C4_FCOER2" jdbcType="NUMERIC" property="c4Fcoer2" />
+		<result column="C4_USPROD" jdbcType="VARCHAR" property="c4Usprod" />
+		<result column="C4_USMEB" jdbcType="VARCHAR" property="c4Usmeb" />
+		<result column="C4_USREL" jdbcType="VARCHAR" property="c4Usrel" />
+		<result column="C4_RELADD" jdbcType="VARCHAR" property="c4Reladd" />
+		<result column="C4_RELPOST" jdbcType="VARCHAR" property="c4Relpost" />
+		<result column="C4_APBTID" jdbcType="VARCHAR" property="c4Apbtid" />
+		<result column="C4_HMAMT" jdbcType="NUMERIC" property="c4Hmamt" />
+		<result column="C4_HLOANYR" jdbcType="NUMERIC" property="c4Hloanyr" />
+		<result column="C4_CARAMT" jdbcType="NUMERIC" property="c4Caramt" />
+		<result column="C4_CARLOAN" jdbcType="NUMERIC" property="c4Carloan" />
+		<result column="C4_ABPHON" jdbcType="VARCHAR" property="c4Abphon" />
+		<result column="C4_ABTYPE" jdbcType="VARCHAR" property="c4Abtype" />
+		<result column="C4_APSOUR" jdbcType="VARCHAR" property="c4Apsour" />
+		<result column="C4_CARYR" jdbcType="NUMERIC" property="c4Caryr" />
+		<result column="C4_ASSID" jdbcType="VARCHAR" property="c4Assid" />
+		<result column="C4_ASSIDTY" jdbcType="VARCHAR" property="c4Assidty" />
+		<result column="C4_ASSNAME" jdbcType="VARCHAR" property="c4Assname" />
+		<result column="C4_ASSBIRT" jdbcType="DATE" property="c4Assbirt" />
+		<result column="C4_ASSGEND" jdbcType="VARCHAR" property="c4Assgend" />
+		<result column="C4_ASSMARS" jdbcType="VARCHAR" property="c4Assmars" />
+		<result column="C4_ASSHARE" jdbcType="NUMERIC" property="c4Asshare" />
+		<result column="C4_ASSHTEL" jdbcType="VARCHAR" property="c4Asshtel" />
+		<result column="C4_ASSBTEL" jdbcType="VARCHAR" property="c4Assbtel" />
+		<result column="C4_ASSBEXT" jdbcType="VARCHAR" property="c4Assbext" />
+		<result column="C4_ASSCELL" jdbcType="VARCHAR" property="c4Asscell" />
+		<result column="C4_ASSCOMP" jdbcType="VARCHAR" property="c4Asscomp" />
+		<result column="C4_ASSDEPT" jdbcType="VARCHAR" property="c4Assdept" />
+		<result column="C4_CDSEL" jdbcType="VARCHAR" property="c4Cdsel" />
+		<result column="C4_CDSELNT" jdbcType="VARCHAR" property="c4Cdselnt" />
+		<result column="C4_DECEMP" jdbcType="NUMERIC" property="c4Decemp" />
+		<result column="C4_XCRLMT" jdbcType="NUMERIC" property="c4Xcrlmt" />
+		<result column="C4_CHILDYN" jdbcType="NUMERIC" property="c4Childyn" />
+		<result column="C4_FCODAT" jdbcType="DATE" property="c4Fcodat" />
+		<result column="C5_SERCD11" jdbcType="VARCHAR" property="c5Sercd11" />
+		<result column="C5_SERCD12" jdbcType="VARCHAR" property="c5Sercd12" />
+		<result column="C5_SERCD13" jdbcType="VARCHAR" property="c5Sercd13" />
+		<result column="C5_SERCD14" jdbcType="VARCHAR" property="c5Sercd14" />
+		<result column="C5_SERCD15" jdbcType="VARCHAR" property="c5Sercd15" />
+		<result column="C5_SERCD16" jdbcType="VARCHAR" property="c5Sercd16" />
+		<result column="C5_SERCD17" jdbcType="VARCHAR" property="c5Sercd17" />
+		<result column="C5_SERCD18" jdbcType="VARCHAR" property="c5Sercd18" />
+		<result column="C5_SERCD19" jdbcType="VARCHAR" property="c5Sercd19" />
+		<result column="C5_CAPCNT" jdbcType="NUMERIC" property="c5Capcnt" />
+		<result column="C5_PTPLAN" jdbcType="NUMERIC" property="c5Ptplan" />
+		<result column="C5_CUCODE1" jdbcType="VARCHAR" property="c5Cucode1" />
+		<result column="C5_CUCODE2" jdbcType="VARCHAR" property="c5Cucode2" />
+		<result column="C5_ACCODE1" jdbcType="VARCHAR" property="c5Accode1" />
+		<result column="C5_ACCODE2" jdbcType="VARCHAR" property="c5Accode2" />
+		<result column="C5_OVRMTYN" jdbcType="VARCHAR" property="c5Ovrmtyn" />
+		<result column="C5_COLEVL" jdbcType="VARCHAR" property="c5Colevl" />
+		<result column="C5_HMST" jdbcType="VARCHAR" property="c5Hmst" />
+		<result column="C5_HMYR" jdbcType="NUMERIC" property="c5Hmyr" />
+		<result column="C5_SCHLNMC" jdbcType="VARCHAR" property="c5Schlnmc" />
+		<result column="C5_SCHLNME" jdbcType="VARCHAR" property="c5Schlnme" />
+		<result column="C5_MOAREA" jdbcType="VARCHAR" property="c5Moarea" />
+		<result column="C5_EMAILIN" jdbcType="VARCHAR" property="c5Emailin" />
+		<result column="C5_OVERSEA" jdbcType="VARCHAR" property="c5Oversea" />
+		<result column="C5_ADTYPE1" jdbcType="VARCHAR" property="c5Adtype1" />
+		<result column="C5_ADTYPE2" jdbcType="VARCHAR" property="c5Adtype2" />
+		<result column="C5_ADTYPE3" jdbcType="VARCHAR" property="c5Adtype3" />
+		<result column="C5_ADTYPE4" jdbcType="VARCHAR" property="c5Adtype4" />
+		<result column="C5_BMWYN" jdbcType="VARCHAR" property="c5Bmwyn" />
+		<result column="C5_MSGFREE" jdbcType="VARCHAR" property="c5Msgfree" />
+		<result column="C5_CPTNO" jdbcType="NUMERIC" property="c5Cptno" />
+		<result column="C5_INTCODE" jdbcType="NUMERIC" property="c5Intcode" />
+		<result column="C5_MNGRNO" jdbcType="VARCHAR" property="c5Mngrno" />
+		<result column="C5_IDTE1" jdbcType="DATE" property="c5Idte1" />
+		<result column="C5_IDTE3" jdbcType="DATE" property="c5Idte3" />
+		<result column="C5_ABTEAM" jdbcType="NUMERIC" property="c5Abteam" />
+		<result column="C5_ABAREA" jdbcType="NUMERIC" property="c5Abarea" />
+		<result column="C5_CARLICS" jdbcType="VARCHAR" property="c5Carlics" />
+		<result column="C5_ATM1" jdbcType="VARCHAR" property="c5Atm1" />
+		<result column="C5_TELE1" jdbcType="VARCHAR" property="c5Tele1" />
+		<result column="C5_NET1" jdbcType="VARCHAR" property="c5Net1" />
+		<result column="C5_PHONE1" jdbcType="VARCHAR" property="c5Phone1" />
+		<result column="C5_CPNO1" jdbcType="NUMERIC" property="c5Cpno1" />
+		<result column="C5_NBRMTH1" jdbcType="NUMERIC" property="c5Nbrmth1" />
+		<result column="C5_COMCUST" jdbcType="VARCHAR" property="c5Comcust" />
+		<result column="C5_COMRCCD" jdbcType="VARCHAR" property="c5Comrccd" />
+		<result column="C5_COMNAME" jdbcType="VARCHAR" property="c5Comname" />
+		<result column="C5_MPLLMT" jdbcType="NUMERIC" property="c5Mpllmt" />
+		<result column="C5_JCTYPE" jdbcType="VARCHAR" property="c5Jctype" />
+		<result column="C5_MAILCO1" jdbcType="VARCHAR" property="c5Mailco1" />
+		<result column="C5_GUARNM2" jdbcType="VARCHAR" property="c5Guarnm2" />
+		<result column="C5_GUAR2" jdbcType="VARCHAR" property="c5Guar2" />
+		<result column="C5_EMPNO" jdbcType="VARCHAR" property="c5Empno" />
+		<result column="C5_PATHWAY" jdbcType="VARCHAR" property="c5Pathway" />
+		<result column="C5_GUIDTP" jdbcType="VARCHAR" property="c5Guidtp" />
+		<result column="C5_CUCRED" jdbcType="NUMERIC" property="c5Cucred" />
+		<result column="C5_NCRED" jdbcType="VARCHAR" property="c5Ncred" />
+		<result column="C5_CREDLMT" jdbcType="NUMERIC" property="c5Credlmt" />
+		<result column="C5_EXPYDT" jdbcType="NUMERIC" property="c5Expydt" />
+		<result column="C5_PINLIM1" jdbcType="NUMERIC" property="c5Pinlim1" />
+		<result column="C5_USREL" jdbcType="VARCHAR" property="c5Usrel" />
+		<result column="C5_ABTYPE" jdbcType="VARCHAR" property="c5Abtype" />
+		<result column="C5_OTHBNK" jdbcType="NUMERIC" property="c5Othbnk" />
+		<result column="C5_SENDNBR" jdbcType="VARCHAR" property="c5Sendnbr" />
+		<result column="C5_TEMPLMT" jdbcType="NUMERIC" property="c5Templmt" />
+		<result column="C5_TLMTBEG" jdbcType="DATE" property="c5Tlmtbeg" />
+		<result column="C5_TLMTEND" jdbcType="DATE" property="c5Tlmtend" />
+		<result column="C5_POI_COD" jdbcType="VARCHAR" property="c5PoiCod" />
+		<result column="C5_WORK_TY" jdbcType="VARCHAR" property="c5WorkTy" />
+		<result column="C5_PRO_COD" jdbcType="VARCHAR" property="c5ProCod" />
+		<result column="C5_SIN_DUA" jdbcType="VARCHAR" property="c5SinDua" />
+		<result column="C5_APR_COM" jdbcType="VARCHAR" property="c5AprCom" />
+		<result column="C5_REL_PAR" jdbcType="VARCHAR" property="c5RelPar" />
+		<result column="C5_OTHER_I" jdbcType="VARCHAR" property="c5OtherI" />
+		<result column="C5_BUS_OWN" jdbcType="VARCHAR" property="c5BusOwn" />
+		<result column="C5_BUS_EST" jdbcType="DATE" property="c5BusEst" />
+		<result column="C5_BUS_REG" jdbcType="VARCHAR" property="c5BusReg" />
+		<result column="C5_CUSEG1" jdbcType="VARCHAR" property="c5Cuseg1" />
+		<result column="C5_INTBNK" jdbcType="NUMERIC" property="c5Intbnk" />
+		<result column="C5_TRAN_RTE" jdbcType="VARCHAR" property="c5TranRte" />
+		<result column="C5_COSU_RTE" jdbcType="VARCHAR" property="c5CosuRte" />
+		<result column="C5_DEPO_RTE" jdbcType="VARCHAR" property="c5DepoRte" />
+		<result column="C5_SGNDTE1" jdbcType="DATE" property="c5Sgndte1" />
+		<result column="C5_REGDTE1" jdbcType="DATE" property="c5Regdte1" />
+		<result column="C5_SGNDTE3" jdbcType="DATE" property="c5Sgndte3" />
+		<result column="C5_REGDTE3" jdbcType="DATE" property="c5Regdte3" />
+		<result column="C5_CUREF1" jdbcType="VARCHAR" property="c5Curef1" />
+		<result column="C5_MASTNO1" jdbcType="VARCHAR" property="c5Mastno1" />
+		<result column="C5_NTMSG1" jdbcType="VARCHAR" property="c5Ntmsg1" />
+		<result column="C5_NTMSG2" jdbcType="VARCHAR" property="c5Ntmsg2" />
+		<result column="C5_CARDTO1" jdbcType="VARCHAR" property="c5Cardto1" />
+		<result column="C5_ABCODE" jdbcType="VARCHAR" property="c5Abcode" />
+		<result column="C5_PBCBRNC" jdbcType="VARCHAR" property="c5Pbcbrnc" />
+		<result column="C5_COMNM2P" jdbcType="VARCHAR" property="c5Comnm2p" />
+		<result column="C5_COMNM2V" jdbcType="VARCHAR" property="c5Comnm2v" />
+		<result column="C5_NOREISS" jdbcType="NUMERIC" property="c5Noreiss" />
+		<result column="C5_MSMPNBR" jdbcType="VARCHAR" property="c5Msmpnbr" />
+		<result column="C5_MSMPBAL" jdbcType="NUMERIC" property="c5Msmpbal" />
+		<result column="C5_CDSEL1" jdbcType="VARCHAR" property="c5Cdsel1" />
+		<result column="C5_HDWR_SN" jdbcType="VARCHAR" property="c5HdwrSn" />
+		<result column="C5_AID" jdbcType="VARCHAR" property="c5Aid" />
+		<result column="C5_INTFLCD" jdbcType="NUMERIC" property="c5Intflcd" />
+		<result column="C5_DEPOSIT" jdbcType="NUMERIC" property="c5Deposit" />
+		<result column="C5_DAILYTP" jdbcType="NUMERIC" property="c5Dailytp" />
+		<result column="C5_OPE_MOD" jdbcType="VARCHAR" property="c5OpeMod" />
+		<result column="C5_OPE_TPE" jdbcType="VARCHAR" property="c5OpeTpe" />
+		<result column="C5_CASHRTE" jdbcType="VARCHAR" property="c5Cashrte" />
+		<result column="C5_BEATYPE" jdbcType="NUMERIC" property="c5Beatype" />
+		<result column="C5_INLAND" jdbcType="VARCHAR" property="c5Inland" />
+		<result column="C5_FEEGRP" jdbcType="NUMERIC" property="c5Feegrp" />
+		<result column="C5_CC_YN1" jdbcType="NUMERIC" property="c5CcYn1" />
+		<result column="C5_EC_YN1" jdbcType="NUMERIC" property="c5EcYn1" />
+		<result column="C5_FRELIM" jdbcType="NUMERIC" property="c5Frelim" />
+		<result column="C5_LIVE_CY1" jdbcType="VARCHAR" property="c5LiveCy1" />
+		<result column="C5_INTFL_CODE" jdbcType="NUMERIC" property="c5IntflCode" />
+		<result column="C5_DETCARD" jdbcType="VARCHAR" property="c5Detcard" />
+		<result column="C5_QQ_NBR1" jdbcType="VARCHAR" property="c5QqNbr1" />
+		<result column="C5_WEIXIN_NBR1" jdbcType="VARCHAR" property="c5WeixinNbr1" />
+		<result column="C5_ISS_MOD" jdbcType="VARCHAR" property="c5IssMod" />
+		<result column="C5_CARDCST2" jdbcType="VARCHAR" property="c5Cardcst2" />
+		<result column="C5_ISDPIF1" jdbcType="VARCHAR" property="c5Isdpif1" />
+		<result column="C5_ISDPIF3" jdbcType="VARCHAR" property="c5Isdpif3" />
+		<result column="C5_CUCODE3" jdbcType="VARCHAR" property="c5Cucode3" />
+		<result column="C6_OUT_MTH" jdbcType="NUMERIC" property="c6OutMth" />
+		<result column="THIRD_PARTY_YN1" jdbcType="VARCHAR" property="thirdPartyYn1" />
+		<result column="PAYMT_YN" jdbcType="NUMERIC" property="paymtYn" />
+		<result column="C5_CUCODE4" jdbcType="VARCHAR" property="c5Cucode4" />
+		<result column="C5_LOAN_DTE" jdbcType="DATE" property="c5LoanDte" />
+		<result column="C5_INTR_RATEW" jdbcType="NUMERIC" property="c5IntrRatew" />
+		<result column="C5_RMB_BILL1" jdbcType="NUMERIC" property="c5RmbBill1" />
+		<result column="SERIES_ID1" jdbcType="VARCHAR" property="seriesId1" />
+		<result column="C5_MPLMT_FLAG" jdbcType="NUMERIC" property="c5MplmtFlag" />
+		<result column="C5_HDWR_SN2" jdbcType="VARCHAR" property="c5HdwrSn2" />
+		<result column="C5_AID2" jdbcType="VARCHAR" property="c5Aid2" />
+		<result column="C6_REL_FLAG1" jdbcType="NUMERIC" property="c6RelFlag1" />
+		<result column="C6_REL_FLAG3" jdbcType="NUMERIC" property="c6RelFlag3" />
+		<result column="C6_CLASS_NBR1" jdbcType="VARCHAR" property="c6ClassNbr1" />
+		<result column="C6_CLASS_NBR3" jdbcType="VARCHAR" property="c6ClassNbr3" />
+		<result column="C6_WHITE_RSN1" jdbcType="VARCHAR" property="c6WhiteRsn1" />
+		<result column="C6_WHITE_RSN3" jdbcType="VARCHAR" property="c6WhiteRsn3" />
+		<result column="C6_MP_EXPDTE" jdbcType="DATE" property="c6MpExpdte" />
+		<result column="C6_ETHNIC1" jdbcType="VARCHAR" property="c6Ethnic1" />
+		<result column="C6_OCCUPATION1" jdbcType="VARCHAR" property="c6Occupation1" />
+		<result column="C6_ENROLL_DATE" jdbcType="NUMERIC" property="c6EnrollDate" />
+		<result column="C6_GRADU_DATE" jdbcType="NUMERIC" property="c6GraduDate" />
+		<result column="C6_UNQPASS1" jdbcType="NUMERIC" property="c6Unqpass1" />
+		<result column="C6_MAX_MPAMT1" jdbcType="NUMERIC" property="c6MaxMpamt1" />
+		<result column="C6_MIN_MPAMT1" jdbcType="NUMERIC" property="c6MinMpamt1" />
+		<result column="C6_ABREASON" jdbcType="VARCHAR" property="c6Abreason" />
+		<result column="C6_ABSOUAREA" jdbcType="VARCHAR" property="c6Absouarea" />
+		<result column="C6_UNION_CD" jdbcType="VARCHAR" property="c6UnionCd" />
+		<result column="C6_FINANCE_CD" jdbcType="VARCHAR" property="c6FinanceCd" />
+		<result column="C6_LMT_TYPE1" jdbcType="VARCHAR" property="c6LmtType1" />
+		<result column="C6_SUBLMT_NBR1" jdbcType="NUMERIC" property="c6SublmtNbr1" />
+		<result column="C6_LIMIT1" jdbcType="NUMERIC" property="c6Limit1" />
+		<result column="C6_ATTRBTE1" jdbcType="NUMERIC" property="c6Attrbte1" />
+		<result column="C6_AVAIL_YN1" jdbcType="NUMERIC" property="c6AvailYn1" />
+		<result column="C6_BEGIN_DATE1" jdbcType="DATE" property="c6BeginDate1" />
+		<result column="C6_END_DATE1" jdbcType="DATE" property="c6EndDate1" />
+		<result column="C6_LMT_TYPE2" jdbcType="VARCHAR" property="c6LmtType2" />
+		<result column="C6_SUBLMT_NBR2" jdbcType="NUMERIC" property="c6SublmtNbr2" />
+		<result column="C6_LIMIT2" jdbcType="NUMERIC" property="c6Limit2" />
+		<result column="C6_ATTRBTE2" jdbcType="NUMERIC" property="c6Attrbte2" />
+		<result column="C6_AVAIL_YN2" jdbcType="NUMERIC" property="c6AvailYn2" />
+		<result column="C6_BEGIN_DATE2" jdbcType="DATE" property="c6BeginDate2" />
+		<result column="C6_END_DATE2" jdbcType="DATE" property="c6EndDate2" />
+		<result column="C6_VCN_YN" jdbcType="NUMERIC" property="c6VcnYn" />
+		<result column="C6_VCN_CHL" jdbcType="NUMERIC" property="c6VcnChl" />
+		<result column="C6_ITCD_ENDDT" jdbcType="DATE" property="c6ItcdEnddt" />
+		<result column="C5_RESERV2" jdbcType="VARCHAR" property="c5Reserv2" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+
+		<result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+		<result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+		<result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+		<result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+		<result column="BATCH_OPERATE_FLAG" jdbcType="VARCHAR"
+			property="batchOperateFlag" />
+		<result column="C1C2_FLAG" jdbcType="VARCHAR" property="c1c2Flag" />
+		<result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+		<result column="INPUT_CHANNEL" jdbcType="CHAR" property="inputChannel" />
+		<result column="EPAY_MATCH" jdbcType="CHAR" property="epayMatch" />
+		<result column="CZFQ_MATCH" jdbcType="CHAR" property="czfqMatch" />
+
+		<result column="C2_CNAME" jdbcType="VARCHAR" property="c2Cname" />
+		<result column="C2_IDNBR" jdbcType="VARCHAR" property="c2Idnbr" />
+		<result column="PATCH_CODE" jdbcType="VARCHAR" property="patchCode" />  <!-- 补件码 -->
+		<result column="OPERATE_RESULT" jdbcType="VARCHAR" property="operateResult" />  <!-- 当前状态 -->
+		<result column="APPROVE_RESULT" jdbcType="VARCHAR" property="approveResult" />  <!-- 审批结果 -->
+	
+		<result column="MATCHING_CARD_FLAG" jdbcType="CHAR" property="matchingCardFlag" />  <!-- 套卡标识 -->
+		<result column="remark" property="remark" jdbcType="NUMERIC" />
+	</resultMap>
+
+	<resultMap id="ApplyInfoResultMap" type="java.util.Map">
+		<id column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="C1_CNAME" property="c1Cname" jdbcType="VARCHAR" />
+		<result column="C1_IDNBR" property="c1Idnbr" jdbcType="VARCHAR" />
+		<result column="C2_CNAME" property="c2Cname" jdbcType="VARCHAR" />
+		<result column="C2_IDNBR" property="c2Idnbr" jdbcType="VARCHAR" />
+		<result column="PATCH_CODE" property="patchCode" jdbcType="VARCHAR" />
+		<result column="OPERATE_DESC" property="operateDesc" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+		<result column="APP_PROD" property="appProd" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="NUMERIC" />
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag"
+			jdbcType="CHAR" />
+		<result column="FLAG" property="flag" jdbcType="CHAR"/>
+		<result column="APP_RESULT" property="appResult" jdbcType="CHAR"/>
+		<result column="LAOJIANFLAG" property="laojianFlag" jdbcType="VARCHAR"/>
+		<!-- 网申短表字段 20200604 -->
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="CERT_TYPE" property="certType" jdbcType="VARCHAR"/>
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR"/>
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+		<result column="NODE_DESC" property="nodeDesc" jdbcType="VARCHAR"/>
+		<result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR"/>
+		<result column="WORK_PROVINCE" property="workProvince" jdbcType="VARCHAR"/>
+		<result column="WORK_AREA" property="workArea" jdbcType="VARCHAR"/>
+		<result column="WORK_ADDRESS" property="workAddress" jdbcType="VARCHAR"/>
+		<result column="BRNCH_NAME" property="brnchName" jdbcType="VARCHAR"/>
+		<result column="PROMT_ORG" property="promtOrg" jdbcType="VARCHAR"/>
+		<result column="APPROVE_RESULT" property="approveResult" jdbcType="CHAR"/>
+		<result column="COMPANY_NO_3RD" property="companyNo3rd" jdbcType="VARCHAR"/>
+		<result column="CHANNEL_NO_3RD" property="channelNo3rd" jdbcType="VARCHAR"/>
+		<result column="MOBILE_IDENTIFIED" property="mobileIdentified" jdbcType="VARCHAR"/>
+	</resultMap>
+    <!-- 存量客户字段 -->
+	<resultMap id="StockInfoResultMap" type="java.util.Map">
+		<id column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CUSTR_NBR" property="custrNbr" jdbcType="VARCHAR" />
+		<result column="SURNAME" property="surName" jdbcType="VARCHAR" />
+		<result column="PRODUCT" property="product" jdbcType="VARCHAR" />
+		<result column="ADDL_CARD" property="addlCard" jdbcType="VARCHAR" />
+		<result column="ACC_TYPE" property="accType" jdbcType="VARCHAR" />
+		<result column="CDFRM" property="cdfrm" jdbcType="VARCHAR" />
+		<result column="EMBNAME_D" property="embnameD" jdbcType="VARCHAR" />
+		<result column="CDESPMTD" property="cdespmtd" jdbcType="VARCHAR" />
+		<result column="STM_CODE" property="stmCode" jdbcType="VARCHAR" />
+		<result column="MAIL_TO" property="mailTo" jdbcType="VARCHAR" />
+		<result column="ADDR1_L1" property="addr1L1" jdbcType="VARCHAR" />
+		<result column="ADDR1_L2" property="addr1L2" jdbcType="VARCHAR" />
+		<result column="ADDR1_L3" property="addr1L3" jdbcType="VARCHAR" />
+		<result column="ADDR1_L4" property="addr1L4" jdbcType="VARCHAR" />
+		<result column="POST_CODE" property="postCode" jdbcType="VARCHAR" />
+		<result column="ADDR1_TYPE" property="addr1Type" jdbcType="VARCHAR" />
+		<result column="PIN_CHK" property="pinChk" jdbcType="VARCHAR" />
+		<result column="SMS_YN" property="smsYn" jdbcType="VARCHAR" />
+		<result column="SMS_FREEYN" property="smsFreeyn" jdbcType="VARCHAR" />
+		<result column="CDISS_FLAG" property="cdissFlag" jdbcType="VARCHAR" />
+		<result column="ISS_MOD" property="issMod" jdbcType="VARCHAR" />
+		<result column="RUSHFLG" property="rushflg" jdbcType="VARCHAR" />
+		<result column="RUSHFEE" property="rushfee" jdbcType="VARCHAR" />
+		<result column="COURIERF" property="courierf" jdbcType="VARCHAR" />
+		<result column="EMBOSS_CPY" property="embossCpy" jdbcType="VARCHAR" />
+		<result column="PRMAG_CD" property="prmagCd" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="MATCH_FLAG" property="matchFlag" jdbcType="VARCHAR" />
+		<result column="RESI_TAXID" property="resiTaxid" jdbcType="VARCHAR" />
+		<result column="DEVICE_ID" property="deviceId" jdbcType="VARCHAR" />
+		<result column="COLLECT_ID" property="collectId" jdbcType="VARCHAR" />
+		<result column="CUSTR_TYPE" property="custrType" jdbcType="VARCHAR" />
+		<result column="ACTIVE_NOW" property="activeNow" jdbcType="VARCHAR" />
+		<result column="VCN_CHNL" property="vcnChnl" jdbcType="VARCHAR" />
+		<result column="APPROVE_RESULT" property="approveResult" jdbcType="CHAR"/>
+	</resultMap>
+
+	<select id="queryApplyInfoCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from (select distinct c1.APP_ID,
+		c1.C1_CNAME,
+		c1.C1_IDNBR,
+		c2.C2_CNAME,
+		c2.C2_IDNBR,
+	    d.flag,
+	    y.LAOJIANFLAG,
+        d.app_result,
+		w.PATCH_CODE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark,
+		c1.MATCHING_CARD_FLAG
+		from OPAS_BIZ_INP_APPL_C1 c1
+		left join
+		OPAS_BIZ_INP_APPL_C2 c2 on c2.APP_ID = c1.APP_ID
+		left join OPAS_ALLOT_APPLY_ALLOT y on y.app_id = c1.app_id
+		left join (select rn,app_id,patch_code from (
+		  	select row_number() over (partition by APP_ID order by operat_time desc) as rn,app_id,patch_code from OPAS_FILE_PATCHBOLT_HIS
+		  			)   where  rn = 1) w  on w.app_id = c1.APP_ID
+		left join OPAS_FILE_APPLICATION_DETAIL d on d.app_id = c1.app_id
+		where not exists (select t.id_no
+		from OPAS_VVIP_LIST t, OPAS_FILE_APPLICATION_DETAIL l
+		where t.id_no =
+		l.cred_no
+		and t.id_no = c1.C1_IDNBR)
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='2'.toString() ">
+			and c1.APP_ID  = #{appId}
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='1'.toString() ">
+			and (c1.APP_ID like '${appId}%')
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='0'.toString() ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="flag == '1'.toString() ">
+			and  substr(c1.APP_ID,1,6) &lt; to_char(sysdate-365,'yymmdd')
+		</if>
+		<if test="flag == '0'.toString() ">
+			and substr(c1.APP_ID,1,6) &gt;= to_char(sysdate-365,'yymmdd')
+		</if>)
+	</select>
+
+	<select id="queryApplyInfoMap" parameterType="java.lang.String"
+		resultMap="ApplyInfoResultMap">
+		select distinct c1.APP_ID,
+		c1.C1_CNAME,
+		c1.C1_IDNBR,
+		c2.C2_CNAME,
+		c2.C2_IDNBR,
+	    d.flag,
+	    y.LAOJIANFLAG,
+        d.app_result,
+		w.PATCH_CODE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark,
+		c1.MATCHING_CARD_FLAG
+		from OPAS_BIZ_INP_APPL_C1 c1
+		left join
+		OPAS_BIZ_INP_APPL_C2 c2 on c2.APP_ID = c1.APP_ID
+		left join OPAS_ALLOT_APPLY_ALLOT y on y.app_id = c1.app_id
+		left join (select rn,app_id,patch_code from (
+		  	select row_number() over (partition by APP_ID order by operat_time desc) as rn,app_id,patch_code from OPAS_FILE_PATCHBOLT_HIS
+		  			)   where  rn = 1) w  on w.app_id = c1.APP_ID
+		left join OPAS_FILE_APPLICATION_DETAIL d on d.app_id = c1.app_id
+		where not exists (select t.id_no
+		from OPAS_VVIP_LIST t, OPAS_FILE_APPLICATION_DETAIL l
+		where t.id_no =
+		l.cred_no
+		and t.id_no = c1.C1_IDNBR)
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='2'.toString() ">
+			and c1.APP_ID  = #{appId}
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='1'.toString() ">
+			and (c1.APP_ID like '${appId}%')
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='0'.toString() ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="flag == '1'.toString() ">
+			and  substr(c1.APP_ID,1,6) &lt; to_char(sysdate-365,'yymmdd')
+			<!--d.TO_ARCHIVE_TIME &lt; (sysdate - 365)  -->
+		</if>
+		<if test="flag == '0'.toString() ">
+			and substr(c1.APP_ID,1,6) &gt;= to_char(sysdate-365,'yymmdd')
+		</if>
+		order by substr(c1.APP_ID,1,6) desc,substr(c1.app_id,7,1) desc,c1.app_id
+	</select>
+	
+	
+	<select id="queryApplyInfoCountWithPatchCode" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1)
+		from (select distinct c1.APP_ID,
+		c1.C1_CNAME,
+		c1.C1_IDNBR,
+		c2.C2_CNAME,
+		c2.C2_IDNBR,
+	    d.flag,
+	    y.LAOJIANFLAG,
+        d.app_result,
+		w.PATCH_CODE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark,
+		c1.MATCHING_CARD_FLAG
+		from OPAS_BIZ_INP_APPL_C1 c1
+		left join
+		OPAS_BIZ_INP_APPL_C2 c2 on c2.APP_ID = c1.APP_ID
+		left join OPAS_ALLOT_APPLY_ALLOT y on y.app_id = c1.app_id
+		left join OPAS_FILE_PATCHBOLT_HIS  w  on w.app_id = c1.APP_ID
+		left join OPAS_FILE_APPLICATION_DETAIL d on d.app_id = c1.app_id
+		where not exists (select t.id_no
+		from OPAS_VVIP_LIST t, OPAS_FILE_APPLICATION_DETAIL l
+		where t.id_no =
+		l.cred_no
+		and t.id_no = c1.C1_IDNBR)
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='2'.toString() ">
+			and c1.APP_ID  = #{appId}
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='1'.toString() ">
+			and (c1.APP_ID like '${appId}%')
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='0'.toString() ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode !=null and patchCode !=''">
+			and w.PATCH_CODE = #{patchCode}
+		</if>
+		<if test="flag == '1'.toString() ">
+		    and  substr(c1.APP_ID,1,6) &lt; to_char(sysdate-365,'yymmdd')
+			<!-- and  d.TO_ARCHIVE_TIME &lt; (sysdate - 365) -->
+		</if>
+		<if test="flag == '0'.toString() ">
+			and substr(c1.APP_ID,1,6) &gt;= to_char(sysdate-365,'yymmdd')
+		</if>)
+	</select>
+
+	<select id="queryApplyInfoMapWithPatchCode" parameterType="java.lang.String"
+		resultMap="ApplyInfoResultMap">
+		select distinct c1.APP_ID,
+		c1.C1_CNAME,
+		c1.C1_IDNBR,
+		c2.C2_CNAME,
+		c2.C2_IDNBR,
+	    d.flag,
+	    y.LAOJIANFLAG,
+        d.app_result,
+		w.PATCH_CODE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark,
+		c1.MATCHING_CARD_FLAG
+		from OPAS_BIZ_INP_APPL_C1 c1
+		left join
+		OPAS_BIZ_INP_APPL_C2 c2 on c2.APP_ID = c1.APP_ID
+		left join OPAS_ALLOT_APPLY_ALLOT y on y.app_id = c1.app_id
+		left join OPAS_FILE_PATCHBOLT_HIS  w  on w.app_id = c1.APP_ID
+		left join OPAS_FILE_APPLICATION_DETAIL d on d.app_id = c1.app_id
+		where not exists (select t.id_no
+		from OPAS_VVIP_LIST t, OPAS_FILE_APPLICATION_DETAIL l
+		where t.id_no =
+		l.cred_no
+		and t.id_no = c1.C1_IDNBR)
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='2'.toString() ">
+			and c1.APP_ID  = #{appId}
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='1'.toString() ">
+			and (c1.APP_ID like '${appId}%')
+		</if>
+		<if test="appId != null and appId !='' and appFlag !=null and appFlag =='0'.toString() ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode !=null and patchCode !=''">
+			and w.PATCH_CODE = #{patchCode}
+		</if>
+		<if test="flag == '1'.toString() ">
+		    and  substr(c1.APP_ID,1,6) &lt; to_char(sysdate-365,'yymmdd')
+			<!--and  d.TO_ARCHIVE_TIME &lt; (sysdate - 365)-->
+		</if>
+		<if test="flag == '0'.toString() ">
+			and substr(c1.APP_ID,1,6) &gt;= to_char(sysdate-365,'yymmdd')
+		</if>
+		order by substr(c1.APP_ID,1,6) desc,substr(c1.app_id,7,1) desc,c1.app_id
+	</select>
+	
+	
+	
+	
+	
+	<!-- 申请件信息一般查询 -->
+	<!-- ============================================== 一 没输入证件码 =============================================================== -->
+	<select id="selectCurrentApplyCount1" resultType="java.lang.Integer">
+		select count(1) from
+		( select
+		c1.APP_ID ,
+		c1.C1_CNAME ,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from OPAS_BIZ_INP_APPL_C1 c1 join
+		OPAS_BIZ_INP_APPL_C2 c2
+		on (c1.APP_ID = c2.APP_ID ) left join
+		OPAS_FILE_PATCHBOLT c3 on
+		(c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+		)
+	</select>
+
+	<select id="selectCurrentApplyList1" parameterType="java.util.Map"
+		resultMap="resultApplyList">
+		select
+		c1.APP_ID ,
+		c1.C1_CNAME,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE,
+		c1.MATCHING_CARD_FLAG
+		from
+		OPAS_BIZ_INP_APPL_C1 c1 join
+		OPAS_BIZ_INP_APPL_C2 c2 on (c1.APP_ID =
+		c2.APP_ID ) left join
+		OPAS_FILE_PATCHBOLT c3 on (c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+	</select>
+	<!-- ================================== 二 只输入补件码 ====================================== -->
+
+
+	<select id="selectCurrentApplyCount2" resultType="java.lang.Integer">
+		select count(1) from
+		(select
+		c1.APP_ID ,
+		c1.C1_CNAME ,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from OPAS_BIZ_INP_APPL_C1 c1 join
+		OPAS_BIZ_INP_APPL_C2 c2
+		on (c1.APP_ID = c2.APP_ID ) right join
+		OPAS_FILE_PATCHBOLT c3 on
+		(c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+		)
+	</select>
+
+	<select id="selectCurrentApplyList2" parameterType="java.util.Map"
+		resultMap="resultApplyList">
+		select
+		c1.APP_ID ,
+		c1.C1_CNAME ,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE,
+		c1.MATCHING_CARD_FLAG
+		from
+		OPAS_BIZ_INP_APPL_C1 c1 join
+		OPAS_BIZ_INP_APPL_C2 c2 on (c1.APP_ID =
+		c2.APP_ID ) right join
+		OPAS_FILE_PATCHBOLT c3 on (c1.APP_ID =
+		c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+	</select>
+
+	<!--====================================== 三 所有查询条件全部输入 =============================================== -->
+	<select id="selectCurrentApplyCount3" resultType="java.lang.Integer">
+		select count(1) from
+		( select
+		c1.APP_ID ,c1.C1_CNAME ,c1.C1_IDNBR
+		,c1.C1_MOBILE,c1.YDJ_FLAG,c1.APP_PROD,
+		c2.C2_CNAME
+		,c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from
+		OPAS_BIZ_INP_APPL_C1 c1 ,
+		OPAS_BIZ_INP_APPL_C2 c2 ,
+		OPAS_FILE_PATCHBOLT c3
+		where
+		c1.APP_ID =
+		c2.APP_ID
+		and
+		c1.APP_ID=c3.APP_ID
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+		)
+	</select>
+
+	<select id="selectCurrentApplyList3" parameterType="java.util.Map"
+		resultMap="resultApplyList">
+		select
+		c1.APP_ID ,c1.C1_CNAME ,c1.C1_IDNBR
+		,c1.C1_MOBILE,c1.YDJ_FLAG,c1.APP_PROD,
+		c2.C2_CNAME
+		,c2.C2_IDNBR ,
+		c3.PATCH_CODE,
+		c1.MATCHING_CARD_FLAG
+		from
+		OPAS_BIZ_INP_APPL_C1 c1 ,
+		OPAS_BIZ_INP_APPL_C2 c2 ,
+		OPAS_FILE_PATCHBOLT c3
+		where
+		c1.APP_ID =
+		c2.APP_ID
+		and
+		c1.APP_ID=c3.APP_ID
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+	</select>
+
+	<!--==================================================================================================================================== -->
+
+
+	<!-- 申请件信息状态查询 -->
+	<select id="selectCurrentState" resultType="java.util.Map">
+		select c1.APP_ID,
+		tab.OPERATE_RESULT
+		from OPAS_BIZ_INP_APPL_C1 c1
+		left join (select
+		e.APP_ID,
+		e.OPERATE_RESULT,
+		row_number() over(partition by e.APP_ID
+		order by e.LST_UPD_DATE desc) rank
+		from OPAS_APPLY_LIFE_CICLE e)
+		tab on
+		tab.APP_ID = c1.APP_ID and rank = 1
+	</select>
+
+	<!-- 申请件信息高级查询 -->
+	<select id="selectHighCurrentCount" resultType="java.lang.Integer">
+		select count(1)
+		from
+		(select
+		c1.C1_COADD1,c1.C1_COADD2,c1.C1_COADD3,c1.C1_COADD4,c1.C1_CNAME,c1.APP_ID,c1.C1_CONAME ,c1.C1_RENAME
+		,c1.C1_COTEL,c1.C1_RETEL,c1.C1_HMTEL,c1.C1_REMOBIL,
+		c1.C1_IDNBR,c1.YDJ_FLAG,c1.APP_PROD,c1.C1_XNAME1,c1.C1_XNAME2,
+		c1.C4_APBATCH ,c1.C1_MOBILE ,c1.C5_ABCODE,c1.C1_GENDER
+		,c1.C4_ABUSER,c1.C1_XTEL1,c1.C1_XTEL2,c1.C1_XMOBIL1,c1.C1_XMOBIL2,
+		c2.APPROVE_RESULT,c1.MATCHING_CARD_FLAG,
+		c3.FLAG as kflag,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from
+		OPAS_BIZ_INP_APPL_C1 c1
+		left join
+		OPAS_BIZ_APPROVAL c2
+		on (c1.APP_ID = c2.APP_ID)
+		left join
+		OPAS_FILE_APPLICATION_DETAIL c3
+		on (c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="c1Coname != null and c1Coname !='' ">
+			and c1.C1_CONAME like '${c1Coname}%'
+		</if>
+		<if test="c1Rename != null and c1Rename !='' ">
+			and ( c1.C1_XNAME1 like '${c1Rename}%' or c1.C1_RENAME
+			like '${c1Rename}%' or c1.C1_XNAME2 like '${c1Rename}%')
+		</if>
+		<if test="c1Cotel != null and c1Cotel !='' ">
+			and c1.C1_COTEL like '${c1Cotel}%'
+		</if>
+		<if test="c1Retel != null and c1Retel !='' ">    <!--直系亲属电话 C1_RETEL -->
+			and (c1.C1_RETEL like '${c1Retel}%' or c1.C1_XTEL1 like '${c1Retel}%'
+			or c1.C1_XTEL2 like '${c1Retel}%')
+		</if>
+		<if test="c1Hmtel != null and c1Hmtel !='' ">
+			and c1.C1_HMTEL like '${c1Hmtel}%'
+		</if>
+		<if test="c1Remobil != null and c1Remobil !='' "> <!--直系亲属手机 C1_REMOBIL -->
+			and(c1.C1_REMOBIL like '${c1Remobil}%' or c1.C1_XMOBIL1 like
+			'${c1Remobil}%' or c1.C1_XMOBIL2 like '${c1Remobil}%')
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c4Apbatch != null and c4Apbatch !='' ">
+			and c1.C4_APBATCH like '${c4Apbatch}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE like '${c1Mobile}%'
+		</if>
+	    <!-- <if test="approveResult != null and approveResult !='' and approveResult != '2'.toString() ">
+			and c2.APPROVE_RESULT =#{approveResult}
+		</if> -->
+		
+		<if test="approveResultNumList != null and approveResultNumList.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultNumList1 != null and approveResultNumList1.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList1" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultFlag == '0'.toString() and kflag != null">
+			and c3.FLAG != '2'
+		</if>
+		
+	    <!-- <if test="approveResult != null and approveResult !='' and approveResult == '2'.toString() ">
+			and c3.FLAG != '2'
+		</if> -->
+		<if test="c5Abcode != null and c5Abcode !='' ">
+			and c1.C5_ABCODE =#{c5Abcode}
+		</if>
+		<if test="c1Gender != null and c1Gender !='' ">
+			and c1.C1_GENDER =#{c1Gender}
+		</if>
+		<if test="c4Abuser != null and c4Abuser !='' ">
+			and c1.C4_ABUSER =#{c4Abuser}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="flag == '0'.toString() ">
+			and substr(c1.APP_ID,1,6) &gt; to_char(sysdate-365,'yymmdd')
+		</if>
+		
+		<if test="crtDate != null and crtDate !='' and crtDate1 != null and crtDate1 !=''">
+			and c1.CRT_DATE between #{crtDate} and #{crtDate1}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG =#{ydjFlag}
+		</if>
+		)
+	</select>
+
+	<select id="selectHighCurrentList" parameterType="java.util.Map"
+		resultMap="resultApplyList">
+		select
+		c1.C1_COADD1,c1.C1_COADD2,c1.C1_COADD3,c1.C1_COADD4,c1.C1_CNAME,c1.APP_ID,c1.C1_CONAME ,c1.C1_RENAME
+		,c1.C1_COTEL,c1.C1_RETEL,c1.C1_HMTEL,c1.C1_REMOBIL,
+		c1.C1_IDNBR,c1.YDJ_FLAG,c1.APP_PROD,c1.C1_XNAME1,c1.C1_XNAME2,
+		c1.C4_APBATCH ,c1.C1_MOBILE ,c1.C5_ABCODE,c1.C1_GENDER
+		,c1.C4_ABUSER,c1.C1_XTEL1,c1.C1_XTEL2,c1.C1_XMOBIL1,c1.C1_XMOBIL2,
+		c2.APPROVE_RESULT,c1.MATCHING_CARD_FLAG,
+		c3.FLAG as kflag,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from
+		OPAS_BIZ_INP_APPL_C1 c1
+		left join
+		OPAS_BIZ_APPROVAL c2
+		on (c1.APP_ID = c2.APP_ID)
+		left join
+		OPAS_FILE_APPLICATION_DETAIL c3
+		on (c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="c1Coname != null and c1Coname !='' ">
+			and c1.C1_CONAME like '${c1Coname}%'
+		</if>
+		<if test="c1Rename != null and c1Rename !='' ">
+			and ( c1.C1_XNAME1 like '${c1Rename}%' or c1.C1_RENAME
+			like '${c1Rename}%' or c1.C1_XNAME2 like '${c1Rename}%')
+		</if>
+		<if test="c1Cotel != null and c1Cotel !='' ">
+			and c1.C1_COTEL like '${c1Cotel}%'
+		</if>
+		<if test="c1Retel != null and c1Retel !='' ">    <!--直系亲属电话 C1_RETEL -->
+			and (c1.C1_RETEL like '${c1Retel}%' or c1.C1_XTEL1 like '${c1Retel}%'
+			or c1.C1_XTEL2 like '${c1Retel}%')
+		</if>
+		<if test="c1Hmtel != null and c1Hmtel !='' ">
+			and c1.C1_HMTEL like '${c1Hmtel}%'
+		</if>
+		<if test="c1Remobil != null and c1Remobil !='' "> <!--直系亲属手机 C1_REMOBIL -->
+			and(c1.C1_REMOBIL like '${c1Remobil}%' or c1.C1_XMOBIL1 like
+			'${c1Remobil}%' or c1.C1_XMOBIL2 like '${c1Remobil}%')
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c4Apbatch != null and c4Apbatch !='' ">
+			and c1.C4_APBATCH like '${c4Apbatch}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE like '${c1Mobile}%'
+		</if>
+		<if test="approveResultNumList != null and approveResultNumList.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultNumList1 != null and approveResultNumList1.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList1" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultFlag == '0'.toString() and kflag != null">
+			and c3.FLAG != '2'
+		</if>
+		<if test="c5Abcode != null and c5Abcode !='' ">
+			and c1.C5_ABCODE =#{c5Abcode}
+		</if>
+		<if test="c1Gender != null and c1Gender !='' ">
+			and c1.C1_GENDER =#{c1Gender}
+		</if>
+		<if test="c4Abuser != null and c4Abuser !='' ">
+			and c1.C4_ABUSER =#{c4Abuser}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="flag == '0'.toString() ">
+			and substr(c1.APP_ID,1,6) &gt; to_char(sysdate-365,'yymmdd')
+		</if>
+		<if test="crtDate != null and crtDate !='' and crtDate1 != null and crtDate1 !=''">
+			and c1.CRT_DATE between #{crtDate} and #{crtDate1}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG =#{ydjFlag}
+		</if>
+		order by substr(c1.APP_ID,1,6) desc,substr(c1.app_id,7,1) desc,c1.app_id
+	</select>
+
+	<!--进件表信息查询 -->
+	<select id="selectCurrentBIZC1Info" parameterType="java.util.Map"
+		resultMap="resultApplyList">
+		select
+		c1.APP_ID,c1.C1_MOBILE,c1.C1_IDNBR,c1.MATCHING_CARD_FLAG
+		from
+		OPAS_BIZ_INP_APPL_C1 c1
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and c1.APP_ID = #{appId}
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR = #{c1Idnbr}
+		</if>
+	</select>
+
+	<!-- VVIP客户数量查询 -->
+	<select id="selectCurrentVVIP" resultType="java.lang.Integer">
+		select count(1)
+		from
+		(select t.ID_NO,c1.C1_IDNBR from OPAS_VVIP_LIST t,
+		OPAS_BIZ_INP_APPL_C1 c1
+		where t.ID_NO=c1.C1_IDNBR
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR = #{c1Idnbr,jdbcType=VARCHAR}
+		</if>
+		)
+	</select>
+
+	<!-- 查询申请件是否归档 -->
+	<select id="selectCurrentArchive" resultType="java.lang.Integer">
+		select count(1)
+		from
+		(select t.CRED_NO,c1.C1_IDNBR from
+		OPAS_FILE_APPLICATION_DETAIL t,
+		OPAS_BIZ_INP_APPL_C1 c1 where
+		t.CRED_NO=c1.C1_IDNBR and t.flag='2'
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR = #{c1Idnbr,jdbcType=VARCHAR}
+		</if>
+		)
+	</select>
+
+	<!--高级查询审批结果状态查询 -->
+	<select id="selectHighAppayState" parameterType="java.util.Map"
+		resultMap="resultApplyList">
+		select
+		c1.APP_ID ,
+		c2.CURR_OPT_USER
+		,c2.CURR_NODE
+		from
+		OPAS_BIZ_INP_APPL_C1 c1 ,
+		OPAS_ALLOT_APPLY_ALLOT c2
+		where
+		c1.APP_ID=c2.APP_ID
+	</select>
+
+	<!--申请件流程节点显示 -->
+	<resultMap id="NodeResultMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="OPERATER" property="operater" jdbcType="VARCHAR" />
+		<result column="OPERATE_DESC" property="operateDesc" jdbcType="VARCHAR" />
+		<result column="OPERATE_RESULT" property="operateResult"
+			jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" javaType="String" jdbcType="TIMESTAMP" />
+		<result column="NODE_DESC" property="nodeDesc" jdbcType="VARCHAR" />
+		<result column="NODE_STATUS" property="nodeStatus" jdbcType="VARCHAR" />
+		<result column="START_TIME" property="startTime" javaType="String" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" javaType="String" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="selectNodeCount" resultType="java.lang.Integer">
+		select count(1)
+		from
+		(select c2.APP_ID,c2.OPERATER,c2.OPERATE_DESC,
+		c2.OPERATE_RESULT,c2.CRT_DATE
+		from
+		OPAS_BIZ_INP_APPL_C1 c1 ,
+		OPAS_APPLY_LIFE_CICLE c2
+		where
+		c1.APP_ID = c2.APP_ID
+		<if test="appId != null and appId !='' ">
+			and c2.APP_ID = #{appId}
+		</if>
+		<if test="operater != null and operater !='' ">
+			and c2.OPERATER = #{operater}
+		</if>
+		<if test="operateDesc != null and operateDesc !='' ">
+			and c2.OPERATE_DESC = #{operateDesc}
+		</if>
+		<if test="operateResult != null and operateResult !='' ">
+			and c2.OPERATE_RESULT = #{operateResult}
+		</if>
+		<if test="crtDate != null and crtDate !='' ">
+			and c2.CRT_DATE = #{crtDate}
+		</if>
+		order by c2.CRT_DATE asc)
+	</select>
+
+	<select id="selectNodeList" parameterType="java.util.Map"
+		resultMap="NodeResultMap">
+		select
+		c2.APP_ID,c2.OPERATER,c2.OPERATE_DESC,
+		c2.OPERATE_RESULT,c2.CRT_DATE
+		from
+		OPAS_APPLY_LIFE_CICLE c2
+		<where>
+		<if test="appId != null and appId !='' ">
+			and c2.APP_ID = #{appId}
+		</if>
+		<if test="operater != null and operater !='' ">
+			and c2.OPERATER = #{operater}
+		</if>
+		<if test="operateDesc != null and operateDesc !='' ">
+			and c2.OPERATE_DESC = #{operateDesc}
+		</if>
+		<if test="operateResult != null and operateResult !='' ">
+			and c2.OPERATE_RESULT = #{operateResult}
+		</if>
+		<if test="crtDate != null and crtDate !='' ">
+			and c2.CRT_DATE = #{crtDate}
+		</if>
+		</where>
+		order by c2.CRT_DATE asc
+	</select>
+
+	<!--申请件全局信息备注表 -->
+	<resultMap id="RemarkResultMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="REMARK_INFO" property="remarkInfo" jdbcType="VARCHAR" />
+		<result column="REMARK_USER" property="remarkUser" jdbcType="VARCHAR" />
+		<!-- <result column="REMARK_CODE" property="remarkCode" jdbcType="VARCHAR" 
+			/> -->
+		<result column="REMARK_TIME" property="remarkTime" jdbcType="VARCHAR" />
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectRemarkCount" resultType="java.lang.Integer">
+		select count(1)
+		from
+		(select c2.APP_ID,c2.REMARK_INFO,c2.REMARK_USER,
+		c2.REMARK_TIME,c2.CURR_NODE
+		from
+		OPAS_BIZ_INP_APPL_C1 c1
+		,
+		OPAS_ALLOT_APPLY_REMARK c2
+		where
+		c1.APP_ID = c2.APP_ID
+		<if test="appId != null and appId !='' ">
+			and c2.APP_ID = #{appId}
+		</if>
+		<if test="remarkInfo != null and remarkInfo !='' ">
+			and c2.REMARK_INFO = #{remarkInfo}
+		</if>
+		<if test="remarkUser != null and remarkUser !='' ">
+			and c2.REMARK_USER = #{remarkUser}
+		</if>
+		<if test="remarkTime != null and remarkTime !='' ">
+			and c2.REMARK_TIME = #{remarkTime}
+		</if>
+		<if test="currNode != null and currNode !='' ">
+			and c2.CURR_NODE = #{currNode}
+		</if>
+		)
+	</select>
+
+	<select id="selectRemarkList" parameterType="java.util.Map"
+		resultMap="RemarkResultMap">
+		select
+		c2.APP_ID,c2.REMARK_INFO,c2.REMARK_USER,
+		c2.REMARK_TIME,c2.CURR_NODE
+		from
+		OPAS_BIZ_INP_APPL_C1 c1,
+		OPAS_ALLOT_APPLY_REMARK c2
+		where
+		c1.APP_ID = c2.APP_ID
+		<if test="appId != null and appId !='' ">
+			and c2.APP_ID = #{appId}
+		</if>
+		<if test="remarkInfo != null and remarkInfo !='' ">
+			and c2.REMARK_INFO = #{remarkInfo}
+		</if>
+		<if test="remarkUser != null and remarkUser !='' ">
+			and c2.REMARK_USER = #{remarkUser}
+		</if>
+		<if test="remarkTime != null and remarkTime !='' ">
+			and c2.REMARK_TIME = #{remarkTime}
+		</if>
+		<if test="currNode != null and currNode !='' ">
+			and c2.CURR_NODE = #{currNode}
+		</if>
+		order by REMARK_TIME desc
+	</select>
+
+	<!-- 历史附卡进件信息 -->
+	<resultMap id="resultHistoryList" type="java.util.Map">
+		<id column="INSIDE_APP_NO" property="insideAppNo" jdbcType="CHAR" />
+		<result column="APP_BANK" property="appBank" jdbcType="DECIMAL" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="APP_PROD" property="appProd" jdbcType="VARCHAR" />
+		<result column="APP_FLAG" property="appFlag" jdbcType="DECIMAL" />
+		<result column="APP_FLOWST" property="appFlowst" jdbcType="DECIMAL" />
+		<result column="APP_CODE" property="appCode" jdbcType="DECIMAL" />
+		<result column="APP_ACCTYP" property="appAcctyp" jdbcType="VARCHAR" />
+		<result column="C1_BRNCH" property="c1Brnch" jdbcType="DECIMAL" />
+		<result column="C1_CARDNBR" property="c1Cardnbr" jdbcType="VARCHAR" />
+		<result column="C1_IDTYPE" property="c1Idtype" jdbcType="VARCHAR" />
+		<result column="C1_IDNBR" property="c1Idnbr" jdbcType="VARCHAR" />
+		<result column="C1_SECNBR" property="c1Secnbr" jdbcType="VARCHAR" />
+		<result column="C1_CNAME" property="c1Cname" jdbcType="VARCHAR" />
+		<result column="C1_ENAME" property="c1Ename" jdbcType="VARCHAR" />
+		<result column="C1_GENDER" property="c1Gender" jdbcType="VARCHAR" />
+		<result column="C1_BIRTH" property="c1Birth" jdbcType="TIMESTAMP" />
+		<result column="C1_NATION" property="c1Nation" jdbcType="VARCHAR" />
+		<result column="C1_MARST" property="c1Marst" jdbcType="VARCHAR" />
+		<result column="C1_EDUCLS" property="c1Educls" jdbcType="VARCHAR" />
+		<result column="C1_TITLE" property="c1Title" jdbcType="VARCHAR" />
+		<result column="C1_TELVL" property="c1Telvl" jdbcType="VARCHAR" />
+		<result column="C1_HMARE" property="c1Hmare" jdbcType="VARCHAR" />
+		<result column="C1_HMTEL" property="c1Hmtel" jdbcType="VARCHAR" />
+		<result column="C1_MOBILE" property="c1Mobile" jdbcType="VARCHAR" />
+		<result column="C1_EMAIL" property="c1Email" jdbcType="VARCHAR" />
+		<result column="C1_FAX" property="c1Fax" jdbcType="VARCHAR" />
+		<result column="C1_CLASS" property="c1Class" jdbcType="VARCHAR" />
+		<result column="C1_HMADD1" property="c1Hmadd1" jdbcType="VARCHAR" />
+		<result column="C1_HMADD2" property="c1Hmadd2" jdbcType="VARCHAR" />
+		<result column="C1_HMADD3" property="c1Hmadd3" jdbcType="VARCHAR" />
+		<result column="C1_HMADD4" property="c1Hmadd4" jdbcType="VARCHAR" />
+		<result column="C1_HMPOST" property="c1Hmpost" jdbcType="VARCHAR" />
+		<result column="C1_HMST" property="c1Hmst" jdbcType="VARCHAR" />
+		<result column="C1_HMYR" property="c1Hmyr" jdbcType="DECIMAL" />
+		<result column="C1_HLOAN" property="c1Hloan" jdbcType="DECIMAL" />
+		<result column="C1_IDADD1" property="c1Idadd1" jdbcType="VARCHAR" />
+		<result column="C1_IDADD2" property="c1Idadd2" jdbcType="VARCHAR" />
+		<result column="C1_IDADD3" property="c1Idadd3" jdbcType="VARCHAR" />
+		<result column="C1_IDADD4" property="c1Idadd4" jdbcType="VARCHAR" />
+		<result column="C1_IDPOST" property="c1Idpost" jdbcType="VARCHAR" />
+		<result column="C1_ESTADD1" property="c1Estadd1" jdbcType="VARCHAR" />
+		<result column="C1_ESTADD2" property="c1Estadd2" jdbcType="VARCHAR" />
+		<result column="C1_ESTADD3" property="c1Estadd3" jdbcType="VARCHAR" />
+		<result column="C1_ESTADD4" property="c1Estadd4" jdbcType="VARCHAR" />
+		<result column="C1_ESTPOST" property="c1Estpost" jdbcType="DECIMAL" />
+		<result column="C1_CARBRND" property="c1Carbrnd" jdbcType="VARCHAR" />
+		<result column="C1_CARDATE" property="c1Cardate" jdbcType="TIMESTAMP" />
+		<result column="C1_CARNBR" property="c1Carnbr" jdbcType="VARCHAR" />
+		<result column="C1_CARST" property="c1Carst" jdbcType="VARCHAR" />
+		<result column="C1_COADD1" property="c1Coadd1" jdbcType="VARCHAR" />
+		<result column="C1_COADD2" property="c1Coadd2" jdbcType="VARCHAR" />
+		<result column="C1_COADD3" property="c1Coadd3" jdbcType="VARCHAR" />
+		<result column="C1_COADD4" property="c1Coadd4" jdbcType="VARCHAR" />
+		<result column="C1_COPOST" property="c1Copost" jdbcType="VARCHAR" />
+		<result column="C1_CONAME" property="c1Coname" jdbcType="VARCHAR" />
+		<result column="C1_CODEPT" property="c1Codept" jdbcType="VARCHAR" />
+		<result column="C1_CODUTY" property="c1Coduty" jdbcType="VARCHAR" />
+		<result column="C1_COCODE" property="c1Cocode" jdbcType="VARCHAR" />
+		<result column="C1_COBUSCD" property="c1Cobuscd" jdbcType="VARCHAR" />
+		<result column="C1_COKIND" property="c1Cokind" jdbcType="VARCHAR" />
+		<result column="C1_COLEVL" property="c1Colevl" jdbcType="VARCHAR" />
+		<result column="C1_COTEL" property="c1Cotel" jdbcType="VARCHAR" />
+		<result column="C1_COEXT" property="c1Coext" jdbcType="VARCHAR" />
+		<result column="C1_COYR" property="c1Coyr" jdbcType="DECIMAL" />
+		<result column="C1_EARN" property="c1Earn" jdbcType="DECIMAL" />
+		<result column="C1_FCONAME" property="c1Fconame" jdbcType="VARCHAR" />
+		<result column="C1_FCODEPT" property="c1Fcodept" jdbcType="VARCHAR" />
+		<result column="C1_FCOTITL" property="c1Fcotitl" jdbcType="VARCHAR" />
+		<result column="C1_FCOTEL" property="c1Fcotel" jdbcType="VARCHAR" />
+		<result column="C1_FCOYR" property="c1Fcoyr" jdbcType="DECIMAL" />
+		<result column="C1_FOREANN" property="c1Foreann" jdbcType="DECIMAL" />
+		<result column="C1_DEPEND" property="c1Depend" jdbcType="DECIMAL" />
+		<result column="C1_BUSISER" property="c1Busiser" jdbcType="VARCHAR" />
+		<result column="C1_PROMQU" property="c1Promqu" jdbcType="VARCHAR" />
+		<result column="C1_PROMAN" property="c1Proman" jdbcType="VARCHAR" />
+		<result column="C1_REID" property="c1Reid" jdbcType="VARCHAR" />
+		<result column="C1_RENAME" property="c1Rename" jdbcType="VARCHAR" />
+		<result column="C1_RETELAR" property="c1Retelar" jdbcType="VARCHAR" />
+		<result column="C1_RETEL" property="c1Retel" jdbcType="VARCHAR" />
+		<result column="C1_RESHIP" property="c1Reship" jdbcType="VARCHAR" />
+		<result column="C1_REMOBIL" property="c1Remobil" jdbcType="VARCHAR" />
+		<result column="C1_XID1" property="c1Xid1" jdbcType="VARCHAR" />
+		<result column="C1_XNAME1" property="c1Xname1" jdbcType="VARCHAR" />
+		<result column="C1_XTELAR1" property="c1Xtelar1" jdbcType="VARCHAR" />
+		<result column="C1_XTEL1" property="c1Xtel1" jdbcType="VARCHAR" />
+		<result column="C1_XSHIP1" property="c1Xship1" jdbcType="VARCHAR" />
+		<result column="C1_XCOMP1" property="c1Xcomp1" jdbcType="VARCHAR" />
+		<result column="C1_XMOBIL1" property="c1Xmobil1" jdbcType="VARCHAR" />
+		<result column="C1_XID2" property="c1Xid2" jdbcType="VARCHAR" />
+		<result column="C1_XNAME2" property="c1Xname2" jdbcType="VARCHAR" />
+		<result column="C1_XTELAR2" property="c1Xtelar2" jdbcType="VARCHAR" />
+		<result column="C1_XTEL2" property="c1Xtel2" jdbcType="VARCHAR" />
+		<result column="C1_XSHIP2" property="c1Xship2" jdbcType="VARCHAR" />
+		<result column="C1_XCOMP2" property="c1Xcomp2" jdbcType="VARCHAR" />
+		<result column="C1_XMOBIL2" property="c1Xmobil2" jdbcType="VARCHAR" />
+		<result column="C1_SPIDTYP" property="c1Spidtyp" jdbcType="VARCHAR" />
+		<result column="C1_SPIDNBR" property="c1Spidnbr" jdbcType="VARCHAR" />
+		<result column="C1_SPNAME" property="c1Spname" jdbcType="VARCHAR" />
+		<result column="C1_SPMOBIL" property="c1Spmobil" jdbcType="VARCHAR" />
+		<result column="C1_SPCNAME" property="c1Spcname" jdbcType="VARCHAR" />
+		<result column="C1_SPCDEPT" property="c1Spcdept" jdbcType="VARCHAR" />
+		<result column="C1_SPCDUTY" property="c1Spcduty" jdbcType="VARCHAR" />
+		<result column="C1_SPCTEL" property="c1Spctel" jdbcType="VARCHAR" />
+		<result column="C1_SPCEXT" property="c1Spcext" jdbcType="VARCHAR" />
+		<result column="C1_SPEARN" property="c1Spearn" jdbcType="DECIMAL" />
+		<result column="C2_OBNKNO" property="c2Obnkno" jdbcType="DECIMAL" />
+		<result column="C2_RELCOMP" property="c2Relcomp" jdbcType="VARCHAR" />
+		<result column="C2_SIGNCK" property="c2Signck" jdbcType="VARCHAR" />
+		<result column="C2_IDDT1" property="c2Iddt1" jdbcType="TIMESTAMP" />
+		<result column="C2_ISDP1" property="c2Isdp1" jdbcType="VARCHAR" />
+		<result column="C2_NATNCD1" property="c2Natncd1" jdbcType="VARCHAR" />
+		<result column="C2_IDDT3" property="c2Iddt3" jdbcType="TIMESTAMP" />
+		<result column="C2_ISDP3" property="c2Isdp3" jdbcType="VARCHAR" />
+		<result column="C2_NATNCD3" property="c2Natncd3" jdbcType="VARCHAR" />
+		<result column="C2_REVS2" property="c2Revs2" jdbcType="VARCHAR" />
+		<result column="C3_IDTYPE" property="c3Idtype" jdbcType="VARCHAR" />
+		<result column="C3_IDNBR" property="c3Idnbr" jdbcType="VARCHAR" />
+		<result column="C3_CNAME" property="c3Cname" jdbcType="VARCHAR" />
+		<result column="C3_ENAME" property="c3Ename" jdbcType="VARCHAR" />
+		<result column="C3_GENDER" property="c3Gender" jdbcType="VARCHAR" />
+		<result column="C3_BIRTH" property="c3Birth" jdbcType="TIMESTAMP" />
+		<result column="C3_NATION" property="c3Nation" jdbcType="VARCHAR" />
+		<result column="C3_MARST" property="c3Marst" jdbcType="VARCHAR" />
+		<result column="C3_EDUCLS" property="c3Educls" jdbcType="VARCHAR" />
+		<result column="C3_HMARE" property="c3Hmare" jdbcType="VARCHAR" />
+		<result column="C3_HMTEL" property="c3Hmtel" jdbcType="VARCHAR" />
+		<result column="C3_MOBILE" property="c3Mobile" jdbcType="VARCHAR" />
+		<result column="C3_RESVD1" property="c3Resvd1" jdbcType="VARCHAR" />
+		<result column="C3_RESVD2" property="c3Resvd2" jdbcType="VARCHAR" />
+		<result column="C3_RESVD3" property="c3Resvd3" jdbcType="VARCHAR" />
+		<result column="C3_RESVD4" property="c3Resvd4" jdbcType="VARCHAR" />
+		<result column="C3_RESVD5" property="c3Resvd5" jdbcType="VARCHAR" />
+		<result column="C3_RESVD6" property="c3Resvd6" jdbcType="VARCHAR" />
+		<result column="C3_EMAIL" property="c3Email" jdbcType="VARCHAR" />
+		<result column="C3_CONAME" property="c3Coname" jdbcType="VARCHAR" />
+		<result column="C3_CODEPT" property="c3Codept" jdbcType="VARCHAR" />
+		<result column="C3_CODUTY" property="c3Coduty" jdbcType="VARCHAR" />
+		<result column="C3_COCODE" property="c3Cocode" jdbcType="VARCHAR" />
+		<result column="C3_TITLE" property="c3Title" jdbcType="VARCHAR" />
+		<result column="C3_COKIND" property="c3Cokind" jdbcType="VARCHAR" />
+		<result column="C3_COTEL" property="c3Cotel" jdbcType="VARCHAR" />
+		<result column="C3_COEXT" property="c3Coext" jdbcType="VARCHAR" />
+		<result column="C3_COYR" property="c3Coyr" jdbcType="DECIMAL" />
+		<result column="C3_EARN" property="c3Earn" jdbcType="DECIMAL" />
+		<result column="C3_ACCTNBR" property="c3Acctnbr" jdbcType="VARCHAR" />
+		<result column="C3_GUAMT" property="c3Guamt" jdbcType="DECIMAL" />
+		<result column="C3_TYPE" property="c3Type" jdbcType="VARCHAR" />
+		<result column="C3_GREF" property="c3Gref" jdbcType="VARCHAR" />
+		<result column="C3_GREL" property="c3Grel" jdbcType="VARCHAR" />
+		<result column="C4_CACCNBR" property="c4Caccnbr" jdbcType="VARCHAR" />
+		<result column="C4_CPAYMOD" property="c4Cpaymod" jdbcType="VARCHAR" />
+		<result column="C4_FACCNBR" property="c4Faccnbr" jdbcType="VARCHAR" />
+		<result column="C4_FPAYMOD" property="c4Fpaymod" jdbcType="VARCHAR" />
+		<result column="C4_OTHCARD" property="c4Othcard" jdbcType="VARCHAR" />
+		<result column="C4_OTHTYPE" property="c4Othtype" jdbcType="VARCHAR" />
+		<result column="C4_OTHCRED" property="c4Othcred" jdbcType="DECIMAL" />
+		<result column="C4_PAYCRED" property="c4Paycred" jdbcType="DECIMAL" />
+		<result column="C4_CCREDIT" property="c4Ccredit" jdbcType="DECIMAL" />
+		<result column="C4_FCREDIT" property="c4Fcredit" jdbcType="DECIMAL" />
+		<result column="C4_SOURCE" property="c4Source" jdbcType="VARCHAR" />
+		<result column="C4_APBATCH" property="c4Apbatch" jdbcType="VARCHAR" />
+		<result column="C4_ABACCES" property="c4Abacces" jdbcType="VARCHAR" />
+		<result column="C4_ABBRNCH" property="c4Abbrnch" jdbcType="VARCHAR" />
+		<result column="C4_ABUSER" property="c4Abuser" jdbcType="VARCHAR" />
+		<result column="C4_ABNAME" property="c4Abname" jdbcType="VARCHAR" />
+		<result column="C4_RECNAME" property="c4Recname" jdbcType="VARCHAR" />
+		<result column="C4_RECCARD" property="c4Reccard" jdbcType="VARCHAR" />
+		<result column="C4_RECEMP" property="c4Recemp" jdbcType="VARCHAR" />
+		<result column="C4_RELSHIP" property="c4Relship" jdbcType="VARCHAR" />
+		<result column="C4_RELMOD" property="c4Relmod" jdbcType="VARCHAR" />
+		<result column="C4_CYCDATE" property="c4Cycdate" jdbcType="DECIMAL" />
+		<result column="C4_CYCADD1" property="c4Cycadd1" jdbcType="VARCHAR" />
+		<result column="C4_CYCADD2" property="c4Cycadd2" jdbcType="VARCHAR" />
+		<result column="C4_BNAME" property="c4Bname" jdbcType="VARCHAR" />
+		<result column="C4_PINREQ" property="c4Pinreq" jdbcType="DECIMAL" />
+		<result column="C4_MESSREQ" property="c4Messreq" jdbcType="DECIMAL" />
+		<result column="C4_SMSAMT" property="c4Smsamt" jdbcType="DECIMAL" />
+		<result column="C4_SIGN_FLAG" property="c4SignFlag" jdbcType="VARCHAR" />
+		<result column="C4_REVS2" property="c4Revs2" jdbcType="VARCHAR" />
+		<result column="C4_STMCODE" property="c4Stmcode" jdbcType="VARCHAR" />
+		<result column="C4_GTOC" property="c4Gtoc" jdbcType="DECIMAL" />
+		<result column="C4_DOWNPD" property="c4Downpd" jdbcType="VARCHAR" />
+		<result column="C4_RUSHFLG" property="c4Rushflg" jdbcType="DECIMAL" />
+		<result column="C4_RUSHFEE" property="c4Rushfee" jdbcType="DECIMAL" />
+		<result column="C4_VCODE" property="c4Vcode" jdbcType="VARCHAR" />
+		<result column="C4_VRCODE" property="c4Vrcode" jdbcType="DECIMAL" />
+		<result column="C4_VCCRED" property="c4Vccred" jdbcType="DECIMAL" />
+		<result column="C4_VFCRED" property="c4Vfcred" jdbcType="DECIMAL" />
+		<result column="C4_VPACRED" property="c4Vpacred" jdbcType="DECIMAL" />
+		<result column="C4_CDESPMD" property="c4Cdespmd" jdbcType="VARCHAR" />
+		<result column="C4_CARDCST" property="c4Cardcst" jdbcType="DECIMAL" />
+		<result column="C4_CDESPLC" property="c4Cdesplc" jdbcType="DECIMAL" />
+		<result column="C4_VERCODE" property="c4Vercode" jdbcType="VARCHAR" />
+		<result column="C4_LYSRV" property="c4Lysrv" jdbcType="VARCHAR" />
+		<result column="C4_LYFEE" property="c4Lyfee" jdbcType="VARCHAR" />
+		<result column="C4_EXFLAG" property="c4Exflag" jdbcType="VARCHAR" />
+		<result column="C4_EXCODE" property="c4Excode" jdbcType="VARCHAR" />
+		<result column="C4_EXRTDT" property="c4Exrtdt" jdbcType="DECIMAL" />
+		<result column="C4_EXACCT" property="c4Exacct" jdbcType="VARCHAR" />
+		<result column="C4_CHFLAG" property="c4Chflag" jdbcType="VARCHAR" />
+		<result column="C4_BUEMB" property="c4Buemb" jdbcType="VARCHAR" />
+		<result column="C4_EMPNO" property="c4Empno" jdbcType="VARCHAR" />
+		<result column="C4_RISKCD" property="c4Riskcd" jdbcType="VARCHAR" />
+		<result column="C4_PIN1" property="c4Pin1" jdbcType="VARCHAR" />
+		<result column="C4_SRVCD1" property="c4Srvcd1" jdbcType="VARCHAR" />
+		<result column="C4_GIFTNO" property="c4Giftno" jdbcType="VARCHAR" />
+		<result column="C4_PSNID1" property="c4Psnid1" jdbcType="VARCHAR" />
+		<result column="C4_SYSFLG" property="c4Sysflg" jdbcType="VARCHAR" />
+		<result column="C4_GIFTN2" property="c4Giftn2" jdbcType="VARCHAR" />
+		<result column="C4_OTHCD4" property="c4Othcd4" jdbcType="VARCHAR" />
+		<result column="C4_OTHTYP4" property="c4Othtyp4" jdbcType="VARCHAR" />
+		<result column="C4_OTHEXP4" property="c4Othexp4" jdbcType="DECIMAL" />
+		<result column="C4_OBNKNM" property="c4Obnknm" jdbcType="VARCHAR" />
+		<result column="C4_RA" property="c4Ra" jdbcType="VARCHAR" />
+		<result column="C4_SC" property="c4Sc" jdbcType="VARCHAR" />
+		<result column="C4_SN" property="c4Sn" jdbcType="DECIMAL" />
+		<result column="C4_CLYN1" property="c4Clyn1" jdbcType="VARCHAR" />
+		<result column="C4_OTHCRQ" property="c4Othcrq" jdbcType="DECIMAL" />
+		<result column="C4_MUMPFL" property="c4Mumpfl" jdbcType="DECIMAL" />
+		<result column="C4_FCONM2" property="c4Fconm2" jdbcType="VARCHAR" />
+		<result column="C4_FCOYR2" property="c4Fcoyr2" jdbcType="DECIMAL" />
+		<result column="C4_FCOER2" property="c4Fcoer2" jdbcType="DECIMAL" />
+		<result column="C4_USPROD" property="c4Usprod" jdbcType="VARCHAR" />
+		<result column="C4_USMEB" property="c4Usmeb" jdbcType="VARCHAR" />
+		<result column="C4_USREL" property="c4Usrel" jdbcType="VARCHAR" />
+		<result column="C4_RELADD" property="c4Reladd" jdbcType="VARCHAR" />
+		<result column="C4_RELPOST" property="c4Relpost" jdbcType="VARCHAR" />
+		<result column="C4_APBTID" property="c4Apbtid" jdbcType="VARCHAR" />
+		<result column="C4_HMAMT" property="c4Hmamt" jdbcType="DECIMAL" />
+		<result column="C4_HLOANYR" property="c4Hloanyr" jdbcType="DECIMAL" />
+		<result column="C4_CARAMT" property="c4Caramt" jdbcType="DECIMAL" />
+		<result column="C4_CARLOAN" property="c4Carloan" jdbcType="DECIMAL" />
+		<result column="C4_ABPHON" property="c4Abphon" jdbcType="VARCHAR" />
+		<result column="C4_ABTYPE" property="c4Abtype" jdbcType="VARCHAR" />
+		<result column="C4_APSOUR" property="c4Apsour" jdbcType="VARCHAR" />
+		<result column="C4_CARYR" property="c4Caryr" jdbcType="DECIMAL" />
+		<result column="C4_ASSID" property="c4Assid" jdbcType="VARCHAR" />
+		<result column="C4_ASSIDTY" property="c4Assidty" jdbcType="VARCHAR" />
+		<result column="C4_ASSNAME" property="c4Assname" jdbcType="VARCHAR" />
+		<result column="C4_ASSBIRT" property="c4Assbirt" jdbcType="TIMESTAMP" />
+		<result column="C4_ASSGEND" property="c4Assgend" jdbcType="VARCHAR" />
+		<result column="C4_ASSMARS" property="c4Assmars" jdbcType="VARCHAR" />
+		<result column="C4_ASSHARE" property="c4Asshare" jdbcType="DECIMAL" />
+		<result column="C4_ASSHTEL" property="c4Asshtel" jdbcType="VARCHAR" />
+		<result column="C4_ASSBTEL" property="c4Assbtel" jdbcType="VARCHAR" />
+		<result column="C4_ASSBEXT" property="c4Assbext" jdbcType="VARCHAR" />
+		<result column="C4_ASSCELL" property="c4Asscell" jdbcType="VARCHAR" />
+		<result column="C4_ASSCOMP" property="c4Asscomp" jdbcType="VARCHAR" />
+		<result column="C4_ASSDEPT" property="c4Assdept" jdbcType="VARCHAR" />
+		<result column="C4_CDSEL" property="c4Cdsel" jdbcType="VARCHAR" />
+		<result column="C4_CDSELNT" property="c4Cdselnt" jdbcType="VARCHAR" />
+		<result column="C4_DECEMP" property="c4Decemp" jdbcType="DECIMAL" />
+		<result column="C4_XCRLMT" property="c4Xcrlmt" jdbcType="DECIMAL" />
+		<result column="C4_CHILDYN" property="c4Childyn" jdbcType="DECIMAL" />
+		<result column="C4_FCODAT" property="c4Fcodat" jdbcType="TIMESTAMP" />
+		<result column="C5_SERCD11" property="c5Sercd11" jdbcType="VARCHAR" />
+		<result column="C5_SERCD12" property="c5Sercd12" jdbcType="VARCHAR" />
+		<result column="C5_SERCD13" property="c5Sercd13" jdbcType="VARCHAR" />
+		<result column="C5_SERCD14" property="c5Sercd14" jdbcType="VARCHAR" />
+		<result column="C5_SERCD15" property="c5Sercd15" jdbcType="VARCHAR" />
+		<result column="C5_SERCD16" property="c5Sercd16" jdbcType="VARCHAR" />
+		<result column="C5_SERCD17" property="c5Sercd17" jdbcType="VARCHAR" />
+		<result column="C5_SERCD18" property="c5Sercd18" jdbcType="VARCHAR" />
+		<result column="C5_SERCD19" property="c5Sercd19" jdbcType="VARCHAR" />
+		<result column="C5_CAPCNT" property="c5Capcnt" jdbcType="DECIMAL" />
+		<result column="C5_PTPLAN" property="c5Ptplan" jdbcType="DECIMAL" />
+		<result column="C5_CUCODE1" property="c5Cucode1" jdbcType="VARCHAR" />
+		<result column="C5_CUCODE2" property="c5Cucode2" jdbcType="VARCHAR" />
+		<result column="C5_ACCODE1" property="c5Accode1" jdbcType="VARCHAR" />
+		<result column="C5_ACCODE2" property="c5Accode2" jdbcType="VARCHAR" />
+		<result column="C5_OVRMTYN" property="c5Ovrmtyn" jdbcType="VARCHAR" />
+		<result column="C5_COLEVL" property="c5Colevl" jdbcType="VARCHAR" />
+		<result column="C5_HMST" property="c5Hmst" jdbcType="VARCHAR" />
+		<result column="C5_HMYR" property="c5Hmyr" jdbcType="DECIMAL" />
+		<result column="C5_SCHLNMC" property="c5Schlnmc" jdbcType="VARCHAR" />
+		<result column="C5_SCHLNME" property="c5Schlnme" jdbcType="VARCHAR" />
+		<result column="C5_MOAREA" property="c5Moarea" jdbcType="VARCHAR" />
+		<result column="C5_EMAILIN" property="c5Emailin" jdbcType="VARCHAR" />
+		<result column="C5_OVERSEA" property="c5Oversea" jdbcType="VARCHAR" />
+		<result column="C5_ADTYPE1" property="c5Adtype1" jdbcType="VARCHAR" />
+		<result column="C5_ADTYPE2" property="c5Adtype2" jdbcType="VARCHAR" />
+		<result column="C5_ADTYPE3" property="c5Adtype3" jdbcType="VARCHAR" />
+		<result column="C5_ADTYPE4" property="c5Adtype4" jdbcType="VARCHAR" />
+		<result column="C5_BMWYN" property="c5Bmwyn" jdbcType="VARCHAR" />
+		<result column="C5_MSGFREE" property="c5Msgfree" jdbcType="VARCHAR" />
+		<result column="C5_CPTNO" property="c5Cptno" jdbcType="DECIMAL" />
+		<result column="C5_INTCODE" property="c5Intcode" jdbcType="DECIMAL" />
+		<result column="C5_MNGRNO" property="c5Mngrno" jdbcType="VARCHAR" />
+		<result column="C5_IDTE1" property="c5Idte1" jdbcType="TIMESTAMP" />
+		<result column="C5_IDTE3" property="c5Idte3" jdbcType="TIMESTAMP" />
+		<result column="C5_ABTEAM" property="c5Abteam" jdbcType="DECIMAL" />
+		<result column="C5_ABAREA" property="c5Abarea" jdbcType="DECIMAL" />
+		<result column="C5_CARLICS" property="c5Carlics" jdbcType="VARCHAR" />
+		<result column="C5_ATM1" property="c5Atm1" jdbcType="VARCHAR" />
+		<result column="C5_TELE1" property="c5Tele1" jdbcType="VARCHAR" />
+		<result column="C5_NET1" property="c5Net1" jdbcType="VARCHAR" />
+		<result column="C5_PHONE1" property="c5Phone1" jdbcType="VARCHAR" />
+		<result column="C5_CPNO1" property="c5Cpno1" jdbcType="DECIMAL" />
+		<result column="C5_NBRMTH1" property="c5Nbrmth1" jdbcType="DECIMAL" />
+		<result column="C5_COMCUST" property="c5Comcust" jdbcType="VARCHAR" />
+		<result column="C5_COMRCCD" property="c5Comrccd" jdbcType="VARCHAR" />
+		<result column="C5_COMNAME" property="c5Comname" jdbcType="VARCHAR" />
+		<result column="C5_MPLLMT" property="c5Mpllmt" jdbcType="DECIMAL" />
+		<result column="C5_JCTYPE" property="c5Jctype" jdbcType="VARCHAR" />
+		<result column="C5_MAILCO1" property="c5Mailco1" jdbcType="VARCHAR" />
+		<result column="C5_GUARNM2" property="c5Guarnm2" jdbcType="VARCHAR" />
+		<result column="C5_GUAR2" property="c5Guar2" jdbcType="VARCHAR" />
+		<result column="C5_EMPNO" property="c5Empno" jdbcType="VARCHAR" />
+		<result column="C5_PATHWAY" property="c5Pathway" jdbcType="VARCHAR" />
+		<result column="C5_GUIDTP" property="c5Guidtp" jdbcType="VARCHAR" />
+		<result column="C5_CUCRED" property="c5Cucred" jdbcType="DECIMAL" />
+		<result column="C5_NCRED" property="c5Ncred" jdbcType="VARCHAR" />
+		<result column="C5_CREDLMT" property="c5Credlmt" jdbcType="DECIMAL" />
+		<result column="C5_EXPYDT" property="c5Expydt" jdbcType="DECIMAL" />
+		<result column="C5_PINLIM1" property="c5Pinlim1" jdbcType="DECIMAL" />
+		<result column="C5_USREL" property="c5Usrel" jdbcType="VARCHAR" />
+		<result column="C5_ABTYPE" property="c5Abtype" jdbcType="VARCHAR" />
+		<result column="C5_OTHBNK" property="c5Othbnk" jdbcType="DECIMAL" />
+		<result column="C5_SENDNBR" property="c5Sendnbr" jdbcType="VARCHAR" />
+		<result column="C5_TEMPLMT" property="c5Templmt" jdbcType="DECIMAL" />
+		<result column="C5_TLMTBEG" property="c5Tlmtbeg" jdbcType="TIMESTAMP" />
+		<result column="C5_TLMTEND" property="c5Tlmtend" jdbcType="TIMESTAMP" />
+		<result column="C5_POI_COD" property="c5PoiCod" jdbcType="VARCHAR" />
+		<result column="C5_WORK_TY" property="c5WorkTy" jdbcType="VARCHAR" />
+		<result column="C5_PRO_COD" property="c5ProCod" jdbcType="VARCHAR" />
+		<result column="C5_SIN_DUA" property="c5SinDua" jdbcType="VARCHAR" />
+		<result column="C5_APR_COM" property="c5AprCom" jdbcType="VARCHAR" />
+		<result column="C5_REL_PAR" property="c5RelPar" jdbcType="VARCHAR" />
+		<result column="C5_OTHER_I" property="c5OtherI" jdbcType="VARCHAR" />
+		<result column="C5_BUS_OWN" property="c5BusOwn" jdbcType="VARCHAR" />
+		<result column="C5_BUS_EST" property="c5BusEst" jdbcType="TIMESTAMP" />
+		<result column="C5_BUS_REG" property="c5BusReg" jdbcType="VARCHAR" />
+		<result column="C5_CUSEG1" property="c5Cuseg1" jdbcType="VARCHAR" />
+		<result column="C5_INTBNK" property="c5Intbnk" jdbcType="DECIMAL" />
+		<result column="C5_TRAN_RTE" property="c5TranRte" jdbcType="VARCHAR" />
+		<result column="C5_COSU_RTE" property="c5CosuRte" jdbcType="VARCHAR" />
+		<result column="C5_DEPO_RTE" property="c5DepoRte" jdbcType="VARCHAR" />
+		<result column="C5_SGNDTE1" property="c5Sgndte1" jdbcType="TIMESTAMP" />
+		<result column="C5_REGDTE1" property="c5Regdte1" jdbcType="TIMESTAMP" />
+		<result column="C5_SGNDTE3" property="c5Sgndte3" jdbcType="TIMESTAMP" />
+		<result column="C5_REGDTE3" property="c5Regdte3" jdbcType="TIMESTAMP" />
+		<result column="C5_CUREF1" property="c5Curef1" jdbcType="VARCHAR" />
+		<result column="C5_MASTNO1" property="c5Mastno1" jdbcType="VARCHAR" />
+		<result column="C5_NTMSG1" property="c5Ntmsg1" jdbcType="VARCHAR" />
+		<result column="C5_NTMSG2" property="c5Ntmsg2" jdbcType="VARCHAR" />
+		<result column="C5_CARDTO1" property="c5Cardto1" jdbcType="VARCHAR" />
+		<result column="C5_ABCODE" property="c5Abcode" jdbcType="VARCHAR" />
+		<result column="C5_PBCBRNC" property="c5Pbcbrnc" jdbcType="VARCHAR" />
+		<result column="C5_COMNM2P" property="c5Comnm2p" jdbcType="VARCHAR" />
+		<result column="C5_COMNM2V" property="c5Comnm2v" jdbcType="VARCHAR" />
+		<result column="C5_NOREISS" property="c5Noreiss" jdbcType="DECIMAL" />
+		<result column="C5_MSMPNBR" property="c5Msmpnbr" jdbcType="VARCHAR" />
+		<result column="C5_MSMPBAL" property="c5Msmpbal" jdbcType="DECIMAL" />
+		<result column="C5_CDSEL1" property="c5Cdsel1" jdbcType="VARCHAR" />
+		<result column="C5_HDWR_SN" property="c5HdwrSn" jdbcType="VARCHAR" />
+		<result column="C5_AID" property="c5Aid" jdbcType="VARCHAR" />
+		<result column="C5_INTFLCD" property="c5Intflcd" jdbcType="DECIMAL" />
+		<result column="C5_DEPOSIT" property="c5Deposit" jdbcType="DECIMAL" />
+		<result column="C5_DAILYTP" property="c5Dailytp" jdbcType="DECIMAL" />
+		<result column="C5_OPE_MOD" property="c5OpeMod" jdbcType="VARCHAR" />
+		<result column="C5_OPE_TPE" property="c5OpeTpe" jdbcType="VARCHAR" />
+		<result column="C5_CASHRTE" property="c5Cashrte" jdbcType="VARCHAR" />
+		<result column="C5_BEATYPE" property="c5Beatype" jdbcType="DECIMAL" />
+		<result column="C5_INLAND" property="c5Inland" jdbcType="VARCHAR" />
+		<result column="C5_FEEGRP" property="c5Feegrp" jdbcType="DECIMAL" />
+		<result column="C5_CC_YN1" property="c5CcYn1" jdbcType="DECIMAL" />
+		<result column="C5_EC_YN1" property="c5EcYn1" jdbcType="DECIMAL" />
+		<result column="C5_FRELIM" property="c5Frelim" jdbcType="DECIMAL" />
+		<result column="C5_LIVE_CY1" property="c5LiveCy1" jdbcType="VARCHAR" />
+		<result column="C5_INTFL_CODE" property="c5IntflCode" jdbcType="DECIMAL" />
+		<result column="C5_DETCARD" property="c5Detcard" jdbcType="VARCHAR" />
+		<result column="C5_QQ_NBR1" property="c5QqNbr1" jdbcType="VARCHAR" />
+		<result column="C5_WEIXIN_NBR1" property="c5WeixinNbr1"
+			jdbcType="VARCHAR" />
+		<result column="C5_ISS_MOD" property="c5IssMod" jdbcType="VARCHAR" />
+		<result column="C5_CARDCST2" property="c5Cardcst2" jdbcType="VARCHAR" />
+		<result column="C5_ISDPIF1" property="c5Isdpif1" jdbcType="VARCHAR" />
+		<result column="C5_ISDPIF3" property="c5Isdpif3" jdbcType="VARCHAR" />
+		<result column="C5_CUCODE3" property="c5Cucode3" jdbcType="VARCHAR" />
+		<result column="C6_OUT_MTH" property="c6OutMth" jdbcType="DECIMAL" />
+		<result column="THIRD_PARTY_YN1" property="thirdPartyYn1"
+			jdbcType="VARCHAR" />
+		<result column="PAYMT_YN" property="paymtYn" jdbcType="DECIMAL" />
+		<result column="C5_CUCODE4" property="c5Cucode4" jdbcType="VARCHAR" />
+		<result column="C5_LOAN_DTE" property="c5LoanDte" jdbcType="TIMESTAMP" />
+		<result column="C5_INTR_RATEW" property="c5IntrRatew" jdbcType="DECIMAL" />
+		<result column="C5_RMB_BILL1" property="c5RmbBill1" jdbcType="DECIMAL" />
+		<result column="SERIES_ID1" property="seriesId1" jdbcType="VARCHAR" />
+		<result column="C5_MPLMT_FLAG" property="c5MplmtFlag" jdbcType="DECIMAL" />
+		<result column="C5_HDWR_SN2" property="c5HdwrSn2" jdbcType="VARCHAR" />
+		<result column="C5_AID2" property="c5Aid2" jdbcType="VARCHAR" />
+		<result column="C6_REL_FLAG1" property="c6RelFlag1" jdbcType="DECIMAL" />
+		<result column="C6_REL_FLAG3" property="c6RelFlag3" jdbcType="DECIMAL" />
+		<result column="C6_CLASS_NBR1" property="c6ClassNbr1" jdbcType="VARCHAR" />
+		<result column="C6_CLASS_NBR3" property="c6ClassNbr3" jdbcType="VARCHAR" />
+		<result column="C6_WHITE_RSN1" property="c6WhiteRsn1" jdbcType="VARCHAR" />
+		<result column="C6_WHITE_RSN3" property="c6WhiteRsn3" jdbcType="VARCHAR" />
+		<result column="C6_MP_EXPDTE" property="c6MpExpdte" jdbcType="TIMESTAMP" />
+		<result column="C6_ETHNIC1" property="c6Ethnic1" jdbcType="VARCHAR" />
+		<result column="C6_OCCUPATION1" property="c6Occupation1"
+			jdbcType="VARCHAR" />
+		<result column="C6_ENROLL_DATE" property="c6EnrollDate"
+			jdbcType="DECIMAL" />
+		<result column="C6_GRADU_DATE" property="c6GraduDate" jdbcType="DECIMAL" />
+		<result column="C6_UNQPASS1" property="c6Unqpass1" jdbcType="DECIMAL" />
+		<result column="C6_MAX_MPAMT1" property="c6MaxMpamt1" jdbcType="DECIMAL" />
+		<result column="C6_MIN_MPAMT1" property="c6MinMpamt1" jdbcType="DECIMAL" />
+		<result column="C6_ABREASON" property="c6Abreason" jdbcType="VARCHAR" />
+		<result column="C6_ABSOUAREA" property="c6Absouarea" jdbcType="VARCHAR" />
+		<result column="C6_UNION_CD" property="c6UnionCd" jdbcType="VARCHAR" />
+		<result column="C6_FINANCE_CD" property="c6FinanceCd" jdbcType="VARCHAR" />
+		<result column="C6_LMT_TYPE1" property="c6LmtType1" jdbcType="VARCHAR" />
+		<result column="C6_SUBLMT_NBR1" property="c6SublmtNbr1"
+			jdbcType="DECIMAL" />
+		<result column="C6_LIMIT1" property="c6Limit1" jdbcType="DECIMAL" />
+		<result column="C6_ATTRBTE1" property="c6Attrbte1" jdbcType="DECIMAL" />
+		<result column="C6_AVAIL_YN1" property="c6AvailYn1" jdbcType="DECIMAL" />
+		<result column="C6_BEGIN_DATE1" property="c6BeginDate1"
+			jdbcType="TIMESTAMP" />
+		<result column="C6_END_DATE1" property="c6EndDate1" jdbcType="TIMESTAMP" />
+		<result column="C6_LMT_TYPE2" property="c6LmtType2" jdbcType="VARCHAR" />
+		<result column="C6_SUBLMT_NBR2" property="c6SublmtNbr2"
+			jdbcType="DECIMAL" />
+		<result column="C6_LIMIT2" property="c6Limit2" jdbcType="DECIMAL" />
+		<result column="C6_ATTRBTE2" property="c6Attrbte2" jdbcType="DECIMAL" />
+		<result column="C6_AVAIL_YN2" property="c6AvailYn2" jdbcType="DECIMAL" />
+		<result column="C6_BEGIN_DATE2" property="c6BeginDate2"
+			jdbcType="TIMESTAMP" />
+		<result column="C6_END_DATE2" property="c6EndDate2" jdbcType="TIMESTAMP" />
+		<result column="C6_VCN_YN" property="c6VcnYn" jdbcType="DECIMAL" />
+		<result column="C6_VCN_CHL" property="c6VcnChl" jdbcType="DECIMAL" />
+		<result column="C6_ITCD_ENDDT" property="c6ItcdEnddt" jdbcType="TIMESTAMP" />
+		<result column="C5_RESERV2" property="c5Reserv2" jdbcType="VARCHAR" />
+		<result column="BATCH_OPERATE_FLAG" property="batchOperateFlag"
+			jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="C1C2_FLAG" property="c1c2Flag" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+		<result column="KQ" property="kq" jdbcType="VARCHAR" />
+		<result column="FL" property="fl" jdbcType="DECIMAL" />
+		<result column="MAIN_CARD_STS" property="mainCardSts" jdbcType="VARCHAR" />
+		<result column="HD_INFO_MATCHING" property="hdInfoMatching"
+			jdbcType="VARCHAR" />
+		<result column="ALLOT_STATUS" property="allotStatus" jdbcType="CHAR" />
+		<result column="INPUT_CHANNEL" property="inputChannel"
+			jdbcType="CHAR" />
+		<result column="EPAY_MATCH" property="epayMatch" jdbcType="CHAR" />
+		<result column="CZFQ_MATCH" property="czfqMatch" jdbcType="CHAR" />
+
+		<result column="C2_CNAME" jdbcType="VARCHAR" property="c2Cname" />
+		<result column="C2_IDNBR" jdbcType="VARCHAR" property="c2Idnbr" />
+		<result column="PATCH_CODE" jdbcType="VARCHAR" property="patchCode" />  <!-- 补件码 -->
+		<result column="OPERATE_RESULT" jdbcType="VARCHAR" property="operateResult" />  <!-- 当前状态 -->
+		<result column="APPROVE_RESULT" jdbcType="VARCHAR" property="approveResult" />  <!-- 审批结果 -->
+		<result column="remark" property="remark" jdbcType="NUMERIC" />
+	</resultMap>
+
+	<!-- 申请件信息一般历史查询 -->
+	<!-- ============================================== 一 没输入证件码 =============================================================== -->
+	<select id="selectHistoryCount1" resultType="java.lang.Integer">
+		select count(1) from
+		( select
+		c1.APP_ID ,
+		c1.C1_CNAME ,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from OPAS_BIZ_INP_APPL_HISTORY_C1 c1 join
+		OPAS_BIZ_INP_APPL_HISTORY_C2 c2
+		on (c1.APP_ID = c2.APP_ID ) left join
+		OPAS_FILE_PATCHBOLT c3 on
+		(c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME = #{c1Cname}
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+		)
+	</select>
+
+	<select id="selectHistoryList1" parameterType="java.util.Map"
+		resultMap="resultHistoryList">
+		select
+		c1.APP_ID ,
+		c1.C1_CNAME,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from
+		OPAS_BIZ_INP_APPL_HISTORY_C1 c1 join
+		OPAS_BIZ_INP_APPL_HISTORY_C2 c2 on
+		(c1.APP_ID =
+		c2.APP_ID ) left join
+		OPAS_FILE_PATCHBOLT c3 on (c1.APP_ID
+		= c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+	</select>
+	<!-- ================================== 二 只输入补件码 ====================================== -->
+
+
+	<select id="selectHistoryCount2" resultType="java.lang.Integer">
+		select count(1) from
+		(select
+		c1.APP_ID ,
+		c1.C1_CNAME ,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from OPAS_BIZ_INP_APPL_HISTORY_C1 c1 join
+		OPAS_BIZ_INP_APPL_HISTORY_C2 c2
+		on (c1.APP_ID = c2.APP_ID ) right join
+		OPAS_FILE_PATCHBOLT c3 on
+		(c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+		)
+	</select>
+
+	<select id="selectHistoryList2" parameterType="java.util.Map"
+		resultMap="resultHistoryList">
+		select
+		c1.APP_ID ,
+		c1.C1_CNAME ,
+		c1.C1_IDNBR,
+		c1.C1_MOBILE,
+		c1.YDJ_FLAG,
+		c1.APP_PROD,
+		c2.C2_CNAME,
+		c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from
+		OPAS_BIZ_INP_APPL_HISTORY_C1 c1 join
+		OPAS_BIZ_INP_APPL_HISTORY_C2 c2 on
+		(c1.APP_ID = c2.APP_ID ) right join
+		OPAS_FILE_PATCHBOLT c3 on
+		(c1.APP_ID = c3.APP_ID)
+		where 1=1
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+	</select>
+
+	<!--====================================== 三 所有查询条件全部输入 =============================================== -->
+	<select id="selectHistoryCount3" resultType="java.lang.Integer">
+		select count(1) from
+		( select
+		c1.APP_ID ,c1.C1_CNAME ,c1.C1_IDNBR
+		,c1.C1_MOBILE,c1.YDJ_FLAG,c1.APP_PROD,
+		c2.C2_CNAME
+		,c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from
+		OPAS_BIZ_INP_APPL_HISTORY_C1 c1 ,
+		OPAS_BIZ_INP_APPL_HISTORY_C2 c2 ,
+		OPAS_FILE_PATCHBOLT c3
+		where
+		c1.APP_ID
+		=
+		c2.APP_ID
+		and
+		c1.APP_ID=c3.APP_ID
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+		)
+	</select>
+
+	<select id="selectHistoryList3" parameterType="java.util.Map"
+		resultMap="resultHistoryList">
+		select
+		c1.APP_ID ,c1.C1_CNAME ,c1.C1_IDNBR
+		,c1.C1_MOBILE,c1.YDJ_FLAG,c1.APP_PROD,
+		c2.C2_CNAME
+		,c2.C2_IDNBR ,
+		c3.PATCH_CODE
+		from
+		OPAS_BIZ_INP_APPL_HISTORY_C1 c1 ,
+		OPAS_BIZ_INP_APPL_HISTORY_C2 c2 ,
+		OPAS_FILE_PATCHBOLT c3
+		where
+		c1.APP_ID
+		=
+		c2.APP_ID
+		and
+		c1.APP_ID=c3.APP_ID
+		<if test="appId != null and appId !='' ">
+			and (c1.APP_ID like '${appId}%' or reverse(c1.app_id) like reverse('%${appId}'))
+		</if>
+		<if test="c1Cname != null and c1Cname !='' ">
+			and c1.C1_CNAME like '${c1Cname}%'
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE = #{c1Mobile}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="appProd != null and appProd !='' ">
+			and c1.APP_PROD = #{appProd}
+		</if>
+		<if test="c2Cname != null and c2Cname !='' ">
+			and c2.C2_CNAME like '${c2Cname}%'
+		</if>
+		<if test="c2Idnbr != null and c2Idnbr !='' ">
+			and c2.C2_IDNBR like '${c2Idnbr}%'
+		</if>
+		<if test="patchCode != null and patchCode !='' ">
+			and c3.PATCH_CODE =#{patchCode}
+		</if>
+	</select>
+
+	<!--==================================================================================================================================== -->
+
+	<!--申请件信息历史状态查询 -->
+	<select id="selectHistoryState" resultType="java.util.Map">
+		select c1.APP_ID,
+		tab.OPERATE_RESULT
+		from OPAS_BIZ_INP_APPL_HISTORY_C1 c1
+		left join
+		(select e.APP_ID,
+		e.OPERATE_RESULT,
+		row_number() over(partition by
+		e.APP_ID order by e.LST_UPD_DATE desc) rank
+		from OPAS_APPLY_LIFE_CICLE
+		e)
+		tab on tab.APP_ID = c1.APP_ID and rank = 1
+	</select>
+
+	<!-- 申请件信息高级历史查询 -->
+	<select id="selectHighHistoryCount" resultType="java.lang.Integer">
+		select count(1)
+		from (select
+		c1.C1_COADD1,c1.C1_CNAME,c1.APP_ID,c1.C1_CONAME ,c1.C1_RENAME
+		,c1.C1_COTEL,c1.C1_RETEL,c1.C1_HMTEL,c1.C1_REMOBIL,
+		c1.C1_IDNBR,c1.YDJ_FLAG,c1.APP_PROD,c1.C1_XNAME1,c1.C1_XNAME2,
+		c1.C4_APBATCH ,c1.C1_MOBILE ,c1.C5_ABCODE,c1.C1_GENDER
+		,c1.C4_ABUSER,c1.C1_XTEL1,c1.C1_XTEL2,c1.C1_XMOBIL1,c1.C1_XMOBIL2,
+		c2.APPROVE_RESULT,
+		c3.FLAG as kflag,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from
+		OPAS_BIZ_INP_APPL_C1 c1
+		left join OPAS_BIZ_APPROVAL c2 	on (c1.APP_ID = c2.APP_ID)
+		left join opas_file_application_detail c3 on c3.app_id = c1.app_id
+		where 1=1
+		<if test="c1Coname != null and c1Coname !='' ">
+			and c1.C1_CONAME like '${c1Coname}%'
+		</if>
+		<if test="c1Rename != null and c1Rename !='' ">
+			and ( c1.C1_XNAME1 like '${c1Rename}%' or c1.C1_RENAME
+			like '${c1Rename}%' or c1.C1_XNAME2 like '${c1Rename}%')
+		</if>
+		<if test="c1Cotel != null and c1Cotel !='' ">
+			and c1.C1_COTEL like '${c1Cotel}%'
+		</if>
+		<if test="c1Retel != null and c1Retel !='' ">    <!--直系亲属电话 C1_RETEL -->
+			and (c1.C1_RETEL like '${c1Retel}%' or c1.C1_XTEL1 like '${c1Retel}%'
+			or c1.C1_XTEL2 like '${c1Retel}%')
+		</if>
+		<if test="c1Hmtel != null and c1Hmtel !='' ">
+			and c1.C1_HMTEL like '${c1Hmtel}%'
+		</if>
+		<if test="c1Remobil != null and c1Remobil !='' "> <!--直系亲属手机 C1_REMOBIL -->
+			and(c1.C1_REMOBIL like '${c1Remobil}%' or c1.C1_XMOBIL1 like
+			'${c1Remobil}%' or c1.C1_XMOBIL2 like '${c1Remobil}%')
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c4Apbatch != null and c4Apbatch !='' ">
+			and c1.C4_APBATCH like '${c4Apbatch}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE like '${c1Mobile}%'
+		</if>
+		
+		<if test="approveResultNumList != null and approveResultNumList.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultNumList1 != null and approveResultNumList1.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList1" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultFlag == '0'.toString() and kflag != null ">
+			and c3.FLAG != '2'
+		</if>
+		
+		<if test="c5Abcode != null and c5Abcode !='' ">
+			and c1.C5_ABCODE =#{c5Abcode}
+		</if>
+		<if test="c1Gender != null and c1Gender !='' ">
+			and c1.C1_GENDER =#{c1Gender}
+		</if>
+		<if test="c4Abuser != null and c4Abuser !='' ">
+			and c1.C4_ABUSER =#{c4Abuser}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="crtDate != null and crtDate !='' and crtDate1 != null and crtDate1 !=''">
+			and c1.CRT_DATE between #{crtDate} and #{crtDate1}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="flag == '1'.toString()">
+		    and  substr(c1.APP_ID,1,6) &lt; to_char(sysdate-365,'yymmdd')
+			<!--and c3.TO_ARCHIVE_TIME &lt; (sysdate - 365)-->
+		</if>)
+	</select>
+
+	<select id="selectHighHistoryList" parameterType="java.util.Map"
+		resultMap="resultHistoryList">
+		select
+		c1.C1_COADD1,c1.C1_CNAME,c1.APP_ID,c1.C1_CONAME ,c1.C1_RENAME
+		,c1.C1_COTEL,c1.C1_RETEL,c1.C1_HMTEL,c1.C1_REMOBIL,
+		c1.C1_IDNBR,c1.YDJ_FLAG,c1.APP_PROD,c1.C1_XNAME1,c1.C1_XNAME2,
+		c1.C4_APBATCH ,c1.C1_MOBILE ,c1.C5_ABCODE,c1.C1_GENDER
+		,c1.C4_ABUSER,c1.C1_XTEL1,c1.C1_XTEL2,c1.C1_XMOBIL1,c1.C1_XMOBIL2,
+		c2.APPROVE_RESULT,
+		c3.FLAG as kflag,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from
+		OPAS_BIZ_INP_APPL_C1 c1
+		left join OPAS_BIZ_APPROVAL c2 	on (c1.APP_ID = c2.APP_ID)
+		left join opas_file_application_detail c3 on c3.app_id = c1.app_id
+		where 1=1
+		<if test="c1Coname != null and c1Coname !='' ">
+			and c1.C1_CONAME like '${c1Coname}%'
+		</if>
+		<if test="c1Rename != null and c1Rename !='' ">
+			and ( c1.C1_XNAME1 like '${c1Rename}%' or c1.C1_RENAME
+			like '${c1Rename}%' or c1.C1_XNAME2 like '${c1Rename}%')
+		</if>
+		<if test="c1Cotel != null and c1Cotel !='' ">
+			and c1.C1_COTEL like '${c1Cotel}%'
+		</if>
+		<if test="c1Retel != null and c1Retel !='' ">    <!--直系亲属电话 C1_RETEL -->
+			and (c1.C1_RETEL like '${c1Retel}%' or c1.C1_XTEL1 like '${c1Retel}%'
+			or c1.C1_XTEL2 like '${c1Retel}%')
+		</if>
+		<if test="c1Hmtel != null and c1Hmtel !='' ">
+			and c1.C1_HMTEL like '${c1Hmtel}%'
+		</if>
+		<if test="c1Remobil != null and c1Remobil !='' "> <!--直系亲属手机 C1_REMOBIL -->
+			and(c1.C1_REMOBIL like '${c1Remobil}%' or c1.C1_XMOBIL1 like
+			'${c1Remobil}%' or c1.C1_XMOBIL2 like '${c1Remobil}%')
+		</if>
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR like '${c1Idnbr}%'
+		</if>
+		<if test="c4Apbatch != null and c4Apbatch !='' ">
+			and c1.C4_APBATCH like '${c4Apbatch}%'
+		</if>
+		<if test="c1Mobile != null and c1Mobile !='' ">
+			and c1.C1_MOBILE like '${c1Mobile}%'
+		</if>
+		
+		<if test="approveResultNumList != null and approveResultNumList.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultNumList1 != null and approveResultNumList1.size()>0">
+			and c2.APPROVE_RESULT IN
+			<foreach collection="approveResultNumList1" item="item" index="index" open="(" close=")" separator=",">
+			   #{item}
+			</foreach>
+		</if>
+		<if test="approveResultFlag == '0'.toString() and kflag != null">
+			and c3.FLAG != '2'
+		</if>
+		
+		<if test="c5Abcode != null and c5Abcode !='' ">
+			and c1.C5_ABCODE =#{c5Abcode}
+		</if>
+		<if test="c1Gender != null and c1Gender !='' ">
+			and c1.C1_GENDER =#{c1Gender}
+		</if>
+		<if test="c4Abuser != null and c4Abuser !='' ">
+			and c1.C4_ABUSER =#{c4Abuser}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="crtDate != null and crtDate !='' and crtDate1 != null and crtDate1 !=''">
+			and c1.CRT_DATE between #{crtDate} and #{crtDate1}
+		</if>
+		<if test="ydjFlag != null and ydjFlag !='' ">
+			and c1.YDJ_FLAG = #{ydjFlag}
+		</if>
+		<if test="flag == '1'.toString()">
+		    and  substr(c1.APP_ID,1,6) &lt; to_char(sysdate-365,'yymmdd')
+			<!--and c3.TO_ARCHIVE_TIME &lt; (sysdate - 365)-->
+		</if>
+		order by substr(c1.APP_ID,1,6) desc,substr(c1.app_id,7,1) desc,c1.app_id
+	</select>
+
+	<!-- 查询申请件单位信息 -->
+	<select id="selectApplyCompanyInfo" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT C1_COCODE, C1_CONAME,
+		C1_COADD1||C1_COADD2||C1_COADD3||C1_COADD4 AS C1_COADDRESS
+		FROM
+		OPAS_BIZ_INP_APPL_C1
+		WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+
+	<!-- VVIP客户历史数量信息查询 -->
+	<select id="selectArchiveCount" resultType="java.lang.Integer">
+		select count(1)
+		from
+		(select t.ID_NO,c1.C1_IDNBR from
+		opas_vvip_list_history t,
+		OPAS_BIZ_INP_APPL_HISTORY_C1 c1 where
+		t.ID_NO=c1.C1_IDNBR
+		<if test="c1Idnbr != null and c1Idnbr !='' ">
+			and c1.C1_IDNBR = #{c1Idnbr,jdbcType=VARCHAR}
+		</if>
+		)
+	</select>
+
+	<!--高级查询审批结果状态查询 -->
+	<select id="selectHighHistoryAppayState" parameterType="java.util.Map"
+		resultMap="resultHistoryList">
+		select
+		c1.APP_ID ,
+		c2.CURR_OPT_USER
+		,c2.CURR_NODE
+		from
+		OPAS_BIZ_INP_APPL_HISTORY_C1 c1 ,
+		OPAS_ALLOT_APPLY_ALLOT c2
+		where
+		c1.APP_ID=c2.APP_ID
+	</select>
+
+
+	<!--当前批量导出 -->
+	<resultMap id="resultExprotCurrentList" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="C1_CONAME" property="c1Coname" jdbcType="VARCHAR" />
+		<result column="C4_APBATCH" property="c4Apbatch" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+		<result column="DECISION_DESP" property="sysDecisionResult"
+			jdbcType="VARCHAR" />
+		<result column="PROPOSED_LMT" property="adviseLimit" jdbcType="DECIMAL" />
+		<result column="CDT_SCORE" property="creditScore" jdbcType="DECIMAL" />
+		<result column="NUMBER_READ" property="numberRead" jdbcType="VARCHAR" />
+		<result column="JOB_BF_MINCOME" property="pretaxIncome"
+			jdbcType="VARCHAR" />
+		<result column="REF_UN_PLGE_DTI" property="sysUnmortgageDti"
+			jdbcType="DECIMAL" />
+		<result column="REF_CP_DTI" property="sysSyntheticalDti"
+			jdbcType="DECIMAL" />
+		<result column="REF_MUE" property="sysRiskOpenMue" jdbcType="DECIMAL" />
+		<result column="DECISION_DESP" property="sysResultDesc"
+			jdbcType="VARCHAR" />
+		<result column="MASTERCARD_APPROVEREUSLT" property="masterCardApproveResult"
+			jdbcType="VARCHAR" />
+		<result column="APPROVE_CREDIT_PRODUCT" property="approveCreditProduct"
+			jdbcType="VARCHAR" />
+		<result column="APPROVE_CREDIT_LIMIT" property="approveCreditLimit"
+			jdbcType="VARCHAR" />
+		<result column="APPROVE_RESULT" property="approveResult"
+			jdbcType="CHAR" />
+		<result column="POLICY_CODE1" property="policyCode1" jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE1" property="violateCode1"
+			jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE1" property="refuseCode1" jdbcType="VARCHAR" />
+		<result column="MEMO" property="meMo" jdbcType="VARCHAR" />
+		<result column="CREDIT_RESULT" property="creditResult"
+			jdbcType="VARCHAR" />
+		<result column="MANUAL_LIMIT" property="manualLimit" jdbcType="VARCHAR" />
+		<result column="UN_PLGE_DTI" property="unPlgeDti" jdbcType="DECIMAL" />
+		<result column="CP_DTI" property="cpDti" jdbcType="DECIMAL" />
+		<result column="MUE" property="mue" jdbcType="DECIMAL" />
+		<result column="CUST_TYPE" property="custType" jdbcType="VARCHAR" />
+		<result column="AUDITOR_NAME" property="auditorName" jdbcType="VARCHAR" />
+		<result column="CREDITER_NAME" property="crediterName" jdbcType="VARCHAR" />
+		<result column="APPROVER" property="approver" jdbcType="VARCHAR" />
+		<result column="IVS_SCORE" property="ivsScore" jdbcType="VARCHAR" />
+		<result column="ZM_SCORE" property="zmScore" jdbcType="VARCHAR" />
+		<result column="BRCREDITPOINT" property="brcreditPoint"
+			jdbcType="VARCHAR" />
+		<result column="AGE" property="age" jdbcType="DECIMAL" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="remark" property="remark" jdbcType="NUMERIC"/>
+		<result column="TRIGGER_TYPE" property="triggerType" jdbcType="VARCHAR"/>
+
+		<!--补件提交信息表（标准卡）[OPAS_PATCHBOLT_INFO] c15 -->
+		<result column="APP_ID2" property="appId2" jdbcType="VARCHAR" />
+		<result column="AUTO_ID1" property="autoId1" jdbcType="VARCHAR" />
+		<result column="PATCH_CODE1" property="patchCode1" jdbcType="VARCHAR" />
+		<result column="IDENTITY_CARD1" property="identityCard1"
+			jdbcType="CHAR" />
+		<result column="INCOME_CONFIRM" property="incomeConfirm"
+			jdbcType="CHAR" />
+		<result column="DRIVING_LICENSE" property="drivngLicense"
+			jdbcType="CHAR" />
+		<result column="OTHER_CREDITCARD" property="otherCreditCard"
+			jdbcType="CHAR" />
+		<result column="OTHERS" property="others" jdbcType="CHAR" />
+		<result column="IS_HAVESIGN" property="isHavesign" jdbcType="CHAR" />
+		<result column="LIVE_CONFIRM" property="liveConfirm" jdbcType="CHAR" />
+		<result column="EDU_CONFIRM" property="eduConfirm" jdbcType="CHAR" />
+		<result column="OWNER_BANK_CONFIRM" property="ownerBankConfirm"
+			jdbcType="CHAR" />
+		<result column="NON_ADDFILES" property="nonAddfiles" jdbcType="CHAR" />
+		<result column="WORK_CONFIRM" property="workConfirm" jdbcType="CHAR" />
+		<result column="HOUSE_CONFIRM" property="houseConfirm"
+			jdbcType="CHAR" />
+		<result column="TITLE_CONFIRM" property="titleConfirm"
+			jdbcType="VARCHAR" />
+		<result column="FINANCAL_CONFIRM" property="financalConfirm"
+			jdbcType="CHAR" />
+		<result column="CRT_DATE1" property="crtDate1" jdbcType="DATE" />
+		<result column="CRT_USER1" property="crtUser1" jdbcType="VARCHAR" />
+
+		<!-- 补件提交信息表（易达金）[OPAS_PATCHBOLT_YDJ_INFO] c16 -->
+		<result column="APP_ID1" property="appId1" jdbcType="VARCHAR" />
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PATCH_CODE" property="patchCode" jdbcType="VARCHAR" />
+		<result column="IDENTITY_CARD" property="identityCard"
+			jdbcType="CHAR" />
+		<result column="PAY_WATER" property="payWater" jdbcType="CHAR" />
+		<result column="WORK_PROOF" property="workProof" jdbcType="CHAR" />
+		<result column="INCOME_PROOF" property="incomeProof" jdbcType="CHAR" />
+		<result column="SOCIAL_SECURITY" property="socialSecurity"
+			jdbcType="CHAR" />
+		<result column="HOUSE_PROOF" property="houseProof" jdbcType="CHAR" />
+		<result column="ACCUMULATION_FUND" property="accumulationFund"
+			jdbcType="CHAR" />
+		<result column="EDUCATION_PROOF" property="educationProof"
+			jdbcType="CHAR" />
+		<result column="TAX_RECEIPT" property="taxReceipt" jdbcType="CHAR" />
+		<result column="CREDIT_CARD_BILL" property="creditCardBill"
+			jdbcType="CHAR" />
+		<result column="OWNER_BANK_PROOF" property="ownerBankProof"
+			jdbcType="CHAR" />
+		<result column="FINANCAL_PROOF" property="financalProof"
+			jdbcType="CHAR" />
+		<result column="LOAN_SETTLE_PROOF" property="loanSettleProof"
+			jdbcType="CHAR" />
+		<result column="RPR_PROOF" property="rprProof" jdbcType="CHAR" />
+		<result column="MARRIAGE_CERTIFICATE" property="marriageCertificate"
+			jdbcType="CHAR" />
+		<result column="BUSINESS_LICENSE" property="businessLicense"
+			jdbcType="CHAR" />
+		<result column="CAR_PROOF" property="carProof" jdbcType="CHAR" />
+		<result column="RETRICAL_MASTER_COPY" property="retricalMasterCopy"
+			jdbcType="CHAR" />
+		<result column="IMAGE_REPAIR" property="imageRepair" jdbcType="CHAR" />
+		<result column="OTHER" property="other" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectExprotCurrentInfoBzk" parameterType="java.lang.String" resultMap="resultExprotCurrentList">
+		select c1.APP_ID, c1.C1_CONAME, c1.C4_APBATCH, c1.YDJ_FLAG,
+		c2.DECISION_DESP, c7.PROPOSED_LMT, c7.TRIGGER_TYPE,
+		c3.NUMBER_READ,
+		c6.JOB_BF_MINCOME, C6.REF_UN_PLGE_DTI,c6.DECISION_DESP,
+		c6.REF_CP_DTI,
+		c6.REF_MUE,
+		c5.MASTERCARD_APPROVEREUSLT, c5.APPROVE_CREDIT_PRODUCT,c5.APPROVER,
+		c5.APPROVE_CREDIT_LIMIT, c5.APPROVE_RESULT, c5.POLICY_CODE1,
+		c5.VIOLATE_CODE1, c5.REFUSE_CODE1, c5.MEMO, c5.CREDIT_RESULT,
+		c5.MANUAL_LIMIT,
+		c6.UN_PLGE_DTI, c6.CP_DTI,c6.MUE,
+		c7.CUST_TYPE,
+		c8.AUDITOR_NAME, c9.CREDITER_NAME, c10.IVS_SCORE, c11.ZM_SCORE,
+		c12.BRCREDITPOINT, get_age(#{appId}) as AGE, c14.CURR_STATUS,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from OPAS_BIZ_INP_APPL_C1 c1
+		left join OPAS_FICO_SD_BLAZE c2 on (c2.APP_ID = c1.APP_ID)
+		left join OPAS_PBOC_CREDIT_CUE c3 on (c1.APP_ID = c3.APP_ID)
+		left join OPAS_BIZ_APPROVAL c5 on (c1.APP_ID = c5.APP_ID)
+		left join OPAS_FICO_YDJ_BLAZE c6 on (c1.APP_ID = c6.APP_ID)
+		left join OPAS_FICO_SD_BLAZE c7 on (c1.APP_ID = c7.APP_ID)
+		left join OPAS_REVIEW_DECISION_RESULT c8 on (c1.APP_ID = c8.APP_ID)
+		left join OPAS_TELCHECK_RESULT c9 on (c1.APP_ID = c9.APP_ID)
+		left join OPAS_BIZ_ZM_IVS_DATA c10 on (c1.APP_ID = c10.APP_ID)
+		left join OPAS_BIZ_ZM_SCOR_DATA c11 on (c1.APP_ID = c11.APP_ID)
+		left join OPAS_BIZ_SPECIALLIST_SCORE c12 on ( c1.APP_ID = c12.APP_ID)
+	
+		left join OPAS_ALLOT_APPLY_ALLOT c14 on (c1.APP_ID = c14.APP_ID)
+		where c1.APP_ID = #{appId}
+	</select>
+	
+	<select id="selectExprotCurrentInfoYdj" parameterType="java.lang.String" resultMap="resultExprotCurrentList">
+		select c1.APP_ID, c1.C1_CONAME, c1.C4_APBATCH, c1.YDJ_FLAG,
+		c2.DECISION_DESP, c6.PROPOSED_LMT, c6.CDT_SCORE,
+		c3.NUMBER_READ,
+		c6.JOB_BF_MINCOME, C6.REF_UN_PLGE_DTI,c6.DECISION_DESP,
+		c6.REF_CP_DTI,
+		c6.REF_MUE,
+		c5.MASTERCARD_APPROVEREUSLT, c5.APPROVE_CREDIT_PRODUCT,
+		c5.APPROVE_CREDIT_LIMIT, c5.APPROVE_RESULT, c5.POLICY_CODE1,
+		c5.VIOLATE_CODE1, c5.REFUSE_CODE1, c5.MEMO, c5.CREDIT_RESULT,c5.APPROVER,
+		c5.MANUAL_LIMIT,
+		c6.UN_PLGE_DTI, c6.CP_DTI,c6.MUE,
+		c7.CUST_TYPE,
+		c8.AUDITOR_NAME, c9.CREDITER_NAME, c10.IVS_SCORE, c11.ZM_SCORE,
+		c12.BRCREDITPOINT, get_age(#{appId}) as AGE, c14.CURR_STATUS,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from OPAS_BIZ_INP_APPL_C1 c1
+		left join OPAS_FICO_YDJ_BLAZE c2 on (c2.APP_ID = c1.APP_ID)
+		left join OPAS_PBOC_CREDIT_CUE c3 on (c1.APP_ID = c3.APP_ID)
+		left join OPAS_BIZ_APPROVAL c5 on (c1.APP_ID = c5.APP_ID)
+		left join OPAS_FICO_YDJ_BLAZE c6 on (c1.APP_ID = c6.APP_ID)
+		left join OPAS_FICO_SD_BLAZE c7 on (c1.APP_ID = c7.APP_ID)
+		left join OPAS_REVIEW_DECISION_RESULT c8 on (c1.APP_ID = c8.APP_ID)
+		left join OPAS_TELCHECK_RESULT c9 on (c1.APP_ID = c9.APP_ID)
+		left join OPAS_BIZ_ZM_IVS_DATA c10 on (c1.APP_ID = c10.APP_ID)
+		left join OPAS_BIZ_ZM_SCOR_DATA c11 on (c1.APP_ID = c11.APP_ID)
+		left join OPAS_BIZ_SPECIALLIST_SCORE c12 on ( c1.APP_ID = c12.APP_ID)
+		
+		left join OPAS_ALLOT_APPLY_ALLOT c14 on (c1.APP_ID = c14.APP_ID)
+		where c1.APP_ID = #{appId}
+	</select>
+	
+
+	<select id="selectExprotCurrentBJInfo" parameterType="java.util.List"
+		resultMap="resultExprotCurrentList">
+		select distinct
+		c3.APP_ID,c3.YDJ_FLAG,
+		c2.APP_ID as APP_ID2 ,
+		c2.PATCH_CODE as PATCH_CODE1,
+		c2.IDENTITY_CARD as IDENTITY_CARD1 ,
+		c2.INCOME_CONFIRM , c2.DRIVING_LICENSE ,
+		c2.OTHER_CREDITCARD, c2.OTHERS
+		, c2.IS_HAVESIGN ,
+		c2.LIVE_CONFIRM ,
+		c2.EDU_CONFIRM ,
+		c2.OWNER_BANK_CONFIRM , c2.NON_ADDFILES ,
+		c2.WORK_CONFIRM ,
+		c2.HOUSE_CONFIRM ,
+		c2.TITLE_CONFIRM , c2.CRT_DATE as CRT_DATE1,
+		c2.CRT_USER as CRT_USER1,
+
+		c1.APP_ID as APP_ID1,
+		c1.PATCH_CODE,
+		c1.IDENTITY_CARD,
+		c1.PAY_WATER, c1.WORK_PROOF,
+		c1.INCOME_PROOF,
+		c1.SOCIAL_SECURITY,
+		c1.HOUSE_PROOF,
+		c1.ACCUMULATION_FUND,
+		c1.EDUCATION_PROOF,
+		c1.TAX_RECEIPT,
+		c1.CREDIT_CARD_BILL,
+		c1.OWNER_BANK_PROOF,
+		c1.FINANCAL_PROOF,
+		c1.LOAN_SETTLE_PROOF,
+		c1.RPR_PROOF,
+		c1.MARRIAGE_CERTIFICATE,
+		c1.BUSINESS_LICENSE,
+		c1.CAR_PROOF,
+		c1.RETRICAL_MASTER_COPY,
+		c1.IMAGE_REPAIR, c1.OTHER,
+		c1.CRT_DATE,
+		c1.CRT_USER
+
+		from
+		OPAS_BIZ_INP_APPL_C1 c3
+		left join
+		OPAS_PATCHBOLT_INFO c2 on (c3.APP_ID = c2.APP_ID ) left join
+		OPAS_PATCHBOLT_YDJ_INFO c1 on (c3.APP_ID = c1.APP_ID)
+
+		where c3.APP_ID
+		IN
+
+		<foreach collection="list" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+
+	<!--历史批量导出 -->
+	<resultMap id="resultExprotHistoryList" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="C1_CONAME" property="c1Coname" jdbcType="VARCHAR" />  <!--主卡进件信息历史表 OPAS_BIZ_INP_APPL_HISTORY_C1 -->
+		<result column="C4_APBATCH" property="c4Apbatch" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />  <!--1为易达金，2为非易达金 -->
+
+		<result column="DECISION_DESP" property="sysDecisionResult"
+			jdbcType="VARCHAR" />    <!-- 系统决策结果信息表(标准卡)[OPAS_BZK_SYSRESULT_INFO] c2 -->
+		<result column="PROPOSED_LMT" property="adviseLimit" jdbcType="DECIMAL" />
+		<result column="CDT_SCORE" property="creditScore" jdbcType="DECIMAL" />
+
+		<result column="NUMBER_READ" property="numberRead" jdbcType="VARCHAR" />   <!-- 人行信用提示信息表 OPAS_PBOC_CREDIT_CUE c3 新字段该表 中征信“信用1000”评分，系统决策结果信息表(易达金)[OPAS_YDJ_SYSRESULT_INFO] -->
+
+		<result column="JOB_BF_MINCOME" property="pretaxIncome"
+			jdbcType="VARCHAR" />    <!-- <系统决策结果信息表(易达金)[OPAS_YDJ_SYSRESULT_INFO] c4 -->
+
+		<result column="REF_UN_PLGE_DTI" property="sysUnmortgageDti"
+			jdbcType="DECIMAL" />
+		<result column="REF_CP_DTI" property="sysSyntheticalDti"
+			jdbcType="DECIMAL" />
+		<result column="REF_MUE" property="sysRiskOpenMue" jdbcType="DECIMAL" />
+		<result column="DECISION_DESP" property="sysResultDesc"
+			jdbcType="VARCHAR" />
+
+		<result column="MASTERCARD_APPROVEREUSLT" property="masterCardApproveResult"
+			jdbcType="VARCHAR" />     <!-- 审批复核信息表[OPAS_BIZ_APPROVAL] c5 -->
+		<result column="APPROVE_CREDIT_PRODUCT" property="approveCreditProduct"
+			jdbcType="VARCHAR" />
+		<result column="APPROVE_CREDIT_LIMIT" property="approveCreditLimit"
+			jdbcType="VARCHAR" />
+		<result column="APPROVE_RESULT" property="approveResult"
+			jdbcType="CHAR" />
+		<result column="POLICY_CODE1" property="policyCode1" jdbcType="VARCHAR" />
+		<result column="VIOLATE_CODE1" property="violateCode1"
+			jdbcType="VARCHAR" />
+		<result column="REFUSE_CODE1" property="refuseCode1" jdbcType="VARCHAR" />
+		<result column="MEMO" property="meMo" jdbcType="VARCHAR" />
+		<result column="CREDIT_RESULT" property="creditResult"
+			jdbcType="VARCHAR" />
+		<result column="MANUAL_LIMIT" property="manualLimit" jdbcType="VARCHAR" />
+
+
+		<result column="UN_PLGE_DTI" property="unPlgeDti" jdbcType="DECIMAL" />     <!-- 易达金BLAZE返回表[OPAS_FICO_YDJ_BLAZE] c6 -->
+		<result column="CP_DTI" property="cpDti" jdbcType="DECIMAL" />
+		<result column="MUE" property="mue" jdbcType="DECIMAL" />
+
+
+
+		<result column="CUST_TYPE" property="custType" jdbcType="VARCHAR" />    <!-- 标准卡BLAZE返回表[OPAS_FICO_SD_BLAZE] c7 -->
+
+
+		<result column="AUDITOR_NAME" property="auditorName" jdbcType="VARCHAR" />    <!-- 审查决策结果信息表[OPAS_REVIEW_DECISION_RESULT] c8 -->
+
+
+		<result column="CREDITER_NAME" property="crediterName"
+			jdbcType="VARCHAR" />    <!-- 征信电核结果信息表[OPAS_TELCHECK_RESULT] c9 -->
+
+		<result column="APPROVER" property="approver" jdbcType="VARCHAR" />
+		<result column="IVS_SCORE" property="ivsScore" jdbcType="VARCHAR" />   <!-- 芝麻 OPAS_BIZ_ZM_IVS_DATA表 反欺诈信息验证 c10 -->
+
+
+		<result column="ZM_SCORE" property="zmScore" jdbcType="VARCHAR" />   <!-- 芝麻OPAS_BIZ_ZM_SCOR_DATA 表 芝麻信用评分 c11 -->
+
+
+		<result column="BRCREDITPOINT" property="brcreditPoint"
+			jdbcType="VARCHAR" />    <!-- 百融OPAS_BIZ_SPECIALLIST_SCORE表百融评分 c12 -->
+
+
+		<result column="AGE" property="age" jdbcType="DECIMAL" />    <!-- 客户基本信息表[OPAS_CUST_BASEINFO] c13 -->
+
+
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />    <!-- 申请件分配历史表：OPAS_ALLOT_APPLY_ALLOT c14 -->
+
+		<result column="remark" property="remark" jdbcType="NUMERIC"/>
+		<result column="TRIGGER_TYPE" property="triggerType" jdbcType="VARCHAR"/>
+		<!--补件提交信息表（标准卡）[OPAS_PATCHBOLT_INFO] c15 -->
+		<result column="APP_ID2" property="appId2" jdbcType="VARCHAR" />
+		<result column="PATCH_CODE1" property="patchCode1" jdbcType="VARCHAR" />
+		<result column="IDENTITY_CARD1" property="identityCard1"
+			jdbcType="CHAR" />
+		<result column="INCOME_CONFIRM" property="incomeConfirm"
+			jdbcType="CHAR" />
+		<result column="DRIVING_LICENSE" property="drivngLicense"
+			jdbcType="CHAR" />
+		<result column="OTHER_CREDITCARD" property="otherCreditCard"
+			jdbcType="CHAR" />
+		<result column="OTHERS" property="others" jdbcType="CHAR" />
+		<result column="IS_HAVESIGN" property="isHavesign" jdbcType="CHAR" />
+		<result column="LIVE_CONFIRM" property="liveConfirm" jdbcType="CHAR" />
+		<result column="EDU_CONFIRM" property="eduConfirm" jdbcType="CHAR" />
+		<result column="OWNER_BANK_CONFIRM" property="ownerBankConfirm"
+			jdbcType="CHAR" />
+		<result column="NON_ADDFILES" property="nonAddfiles" jdbcType="CHAR" />
+		<result column="WORK_CONFIRM" property="workConfirm" jdbcType="CHAR" />
+		<result column="HOUSE_CONFIRM" property="houseConfirm"
+			jdbcType="CHAR" />
+		<result column="TITLE_CONFIRM" property="titleConfirm"
+			jdbcType="VARCHAR" />
+		<result column="FINANCAL_CONFIRM" property="financalConfirm"
+			jdbcType="CHAR" />
+		<result column="CRT_DATE1" property="crtDate1" jdbcType="DATE" />
+		<result column="CRT_USER1" property="crtUser1" jdbcType="VARCHAR" />
+
+		<!-- 补件提交信息表（易达金）[OPAS_PATCHBOLT_YDJ_INFO] c16 -->
+		<result column="APP_ID1" property="appId1" jdbcType="VARCHAR" />
+		<result column="PATCH_CODE" property="patchCode" jdbcType="VARCHAR" />
+		<result column="IDENTITY_CARD" property="identityCard"
+			jdbcType="CHAR" />
+		<result column="PAY_WATER" property="payWater" jdbcType="CHAR" />
+		<result column="WORK_PROOF" property="workProof" jdbcType="CHAR" />
+		<result column="INCOME_PROOF" property="incomeProof" jdbcType="CHAR" />
+		<result column="SOCIAL_SECURITY" property="socialSecurity"
+			jdbcType="CHAR" />
+		<result column="HOUSE_PROOF" property="houseProof" jdbcType="CHAR" />
+		<result column="ACCUMULATION_FUND" property="accumulationFund"
+			jdbcType="CHAR" />
+		<result column="EDUCATION_PROOF" property="educationProof"
+			jdbcType="CHAR" />
+		<result column="TAX_RECEIPT" property="taxReceipt" jdbcType="CHAR" />
+		<result column="CREDIT_CARD_BILL" property="creditCardBill"
+			jdbcType="CHAR" />
+		<result column="OWNER_BANK_PROOF" property="ownerBankProof"
+			jdbcType="CHAR" />
+		<result column="FINANCAL_PROOF" property="financalProof"
+			jdbcType="CHAR" />
+		<result column="LOAN_SETTLE_PROOF" property="loanSettleProof"
+			jdbcType="CHAR" />
+		<result column="RPR_PROOF" property="rprProof" jdbcType="CHAR" />
+		<result column="MARRIAGE_CERTIFICATE" property="marriageCertificate"
+			jdbcType="CHAR" />
+		<result column="BUSINESS_LICENSE" property="businessLicense"
+			jdbcType="CHAR" />
+		<result column="CAR_PROOF" property="carProof" jdbcType="CHAR" />
+		<result column="RETRICAL_MASTER_COPY" property="retricalMasterCopy"
+			jdbcType="CHAR" />
+		<result column="IMAGE_REPAIR" property="imageRepair" jdbcType="CHAR" />
+		<result column="OTHER" property="other" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectExprotCurrentInfoYdjHis" parameterType="java.util.List"
+		resultMap="resultExprotHistoryList">
+		select c1.APP_ID, c1.C1_CONAME, c1.C4_APBATCH, c1.YDJ_FLAG,
+		c2.DECISION_DESP, c6.PROPOSED_LMT, c6.CDT_SCORE,
+		c3.NUMBER_READ,
+		c6.JOB_BF_MINCOME, C6.REF_UN_PLGE_DTI,c6.DECISION_DESP,
+		c6.REF_CP_DTI,
+		c6.REF_MUE,
+		c5.MASTERCARD_APPROVEREUSLT, c5.APPROVE_CREDIT_PRODUCT,
+		c5.APPROVE_CREDIT_LIMIT, c5.APPROVE_RESULT, c5.POLICY_CODE1,
+		c5.VIOLATE_CODE1, c5.REFUSE_CODE1, c5.MEMO, c5.CREDIT_RESULT,c5.APPROVER,
+		c5.MANUAL_LIMIT,
+		c6.UN_PLGE_DTI, c6.CP_DTI,c6.MUE,
+		c7.CUST_TYPE,
+		c8.AUDITOR_NAME, c9.CREDITER_NAME, c10.IVS_SCORE, c11.ZM_SCORE,
+		c12.BRCREDITPOINT, get_age(#{appId}) as AGE, c14.CURR_STATUS,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from OPAS_BIZ_INP_APPL_HISTORY_C1 c1
+		left join OPAS_FICO_YDJ_BLAZE c2 on (c1.APP_ID = c2.APP_ID) 
+		left join OPAS_PBOC_CREDIT_CUE c3 on (c1.APP_ID = c3.APP_ID)
+		left join OPAS_BIZ_APPROVAL c5 on (c1.APP_ID = c5.APP_ID)
+		left join OPAS_FICO_YDJ_BLAZE c6 on (c1.APP_ID = c6.APP_ID)
+		left join OPAS_FICO_SD_BLAZE c7 on (c1.APP_ID = c7.APP_ID) 
+		left join OPAS_REVIEW_DECISION_RESULT c8 on (c1.APP_ID = c8.APP_ID)
+		left join OPAS_TELCHECK_RESULT c9 on (c1.APP_ID = c9.APP_ID) 
+		left join OPAS_BIZ_ZM_IVS_DATA c10 on (c1.APP_ID = c10.APP_ID)
+		left join OPAS_BIZ_ZM_SCOR_DATA c11 on (c1.APP_ID = c11.APP_ID) 
+		left join OPAS_BIZ_SPECIALLIST_SCORE c12 on ( c1.APP_ID = c12.APP_ID)
+		left join OPAS_ALLOT_APPLY_ALLOT c14 on (c1.APP_ID = c14.APP_ID)
+		where c1.APP_ID = #{appId}
+	</select>
+	<select id="selectExprotCurrentInfoBzkHis" parameterType="java.util.List"
+		resultMap="resultExprotHistoryList">
+		select c1.APP_ID, c1.C1_CONAME, c1.C4_APBATCH, c1.YDJ_FLAG,
+		c2.DECISION_DESP, c7.PROPOSED_LMT, c7.TRIGGER_TYPE,
+		c3.NUMBER_READ,
+		c6.JOB_BF_MINCOME, C6.REF_UN_PLGE_DTI,c6.DECISION_DESP,
+		c6.REF_CP_DTI,
+		c6.REF_MUE,
+		c5.MASTERCARD_APPROVEREUSLT, c5.APPROVE_CREDIT_PRODUCT,
+		c5.APPROVE_CREDIT_LIMIT, c5.APPROVE_RESULT, c5.POLICY_CODE1,c5.APPROVER,
+		c5.VIOLATE_CODE1, c5.REFUSE_CODE1, c5.MEMO, c5.CREDIT_RESULT,
+		c5.MANUAL_LIMIT,
+		c6.UN_PLGE_DTI, c6.CP_DTI,c6.MUE,
+		c7.CUST_TYPE,
+		c8.AUDITOR_NAME, c9.CREDITER_NAME, c10.IVS_SCORE, c11.ZM_SCORE,
+		c12.BRCREDITPOINT, get_age(#{appId}) as AGE, c14.CURR_STATUS,
+		(select
+		count(OPAS_ALLOT_APPLY_REMARK.REMARK_ID)
+		from OPAS_ALLOT_APPLY_REMARK
+		where OPAS_ALLOT_APPLY_REMARK.APP_ID = c1.APP_ID) as remark
+		from OPAS_BIZ_INP_APPL_HISTORY_C1 c1
+		left join OPAS_FICO_SD_BLAZE c2 on (c1.APP_ID = c2.APP_ID) 
+		left join OPAS_PBOC_CREDIT_CUE c3 on (c1.APP_ID = c3.APP_ID)
+		left join OPAS_BIZ_APPROVAL c5 on (c1.APP_ID = c5.APP_ID)
+		left join OPAS_FICO_YDJ_BLAZE c6 on (c1.APP_ID = c6.APP_ID)
+		left join OPAS_FICO_SD_BLAZE c7 on (c1.APP_ID = c7.APP_ID) 
+		left join OPAS_REVIEW_DECISION_RESULT c8 on (c1.APP_ID = c8.APP_ID)
+		left join OPAS_TELCHECK_RESULT c9 on (c1.APP_ID = c9.APP_ID) 
+		left join OPAS_BIZ_ZM_IVS_DATA c10 on (c1.APP_ID = c10.APP_ID)
+		left join OPAS_BIZ_ZM_SCOR_DATA c11 on (c1.APP_ID = c11.APP_ID) 
+		left join OPAS_BIZ_SPECIALLIST_SCORE c12 on ( c1.APP_ID = c12.APP_ID)
+		
+		left join OPAS_ALLOT_APPLY_ALLOT c14 on (c1.APP_ID = c14.APP_ID)
+		where c1.APP_ID = #{appId}
+	</select>
+
+	<select id="selectExprotHistoryBJInfo" parameterType="java.util.List"
+		resultMap="resultExprotHistoryList">
+		select distinct
+		c3.APP_ID,c3.YDJ_FLAG,
+		c2.APP_ID as APP_ID2 ,
+		c2.PATCH_CODE as PATCH_CODE1,
+		c2.IDENTITY_CARD as IDENTITY_CARD1 ,
+		c2.INCOME_CONFIRM , c2.DRIVING_LICENSE ,
+		c2.OTHER_CREDITCARD, c2.OTHERS
+		, c2.IS_HAVESIGN ,
+		c2.LIVE_CONFIRM ,
+		c2.EDU_CONFIRM ,
+		c2.OWNER_BANK_CONFIRM , c2.NON_ADDFILES ,
+		c2.WORK_CONFIRM ,
+		c2.HOUSE_CONFIRM ,
+		c2.TITLE_CONFIRM , c2.CRT_DATE as CRT_DATE1,
+		c2.CRT_USER as CRT_USER1,
+		c1.APP_ID as APP_ID1,
+		c1.PATCH_CODE,
+		c1.IDENTITY_CARD,
+		c1.PAY_WATER, c1.WORK_PROOF,
+		c1.INCOME_PROOF,
+		c1.SOCIAL_SECURITY,
+		c1.HOUSE_PROOF,
+		c1.ACCUMULATION_FUND,
+		c1.EDUCATION_PROOF,
+		c1.TAX_RECEIPT,
+		c1.CREDIT_CARD_BILL,
+		c1.OWNER_BANK_PROOF,
+		c1.FINANCAL_PROOF,
+		c1.LOAN_SETTLE_PROOF,
+		c1.RPR_PROOF,
+		c1.MARRIAGE_CERTIFICATE,
+		c1.BUSINESS_LICENSE,
+		c1.CAR_PROOF,
+		c1.RETRICAL_MASTER_COPY,
+		c1.IMAGE_REPAIR, c1.OTHER,
+		c1.CRT_DATE,
+		c1.CRT_USER
+		from
+		OPAS_BIZ_INP_APPL_HISTORY_C1 c3
+		left join
+		OPAS_PATCHBOLT_INFO c2 on (c3.APP_ID = c2.APP_ID ) left join
+		OPAS_PATCHBOLT_YDJ_INFO c1 on (c3.APP_ID = c1.APP_ID)
+
+		where c3.APP_ID
+		IN
+
+		<foreach collection="list" open="(" close=")" item="id"
+			separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+	
+	<select id="selectAllotMap" parameterType="java.lang.String" resultType="java.util.Map">
+		select YDJ_FLAG,MATCHING_CARD_FLAG FROM OPAS_BIZ_INP_APPL_C1
+		where app_id = #{appId}
+	</select>
+	
+	<select id = "queryApplyLifeCicle" parameterType="java.lang.String" resultType="java.lang.String">
+	  select  OPERATE_DESC from (select e.OPERATE_DESC,app_id,
+	       row_number() over(partition by e.APP_ID order by e.crt_date desc) rank
+	  from OPAS_APPLY_LIFE_CICLE e ) where app_id = #{appIdPlus} and 
+	  rank = 1
+	</select>
+	<!-- 网申短表数量查询 -->
+	<select id="queryWsdbInfoCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from CAMS_WANGSHEN_INPUT_APPLN c
+		<where>
+			<if test="appId != null and appId !=''">
+				and c.app_id like '${appId}%'
+			</if>
+			<if test="name != null and name !='' ">
+				and c.name like '${name}%'
+			</if>
+			<if test="certNo != null and certNo !='' ">
+				and c.cert_no like '${certNo}%'
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				and c.mobile = #{mobile}
+			</if>
+		</where>
+	</select>	
+	<!-- 网申短表集合 -->
+	<select id="queryWsdbInfoMap" parameterType="java.lang.String"
+		resultMap="ApplyInfoResultMap">
+			select c.app_id, c.name, c.cert_no, c.mobile, (case when  b.node_desc is null then '流程结束' else  b.node_desc end) node_desc
+	  		from CAMS_WANGSHEN_INPUT_APPLN c 
+	  		left join cams_workflow_node_instance n on n.process_id = c.app_id
+	  		left join cams_workflow_node b on n.process_no = b.process_no
+	                                and n.node_no = b.node_no
+		<where>
+			<if test="appId != null and appId !=''">
+				and c.app_id like '${appId}%'
+			</if>
+			<if test="name != null and name !='' ">
+				and c.name like '${name}%'
+			</if>
+			<if test="certNo != null and certNo !='' ">
+				and c.cert_no like '${certNo}%'
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				and c.mobile = #{mobile}
+			</if> 
+		</where>
+	</select>	
+	<!-- 网申短表节点数量 -->
+	<select id="queryWsdbNodeCount" resultType="java.lang.Integer">
+		select count(1)
+		from cams_workflow_node_history c
+		where c.process_id = #{appId}
+		order by c.start_time asc
+	</select>
+	<!-- 网申短表节点详细 -->
+	<!-- START(1, "开始"), INVOKE(3, "处理"), GOBACK(4, "回退"),EXCEPTION(512, "异常"), FINISH(16, "完成") -->
+	<select id="selectWsdbNodeList" parameterType="java.util.Map"
+		resultMap="NodeResultMap">
+		select *
+  from (select (case n.node_desc
+                 when '开始' then
+                  '进件'
+                 when '结束' then
+                  '流程结束'
+                 else
+                  n.node_desc
+               end) node_desc,
+               (case h.node_status
+                 when 1 then
+                  '开始'
+                 when 3 then
+                  '处理'
+                 when 4 then
+                  '回退'
+                 when 5 then
+                  '阻塞'
+                 when 512 then
+                  '异常'
+                 else
+                  '完成'
+               end) node_status,
+               h.start_time,
+               h.end_time
+          from cams_workflow_node_history h
+          join cams_workflow_node n on h.process_no = n.process_no
+                                   and h.node_no = n.node_no
+         where h.process_id = #{appId}
+        
+        union
+        select (case n.node_desc
+                 when '开始' then
+                  '进件'
+                 when '结束' then
+                  '流程结束'
+                 else
+                  n.node_desc
+               end) node_desc,
+               (case i.node_status
+                 when 1 then
+                  '开始'
+                 when 3 then
+                  '处理'
+                 when 4 then
+                  '回退'
+                 when 5 then
+                  '阻塞'
+                 when 512 then
+                  '异常'
+                 else
+                  '完成'
+               end) node_status,
+               i.start_time,
+               i.start_time as end_time
+          from cams_workflow_node_instance i
+          join cams_workflow_node n on i.process_no = n.process_no
+                                   and i.node_no = n.node_no
+         where i.process_id = #{appId})
+ 		 order by start_time
+	</select>
+	<!-- 网申短表数据表详细 -->
+	<select id="selectWsdbInfoByAppId"  parameterType="java.lang.String"
+		resultMap="ApplyInfoResultMap">
+		select a.NAME,
+           a.CERT_TYPE,
+           a.CERT_NO,
+           a.MOBILE,
+           a.ENTERPRISE_NAME,
+           a.WORK_PROVINCE,
+           a.WORK_AREA,
+           a.WORK_ADDRESS,
+           a.BRNCH_NAME,
+           a.PROMT_ORG,
+           a.COMPANY_NO_3RD,
+           a.CHANNEL_NO_3RD,
+           MOBILE_IDENTIFIED,
+           (select approve_result from CAMS_WORKFLOW_TASK where app_id = #{appId}  and status in (15,2)) as APPROVE_RESULT
+      from CAMS_WANGSHEN_INPUT_APPLN a 
+      where a.app_id = #{appId}
+	</select>
+	
+    <!-- 存量客户数量查询 -->
+	<select id="queryStockCustomerInfoCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_BIZ_INP_STOCK c
+		<where>
+			<if test="appId != null and appId !=''">
+				and c.app_id like '${appId}%'
+			</if>
+			<if test="name != null and name !='' ">
+				and c.surname like '${name}%'
+			</if>
+			<if test="certNo != null and certNo !='' ">
+				and c.custr_nbr like '${certNo}%'
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				and c.mobile = #{mobile}
+			</if>
+		</where>
+	</select>	
+	<!-- 存量客户集合 -->
+	<select id="queryStockCustomerInfoMap" parameterType="java.lang.String"
+		resultMap="ApplyInfoResultMap">
+		select c.app_id,c.surname as name,c.custr_nbr as cert_no, c.mobile, (case when  b.node_desc is null then '流程结束' else  b.node_desc end) node_desc
+		   from OPAS_BIZ_INP_STOCK c 
+		   left join cams_workflow_node_instance n on n.process_id = c.app_id
+	  	   left join cams_workflow_node b on n.process_no = b.process_no
+	                                and n.node_no = b.node_no 
+		<where>
+			<if test="appId != null and appId !=''">
+				and c.app_id like '${appId}%'
+			</if>
+			<if test="name != null and name !='' ">
+				and c.surname like '${name}%'
+			</if>
+			<if test="certNo != null and certNo !='' ">
+				and c.custr_nbr like '${certNo}%'
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				and c.mobile = #{mobile}
+			</if> 
+		</where>
+	</select>	
+	<!-- 存量客户节点数量 -->
+	<select id="queryStockCustomerNodeCount" resultType="java.lang.Integer">
+		select count(1)
+		from cams_workflow_node_history c
+		where c.process_id = #{appId}
+		order by c.start_time asc
+	</select>
+	<!-- 存量客户节点详细 -->
+	<!-- START(1, "开始"), INVOKE(3, "处理"), GOBACK(4, "回退"),EXCEPTION(512, "异常"), FINISH(16, "完成") -->
+	<select id="selectStockCustomerNodeList" parameterType="java.util.Map"
+		resultMap="NodeResultMap">
+		select n.node_desc,
+       (case h.node_status
+         when 1 then
+          '开始'
+         when 3 then
+          '处理'
+         when 4 then
+          '回退'
+         when 5 then
+          '阻塞'
+         when 512 then
+          '异常'
+         else
+          '完成'
+       end) node_status,
+       h.start_time,
+       h.end_time
+  	from cams_workflow_node_history h
+  	join cams_workflow_node n on h.process_no = n.process_no
+                           and h.node_no = n.node_no
+ 	where h.process_id = #{appId}
+ 	order by h.start_time
+	</select>
+	<!-- 存量客户数据表详细 -->
+	<select id="selectStockCustomerInfoByAppId"  parameterType="java.lang.String"
+		resultMap="StockInfoResultMap">
+		select s.app_id,s.custr_nbr,s.surname,s.product,s.addl_card,s.acc_type,s.cdfrm,s.embname_d,s.cdespmtd,
+			s.stm_code,s.mail_to,s.addr1_l1,s.addr1_l2,s.addr1_l3,s.addr1_l4,s.post_code,s.addr1_type,s.pin_chk,s.sms_yn,
+			s.sms_freeyn,s.cdiss_flag,s.iss_mod,s.rushflg,s.rushfee,s.courierf,s.emboss_cpy,s.prmag_cd,s.mobile,s.match_flag,
+			s.resi_taxid,s.custr_type,s.active_now,s.vcn_chnl,(select approve_result from opas_biz_approval where app_id = #{appId}) as approve_result
+			from opas_biz_inp_stock s where s.app_id = #{appId}
+	</select>
+	<!-- 存量客户发卡信息查询 -->
+	<resultMap id="StockCardInfoMap" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="PRODUCT" property="product" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="CARD_NBR" property="cardNbr" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectStockCustomerCardInfoByAppId"  parameterType="java.lang.String"
+		resultMap="StockCardInfoMap">
+		select i.app_id, i.product, (select p.prod_name from opas_param_card_product p where p.card_code = i.product and p.status = '1' and rownum &lt; 2)  as product_name , i.card_nbr
+			from opas_interface_4093 i where i.app_id like #{appId} order by i.app_id
+	</select>
+	<select id="selectStockCustomerCardResultByAppId"  parameterType="java.lang.String"
+		resultType="java.util.Map">
+        select  s.finish , s.remark
+          from opas_biz_inp_stock_flow s where s.app_id like #{appId} and s.interface_type = '4093' and rownum &lt; 2
+	</select>
+</mapper>

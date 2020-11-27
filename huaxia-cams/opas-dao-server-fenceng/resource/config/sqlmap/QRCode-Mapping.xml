@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="QRCode">
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="QRCodeResultMap" type="com.huaxia.opas.domain.sysparm.QRCode">
+		<result column="UUID" property="uuId" jdbcType="VARCHAR" />
+		<result column="COMPANY_CODE" property="companyCode" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR" />
+		<result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+		<result column="EXTENSION_CODE" property="extensionCode" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="operator" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryQRCode" parameterType="com.huaxia.opas.domain.sysparm.QRCode"
+		resultMap="QRCodeResultMap">
+		select
+		UUID,
+		COMPANY_CODE,
+		COMPANY_NAME,
+		MODULE_CODE,
+		MODULE_NAME,
+		EXTENSION_CODE,
+		AREA_CODE,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER
+		from
+		OPAS_QRCODE_LIST
+		<where>
+			1 = 1
+			<if test="companyCode != null and companyCode !='' ">
+				AND COMPANY_CODE LIKE '%${companyCode}%'
+			</if>
+			<if test="companyName != null and companyName !='' ">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="moduleCode != null and moduleCode !='' ">
+				AND MODULE_CODE LIKE '%${moduleCode}%'
+			</if>
+			<if test="moduleName != null and moduleName !='' ">
+				AND MODULE_NAME LIKE '%${moduleName}%'
+			</if>
+			<if test="extensionCode != null and extensionCode !='' ">
+				AND EXTENSION_CODE LIKE '%${extensionCode}%'
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+	<!-- 统计数量 -->
+	<select id="queryQRCodeCount" parameterType="com.huaxia.opas.domain.sysparm.QRCode"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_QRCODE_LIST
+		<where>
+			1 = 1
+			<if test="companyCode != null and companyCode !='' ">
+				AND COMPANY_CODE LIKE '%${companyCode}%'
+			</if>
+			<if test="companyName != null and companyName !='' ">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="moduleCode != null and moduleCode !='' ">
+				AND MODULE_CODE LIKE '%${moduleCode}%'
+			</if>
+			<if test="moduleName != null and moduleName !='' ">
+				AND MODULE_NAME LIKE '%${moduleName}%'
+			</if>
+			<if test="extensionCode != null and extensionCode !='' ">
+				AND EXTENSION_CODE LIKE '%${extensionCode}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteQRCode" parameterType="java.util.List">
+		delete from
+		OPAS_QRCODE_LIST
+		where UUID in
+		<foreach collection="list" open="(" close=")" item="uuId"
+			separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 查询数据是否已存在 -->
+	<select id="checkIsExistQR" parameterType="com.huaxia.opas.domain.sysparm.QRCode"
+		resultMap="QRCodeResultMap">
+		select * from
+		OPAS_QRCODE_LIST
+		where COMPANY_CODE = #{companyCode} and
+		COMPANY_NAME = #{companyName} and 
+		MODULE_CODE = #{moduleCode}and 
+		MODULE_NAME = #{moduleName}and 
+		AREA_CODE = #{areaCode}and 
+		EXTENSION_CODE = #{extensionCode}
+
+	</select>
+	<!-- 添加 启用 -->
+	<insert id="insertQRCodeStart" parameterType="com.huaxia.opas.domain.sysparm.QRCode">
+		insert into
+		OPAS_QRCODE_LIST
+		(UUID,
+		COMPANY_CODE,
+		COMPANY_NAME,
+		MODULE_CODE,
+		MODULE_NAME,
+		EXTENSION_CODE,
+		AREA_CODE,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER)
+		values	
+		(#{uuId,jdbcType=VARCHAR},
+		#{companyCode,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{moduleCode,jdbcType=VARCHAR},
+		#{moduleName,jdbcType=VARCHAR},
+		#{extensionCode,jdbcType=VARCHAR},
+		#{areaCode,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		#{operator,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 添加 停用 -->
+	<insert id="insertQRCodeEnd" parameterType="com.huaxia.opas.domain.sysparm.QRCode">
+		insert into
+		OPAS_QRCODE_LIST
+		(UUID,
+		COMPANY_CODE,
+		COMPANY_NAME,
+		MODULE_CODE,
+		MODULE_NAME,
+		EXTENSION_CODE,
+		AREA_CODE,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER)
+		values	
+		(#{uuId,jdbcType=VARCHAR},
+		#{companyCode,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{moduleCode,jdbcType=VARCHAR},
+		#{moduleName,jdbcType=VARCHAR},
+		#{extensionCode,jdbcType=VARCHAR},
+		#{areaCode,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		SYSDATE,
+		#{operator,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateQRCodeAndStatus" parameterType="com.huaxia.opas.domain.sysparm.QRCode">
+		update OPAS_QRCODE_LIST
+		<set>
+			<if test="companyCode != null">
+				COMPANY_CODE = #{companyCode,jdbcType=VARCHAR},</if>
+				COMPANY_NAME=#{companyName,jdbcType=VARCHAR},
+			<if test="moduleCode != null">
+				MODULE_CODE	= #{moduleCode,jdbcType=VARCHAR},</if>
+				MODULE_NAME=#{moduleName,jdbcType=VARCHAR},
+			<if test="areaCode != null">
+				AREA_CODE = #{areaCode,jdbcType=VARCHAR},</if>
+			EXTENSION_CODE= #{extensionCode,jdbcType=VARCHAR},
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},</if>
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			    LST_UPD_DATE = SYSDATE
+		</set>
+		where UUID = #{uuId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 上传 -->
+	<insert id="insertQRCodeUpload" parameterType="java.util.List">
+		insert into OPAS_QRCODE_LIST (
+		UUID,
+		COMPANY_CODE,
+		COMPANY_NAME,
+		MODULE_CODE,
+		MODULE_NAME,
+		EXTENSION_CODE,
+		AREA_CODE,
+		STATUS,
+		CRT_DATE,
+		START_DATE,
+		STOP_DATE,
+		LST_UPD_DATE,
+		CRT_USER,
+		LST_UPD_USER)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.uuId,jdbcType=VARCHAR},
+			#{item.companyCode,jdbcType=VARCHAR},
+			#{item.companyName,jdbcType=VARCHAR},
+			#{item.moduleCode,jdbcType=VARCHAR},
+			#{item.moduleName,jdbcType=VARCHAR},
+			#{item.extensionCode,jdbcType=VARCHAR},
+			#{item.areaCode,jdbcType=VARCHAR},
+			1,
+			SYSDATE,
+			SYSDATE,
+			NULL,
+			SYSDATE,
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+
+	<!-- 批量启用 -->
+	<update id="setQRCodeStatusOK" parameterType="com.huaxia.opas.domain.sysparm.QRCode">
+		update OPAS_QRCODE_LIST
+		<set>
+			STATUS = '1',
+			START_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+		</set>
+		where UUID in
+		<foreach collection="ids" open="(" close=")" item="uuId"
+			separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<!-- 批量禁用 -->
+	<update id="setQRCodeStatusNO" parameterType="com.huaxia.opas.domain.sysparm.QRCode">
+		update OPAS_QRCODE_LIST
+		<set>
+			STATUS = '0',
+			STOP_DATE = SYSDATE,
+			LST_UPD_DATE = SYSDATE,
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR}
+		</set>
+		where UUID in
+		<foreach collection="ids" open="(" close=")" item="uuId"
+			separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 查询status -->
+	<select id="queryQRCodeStatus" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select status from OPAS_QRCODE_LIST where
+		UUID=#{uuId,jdbcType=VARCHAR}
+	</select>
+	<!-- 修改 状态不变 -->
+	<update id="updateQRCodeWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.QRCode">
+		update OPAS_QRCODE_LIST
+		<set>
+			<if test="companyCode != null">
+				COMPANY_CODE = #{companyCode,jdbcType=VARCHAR},</if>
+				COMPANY_NAME=#{companyName,jdbcType=VARCHAR},
+			<if test="moduleCode != null">
+				MODULE_CODE	= #{moduleCode,jdbcType=VARCHAR},</if>
+				MODULE_NAME=#{moduleName,jdbcType=VARCHAR},
+			<if test="areaCode != null">
+				AREA_CODE = #{areaCode,jdbcType=VARCHAR},</if>
+			    EXTENSION_CODE = #{extensionCode,jdbcType=VARCHAR},
+			<if test="lstUpdUser != null">
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			    LST_UPD_DATE = SYSDATE
+		</set>
+		where UUID = #{uuId,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

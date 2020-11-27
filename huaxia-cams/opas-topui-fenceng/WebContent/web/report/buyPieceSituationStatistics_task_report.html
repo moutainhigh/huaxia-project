@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:10px
+}
+</style>
+</head>
+<body>
+<div id="report_buyPieceSituationStatistics_center"  data-options="fit:true,boder:true">
+<div data-options="region='north',border:true,fit:true" style="overflow:auto;">
+ <form id="report_buyPieceSituationStatistics_form">
+ <table class="report_buyPieceSituationStatistics_tableForm datagrid-toolbar" style="width:100%;height:100%">
+  <tr>
+   <td><label class="alsp">开始时间</label><input id="report_buyPieceSituationStatistics_beginDate" name="beginDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+  var beginDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',beginDate);
+   $('#report_buyPieceSituationStatistics_table_beginDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;<label class="alsp">截止时间</label><input id="report_buyPieceSituationStatistics_endDate" name="endDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   var endDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',endDate);
+   $('#report_buyPieceSituationStatistics_table_endDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;&nbsp;
+   <a id="report_buyPieceSituationStatistics_searchButton" class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>&nbsp;
+   <a id="report_buyPieceSituationStatistics_cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+   </td>
+  </tr>
+ </table>
+ </form>
+ </div>
+ <div data-options="region:'center',border:true,fit:true">
+<!--  进件核准率统计表(按选择维度) -->
+<br><table><tr><td id="report_buyPieceSituationStatistics_table_beginDate" style="width:80px;"></td><td>至</td><td id="report_buyPieceSituationStatistics_table_endDate" style="width:80px;"></td></tr></table>
+<h4 align="center">进件情况统计表</h4><br> 
+ <table id="report_buyPieceSituationStatistics_datagrid" style="height: 400px"></table>
+ </div>
+</div>
+</body>
+<script type="text/javascript">
+var report_buyPieceSituationStatistics_form=undefined;
+var report_buyPieceSituationStatistics_datagrid=undefined;
+var report_buyPieceSituationStatistics_ydjFlagType='';  //易达金卡1或标准卡2的判断依据 
+$(function(){
+	if(report_buyPieceSituationStatistics_ydjFlagType==''){
+		report_buyPieceSituationStatistics_ydjFlagType=getCurrentUrlParam();
+	}
+	report_buyPieceSituationStatistics_form=$('#report_buyPieceSituationStatistics_form');
+	$('#report_buyPieceSituationStatistics_searchButton').bind('click',function(){
+		report_buyPieceSituationStatistics_search();
+	});
+	$('#report_buyPieceSituationStatistics_cleanButton').bind('click',function(){
+		report_buyPieceSituationStatistics_clean();
+	});
+	report_buyPieceSituationStatistics_datagrid=$('#report_buyPieceSituationStatistics_datagrid').datagrid({
+		url:"/opas-naps/queryBuyPieceSituationStatisticsDataByDate.json",
+		border:true,
+		animate:true,
+		singleSelect:false,
+		rownumbers:true,
+		columns:[[{
+			title:'日期',
+			field:'crtDate',
+			formatter:formatDate,
+			width:"15%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'进件数量',
+			field:'appcnt',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'核准',
+			field:'pass',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'拒绝',
+			field:'refuse',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'取消',
+			field:'cancel',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'未完成',
+			field:'noFinish',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'核准率%',
+			field:'passRate',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'拒绝率%',
+			field:'refusuRate',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'待处理率%',
+			field:'waitDealRate',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}
+		]]
+	});
+});
+
+//日期格式转换
+function formatDate(value) {
+	var array = value.split(".");
+	var length=array.length;
+	var currentData="";
+	if(length>=2){
+		return array[0];
+	}else{
+		return value;
+	}
+}
+
+function showWaringBox(message){
+	$.messager.alert('提示',message,'warning');
+}
+function report_buyPieceSituationStatistics_search(){
+	var beginDate=$('#report_buyPieceSituationStatistics_beginDate').datebox('getValue');
+	var endDate=$('#report_buyPieceSituationStatistics_endDate').datebox('getValue');
+	if(beginDate==""||endDate==""){//没有选择起止时间
+		showWaringBox('请选择起止时间.');return null;
+	}
+	
+	var day = GetDateDiff(beginDate,endDate);
+	if (day>32){
+		alert("区间不能超过31天");
+		return;
+	}
+	
+	var ydjObject=new Object();
+	ydjObject.name='ydjFlag';
+	ydjObject.value=report_buyPieceSituationStatistics_ydjFlagType;
+	var paramArray=report_buyPieceSituationStatistics_form.serializeArray();
+	paramArray.push(ydjObject);
+	var jsondata =common.formToJson(paramArray);
+	report_buyPieceSituationStatistics_datagrid.datagrid('load',jsondata);
+	
+}
+
+function GetDateDiff(startDate,endDate) {
+	
+	var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+	var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+	var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+	return dates;
+}
+
+
+function report_buyPieceSituationStatistics_clean(){
+	report_buyPieceSituationStatistics_datagrid.datagrid('load',{});
+	$('#report_buyPieceSituationStatistics_table_beginDate').html('');
+	$('#report_buyPieceSituationStatistics_table_endDate').html('');
+	report_buyPieceSituationStatistics_form.form('reset');
+}
+function getCurrentUrlParam(){
+	var currentUrl=window.location.href;
+	return  ydjFlagType=currentUrl.split("=")[1];
+}
+</script>
+
+</html>

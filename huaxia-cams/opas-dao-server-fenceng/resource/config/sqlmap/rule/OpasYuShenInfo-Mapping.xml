@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasYuShenInfo">
+
+	<resultMap id="yuShenInfoMap" type="java.util.Map">
+	   <result column="APPROVE_CODE" jdbcType="VARCHAR" property="approveCode" />
+	</resultMap>
+	
+	
+	<!-- 预审信息查询 --><!-- 当前只有预审拒绝码 from wjf 20190417 -->
+	<select id="queryYuShenInfoByAppId"  parameterType="java.lang.String" resultMap="yuShenInfoMap">
+  	   select APPROVE_CODE from YS_RESULT_INFO
+  	  <where>
+		app_id = #{appId, jdbcType=VARCHAR}  ORDER BY CRT_TIME desc
+	  </where>
+	</select>
+	
+
+	
+</mapper>

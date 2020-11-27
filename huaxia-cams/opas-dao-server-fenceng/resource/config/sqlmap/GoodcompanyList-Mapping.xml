@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GoodcompanyList">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.sysparm.GoodcompanyList">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > AUTO_ID, PROJECT_CODE, COMPANY_NAME, AREA, 
+		START_TIME, END_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS </sql> -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, PROJECT_CODE, COMPANY_NAME, AREA, START_TIME, END_TIME, OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,CREATE_TIME
+		from OPAS_GOODCOMPANY_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByCondtion" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	   select
+		AUTO_ID, PROJECT_CODE, COMPANY_NAME, AREA, START_TIME, END_TIME, OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,CREATE_TIME
+		from OPAS_GOODCOMPANY_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="projectCode != null and projectCode != ''" >
+	      and  upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+	    </if>
+	    <if test="companyName != null and companyName != ''" >
+	      and  upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	    </if>
+  	</select>
+  	<select id="queryCountList" resultType="java.lang.Integer" parameterType="java.util.Map" >
+	   select count(1)
+		from OPAS_GOODCOMPANY_LIST
+	    where 1 = 1
+	    and CURR_STATUS = '1'
+	    <if test="projectCode != null and projectCode != ''" >
+	      and  upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+	    </if>
+	    <if test="companyName != null and companyName != ''" >
+	      and  upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	    </if>
+  	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_GOODCOMPANY_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.sysparm.GoodcompanyList">
+		insert into OPAS_GOODCOMPANY_LIST (AUTO_ID, PROJECT_CODE,
+		COMPANY_NAME,
+		AREA, START_TIME, END_TIME,
+		OPERATOR, OPERAT_TIME, CURR_STATUS,CREATE_TIME
+		)
+		values (#{autoId,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{area,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+		#{operator,jdbcType=VARCHAR}, #{operatTime,jdbcType=TIMESTAMP},
+		#{currStatus,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.sysparm.GoodcompanyList">
+		insert into OPAS_GOODCOMPANY_LIST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="projectCode != null">
+				PROJECT_CODE,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME,
+			</if>
+			<if test="area != null">
+				AREA,
+			</if>
+			<if test="startTime != null">
+				START_TIME,
+			</if>
+			<if test="endTime != null">
+				END_TIME,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			OPERAT_TIME,
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+			CREATE_TIME,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="projectCode != null">
+				#{projectCode,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			CURRENT_DATE,
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+			CURRENT_DATE,
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.sysparm.GoodcompanyList">
+		update OPAS_GOODCOMPANY_LIST
+		<set>
+			<if test="projectCode != null">
+				PROJECT_CODE = #{projectCode,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				AREA = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				START_TIME = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				END_TIME = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				OPERATOR = #{operator,jdbcType=VARCHAR},
+			</if>
+			OPERAT_TIME = CURRENT_DATE,
+			<if test="currStatus != null">
+				CURR_STATUS = #{currStatus,jdbcType=CHAR},
+			</if>
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.sysparm.GoodcompanyList">
+		update OPAS_GOODCOMPANY_LIST
+		set PROJECT_CODE = #{projectCode,jdbcType=VARCHAR},
+		COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+		AREA = #{area,jdbcType=VARCHAR},
+		START_TIME = #{startTime,jdbcType=TIMESTAMP},
+		END_TIME = #{endTime,jdbcType=TIMESTAMP},
+		OPERATOR = #{operator,jdbcType=VARCHAR},
+		OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+		CURR_STATUS = #{currStatus,jdbcType=CHAR},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!--shihuan 2017-03-19 优质机构名单列表查询条数 -->
+	<select id="queryCoodCompanyList" parameterType="com.huaxia.opas.domain.sysparm.GoodcompanyList"
+		resultMap="BaseResultMap">
+		select
+		AUTO_ID,
+		PROJECT_CODE,
+		COMPANY_NAME,
+		AREA,
+		START_TIME,
+		END_TIME,
+		OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,
+		CREATE_TIME
+		from OPAS_GOODCOMPANY_LIST
+		where
+		1=1
+		<if test="area != null and area !='' ">
+			AND upper(AREA) LIKE upper('%${area}%')
+		</if>
+		<if test="projectCode != null and projectCode !='' ">
+			AND upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+		</if>
+		<if test="companyName != null and companyName !='' ">
+			AND upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+		</if>
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+		order by CREATE_TIME desc,to_number(ORDERBY_NO)
+	</select>
+
+	<!--shihuan 2017-03-19 优质企业名单列表查询条数 -->
+	<select id="queryCoodCompanyCount" parameterType="com.huaxia.opas.domain.sysparm.GoodcompanyList"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_GOODCOMPANY_LIST
+		where
+		1=1
+		<if test="area != null and area !='' ">
+			AND upper(AREA) LIKE upper('%${area}%')
+		</if>
+		<if test="projectCode != null and projectCode !='' ">
+			AND upper(PROJECT_CODE) LIKE upper('%${projectCode}%')
+		</if>
+		<if test="companyName != null and companyName !='' ">
+			AND upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+		</if>
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+	</select>
+	<!--shihuan 2017-03-19 优质企业批量启动修改状态 1:启用 0:停用 -->
+	<update id="updateStartStatus" parameterType="java.lang.String">
+		update OPAS_GOODCOMPANY_LIST
+		set CURR_STATUS = '1'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!--shihuan 2017-03-19 优质企业批量停用修改状态 1:启用 0:停用 -->
+	<update id="updateStopStatus" parameterType="java.lang.String">
+		update OPAS_GOODCOMPANY_LIST
+		set CURR_STATUS = '0'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- shihuan 2017-03-19 添加历史修改记录表 -->
+	<insert id="insertHisSelective"
+		parameterType="com.huaxia.opas.domain.sysparm.GoodcompanyListHistory">
+		insert into OPAS_GOODCOMPANY_LIST_HISTORY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				ID,
+			</if>
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="projectCode != null">
+				PROJECT_CODE,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME,
+			</if>
+			<if test="area != null">
+				AREA,
+			</if>
+			<if test="startTime != null">
+				START_TIME,
+			</if>
+			<if test="endTime != null">
+				END_TIME,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME,
+			</if>
+			<if test="currStatus != null">
+				CURR_STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				#{Id,jdbcType=VARCHAR},
+			</if>
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="projectCode != null">
+				#{projectCode,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="operatTime != null">
+				#{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="currStatus != null">
+				#{currStatus,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!--shihuan 2017-03-14 重点院校列表查询 -->
+	<select id="queryCoodCompanyHistory" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		ID,
+		AUTO_ID,
+		PROJECT_CODE,
+		COMPANY_NAME,
+		AREA,
+		START_TIME,
+		END_TIME,
+		OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,
+		CREATE_TIME
+		from OPAS_GOODCOMPANY_LIST_HISTORY
+		where AUTO_ID = #{autoId,jdbcType=CHAR}
+		order by OPERAT_TIME desc
+	</select>
+
+	<!--shihuan 2017-03-14 重点院校列表查询条数 -->
+	<select id="queryCoodCompanyHistoryCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_GOODCOMPANY_LIST_HISTORY where
+		AUTO_ID = #{autoId,jdbcType=CHAR}
+	</select>
+
+	<!-- 批量导入 shihuan 2017-03-18 -->
+	<insert id="insertCoodCompUpload" parameterType="java.util.List">
+		insert into OPAS_GOODCOMPANY_LIST(
+		AUTO_ID,
+		PROJECT_CODE,
+		COMPANY_NAME,
+		AREA,
+		START_TIME,
+		END_TIME,
+		OPERATOR,
+		OPERAT_TIME,
+		CURR_STATUS,
+		CREATE_TIME,
+		ORDERBY_NO)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.projectCode,jdbcType=VARCHAR},
+			#{item.companyName,jdbcType=VARCHAR},
+			#{item.area,jdbcType=VARCHAR},
+			#{item.startTime,jdbcType=TIMESTAMP},
+			#{item.endTime,jdbcType=TIMESTAMP},
+			#{item.operator,jdbcType=VARCHAR},
+			#{item.operatTime,jdbcType=TIMESTAMP},
+			#{item.currStatus,jdbcType=CHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.orderByNo,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+	
+	<!--shihuan 2017-04-24 校验学校名称不能重复 -->
+	<select id="queryByCompanyName" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_GOODCOMPANY_LIST where
+		COMPANY_NAME = #{companyName,jdbcType=VARCHAR}
+	</select>
+</mapper>

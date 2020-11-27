@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="BzkIncome">
+
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="IncomeResultMap" type="com.huaxia.opas.domain.sysparm.Income">
+		<result column="UUID" property="uuId" jdbcType="VARCHAR" />
+		<result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+		<result column="UNION_TYPE" property="unionType" jdbcType="VARCHAR" />
+		<result column="EDUCATION" property="education" jdbcType="VARCHAR" />
+		<result column="INDUSTRY_CODE" property="industryCode"
+			jdbcType="VARCHAR" />
+		<result column="JOB_CODE" property="jobCode" jdbcType="VARCHAR" />
+		<result column="MATCH_INCOME" property="matchIncome" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryIncome" parameterType="com.huaxia.opas.domain.sysparm.Income"
+		resultMap="IncomeResultMap">
+		select
+		UUID,
+		CITY_CODE,
+		UNION_TYPE,
+		EDUCATION,
+		INDUSTRY_CODE,
+		JOB_CODE,
+		MATCH_INCOME,
+		CRT_DATE,
+		STATUS,
+		OPERATOR,
+		REMARK
+		from
+		OPAS_BZK_INDUSTRY_INCOMEMACHT
+		<where>1 = 1
+			<if test="cityCode != null and cityCode !='' ">
+				AND CITY_CODE LIKE '%${cityCode}%'
+			</if>
+			<if test="unionType != null and unionType !='' ">
+				AND UNION_TYPE LIKE '%${unionType}%'
+			</if>
+			<if test="industryCode != null and industryCode !='' ">
+				AND INDUSTRY_CODE LIKE '%${industryCode}%'
+			</if>
+			<if test="jobCode != null and jobCode !='' ">
+				AND JOB_CODE LIKE '%${jobCode}%'
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+
+	<select id="queryIncomeCount" parameterType="com.huaxia.opas.domain.sysparm.Income"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_BZK_INDUSTRY_INCOMEMACHT
+		<where>1 = 1
+			<if test="cityCode != null and cityCode !='' ">
+				AND CITY_CODE LIKE '%${cityCode}%'
+			</if>
+			<if test="unionType != null and unionType !='' ">
+				AND UNION_TYPE LIKE '%${unionType}%'
+			</if>
+			<if test="industryCode != null and industryCode !='' ">
+				AND INDUSTRY_CODE LIKE '%${industryCode}%'
+			</if>
+			<if test="jobCode != null and jobCode !='' ">
+				AND JOB_CODE LIKE '%${jobCode}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteIncome" parameterType="java.util.List">
+		delete from
+		OPAS_BZK_INDUSTRY_INCOMEMACHT
+		where UUID in
+		<foreach collection="list" open= "(" close=")" item="uuId" separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insertIncome" parameterType="com.huaxia.opas.domain.sysparm.Income">
+		insert into
+		OPAS_BZK_INDUSTRY_INCOMEMACHT
+		(UUID,
+		CITY_CODE,
+		UNION_TYPE,
+		EDUCATION,
+		INDUSTRY_CODE,
+		JOB_CODE,
+		MATCH_INCOME,
+		CRT_DATE,
+		STATUS,
+		OPERATOR,
+		REMARK)
+		values
+		(#{uuId,jdbcType=VARCHAR},
+		#{cityCode,jdbcType=VARCHAR},
+		#{unionType,jdbcType=VARCHAR},
+		#{education,jdbcType=VARCHAR},
+		#{industryCode,jdbcType=VARCHAR},
+		#{jobCode,jdbcType=VARCHAR},
+		#{matchIncome,jdbcType=CHAR},
+		SYSDATE,
+		#{status,jdbcType=VARCHAR},
+		#{operator,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateIncome" parameterType="com.huaxia.opas.domain.sysparm.Income">
+		update OPAS_BZK_INDUSTRY_INCOMEMACHT
+		<set>
+			<if test="cityCode != null">
+				CITY_CODE = #{cityCode,jdbcType=VARCHAR},</if>
+			<if test="unionType != null">
+				UNION_TYPE = #{unionType,jdbcType=VARCHAR},</if>
+			<if test="education != null">
+				EDUCATION = #{education,jdbcType=VARCHAR},</if>
+			<if test="industryCode != null">
+				INDUSTRY_CODE
+				= #{industryCode,jdbcType=VARCHAR},</if>
+			<if test="jobCode != null">
+				JOB_CODE = #{jobCode,jdbcType=VARCHAR},</if>
+			<if test="matchIncome != null">
+				MATCH_INCOME = #{matchIncome,jdbcType=VARCHAR},</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},</if>
+			<if test="operator != null">
+				OPERATOR = #{operator,jdbcType=VARCHAR},</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},</if>
+				CRT_DATE = SYSDATE
+		</set>
+		where UUID = #{uuId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 上传 -->
+	<insert id="insertIncomeList" parameterType="java.util.List">
+		insert into OPAS_BZK_INDUSTRY_INCOMEMACHT (
+		UUID,
+		CITY_CODE,
+		UNION_TYPE,
+		EDUCATION,
+		INDUSTRY_CODE,
+		JOB_CODE,
+		MATCH_INCOME,
+		CRT_DATE,
+		STATUS,
+		OPERATOR
+		)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			sys_guid(),
+			#{item.cityCode,jdbcType=CHAR},
+			#{item.unionType,jdbcType=CHAR},
+			#{item.education,jdbcType=CHAR},
+			#{item.industryCode,jdbcType=CHAR},
+			#{item.jobCode,jdbcType=CHAR},
+			#{item.matchIncome,jdbcType=VARCHAR},
+			#{item.crtDate,jdbcType=TIMESTAMP},
+			'1',
+			#{item.operator,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+	
+	<!-- 批量启用 -->
+	<update id="setIncomeStatusOK" parameterType="com.huaxia.opas.domain.sysparm.Income">
+		update OPAS_BZK_INDUSTRY_INCOMEMACHT
+		<set>
+			STATUS = '1',
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+
+		</set>
+		where UUID in 
+		<foreach collection="ids" open= "(" close=")" item="uuId" separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<!-- 批量禁用 -->
+	<update id="setIncomeStatusNO" parameterType="com.huaxia.opas.domain.sysparm.Income">
+		update OPAS_BZK_INDUSTRY_INCOMEMACHT
+		<set>
+			STATUS = '0',
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+		</set>
+		where UUID in 
+		<foreach collection="ids" open= "(" close=")" item="uuId" separator=",">
+			#{uuId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+</mapper>

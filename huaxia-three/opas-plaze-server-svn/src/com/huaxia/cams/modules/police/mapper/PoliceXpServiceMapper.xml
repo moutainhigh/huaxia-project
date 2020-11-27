@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper	namespace="com.huaxia.cams.modules.police.mapper.PoliceXpServiceMapper">
+	<select id="selectCountByAppId" resultType = "java.lang.Integer">
+		SELECT COUNT(1) FROM POLICE_XP_INFO WHERE APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+		<insert id="insertPoliceXpInfo" parameterType="com.huaxia.cams.modules.police.domain.PoliceXpInfo">
+		INSERT INTO POLICE_XP_INFO (
+			APP_ID,
+			CRT_TIME,
+			CRT_USER,
+			GMSFHM,
+			RESULT_GMSFHM,
+			XM,
+			RESULT_XM,
+			XP,
+			ERROR_CODE,
+			ERROR_MESSAGE,
+			ERROR_MESSAGE_COL,
+			RESULT_FS,
+			RESULT_FX
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			SYSDATE,
+			'SYSTEM',
+			#{gmsfhm, jdbcType = VARCHAR},
+			#{resultGmsfhm, jdbcType = VARCHAR},
+			#{xm, jdbcType = VARCHAR},
+			#{resultXm, jdbcType = VARCHAR},
+			#{xp, jdbcType = CLOB},
+			#{errorCode, jdbcType = VARCHAR},
+			#{errorMessage, jdbcType = VARCHAR},
+			#{errorMessageCol, jdbcType = VARCHAR},
+			#{resultFs, jdbcType = VARCHAR},
+			#{resultFx, jdbcType = VARCHAR}
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd">
+    
+	<!-- ########## 组长调阅  经理调阅 # 开始 ########## -->
+	<!-- zlb start-->
+	<bean id="finishCountDao" class="com.huaxia.opas.dao.retrieve.impl.FinishCountDaoImpl"/>
+	<bean id="bizInpApplC1nDao" class="com.huaxia.opas.dao.apply.impl.BizInpApplC1DaoImpl" />
+	<bean id="ficoBigResponseDao" class="com.huaxia.opas.dao.retrieve.impl.FicoBigResponseDaoImpl" />
+	<!-- zlb end-->
+	<!-- ########## 组长调阅  经理调阅 # 结束 ########## -->
+	
+	<!-- ########## 参数管理 # 开始 ########## -->
+	<!-- 业务字典大类 -->
+	<bean id="apDictDao" class="com.huaxia.opas.dao.dict.impl.ApDictDaoImpl" />
+	<!-- 业务字典小类 -->
+	<bean id="apDictDetailDao" class="com.huaxia.opas.dao.dict.impl.ApDictDetailDaoImpl" />
+	<!-- 同业关注风险名单库 -->
+	<bean id="sameIndustryRiskDao"
+		class="com.huaxia.opas.dao.sysparm.impl.SameIndustryRiskDaoImpl" />
+	<!-- 易达金存量客户电销名单库 -->
+	<bean id="stockcustTelSaleDao"
+		class="com.huaxia.opas.dao.sysparm.impl.StockcustTelSaleDaoImpl" />
+	<!-- 推广员风险名单库 -->
+	<bean id="promoterRiskDao" class="com.huaxia.opas.dao.sysparm.impl.PromoterRiskDaoImpl" />
+	<!-- 预授信 -->
+	<bean id="preCreditParamDao" class="com.huaxia.opas.dao.sysparm.impl.PreCreditParamDaoImpl" />
+	<!-- PAD定位地址-wenyh -->
+	<bean id="padLocationAddressDao" class="com.huaxia.opas.dao.sysparm.impl.PadLocationAddressDaoImpl" />
+	<!-- 简项公安参数匹配-->
+	<bean id="matchIdenityDao" class="com.huaxia.opas.dao.sysparm.impl.MatchIdenityDaoImpl" />
+	<!--MBA院校名单库 -->
+	<bean id="MBASchoolDao" class="com.huaxia.opas.dao.sysparm.impl.MBASchoolDaoImpl" />
+	<!--团办名单库 -->
+	<bean id="teamDao" class="com.huaxia.opas.dao.sysparm.impl.TeamDaoImpl" />
+	<!-- 用户审批卡种 用于用户添加时勾选审批卡中 shihuan -->
+	<bean id="userCardDao" class="com.huaxia.opas.dao.sysparm.impl.UserCardDaoImpl" />
+	<!-- 地址风险类名单 shihuan -->
+	<bean id="addrRiskListDao" class="com.huaxia.opas.dao.sysparm.impl.AddrRistListDaoImpl" />
+	<bean id="addrRiskListHistroyDao"
+		class="com.huaxia.opas.dao.sysparm.impl.AddrRistListHistoryDaoImpl" />
+	<!-- 单位地址风险类名单 shihuan -->
+	<bean id="companyRiskDao" class="com.huaxia.opas.dao.sysparm.impl.CompanyRiskDaoImpl" />
+	<!-- 电话类风险名单 shihuan -->
+	<bean id="telRiskListDao" class="com.huaxia.opas.dao.sysparm.impl.TelRistListDaoImpl" />
+	<bean id="telRiskListHistoryDao"
+		class="com.huaxia.opas.dao.sysparm.impl.TelRistListHistoryDaoImpl" />
+	<!-- 重点院校名单 shihuan -->
+	<bean id="majorschoolListDao" class="com.huaxia.opas.dao.sysparm.impl.MajorschoolListDaoImpl" />
+	<!-- 特殊项目名单 shihuan -->
+	<bean id="specialProjectDao" class="com.huaxia.opas.dao.sysparm.impl.SpecialProjectDaoImpl" />
+	<!-- 优质企业名单 shihuan -->
+	<bean id="goodCompanyListDao" class="com.huaxia.opas.dao.sysparm.impl.GoodCompanyListDaoImpl" />
+	<!-- 目标企业名单 shihuan -->
+	<bean id="targetCompanyDao" class="com.huaxia.opas.dao.sysparm.impl.TargetcompanyDaoImpl" />
+	<!-- 导入查询历史记录 shihuan -->
+	<bean id="batchFileInfoDao" class="com.huaxia.opas.dao.sysparm.impl.BatchFileInfoDaoImpl" />
+	<!-- 营销员白名单 -->
+	<bean id="marketerDao" class="com.huaxia.opas.dao.sysparm.impl.MarketerDaoImpl" />
+	<!-- 柳迪 start -->
+	<!-- 欺诈结果原因码 -->
+	<bean id="fraudCodeDao" class="com.huaxia.opas.dao.sysparm.impl.FraudCodeDaoImpl" />
+	<!-- 电核过件码 -->
+	<bean id="phoneChkPassCodeDao"
+		class="com.huaxia.opas.dao.sysparm.impl.PhoneChkPassCodeDaoImpl" />
+	<!-- 电话来源维护 -->
+	<bean id="telSourceDao" class="com.huaxia.opas.dao.sysparm.impl.TelSourceDaoImpl" />
+	<!-- 电话号码参数维护 -->
+	<bean id="telNoDao" class="com.huaxia.opas.dao.sysparm.impl.TelNoDaoImpl" />
+	<!-- 照会对象维护 -->
+	<bean id="telObjectDao" class="com.huaxia.opas.dao.sysparm.impl.TelObjectDaoImpl" />
+	<!-- 电核结论维护 -->
+	<bean id="telChkConclusionDao"
+		class="com.huaxia.opas.dao.sysparm.impl.TelChkConclusionDaoImpl" />
+	<!-- 审批原因代码维护 -->
+	<bean id="approveReasonCodeDao"
+		class="com.huaxia.opas.dao.sysparm.impl.ApproveReasonCodeDaoImpl" />
+	<!-- 政策码维护 -->
+	<bean id="policyDao" class="com.huaxia.opas.dao.sysparm.impl.PolicyDaoImpl" />
+	<!-- 配发卡维护 -->
+	<bean id="matchingCardDao" class="com.huaxia.opas.dao.sysparm.impl.MatchingCardDaoImpl" />
+	<!-- 卡产品维护 -->
+	<bean id="cardProductDao" class="com.huaxia.opas.dao.sysparm.impl.CardProductDaoImpl" />
+	<!-- 卡产品降级维护 -->
+	<bean id="cardDegradeDao" class="com.huaxia.opas.dao.sysparm.impl.CardDegradeDaoImpl" />
+	<!-- 邮编区号维护 -->
+	<bean id="approveZipcodeDao" class="com.huaxia.opas.dao.sysparm.impl.ApproveZipcodeDaoImpl" />
+	<!-- 利率差异化维护 -->
+	<bean id="sysparmRateDao" class="com.huaxia.opas.dao.sysparm.impl.SysparmRateDaoImpl" />
+	<!-- 利率差异化配置 -->
+	<bean id="sysparmRateConfDao" class="com.huaxia.opas.dao.sysparm.impl.SysparmRateConfDaoImpl" />
+	<!-- 最低还款额维护 -->
+	<bean id="sysparmRepayLimitDao"
+		class="com.huaxia.opas.dao.sysparm.impl.SysparmRepayLimitDaoImpl" />
+	<!-- 最低还款额配置 -->
+	<bean id="sysparmRepayLimitConfDao"
+		class="com.huaxia.opas.dao.sysparm.impl.SysparmRepayLimitConfDaoImpl" />
+	<!-- 免息还款期维护 -->
+	<bean id="sysparmRepayFreeTermDao"
+		class="com.huaxia.opas.dao.sysparm.impl.SysparmRepayFreeTermDaoImpl" />
+	<!-- 免息还款期配置 -->
+	<bean id="sysparmRepayFreeTermConfDao"
+		class="com.huaxia.opas.dao.sysparm.impl.SysparmRepayFreeTermConfDaoImpl" />
+	<!-- VVIP客户信息维护 -->
+	<bean id="vvipListDao" class="com.huaxia.opas.dao.sysparm.impl.VvipListDaoImpl" />
+	<!-- 柳迪 end -->
+	<!-- 李鹏飞start -->
+	<!-- WarningList -->
+	<bean id="warningDao" class="com.huaxia.opas.dao.sysparm.impl.WarningDaoImpl" />
+	<!-- 余额转移 -->
+	<bean id="balanceDao" class="com.huaxia.opas.dao.sysparm.impl.BalanceDaoImpl" />
+	<!-- 标准卡行职业收入 -->
+	<bean id="bzkIncomeDao" class="com.huaxia.opas.dao.sysparm.impl.BzkIncomeDaoImpl" />
+	<!-- 易达金卡行职业收入 -->
+	<bean id="ydjIncomeDao" class="com.huaxia.opas.dao.sysparm.impl.YdjIncomeDaoImpl" />
+	<!-- 征信问题库 -->
+	<bean id="confQuestionDao" class="com.huaxia.opas.dao.sysparm.impl.ConfQuestionDaoImpl" />
+	<!-- 行员名单库 -->
+	<bean id="confRosterLibraryDao" class="com.huaxia.opas.dao.sysparm.impl.ConfRosterLibraryDaoImpl" />
+	<!-- 网申合作商户 -->
+	<bean id="netCooperativeDao" class="com.huaxia.opas.dao.sysparm.impl.NetCooperativeDaoImpl" />
+	<!-- 李鹏飞end -->
+	<!-- ########## 参数管理 # 结束 ########## -->
+
+
+	<!-- ########## 系统管理 # 开始 ########## -->
+	<bean id="apOrgDao" class="com.huaxia.opas.dao.system.impl.ApOrgDaoImpl" />
+	<bean id="apUserDao" class="com.huaxia.opas.dao.system.impl.ApUserDaoImpl" />
+	<bean id="apOnlineDao" class="com.huaxia.opas.dao.system.impl.ApOnlineDaoImpl" />
+	<bean id="apUserOrgDao" class="com.huaxia.opas.dao.system.impl.ApUserOrgDaoImpl" />
+	<bean id="apRoleDao" class="com.huaxia.opas.dao.system.impl.ApRoleDaoImpl" />
+	<bean id="apUserRoleDao" class="com.huaxia.opas.dao.system.impl.ApUserRoleDaoImpl" />
+	<bean id="apMenuDao" class="com.huaxia.opas.dao.system.impl.ApMenuDaoImpl" />
+	<bean id="apRoleMenuDao" class="com.huaxia.opas.dao.system.impl.ApRoleMenuDaoImpl" />
+	<bean id="operationLogDao" class="com.huaxia.opas.dao.system.impl.OperationLogDaoImpl" />
+	<!-- ########## 系统管理 # 结束 ########## -->
+
+
+	<!-- ########## 公共管理 # 开始 ########## -->
+	<!-- 文档上传 -->
+	<bean id="fileUploadDao" class="com.huaxia.opas.dao.system.impl.FileUploadDaoImpl" />
+	<bean id="fileUploadLogDao" class="com.huaxia.opas.dao.system.impl.FileUploadLogDaoImpl" />
+	<!-- 单位地址行政级别服务 -->
+	<bean id="queryAddressLev"
+		class="com.huaxia.opas.dao.address.impl.QueryAddressListDaoImpl" />
+	<!-- 风险检查 -->
+	<bean id="riskCheckDao" class="com.huaxia.opas.dao.riskcheck.impl.RiskCheckDaoImpl" />
+	<!-- 网申平台风险调查-wenyh -->
+	<bean id="wSPlatformRiskInvestDao" class="com.huaxia.opas.dao.riskcheck.impl.WSPlatformRiskInvestDaoImpl" />
+	<!-- ########## 公共管理 # 结束 ########## -->
+
+
+	<!-- ########## 提报管理 # 开始 ########## -->
+	<!-- 提报账户 -->
+	<bean id="subReportDao" class="com.huaxia.opas.dao.sysparm.impl.SubReportDaoImpl" />
+	<!-- 提报回复查看 -->
+	<bean id="submitReplyDao" class="com.huaxia.opas.dao.credit.impl.SubmitReplyDaoImpl" />
+
+	<!-- ########## 提报管理 # 结束 ########## -->
+
+	<!-- ########## 第三方接口 # 开始 ########## -->
+	<!-- 人行接口 -->
+	<bean id="pbocDao" class="com.huaxia.opas.dao.thirdparty.impl.PBOCDaoImpl" />
+	<!-- 人行接口新 -->
+	<bean id="bankDao" class="com.huaxia.opas.dao.thirdparty.impl.BankDaoImpl" />
+	<!-- 公安接口 -->
+	<bean id="policeDao" class="com.huaxia.opas.dao.thirdparty.impl.PoliceDaoImpl" />
+	<!-- 蚂蚁接口 -->
+	<bean id="antDao" class="com.huaxia.opas.dao.thirdparty.impl.AntDaoImpl" />
+	<!-- 中征信100接口 -->
+	<bean id="credit100Dao" class="com.huaxia.opas.dao.thirdparty.impl.Credit100DaoImpl" />
+	<!-- 学历接口 -->
+	<bean id="educationDao" class="com.huaxia.opas.dao.thirdparty.impl.EducationDaoImpl" />
+	<!-- 51易达金接口 -->
+	<bean id="gjjDao" class="com.huaxia.opas.dao.thirdparty.impl.GjjDaoImpl" />
+	<!--反欺诈 提报 复核 调查 审批 xiaoJianFeng -->
+	<bean id="creditCheckDao" class="com.huaxia.opas.dao.credit.impl.CreditCheckDaoImp" />
+
+	<!--人行征信查询匹配设置 xiaoJianFeng -->
+	<bean id="creditMatchingDao" class="com.huaxia.opas.dao.credit.impl.CreditMatchingDaoImpl" />
+
+	<!-- 人行征信查询匹配设置、人行查询管理、学历查询匹配设置、学历查询管理 xiaoJianFeng -->
+	<bean id="educationHumanManagemetDao"
+		class="com.huaxia.opas.dao.credit.impl.EducationHumanManagemetDaoImpl" />
+
+	<!-- ########## 第三方接口 # 结束 ########## -->
+
+
+	<!-- 征信电核环节 模块开始 -->
+	<!-- 系统决策（TAB） -->
+	<bean id="sysDecisionDao" class="com.huaxia.opas.dao.decision.impl.SysDecisionDaoImpl" />
+	<bean id="sysDecisionYdjDao" class="com.huaxia.opas.dao.decision.impl.SysDecisionYdjDaoImpl" />
+	<bean id="teamlistDao" class="com.huaxia.opas.dao.decision.impl.TeamlistDaoImpl" />
+	<bean id="keyfiledMarchinfoDao"
+		class="com.huaxia.opas.dao.decision.impl.KeyfiledMarchinfoDaoImpl" />
+	<bean id="goodcompanyListDao"
+		class="com.huaxia.opas.dao.decision.impl.GoodcompanyListDaoImpl" />
+	<bean id="merchTeamdealListDao"
+		class="com.huaxia.opas.dao.decision.impl.MerchTeamdealListDaoImpl" />
+	<bean id="specialprojectListDao"
+		class="com.huaxia.opas.dao.decision.impl.SpecialprojectListDaoImpl" />
+	<bean id="targetcompanyListDao"
+		class="com.huaxia.opas.dao.decision.impl.TargetcompanyListDaoImpl" />
+	<bean id="teamdealListDao" class="com.huaxia.opas.dao.decision.impl.TeamdealListDaoImpl" />
+	<bean id="ydjSysresultInfoDao"
+		class="com.huaxia.opas.dao.decision.impl.YdjSysresultInfoDaoImpl" />
+	<bean id="stockcustTelsaleListDao"
+		class="com.huaxia.opas.dao.decision.impl.StockcustTelsaleListDaoImpl" />
+
+	<bean id="telcheckAddnoteDao"
+		class="com.huaxia.opas.dao.decision.impl.TelcheckAddnoteDaoImpl" />
+	<bean id="creditTelcheckListDao"
+		class="com.huaxia.opas.dao.decision.impl.CreditTelcheckListDaoImpl" />
+	<bean id="applyModifyLogDao" class="com.huaxia.opas.dao.apply.impl.ApplyModifyLogDaoImpl" />
+	<bean id="opasConfQuestionDao"
+		class="com.huaxia.opas.dao.decision.impl.OpasConfQuestionDaoImpl" />
+	<bean id="bizApprovalDao" class="com.huaxia.opas.dao.decision.impl.BizApprovalDaoImpl" />
+	<bean id="bizApprovalHisDao" class="com.huaxia.opas.dao.decision.impl.BizApprovalHisDaoImpl" />
+	<bean id="ficoSdBlazeDao" class="com.huaxia.opas.dao.decision.impl.FicoSdBlazeDaoImpl" />
+	<bean id="ficoYdjBlazeDao" class="com.huaxia.opas.dao.decision.impl.FicoYdjBlazeDaoImpl" />
+
+	<bean id="bizApprovalOpeexchisDao"
+		class="com.huaxia.opas.dao.decision.impl.BizApprovalOpeexchisDaoImpl" />
+	<bean id="bizApprovalOperatedateDao"
+		class="com.huaxia.opas.dao.decision.impl.BizApprovalOperatedateDaoImpl" />
+	<bean id="bizApprovalOperateexcDao"
+		class="com.huaxia.opas.dao.decision.impl.BizApprovalOperateexcDaoImpl" />
+	<!-- 征信电核环节 模块结束 -->
+	<!-- CRM -->
+	<bean id="CRMCommonDao" class="com.huaxia.opas.dao.crm.impl.CRMCommonDaoImpl" />
+
+	<!-- 捞件表 -->
+	<bean id="fishingDao" class="com.huaxia.opas.dao.report.impl.FishingDaoImpl" />
+	<!-- 关键信息修改表 -->
+	<bean id="keyMessageModifyDao" class="com.huaxia.opas.dao.report.impl.KeyMessageModifyDaoImpl" />
+
+	<!-- 工作量统计报表 -->
+	<bean id="workloadStatisticsDao"
+		class="com.huaxia.opas.dao.report.impl.WorkloadStatisticsDaoImpl" />
+	<!-- 审批工作量统计表 -->
+	<bean id="applyStatisticsDao" class="com.huaxia.opas.dao.report.impl.ApplyStatisticsDaoImpl" />
+	<!-- 查询人员信息下拉列表 -->
+	<bean id="queryOperatorMsgDao" class="com.huaxia.opas.dao.report.impl.QueryOperatorMsgDaoImpl" />
+
+	<!-- 归档申请件明细表 -->
+	<bean id="archiveApplicationFileDetailDao"
+		class="com.huaxia.opas.dao.report.impl.ArchiveApplicationFileDetailDaoImpl" />
+	<!-- 不同粒度进件情况统计表 -->
+	<bean id="differentGrainStatisticsDao"
+		class="com.huaxia.opas.dao.report.impl.DifferentGrainStatisticsDaoImpl" />
+	<!-- 进件情况统计表 -->
+	<bean id="buyPieceSituationStatisticsDao"
+		class="com.huaxia.opas.dao.report.impl.BuyPieceSituationStatisticsDaoImpl" />
+	<!-- 网申合作平台数据统计清单-进件情况统计表-wenyh -->
+	<bean id="wsPlatformDataStatisticsDao"
+		class="com.huaxia.opas.dao.report.impl.WsPlatformDataStatisticsDaoImpl" />
+	
+	<!-- 利率差异化分析统计报表 -->
+	<bean id="interestRateDifferAnalysisStatisticsDao"
+		class="com.huaxia.opas.dao.report.impl.InterestRateDifferAnalysisStatisticsDaoImpl" />
+
+	<!-- 征信调查查看 -->
+	<bean id="creditCheckSearchDao"
+		class="com.huaxia.opas.dao.credit.impl.CreditCheckSearchDaoImpl" />
+
+	<!-- 提交补件 -->
+	<bean id="patchboltDao" class="com.huaxia.opas.dao.credit.impl.PatchboltDaoImpl" />
+
+	<!-- 申请表信息 -->
+	<bean id="bizInpApplC1Dao" class="com.huaxia.opas.dao.apply.impl.BizInpApplC1DaoImpl" />
+
+	<!-- 归档批量信息 -->
+	<bean id="arBatchDao" class="com.huaxia.opas.dao.archive.impl.ArBatchDaoImpl" />
+	<!-- 待归档补件信息 -->
+	<bean id="suppArDao" class="com.huaxia.opas.dao.archive.impl.SuppArDaoImpl" />
+	<!-- 归档队列信息 -->
+	<bean id="arQueueDao" class="com.huaxia.opas.dao.archive.impl.ArQueueDaoImpl" />
+	<!-- 归档修改 -->
+	<bean id="arEditDao" class="com.huaxia.opas.dao.archive.impl.ArEditDaoImpl" />
+	<!-- 归档导出 -->
+	<bean id="arExportDao" class="com.huaxia.opas.dao.archive.impl.ArExportDaoImpl" />
+
+	<!-- 申请件查询 -->
+	<bean id="applyInfoDao" class="com.huaxia.opas.dao.apply.impl.ApplyInfoDaoImpl" />
+	<bean id="innerRiskInfoDao" class="com.huaxia.opas.dao.sysparm.impl.InnerRiskInfoDaoImpl" />
+
+	<bean id="allotApplyAllotDao" class="com.huaxia.opas.dao.allot.impl.AllotApplyAllotDaoImpl" />
+	<bean id="allotApplyAllotHisDao"
+		class="com.huaxia.opas.dao.allot.impl.AllotApplyAllotHisDaoImpl" />
+	<!--分件模块 -->
+	<bean id="allotApplyDao" class="com.huaxia.opas.dao.allot.impl.AllotApplyDaoImpl" />
+	<bean id="allotCommonDao" class="com.huaxia.opas.dao.allot.impl.AllotCommonDaoImpl" />
+	<bean id="allotMappingRuleDao" class="com.huaxia.opas.dao.allot.impl.AllotMappingRuleDaoImpl" />
+	<bean id="allotQueueDao" class="com.huaxia.opas.dao.allot.impl.AllotQueueDaoImpl" />
+	<bean id="allotRuleDao" class="com.huaxia.opas.dao.allot.impl.AllotRuleDaoImpl" />
+	<bean id="allotSwitchDao" class="com.huaxia.opas.dao.allot.impl.AllotSwitchDaoImpl" />
+	<bean id="allotYdjResultDao" class="com.huaxia.opas.dao.allot.impl.AllotYdjResultDaoImpl" />
+	<bean id="allotBzkResultDao" class="com.huaxia.opas.dao.allot.impl.AllotBzkResultDaoImpl" />
+	<bean id="reviewDecisionDao" class="com.huaxia.opas.dao.allot.impl.ReviewDecisionDaoImpl"/>
+	<bean id="allotTimeDao" class="com.huaxia.opas.dao.allot.impl.AllotTimeDaoImpl"/>
+	<bean id="allotNumberDao" class="com.huaxia.opas.dao.allot.impl.AllotNumberDaoImpl"/>
+	<bean id="ysTelcheckAddnoteDao" class="com.huaxia.opas.dao.allot.impl.YsTelcheckAddnoteDaoImpl"/>
+	<!-- 客户信息 -->
+	<bean id="custBaseInfoDao" class="com.huaxia.opas.dao.system.impl.CustBaseInfoDaoImpl" />
+
+
+	<!-- 增强信息采集 -->
+	<bean id="enhanceCollectDao" class="com.huaxia.opas.dao.collect.impl.EnhanceCollectDaoImpl" />
+	<bean id="salaryAdoptItemDao" class="com.huaxia.opas.dao.collect.impl.SalaryAdoptItemDaoImpl" />
+	<bean id="salaryComputeDao" class="com.huaxia.opas.dao.collect.impl.SalaryComputeDaoImpl" />
+
+	<!-- 谢滨旭 start -->
+	<bean id="testObjDao" class="com.huaxia.opas.dao.compare.impl.TestObjDaoImpl" />
+	<bean id="revCompInfoDao" class="com.huaxia.opas.dao.compare.impl.RevCompInfoDaoImpl" />
+	<bean id="applyRemarkDao" class="com.huaxia.opas.dao.apply.impl.ApplyRemarkDaoImpl" />
+	<bean id="bizInpApplDao" class="com.huaxia.opas.dao.apply.impl.BizInpApplDaoImpl" />
+	<bean id="infoCollectDao" class="com.huaxia.opas.dao.collect.impl.InfoCollectDaoImpl" />
+	<bean id="applyLifeCicleDao" class="com.huaxia.opas.dao.apply.impl.ApplyLifeCicleDaoImpl" />
+	<bean id="fileAppDetDao" class="com.huaxia.opas.dao.archive.impl.FileAppDetDaoImpl" />
+	<bean id="patchboltSpyInfoDao"
+		class="com.huaxia.opas.dao.collect.impl.PatchboltSpyInfoDaoImpl" />
+	<!-- 谢滨旭 end -->
+	<!-- 规则dao配置 -->
+	<import resource="classpath*:/config/dao-service-rule.xml" />
+	<!-- 系统参数_身份类风险名单 luzhen.ou -->
+	<bean id="identityRiskDao" class="com.huaxia.opas.dao.sysparm.impl.IdentityRiskDaoImpl" />
+	<!-- 名单库管理_标准卡征信信息名单 luzhen.ou -->
+	<bean id="creditInfoDao" class="com.huaxia.opas.dao.sysparm.impl.CreditInfoDaoImpl" />
+	<!-- 名单库管理_征信电话核查白名单 luzhen.ou -->
+	<bean id="creditTelcheckDao" class="com.huaxia.opas.dao.sysparm.impl.CreditTelcheckDaoImpl" />
+	<!-- 名单库管理_商户团办名单 luzhen.ou -->
+	<bean id="merchTeamdealDao" class="com.huaxia.opas.dao.sysparm.impl.MerchTeamdealDaoImpl" />
+	<!-- 名单库管理_易达金团办名单 luzhen.ou -->
+	<bean id="teamdealDao" class="com.huaxia.opas.dao.sysparm.impl.TeamdealDaoImpl" />
+	<!-- 三方数据异常查询-->
+	<bean id="thdErrDataDao" class="com.huaxia.opas.dao.credit.impl.ThdErrDataDaoImpl" />
+	<!-- 征信白名单 susha-->
+	<bean id="creditWhiteListDao" class="com.huaxia.opas.dao.credit.impl.CreditWhiteListDaoImpl" />
+	<!-- 客户基本信息表 susha-->
+	<bean id="baseCustInfoDao" class="com.huaxia.opas.dao.baseinfo.impl.BaseCustInfoDaoImpl"/> 
+	<!-- 信审合一个人工作完成量统计 -->
+	<bean id="creditApplyStatisticDao" class="com.huaxia.opas.dao.sysparm.impl.CreditApplyStatisticDaoImpl" />
+	
+	<!-- 质检wangtao -->
+	<bean id="qualityCheckingDao" class="com.huaxia.opas.dao.checking.impl.QualityCheckingDaoImpl" />	
+	<bean id="fileRoleRelationDao" class="com.huaxia.opas.dao.system.impl.FileRoleRelationDaoImpl" />
+    <!-- 车辆信息查询结果汇总报表 丁国峰 -->
+	<bean id="vehicleInfoSearchResultDao" class="com.huaxia.opas.dao.report.impl.VehicleInfoSearchResultDaoImpl" />
+	<!-- 车辆信息查询结果明细报表 丁国峰 -->
+	<bean id="vehicleInfoSearchResultDetailDao" class="com.huaxia.opas.dao.report.impl.VehicleInfoSearchResultDetailDaoImpl" />
+	<!-- FICO大数据报表 -->
+	<bean id="ficoResultDao" class="com.huaxia.opas.dao.report.impl.FicoResultDaoImpl" />
+	<!-- 三方 查询限制规则 gaohui -->
+	<bean id="threeSearchLimitRuleDao" class="com.huaxia.opas.dao.thirdparty.impl.ThreeSearchLimitRuleDaoImpl" />
+	<!-- 三方 monitor 任务监控 丁国峰 -->
+	<bean id="monitor3rdDao" class="com.huaxia.opas.dao.monitor.impl.Monitor3rdDaoImpl" />
+	<!-- 三方 monitor 日志监控 丁国峰 -->
+	<bean id="monitor3rdLogDao" class="com.huaxia.opas.dao.monitor.impl.Monitor3rdLogDaoImpl" />
+	<!-- 卡版面维护 -->
+	<bean id="cardLayoutDao" class="com.huaxia.opas.dao.sysparm.impl.CardLayoutDaoImpl" />
+	<!-- 第三方-信审交互 Start gaoh -->
+	<!-- 第三方-信审交互主卡 -->
+	<bean id="bizInpApplC1SfDao" class="com.huaxia.opas.dao.tripartite.impl.BizInpApplC1SfDaoImpl" />
+	<!--  第三方-信审交互附卡 -->
+	<bean id="bizInpApplC2SfDao" class="com.huaxia.opas.dao.tripartite.impl.BizInpApplC2SfDaoImpl" />
+	<!-- 第三方-信审交互 End  gaoh -->
+	<!-- 腾讯天御分 -->
+	<bean id="tianYuDao" class="com.huaxia.opas.dao.thirdparty.impl.TianYuDaoImpl" />
+	<!-- 数字解读 -->
+	<bean id="szjdDao" class="com.huaxia.opas.dao.thirdparty.impl.SzjdDaoImpl" />
+	<!-- 批量提交失败 -->
+	<bean id="allotBatchFailDao" class="com.huaxia.opas.dao.allot.impl.AllotBatchFailDaoImpl" />
+	<!-- 企业行业信息查询部分 -->
+	<bean id="qiYeDao" class="com.huaxia.opas.dao.thirdparty.impl.QiYeDaoImpl" />
+	<!-- 厦门易联众社保信息查询部分 -->
+	<bean id="ylzDao" class="com.huaxia.opas.dao.thirdparty.impl.YLZDaoImpl" />
+	<!-- 深圳鹏元个人社保信息查询部分 -->
+	<bean id="pypcrDao" class="com.huaxia.opas.dao.thirdparty.impl.PYPCRDaoImpl" />
+	<!-- 深圳鹏元高信分信息查询部分 -->
+	<bean id="pypwslDao" class="com.huaxia.opas.dao.thirdparty.impl.PYPWSLDaoImpl" />
+	<!-- 通讯运营商 -->
+	<bean id="txOperatorDao" class="com.huaxia.opas.dao.thirdparty.impl.TxOperatorDaoImpl" />
+	<!-- 自动分件数量查询 -->
+	<bean id="autoApplyDao" class="com.huaxia.opas.dao.allot.impl.AutoApplyDaoImpl" />
+	<bean id="applyLifeCicleService" class="com.huaxia.opas.service.apply.impl.ApplyLifeCicleServiceImpl" />
+	<!-- 参数管理  风险联系人信息  wangtao-->
+	<bean id="applyRiskInfoDao" class="com.huaxia.opas.dao.sysparm.impl.ApplyRiskInfoDaoImpl" />
+	<!--名单库管理  3311企业名单库 chenmeng -->
+	<bean id="companyInfoDao" class="com.huaxia.opas.dao.sysparm.impl.CompanyInfoDaoImpl" />
+	<!--avaya -->
+	<bean id="autoDialingDao" class="com.huaxia.opas.dao.avaya.impl.AutoDialingDaoImpl" />
+	<bean id="avayaLogDao" class="com.huaxia.opas.dao.avaya.impl.AvayaLogDaoImpl" />
+	<!--chenmeng etcPad -->
+	<bean id="etcPadDao" class="com.huaxia.opas.dao.compare.impl.EtcPadDaoImpl" />
+	<!-- 进件管理 -->
+	<bean id="inputChannelDao" class="com.huaxia.opas.dao.channel.impl.InputChannelDaoImpl" />
+	<!--工作流dao jpc0522 -->
+	<bean id="workflowDao" class="com.huaxia.opas.dao.workflow.impl.WorkflowDaoImpl" />
+	<!-- 客群 职级替代收入 -->
+	<bean id="ydjCustomersIncomeDaoimpl" class="com.huaxia.opas.dao.sysparm.impl.YdjCustomersIncomeDaoimpl"/>
+	<!-- 杭州公积金 -->
+	<bean id="hzGjjDao" class="com.huaxia.opas.dao.thirdparty.impl.HzGjjDaoImpl"/>
+	<!-- 二维码名单库维护 -->
+	<bean id="qrCodeDaoimpl" class="com.huaxia.opas.dao.sysparm.impl.QRCodeDaoimpl"/>
+	<bean id="hospitalDao" class="com.huaxia.opas.dao.sysparm.impl.HospitalDaoImpl"/>
+	<bean id="marktQRCodeDaoimpl" class="com.huaxia.opas.dao.sysparm.impl.MarktQRCodeDaoimpl"/>
+	<bean id="excellentDaoImpl" class="com.huaxia.opas.dao.sysparm.impl.ExcellentDaoImpl"/>
+	
+	<!-- 键值对配置 -->
+	<bean id="keyValueConfigureDao" class="com.huaxia.opas.dao.system.impl.KeyValueConfigureDaoImpl" />
+	<!-- 申请件操作留痕 -->
+	<bean id="operaMarkDao" class="com.huaxia.opas.dao.record.impl.OperaMarkDaoImpl" />
+		<!-- 参数管理_低风险客户名单库 liuwei -->
+	<bean id="lowRiskCustomersDao" class="com.huaxia.opas.dao.sysparm.impl.LowRiskCustomersDaoImpl" />
+	<!-- 导入查询低风险客户名单历史记录 liuwei -->
+	<bean id="batchFileLowRiskInfoDao" class="com.huaxia.opas.dao.sysparm.impl.BatchFileLowRiskInfoDaoImpl" />
+	
+</beans>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BaseCustInfo">
+	<resultMap id="BaseResult" type="java.util.Map">
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+		<result column="C1_CNAME" jdbcType="VARCHAR" property="custName" />
+		<result column="C1_GENDER" jdbcType="VARCHAR" property="sex" />
+		<result column="C1_NATION" jdbcType="VARCHAR" property="nationaity" />
+		<result column="C1_BIRTH" jdbcType="INTEGER" property="age" />
+		<result column="C1_IDTYPE" jdbcType="VARCHAR" property="certifiType" />
+		<result column="C1_IDNBR" jdbcType="VARCHAR" property="certifiNo" />
+		<result column="C1_HMARE" jdbcType="VARCHAR" property="housePhone" />
+		<result column="C1_CONAME" jdbcType="VARCHAR" property="workCompany" />
+		<result column="C1_COTEL" jdbcType="VARCHAR" property="officeTel" />
+		<result column="C1_MOBILE" jdbcType="VARCHAR" property="mobileNo" />
+		<result column="APP_PROD" jdbcType="INTEGER" property="applyCard" />
+		<result column="POLICE_STATUS" jdbcType="VARCHAR" property="policeStatus" />
+		<result column="C4_APBATCH" jdbcType="VARCHAR" property="c4Apbatch" />
+		<result column="TEAMNO_ISMATCH" jdbcType="VARCHAR" property="teamnoIsMatch" />
+		<result column="IS_ONESELF_CUST" jdbcType="VARCHAR" property="isOneselfCust" />
+		<result column="IS_HAVECARD_CUST" jdbcType="VARCHAR" property="isHavecardCust" />
+		<result column="IS_HAVECARD_STANDARD" jdbcType="VARCHAR"
+			property="isHavecardStandard" />
+		<result column="IS_PREFILTERCUST_ STANDARD" jdbcType="VARCHAR"
+			property="isPerfiltercustStandard" />
+		<result column="IS_EDUBACK_STANDARD" jdbcType="VARCHAR"
+			property="isEdubackStandard" />
+		<result column="IS_VECILE_STANDARD" jdbcType="VARCHAR"
+			property="isVecileStandard" />
+		<result column="IDENTITY_NO_CHECK_RST" jdbcType="VARCHAR"
+			property="idEntityNoCheckRst" />
+		<result column="NAME_CHECK_RST" jdbcType="VARCHAR" property="nameCheckRst" />
+	</resultMap>
+	<!-- 根据appId查询客户基本信息 -->
+	<select id="queryCustInfo" parameterType="java.lang.String"
+		resultMap="BaseResult">
+		select
+		C1_CNAME,
+		C1_GENDER,
+		C1_NATION,
+        FLOOR(MONTHS_BETWEEN(SYSDATE, C1_BIRTH) / 12) C1_BIRTH,
+		C1_IDTYPE,
+		C1_IDNBR,
+		C1_HMTEL,
+		C1_CONAME,
+		C1_COTEL,
+		C1_MOBILE,
+		APP_PROD
+		from
+		OPAS_BIZ_INP_APPL_C1
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+		
+	</select>
+	<select id="queryPoliceStatus" parameterType="java.lang.String"
+		resultMap="BaseResult">
+		select
+		IDENTITY_NO_CHECK_RST,
+		NAME_CHECK_RST
+		from
+		OPAS_BIZ_PUBSEC_GATHER
+		where IDENTITY_NO = #{idNbr,jdbcType=VARCHAR}
+	</select>
+	<select id="selectCustInfo" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select APP_ID
+		from OPAS_CUST_BASEINFO
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据团办号查数量确认是否匹配 -->
+	<!-- <select id="queryFromTeamList" parameterType="java.lang.String" resultType="java.lang.Integer"> 
+		select count(1) from OPAS_TEAMLIST where TEAM_ID = #{c4Apbatch} </select> 
+		<select id="queryFromTeamDealList" parameterType="java.lang.String" resultType="java.lang.Integer"> 
+		select count(1) from OPAS_TEAMDEAL_LIST where TEAMDEAL_CODE = #{c4Apbatch} 
+		</select> -->
+	<!-- 查询是否已持卡客户 -->
+	<!-- <select id="queryIsHaveCard" parameterType="java.lang.String" resultType="java.lang.Integer"> 
+		select count(1) from OPAS_TEAMDEAL_LIST where TEAMDEAL_CODE = #{c4Apbatch} 
+		</select> -->
+	<!-- 查询公安状态 -->
+	<!-- 将查询到的数据插入客户基本信息表 -->
+	<insert id="insertCustInfo" parameterType="com.huaxia.opas.domain.baseinfo.BaseCustInfo">
+		insert into OPAS_CUST_BASEINFO(AUTO_ID,APP_ID,CUST_NAME,SEX,NATIONAITY,AGE,CERTIFI_TYPE,CERTIFI_NO,HOUSE_PHONE,WORK_COMPANY,OFFICE_TEL,MOBILE_NO,APPLY_CARD,POLICE_STATUS )
+		values(	
+			 #{autoId,jdbcType=VARCHAR},
+			 #{appId,jdbcType=VARCHAR},
+			 #{custName,jdbcType=VARCHAR},
+			 #{sex,jdbcType=VARCHAR},
+			 #{nationaity,jdbcType=VARCHAR},
+			 #{age},
+			 #{certifiType,jdbcType=VARCHAR},
+			 #{certifiNo,jdbcType=VARCHAR},
+			 #{housePhone,jdbcType=VARCHAR},
+			 #{workCompany,jdbcType=VARCHAR},
+			 #{officeTel,jdbcType=VARCHAR},
+			 #{mobileNo},
+			 #{applyCard,jdbcType=VARCHAR},
+			 #{policeStatus,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateCustInfo" parameterType="com.huaxia.opas.domain.baseinfo.BaseCustInfo">
+		update OPAS_CUST_BASEINFO
+		<set>
+			<if test="custName != null  ">
+				CUST_NAME = #{custName,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null  ">
+				SEX = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="nationaity != null  ">
+				NATIONAITY = #{nationaity,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null   ">
+				AGE = #{age},
+			</if>
+			<if test="certifiType != null  ">
+				CERTIFI_TYPE = #{certifiType,jdbcType=VARCHAR},
+			</if>
+			<if test="certifiNo != null  ">
+				CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+			</if>
+			<if test="housePhone != null ">
+				HOUSE_PHONE = #{housePhone,jdbcType=VARCHAR},
+			</if>
+			<if test="workCompany != null ">
+				WORK_COMPANY = #{workCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="officeTel != null  ">
+				OFFICE_TEL = #{officeTel,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileNo != null  ">
+				MOBILE_NO = #{mobileNo},
+			</if>
+			<if test="applyCard != null  ">
+				APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+			</if>
+			<if test="policeStatus != null  ">
+				POLICE_STATUS = #{policeStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateBaseCustInfo" parameterType="com.huaxia.opas.domain.baseinfo.BaseCustInfo">
+		update OPAS_CUST_BASEINFO
+		<set>
+			<if test="custName != null and custName != '' ">
+				CUST_NAME = #{custName,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null and sex != '' ">
+				SEX = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="nationaity != null and nationaity != '' ">
+				NATIONAITY = #{nationaity,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null and age != '' ">
+				AGE = #{age},
+			</if>
+			<if test="certifiType != null and certifiType != '' ">
+				CERTIFI_TYPE = #{certifiType,jdbcType=VARCHAR},
+			</if>
+			<if test="certifiNo != null and certifiNo != '' ">
+				CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+			</if>
+			<if test="housePhone != null and housePhone != '' ">
+				HOUSE_PHONE = #{housePhone,jdbcType=VARCHAR},
+			</if>
+			<if test="workCompany != null and workCompany != '' ">
+				WORK_COMPANY = #{workCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="officeTel != null and officeTel != '' ">
+				OFFICE_TEL = #{officeTel,jdbcType=VARCHAR},
+			</if>
+			<if test="mobileNo != null and mobileNo != '' ">
+				MOBILE_NO = #{mobileNo},
+			</if>
+			<if test="applyCard != null and applyCard != '' ">
+				APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+			</if>
+			<if test="policeStatus != null and policeStatus != '' ">
+				POLICE_STATUS = #{policeStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where APP_ID like '${appId}%'
+	</update>
+	
+	<select id="queryBizInpApplC1" parameterType="java.lang.String"
+		resultMap="BaseResult">
+		select 
+		C1_CNAME,C1_IDNBR
+		from
+		OPAS_BIZ_INP_APPL_C1
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<resultMap id="BaseCustByIdNbrResult" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+		<result column="APP_FLAG" property="appFlag" jdbcType="VARCHAR"/>
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="VARCHAR"/>
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR"/>
+		<result column="C1_IDNBR" property="c1Idnbr" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="queryBaseCustByIdNbr" parameterType="java.util.Map"
+		resultMap="BaseCustByIdNbrResult">
+		select 
+			APP_ID
+		from
+			OPAS_CUST_BASEINFO
+		where 
+			app_id &lt;&gt; #{appId,jdbcType=CHAR}
+  			and CERTIFI_NO = #{c1Idnbr,jdbcType=CHAR}
+	</select>
+</mapper>

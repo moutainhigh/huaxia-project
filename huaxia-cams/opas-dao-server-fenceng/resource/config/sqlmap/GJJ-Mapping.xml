@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GJJ">
+  <resultMap id="gjjBriefInfoResultMap" type="java.util.Map">
+		<result column="CELL_PHONE" property="cellphone" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="customer_Id" property="customerId" jdbcType="VARCHAR" />
+		<result column="LOCATION_CID" property="locationCid" jdbcType="VARCHAR" />
+		<result column="gjj_sid" property="gjjSid" jdbcType="VARCHAR" />
+		<result column="card" property="card" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="VARCHAR" />
+		<result column="fb_balance" property="fbBalance" jdbcType="VARCHAR" />
+		<result column="once_balance" property="onceBalance" jdbcType="VARCHAR" />
+		<result column="deposit_amount" property="depositAmount" jdbcType="VARCHAR" />
+		<result column="fb_deposit_amount" property="fbDepositAmount" jdbcType="VARCHAR" />
+		<result column="record_date" property="recordDate" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="COMPANY" property="company" jdbcType="VARCHAR" />
+		<result column="deposit_base" property="depositBase" jdbcType="VARCHAR" />
+		<result column="init_date" property="initDate" jdbcType="VARCHAR" />
+		<result column="start_date" property="startDate" jdbcType="VARCHAR" />
+		<result column="person_rate" property="personRate" jdbcType="VARCHAR" />
+		<result column="company_rate" property="companyRate" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="marriage" property="marriage" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="VARCHAR" />
+		<result column="company_id" property="companyId" jdbcType="VARCHAR" />
+		<result column="person_deposit_amount" property="personDepositAmount" jdbcType="VARCHAR" />
+		<result column="company_deposit_amount" property="companyDepositAmount" jdbcType="VARCHAR" />
+		<result column="deposit_rate" property="depositRate" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="deposit_base_analysis" property="depositBaseAnalysis" jdbcType="VARCHAR" />
+		<result column="record_date_analysis" property="recordDateAnalysis" jdbcType="VARCHAR" />
+		<result column="platform_refresh_time" property="platformRefreshTime" jdbcType="VARCHAR" />
+		<result column="cont_last_times" property="contLastTimes" jdbcType="VARCHAR" />
+		<result column="consis_months" property="consisMonths" jdbcType="VARCHAR" />
+		<result column="sum_times" property="sumTimes" jdbcType="VARCHAR" />
+		<result column="exist_months" property="existMonths" jdbcType="VARCHAR" />
+		<result column="platform_create_time" property="platformCreate_time" jdbcType="VARCHAR" />
+		<result column="deposit_amount_analysis" property="depositAmountAnalysis" jdbcType="VARCHAR" />
+		<result column="balance_analysis" property="balanceAnalysis" jdbcType="VARCHAR" />
+		<result column="platform_updated_time" property="platformUpdatedTime" jdbcType="VARCHAR" />
+		<result column="location_all" property="locationAll" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="deposit_rate_analysis" property="depositRateAnalysis" jdbcType="VARCHAR" />
+		<result column="gjj_status_analysis" property="gjjStatusAnalysis" jdbcType="VARCHAR" />
+		<result column="company_6m_arr" property="company6mArr" jdbcType="VARCHAR" />
+		<result column="company_12m_arr" property="company12mArr" jdbcType="VARCHAR" />
+		<result column="company_24m_arr" property="company24mArr" jdbcType="VARCHAR" />
+		<result column="created_date_arr" property="createdDateArr" jdbcType="VARCHAR" />
+		<result column="company_count_24m_analysis" property="companyCount24mAnalysis" jdbcType="VARCHAR" />
+		<result column="company_count_6m_analysis" property="companyCount6mAnalysis" jdbcType="VARCHAR" />
+		<result column="company_count_12m_analysis" property="companyCount12mAnalysis" jdbcType="VARCHAR" />
+		<result column="detail_latest_create_time" property="detailLatestCreateTime" jdbcType="VARCHAR" />
+		<result column="detail_latest_record_month" property="detailLatestRecordMonth" jdbcType="VARCHAR" />
+		<result column="detail_latest_record_date" property="detailLatestRecordDate" jdbcType="VARCHAR" />
+		<result column="detail_init_create_time" property="detailInitCreateTime" jdbcType="VARCHAR" />
+		<result column="detail_init_record_month" property="detailInitRecordMonth" jdbcType="VARCHAR" />
+		<result column="detail_init_record_date" property="detailInitRecordDate" jdbcType="VARCHAR" />
+		<result column="detail_times" property="detailTimes" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	 <resultMap id="gjjDetailResultMap" type="java.util.Map">
+		<result column="gjj_type" property="gjjType" jdbcType="VARCHAR" />
+		<result column="company" property="company" jdbcType="VARCHAR" />
+		<result column="record_date" property="recordDate" jdbcType="VARCHAR" />
+		<result column="op_type" property="opType" jdbcType="VARCHAR" />
+		<result column="record_month" property="recordMonth" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="VARCHAR" />
+		<result column="std_op_type" property="stdOpType" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="companyAnalDataResultMap" type="java.util.Map">
+		<result column="cont_last_times" property="contLastTimes" jdbcType="VARCHAR" />
+		<result column="company" property="company" jdbcType="VARCHAR" />
+		<result column="back_cont_last_times" property="backContLastTimes" jdbcType="VARCHAR" />
+		<result column="cont_max_times" property="contMaxTimes" jdbcType="VARCHAR" />
+		<result column="back_cont_max_times" property="backContMaxTimes" jdbcType="VARCHAR" />
+		<result column="sum_times" property="sumTimes" jdbcType="VARCHAR" />
+		<result column="back_sum_times" property="backSumTimes" jdbcType="VARCHAR" />
+		<result column="start_month" property="startMonth" jdbcType="VARCHAR" />
+		<result column="end_month" property="endMonth" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="gjjDetailAnalysisResultMap" type="java.util.Map">
+		<result column="company_6m_arr" property="company6mArr" jdbcType="VARCHAR" />
+		<result column="company_12m_arr" property="company12mArr" jdbcType="VARCHAR" />
+		<result column="company_24m_arr" property="company24mArr" jdbcType="VARCHAR" />
+		<result column="created_date_arr" property="createdDateArr" jdbcType="VARCHAR" />
+		<result column="company_count_24m_analysis" property="companyCount24mAnalysis" jdbcType="VARCHAR" />
+		<result column="company_count_6m_analysis" property="companyCount6mAnalysis" jdbcType="VARCHAR" />
+		<result column="company_count_12m_analysis" property="companyCount12mAnalysis" jdbcType="VARCHAR" />
+		<result column="detail_latest_create_time" property="detailLatestCreateTime" jdbcType="VARCHAR" />
+		<result column="detail_latest_record_month" property="detailLatestRecordMonth" jdbcType="VARCHAR" />
+		<result column="detail_latest_record_date" property="detailLatestRecordDate" jdbcType="VARCHAR" />
+		<result column="detail_init_create_time" property="detailInitCreateTime" jdbcType="VARCHAR" />
+		<result column="detail_init_record_month" property="detailInitRecordMonth" jdbcType="VARCHAR" />
+		<result column="detail_init_record_date" property="detailInitRecordDate" jdbcType="VARCHAR" />
+		<result column="detail_times" property="detailTimes" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="gjjLoadBriefResultMap" type="java.util.Map">
+		<result column="con_no" property="conNo" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="credit" property="credit" jdbcType="VARCHAR" />
+		<result column="period" property="period" jdbcType="VARCHAR" />
+		<result column="rate" property="rate" jdbcType="VARCHAR" />
+		<result column="warning_rate" property="warningRate" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="VARCHAR" />
+		<result column="fund" property="fund" jdbcType="VARCHAR" />
+		<result column="fund_date" property="fundDate" jdbcType="VARCHAR" />
+		<result column="bank" property="bank" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="start_date" property="startDate" jdbcType="VARCHAR" />
+		<result column="end_date" property="endDate" jdbcType="VARCHAR" />
+		<result column="record_date" property="recordDate" jdbcType="VARCHAR" />
+		<result column="due_amount" property="dueAmount" jdbcType="VARCHAR" />
+		<result column="pay_principle" property="payPrinciple" jdbcType="VARCHAR" />
+		<result column="pay_interest" property="payInterest" jdbcType="VARCHAR" />
+		<result column="past_due" property="pastDue" jdbcType="VARCHAR" />
+		<result column="past_interest" property="pastInterest" jdbcType="VARCHAR" />
+		<result column="past_principle" property="pastPrinciple" jdbcType="VARCHAR" />
+		<result column="past_period" property="pastPeriod" jdbcType="VARCHAR" />
+		<result column="history_past_period" property="historyPastPeriod" jdbcType="VARCHAR" />
+		<result column="history_past_amount" property="historyPastAmount" jdbcType="VARCHAR" />
+		<result column="assure_style" property="assureStyle" jdbcType="VARCHAR" />
+		<result column="house_type" property="houseType" jdbcType="VARCHAR" />
+		<result column="debit_account" property="debitAccount" jdbcType="VARCHAR" />
+		<result column="left_period" property="leftPeriod" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="gjjLoadDetailResultMap" type="java.util.Map">
+		<result column="record_date" property="recordDate" jdbcType="VARCHAR" />
+		<result column="op_type" property="opType" jdbcType="VARCHAR" />
+		<result column="record_month" property="recordMonth" jdbcType="VARCHAR" />
+		<result column="principle" property="principle" jdbcType="VARCHAR" />
+		<result column="interest" property="interest" jdbcType="VARCHAR" />
+		<result column="base" property="base" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="VARCHAR" />
+		<result column="bill_date" property="billDate" jdbcType="VARCHAR" />
+		<result column="warning_interest" property="warningInterest" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="deposit_type" property="depositType" jdbcType="VARCHAR" />
+		<result column="due_date" property="dueDate" jdbcType="VARCHAR" />
+		<result column="comments" property="comments" jdbcType="VARCHAR" />
+		<result column="period" property="period" jdbcType="VARCHAR" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<!-- 征信信息页面gjj展示 -->
+	<select id="queryGjjInfo" parameterType="java.lang.String" resultMap="gjjBriefInfoResultMap">	
+		select f.name,f.phone,f.deposit_amount,f.deposit_base,f.start_date,f.deposit_rate,
+             f.balance,f.company, s.consis_months,f.record_date
+        from jianbing_gjj_brief f left join jianbing_gjj_brief_analysis s 
+        on f.app_Id = s.app_id
+        where f.app_id = #{appId,jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 公积金数据 --> 
+	<select id="queryGjjBriefInfo" parameterType="java.lang.String" resultMap="gjjBriefInfoResultMap">	
+		select  f.name,f.ID,f.card,f.customer_id,f.balance,f.fb_balance,f.once_balance,
+			f.deposit_amount,f.fb_deposit_amount,f.record_date,f.status,f.company,
+			f.deposit_base,f.init_date,f.start_date,f.person_rate,f.company_rate,
+			f.gender,f.email,f.phone,f.marriage,f.address,f.birthday,f.company_id,
+			f.person_deposit_amount,f.company_deposit_amount,f.deposit_rate,f.location ,
+			s.deposit_base_analysis,s.record_date_analysis,s.platform_refresh_time,
+			s.cont_last_times,s.consis_months,s.sum_times,s.exist_months,s.platform_create_time,
+			s.deposit_amount_analysis,s.balance_analysis,s.platform_updated_time,s.location_all,
+			s.province,s.city,s.deposit_rate_analysis,s.gjj_status_analysis,
+			j.company_12m_arr,j.company_24m_arr,j.created_date_arr,j.company_count_24m_analysis,
+			j.company_count_6m_analysis,j.company_count_12m_analysis,j.detail_latest_create_time,
+			j.detail_latest_record_month,j.detail_latest_record_date,j.detail_init_create_time,
+			j.detail_init_record_month,j.detail_init_record_date,j.detail_times
+		from JIANBING_GJJ_BRIEF f left join jianbing_gjj_brief_analysis s on f.app_id = s.app_Id
+		left join JIANBING_GJJ_DETAIL_ANALYSIS j on j.app_id = f.app_id
+		 where f.app_id = #{appId,jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 公积金明细 --> 
+	<select id="queryGjjDetail" parameterType="java.lang.String" resultMap="gjjDetailResultMap">	
+		select gjj_type,company,record_date,op_type,     
+			 record_month,amount,balance,std_op_type 
+		from JIANBING_GJJ_DETAIL where app_id = #{appId,jdbcType=VARCHAR} 
+	</select>
+	<!-- 明细公司分析 --> 
+	<select id="queryCompanyAnalData" parameterType="java.lang.String" resultMap="companyAnalDataResultMap">	
+		select company,cont_last_times,back_cont_last_times,cont_max_times,
+       		 back_cont_max_times,sum_times,back_sum_times,start_month,end_month
+  		from JIANBING_COMPANY_ANAL_DATA where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 明细分析 --> 
+	<select id="queryGjjDetailAnalysis" parameterType="java.lang.String" resultMap="gjjDetailAnalysisResultMap">	
+		SELECT company_12m_arr,company_24m_arr,created_date_arr,company_count_24m_analysis,
+			company_count_6m_analysis,company_count_12m_analysis,detail_latest_create_time,
+			detail_latest_record_month,detail_latest_record_date,detail_init_create_time,
+			detail_init_record_month,detail_init_record_date,detail_times
+		FROM JIANBING_GJJ_DETAIL_ANALYSIS where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 贷款基本信息--> 
+	<select id="queryGjjLoadBrief" parameterType="java.lang.String" resultMap="gjjLoadBriefResultMap">	
+		select name,ID,con_no,status,credit,period,rate,warning_rate,balance,fund,fund_date,
+			bank,phone,address,start_date,end_date,record_date,due_amount,pay_principle,
+			pay_interest,past_due,past_interest,past_principle,past_period,history_past_period,
+			history_past_amount,assure_style,house_type,debit_account,left_period 
+		from JIANBING_GJJ_LOAN_BRIEF where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 贷款明细--> 
+	<select id="queryGjjLoadDetail" parameterType="java.lang.String" resultMap="gjjLoadDetailResultMap">	
+		 select record_date,op_type,record_month,principle,interest,
+           base,balance,bill_date,warning_interest,remark,deposit_type,
+           due_date,comments,period,uuid
+		from JIANBING_GJJ_LOAN_DETAIL where  app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

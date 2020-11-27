@@ -1,0 +1,1873 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FicoYdjBlaze" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.input.FicoYdjBlaze" >
+    <id column="YDJ_ID" property="ydjId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="CRT_TIME" property="crtTime" jdbcType="DATE" />
+    <result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR" />
+    <result column="IS_AML_FLG" property="isAmlFlg" jdbcType="VARCHAR" />
+    <result column="AREA_TYPE" property="areaType" jdbcType="VARCHAR" />
+    <result column="CONT_CUST_TYPE" property="contCustType" jdbcType="VARCHAR" />
+    <result column="FINAL_CUST_TYPE" property="finalCustType" jdbcType="VARCHAR" />
+    <result column="CIF_AGE" property="cifAge" jdbcType="DECIMAL" />
+    <result column="IS_GREY_CIF" property="isGreyCif" jdbcType="VARCHAR" />
+    <result column="WORK_AGE" property="workAge" jdbcType="DECIMAL" />
+    <result column="CDT_SCORE" property="cdtScore" jdbcType="DECIMAL" />
+    <result column="CDT_CARD_DEBT" property="cdtCardDebt" jdbcType="DECIMAL" />
+    <result column="REALY_M_INCOME" property="realyMIncome" jdbcType="DECIMAL" />
+    <result column="WAGE_FLOW_MINCOME" property="wageFlowMincome" jdbcType="DECIMAL" />
+    <result column="TAX_MINCOME" property="taxMincome" jdbcType="DECIMAL" />
+    <result column="JOB_MINCOME" property="jobMincome" jdbcType="DECIMAL" />
+    <result column="SOCIAL_SETY_MINCOME" property="socialSetyMincome" jdbcType="DECIMAL" />
+    <result column="PUB_ACLA_FUNDS_MINCOME" property="pubAclaFundsMincome" jdbcType="DECIMAL" />
+    <result column="SPOUSE_MINCOME" property="spouseMincome" jdbcType="DECIMAL" />
+    <result column="RENT_MINCOME" property="rentMincome" jdbcType="DECIMAL" />
+    <result column="TAX_LIST_MINCOME" property="taxListMincome" jdbcType="DECIMAL" />
+    <result column="SYS_PRO_MINCOME" property="sysProMincome" jdbcType="DECIMAL" />
+    <result column="WAGE_FLOW_RATE" property="wageFlowRate" jdbcType="DECIMAL" />
+    <result column="WAGE_FLOW_DUCT" property="wageFlowDuct" jdbcType="DECIMAL" />
+    <result column="JOB_RATE" property="jobRate" jdbcType="DECIMAL" />
+    <result column="JOB_DUCT" property="jobDuct" jdbcType="DECIMAL" />
+    <result column="TAX_RATE" property="taxRate" jdbcType="DECIMAL" />
+    <result column="TAX_DUCT" property="taxDuct" jdbcType="DECIMAL" />
+    <result column="PUB_ACLA_FUNDS_RATIO" property="pubAclaFundsRatio" jdbcType="DECIMAL" />
+    <result column="PUB_ACLA_FUNDS_UP" property="pubAclaFundsUp" jdbcType="DECIMAL" />
+    <result column="WF_PAF_AMT" property="wfPafAmt" jdbcType="DECIMAL" />
+    <result column="WF_INCOME_AMT" property="wfIncomeAmt" jdbcType="DECIMAL" />
+    <result column="TAX_PAF_AMT" property="taxPafAmt" jdbcType="DECIMAL" />
+    <result column="TAX_INCOME_AMT" property="taxIncomeAmt" jdbcType="DECIMAL" />
+    <result column="JOB_BF_MINCOME" property="jobBfMincome" jdbcType="DECIMAL" />
+    <result column="JOB_AF_MINCOME" property="jobAfMincome" jdbcType="DECIMAL" />
+    <result column="TAX_THRESHOLD" property="taxThreshold" jdbcType="DECIMAL" />
+    <result column="PROPOSED_LMT" property="proposedLmt" jdbcType="DECIMAL" />
+    <result column="PB_UN_PLGE_LOAN_DEBT" property="pbUnPlgeLoanDebt" jdbcType="DECIMAL" />
+    <result column="PB_PLGE_LOAN_DEBT" property="pbPlgeLoanDebt" jdbcType="DECIMAL" />
+    <result column="PB_CDT_CARD_EXP" property="pbCdtCardExp" jdbcType="DECIMAL" />
+    <result column="PB_UN_PLGE_LOAN_EXP" property="pbUnPlgeLoanExp" jdbcType="DECIMAL" />
+    <result column="LOAN_LMT" property="loanLmt" jdbcType="DECIMAL" />
+    <result column="CIF_INCOME_MUL" property="cifIncomeMul" jdbcType="DECIMAL" />
+    <result column="CDT_LOAN_SC" property="cdtLoanSc" jdbcType="DECIMAL" />
+    <result column="DTI_LMT_UP" property="dtiLmtUp" jdbcType="DECIMAL" />
+    <result column="CIF_DTI_UP" property="cifDtiUp" jdbcType="DECIMAL" />
+    <result column="UN_PLGE_LOAN_DEBT" property="unPlgeLoanDebt" jdbcType="DECIMAL" />
+    <result column="UN_PLGE_EXP" property="unPlgeExp" jdbcType="DECIMAL" />
+    <result column="PLGE_LOAN_DEBT" property="plgeLoanDebt" jdbcType="DECIMAL" />
+    <result column="DTI_VIOL_LMT_UP" property="dtiViolLmtUp" jdbcType="DECIMAL" />
+    <result column="CIF_DTI_VIOL_UP" property="cifDtiViolUp" jdbcType="DECIMAL" />
+    <result column="CP_DTI_LMT_UP" property="cpDtiLmtUp" jdbcType="DECIMAL" />
+    <result column="CP_DTI_VIOL_LMT_UP" property="cpDtiViolLmtUp" jdbcType="DECIMAL" />
+    <result column="OPEN_LMT_UP" property="openLmtUp" jdbcType="DECIMAL" />
+    <result column="OPEN_VIOL_LMT_UP" property="openViolLmtUp" jdbcType="DECIMAL" />
+    <result column="H_FINAN_CIF_LMT" property="hFinanCifLmt" jdbcType="DECIMAL" />
+    <result column="MUE_VIOL_LMT_UP" property="mueViolLmtUp" jdbcType="DECIMAL" />
+    <result column="RANK_INCOME" property="rankIncome" jdbcType="DECIMAL" />
+    <result column="CIF_LMT_DOWN" property="cifLmtDown" jdbcType="DECIMAL" />
+    <result column="IRB_LOAN_SC" property="irbLoanSc" jdbcType="DECIMAL" />
+    <result column="FOUNDING_Y" property="foundingY" jdbcType="DECIMAL" />
+    <result column="HOUSE_CTFN" property="houseCtfn" jdbcType="VARCHAR" />
+    <result column="CAR_CTFN" property="carCtfn" jdbcType="VARCHAR" />
+    <result column="VIOL_LMT_UP" property="violLmtUp" jdbcType="DECIMAL" />
+    <result column="TRGER_RULE_CODE" property="trgerRuleCode" jdbcType="VARCHAR" />
+    <result column="UN_PLGE_DTI" property="unPlgeDti" jdbcType="DECIMAL" />
+    <result column="CP_DTI" property="cpDti" jdbcType="DECIMAL" />
+    <result column="MUE" property="mue" jdbcType="DECIMAL" />
+    <result column="DITY_NAME_TYPE" property="dityNameType" jdbcType="VARCHAR" />
+    <result column="APPR_RST" property="apprRst" jdbcType="VARCHAR" />
+    <result column="APPR_RISK_RST" property="apprRiskRst" jdbcType="VARCHAR" />
+    <result column="IS_HAVE_PBOC" property="isHavePboc" jdbcType="VARCHAR" />
+    <result column="TT_PAY_RATE" property="ttPayRate" jdbcType="DECIMAL" />
+    <result column="PAY" property="pay" jdbcType="DECIMAL" />
+    <result column="PAY_DUE" property="payDue" jdbcType="DECIMAL" />
+    <result column="REVOLVING_LABEL" property="revolvingLabel" jdbcType="VARCHAR" />
+    <result column="CIF_LABEL" property="cifLabel" jdbcType="VARCHAR" />
+    <result column="LOWEST_PAY_AMT_LABEL" property="lowestPayAmtLabel" jdbcType="VARCHAR" />
+    <result column="FREE_PAY_TERM_LABEL" property="freePayTermLabel" jdbcType="VARCHAR" />
+    <result column="APP_SCROE" property="appScroe" jdbcType="DECIMAL" />
+    <result column="IS_HAVE_PB_DATA" property="isHavePbData" jdbcType="VARCHAR" />
+    <result column="LOANCARD12MACTIVECOUNT" property="loancard12mactivecount" jdbcType="DECIMAL" />
+    <result column="LOAN12MACTIVECOUNT" property="loan12mactivecount" jdbcType="DECIMAL" />
+    <result column="STANDARDLOANCARD12MACTIVECOUNT" property="standardloancard12mactivecount" jdbcType="DECIMAL" />
+    <result column="MACTIVETHAN3CARDAMT12" property="mactivethan3cardamt12" jdbcType="DECIMAL" />
+    <result column="MACTIVETHAN3CARDOVERDRAFT12" property="mactivethan3cardoverdraft12" jdbcType="DECIMAL" />
+    <result column="LOANCARD12MUNREPAYMENTCOUNT" property="loancard12munrepaymentcount" jdbcType="DECIMAL" />
+    <result column="LOANCARDMAXACCTAGE" property="loancardmaxacctage" jdbcType="DECIMAL" />
+    <result column="CREDITCARD24MMAXARCOUNT" property="creditcard24mmaxarcount" jdbcType="DECIMAL" />
+    <result column="OTHERLOANCARDMAXSECAMT" property="otherloancardmaxsecamt" jdbcType="DECIMAL" />
+    <result column="LOAN24MMAXARCOUNT" property="loan24mmaxarcount" jdbcType="DECIMAL" />
+    <result column="CARDORLOANACCTSTATUSABL" property="cardorloanacctstatusabl" jdbcType="VARCHAR" />
+    <result column="CREDITCARD12MDUEABL" property="creditcard12mdueabl" jdbcType="VARCHAR" />
+    <result column="CREDITCARD3MDUEABL" property="creditcard3mdueabl" jdbcType="VARCHAR" />
+    <result column="CARDORLOAN3MDUEABL" property="cardorloan3mdueabl" jdbcType="VARCHAR" />
+    <result column="LOANCARDDUEABL" property="loancarddueabl" jdbcType="VARCHAR" />
+    <result column="LOANDUEABL" property="loandueabl" jdbcType="VARCHAR" />
+    <result column="LOAN12MDUEABL" property="loan12mdueabl" jdbcType="VARCHAR" />
+    <result column="LOAN3MDUEABL" property="loan3mdueabl" jdbcType="VARCHAR" />
+    <result column="NEWLOANCARDACCTCOUNTABL" property="newloancardacctcountabl" jdbcType="VARCHAR" />
+    <result column="LOANCARDAMTUSERATIOABL" property="loancardamtuseratioabl" jdbcType="VARCHAR" />
+    <result column="CARDLOANSELECTCOUNTABL" property="cardloanselectcountabl" jdbcType="VARCHAR" />
+    <result column="PAYMENTMONTHAMT" property="paymentmonthamt" jdbcType="DECIMAL" />
+    <result column="IS_ACTIVE_CARD" property="isActiveCard" jdbcType="VARCHAR" />
+    <result column="ACTIVE_CARD_SHAR_AMT" property="activeCardSharAmt" jdbcType="DECIMAL" />
+    <result column="AMTUSERATIO" property="amtuseratio" jdbcType="DECIMAL" />
+    <result column="CREDITCARDMAXDUECOUNT" property="creditcardmaxduecount" jdbcType="DECIMAL" />
+    <result column="LOANMAXDUESTATUS" property="loanmaxduestatus" jdbcType="VARCHAR" />
+    <result column="CIFMUSTPROVEMATERIAL" property="cifmustprovematerial" jdbcType="VARCHAR" />
+    <result column="CIFMUSTPROVEMATERIALREMARK" property="cifmustprovematerialremark" jdbcType="VARCHAR" />
+    <result column="PRODUCTAMTDOWN" property="productamtdown" jdbcType="DECIMAL" />
+    <result column="REF_UN_PLGE_DTI" property="refUnPlgeDti" jdbcType="DECIMAL" />
+    <result column="REF_CP_DTI" property="refCpDti" jdbcType="DECIMAL" />
+    <result column="REF_MUE" property="refMue" jdbcType="DECIMAL" />
+    <result column="UN_PLGE_DTI_RANGE" property="unPlgeDtiRange" jdbcType="DECIMAL" />
+    <result column="CP_DTI_RANGE" property="cpDtiRange" jdbcType="DECIMAL" />
+    <result column="UN_PLGE_DTI_RANGE_LV" property="unPlgeDtiRangeLv" jdbcType="DECIMAL" />
+    <result column="CP_DTI_RANGE_LV" property="cpDtiRangeLv" jdbcType="DECIMAL" />
+    <result column="MUE_LV" property="mueLv" jdbcType="DECIMAL" />
+    <result column="APPR_MATRIX" property="apprMatrix" jdbcType="VARCHAR" />
+    <result column="POLICY_CD" property="policyCd" jdbcType="VARCHAR" />
+    <result column="REJECT_CD" property="rejectCd" jdbcType="VARCHAR" />
+    <result column="VIOLATION_CD" property="violationCd" jdbcType="VARCHAR" />
+    <result column="HOUSE_TOTAL_RATIO" property="houseTotalRatio" jdbcType="DECIMAL" />
+    <result column="WAGE_INCOME_RATE" property="wageIncomeRate" jdbcType="DECIMAL" />
+    <result column="WAGE_INCOME_DUCT" property="wageIncomeDuct" jdbcType="DECIMAL" />
+    <result column="TAX_INCOME_RATE" property="taxIncomeRate" jdbcType="DECIMAL" />
+    <result column="TAX_INCOME_DUCT" property="taxIncomeDuct" jdbcType="DECIMAL" />
+    <result column="WAGE_INCOME_AVG_SUM" property="wageIncomeAvgSum" jdbcType="DECIMAL" />
+    <result column="TAX_INCOME_AVG_SUM" property="taxIncomeAvgSum" jdbcType="DECIMAL" />
+    <result column="TAC_TYPE" property="tacType" jdbcType="VARCHAR" />
+    <result column="FQZ_RST" property="fqzRst" jdbcType="VARCHAR" />
+    <result column="FQZ_RST_DESP" property="fqzRstDesp" jdbcType="VARCHAR" />
+    <result column="IS_SPECIAL_CUST" property="isSpecialCust" jdbcType="VARCHAR" />
+    <result column="EDU_PROV_RST" property="eduProvRst" jdbcType="VARCHAR" />
+    <result column="DECISION_RESULT" property="decisionResult" jdbcType="VARCHAR" />
+    <result column="DECISION_DESP" property="decisionDesp" jdbcType="VARCHAR" />
+    <result column="SAMP_M_INCOME" property="sampMIncome" jdbcType="DECIMAL" />
+    <result column="CIF_CP_DTI_UP" property="cifCpDtiUp" jdbcType="DECIMAL" />
+    <result column="CIF_CP_DTI_VIOL_UP" property="cifCpDtiViolUp" jdbcType="DECIMAL" />
+    <result column="CIF_OPEN_LMT_UP" property="cifOpenLmtUp" jdbcType="DECIMAL" />
+    <result column="CIF_OPEN_LMT_VIOL_UP" property="cifOpenLmtViolUp" jdbcType="DECIMAL" />
+    <result column="VIOL_REF_LMT" property="violRefLmt" jdbcType="DECIMAL" />
+    <result column="GENDER_CD" property="genderCd" jdbcType="VARCHAR" />
+    <result column="INTEREST_RATE_PRODUCT" property="interestRateProduct" jdbcType="VARCHAR" />
+    
+    <result column="NUMBER_READ" property="numberRead" jdbcType="VARCHAR" />
+    <result column="CREDIT_DECISION_RESULT" property="creditDecisionResult" jdbcType="VARCHAR" />
+    <result column="CREDIT_DECISION_DESC" property="creditDecisionDesc" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_A" property="custLevelTagA" jdbcType="VARCHAR" />
+    <result column="RATE_NAME" property="rateName" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_B" property="custLevelTagB" jdbcType="VARCHAR" />
+    <result column="REPAY_RATIO_VALUE" property="repayRationValue" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_C" property="custLevelTagC" jdbcType="VARCHAR" />
+    <result column="REPAY_FREE_VALUE" property="repayFreeValue" jdbcType="VARCHAR" />
+    <result column="CUST_LEVEL_TAG_D" property="custLevelTagD" jdbcType="VARCHAR" /> 
+    <result column="RATE_VALUE_LOSE_DATE" property="rateValueLoseDate" jdbcType="VARCHAR" />
+    <result column="MATCH_INCOME" property="matchIncome" jdbcType="VARCHAR" />
+    <result column="WF_RESULT" property="wfResult" jdbcType="VARCHAR" />
+    <result column="DL_AMT" property="dlAmt" jdbcType="DECIMAL" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    YDJ_ID, APP_ID, CRT_TIME, PRODUCT_TYPE, IS_AML_FLG, AREA_TYPE, CONT_CUST_TYPE, FINAL_CUST_TYPE, 
+    CIF_AGE, IS_GREY_CIF, WORK_AGE, CDT_SCORE, CDT_CARD_DEBT, REALY_M_INCOME, WAGE_FLOW_MINCOME, 
+    TAX_MINCOME, JOB_MINCOME, SOCIAL_SETY_MINCOME, PUB_ACLA_FUNDS_MINCOME, SPOUSE_MINCOME, 
+    RENT_MINCOME, TAX_LIST_MINCOME, SYS_PRO_MINCOME, WAGE_FLOW_RATE, WAGE_FLOW_DUCT, 
+    JOB_RATE, JOB_DUCT, TAX_RATE, TAX_DUCT, PUB_ACLA_FUNDS_RATIO, PUB_ACLA_FUNDS_UP, 
+    WF_PAF_AMT, WF_INCOME_AMT, TAX_PAF_AMT, TAX_INCOME_AMT, JOB_BF_MINCOME, JOB_AF_MINCOME, 
+    TAX_THRESHOLD, PROPOSED_LMT, PB_UN_PLGE_LOAN_DEBT, PB_PLGE_LOAN_DEBT, PB_CDT_CARD_EXP, 
+    PB_UN_PLGE_LOAN_EXP, LOAN_LMT, CIF_INCOME_MUL, CDT_LOAN_SC, DTI_LMT_UP, CIF_DTI_UP, 
+    UN_PLGE_LOAN_DEBT, UN_PLGE_EXP, PLGE_LOAN_DEBT, DTI_VIOL_LMT_UP, CIF_DTI_VIOL_UP, 
+    CP_DTI_LMT_UP, CP_DTI_VIOL_LMT_UP, OPEN_LMT_UP, OPEN_VIOL_LMT_UP, H_FINAN_CIF_LMT, 
+    MUE_VIOL_LMT_UP, RANK_INCOME, CIF_LMT_DOWN, IRB_LOAN_SC, FOUNDING_Y, HOUSE_CTFN, 
+    CAR_CTFN, VIOL_LMT_UP, TRGER_RULE_CODE, UN_PLGE_DTI, CP_DTI, MUE, DITY_NAME_TYPE, 
+    APPR_RST, APPR_RISK_RST, IS_HAVE_PBOC, TT_PAY_RATE, PAY, PAY_DUE, REVOLVING_LABEL, 
+    CIF_LABEL, LOWEST_PAY_AMT_LABEL, FREE_PAY_TERM_LABEL, APP_SCROE, IS_HAVE_PB_DATA, 
+    LOANCARD12MACTIVECOUNT, LOAN12MACTIVECOUNT, STANDARDLOANCARD12MACTIVECOUNT, MACTIVETHAN3CARDAMT12, 
+    MACTIVETHAN3CARDOVERDRAFT12, LOANCARD12MUNREPAYMENTCOUNT, LOANCARDMAXACCTAGE, CREDITCARD24MMAXARCOUNT, 
+    OTHERLOANCARDMAXSECAMT, LOAN24MMAXARCOUNT, CARDORLOANACCTSTATUSABL, CREDITCARD12MDUEABL, 
+    CREDITCARD3MDUEABL, CARDORLOAN3MDUEABL, LOANCARDDUEABL, LOANDUEABL, LOAN12MDUEABL, 
+    LOAN3MDUEABL, NEWLOANCARDACCTCOUNTABL, LOANCARDAMTUSERATIOABL, CARDLOANSELECTCOUNTABL, 
+    PAYMENTMONTHAMT, IS_ACTIVE_CARD, ACTIVE_CARD_SHAR_AMT, AMTUSERATIO, CREDITCARDMAXDUECOUNT, 
+    LOANMAXDUESTATUS, CIFMUSTPROVEMATERIAL, CIFMUSTPROVEMATERIALREMARK, PRODUCTAMTDOWN, 
+    REF_UN_PLGE_DTI, REF_CP_DTI, REF_MUE, UN_PLGE_DTI_RANGE, CP_DTI_RANGE, UN_PLGE_DTI_RANGE_LV, 
+    CP_DTI_RANGE_LV, MUE_LV, APPR_MATRIX, POLICY_CD, REJECT_CD, VIOLATION_CD, HOUSE_TOTAL_RATIO, 
+    WAGE_INCOME_RATE, WAGE_INCOME_DUCT, TAX_INCOME_RATE, TAX_INCOME_DUCT, WAGE_INCOME_AVG_SUM, 
+    TAX_INCOME_AVG_SUM, TAC_TYPE, FQZ_RST, FQZ_RST_DESP, IS_SPECIAL_CUST, EDU_PROV_RST, 
+    DECISION_RESULT, DECISION_DESP, SAMP_M_INCOME, CIF_CP_DTI_UP, CIF_CP_DTI_VIOL_UP, 
+    CIF_OPEN_LMT_UP, CIF_OPEN_LMT_VIOL_UP, VIOL_REF_LMT, GENDER_CD, INTEREST_RATE_PRODUCT
+    from OPAS_FICO_YDJ_BLAZE
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectSystemDecisionByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select * from (select s.APP_ID,
+	       s.CRT_TIME,
+	       s.app_scroe,
+	       e.NUMBER_READ,
+	       s.CDT_SCORE,
+	       s.DECISION_RESULT,
+	       s.DECISION_DESP,
+	       s.PROPOSED_LMT,
+	       s.TAC_TYPE,
+	       o.CREDIT_DECISION_RESULT,
+	       o.CREDIT_DECISION_DESC,
+	       s.VIOL_LMT_UP,
+	       s.VIOL_REF_LMT,
+	       s.TAX_LIST_MINCOME,
+	       s.UN_PLGE_DTI,
+	       s.CP_DTI,
+	       s.REF_MUE,
+	       s.MUE,
+	       s.Reject_Cd,
+	       s.SAMP_M_INCOME,
+	       s.JOB_BF_MINCOME,
+	       w.MATCH_INCOME,
+	       s.CIF_LABEL as cust_level_tag_a,
+	       s.RATE_CODE as RATE_NAME,
+	       s.LOWEST_PAY_AMT_LABEL as cust_level_tag_b,
+	       return_Value(s.APP_ID,'2',s.LOWEST_PAY_AMT_LABEL) as REPAY_RATIO_VALUE,
+	       s.FREE_PAY_TERM_LABEL as cust_level_tag_c,
+	       return_Value(s.APP_ID,'3',s.FREE_PAY_TERM_LABEL) as repay_free_value,
+	       s.RATE_CODE_VALID_TIME as cust_level_tag_d,
+	       return_Value(s.APP_ID,'4','LLDMSXRQ') as RATE_VALUE_LOSE_DATE,
+	       s.DL_AMT
+	  from  opas_biz_inp_appl_c1 t 
+	  	  left join OPAS_FICO_YDJ_BLAZE s on t.app_id = s.app_id
+		  left join OPAS_PBOC_CREDIT_CUE e on  t.APP_ID = e.app_id 
+		  left join OPAS_YDJ_SYSRESULT_INFO o on t.APP_ID =o.app_id 
+	      left join OPAS_YDJ_ENHANCE_COLLECT k on t.app_id = k.app_id
+	      left join OPAS_YDJ_INDUSTRY_INCOMEMACHT w on (
+	           w.city_code = substr(s.app_id,9, 2)
+	           and w.industry_code = k.INDUSTRY_CODE
+	           and w.job_code = k.position_code
+	           and w.UNION_TYPE = t.C1_COKIND
+	           and w.EDUCATION = t.C1_Educls)
+      where s.APP_ID = #{appId,jdbcType=VARCHAR} 
+    	order by e.crt_time desc,e.batch_date desc) where rownum = 1
+  </select>
+  
+  <select id="selectByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    YDJ_ID, APP_ID, CRT_TIME, PRODUCT_TYPE, IS_AML_FLG, AREA_TYPE, CONT_CUST_TYPE, FINAL_CUST_TYPE, 
+    CIF_AGE, IS_GREY_CIF, WORK_AGE, CDT_SCORE, CDT_CARD_DEBT, REALY_M_INCOME, WAGE_FLOW_MINCOME, 
+    TAX_MINCOME, JOB_MINCOME, SOCIAL_SETY_MINCOME, PUB_ACLA_FUNDS_MINCOME, SPOUSE_MINCOME, 
+    RENT_MINCOME, TAX_LIST_MINCOME, SYS_PRO_MINCOME, WAGE_FLOW_RATE, WAGE_FLOW_DUCT, 
+    JOB_RATE, JOB_DUCT, TAX_RATE, TAX_DUCT, PUB_ACLA_FUNDS_RATIO, PUB_ACLA_FUNDS_UP, 
+    WF_PAF_AMT, WF_INCOME_AMT, TAX_PAF_AMT, TAX_INCOME_AMT, JOB_BF_MINCOME, JOB_AF_MINCOME, 
+    TAX_THRESHOLD, PROPOSED_LMT, PB_UN_PLGE_LOAN_DEBT, PB_PLGE_LOAN_DEBT, PB_CDT_CARD_EXP, 
+    PB_UN_PLGE_LOAN_EXP, LOAN_LMT, CIF_INCOME_MUL, CDT_LOAN_SC, DTI_LMT_UP, CIF_DTI_UP, 
+    UN_PLGE_LOAN_DEBT, UN_PLGE_EXP, PLGE_LOAN_DEBT, DTI_VIOL_LMT_UP, CIF_DTI_VIOL_UP, 
+    CP_DTI_LMT_UP, CP_DTI_VIOL_LMT_UP, OPEN_LMT_UP, OPEN_VIOL_LMT_UP, H_FINAN_CIF_LMT, 
+    MUE_VIOL_LMT_UP, RANK_INCOME, CIF_LMT_DOWN, IRB_LOAN_SC, FOUNDING_Y, HOUSE_CTFN, 
+    CAR_CTFN, VIOL_LMT_UP, TRGER_RULE_CODE, UN_PLGE_DTI, CP_DTI, MUE, DITY_NAME_TYPE, 
+    APPR_RST, APPR_RISK_RST, IS_HAVE_PBOC, TT_PAY_RATE, PAY, PAY_DUE, REVOLVING_LABEL, 
+    CIF_LABEL, LOWEST_PAY_AMT_LABEL, FREE_PAY_TERM_LABEL, APP_SCROE, IS_HAVE_PB_DATA, 
+    LOANCARD12MACTIVECOUNT, LOAN12MACTIVECOUNT, STANDARDLOANCARD12MACTIVECOUNT, MACTIVETHAN3CARDAMT12, 
+    MACTIVETHAN3CARDOVERDRAFT12, LOANCARD12MUNREPAYMENTCOUNT, LOANCARDMAXACCTAGE, CREDITCARD24MMAXARCOUNT, 
+    OTHERLOANCARDMAXSECAMT, LOAN24MMAXARCOUNT, CARDORLOANACCTSTATUSABL, CREDITCARD12MDUEABL, 
+    CREDITCARD3MDUEABL, CARDORLOAN3MDUEABL, LOANCARDDUEABL, LOANDUEABL, LOAN12MDUEABL, 
+    LOAN3MDUEABL, NEWLOANCARDACCTCOUNTABL, LOANCARDAMTUSERATIOABL, CARDLOANSELECTCOUNTABL, 
+    PAYMENTMONTHAMT, IS_ACTIVE_CARD, ACTIVE_CARD_SHAR_AMT, AMTUSERATIO, CREDITCARDMAXDUECOUNT, 
+    LOANMAXDUESTATUS, CIFMUSTPROVEMATERIAL, CIFMUSTPROVEMATERIALREMARK, PRODUCTAMTDOWN, 
+    REF_UN_PLGE_DTI, REF_CP_DTI, REF_MUE, UN_PLGE_DTI_RANGE, CP_DTI_RANGE, UN_PLGE_DTI_RANGE_LV, 
+    CP_DTI_RANGE_LV, MUE_LV, APPR_MATRIX, POLICY_CD, REJECT_CD, VIOLATION_CD, HOUSE_TOTAL_RATIO, 
+    WAGE_INCOME_RATE, WAGE_INCOME_DUCT, TAX_INCOME_RATE, TAX_INCOME_DUCT, WAGE_INCOME_AVG_SUM, 
+    TAX_INCOME_AVG_SUM, TAC_TYPE, FQZ_RST, FQZ_RST_DESP, IS_SPECIAL_CUST, EDU_PROV_RST, 
+    DECISION_RESULT, DECISION_DESP, SAMP_M_INCOME, CIF_CP_DTI_UP, CIF_CP_DTI_VIOL_UP, 
+    CIF_OPEN_LMT_UP, CIF_OPEN_LMT_VIOL_UP, VIOL_REF_LMT, GENDER_CD, INTEREST_RATE_PRODUCT,WF_RESULT,
+    RATE_CODE as RATE_NAME,DL_AMT
+    from OPAS_FICO_YDJ_BLAZE
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_FICO_YDJ_BLAZE
+    where YDJ_ID = #{ydjId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.input.FicoYdjBlaze" >
+    insert into OPAS_FICO_YDJ_BLAZE (YDJ_ID, APP_ID, CRT_TIME, 
+      PRODUCT_TYPE, IS_AML_FLG, AREA_TYPE, 
+      CONT_CUST_TYPE, FINAL_CUST_TYPE, CIF_AGE, 
+      IS_GREY_CIF, WORK_AGE, CDT_SCORE, 
+      CDT_CARD_DEBT, REALY_M_INCOME, WAGE_FLOW_MINCOME, 
+      TAX_MINCOME, JOB_MINCOME, SOCIAL_SETY_MINCOME, 
+      PUB_ACLA_FUNDS_MINCOME, SPOUSE_MINCOME, RENT_MINCOME, 
+      TAX_LIST_MINCOME, SYS_PRO_MINCOME, WAGE_FLOW_RATE, 
+      WAGE_FLOW_DUCT, JOB_RATE, JOB_DUCT, 
+      TAX_RATE, TAX_DUCT, PUB_ACLA_FUNDS_RATIO, 
+      PUB_ACLA_FUNDS_UP, WF_PAF_AMT, WF_INCOME_AMT, 
+      TAX_PAF_AMT, TAX_INCOME_AMT, JOB_BF_MINCOME, 
+      JOB_AF_MINCOME, TAX_THRESHOLD, PROPOSED_LMT, 
+      PB_UN_PLGE_LOAN_DEBT, PB_PLGE_LOAN_DEBT, PB_CDT_CARD_EXP, 
+      PB_UN_PLGE_LOAN_EXP, LOAN_LMT, CIF_INCOME_MUL, 
+      CDT_LOAN_SC, DTI_LMT_UP, CIF_DTI_UP, 
+      UN_PLGE_LOAN_DEBT, UN_PLGE_EXP, PLGE_LOAN_DEBT, 
+      DTI_VIOL_LMT_UP, CIF_DTI_VIOL_UP, CP_DTI_LMT_UP, 
+      CP_DTI_VIOL_LMT_UP, OPEN_LMT_UP, OPEN_VIOL_LMT_UP, 
+      H_FINAN_CIF_LMT, MUE_VIOL_LMT_UP, RANK_INCOME, 
+      CIF_LMT_DOWN, IRB_LOAN_SC, FOUNDING_Y, 
+      HOUSE_CTFN, CAR_CTFN, VIOL_LMT_UP, 
+      TRGER_RULE_CODE, UN_PLGE_DTI, CP_DTI, 
+      MUE, DITY_NAME_TYPE, APPR_RST, 
+      APPR_RISK_RST, IS_HAVE_PBOC, TT_PAY_RATE, 
+      PAY, PAY_DUE, REVOLVING_LABEL, 
+      CIF_LABEL, LOWEST_PAY_AMT_LABEL, FREE_PAY_TERM_LABEL, 
+      APP_SCROE, IS_HAVE_PB_DATA, LOANCARD12MACTIVECOUNT, 
+      LOAN12MACTIVECOUNT, STANDARDLOANCARD12MACTIVECOUNT, 
+      MACTIVETHAN3CARDAMT12, MACTIVETHAN3CARDOVERDRAFT12, 
+      LOANCARD12MUNREPAYMENTCOUNT, LOANCARDMAXACCTAGE, 
+      CREDITCARD24MMAXARCOUNT, OTHERLOANCARDMAXSECAMT, 
+      LOAN24MMAXARCOUNT, CARDORLOANACCTSTATUSABL, 
+      CREDITCARD12MDUEABL, CREDITCARD3MDUEABL, 
+      CARDORLOAN3MDUEABL, LOANCARDDUEABL, LOANDUEABL, 
+      LOAN12MDUEABL, LOAN3MDUEABL, NEWLOANCARDACCTCOUNTABL, 
+      LOANCARDAMTUSERATIOABL, CARDLOANSELECTCOUNTABL, 
+      PAYMENTMONTHAMT, IS_ACTIVE_CARD, ACTIVE_CARD_SHAR_AMT, 
+      AMTUSERATIO, CREDITCARDMAXDUECOUNT, LOANMAXDUESTATUS, 
+      CIFMUSTPROVEMATERIAL, CIFMUSTPROVEMATERIALREMARK, 
+      PRODUCTAMTDOWN, REF_UN_PLGE_DTI, REF_CP_DTI, 
+      REF_MUE, UN_PLGE_DTI_RANGE, CP_DTI_RANGE, 
+      UN_PLGE_DTI_RANGE_LV, CP_DTI_RANGE_LV, MUE_LV, 
+      APPR_MATRIX, POLICY_CD, REJECT_CD, 
+      VIOLATION_CD, HOUSE_TOTAL_RATIO, WAGE_INCOME_RATE, 
+      WAGE_INCOME_DUCT, TAX_INCOME_RATE, TAX_INCOME_DUCT, 
+      WAGE_INCOME_AVG_SUM, TAX_INCOME_AVG_SUM, TAC_TYPE, 
+      FQZ_RST, FQZ_RST_DESP, IS_SPECIAL_CUST, 
+      EDU_PROV_RST, DECISION_RESULT, DECISION_DESP, 
+      SAMP_M_INCOME, CIF_CP_DTI_UP, CIF_CP_DTI_VIOL_UP, 
+      CIF_OPEN_LMT_UP, CIF_OPEN_LMT_VIOL_UP, VIOL_REF_LMT, 
+      GENDER_CD, INTEREST_RATE_PRODUCT)
+    values (#{ydjId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{crtTime,jdbcType=VARCHAR}, 
+      #{productType,jdbcType=VARCHAR}, #{isAmlFlg,jdbcType=VARCHAR}, #{areaType,jdbcType=VARCHAR}, 
+      #{contCustType,jdbcType=VARCHAR}, #{finalCustType,jdbcType=VARCHAR}, #{cifAge,jdbcType=DECIMAL}, 
+      #{isGreyCif,jdbcType=VARCHAR}, #{workAge,jdbcType=DECIMAL}, #{cdtScore,jdbcType=DECIMAL}, 
+      #{cdtCardDebt,jdbcType=DECIMAL}, #{realyMIncome,jdbcType=DECIMAL}, #{wageFlowMincome,jdbcType=DECIMAL}, 
+      #{taxMincome,jdbcType=DECIMAL}, #{jobMincome,jdbcType=DECIMAL}, #{socialSetyMincome,jdbcType=DECIMAL}, 
+      #{pubAclaFundsMincome,jdbcType=DECIMAL}, #{spouseMincome,jdbcType=DECIMAL}, #{rentMincome,jdbcType=DECIMAL}, 
+      #{taxListMincome,jdbcType=DECIMAL}, #{sysProMincome,jdbcType=DECIMAL}, #{wageFlowRate,jdbcType=DECIMAL}, 
+      #{wageFlowDuct,jdbcType=DECIMAL}, #{jobRate,jdbcType=DECIMAL}, #{jobDuct,jdbcType=DECIMAL}, 
+      #{taxRate,jdbcType=DECIMAL}, #{taxDuct,jdbcType=DECIMAL}, #{pubAclaFundsRatio,jdbcType=DECIMAL}, 
+      #{pubAclaFundsUp,jdbcType=DECIMAL}, #{wfPafAmt,jdbcType=DECIMAL}, #{wfIncomeAmt,jdbcType=DECIMAL}, 
+      #{taxPafAmt,jdbcType=DECIMAL}, #{taxIncomeAmt,jdbcType=DECIMAL}, #{jobBfMincome,jdbcType=DECIMAL}, 
+      #{jobAfMincome,jdbcType=DECIMAL}, #{taxThreshold,jdbcType=DECIMAL}, #{proposedLmt,jdbcType=DECIMAL}, 
+      #{pbUnPlgeLoanDebt,jdbcType=DECIMAL}, #{pbPlgeLoanDebt,jdbcType=DECIMAL}, #{pbCdtCardExp,jdbcType=DECIMAL}, 
+      #{pbUnPlgeLoanExp,jdbcType=DECIMAL}, #{loanLmt,jdbcType=DECIMAL}, #{cifIncomeMul,jdbcType=DECIMAL}, 
+      #{cdtLoanSc,jdbcType=DECIMAL}, #{dtiLmtUp,jdbcType=DECIMAL}, #{cifDtiUp,jdbcType=DECIMAL}, 
+      #{unPlgeLoanDebt,jdbcType=DECIMAL}, #{unPlgeExp,jdbcType=DECIMAL}, #{plgeLoanDebt,jdbcType=DECIMAL}, 
+      #{dtiViolLmtUp,jdbcType=DECIMAL}, #{cifDtiViolUp,jdbcType=DECIMAL}, #{cpDtiLmtUp,jdbcType=DECIMAL}, 
+      #{cpDtiViolLmtUp,jdbcType=DECIMAL}, #{openLmtUp,jdbcType=DECIMAL}, #{openViolLmtUp,jdbcType=DECIMAL}, 
+      #{hFinanCifLmt,jdbcType=DECIMAL}, #{mueViolLmtUp,jdbcType=DECIMAL}, #{rankIncome,jdbcType=DECIMAL}, 
+      #{cifLmtDown,jdbcType=DECIMAL}, #{irbLoanSc,jdbcType=DECIMAL}, #{foundingY,jdbcType=DECIMAL}, 
+      #{houseCtfn,jdbcType=VARCHAR}, #{carCtfn,jdbcType=VARCHAR}, #{violLmtUp,jdbcType=DECIMAL}, 
+      #{trgerRuleCode,jdbcType=VARCHAR}, #{unPlgeDti,jdbcType=DECIMAL}, #{cpDti,jdbcType=DECIMAL}, 
+      #{mue,jdbcType=DECIMAL}, #{dityNameType,jdbcType=VARCHAR}, #{apprRst,jdbcType=VARCHAR}, 
+      #{apprRiskRst,jdbcType=VARCHAR}, #{isHavePboc,jdbcType=VARCHAR}, #{ttPayRate,jdbcType=DECIMAL}, 
+      #{pay,jdbcType=DECIMAL}, #{payDue,jdbcType=DECIMAL}, #{revolvingLabel,jdbcType=VARCHAR}, 
+      #{cifLabel,jdbcType=VARCHAR}, #{lowestPayAmtLabel,jdbcType=VARCHAR}, #{freePayTermLabel,jdbcType=VARCHAR}, 
+      #{appScroe,jdbcType=DECIMAL}, #{isHavePbData,jdbcType=VARCHAR}, #{loancard12mactivecount,jdbcType=DECIMAL}, 
+      #{loan12mactivecount,jdbcType=DECIMAL}, #{standardloancard12mactivecount,jdbcType=DECIMAL}, 
+      #{mactivethan3cardamt12,jdbcType=DECIMAL}, #{mactivethan3cardoverdraft12,jdbcType=DECIMAL}, 
+      #{loancard12munrepaymentcount,jdbcType=DECIMAL}, #{loancardmaxacctage,jdbcType=DECIMAL}, 
+      #{creditcard24mmaxarcount,jdbcType=DECIMAL}, #{otherloancardmaxsecamt,jdbcType=DECIMAL}, 
+      #{loan24mmaxarcount,jdbcType=DECIMAL}, #{cardorloanacctstatusabl,jdbcType=VARCHAR}, 
+      #{creditcard12mdueabl,jdbcType=VARCHAR}, #{creditcard3mdueabl,jdbcType=VARCHAR}, 
+      #{cardorloan3mdueabl,jdbcType=VARCHAR}, #{loancarddueabl,jdbcType=VARCHAR}, #{loandueabl,jdbcType=VARCHAR}, 
+      #{loan12mdueabl,jdbcType=VARCHAR}, #{loan3mdueabl,jdbcType=VARCHAR}, #{newloancardacctcountabl,jdbcType=VARCHAR}, 
+      #{loancardamtuseratioabl,jdbcType=VARCHAR}, #{cardloanselectcountabl,jdbcType=VARCHAR}, 
+      #{paymentmonthamt,jdbcType=DECIMAL}, #{isActiveCard,jdbcType=VARCHAR}, #{activeCardSharAmt,jdbcType=DECIMAL}, 
+      #{amtuseratio,jdbcType=DECIMAL}, #{creditcardmaxduecount,jdbcType=DECIMAL}, #{loanmaxduestatus,jdbcType=VARCHAR}, 
+      #{cifmustprovematerial,jdbcType=VARCHAR}, #{cifmustprovematerialremark,jdbcType=VARCHAR}, 
+      #{productamtdown,jdbcType=DECIMAL}, #{refUnPlgeDti,jdbcType=DECIMAL}, #{refCpDti,jdbcType=DECIMAL}, 
+      #{refMue,jdbcType=DECIMAL}, #{unPlgeDtiRange,jdbcType=DECIMAL}, #{cpDtiRange,jdbcType=DECIMAL}, 
+      #{unPlgeDtiRangeLv,jdbcType=DECIMAL}, #{cpDtiRangeLv,jdbcType=DECIMAL}, #{mueLv,jdbcType=DECIMAL}, 
+      #{apprMatrix,jdbcType=VARCHAR}, #{policyCd,jdbcType=VARCHAR}, #{rejectCd,jdbcType=VARCHAR}, 
+      #{violationCd,jdbcType=VARCHAR}, #{houseTotalRatio,jdbcType=DECIMAL}, #{wageIncomeRate,jdbcType=DECIMAL}, 
+      #{wageIncomeDuct,jdbcType=DECIMAL}, #{taxIncomeRate,jdbcType=DECIMAL}, #{taxIncomeDuct,jdbcType=DECIMAL}, 
+      #{wageIncomeAvgSum,jdbcType=DECIMAL}, #{taxIncomeAvgSum,jdbcType=DECIMAL}, #{tacType,jdbcType=VARCHAR}, 
+      #{fqzRst,jdbcType=VARCHAR}, #{fqzRstDesp,jdbcType=VARCHAR}, #{isSpecialCust,jdbcType=VARCHAR}, 
+      #{eduProvRst,jdbcType=VARCHAR}, #{decisionResult,jdbcType=VARCHAR}, #{decisionDesp,jdbcType=VARCHAR}, 
+      #{sampMIncome,jdbcType=DECIMAL}, #{cifCpDtiUp,jdbcType=DECIMAL}, #{cifCpDtiViolUp,jdbcType=DECIMAL}, 
+      #{cifOpenLmtUp,jdbcType=DECIMAL}, #{cifOpenLmtViolUp,jdbcType=DECIMAL}, #{violRefLmt,jdbcType=DECIMAL}, 
+      #{genderCd,jdbcType=VARCHAR}, #{interestRateProduct,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.input.FicoYdjBlaze" >
+    insert into OPAS_FICO_YDJ_BLAZE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ydjId != null" >
+        YDJ_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="crtTime != null" >
+        CRT_TIME,
+      </if>
+      <if test="productType != null" >
+        PRODUCT_TYPE,
+      </if>
+      <if test="isAmlFlg != null" >
+        IS_AML_FLG,
+      </if>
+      <if test="areaType != null" >
+        AREA_TYPE,
+      </if>
+      <if test="contCustType != null" >
+        CONT_CUST_TYPE,
+      </if>
+      <if test="finalCustType != null" >
+        FINAL_CUST_TYPE,
+      </if>
+      <if test="cifAge != null" >
+        CIF_AGE,
+      </if>
+      <if test="isGreyCif != null" >
+        IS_GREY_CIF,
+      </if>
+      <if test="workAge != null" >
+        WORK_AGE,
+      </if>
+      <if test="cdtScore != null" >
+        CDT_SCORE,
+      </if>
+      <if test="cdtCardDebt != null" >
+        CDT_CARD_DEBT,
+      </if>
+      <if test="realyMIncome != null" >
+        REALY_M_INCOME,
+      </if>
+      <if test="wageFlowMincome != null" >
+        WAGE_FLOW_MINCOME,
+      </if>
+      <if test="taxMincome != null" >
+        TAX_MINCOME,
+      </if>
+      <if test="jobMincome != null" >
+        JOB_MINCOME,
+      </if>
+      <if test="socialSetyMincome != null" >
+        SOCIAL_SETY_MINCOME,
+      </if>
+      <if test="pubAclaFundsMincome != null" >
+        PUB_ACLA_FUNDS_MINCOME,
+      </if>
+      <if test="spouseMincome != null" >
+        SPOUSE_MINCOME,
+      </if>
+      <if test="rentMincome != null" >
+        RENT_MINCOME,
+      </if>
+      <if test="taxListMincome != null" >
+        TAX_LIST_MINCOME,
+      </if>
+      <if test="sysProMincome != null" >
+        SYS_PRO_MINCOME,
+      </if>
+      <if test="wageFlowRate != null" >
+        WAGE_FLOW_RATE,
+      </if>
+      <if test="wageFlowDuct != null" >
+        WAGE_FLOW_DUCT,
+      </if>
+      <if test="jobRate != null" >
+        JOB_RATE,
+      </if>
+      <if test="jobDuct != null" >
+        JOB_DUCT,
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE,
+      </if>
+      <if test="taxDuct != null" >
+        TAX_DUCT,
+      </if>
+      <if test="pubAclaFundsRatio != null" >
+        PUB_ACLA_FUNDS_RATIO,
+      </if>
+      <if test="pubAclaFundsUp != null" >
+        PUB_ACLA_FUNDS_UP,
+      </if>
+      <if test="wfPafAmt != null" >
+        WF_PAF_AMT,
+      </if>
+      <if test="wfIncomeAmt != null" >
+        WF_INCOME_AMT,
+      </if>
+      <if test="taxPafAmt != null" >
+        TAX_PAF_AMT,
+      </if>
+      <if test="taxIncomeAmt != null" >
+        TAX_INCOME_AMT,
+      </if>
+      <if test="jobBfMincome != null" >
+        JOB_BF_MINCOME,
+      </if>
+      <if test="jobAfMincome != null" >
+        JOB_AF_MINCOME,
+      </if>
+      <if test="taxThreshold != null" >
+        TAX_THRESHOLD,
+      </if>
+      <if test="proposedLmt != null" >
+        PROPOSED_LMT,
+      </if>
+      <if test="pbUnPlgeLoanDebt != null" >
+        PB_UN_PLGE_LOAN_DEBT,
+      </if>
+      <if test="pbPlgeLoanDebt != null" >
+        PB_PLGE_LOAN_DEBT,
+      </if>
+      <if test="pbCdtCardExp != null" >
+        PB_CDT_CARD_EXP,
+      </if>
+      <if test="pbUnPlgeLoanExp != null" >
+        PB_UN_PLGE_LOAN_EXP,
+      </if>
+      <if test="loanLmt != null" >
+        LOAN_LMT,
+      </if>
+      <if test="cifIncomeMul != null" >
+        CIF_INCOME_MUL,
+      </if>
+      <if test="cdtLoanSc != null" >
+        CDT_LOAN_SC,
+      </if>
+      <if test="dtiLmtUp != null" >
+        DTI_LMT_UP,
+      </if>
+      <if test="cifDtiUp != null" >
+        CIF_DTI_UP,
+      </if>
+      <if test="unPlgeLoanDebt != null" >
+        UN_PLGE_LOAN_DEBT,
+      </if>
+      <if test="unPlgeExp != null" >
+        UN_PLGE_EXP,
+      </if>
+      <if test="plgeLoanDebt != null" >
+        PLGE_LOAN_DEBT,
+      </if>
+      <if test="dtiViolLmtUp != null" >
+        DTI_VIOL_LMT_UP,
+      </if>
+      <if test="cifDtiViolUp != null" >
+        CIF_DTI_VIOL_UP,
+      </if>
+      <if test="cpDtiLmtUp != null" >
+        CP_DTI_LMT_UP,
+      </if>
+      <if test="cpDtiViolLmtUp != null" >
+        CP_DTI_VIOL_LMT_UP,
+      </if>
+      <if test="openLmtUp != null" >
+        OPEN_LMT_UP,
+      </if>
+      <if test="openViolLmtUp != null" >
+        OPEN_VIOL_LMT_UP,
+      </if>
+      <if test="hFinanCifLmt != null" >
+        H_FINAN_CIF_LMT,
+      </if>
+      <if test="mueViolLmtUp != null" >
+        MUE_VIOL_LMT_UP,
+      </if>
+      <if test="rankIncome != null" >
+        RANK_INCOME,
+      </if>
+      <if test="cifLmtDown != null" >
+        CIF_LMT_DOWN,
+      </if>
+      <if test="irbLoanSc != null" >
+        IRB_LOAN_SC,
+      </if>
+      <if test="foundingY != null" >
+        FOUNDING_Y,
+      </if>
+      <if test="houseCtfn != null" >
+        HOUSE_CTFN,
+      </if>
+      <if test="carCtfn != null" >
+        CAR_CTFN,
+      </if>
+      <if test="violLmtUp != null" >
+        VIOL_LMT_UP,
+      </if>
+      <if test="trgerRuleCode != null" >
+        TRGER_RULE_CODE,
+      </if>
+      <if test="unPlgeDti != null" >
+        UN_PLGE_DTI,
+      </if>
+      <if test="cpDti != null" >
+        CP_DTI,
+      </if>
+      <if test="mue != null" >
+        MUE,
+      </if>
+      <if test="dityNameType != null" >
+        DITY_NAME_TYPE,
+      </if>
+      <if test="apprRst != null" >
+        APPR_RST,
+      </if>
+      <if test="apprRiskRst != null" >
+        APPR_RISK_RST,
+      </if>
+      <if test="isHavePboc != null" >
+        IS_HAVE_PBOC,
+      </if>
+      <if test="ttPayRate != null" >
+        TT_PAY_RATE,
+      </if>
+      <if test="pay != null" >
+        PAY,
+      </if>
+      <if test="payDue != null" >
+        PAY_DUE,
+      </if>
+      <if test="revolvingLabel != null" >
+        REVOLVING_LABEL,
+      </if>
+      <if test="cifLabel != null" >
+        CIF_LABEL,
+      </if>
+      <if test="lowestPayAmtLabel != null" >
+        LOWEST_PAY_AMT_LABEL,
+      </if>
+      <if test="freePayTermLabel != null" >
+        FREE_PAY_TERM_LABEL,
+      </if>
+      <if test="appScroe != null" >
+        APP_SCROE,
+      </if>
+      <if test="isHavePbData != null" >
+        IS_HAVE_PB_DATA,
+      </if>
+      <if test="loancard12mactivecount != null" >
+        LOANCARD12MACTIVECOUNT,
+      </if>
+      <if test="loan12mactivecount != null" >
+        LOAN12MACTIVECOUNT,
+      </if>
+      <if test="standardloancard12mactivecount != null" >
+        STANDARDLOANCARD12MACTIVECOUNT,
+      </if>
+      <if test="mactivethan3cardamt12 != null" >
+        MACTIVETHAN3CARDAMT12,
+      </if>
+      <if test="mactivethan3cardoverdraft12 != null" >
+        MACTIVETHAN3CARDOVERDRAFT12,
+      </if>
+      <if test="loancard12munrepaymentcount != null" >
+        LOANCARD12MUNREPAYMENTCOUNT,
+      </if>
+      <if test="loancardmaxacctage != null" >
+        LOANCARDMAXACCTAGE,
+      </if>
+      <if test="creditcard24mmaxarcount != null" >
+        CREDITCARD24MMAXARCOUNT,
+      </if>
+      <if test="otherloancardmaxsecamt != null" >
+        OTHERLOANCARDMAXSECAMT,
+      </if>
+      <if test="loan24mmaxarcount != null" >
+        LOAN24MMAXARCOUNT,
+      </if>
+      <if test="cardorloanacctstatusabl != null" >
+        CARDORLOANACCTSTATUSABL,
+      </if>
+      <if test="creditcard12mdueabl != null" >
+        CREDITCARD12MDUEABL,
+      </if>
+      <if test="creditcard3mdueabl != null" >
+        CREDITCARD3MDUEABL,
+      </if>
+      <if test="cardorloan3mdueabl != null" >
+        CARDORLOAN3MDUEABL,
+      </if>
+      <if test="loancarddueabl != null" >
+        LOANCARDDUEABL,
+      </if>
+      <if test="loandueabl != null" >
+        LOANDUEABL,
+      </if>
+      <if test="loan12mdueabl != null" >
+        LOAN12MDUEABL,
+      </if>
+      <if test="loan3mdueabl != null" >
+        LOAN3MDUEABL,
+      </if>
+      <if test="newloancardacctcountabl != null" >
+        NEWLOANCARDACCTCOUNTABL,
+      </if>
+      <if test="loancardamtuseratioabl != null" >
+        LOANCARDAMTUSERATIOABL,
+      </if>
+      <if test="cardloanselectcountabl != null" >
+        CARDLOANSELECTCOUNTABL,
+      </if>
+      <if test="paymentmonthamt != null" >
+        PAYMENTMONTHAMT,
+      </if>
+      <if test="isActiveCard != null" >
+        IS_ACTIVE_CARD,
+      </if>
+      <if test="activeCardSharAmt != null" >
+        ACTIVE_CARD_SHAR_AMT,
+      </if>
+      <if test="amtuseratio != null" >
+        AMTUSERATIO,
+      </if>
+      <if test="creditcardmaxduecount != null" >
+        CREDITCARDMAXDUECOUNT,
+      </if>
+      <if test="loanmaxduestatus != null" >
+        LOANMAXDUESTATUS,
+      </if>
+      <if test="cifmustprovematerial != null" >
+        CIFMUSTPROVEMATERIAL,
+      </if>
+      <if test="cifmustprovematerialremark != null" >
+        CIFMUSTPROVEMATERIALREMARK,
+      </if>
+      <if test="productamtdown != null" >
+        PRODUCTAMTDOWN,
+      </if>
+      <if test="refUnPlgeDti != null" >
+        REF_UN_PLGE_DTI,
+      </if>
+      <if test="refCpDti != null" >
+        REF_CP_DTI,
+      </if>
+      <if test="refMue != null" >
+        REF_MUE,
+      </if>
+      <if test="unPlgeDtiRange != null" >
+        UN_PLGE_DTI_RANGE,
+      </if>
+      <if test="cpDtiRange != null" >
+        CP_DTI_RANGE,
+      </if>
+      <if test="unPlgeDtiRangeLv != null" >
+        UN_PLGE_DTI_RANGE_LV,
+      </if>
+      <if test="cpDtiRangeLv != null" >
+        CP_DTI_RANGE_LV,
+      </if>
+      <if test="mueLv != null" >
+        MUE_LV,
+      </if>
+      <if test="apprMatrix != null" >
+        APPR_MATRIX,
+      </if>
+      <if test="policyCd != null" >
+        POLICY_CD,
+      </if>
+      <if test="rejectCd != null" >
+        REJECT_CD,
+      </if>
+      <if test="violationCd != null" >
+        VIOLATION_CD,
+      </if>
+      <if test="houseTotalRatio != null" >
+        HOUSE_TOTAL_RATIO,
+      </if>
+      <if test="wageIncomeRate != null" >
+        WAGE_INCOME_RATE,
+      </if>
+      <if test="wageIncomeDuct != null" >
+        WAGE_INCOME_DUCT,
+      </if>
+      <if test="taxIncomeRate != null" >
+        TAX_INCOME_RATE,
+      </if>
+      <if test="taxIncomeDuct != null" >
+        TAX_INCOME_DUCT,
+      </if>
+      <if test="wageIncomeAvgSum != null" >
+        WAGE_INCOME_AVG_SUM,
+      </if>
+      <if test="taxIncomeAvgSum != null" >
+        TAX_INCOME_AVG_SUM,
+      </if>
+      <if test="tacType != null" >
+        TAC_TYPE,
+      </if>
+      <if test="fqzRst != null" >
+        FQZ_RST,
+      </if>
+      <if test="fqzRstDesp != null" >
+        FQZ_RST_DESP,
+      </if>
+      <if test="isSpecialCust != null" >
+        IS_SPECIAL_CUST,
+      </if>
+      <if test="eduProvRst != null" >
+        EDU_PROV_RST,
+      </if>
+      <if test="decisionResult != null" >
+        DECISION_RESULT,
+      </if>
+      <if test="decisionDesp != null" >
+        DECISION_DESP,
+      </if>
+      <if test="sampMIncome != null" >
+        SAMP_M_INCOME,
+      </if>
+      <if test="cifCpDtiUp != null" >
+        CIF_CP_DTI_UP,
+      </if>
+      <if test="cifCpDtiViolUp != null" >
+        CIF_CP_DTI_VIOL_UP,
+      </if>
+      <if test="cifOpenLmtUp != null" >
+        CIF_OPEN_LMT_UP,
+      </if>
+      <if test="cifOpenLmtViolUp != null" >
+        CIF_OPEN_LMT_VIOL_UP,
+      </if>
+      <if test="violRefLmt != null" >
+        VIOL_REF_LMT,
+      </if>
+      <if test="genderCd != null" >
+        GENDER_CD,
+      </if>
+      <if test="interestRateProduct != null" >
+        INTEREST_RATE_PRODUCT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ydjId != null" >
+        #{ydjId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null" >
+        #{crtTime,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="isAmlFlg != null" >
+        #{isAmlFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="areaType != null" >
+        #{areaType,jdbcType=VARCHAR},
+      </if>
+      <if test="contCustType != null" >
+        #{contCustType,jdbcType=VARCHAR},
+      </if>
+      <if test="finalCustType != null" >
+        #{finalCustType,jdbcType=VARCHAR},
+      </if>
+      <if test="cifAge != null" >
+        #{cifAge,jdbcType=DECIMAL},
+      </if>
+      <if test="isGreyCif != null" >
+        #{isGreyCif,jdbcType=VARCHAR},
+      </if>
+      <if test="workAge != null" >
+        #{workAge,jdbcType=DECIMAL},
+      </if>
+      <if test="cdtScore != null" >
+        #{cdtScore,jdbcType=DECIMAL},
+      </if>
+      <if test="cdtCardDebt != null" >
+        #{cdtCardDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="realyMIncome != null" >
+        #{realyMIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="wageFlowMincome != null" >
+        #{wageFlowMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxMincome != null" >
+        #{taxMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="jobMincome != null" >
+        #{jobMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="socialSetyMincome != null" >
+        #{socialSetyMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="pubAclaFundsMincome != null" >
+        #{pubAclaFundsMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="spouseMincome != null" >
+        #{spouseMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="rentMincome != null" >
+        #{rentMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxListMincome != null" >
+        #{taxListMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="sysProMincome != null" >
+        #{sysProMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="wageFlowRate != null" >
+        #{wageFlowRate,jdbcType=DECIMAL},
+      </if>
+      <if test="wageFlowDuct != null" >
+        #{wageFlowDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="jobRate != null" >
+        #{jobRate,jdbcType=DECIMAL},
+      </if>
+      <if test="jobDuct != null" >
+        #{jobDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="taxRate != null" >
+        #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="taxDuct != null" >
+        #{taxDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="pubAclaFundsRatio != null" >
+        #{pubAclaFundsRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="pubAclaFundsUp != null" >
+        #{pubAclaFundsUp,jdbcType=DECIMAL},
+      </if>
+      <if test="wfPafAmt != null" >
+        #{wfPafAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="wfIncomeAmt != null" >
+        #{wfIncomeAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="taxPafAmt != null" >
+        #{taxPafAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeAmt != null" >
+        #{taxIncomeAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="jobBfMincome != null" >
+        #{jobBfMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="jobAfMincome != null" >
+        #{jobAfMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxThreshold != null" >
+        #{taxThreshold,jdbcType=DECIMAL},
+      </if>
+      <if test="proposedLmt != null" >
+        #{proposedLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="pbUnPlgeLoanDebt != null" >
+        #{pbUnPlgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="pbPlgeLoanDebt != null" >
+        #{pbPlgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="pbCdtCardExp != null" >
+        #{pbCdtCardExp,jdbcType=DECIMAL},
+      </if>
+      <if test="pbUnPlgeLoanExp != null" >
+        #{pbUnPlgeLoanExp,jdbcType=DECIMAL},
+      </if>
+      <if test="loanLmt != null" >
+        #{loanLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cifIncomeMul != null" >
+        #{cifIncomeMul,jdbcType=DECIMAL},
+      </if>
+      <if test="cdtLoanSc != null" >
+        #{cdtLoanSc,jdbcType=DECIMAL},
+      </if>
+      <if test="dtiLmtUp != null" >
+        #{dtiLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifDtiUp != null" >
+        #{cifDtiUp,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeLoanDebt != null" >
+        #{unPlgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeExp != null" >
+        #{unPlgeExp,jdbcType=DECIMAL},
+      </if>
+      <if test="plgeLoanDebt != null" >
+        #{plgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="dtiViolLmtUp != null" >
+        #{dtiViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifDtiViolUp != null" >
+        #{cifDtiViolUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiLmtUp != null" >
+        #{cpDtiLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiViolLmtUp != null" >
+        #{cpDtiViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="openLmtUp != null" >
+        #{openLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="openViolLmtUp != null" >
+        #{openViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="hFinanCifLmt != null" >
+        #{hFinanCifLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="mueViolLmtUp != null" >
+        #{mueViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="rankIncome != null" >
+        #{rankIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="cifLmtDown != null" >
+        #{cifLmtDown,jdbcType=DECIMAL},
+      </if>
+      <if test="irbLoanSc != null" >
+        #{irbLoanSc,jdbcType=DECIMAL},
+      </if>
+      <if test="foundingY != null" >
+        #{foundingY,jdbcType=DECIMAL},
+      </if>
+      <if test="houseCtfn != null" >
+        #{houseCtfn,jdbcType=VARCHAR},
+      </if>
+      <if test="carCtfn != null" >
+        #{carCtfn,jdbcType=VARCHAR},
+      </if>
+      <if test="violLmtUp != null" >
+        #{violLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="trgerRuleCode != null" >
+        #{trgerRuleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unPlgeDti != null" >
+        #{unPlgeDti,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDti != null" >
+        #{cpDti,jdbcType=DECIMAL},
+      </if>
+      <if test="mue != null" >
+        #{mue,jdbcType=DECIMAL},
+      </if>
+      <if test="dityNameType != null" >
+        #{dityNameType,jdbcType=VARCHAR},
+      </if>
+      <if test="apprRst != null" >
+        #{apprRst,jdbcType=VARCHAR},
+      </if>
+      <if test="apprRiskRst != null" >
+        #{apprRiskRst,jdbcType=VARCHAR},
+      </if>
+      <if test="isHavePboc != null" >
+        #{isHavePboc,jdbcType=VARCHAR},
+      </if>
+      <if test="ttPayRate != null" >
+        #{ttPayRate,jdbcType=DECIMAL},
+      </if>
+      <if test="pay != null" >
+        #{pay,jdbcType=DECIMAL},
+      </if>
+      <if test="payDue != null" >
+        #{payDue,jdbcType=DECIMAL},
+      </if>
+      <if test="revolvingLabel != null" >
+        #{revolvingLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="cifLabel != null" >
+        #{cifLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestPayAmtLabel != null" >
+        #{lowestPayAmtLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="freePayTermLabel != null" >
+        #{freePayTermLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="appScroe != null" >
+        #{appScroe,jdbcType=DECIMAL},
+      </if>
+      <if test="isHavePbData != null" >
+        #{isHavePbData,jdbcType=VARCHAR},
+      </if>
+      <if test="loancard12mactivecount != null" >
+        #{loancard12mactivecount,jdbcType=DECIMAL},
+      </if>
+      <if test="loan12mactivecount != null" >
+        #{loan12mactivecount,jdbcType=DECIMAL},
+      </if>
+      <if test="standardloancard12mactivecount != null" >
+        #{standardloancard12mactivecount,jdbcType=DECIMAL},
+      </if>
+      <if test="mactivethan3cardamt12 != null" >
+        #{mactivethan3cardamt12,jdbcType=DECIMAL},
+      </if>
+      <if test="mactivethan3cardoverdraft12 != null" >
+        #{mactivethan3cardoverdraft12,jdbcType=DECIMAL},
+      </if>
+      <if test="loancard12munrepaymentcount != null" >
+        #{loancard12munrepaymentcount,jdbcType=DECIMAL},
+      </if>
+      <if test="loancardmaxacctage != null" >
+        #{loancardmaxacctage,jdbcType=DECIMAL},
+      </if>
+      <if test="creditcard24mmaxarcount != null" >
+        #{creditcard24mmaxarcount,jdbcType=DECIMAL},
+      </if>
+      <if test="otherloancardmaxsecamt != null" >
+        #{otherloancardmaxsecamt,jdbcType=DECIMAL},
+      </if>
+      <if test="loan24mmaxarcount != null" >
+        #{loan24mmaxarcount,jdbcType=DECIMAL},
+      </if>
+      <if test="cardorloanacctstatusabl != null" >
+        #{cardorloanacctstatusabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard12mdueabl != null" >
+        #{creditcard12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard3mdueabl != null" >
+        #{creditcard3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardorloan3mdueabl != null" >
+        #{cardorloan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancarddueabl != null" >
+        #{loancarddueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loandueabl != null" >
+        #{loandueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan12mdueabl != null" >
+        #{loan12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan3mdueabl != null" >
+        #{loan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="newloancardacctcountabl != null" >
+        #{newloancardacctcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancardamtuseratioabl != null" >
+        #{loancardamtuseratioabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardloanselectcountabl != null" >
+        #{cardloanselectcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentmonthamt != null" >
+        #{paymentmonthamt,jdbcType=DECIMAL},
+      </if>
+      <if test="isActiveCard != null" >
+        #{isActiveCard,jdbcType=VARCHAR},
+      </if>
+      <if test="activeCardSharAmt != null" >
+        #{activeCardSharAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="amtuseratio != null" >
+        #{amtuseratio,jdbcType=DECIMAL},
+      </if>
+      <if test="creditcardmaxduecount != null" >
+        #{creditcardmaxduecount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanmaxduestatus != null" >
+        #{loanmaxduestatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cifmustprovematerial != null" >
+        #{cifmustprovematerial,jdbcType=VARCHAR},
+      </if>
+      <if test="cifmustprovematerialremark != null" >
+        #{cifmustprovematerialremark,jdbcType=VARCHAR},
+      </if>
+      <if test="productamtdown != null" >
+        #{productamtdown,jdbcType=DECIMAL},
+      </if>
+      <if test="refUnPlgeDti != null" >
+        #{refUnPlgeDti,jdbcType=DECIMAL},
+      </if>
+      <if test="refCpDti != null" >
+        #{refCpDti,jdbcType=DECIMAL},
+      </if>
+      <if test="refMue != null" >
+        #{refMue,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeDtiRange != null" >
+        #{unPlgeDtiRange,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiRange != null" >
+        #{cpDtiRange,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeDtiRangeLv != null" >
+        #{unPlgeDtiRangeLv,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiRangeLv != null" >
+        #{cpDtiRangeLv,jdbcType=DECIMAL},
+      </if>
+      <if test="mueLv != null" >
+        #{mueLv,jdbcType=DECIMAL},
+      </if>
+      <if test="apprMatrix != null" >
+        #{apprMatrix,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCd != null" >
+        #{policyCd,jdbcType=VARCHAR},
+      </if>
+      <if test="rejectCd != null" >
+        #{rejectCd,jdbcType=VARCHAR},
+      </if>
+      <if test="violationCd != null" >
+        #{violationCd,jdbcType=VARCHAR},
+      </if>
+      <if test="houseTotalRatio != null" >
+        #{houseTotalRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="wageIncomeRate != null" >
+        #{wageIncomeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="wageIncomeDuct != null" >
+        #{wageIncomeDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeRate != null" >
+        #{taxIncomeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeDuct != null" >
+        #{taxIncomeDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="wageIncomeAvgSum != null" >
+        #{wageIncomeAvgSum,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeAvgSum != null" >
+        #{taxIncomeAvgSum,jdbcType=DECIMAL},
+      </if>
+      <if test="tacType != null" >
+        #{tacType,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRst != null" >
+        #{fqzRst,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRstDesp != null" >
+        #{fqzRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="isSpecialCust != null" >
+        #{isSpecialCust,jdbcType=VARCHAR},
+      </if>
+      <if test="eduProvRst != null" >
+        #{eduProvRst,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionResult != null" >
+        #{decisionResult,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionDesp != null" >
+        #{decisionDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="sampMIncome != null" >
+        #{sampMIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="cifCpDtiUp != null" >
+        #{cifCpDtiUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifCpDtiViolUp != null" >
+        #{cifCpDtiViolUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifOpenLmtUp != null" >
+        #{cifOpenLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifOpenLmtViolUp != null" >
+        #{cifOpenLmtViolUp,jdbcType=DECIMAL},
+      </if>
+      <if test="violRefLmt != null" >
+        #{violRefLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="genderCd != null" >
+        #{genderCd,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRateProduct != null" >
+        #{interestRateProduct,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.input.FicoYdjBlaze" >
+    update OPAS_FICO_YDJ_BLAZE
+    <set >
+      <if test="appId != null" >
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null" >
+        CRT_TIME = #{crtTime,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="isAmlFlg != null" >
+        IS_AML_FLG = #{isAmlFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="areaType != null" >
+        AREA_TYPE = #{areaType,jdbcType=VARCHAR},
+      </if>
+      <if test="contCustType != null" >
+        CONT_CUST_TYPE = #{contCustType,jdbcType=VARCHAR},
+      </if>
+      <if test="finalCustType != null" >
+        FINAL_CUST_TYPE = #{finalCustType,jdbcType=VARCHAR},
+      </if>
+      <if test="cifAge != null" >
+        CIF_AGE = #{cifAge,jdbcType=DECIMAL},
+      </if>
+      <if test="isGreyCif != null" >
+        IS_GREY_CIF = #{isGreyCif,jdbcType=VARCHAR},
+      </if>
+      <if test="workAge != null" >
+        WORK_AGE = #{workAge,jdbcType=DECIMAL},
+      </if>
+      <if test="cdtScore != null" >
+        CDT_SCORE = #{cdtScore,jdbcType=DECIMAL},
+      </if>
+      <if test="cdtCardDebt != null" >
+        CDT_CARD_DEBT = #{cdtCardDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="realyMIncome != null" >
+        REALY_M_INCOME = #{realyMIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="wageFlowMincome != null" >
+        WAGE_FLOW_MINCOME = #{wageFlowMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxMincome != null" >
+        TAX_MINCOME = #{taxMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="jobMincome != null" >
+        JOB_MINCOME = #{jobMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="socialSetyMincome != null" >
+        SOCIAL_SETY_MINCOME = #{socialSetyMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="pubAclaFundsMincome != null" >
+        PUB_ACLA_FUNDS_MINCOME = #{pubAclaFundsMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="spouseMincome != null" >
+        SPOUSE_MINCOME = #{spouseMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="rentMincome != null" >
+        RENT_MINCOME = #{rentMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxListMincome != null" >
+        TAX_LIST_MINCOME = #{taxListMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="sysProMincome != null" >
+        SYS_PRO_MINCOME = #{sysProMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="wageFlowRate != null" >
+        WAGE_FLOW_RATE = #{wageFlowRate,jdbcType=DECIMAL},
+      </if>
+      <if test="wageFlowDuct != null" >
+        WAGE_FLOW_DUCT = #{wageFlowDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="jobRate != null" >
+        JOB_RATE = #{jobRate,jdbcType=DECIMAL},
+      </if>
+      <if test="jobDuct != null" >
+        JOB_DUCT = #{jobDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="taxDuct != null" >
+        TAX_DUCT = #{taxDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="pubAclaFundsRatio != null" >
+        PUB_ACLA_FUNDS_RATIO = #{pubAclaFundsRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="pubAclaFundsUp != null" >
+        PUB_ACLA_FUNDS_UP = #{pubAclaFundsUp,jdbcType=DECIMAL},
+      </if>
+      <if test="wfPafAmt != null" >
+        WF_PAF_AMT = #{wfPafAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="wfIncomeAmt != null" >
+        WF_INCOME_AMT = #{wfIncomeAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="taxPafAmt != null" >
+        TAX_PAF_AMT = #{taxPafAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeAmt != null" >
+        TAX_INCOME_AMT = #{taxIncomeAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="jobBfMincome != null" >
+        JOB_BF_MINCOME = #{jobBfMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="jobAfMincome != null" >
+        JOB_AF_MINCOME = #{jobAfMincome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxThreshold != null" >
+        TAX_THRESHOLD = #{taxThreshold,jdbcType=DECIMAL},
+      </if>
+      <if test="proposedLmt != null" >
+        PROPOSED_LMT = #{proposedLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="pbUnPlgeLoanDebt != null" >
+        PB_UN_PLGE_LOAN_DEBT = #{pbUnPlgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="pbPlgeLoanDebt != null" >
+        PB_PLGE_LOAN_DEBT = #{pbPlgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="pbCdtCardExp != null" >
+        PB_CDT_CARD_EXP = #{pbCdtCardExp,jdbcType=DECIMAL},
+      </if>
+      <if test="pbUnPlgeLoanExp != null" >
+        PB_UN_PLGE_LOAN_EXP = #{pbUnPlgeLoanExp,jdbcType=DECIMAL},
+      </if>
+      <if test="loanLmt != null" >
+        LOAN_LMT = #{loanLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cifIncomeMul != null" >
+        CIF_INCOME_MUL = #{cifIncomeMul,jdbcType=DECIMAL},
+      </if>
+      <if test="cdtLoanSc != null" >
+        CDT_LOAN_SC = #{cdtLoanSc,jdbcType=DECIMAL},
+      </if>
+      <if test="dtiLmtUp != null" >
+        DTI_LMT_UP = #{dtiLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifDtiUp != null" >
+        CIF_DTI_UP = #{cifDtiUp,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeLoanDebt != null" >
+        UN_PLGE_LOAN_DEBT = #{unPlgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeExp != null" >
+        UN_PLGE_EXP = #{unPlgeExp,jdbcType=DECIMAL},
+      </if>
+      <if test="plgeLoanDebt != null" >
+        PLGE_LOAN_DEBT = #{plgeLoanDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="dtiViolLmtUp != null" >
+        DTI_VIOL_LMT_UP = #{dtiViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifDtiViolUp != null" >
+        CIF_DTI_VIOL_UP = #{cifDtiViolUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiLmtUp != null" >
+        CP_DTI_LMT_UP = #{cpDtiLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiViolLmtUp != null" >
+        CP_DTI_VIOL_LMT_UP = #{cpDtiViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="openLmtUp != null" >
+        OPEN_LMT_UP = #{openLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="openViolLmtUp != null" >
+        OPEN_VIOL_LMT_UP = #{openViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="hFinanCifLmt != null" >
+        H_FINAN_CIF_LMT = #{hFinanCifLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="mueViolLmtUp != null" >
+        MUE_VIOL_LMT_UP = #{mueViolLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="rankIncome != null" >
+        RANK_INCOME = #{rankIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="cifLmtDown != null" >
+        CIF_LMT_DOWN = #{cifLmtDown,jdbcType=DECIMAL},
+      </if>
+      <if test="irbLoanSc != null" >
+        IRB_LOAN_SC = #{irbLoanSc,jdbcType=DECIMAL},
+      </if>
+      <if test="foundingY != null" >
+        FOUNDING_Y = #{foundingY,jdbcType=DECIMAL},
+      </if>
+      <if test="houseCtfn != null" >
+        HOUSE_CTFN = #{houseCtfn,jdbcType=VARCHAR},
+      </if>
+      <if test="carCtfn != null" >
+        CAR_CTFN = #{carCtfn,jdbcType=VARCHAR},
+      </if>
+      <if test="violLmtUp != null" >
+        VIOL_LMT_UP = #{violLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="trgerRuleCode != null" >
+        TRGER_RULE_CODE = #{trgerRuleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unPlgeDti != null" >
+        UN_PLGE_DTI = #{unPlgeDti,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDti != null" >
+        CP_DTI = #{cpDti,jdbcType=DECIMAL},
+      </if>
+      <if test="mue != null" >
+        MUE = #{mue,jdbcType=DECIMAL},
+      </if>
+      <if test="dityNameType != null" >
+        DITY_NAME_TYPE = #{dityNameType,jdbcType=VARCHAR},
+      </if>
+      <if test="apprRst != null" >
+        APPR_RST = #{apprRst,jdbcType=VARCHAR},
+      </if>
+      <if test="apprRiskRst != null" >
+        APPR_RISK_RST = #{apprRiskRst,jdbcType=VARCHAR},
+      </if>
+      <if test="isHavePboc != null" >
+        IS_HAVE_PBOC = #{isHavePboc,jdbcType=VARCHAR},
+      </if>
+      <if test="ttPayRate != null" >
+        TT_PAY_RATE = #{ttPayRate,jdbcType=DECIMAL},
+      </if>
+      <if test="pay != null" >
+        PAY = #{pay,jdbcType=DECIMAL},
+      </if>
+      <if test="payDue != null" >
+        PAY_DUE = #{payDue,jdbcType=DECIMAL},
+      </if>
+      <if test="revolvingLabel != null" >
+        REVOLVING_LABEL = #{revolvingLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="cifLabel != null" >
+        CIF_LABEL = #{cifLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestPayAmtLabel != null" >
+        LOWEST_PAY_AMT_LABEL = #{lowestPayAmtLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="freePayTermLabel != null" >
+        FREE_PAY_TERM_LABEL = #{freePayTermLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="appScroe != null" >
+        APP_SCROE = #{appScroe,jdbcType=DECIMAL},
+      </if>
+      <if test="isHavePbData != null" >
+        IS_HAVE_PB_DATA = #{isHavePbData,jdbcType=VARCHAR},
+      </if>
+      <if test="loancard12mactivecount != null" >
+        LOANCARD12MACTIVECOUNT = #{loancard12mactivecount,jdbcType=DECIMAL},
+      </if>
+      <if test="loan12mactivecount != null" >
+        LOAN12MACTIVECOUNT = #{loan12mactivecount,jdbcType=DECIMAL},
+      </if>
+      <if test="standardloancard12mactivecount != null" >
+        STANDARDLOANCARD12MACTIVECOUNT = #{standardloancard12mactivecount,jdbcType=DECIMAL},
+      </if>
+      <if test="mactivethan3cardamt12 != null" >
+        MACTIVETHAN3CARDAMT12 = #{mactivethan3cardamt12,jdbcType=DECIMAL},
+      </if>
+      <if test="mactivethan3cardoverdraft12 != null" >
+        MACTIVETHAN3CARDOVERDRAFT12 = #{mactivethan3cardoverdraft12,jdbcType=DECIMAL},
+      </if>
+      <if test="loancard12munrepaymentcount != null" >
+        LOANCARD12MUNREPAYMENTCOUNT = #{loancard12munrepaymentcount,jdbcType=DECIMAL},
+      </if>
+      <if test="loancardmaxacctage != null" >
+        LOANCARDMAXACCTAGE = #{loancardmaxacctage,jdbcType=DECIMAL},
+      </if>
+      <if test="creditcard24mmaxarcount != null" >
+        CREDITCARD24MMAXARCOUNT = #{creditcard24mmaxarcount,jdbcType=DECIMAL},
+      </if>
+      <if test="otherloancardmaxsecamt != null" >
+        OTHERLOANCARDMAXSECAMT = #{otherloancardmaxsecamt,jdbcType=DECIMAL},
+      </if>
+      <if test="loan24mmaxarcount != null" >
+        LOAN24MMAXARCOUNT = #{loan24mmaxarcount,jdbcType=DECIMAL},
+      </if>
+      <if test="cardorloanacctstatusabl != null" >
+        CARDORLOANACCTSTATUSABL = #{cardorloanacctstatusabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard12mdueabl != null" >
+        CREDITCARD12MDUEABL = #{creditcard12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcard3mdueabl != null" >
+        CREDITCARD3MDUEABL = #{creditcard3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardorloan3mdueabl != null" >
+        CARDORLOAN3MDUEABL = #{cardorloan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancarddueabl != null" >
+        LOANCARDDUEABL = #{loancarddueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loandueabl != null" >
+        LOANDUEABL = #{loandueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan12mdueabl != null" >
+        LOAN12MDUEABL = #{loan12mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loan3mdueabl != null" >
+        LOAN3MDUEABL = #{loan3mdueabl,jdbcType=VARCHAR},
+      </if>
+      <if test="newloancardacctcountabl != null" >
+        NEWLOANCARDACCTCOUNTABL = #{newloancardacctcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="loancardamtuseratioabl != null" >
+        LOANCARDAMTUSERATIOABL = #{loancardamtuseratioabl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardloanselectcountabl != null" >
+        CARDLOANSELECTCOUNTABL = #{cardloanselectcountabl,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentmonthamt != null" >
+        PAYMENTMONTHAMT = #{paymentmonthamt,jdbcType=DECIMAL},
+      </if>
+      <if test="isActiveCard != null" >
+        IS_ACTIVE_CARD = #{isActiveCard,jdbcType=VARCHAR},
+      </if>
+      <if test="activeCardSharAmt != null" >
+        ACTIVE_CARD_SHAR_AMT = #{activeCardSharAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="amtuseratio != null" >
+        AMTUSERATIO = #{amtuseratio,jdbcType=DECIMAL},
+      </if>
+      <if test="creditcardmaxduecount != null" >
+        CREDITCARDMAXDUECOUNT = #{creditcardmaxduecount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanmaxduestatus != null" >
+        LOANMAXDUESTATUS = #{loanmaxduestatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cifmustprovematerial != null" >
+        CIFMUSTPROVEMATERIAL = #{cifmustprovematerial,jdbcType=VARCHAR},
+      </if>
+      <if test="cifmustprovematerialremark != null" >
+        CIFMUSTPROVEMATERIALREMARK = #{cifmustprovematerialremark,jdbcType=VARCHAR},
+      </if>
+      <if test="productamtdown != null" >
+        PRODUCTAMTDOWN = #{productamtdown,jdbcType=DECIMAL},
+      </if>
+      <if test="refUnPlgeDti != null" >
+        REF_UN_PLGE_DTI = #{refUnPlgeDti,jdbcType=DECIMAL},
+      </if>
+      <if test="refCpDti != null" >
+        REF_CP_DTI = #{refCpDti,jdbcType=DECIMAL},
+      </if>
+      <if test="refMue != null" >
+        REF_MUE = #{refMue,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeDtiRange != null" >
+        UN_PLGE_DTI_RANGE = #{unPlgeDtiRange,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiRange != null" >
+        CP_DTI_RANGE = #{cpDtiRange,jdbcType=DECIMAL},
+      </if>
+      <if test="unPlgeDtiRangeLv != null" >
+        UN_PLGE_DTI_RANGE_LV = #{unPlgeDtiRangeLv,jdbcType=DECIMAL},
+      </if>
+      <if test="cpDtiRangeLv != null" >
+        CP_DTI_RANGE_LV = #{cpDtiRangeLv,jdbcType=DECIMAL},
+      </if>
+      <if test="mueLv != null" >
+        MUE_LV = #{mueLv,jdbcType=DECIMAL},
+      </if>
+      <if test="apprMatrix != null" >
+        APPR_MATRIX = #{apprMatrix,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCd != null" >
+        POLICY_CD = #{policyCd,jdbcType=VARCHAR},
+      </if>
+      <if test="rejectCd != null" >
+        REJECT_CD = #{rejectCd,jdbcType=VARCHAR},
+      </if>
+      <if test="violationCd != null" >
+        VIOLATION_CD = #{violationCd,jdbcType=VARCHAR},
+      </if>
+      <if test="houseTotalRatio != null" >
+        HOUSE_TOTAL_RATIO = #{houseTotalRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="wageIncomeRate != null" >
+        WAGE_INCOME_RATE = #{wageIncomeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="wageIncomeDuct != null" >
+        WAGE_INCOME_DUCT = #{wageIncomeDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeRate != null" >
+        TAX_INCOME_RATE = #{taxIncomeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeDuct != null" >
+        TAX_INCOME_DUCT = #{taxIncomeDuct,jdbcType=DECIMAL},
+      </if>
+      <if test="wageIncomeAvgSum != null" >
+        WAGE_INCOME_AVG_SUM = #{wageIncomeAvgSum,jdbcType=DECIMAL},
+      </if>
+      <if test="taxIncomeAvgSum != null" >
+        TAX_INCOME_AVG_SUM = #{taxIncomeAvgSum,jdbcType=DECIMAL},
+      </if>
+      <if test="tacType != null" >
+        TAC_TYPE = #{tacType,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRst != null" >
+        FQZ_RST = #{fqzRst,jdbcType=VARCHAR},
+      </if>
+      <if test="fqzRstDesp != null" >
+        FQZ_RST_DESP = #{fqzRstDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="isSpecialCust != null" >
+        IS_SPECIAL_CUST = #{isSpecialCust,jdbcType=VARCHAR},
+      </if>
+      <if test="eduProvRst != null" >
+        EDU_PROV_RST = #{eduProvRst,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionResult != null" >
+        DECISION_RESULT = #{decisionResult,jdbcType=VARCHAR},
+      </if>
+      <if test="decisionDesp != null" >
+        DECISION_DESP = #{decisionDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="sampMIncome != null" >
+        SAMP_M_INCOME = #{sampMIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="cifCpDtiUp != null" >
+        CIF_CP_DTI_UP = #{cifCpDtiUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifCpDtiViolUp != null" >
+        CIF_CP_DTI_VIOL_UP = #{cifCpDtiViolUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifOpenLmtUp != null" >
+        CIF_OPEN_LMT_UP = #{cifOpenLmtUp,jdbcType=DECIMAL},
+      </if>
+      <if test="cifOpenLmtViolUp != null" >
+        CIF_OPEN_LMT_VIOL_UP = #{cifOpenLmtViolUp,jdbcType=DECIMAL},
+      </if>
+      <if test="violRefLmt != null" >
+        VIOL_REF_LMT = #{violRefLmt,jdbcType=DECIMAL},
+      </if>
+      <if test="genderCd != null" >
+        GENDER_CD = #{genderCd,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRateProduct != null" >
+        INTEREST_RATE_PRODUCT = #{interestRateProduct,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where YDJ_ID = #{ydjId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.input.FicoYdjBlaze" >
+    update OPAS_FICO_YDJ_BLAZE
+    set APP_ID = #{appId,jdbcType=VARCHAR},
+      CRT_TIME = #{crtTime,jdbcType=VARCHAR},
+      PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+      IS_AML_FLG = #{isAmlFlg,jdbcType=VARCHAR},
+      AREA_TYPE = #{areaType,jdbcType=VARCHAR},
+      CONT_CUST_TYPE = #{contCustType,jdbcType=VARCHAR},
+      FINAL_CUST_TYPE = #{finalCustType,jdbcType=VARCHAR},
+      CIF_AGE = #{cifAge,jdbcType=DECIMAL},
+      IS_GREY_CIF = #{isGreyCif,jdbcType=VARCHAR},
+      WORK_AGE = #{workAge,jdbcType=DECIMAL},
+      CDT_SCORE = #{cdtScore,jdbcType=DECIMAL},
+      CDT_CARD_DEBT = #{cdtCardDebt,jdbcType=DECIMAL},
+      REALY_M_INCOME = #{realyMIncome,jdbcType=DECIMAL},
+      WAGE_FLOW_MINCOME = #{wageFlowMincome,jdbcType=DECIMAL},
+      TAX_MINCOME = #{taxMincome,jdbcType=DECIMAL},
+      JOB_MINCOME = #{jobMincome,jdbcType=DECIMAL},
+      SOCIAL_SETY_MINCOME = #{socialSetyMincome,jdbcType=DECIMAL},
+      PUB_ACLA_FUNDS_MINCOME = #{pubAclaFundsMincome,jdbcType=DECIMAL},
+      SPOUSE_MINCOME = #{spouseMincome,jdbcType=DECIMAL},
+      RENT_MINCOME = #{rentMincome,jdbcType=DECIMAL},
+      TAX_LIST_MINCOME = #{taxListMincome,jdbcType=DECIMAL},
+      SYS_PRO_MINCOME = #{sysProMincome,jdbcType=DECIMAL},
+      WAGE_FLOW_RATE = #{wageFlowRate,jdbcType=DECIMAL},
+      WAGE_FLOW_DUCT = #{wageFlowDuct,jdbcType=DECIMAL},
+      JOB_RATE = #{jobRate,jdbcType=DECIMAL},
+      JOB_DUCT = #{jobDuct,jdbcType=DECIMAL},
+      TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+      TAX_DUCT = #{taxDuct,jdbcType=DECIMAL},
+      PUB_ACLA_FUNDS_RATIO = #{pubAclaFundsRatio,jdbcType=DECIMAL},
+      PUB_ACLA_FUNDS_UP = #{pubAclaFundsUp,jdbcType=DECIMAL},
+      WF_PAF_AMT = #{wfPafAmt,jdbcType=DECIMAL},
+      WF_INCOME_AMT = #{wfIncomeAmt,jdbcType=DECIMAL},
+      TAX_PAF_AMT = #{taxPafAmt,jdbcType=DECIMAL},
+      TAX_INCOME_AMT = #{taxIncomeAmt,jdbcType=DECIMAL},
+      JOB_BF_MINCOME = #{jobBfMincome,jdbcType=DECIMAL},
+      JOB_AF_MINCOME = #{jobAfMincome,jdbcType=DECIMAL},
+      TAX_THRESHOLD = #{taxThreshold,jdbcType=DECIMAL},
+      PROPOSED_LMT = #{proposedLmt,jdbcType=DECIMAL},
+      PB_UN_PLGE_LOAN_DEBT = #{pbUnPlgeLoanDebt,jdbcType=DECIMAL},
+      PB_PLGE_LOAN_DEBT = #{pbPlgeLoanDebt,jdbcType=DECIMAL},
+      PB_CDT_CARD_EXP = #{pbCdtCardExp,jdbcType=DECIMAL},
+      PB_UN_PLGE_LOAN_EXP = #{pbUnPlgeLoanExp,jdbcType=DECIMAL},
+      LOAN_LMT = #{loanLmt,jdbcType=DECIMAL},
+      CIF_INCOME_MUL = #{cifIncomeMul,jdbcType=DECIMAL},
+      CDT_LOAN_SC = #{cdtLoanSc,jdbcType=DECIMAL},
+      DTI_LMT_UP = #{dtiLmtUp,jdbcType=DECIMAL},
+      CIF_DTI_UP = #{cifDtiUp,jdbcType=DECIMAL},
+      UN_PLGE_LOAN_DEBT = #{unPlgeLoanDebt,jdbcType=DECIMAL},
+      UN_PLGE_EXP = #{unPlgeExp,jdbcType=DECIMAL},
+      PLGE_LOAN_DEBT = #{plgeLoanDebt,jdbcType=DECIMAL},
+      DTI_VIOL_LMT_UP = #{dtiViolLmtUp,jdbcType=DECIMAL},
+      CIF_DTI_VIOL_UP = #{cifDtiViolUp,jdbcType=DECIMAL},
+      CP_DTI_LMT_UP = #{cpDtiLmtUp,jdbcType=DECIMAL},
+      CP_DTI_VIOL_LMT_UP = #{cpDtiViolLmtUp,jdbcType=DECIMAL},
+      OPEN_LMT_UP = #{openLmtUp,jdbcType=DECIMAL},
+      OPEN_VIOL_LMT_UP = #{openViolLmtUp,jdbcType=DECIMAL},
+      H_FINAN_CIF_LMT = #{hFinanCifLmt,jdbcType=DECIMAL},
+      MUE_VIOL_LMT_UP = #{mueViolLmtUp,jdbcType=DECIMAL},
+      RANK_INCOME = #{rankIncome,jdbcType=DECIMAL},
+      CIF_LMT_DOWN = #{cifLmtDown,jdbcType=DECIMAL},
+      IRB_LOAN_SC = #{irbLoanSc,jdbcType=DECIMAL},
+      FOUNDING_Y = #{foundingY,jdbcType=DECIMAL},
+      HOUSE_CTFN = #{houseCtfn,jdbcType=VARCHAR},
+      CAR_CTFN = #{carCtfn,jdbcType=VARCHAR},
+      VIOL_LMT_UP = #{violLmtUp,jdbcType=DECIMAL},
+      TRGER_RULE_CODE = #{trgerRuleCode,jdbcType=VARCHAR},
+      UN_PLGE_DTI = #{unPlgeDti,jdbcType=DECIMAL},
+      CP_DTI = #{cpDti,jdbcType=DECIMAL},
+      MUE = #{mue,jdbcType=DECIMAL},
+      DITY_NAME_TYPE = #{dityNameType,jdbcType=VARCHAR},
+      APPR_RST = #{apprRst,jdbcType=VARCHAR},
+      APPR_RISK_RST = #{apprRiskRst,jdbcType=VARCHAR},
+      IS_HAVE_PBOC = #{isHavePboc,jdbcType=VARCHAR},
+      TT_PAY_RATE = #{ttPayRate,jdbcType=DECIMAL},
+      PAY = #{pay,jdbcType=DECIMAL},
+      PAY_DUE = #{payDue,jdbcType=DECIMAL},
+      REVOLVING_LABEL = #{revolvingLabel,jdbcType=VARCHAR},
+      CIF_LABEL = #{cifLabel,jdbcType=VARCHAR},
+      LOWEST_PAY_AMT_LABEL = #{lowestPayAmtLabel,jdbcType=VARCHAR},
+      FREE_PAY_TERM_LABEL = #{freePayTermLabel,jdbcType=VARCHAR},
+      APP_SCROE = #{appScroe,jdbcType=DECIMAL},
+      IS_HAVE_PB_DATA = #{isHavePbData,jdbcType=VARCHAR},
+      LOANCARD12MACTIVECOUNT = #{loancard12mactivecount,jdbcType=DECIMAL},
+      LOAN12MACTIVECOUNT = #{loan12mactivecount,jdbcType=DECIMAL},
+      STANDARDLOANCARD12MACTIVECOUNT = #{standardloancard12mactivecount,jdbcType=DECIMAL},
+      MACTIVETHAN3CARDAMT12 = #{mactivethan3cardamt12,jdbcType=DECIMAL},
+      MACTIVETHAN3CARDOVERDRAFT12 = #{mactivethan3cardoverdraft12,jdbcType=DECIMAL},
+      LOANCARD12MUNREPAYMENTCOUNT = #{loancard12munrepaymentcount,jdbcType=DECIMAL},
+      LOANCARDMAXACCTAGE = #{loancardmaxacctage,jdbcType=DECIMAL},
+      CREDITCARD24MMAXARCOUNT = #{creditcard24mmaxarcount,jdbcType=DECIMAL},
+      OTHERLOANCARDMAXSECAMT = #{otherloancardmaxsecamt,jdbcType=DECIMAL},
+      LOAN24MMAXARCOUNT = #{loan24mmaxarcount,jdbcType=DECIMAL},
+      CARDORLOANACCTSTATUSABL = #{cardorloanacctstatusabl,jdbcType=VARCHAR},
+      CREDITCARD12MDUEABL = #{creditcard12mdueabl,jdbcType=VARCHAR},
+      CREDITCARD3MDUEABL = #{creditcard3mdueabl,jdbcType=VARCHAR},
+      CARDORLOAN3MDUEABL = #{cardorloan3mdueabl,jdbcType=VARCHAR},
+      LOANCARDDUEABL = #{loancarddueabl,jdbcType=VARCHAR},
+      LOANDUEABL = #{loandueabl,jdbcType=VARCHAR},
+      LOAN12MDUEABL = #{loan12mdueabl,jdbcType=VARCHAR},
+      LOAN3MDUEABL = #{loan3mdueabl,jdbcType=VARCHAR},
+      NEWLOANCARDACCTCOUNTABL = #{newloancardacctcountabl,jdbcType=VARCHAR},
+      LOANCARDAMTUSERATIOABL = #{loancardamtuseratioabl,jdbcType=VARCHAR},
+      CARDLOANSELECTCOUNTABL = #{cardloanselectcountabl,jdbcType=VARCHAR},
+      PAYMENTMONTHAMT = #{paymentmonthamt,jdbcType=DECIMAL},
+      IS_ACTIVE_CARD = #{isActiveCard,jdbcType=VARCHAR},
+      ACTIVE_CARD_SHAR_AMT = #{activeCardSharAmt,jdbcType=DECIMAL},
+      AMTUSERATIO = #{amtuseratio,jdbcType=DECIMAL},
+      CREDITCARDMAXDUECOUNT = #{creditcardmaxduecount,jdbcType=DECIMAL},
+      LOANMAXDUESTATUS = #{loanmaxduestatus,jdbcType=VARCHAR},
+      CIFMUSTPROVEMATERIAL = #{cifmustprovematerial,jdbcType=VARCHAR},
+      CIFMUSTPROVEMATERIALREMARK = #{cifmustprovematerialremark,jdbcType=VARCHAR},
+      PRODUCTAMTDOWN = #{productamtdown,jdbcType=DECIMAL},
+      REF_UN_PLGE_DTI = #{refUnPlgeDti,jdbcType=DECIMAL},
+      REF_CP_DTI = #{refCpDti,jdbcType=DECIMAL},
+      REF_MUE = #{refMue,jdbcType=DECIMAL},
+      UN_PLGE_DTI_RANGE = #{unPlgeDtiRange,jdbcType=DECIMAL},
+      CP_DTI_RANGE = #{cpDtiRange,jdbcType=DECIMAL},
+      UN_PLGE_DTI_RANGE_LV = #{unPlgeDtiRangeLv,jdbcType=DECIMAL},
+      CP_DTI_RANGE_LV = #{cpDtiRangeLv,jdbcType=DECIMAL},
+      MUE_LV = #{mueLv,jdbcType=DECIMAL},
+      APPR_MATRIX = #{apprMatrix,jdbcType=VARCHAR},
+      POLICY_CD = #{policyCd,jdbcType=VARCHAR},
+      REJECT_CD = #{rejectCd,jdbcType=VARCHAR},
+      VIOLATION_CD = #{violationCd,jdbcType=VARCHAR},
+      HOUSE_TOTAL_RATIO = #{houseTotalRatio,jdbcType=DECIMAL},
+      WAGE_INCOME_RATE = #{wageIncomeRate,jdbcType=DECIMAL},
+      WAGE_INCOME_DUCT = #{wageIncomeDuct,jdbcType=DECIMAL},
+      TAX_INCOME_RATE = #{taxIncomeRate,jdbcType=DECIMAL},
+      TAX_INCOME_DUCT = #{taxIncomeDuct,jdbcType=DECIMAL},
+      WAGE_INCOME_AVG_SUM = #{wageIncomeAvgSum,jdbcType=DECIMAL},
+      TAX_INCOME_AVG_SUM = #{taxIncomeAvgSum,jdbcType=DECIMAL},
+      TAC_TYPE = #{tacType,jdbcType=VARCHAR},
+      FQZ_RST = #{fqzRst,jdbcType=VARCHAR},
+      FQZ_RST_DESP = #{fqzRstDesp,jdbcType=VARCHAR},
+      IS_SPECIAL_CUST = #{isSpecialCust,jdbcType=VARCHAR},
+      EDU_PROV_RST = #{eduProvRst,jdbcType=VARCHAR},
+      DECISION_RESULT = #{decisionResult,jdbcType=VARCHAR},
+      DECISION_DESP = #{decisionDesp,jdbcType=VARCHAR},
+      SAMP_M_INCOME = #{sampMIncome,jdbcType=DECIMAL},
+      CIF_CP_DTI_UP = #{cifCpDtiUp,jdbcType=DECIMAL},
+      CIF_CP_DTI_VIOL_UP = #{cifCpDtiViolUp,jdbcType=DECIMAL},
+      CIF_OPEN_LMT_UP = #{cifOpenLmtUp,jdbcType=DECIMAL},
+      CIF_OPEN_LMT_VIOL_UP = #{cifOpenLmtViolUp,jdbcType=DECIMAL},
+      VIOL_REF_LMT = #{violRefLmt,jdbcType=DECIMAL},
+      GENDER_CD = #{genderCd,jdbcType=VARCHAR},
+      INTEREST_RATE_PRODUCT = #{interestRateProduct,jdbcType=VARCHAR}
+    where YDJ_ID = #{ydjId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opasbizzmcreditwatchlisti">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opasbizzmcreditwatchlisti">
+    <result column="INSIDE_APP_NO" jdbcType="VARCHAR" property="insideAppNo" />
+    <result column="IS_MATCHED" jdbcType="VARCHAR" property="isMatched" />
+    <result column="BIZ_NO" jdbcType="VARCHAR" property="bizNo" />
+    <result column="BIZ_CODE" jdbcType="VARCHAR" property="bizCode" />
+    <result column="LEVEL" jdbcType="DECIMAL" property="level" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="REFRESH_TIME" jdbcType="DATE" property="refreshTime" />
+    <result column="SETTLEMENT" jdbcType="VARCHAR" property="settlement" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="STATEMENT" jdbcType="VARCHAR" property="statement" />
+    <result column="KEY" jdbcType="VARCHAR" property="key" />
+    <result column="VALUE" jdbcType="VARCHAR" property="value" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="VARCHAR" property="recStatus" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+  </resultMap>
+  
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.Opasbizzmcreditwatchlisti" resultMap="BaseResultMap">
+    select 
+   INSIDE_APP_NO, IS_MATCHED, BIZ_NO, BIZ_CODE, LEVEL, TYPE, CODE, REFRESH_TIME, SETTLEMENT, 
+    STATUS, STATEMENT, KEY, VALUE, DESCRIPTION, CRT_TIME, CRT_DATE, CRT_USER, LST_UPD_TIME, 
+    LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, REC_STATUS, APP_ID
+     from OPAS_BIZ_ZM_CREDITWATCHLISTI
+  </select>
+    
+   <select id="selectAntHitMsg" parameterType="java.lang.String" resultType="java.lang.String">
+     select RISK_TYPE from OPAS_BIZ_ZM_RISKLIST_DATA where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="selectByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select 
+   INSIDE_APP_NO, IS_MATCHED, BIZ_NO, BIZ_CODE, CODE, REFRESH_TIME, SETTLEMENT, 
+    STATUS, VALUE, DESCRIPTION, CRT_TIME, CRT_DATE, CRT_USER, LST_UPD_TIME, 
+    LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, REC_STATUS, APP_ID 
+     from OPAS_BIZ_ZM_CREDITWATCHLISTI where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opasbizzmcreditwatchlisti">
+    insert into OPAS_BIZ_ZM_CREDITWATCHLISTI (INSIDE_APP_NO, IS_MATCHED, BIZ_NO, 
+      BIZ_CODE, LEVEL, TYPE, 
+      CODE, REFRESH_TIME, SETTLEMENT, 
+      STATUS, STATEMENT, KEY, 
+      VALUE, DESCRIPTION, CRT_TIME, 
+      CRT_DATE, CRT_USER, LST_UPD_TIME, 
+      LST_UPD_DATE, LST_UPD_USER, BATCH_DATE, 
+      REC_STATUS, APP_ID)
+    values (#{insideAppNo,jdbcType=VARCHAR}, #{isMatched,jdbcType=VARCHAR}, #{bizNo,jdbcType=VARCHAR}, 
+      #{bizCode,jdbcType=VARCHAR}, #{level,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{refreshTime,jdbcType=DATE}, #{settlement,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{statement,jdbcType=VARCHAR}, #{key,jdbcType=VARCHAR}, 
+      #{value,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}, 
+      #{crtDate,jdbcType=DATE}, #{crtUser,jdbcType=VARCHAR}, #{lstUpdTime,jdbcType=TIMESTAMP}, 
+      #{lstUpdDate,jdbcType=DATE}, #{lstUpdUser,jdbcType=VARCHAR}, #{batchDate,jdbcType=DATE}, 
+      #{recStatus,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR})
+  </insert>
+  
+</mapper>

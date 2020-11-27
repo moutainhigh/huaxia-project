@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="AllotQueue">
+	<resultMap id="AllotQueueResultMap" type="com.huaxia.opas.domain.allot.AllotQueue">
+		<result column="QUEUE_ID" property="queueId" jdbcType="CHAR"/>
+		<result column="QUEUE_CODE" property="queueCode" jdbcType="VARCHAR"/>
+		<result column="QUEUE_NAME" property="queueName" jdbcType="VARCHAR"/>
+		<result column="QUEUE_LEVEL" property="queueLevel" jdbcType="CHAR"/>
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP"/>
+		<result column="queueNum" property="queueNum" jdbcType="NUMERIC"/>
+	</resultMap>
+
+	<insert id="insertAllotQueue" parameterType="com.huaxia.opas.domain.allot.AllotQueue">
+		insert into OPAS_ALLOT_QUEUE (QUEUE_ID,QUEUE_CODE,QUEUE_NAME,QUEUE_LEVEL,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE) 
+		values (
+			#{queueId,jdbcType=CHAR},
+			#{queueCode,jdbcType=VARCHAR},
+			#{queueName,jdbcType=VARCHAR},
+			#{queueLevel,jdbcType=CHAR},
+			#{crtUser,jdbcType=VARCHAR},
+			CURRENT_DATE,
+			#{lstUpdUser,jdbcType=VARCHAR},
+			CURRENT_DATE
+		)
+	</insert>
+	<update id="updateAllotQueue" parameterType="com.huaxia.opas.domain.allot.AllotQueue">
+		update OPAS_ALLOT_QUEUE
+		<set>
+			QUEUE_CODE = #{queueCode,jdbcType=VARCHAR},
+			QUEUE_NAME = #{queueName,jdbcType=VARCHAR},
+			QUEUE_LEVEL = #{queueLevel,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE
+		</set>
+		where QUEUE_ID = #{queueId,jdbcType=CHAR}
+	</update>
+	<delete id="deleteAllotQueueById" parameterType="java.lang.String">
+		delete from OPAS_ALLOT_QUEUE
+		where QUEUE_ID = #{queueId,jdbcType=CHAR}
+	</delete>
+	<!-- 队列 -->
+	<select id="selectAllotQueueByCode" parameterType="java.lang.String" resultMap="AllotQueueResultMap">
+		select QUEUE_ID,QUEUE_CODE,QUEUE_NAME,QUEUE_LEVEL,CRT_USER,LST_UPD_USER,CRT_DATE,LST_UPD_DATE
+		 from OPAS_ALLOT_QUEUE 
+		where QUEUE_CODE = #{queueCode,jdbcType=VARCHAR}
+	</select>
+	<select id="selectCountAllotQueue" parameterType="com.huaxia.opas.domain.allot.AllotQueue" resultType="int">
+		select count(1) from OPAS_ALLOT_QUEUE 
+		where QUEUE_CODE = #{queueCode,jdbcType=VARCHAR} AND QUEUE_NAME= #{queueName,jdbcType=VARCHAR}
+	</select>
+	<select id="selectAllAllotQueue" parameterType="com.huaxia.opas.domain.allot.AllotQueue" resultMap="AllotQueueResultMap">
+		select QUEUE_ID,QUEUE_CODE,QUEUE_NAME,QUEUE_LEVEL,CRT_USER,LST_UPD_USER,CRT_DATE,LST_UPD_DATE
+		 from OPAS_ALLOT_QUEUE 
+		<where>
+			<if test="queueName != null and queueName!= ''"> 
+				and QUEUE_NAME LIKE '%${queueName}%'
+			</if>
+			<if test="queueCode != null and queueCode!= ''"> 
+				and QUEUE_CODE LIKE '${queueCode}%'
+			</if>
+		</where>
+	</select>
+	<select id="countAllotQueue" parameterType="com.huaxia.opas.domain.allot.AllotQueue" resultType="int">
+		select count(1) from OPAS_ALLOT_QUEUE 
+		<where>
+			<if test="queueName != null and queueName!= ''"> 
+				and QUEUE_NAME LIKE '%${queueName}%'
+			</if>
+			<if test="queueCode != null and queueCode!= ''"> 
+				and QUEUE_CODE LIKE '${queueCode}%'
+			</if>
+		</where>
+	</select>
+	<!-- 队列等级 -->
+	<select id="queryQueueLevel" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select QUEUE_LEVEL from OPAS_ALLOT_QUEUE
+		where QUEUE_CODE = #{queueCode,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 业务字典查询征信策略结果 -->
+	<select id="selectCreditDict" parameterType="java.lang.String" resultMap="AllotQueueResultMap">
+		select a.dict_detail_code as queueCode,a.dict_detail_name as queueName from opas_ap_dict_detail a 
+		where a.dict_id =(select b.dict_id from (select d.dict_id,rownum from opas_ap_dict d where d.dict_code='ALLOT_BZK_CREDIT') b
+		 where rownum=1) order by a.SORT_FLAG 
+	</select>
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ArQueue">
+
+	<resultMap id="ArQueueResultMap" type="com.huaxia.opas.domain.archive.ArDetail">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+		<result column="CRED_NO" property="credNo" jdbcType="VARCHAR" />
+		<result column="APP_RESULT" property="appResult" jdbcType="VARCHAR" />
+		<result column="FILE_NO" property="fileNo" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="queryArQueueCount" parameterType="com.huaxia.opas.domain.archive.ArDetail"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_FILE_APPLICATION_DETAIL
+		where flag = '1'
+			  AND SYN_FLAG = '0'
+		<if test="appId != null and appId !='' ">
+			AND APP_ID LIKE '%${appId}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+		<if test="operator != null and operator !='' ">
+			AND OPERATOR LIKE '%${operator}%'
+		</if>
+		<if test="appResult != null and appResult !='' ">
+			AND APP_RESULT LIKE '%${appResult}%'
+		</if>
+	</select>
+
+	<select id="queryArQueueList" parameterType="com.huaxia.opas.domain.archive.ArDetail"
+		resultMap="ArQueueResultMap">
+		select APP_ID,CUST_NAME,CRED_NO,APP_RESULT,OPERATOR,OPERAT_TIME from
+		OPAS_FILE_APPLICATION_DETAIL
+		where flag = '1'
+			  AND SYN_FLAG = '0'
+		<if test="appId != null and appId !='' ">
+			AND APP_ID LIKE '%${appId}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+		<if test="operator != null and operator !='' ">
+			AND OPERATOR LIKE '%${operator}%'
+		</if>
+		<if test="appResult != null and appResult !='' ">
+			AND APP_RESULT LIKE '%${appResult}%'
+		</if>
+		order by APP_ID
+	</select>
+
+	<update id="updateArQueueToDel" parameterType="com.huaxia.opas.domain.archive.ArDetail">
+		update OPAS_FILE_APPLICATION_DETAIL
+		<set>
+			flag = '4',
+			OPERATOR = #{operator},
+			operat_time = sysdate
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateFileNoForAr" parameterType="com.huaxia.opas.domain.archive.ArDetail">
+		update OPAS_FILE_APPLICATION_DETAIL
+		set
+			FILE_NO = #{fileNo, jdbcType=VARCHAR},
+			OPERAT_TIME = sysdate
+		where APP_ID = #{appId,jdbcType=CHAR} 
+	</update>
+
+	<insert id="insertArBatch" parameterType="com.huaxia.opas.domain.archive.ArBatch">
+		insert into
+		OPAS_FILE_BATCH_INFO
+		(
+		FILE_NO,
+		FILE_APP,
+		FILE_OPERATOR,
+		FILE_TIME
+		)
+		values (
+		#{fileNo,jdbcType=VARCHAR},
+		#{fileApp,jdbcType=VARCHAR},
+		#{fileOperator,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert>
+
+	<update id="updAndInsAll" parameterType="com.huaxia.opas.domain.archive.ArDetail">
+		update OPAS_FILE_APPLICATION_DETAIL
+		<set>
+			flag = '2',
+			FILE_NO = #{fileNo},
+			OPERATOR = #{operator},
+			operat_time = sysdate
+		</set>
+		where flag = '1'
+			and APP_ID in 
+		<foreach collection="ids" open= "(" close=")" item="appId" separator=",">
+			#{appId,jdbcType=VARCHAR}
+		</foreach>
+		
+		<!-- update OPAS_FILE_APPLICATION_DETAIL
+		<set>
+			FILE_NO = #{fileNo}
+		</set>
+		where APP_ID in 
+		<foreach collection="ids" open= "(" close=")" item="appId" separator=",">
+			#{appId,jdbcType=VARCHAR}
+		</foreach> -->
+	</update>
+
+	<update id="updateAppFlag" parameterType="com.huaxia.opas.domain.archive.ArDetail">
+		update OPAS_FILE_APPLICATION_DETAIL
+		<set>
+			flag = '1',
+			OPERATOR = #{operator},
+			operat_time = sysdate
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+		and
+		flag = '4'
+	</update>
+	
+	<!-- 修改C1表中的字段 -->
+	<update id="updateC1" parameterType="com.huaxia.opas.domain.archive.ArDetail">
+		update opas_biz_inp_appl_c1
+		<set>
+			C4_VCODE = 'A'
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 查询套卡标志 -->
+	<select id="queryMatchingFlag" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.matching_card_flag as matchingflag from opas_biz_inp_appl_c1 t
+ 		where 1=1
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID = #{appId}
+			</if>
+	</select>
+
+	<!-- 套卡查询同步标志 -->
+	<select id="querysynFlag" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t.syn_flag as synflag from opas_file_application_detail t
+ 		where 1=1
+			<if test="appId != null and appId !='' ">
+				AND t.APP_ID = #{appId}
+			</if>
+	</select>
+	
+	<!-- 修改套卡同步标志 -->
+	<update id="updatesynFlag" parameterType="java.util.Map">
+		update opas_file_application_detail
+		<set>
+			SYN_FLAG = '1'
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateArchiveBatchNo" parameterType="java.util.Map">
+		UPDATE OPAS_FILE_APPLICATION_DETAIL
+		SET FILE_NO = #{batchNo, jdbcType=VARCHAR},
+			OPERAT_TIME = SYSDATE
+		WHERE APP_ID = #{appId, jdbcType=VARCHAR}
+	</update>
+	
+<!-- 批量归档前的查询 -->
+	<!-- <select id="queryArQueueList" parameterType="com.huaxia.opas.domain.archive.ArDetail"
+		resultMap="ArQueueResultMap">
+		select APP_ID,CUST_NAME,CRED_NO,APP_RESULT,OPERATOR,OPERAT_TIME from
+		OPAS_FILE_APPLICATION_DETAIL
+		where flag = '1'
+		<if test="appId != null and appId !='' ">
+			AND APP_ID LIKE '%${appId}%'
+		</if>
+		<if test="custName != null and custName !='' ">
+			AND CUST_NAME LIKE '%${custName}%'
+		</if>
+		<if test="credNo != null and credNo !='' ">
+			AND CRED_NO LIKE '%${credNo}%'
+		</if>
+		<if test="operator != null and operator !='' ">
+			AND OPERATOR LIKE '%${operator}%'
+		</if>
+		<if test="appResult != null and appResult !='' ">
+			AND APP_RESULT LIKE '%${appResult}%'
+		</if>
+	</select> -->
+</mapper>

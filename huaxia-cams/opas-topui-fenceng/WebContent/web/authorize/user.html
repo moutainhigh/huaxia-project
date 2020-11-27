@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%; height: 650px">
+		<table id="tblUser" title="用户信息列表" class="easyui-datagrid"
+			style="width: 98%; height: 650px"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/user_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+			<thead frozen="true">
+				<tr>
+					<th field="userId" width="10%" align="center" checkbox="true">用户Id</th>
+					<th field="userCode" width="10%">登录名</th>
+					<th field="userName" width="10%">用户名称</th>
+					<th field="status" width="5%" align="center"
+						data-options="formatter:formatStatus">用户状态</th>
+				</tr>
+			</thead>
+			<thead>
+				<tr>
+					<th field="userLdnamber" width="10%" align="center">身份证号</th>
+				    <th field="department" width="8%" align="center">部门名称</th>
+				    <th field="team" width="8%" align="center">团队名称</th>
+				    <th field="station" width="8%" align="center">岗位名称</th>
+				    <th field="crtUser" width="10%" align="center" >创建人</th>
+					<th field="crtTime" width="10%" align="center" formatter="formatDate">创建日期</th>
+					<th field="lstUpdUser" width="10%" align="center" >最后操作人</th>
+					<th field="lstUpdTime" width="10%" align="center" formatter="formatDate">修改日期</th>
+					<th field="operate" width="15%" align="center"
+						data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="positionCodeCondion"
+			style="padding: 10px; text-align: center;">
+			<form id="seachPositionCodeForm">
+			<div id="seachCondion" class="area-search" style="padding: 10px;">
+				<form id="seachForm">
+				<table>
+					<tr>
+						<td>登录名：</td>
+						<td><input class="easyui-textbox" name="userCode"
+							data-options="validType:'maxLength[12]'" style="width: 150px;" />
+						</td>
+						<td>用户名称：</td>
+						<td><input class="easyui-textbox" name="userName"
+							data-options="validType:'maxLength[12]'" style="width: 150px;" />
+						</td>
+						<td>用户角色：</td>
+						<td><select  name="roleId"  id="roleId1"
+							style="width: 150px;" >
+							</select>
+						</td>
+						 <td>部门：</td>
+						<td><input class="easyui-textbox" name="department"
+							data-options="validType:'maxLength[12]'" style="width: 150px;" /></td>
+					</tr>
+					<tr><td>状态：</td>
+						<td><select class="easyui-combobox" name="status" editable="false"
+							style="width: 150px;">
+								<option value="">---请选择---</option>
+								<option value="1">启用</option>
+								<option value="0">停用</option>
+								<option value="2">注销</option>
+						</select></td>
+						<td>团队：</td>
+						<td><input class="easyui-textbox" name="team"
+							style="width: 150px;"></td>
+						<td>用户组别：</td>
+						<td><select name="orgId" id="orgId1" style="width: 150px;" >
+						</select></td>
+						<td>岗位：</td>
+						<td><select class="easyui-textbox" name="station"  style="width: 150px;">
+							</select>
+						</td>
+					</tr>
+				</table>
+			</form>
+			<div class="area-function">
+				<a href="javascript:common.searchTbl('seachPositionCodeForm','tblUser');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+				<a href="javascript:common.openWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add" onclick="initpage()">新增 </a>
+			</div>
+		 </div>
+		</form>
+	</div>
+</div>
+
+	<div id="winEdit" class="easyui-window" title="用户信息修改"
+		style="width: 450px; height: 550px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">登录名:</td>
+					<td><input class="easyui-validatebox" id="userCode"
+						data-options="multiline:true,validType:'notnull',validType:'loginName'"
+						 type="text" name="userCode" readOnly
+						required="true"></input>
+				        <input  type="hidden" name="userIId" id="userIId" />
+				        <input  type="hidden" name="productCode" id="productCode" />
+						<span id="userIdErr"></span>
+				</tr>
+				<tr>
+					<td align="right">用户名称:</td>
+					<td><input class="easyui-validatebox" id="userName"
+						 type="text" name="userName"
+						data-options="required:true" ></input><span id="userNameErr"></span></td>
+				</tr>
+				
+				<tr>
+					<td align="right">新密码:</td>
+					<td><input id="newPassword" name="newPassword" type="password"
+						class="easyui-validatebox textbox"></td>
+
+				</tr>
+				<tr>
+					<td align="right">确认密码:</td>
+					<td><input id="reuserPassword" name="reuserPassword"
+						type="password" class="easyui-validatebox textbox"
+						validType="equals['#editForm input[name=newPassword]']" /></td>
+
+				</tr>
+				<tr>
+					<td align="right">身份证号:</td>
+					<td><input class="easyui-validatebox" id="userLdnamber"
+						 type="text" name="userLdnamber"
+						data-options="validType:'idcard',required:true"></input></td>
+				</tr>
+				<tr>
+					<td align="right">部门:</td>
+					<td><input class="easyui-validatebox" id="department" type="text" name="department">
+					    </input><span id="departmentErr"></span></td>
+				</tr>
+				<tr>
+					<td align="right">团队:</td>
+					<td><input class="easyui-validatebox" id="team" type="text" name="team">
+					    </input><span id="teamErr"></span>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">岗位:</td>
+					<td><input class="easyui-validatebox" id="station" type="text" name="station">
+					    </input><span id="stationErr"></span></td>
+				</tr>
+				<tr>
+					<td align="right">易达金额度上限:</td>
+					<td><input class="easyui-validatebox" id="ydjLimitLevel"
+						type="text"  name="ydjLimitLevel"
+						data-options="validType:['integer','length[0,10]']"></input><span
+						id="limitLevelErr2"></span></td>
+				</tr>
+				<tr>
+					<td align="right">标准卡额度上限:</td>
+					<td><input class="easyui-validatebox" id="bzkLimitLevel"
+						type="text"  name="bzkLimitLevel"
+						data-options="validType:['integer','length[0,10]']"></input><span
+						id="limitLevelErr2"></span></td>
+				</tr>
+				<tr>
+					<td align="right">手机号码:</td>
+					<td><input class="easyui-validatebox" id="cellphone"
+						type="text" name="cellphone" data-options="validType:'mobile',required:true" ></input></td>
+				</tr>
+				<tr>
+					<td align="right">座机号码:</td>
+					<td><input class="easyui-validatebox" id="telephone"
+						type="text" name="telephone"
+						data-options="validType:'mobileAndTel'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">邮箱:</td>
+					<td><input class="easyui-validatebox" id="email" type="text"
+						name="email" data-options="validType:'email'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">用户有效期:</td>
+					<td><input class="easyui-datebox" id="userValidityPerriod1"
+						name="userValidityPerriod" ></input></td>
+				</tr>
+				<tr>
+					<td align="right">文档权限:</td>
+					<td><input  id="fileUploadControl" class="easyui-combotree"  
+						name="fileUploadControl"></input>注：只为文档管理员配置</td>
+				</tr>
+				<tr>
+					<td align="right">IP地址:</td>
+					<td><input class="easyui-validatebox" id="ipAddr" type="text"
+						name="ipAddr" data-options="validType:'ip',required:true"></input></td>
+				</tr>
+				<tr>
+					<td align="right">用户状态:</td>
+					<td><input type="radio" name="status" value="1" />启用&nbsp&nbsp
+						<input type="radio" name="status" value="0" />停用&nbsp&nbsp
+						<input type="radio" name="status" value="2" />注销</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="selectCode()">选择卡种</a></td>
+				</tr>	
+				
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">关闭</a>
+		</div>
+	</div>
+
+	<div id="authorAdd" class="easyui-window" title="角色授权"
+		style="width: 610px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true,maximized:true,closed:true">
+		<div  data-options="fit:true,boder:false">
+			<div data-options="region='north',title:'查询',border:false,icons:'icon-searh'"
+ 				style="height:600px;overflow:hidden;">
+  				<table id="tblRole" class="easyui-datagrid"
+					style="width:100%;height:100%" iconCls="icon-save"
+					rownumbers="true">
+				<thead>
+					<tr>
+						<th field="roleId" width="15%" align="center" checkbox="true">角色Id</th>
+						<th field="roleName" width="25%" align="center">角色名</th>
+						<th field="roleDesc" width="68%" align="center">角色描述</th>
+					</tr>
+				</thead>
+				<tr>
+					<td>用户名:</td>
+					<td><input type="hidden" name="userId" id="userId" /></td>
+				</tr>
+			</table>
+ 		</div>
+ 		<div  data-options="region:'south',split:true,noheader:true,border:false" style="height:20px;text-align:center;margin-top:10px">
+ 			<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('authorAdd')">取消</a> <a href="javascript:void(0)"
+					class="easyui-linkbutton" onclick="updateRoleOfUser()">授权</a>
+ 		</div>
+     </div>
+	</div>
+
+	<div id="relationOrg" class="easyui-window" title="关联机构"
+		style="width: 610px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div  data-options="fit:true,boder:false">
+			<div data-options="region='north',title:'查询',border:false,icons:'icon-searh'"
+ 				style="height:600px;overflow:hidden;">
+				<table id="tblOrg" class="easyui-datagrid"
+					style="width: 100%; height: 100%" iconCls="icon-save"
+					rownumbers="true" data-options="singleSelect:true">
+					<thead>
+						<tr>
+							<th field="orgId" width="15%" align="center" checkbox="true">机构Id</th>
+							<th field="orgName" width="20%" align="center">机构名称</th>
+							<th field="orgLevel" width="10%" align="center">机构级别</th>
+							<!-- <th field="status" width="10%" align="center">机构状态</th> -->
+							<th field="linkMan" width="15%" align="center">联系人</th>
+							<th field="orgAddr" width="25%" align="center">机构地址</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div data-options="region:'south',split:true,noheader:true,border:false" style="height:20px;text-align:center;margin-top:10px">
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('relationOrg')">取消</a> 
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="relationOrgOfUser()">关联机构</a>
+			</div>
+		</div>
+
+	</div> 
+
+	<div id="winAdd" class="easyui-window" title="用户信息添加"
+		style="width: 450px; height: 550px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="right">登录名:</td>
+					<td><input class="easyui-validatebox" id="userCode"
+						data-options="multiline:true,validType:'notnull',validType:'loginName'"
+						 type="text" name="userCode"
+						required="true">
+						<input  type="hidden" name="productCode" id="productCode1" />
+						</input><span id="userCodeErr"></span>
+				</tr>
+				<tr>
+					<td align="right">用户名称:</td>
+					<td><input class="easyui-validatebox" id="userName"
+						 type="text" name="userName"
+						data-options="required:true"></input><span id="userNameErr"></span></td>
+				</tr>
+				<tr>
+					<td align="right">性别:</td>
+					<td><select class="easyui-combobox" id="applyerSex"
+						style="width: 150px;" name="applyerSex" dict_type="ZDXB" 
+						data-options="valueField:'dictDetailCode',textField:'dictDetailName'"></select></td>
+				</tr>
+				<tr>
+					<td align="right">身份证号:</td>
+					<td><input class="easyui-validatebox" id="userLdnamber"
+						 type="text" name="userLdnamber"
+						data-options="validType:'idcard',required:true"></input></td>
+				</tr>
+				<tr>
+					<td align="right">部门:</td>
+					<td><input class="easyui-validatebox" id="department" type="text" name="department">
+					    </input><span id="departmentErr"></span></td>
+				</tr>
+				<tr>
+					<td align="right">团队:</td>
+					<td><input class="easyui-validatebox" id="team" type="text" name="team">
+					    </input><span id="teamErr"></span>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">岗位:</td>
+					<td><input class="easyui-validatebox" id="station" type="text" name="station">
+					    </input><span id="stationErr"></span></td>
+				</tr>
+				<tr>
+					<td align="right">易达金额度上限:</td>
+					<td><input class="easyui-validatebox" id="ydjLimitLevel"
+						type="text"  name="ydjLimitLevel"
+						data-options="validType:['integer','length[0,10]']"></input><span
+						id="limitLevelErr"></span></td>
+				</tr>
+				<tr>
+					<td align="right">标准卡额度上限:</td>
+					<td><input class="easyui-validatebox" id="bzkLimitLevel"
+						type="text"  name="bzkLimitLevel"
+						data-options="validType:['integer','length[0,10]']"></input><span
+						id="limitLevelErr"></span></td>
+				</tr>
+				<tr>
+					<td align="right">登录密码:</td>
+					<td><input id="userPassword" name="userPassword"
+						type="password" value="000000" class="easyui-validatebox textbox"
+						readonly="true" data-options="required:true,validType:'loginName'">(初始密码为000000)</td>
+				</tr>
+				<tr>
+					<td align="right">手机号码:</td>
+					<td><input class="easyui-validatebox" id="cellphone"
+						type="text" name="cellphone" data-options="validType:'mobile',required:true"></input></td>
+				</tr>
+				<tr>
+					<td align="right">座机号码:</td>
+					<td><input class="easyui-validatebox" id="telephone"
+						type="text" name="telephone"
+						data-options="validType:'mobileAndTel'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">邮箱:</td>
+					<td><input class="easyui-validatebox" id="email" type="text"
+						name="email" data-options="validType:'email'"></input></td>
+				</tr>
+				<tr>
+					<td align="right">用户有效期:</td>
+					<td><input class="easyui-datebox" id="userValidityPerriod"
+						name="userValidityPerriod" ></input></td>
+				</tr>
+				<tr>
+					<td align="right">文档权限:</td>
+					<td><input  id="fileUploadControl_add" class="easyui-combotree"  
+						name="fileUploadControl"></input>注：只为文档管理员配置
+					</td>
+				</tr>
+				<tr>
+					<td align="right">IP地址:</td>
+					<td><input class="easyui-validatebox" id="ipAddr" type="text"
+						name="ipAddr" data-options="validType:'ip',required:true"></input></td>
+				</tr>
+				<tr>
+					<td align="right">用户状态:</td>
+					<td><input type="radio" name="status" value="1" checked />启用&nbsp&nbsp
+						<input type="radio" name="status" value="0" />停用&nbsp&nbsp
+						<input type="radio" name="status" value="2" />注销</td>
+				<tr>
+				<tr>
+					<td colspan="2" align="center"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="selectCode()" >选择卡种</a></td>
+				</tr> 
+			</table>
+		</form>
+
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onSave()">保存</a>
+		</div>
+	</div>
+	<!-- 审批卡种 -->
+	<div id="winSelect" class="easyui-window"  title="卡产品列表"
+		style="width: 610px; height: 400px" data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div  data-options="fit:true,boder:false">
+			<div data-options="region='north',title:'查询',border:false,icons:'icon-searh'"
+ 				style="height:600px;overflow:hidden;">
+				<table id="tblCard" class="easyui-datagrid" style="width: 100%; height: 100%" iconCls="icon-save"
+					rownumbers="true">
+					<thead>
+						<tr>
+							<th field="autoId" width="5%" align="center" checkbox="true"></th>
+							<th field="cardCode" width="30%" align="center">产品编号</th>
+							<th field="prodName" width="30%" align="center">产品名称</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div data-options="region:'south',split:true,noheader:true,border:false" style="height:20px;text-align:center;margin-top:10px">
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="enterCode()">确定</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winSelect')">取消</a> 
+			</div>
+	   </div>
+	</div>
+</body>
+
+<script type="text/javascript">
+$cf.loadAllDict();//加载数据字典
+
+	var tblUser = $("#tblUser");
+	var tblRole = $("#tblRole");
+	var tblOrg = $("#tblOrg");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var authorWindow = $("#authorAdd");
+	var orgWindow = $("#relationOrg");
+	var authorForm = $("#authorForm");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	var selectWindow = $("#winSelect");
+	var productCode = "";
+	var selectForm =$("#selectForm");
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editUser(); >修改</a>&nbsp;<a href=javascript:deleteUser();>删除</a>&nbsp;<a href=javascript:authorization();>授权</a>&nbsp;<a href=javascript:relateOrg();>关联机构</a>";
+	}
+
+	function formatGender(val, row, index) {
+			if (val == "M") {
+				return "男";
+			} else if (val == "F") {
+				return "女";
+			}
+		} 
+
+	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		}else if (val == "2") {
+			return "注销";
+		}
+	}  
+
+	//页面初始化
+	$(function() {
+		//加载角色下拉框数据
+		$cf.ajax({
+			url : "/opas-naps/queryRoleByUser.json",
+			onSuccess : function(node) {
+				var roles = eval(node.RSP_BODY.jsonapUser);
+				$("#roleId1").append("<option value=''>请选择</option>");
+				for (var i = 0; i < roles.length; i++) {
+					var role = roles[i];
+					$("#roleId1").append(
+							"<option value='"+role.roleId+"'>" + role.roleName + "</option>");
+				}
+				 
+			}
+		});
+		
+		$cf.ajax({
+			url : "/opas-naps/queryOrgByUser.json",
+			onSuccess : function(node) {
+				var roles = eval(node.RSP_BODY.jsonapOrg);
+				$("#orgId1").append("<option value=''>请选择</option>");
+				for (var i = 0; i < roles.length; i++) {
+					var role = roles[i];
+					$("#orgId1").append(
+							"<option value='"+role.orgId+"'>" + role.orgName + "</option>");
+				}
+				 
+			}
+		});
+		$('#fileUploadControl_add').combotree('loadData', [ 
+		        {	"id" : "",
+		        	"text" : "--请选择--",
+		        	"checked":true
+		        },{
+					"id" : "A",
+					"text" : "标准卡政策(A类)"
+				},{
+					"id" : "B",
+					"text" : "标准卡审核作业(B类)"
+				},{
+					"id" : "C",
+					"text" : "易达金政策(C类)"
+				},{
+					"id" : "D",
+					"text" : "易达金审核作业(D类)"
+				},{
+					"id" : "E",
+					"text" : "系统管理(E)大类"
+				}
+		]);
+	});
+	
+	function addUser() {
+		addWindow.window({
+			closed : false
+		});
+		$.parser.parse('#winAdd');
+	}
+	//审批卡种确定按钮
+	 function enterCode() {
+        var orgObj = $("#tblCard").datagrid("getSelections");
+        var cardCode = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			cardCode.push(orgObj[i].productCode);
+		}
+		productCode=cardCode;
+		$("#productCode1").val(productCode);
+		onConcle("winSelect");
+	} 
+	
+	function initpage() {
+		$("#addForm")[0].reset();
+	}
+	
+	//打开产品列表
+	function selectCode() {
+		selectWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false
+		});
+		$('#tblCard').datagrid("reload");
+		var userObj = tblUser.datagrid("getSelected");
+		$cf.ajax({
+			url : "/opas-naps/queryUserCode.json",
+			async : false,
+			data : userObj,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					selectWindow.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false,
+					});
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$('#tblCard').datagrid("loadData", dataMap);
+					var dataRows = $('#tblCard').datagrid('getRows');
+					var userCardList = data.RSP_BODY.usercard;
+					var userCardLength = userCardList.length;
+					var dataLen = dataRows.length;
+					if (userCardList != null) {
+						for (i = 0; i < dataLen; i++) { //遍历权限表	
+							var datarow = dataRows[i];
+							for (var j = 0; j < userCardLength; j++) {
+								var userCardRow = userCardList[j];
+								if (datarow.autoId == userCardRow.autoId) {
+									$("#tblCard").datagrid('checkRow', i);
+								}
+							}
+						}
+					}
+				}
+		    }
+		});
+	}
+
+	function editUser() {
+		var userObj = tblUser.datagrid("getSelected");
+		userObj.newPassword="";
+		userObj.reuserPassword="";
+		if(userObj.status==2){
+			alert("该用户已被注销！");
+			return;
+		}
+		userObj.userIId = userObj.userId;
+		if (userObj.limitLevel != null) {
+			userObj.limitLevel = userObj.limitLevel.trim();
+		}
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(userObj)
+		});
+		selectCode();
+		selectWindow.window({
+			closed : true
+		});
+ 		var iTime = gridDateFormatYMD(userObj.userValidityPerriod);
+		$('#userValidityPerriod1').datebox('setValue',iTime);
+		//文档权限
+		var fileUploadControl_array =  userObj.fileUploadControl;//$("#fileUploadControl").combotree('getValues');
+		/* if(userObj.roleCode!= null && userObj.roleCode.trim()!= "" && userObj.roleCode.indexOf('SO01')>-1){
+			$('#fileUploadControl').combotree({    
+				 multiple:false
+			});
+		}else if(userObj.roleCode!= null && userObj.roleCode.trim()!= "" && userObj.roleCode.indexOf('OOO1')>-1){
+			$('#fileUploadControl').combotree({    
+				 multiple:true
+			});
+		}else{
+			return;
+		} */
+		/* $('#fileUploadControl').combotree({    
+			multiple:false
+		}); */
+		$('#fileUploadControl').combotree('loadData', [ 
+		        {	"id" : "",
+		        	"text" : "--请选择--"
+		        },{
+					"id" : "A",
+					"text" : "标准卡政策(A类)"
+				},{
+					"id" : "B",
+					"text" : "标准卡审核作业(B类)"
+				},{
+					"id" : "C",
+					"text" : "易达金政策(C类)"
+				},{
+					"id" : "D",
+					"text" : "易达金审核作业(D类)"
+				},{
+					"id" : "E",
+					"text" : "系统管理(E)大类"
+				}
+		]);
+		$('#fileUploadControl').combotree('setValues', fileUploadControl_array);
+	}
+
+	function authorization() {
+		var userObj = tblUser.datagrid("getSelected");
+		if (userObj.status == 2) {
+			alert("该用户已被注销！");
+			return;
+		}
+		userObj.userIId = userObj.userId;
+		getUserRoleList(userObj);//获取用户相关角色信息及角色总信息
+
+	}
+
+	function relateOrg() {
+		var userObj = tblUser.datagrid("getSelected");
+		if (userObj.status == 2) {
+			alert("该用户已被注销！");
+			return;
+		}
+		userObj.userIId = userObj.userId;
+		getUserRelationOrgList(userObj);//获取用户相关联的机构信息及机构总信息
+
+	}
+
+	function getUserRelationOrgList(userData) {
+		$cf.ajax({
+			url : "/opas-naps/getUserRelationOrgList.json",
+			data : userData,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					orgWindow.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false,
+					});
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$('#tblOrg').datagrid("loadData", dataMap);
+					var dataRows = $('#tblOrg').datagrid('getRows');
+					var userOrgList = data.RSP_BODY.userOrgList;
+					var userOrgLength = userOrgList.length;
+					var dataLen = dataRows.length;
+					if (userOrgList != null) {
+						for (i = 0; i < dataLen; i++) { //遍历权限表	
+							var datarow = dataRows[i];
+							for (var j = 0; j < userOrgLength; j++) {
+								var userOrgRow = userOrgList[j];
+								if (datarow.orgId == userOrgRow.orgId) {
+									$("#tblOrg").datagrid('checkRow', i);
+								}
+							}
+						}
+					}
+				} else {
+					return;
+				}
+			}
+		});
+	}
+
+	function getUserRoleList(userData) {
+		$cf.ajax({
+			url : "/opas-naps/getUserRoleListByUserId.json",
+			data : userData,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					authorWindow.window({
+						closed : false,
+						collapsible : false,
+						minimizable : false,
+					});
+					var dataMap = {
+						"rows" : data.RSP_BODY.rows,
+						"total" : data.RSP_BODY.total
+					};
+					$('#tblRole').datagrid("loadData", dataMap);
+					var dataRows = $('#tblRole').datagrid('getRows');
+					var userRoleList = data.RSP_BODY.userRoleList;
+					var userRoleLength = userRoleList.length;
+					var dataLen = dataRows.length;
+					if (userRoleList != null) {
+						for (i = 0; i < dataLen; i++) { //遍历权限表	
+							var datarow = dataRows[i];
+							for (var j = 0; j < userRoleLength; j++) {
+								var userRoleRow = userRoleList[j];
+								if (datarow.roleId == userRoleRow.roleId) {
+									$("#tblRole").datagrid('checkRow', i);
+								}
+							}
+						}
+					}
+				} else {
+					return;
+				}
+			}
+		});
+	}
+
+	function addParam() {
+		var userObj = tblUser.datagrid("getSelected");
+		var userIId = userObj.userId;
+		var param = {
+			"userIId" : userIId
+		};
+
+		$("#tblRole").datagrid("load", param);
+
+	}
+
+	function deleteUser() {
+		var userObj = tblUser.datagrid("getSelected");
+		userObj.userIId = userObj.userId;
+		$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/user_remove.json",
+					data : userObj,
+					onSuccess : function(data) {
+
+						top.$cf.showMsg("删除成功！");
+
+						onConcle("save");
+						tblUser.datagrid("reload");
+					}
+				});
+			}
+		});
+
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	//更改用户相关的角色信息
+	function updateRoleOfUser() {
+		var selections = tblRole.datagrid("getSelections");
+		var userId = tblUser.datagrid("getSelected").userId;
+		var userData = [];
+		for (i = 0; i < selections.length; i++) {
+			var roleId = selections[i].roleId;
+			var userRole = {
+				"userId" : userId,
+				"roleId" : roleId
+			};
+			userData[i] = userRole;
+		}
+
+		if (userData.length == 0) {
+			$.messager.alert("操作提示", "请勾选角色信息!");
+			return;
+		}
+		var datas = {
+			"userIId" : userId,
+			"userRole" : userData
+		};
+		$cf.ajax({
+			url : "/opas-naps/updateRoleOfUser.json",
+			data : datas,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+
+					top.$cf.showMsg("授权成功！");
+
+					onConcle('authorAdd');
+					return;
+
+				} else {
+					$.messager.alert("操作提示", "授权失败:" + data.exMsg, "error");
+					return;
+				}
+			}
+
+		});
+	}
+
+	//更改用户相关的关联机构信息
+	function relationOrgOfUser() {
+		var selections = tblOrg.datagrid("getSelections");
+		var userId = tblUser.datagrid("getSelected").userId;
+		var userData = [];
+		for (i = 0; i < selections.length; i++) {
+			var orgId = selections[i].orgId;
+			var userOrg = {
+				"userId" : userId,
+				"orgId" : orgId
+			};
+			userData[i] = userOrg;
+		}
+		if (userData.length == 0) {
+			$.messager.alert("操作提示", "请勾选机构信息!");
+			return;
+		}
+		var datas = {
+			"userIId" : userId,
+			"userOrg" : userData
+		};
+		$cf.ajax({
+			url : "/opas-naps/relationOrgOfUser.json",
+			data : datas,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+
+					top.$cf.showMsg("关联机构成功！");
+
+					onConcle('relationOrg');
+					return;
+
+				}if (data.RSP_BODY.userSuccess) {
+
+					//top.$cf.showMsg("该组员存在未完成的申请件,请先处理完,再修改！");
+					$.messager.alert("操作提示", "添加失败:该组员存在未完成的申请件,请先处理完,再修改！");
+					onConcle('relationOrg');
+					return;
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					return;
+				}
+			}
+
+		});
+	}
+
+	function onUpdate() {
+		var selections = $('#tblCard').datagrid("getSelections");
+		var userData = [];
+		for (i = 0; i < selections.length; i++) {
+			var cardCode = selections[i].cardCode;
+			userData[i] = cardCode;
+		}
+		$("#productCode").val(userData);
+		var fileUploadControl = $("#fileUploadControl").combotree('getValues').toString();
+		if(fileUploadControl==null || fileUploadControl ==""){
+			fileUploadControl = " ";
+		}
+		var jsondata = getFormData(editForm.serializeArray());
+		jsondata.fileUploadControl = fileUploadControl;
+		if (jsondata.userCode == null || jsondata.userCode.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,登录名不能为空!");
+			return;
+		}
+		if (jsondata.userName == null || jsondata.userName.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,用户名不能为空!");
+			return;
+		}
+		if (jsondata.userLdnamber == null || jsondata.userLdnamber.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,身份证号不能为空!");
+			return;
+		}
+		if (jsondata.newPassword != jsondata.reuserPassword) {
+			$.messager.alert("操作提示", "密码不一致,请重新输入!", "error");
+			return;
+		}
+		if (jsondata.newPassword != null && jsondata.newPassword.trim() != "") {
+			jsondata.userPassword = jsondata.newPassword;
+		}
+		if (jsondata.cellphone == null || jsondata.cellphone.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,手机号码不能为空!");
+			return;
+		}
+		if (jsondata.ipAddr == null || jsondata.ipAddr.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,IP地址不能为空!");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/user_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("修改成功！");
+					onConcle('winEdit');
+					tblUser.datagrid("reload");
+				} else if (data.RSP_BODY.isExist) {
+					$.messager.alert("操作提示", "登入名已存在!");
+					return;
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("edit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		var selections = $('#tblCard').datagrid("getSelections");
+		var userData = [];
+		for (i = 0; i < selections.length; i++) {
+			var cardCode = selections[i].cardCode;
+			userData[i] = cardCode;
+		}
+		$("#productCode1").val(userData);
+		var jsondata = getFormData(addForm.serializeArray());
+		if (jsondata.userCode == null || jsondata.userCode.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,登录名不能为空!");
+			return;
+		}
+		if (jsondata.userName == null || jsondata.userName.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,用户名不能为空!");
+			return;
+		}
+		if (jsondata.userLdnamber == null || jsondata.userLdnamber.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,身份证号不能为空!");
+			return;
+		}
+		if (jsondata.cellphone == null || jsondata.cellphone.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,手机号码不能为空!");
+			return;
+		}
+		if (jsondata.ipAddr == null || jsondata.ipAddr.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,IP地址不能为空!");
+			return;
+		}
+
+		$cf.ajax({
+			url : "/opas-naps/user_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					top.$cf.showMsg("添加成功！");
+					onConcle('winAdd');
+					tblUser.datagrid("reload");
+					addForm[0].reset();
+				} else if (data.RSP_BODY.isExist) {
+					$.messager.alert("操作提示", "登入名已存在!");
+					return;
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("edit");
+					return;
+				}
+			}
+
+		});
+	}
+
+	$.extend($.fn.validatebox.defaults.rules, {
+		equals : {
+			validator : function(value, param) {
+				return value == $(param[0]).val();
+			},
+			message : '密码输入不一致'
+		}
+	});
+
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if (str.indexOf('1970') >= 0) {
+			return '';
+		} else {
+			return str;
+		}
+	}
+
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+	};
+</script>
+</html>

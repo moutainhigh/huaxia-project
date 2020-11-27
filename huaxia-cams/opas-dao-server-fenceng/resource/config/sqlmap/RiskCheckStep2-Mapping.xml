@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="riskcheck_step2">
+	
+  <!-- 重复申请检查	身份证  -->
+  <resultMap id="C1_IDNBRRiskResultMap" type="com.huaxia.opas.domain.riskcheck.RiskCheck_Apply_C1" >
+ 	<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+ 	<result column="C1_IDNBR" property="c1Idnbr" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_BIZ_INP_APPL_C1_BY_C1_IDNBR" resultMap="C1_IDNBRRiskResultMap" parameterType="java.util.Map" >
+    select APP_ID,C1_IDNBR from OPAS_BIZ_INP_APPL_C1
+    where  APP_ID &lt;&gt;#{appId,jdbcType=VARCHAR} and APP_ID &lt;&gt;#{appId2,jdbcType=VARCHAR} and C1_IDNBR=#{Idnbr,jdbcType=VARCHAR}
+  </select>
+  <!-- 关联性检查-手机	申请表手机号与所有历史进件申请人手机号进行匹配 -->
+  <resultMap id="C1_MOBILERiskResultMap" type="com.huaxia.opas.domain.riskcheck.RiskCheck_Apply_C1" >
+ 	<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+ 	<result column="C1_MOBILE" property="c1Mobile" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_BIZ_INP_APPL_C1_BY_C1_MOBILE" resultMap="C1_MOBILERiskResultMap" parameterType="java.util.Map" >
+    select APP_ID,C1_MOBILE from OPAS_BIZ_INP_APPL_C1
+    where  APP_ID &lt;&gt;#{appId,jdbcType=VARCHAR} and C1_MOBILE=#{c1mobile,jdbcType=VARCHAR} and APP_ID &lt;&gt;#{appId2,jdbcType=VARCHAR} 
+    and C1_IDNBR &lt;&gt;#{Idnbr,jdbcType=VARCHAR}
+    
+  </select>
+  <!-- 申请表直系联系人手机号与所有历史进件的直系联系人手机号进行匹配 -->
+  <resultMap id="C1_XMOBIL1_C1_XMOBIL2RiskResultMap" type="com.huaxia.opas.domain.riskcheck.RiskCheck_Apply_C1" >
+ 	<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+ 	<result column="C1_XMOBIL1" property="c1Xmobil1" jdbcType="VARCHAR" />
+ 	<result column="C1_XMOBIL2" property="c1Xmobil2" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_BIZ_INP_APPL_C1_BY_C1_XMOBIL1To2" resultMap="C1_XMOBIL1_C1_XMOBIL2RiskResultMap" parameterType="java.util.Map" >
+    select APP_ID,C1_XMOBIL1,C1_XMOBIL2 from OPAS_BIZ_INP_APPL_C1
+    where  APP_ID &lt;&gt;#{appId,jdbcType=VARCHAR} and APP_ID &lt;&gt;#{appId2,jdbcType=VARCHAR} 
+   <!--  and ( C1_XMOBIL1=#{xmobile1,jdbcType=VARCHAR} or C1_XMOBIL2=#{xmobile2,jdbcType=VARCHAR} ) -->
+   and  C1_REMOBIL = #{c1Remobil,jdbcType=VARCHAR}
+   and 	C1_IDNBR &lt;&gt;#{Idnbr,jdbcType=VARCHAR}
+  </select>
+  <!-- 申请表家庭地址与所有历史进件家庭地址进行匹配 -->
+  <resultMap id="C1_HMADD1To4RiskResultMap" type="com.huaxia.opas.domain.riskcheck.RiskCheck_Apply_C1" >
+ 	<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+ 	<result column="C1_HMADD1" property="c1Hmadd1" jdbcType="VARCHAR" />
+ 	<result column="C1_HMADD2" property="c1Hmadd2" jdbcType="VARCHAR" />
+ 	<result column="C1_HMADD3" property="c1Hmadd3" jdbcType="VARCHAR" />
+ 	<result column="C1_HMADD4" property="c1Hmadd4" jdbcType="VARCHAR" />
+ 	<result column="C4_CYCADD1" property="c4Cycadd1" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 为了提高性能不影响web容器，尽量减少加载的数据，所以对地址C1_HMADD1做like操作 -->
+  <select id="Query_OPAS_BIZ_INP_APPL_C1_BY_C1_HMADD1To4" resultMap="C1_HMADD1To4RiskResultMap" parameterType="java.util.Map" >
+    select APP_ID,C1_HMADD1,C1_HMADD2,C1_HMADD3,C1_HMADD4,C4_CYCADD1 from opas_biz_inp_appl_compore
+    where  APP_ID &lt;&gt;#{appId,jdbcType=VARCHAR}  and APP_ID &lt;&gt;#{appId2,jdbcType=VARCHAR} and C1_IDNBR &lt;&gt;#{Idnbr,jdbcType=VARCHAR}
+    <if test="hmadd1 != null and hmadd1 != '' ">
+		<!-- and contains(C1_HMADD1,#{hmadd1})>0 -->
+		and catsearch(C1_HMADD1,#{hmadd1},null)>0
+	</if>
+	and rownum &lt;11
+  <!-- 	<if test="hmadd2 != null and hmadd2 != '' ">
+		
+		and catsearch(C1_HMADD2,#{hmadd2},null)>0
+	</if> -->
+  </select>
+  
+  <!-- ============================================================================================================ -->
+  <!--  团办名单	申请表团办号码与团办名单内团办号码字段进行匹配（精确匹配）
+	          重点院校	通过申请人单位名称与重点院校名单内学校名称字段进行匹配（模糊匹配或申请人单位名称可完全落在名单单位名称字段内）
+		商户团办名单	通过申请表团办号码与商户团办名单内团办号码字段进行匹配（精确匹配）
+		优质企业	通过申请人优质企业代码+进入系统日期（进件日期）与优质企业名单中优质企业代码+结束日期进行匹配，如未成功匹配项，通过申请人单位名称+进入系统日期（进件日期）与优质企业名单中单位名称+结束日期进行匹配（单位名称进行模糊匹配或申请人单位名称可完全落在名单单位名称字段内，同时进件日期在结束日期之内）
+		目标企业	通过申请人单位名称与目标企业名单内单位名称字段进行匹配（模糊匹配或申请人单位名称可完全落在名单的单位名称字段内）
+		特殊项目名单	通过申请表团办号与名单中项目代码进行匹配
+   -->
+  <resultMap id="teamdealCodeRiskResultMap" type="com.huaxia.opas.domain.decision.TeamdealList" >
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+ 	<result column="TEAMDEAL_CODE" property="teamdealCode" jdbcType="VARCHAR" />
+  </resultMap>
+   <select id="Query_OPAS_TEAMDEAL_LIST" resultMap="teamdealCodeRiskResultMap" parameterType="java.lang.String" >
+    select TEAMDEAL_CODE,AUTO_ID from OPAS_TEAMDEAL_LIST
+    where upper(TEAMDEAL_CODE) = #{teamCode,jdbcType=VARCHAR} and CURR_STATUS = '1' and rownum=1
+  </select>
+    <select id="Query_OPAS_TEAMDEAL_BZK_LIST" resultMap="teamdealCodeRiskResultMap" parameterType="java.lang.String" >
+    select TEAM_ID TEAMDEAL_CODE,AUTO_ID from OPAS_TEAMLIST
+    where upper(TEAM_ID) = #{_parameter} and STATUS = '1' and APPROVE_VAILUD_DATE &gt;= sysdate and rownum=1
+  </select>
+   <!-- 通过申请人单位名称与重点院校名单内学校名称字段进行匹配（模糊匹配或申请人单位名称可完全落在名单单位名称字段内） -->
+  <resultMap id="majorschoolNameRiskResultMap" type="com.huaxia.opas.domain.sysparm.MajorschoolList" >
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+ 	<result column="MAJORSCHOOL_NAME" property="majorschoolName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_MAJORSCHOOL_LIST" resultMap="majorschoolNameRiskResultMap" >
+    select AUTO_ID,MAJORSCHOOL_NAME from OPAS_MAJORSCHOOL_LIST where CURR_STATUS = '1'
+  </select>
+  
+   <!-- 通过申请表团办号码与商户团办名单内团办号码字段进行匹配（精确匹配） -->
+  <resultMap id="teamdealNoRiskResultMap" type="com.huaxia.opas.domain.decision.MerchTeamdealList" >
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+ 	<result column="TEAMDEAL_NO" property="teamdealNo" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_MERCH_TEAMDEAL_LIST" resultMap="teamdealNoRiskResultMap" parameterType="java.lang.String">
+    select TEAMDEAL_NO,AUTO_ID from OPAS_MERCH_TEAMDEAL_LIST where TEAMDEAL_NO=#{teamNo,jdbcType=VARCHAR} and CURR_STATUS = '1'
+  </select>
+  
+   <!-- 通过申请人单位名称与目标企业名单内单位名称字段进行匹配（模糊匹配或申请人单位名称可完全落在名单的单位名称字段内） -->
+  <resultMap id="companyNameRiskResultMap" type="com.huaxia.opas.domain.sysparm.TargetcompanyList" >
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+ 	<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_TARGETCOMPANY_LIST" resultMap="companyNameRiskResultMap" >
+    select AUTO_ID,COMPANY_NAME from OPAS_TARGETCOMPANY_LIST where CURR_STATUS = '1'
+  </select>
+  
+  
+  <!-- 通过申请表团办号与名单中项目代码进行匹配 -->
+  <resultMap id="projectCodeRiskResultMap" type="com.huaxia.opas.domain.sysparm.SpecialprojectList" >
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+ 	<result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_SPECIALPROJECT_LIST" resultMap="projectCodeRiskResultMap" parameterType="java.lang.String">
+    select PROJECT_CODE,AUTO_ID from OPAS_SPECIALPROJECT_LIST where PROJECT_CODE=#{projectCode,jdbcType=VARCHAR} and CURR_STATUS = '1' and END_DATE &gt;= sysdate
+  </select>
+  
+  <!-- 单位电话	征信电话核查白名单 -->
+  <!-- 单位名称	征信电话核查白名单 -->
+  <resultMap id="companyTelRiskResultMap" type="com.huaxia.opas.domain.decision.CreditTelcheckList" >
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+ 	<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+ 	<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="Query_OPAS_CREDIT_TELCHECK_LIST" resultMap="companyTelRiskResultMap">
+    select COMPANY_TEL,AUTO_ID,COMPANY_NAME from OPAS_CREDIT_TELCHECK_LIST where CURR_STATUS = '1'
+  </select>
+  <!-- jiangming.yang -->
+    <!-- 灰名单 -->
+  <resultMap id="greyResultMap" type="java.util.Map" >
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+ 	<result column="CRED_NO" property="credNo" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectApplyDetailByAppId" resultMap="greyResultMap" parameterType="java.lang.String">
+    select APP_ID,CRED_NO from OPAS_FILE_APPLICATION_DETAIL where appId = #{appId,jdbcType=VARCHAR}
+  </select>
+  <!-- 进入灰名单有效期判断 -->
+  <select id="Query_OPAS_BIZ_Grey_Indate" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	    select (select to_date(to_char(CRT_time, 'YYYYMMDD'), 'YYYYMMDD')
+           from opas_biz_inp_appl_c1
+          where app_id = #{appId,jdbcType=VARCHAR}) -
+       (select to_date(to_char(TO_ARCHIVE_TIME, 'YYYYMMDD'), 'YYYYMMDD')
+          from OPAS_FILE_APPLICATION_DETAIL
+         where APP_RESULT = '1'
+           and app_id =  #{appId2,jdbcType=VARCHAR}) d
+  	from dual 
+  </select>
+  <!-- 证件签发日 - 出生日期 -->
+   <select id="queryYearBetweenIssuingDate" resultType="java.lang.Float" parameterType="java.lang.String">
+      select months_between((select C2_IDDT1
+                            from OPAS_BIZ_INP_APPL_C1
+                           where app_id = #{appId,jdbcType=VARCHAR}),
+                          (select C1_BIRTH
+                             from OPAS_BIZ_INP_APPL_C1
+                            where app_id = #{appId,jdbcType=VARCHAR})) / 12 years
+      from dual
+  </select>
+  <!-- 附卡证件签发日 - 出生日期 -->
+   <select id="queryYearBetweenIssuingDateC2" resultType="java.lang.Float" parameterType="java.lang.String">
+      select months_between((select C2_IDDT2
+                            from OPAS_BIZ_INP_APPL_C2
+                           where app_id = #{appId,jdbcType=VARCHAR}),
+                          (select C2_BIRTH
+                             from OPAS_BIZ_INP_APPL_C2
+                            where app_id = #{appId,jdbcType=VARCHAR})) / 12 years
+      from dual
+  </select>
+  <!-- 证件签发日 - 身份证中 出生日期 -->
+  <select id="queryAgeByDateOfIssue" resultType="java.lang.Float" parameterType="java.lang.String">
+      select months_between((select C2_IDDT1
+                            from OPAS_BIZ_INP_APPL_C1
+                           where app_id = #{appId,jdbcType=VARCHAR}),
+                          (select to_date(substr(c1_idnbr,7,8),'yyyy-mm-dd')
+                             from OPAS_BIZ_INP_APPL_C1
+                            where app_id = #{appId,jdbcType=VARCHAR})) / 12 years
+      from dual
+  </select>
+  <!-- 附属卡 证件签发日 - 身份证中 出生日期 -->
+  <select id="queryAgeByDateOfIssueC2" resultType="java.lang.Float" parameterType="java.lang.String">
+      select months_between((select C2_IDDT2
+                        from OPAS_BIZ_INP_APPL_C2 
+                       where app_id = #{appId,jdbcType=VARCHAR}),
+                      (select to_date(substr(c2_idnbr, 7, 8), 'yyyy-mm-dd')
+                         from OPAS_BIZ_INP_APPL_C2
+                        where app_id = #{appId,jdbcType=VARCHAR})) / 12 years
+  from dual
+  </select>
+  <!-- 计算年龄 当前系统时间 减 身份证中的 出生年月 -->
+   <select id="Query_OPAS_BIZ_IsInDate" resultType="java.lang.Float" parameterType="java.lang.String">
+      select months_between((select sysdate from dual),
+                      (select to_date(substr(c1_idnbr, 7, 8), 'yyyy-mm-dd')
+                         from OPAS_BIZ_INP_APPL_C1
+                        where app_id = #{appId,jdbcType=VARCHAR})) / 12 years
+  from dual
+  </select>
+    <select id="Query_OPAS_BIZ_IsInDateByIDindate" resultType="java.lang.Integer" parameterType="java.util.Map">
+	  select (select to_date(to_char(#{idNumberInDate}, 'YYYYMMDD'), 'YYYYMMDD')
+	          from dual) -
+	       (select to_date(#{dateNum}, 'YYYYMMDD') from dual)
+	  from dual 
+  </select>
+  <!-- yang.jiangming 申请人单位电话   标准卡征信信息名单表 -->
+	<resultMap id="cotelRiskResultMap" type="java.util.Map">
+		<result column="Auto_id" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="Query_OPAS_COTEL_RISKLIST" parameterType="java.lang.String" resultMap="cotelRiskResultMap">
+		select Auto_id, COMPANY_TEL
+		from OPAS_CREDITINFO_LIST
+		where <!-- COMPANY_TEL = #{cotel,jdbcType=VARCHAR} and --> CURR_STATUS = '1'
+	</select>
+	<!-- yang.jiangming 申请人单位名称 标准卡征信信息名单表 -->
+	<resultMap id="companyNameRiskResultMap1" type="java.util.Map">
+		<result column="Auto_id" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select  id="Query_OPAS_COMPANY_RISKLIST" resultMap="companyNameRiskResultMap1">
+		select Auto_id, COMPANY_NAME
+		from OPAS_CREDITINFO_LIST where CURR_STATUS = '1' 
+		<!-- and catsearch(company_name, #{companyName},null) &gt; 0 -->
+	</select>
+	<!-- yang.jiangming 申请人单位地址 标准卡征信信息名单表 -->
+	<resultMap id="companyAddressRiskResultMap" type="java.util.Map">
+		<result column="Auto_id" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_ADDR" property="companyAddress" jdbcType="VARCHAR" />
+	</resultMap>
+	<select  id="Query_OPAS_COMPANY_ADDRESS_RISKLIST" resultMap="companyAddressRiskResultMap">
+		select Auto_id, COMPANY_ADDR
+		from OPAS_CREDITINFO_LIST where CURR_STATUS = '1'
+		<!-- and  catsearch ( company_addr, #{companyAddress},null ) &gt; 0  -->
+	</select>
+	<!-- yang.jiangming 申请人单位名称 易达金征信信息名单表 -->
+	<resultMap id="ydjCompanyAddressRiskResultMap" type="java.util.Map">
+		<result column="Auto_id" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select  id="Query_OPAS_YDJ_COMPANY_RISKLIST" resultMap="ydjCompanyAddressRiskResultMap">
+		select Auto_id, COMPANY_NAME
+		from OPAS_CREDIT_TELCHECK_LIST where CURR_STATUS = '1'
+	</select>
+	<!-- yang.jiangming 申请人单位电话   易达金征信信息名单表 -->
+	<resultMap id="ydjCotelRiskResultMap" type="java.util.Map">
+		<result column="Auto_id" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="Query_OPAS_YDJ_COTEL_RISKLIST" parameterType="java.lang.String" resultMap="ydjCotelRiskResultMap">
+		select Auto_id, COMPANY_TEL
+		from OPAS_CREDIT_TELCHECK_LIST
+		where COMPANY_TEL = #{cotel,jdbcType=VARCHAR} and CURR_STATUS = '1'
+	</select>
+	<!-- 查学历 -->
+	<select id="Query_OPAS_BIZ_EDUCATION_BACKGROUD" parameterType="java.lang.String" resultType="java.lang.String">
+		select EDUCATIONDEGREE from OPAS_BIZ_EDUCATION_DATA where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	<!-- 计算年龄 -->
+	<select id="queryAgeBetweenIssuingDate" resultType="java.lang.Float" parameterType="java.util.Date">
+   		  select months_between((select to_date(to_char(sysdate, 'YYYYMMDD'),
+                                       'YYYYMMDD')
+                          from dual),
+                        (select to_date(to_char(#{idNumberIssuingDate}, 'YYYYMMDD'),
+                                        'YYYYMMDD')
+                           from dual)) / 12 years
+    	  from dual
+  	</select>
+  	<!-- 计算证件有效期 -->
+	<select id="Query_OPAS_IDCRAD_ISDate" resultType="java.lang.Float" parameterType="java.util.Map">
+   		  select months_between((select to_date(to_char(#{idNumberInDate}, 'YYYYMMDD'),
+                                       'YYYYMMDD')
+                          from dual),
+                        (select to_date(to_char(#{idNumberIssuingDate}, 'YYYYMMDD'),
+                                        'YYYYMMDD')
+                           from dual)) / 12 years
+    	  from dual
+  	</select>
+  	<!-- 4-17 优质企业  -->
+	<select id="Query_OPAS_GoodCompany_ValiDate" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select (select to_date(to_char(END_TIME, 'YYYYMMDD'), 'YYYYMMDD')
+		from OPAS_GOODCOMPANY_LIST where CURR_STATUS = '1' and END_TIME &gt;= sysdate and  PROJECT_CODE = #{projectCode}) - (select
+		to_date(#{crtDate}, 'YYYYMMDD') from dual)
+		from dual
+	</select>
+	<resultMap id="GoodCompanyByProjectCodeResult" type="java.util.Map">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="Query_OPAS_GoodCompany_ByProjectCode" parameterType="java.lang.String"
+		resultMap="GoodCompanyByProjectCodeResult">
+		  select AUTO_ID, PROJECT_CODE
+    from OPAS_GOODCOMPANY_LIST
+   where PROJECT_CODE = #{projectCode} and CURR_STATUS = '1' and END_TIME &gt;= sysdate
+	</select>
+	<select id="Query_OPAS_GoodCompany" resultMap="GoodCompanyByProjectCodeResult">
+		select AUTO_ID, PROJECT_CODE,COMPANY_NAME
+		from OPAS_GOODCOMPANY_LIST where CURR_STATUS = '1' and END_TIME &gt;= sysdate
+	</select>
+	<!-- 内部风险检查 -->
+	<resultMap id="innerRiskinfoResult" type="java.util.Map">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+		<result column="HOUSEHOLD" property="houseHold" jdbcType="VARCHAR" />
+		<result column="SPREAD_ORG" property="spreadOrg" jdbcType="VARCHAR" />
+		<result column="SPREAD_NO" property="spreadNo" jdbcType="VARCHAR" />
+		<result column="SPREAD_PER" property="spreadPer" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="COMPANY_LEVEL" property="companyLevel" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="Query_OPAS_INNER_RISKINFO_RISKLIST" resultMap="innerRiskinfoResult">
+	select AUTO_ID,
+       COMPANY_NAME,
+       COMPANY_TEL,
+       HOUSEHOLD,
+       SPREAD_ORG,
+       SPREAD_NO,
+       SPREAD_PER,
+       CERTIFI_NO,
+       COMPANY_LEVEL
+  from OPAS_INNER_RISKINFO_LIST where CURR_STATUS = '1' and INVALID_TIME &gt;= sysdate
+	</select>
+	<!-- 灰名单有效期检查 -->
+	<resultMap id="ResonIndate" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="REASON_TIMELIMIT" property="resonTimeLimit" jdbcType="NUMERIC" />
+	</resultMap>
+	<select id="Query_OPAS_BIZ_Grey_ResonIndate" resultMap="ResonIndate" parameterType="java.lang.String" >
+	   select t1.app_id, t3.REASON_TIMELIMIT
+  from OPAS_FILE_APPLICATION_DETAIL t1
+  left join (select *
+               from (select *
+                       from OPAS_BIZ_APPROVAL
+                      where app_id = #{appId,jdbcType=VARCHAR}
+                      order by APPROVE_TIME desc)
+              where rownum = 1) t2 on t1.app_id = t2.app_id
+  left join OPAS_APPROVE_REASONCODE t3 on t2.REFUSE_CODE1 = t3.Reason_Code
+ where t1.app_id = #{appId,jdbcType=VARCHAR}
+   and t1.APP_RESULT = '1'
+	</select>
+	<!-- 存量客户电销名单 -->
+	<select id="QUERY_OPAS_STOCKCUST_IDNBR" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select *
+  from (select TELSALE_LIMIT
+          from OPAS_STOCKCUST_TELSALE_LIST
+         where certifi_no = #{Idnbr,jdbcType=VARCHAR}
+           and curr_status = '1'
+         order by OPERAT_TIME desc)
+ where rownum = 1
+	</select>
+		<resultMap id="MatchingCardFlagAndYdjFalg" type="java.util.Map">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+		<result column="APP_FLAG" property="appFlag" jdbcType="VARCHAR"/>
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="VARCHAR"/>
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR"/>
+		<result column="C1_IDNBR" property="c1Idnbr" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="queryMatchingCardFlagAndYdjFalg" parameterType="java.lang.String" resultMap="MatchingCardFlagAndYdjFalg">
+		 SELECT APP_FLAG,APP_ID,MATCHING_CARD_FLAG,YDJ_FLAG,C1_IDNBR FROM OPAS_BIZ_INP_APPL_C1
+			WHERE  APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+	
+	<select id="Query_OPAS_FILE_APPLICATION_DETAIL_BY_CREDNO" parameterType="java.lang.String" resultType="java.lang.String">
+		   select app_id
+    from OPAS_FILE_APPLICATION_DETAIL
+   where CRED_NO = #{credNo} and APP_RESULT = '1'
+	</select>
+	
+	<select id="Query_TelNo" parameterType="java.lang.String" resultType="java.lang.String">
+		  <!--  select Tel_No from OPAS_APPROVE_ZIPCODE where city like concat('%','${_parameter}') and rownum = 1 -->
+		  select distinct CITY from OPAS_APPROVE_ZIPCODE where TEL_NO ='${_parameter}'
+	</select>
+	<resultMap id="BatchBizIfo" type="com.huaxia.opas.domain.riskcheck.RiskCheck_Apply_C1">
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+		<result column="C1_CONAME" property="c1Coname" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="Query_Batch_Bin_Ifo" parameterType="com.huaxia.opas.domain.riskcheck.RiskCheck_Apply_C1" resultMap="BatchBizIfo">
+		     select APP_ID,C1_CONAME
+    from OPAS_BIZ_INP_APPL_C1
+   where C1_COTEL = #{c1Cotel,jdbcType=VARCHAR}
+         and app_id &lt;&gt; #{appId,jdbcType=VARCHAR}
+     and crt_date &gt;  to_date(to_char(#{crtDate,jdbcType=DATE}, 'yyyy/mm/dd'), 'yyyy/mm/dd')
+     and crt_date &lt;  to_date(to_char(#{crtDate,jdbcType=DATE}, 'yyyy/mm/dd'), 'yyyy/mm/dd') + 1
+	</select>
+	
+	<!-- 电销存量客户 -->
+	<update id="UPDATE_OPAS_STOCKCUST_IDNBR_BY_AUTOID" parameterType="java.lang.String">
+		update OPAS_STOCKCUST_TELSALE_LIST set check_flag = '1' where auto_id = #{autoId}
+	</update>
+	<select id="QUERY_OPAS_STOCKCUST_IDNBR_AUTOIDS" parameterType="java.util.Map" resultType="java.lang.String">
+		select auto_id from OPAS_STOCKCUST_TELSALE_LIST where certifi_no = #{Idnbr,jdbcType=VARCHAR}
+           and curr_status = '1'
+	</select>
+	<select id="Query_Enterprise_Information" resultType="java.util.Map" parameterType="java.lang.String" >
+		select t.app_id,
+		       t1.TEL || t2.DHHM as TEL,
+		       t1.DOM || t2.JGDZ as DOM,
+		       t1.ENTNAME || t2.JGMC as ENTNAME
+		  from TRD_QYHY_INFO_DATA t
+		  left join TRD_QYHY_INFO_BASIC t1 on t.app_id = t1.app_id
+		  left join TRD_QYHY_INFO_ORGDETAIL t2 on t.app_id = t2.app_id
+		  where t.app_id = #{appId}
+ 	</select>
+ 	<select id="Query_Enterprise_Status" resultType="java.util.Map" parameterType="java.lang.String" >
+		select t.app_id ,ENTSTATUS,JYZT
+		  from TRD_QYHY_INFO_DATA t
+		  left join TRD_QYHY_INFO_BASIC t1 on t.app_id = t1.app_id
+		  left join TRD_QYHY_INFO_ORGDETAIL t2 on t.app_id = t2.app_id
+      where (ENTSTATUS = '在营（开业）' or JYZT &lt;&gt; '注销' or JYZT &lt;&gt; '')
+		  and t.app_id = #{appId}
+ 	</select>
+ 	
+ 	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.riskcheck.KeyfiledMarchinfo">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="MARCH_RESULT" property="marchResult" jdbcType="CLOB" />
+	</resultMap>
+	
+ 	<select id="Query_KeyfiledMarchinfo" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		AUTO_ID, APP_ID, CRT_DATE, CRT_USER,MARCH_RESULT
+		from OPAS_KEYFILED_MARCHINFO
+		where substr(APP_ID,0,15) = substr(#{appId,jdbcType=VARCHAR},0,15)
+	</select>
+ 	
+ 	<select id="Query_WorkYear_BY_APPID" resultType="java.lang.Float" parameterType="java.lang.String">
+   		  select months_between((select trunc(to_date(replace(report_time,'.','-'),'yyyy-mm-dd hh24:mi:ss'))
+                          from opas_pboc_personal_info
+                         where app_id = #{appId,jdbcType=VARCHAR}),
+                        (select to_date(max(replace(info_upd_time,'.','-')),'yyyy-mm-dd')
+                           from OPAS_PBOC_RESIDENCE_INFO
+                          where app_id = #{appId,jdbcType=VARCHAR} )) / 12 years
+    	  from dual
+  	</select>
+  	
+  	<resultMap id="padAddition" type="java.util.Map">
+		<result column="BASE_STATION" property="baseStation" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="QueryPadAddr" parameterType="java.lang.String" resultMap="padAddition">
+		select BASE_STATION from CCARD_APP_PAD_ADDITION
+	    where app_id = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+  	<select id="Query_OPAS_MARKETER_LIST" resultMap="innerRiskinfoResult">
+	    select SPREAD_ORG,SPREAD_NO from OPAS_MARKETER_LIST where STATUS = '1' and ((START_DATE &lt;=sysdate AND END_DATE &gt;= sysdate) or END_DATE is null)
+	</select>
+	
+	<select id="Query_OPAS_PAD_LOCATION_ADDRESS_INFO" resultType="java.lang.String" parameterType="java.lang.String">
+	    select PAD_LOCATION_ADDRESS from OPAS_PAD_LOCATION_ADDRESS_INFO where STATUS = '1' 
+	    and city_id =#{cityId,jdbcType=VARCHAR}  
+	</select>
+  	
+</mapper>

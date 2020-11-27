@@ -1,0 +1,232 @@
+
+--重新统计百荣多头
+delete rpt_query_count_day  where source_code ='000700';
+  --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '000700', '00', count(1), trunc(crt_time)
+    from bairong_als_base a
+   where a.crt_user = 'SINGLE'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '000700', '01', count(1), trunc(crt_time)
+    from bairong_als_base a
+   where a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '000700', '10', count(1), trunc(crt_time)
+      from bairong_als_base a
+     where a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     commit;
+  
+  --重新统计同盾多头
+  delete rpt_query_count_day  where source_code ='001500';     
+ --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001500', '00', count(1), trunc(crt_time)
+    from MULBOR_BASE a
+   where a.crt_user = 'SINGLE'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001500', '01', count(1), trunc(crt_time)
+    from MULBOR_BASE a
+   where a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '001500', '10', count(1), trunc(crt_time)
+      from MULBOR_BASE a
+     where a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     commit;
+     
+     
+     
+     
+  --重新统计学历
+  delete rpt_query_count_day  where source_code ='000300';     
+ --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '000300', '00', count(1), trunc(crt_time)
+    from id5_msg_response a
+   where a.crt_user = 'SINGLE'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '000300', '01', count(1), trunc(crt_time)
+    from id5_msg_response a
+   where a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '000300', '10', count(1), trunc(crt_time)
+      from id5_msg_response a
+     where a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     commit;
+     
+     
+     
+     
+  --重新统计联通运营商
+  delete rpt_query_count_day  where source_code ='001100';     
+ --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001100', '00', count(1), trunc(crt_time)
+    from UNICOM_PHONE_DATA a
+   where a.crt_user = 'SINGLE'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001100', '01', count(1), trunc(crt_time)
+    from UNICOM_PHONE_DATA a
+   where a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '001100', '10', count(1), trunc(crt_time)
+      from UNICOM_PHONE_DATA a
+     where a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     
+     commit;
+
+
+  --重新统计联通在网时长
+  delete rpt_query_count_day  where source_code ='001101';     
+ --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001101', '00', count(1), trunc(crt_time)
+    from unicom_online_data a
+   where a.crt_user = 'SINGLE'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001101', '01', count(1), trunc(crt_time)
+    from unicom_online_data a
+   where a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '001101', '10', count(1), trunc(crt_time)
+      from unicom_online_data a
+     where a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     
+     commit;
+
+
+--重新统计公安人像比对
+  delete rpt_query_count_day  where source_code ='000201';     
+ --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '000201', '00', count(1), trunc(crt_time)
+    from NCIIC_XP_INFO a
+   where a.crt_user = 'SINGLE'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '000201', '01', count(1), trunc(crt_time)
+    from NCIIC_XP_INFO a
+   where a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '000201', '10', count(1), trunc(crt_time)
+      from NCIIC_XP_INFO a
+     where a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+  --人脸识别系统
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '000201', '13', count(1), trunc(crt_time)
+      from NCIIC_XP_INFO a
+     where a.crt_user = 'IBIS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     commit;
+
+
+--重新统计联通工作地址类信息
+  delete rpt_query_count_day  where source_code ='001102';     
+ --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001102', '00', count(1), trunc(crt_time)
+    from UNICOM_ADDRESS_INFO a
+   where API_KEY ='360015'
+    and   a.crt_user = 'SINGLE'
+   and    crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001102', '01', count(1), trunc(crt_time)
+    from UNICOM_ADDRESS_INFO a
+   where API_KEY ='360015'
+    and   a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '001102', '10', count(1), trunc(crt_time)
+      from UNICOM_ADDRESS_INFO a
+     where API_KEY ='360015'
+      and a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     
+     commit;
+
+
+
+--重新统计联通居住地工作地址类信息
+  delete rpt_query_count_day  where source_code ='001103';     
+ --单条
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001103', '00', count(1), trunc(crt_time)
+    from UNICOM_ADDRESS_INFO a
+   where API_KEY ='360016'
+    and   a.crt_user = 'SINGLE'
+   and    crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+--批量
+insert into rpt_query_count_day
+  select sys_guid(), sysdate, '001103', '01', count(1), trunc(crt_time)
+    from UNICOM_ADDRESS_INFO a
+   where API_KEY ='360016'
+    and   a.crt_user = 'BATCH'
+   and crt_time<trunc(sysdate)
+   group by trunc(crt_time);
+   --审批
+  insert into rpt_query_count_day
+    select sys_guid(), sysdate, '001103', '10', count(1), trunc(crt_time)
+      from UNICOM_ADDRESS_INFO a
+     where API_KEY ='360016'
+      and a.crt_user = 'CAMS'
+     and crt_time<trunc(sysdate)
+     group by trunc(crt_time);
+     
+     commit;
+
+     
+     select * from rpt_query_count_day order by crt_time desc;
+     select * from rpt_query_count_day where channel_code = '13';

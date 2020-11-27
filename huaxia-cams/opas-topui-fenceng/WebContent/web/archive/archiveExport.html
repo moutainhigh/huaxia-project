@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body style="padding: 10px;">
+	<table id="tblExport" title="申请数据导出" style="width: 95%" data-options="toolbar:'#exportCondion'">
+	</table>
+	<div id="exportCondion">
+		<fieldset>
+			<legend>请选择导出条件</legend>
+			<div align="center">
+				<form id="form_export">
+					<table id="conditiontbl" style="width: 40%;">
+						<tr>
+							<td style="width: 40%" align="right">申请书流水号：</td>
+							<td><input id="appId" class="easyui-textbox" name="appId"
+								style="width: 190px"></td>
+						</tr>
+						<tr>
+							<td align="right">已归档审批结果(暂不可用)：</td>
+							<td><select class="easyui-combobox" style="width: 190px"
+								name="arResult" id="arResult">
+									<option value="">--请选择--</option>
+									<option value="0">批准</option>
+									<option value="1">拒绝</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 40%">发卡方式(暂不可用)：</td>
+							<td><label><input type="radio" name="option"
+									value="0" />正常发卡</label><label><input type="radio"
+									name="option" value="1" />快速发卡</label><label><input
+									type="radio" name="option" value="2" />紧急发卡</label></td>
+						</tr>
+						<tr>
+							<td align="center" colspan="2"><a href="javascript:void(0)"
+								class="easyui-linkbutton" onclick="exportToFile()">导出数据</a>
+								<a href="javascript:void(0)"
+								class="easyui-linkbutton" onclick="flash()">清空数据</a>
+								</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</fieldset>
+
+	</div>
+
+
+
+
+</body>
+<script>
+	//导出excl文件
+	function exportToFile() {
+		var fast = "";
+		var vip = "";
+		var normal = "";
+		var appId = $('#appId').textbox('getValue');
+		var result = $('#arResult').textbox('getValue');
+		var radioVal = $('input[name="option"]:checked').val();
+		if (typeof(radioVal) != 'undefined') {
+			if (radioVal == '0') {
+				normal = radioVal;
+			} else if (radioVal == '1') {
+				fast = radioVal;
+			} else if (radioVal == '2'){
+				vip = radioVal;
+			}
+		}
+
+		var options_fast = 'fast';
+		var options_vip = 'vip';
+		var options_normal = 'normal';
+		var appIdStr = 'appId';
+		var resultStr = 'result';
+		var quryParam = {};
+
+		quryParam[options_fast] = fast;
+		quryParam[options_vip] = vip;
+		quryParam[options_normal] = normal;
+		quryParam[appIdStr] = appId;
+		quryParam[resultStr] = result;
+		
+		$cf.ajax({
+			url : "/opas-naps/exportToFile.json",
+			data : quryParam,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSucc) {
+					$.messager.alert("操作提示", "文件导出成功,文件名为:"
+							+ data.RSP_BODY.fileName, "info");
+					tblExport.datagrid("reload");
+				} else{
+					$.messager.alert("操作提示", "文件导出异常,原因:" 
+							+ data.RSP_BODY.error, "error");
+					return;
+				}
+			}
+		});
+	}
+	
+	//清空页面方法
+	function flash() {
+		window.location.reload();	
+	}
+</script>
+</html>

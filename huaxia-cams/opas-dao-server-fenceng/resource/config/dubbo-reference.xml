@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:consumer timeout="${dubbo_timeout}" retries="${dubbo_retries}" />
+	<!-- 服务消费者 -->
+	<dubbo:reference id="invokeRuleService"
+		interface="com.huaxia.opas.service.rule.InvokeRuleService" check="false" />
+	<dubbo:reference id="thdRuleService"
+		interface="com.huaxia.opas.service.rule.ThdRuleService" check="false" />
+	<dubbo:reference id="sailRuleService"
+		interface="com.huaxia.opas.service.rule.SailRuleService" check="false" />
+	<dubbo:reference id="ficoRuleService"
+		interface="com.huaxia.opas.service.rule.FicoRuleService" check="false" />
+	<!-- <dubbo:reference id="loansRuleService"
+	interface="com.huaxia.opas.service.rule.LoansRuleService" check="false" /> -->
+	<!-- 工作流服务消费者接口-wenyh -->
+	<dubbo:reference id="topbpmService" interface="com.huaxia.opas.service.workflow.TopbpmService" check="false" />
+	<!-- 审批调用智能语音服务 -->
+	<dubbo:reference id="intelligentVoiceService" interface="com.huaxia.opas.service.voice.IntelligentVoiceService" check="false" />
+</beans>

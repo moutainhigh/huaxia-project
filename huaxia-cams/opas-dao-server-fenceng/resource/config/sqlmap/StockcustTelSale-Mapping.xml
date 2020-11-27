@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="StockcustTelSale" >
+
+	<resultMap id="StockcustTelSaleResultMap" type="com.huaxia.opas.domain.sysparm.StockcustTelSale">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="ACCT_NO" property="acctNo" jdbcType="VARCHAR" />
+		<result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+		<result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+		<result column="TELSALE_LIMIT" property="telSaleLimit" jdbcType="FLOAT" />
+		<result column="ADJUST_PROCESS" property="adjustProcess" jdbcType="VARCHAR" />
+		<result column="PEOPLEBANK_SCORE" property="peopleBankScore" jdbcType="FLOAT" />
+		<result column="CRT_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="VARCHAR" />
+		<result column="OPERAT_CONTENT" property="operatContent" jdbcType="VARCHAR" />
+		<result column="OPERAT_DO" property="operatDo" jdbcType="VARCHAR" />
+		<result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR" />
+	</resultMap>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="StockcustTelSaleResultMap">
+    select 
+    AUTO_ID,ACCT_NO,CERTIFI_NO,CUST_NAME,TELSALE_LIMIT,ADJUST_PROCESS,PEOPLEBANK_SCORE,
+	CRT_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS
+    from OPAS_STOCKCUST_TELSALE_LIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <select id="queryStockcustTelSaleCount" parameterType="com.huaxia.opas.domain.sysparm.StockcustTelSale" resultType="java.lang.Integer">
+		select count(1) from OPAS_STOCKCUST_TELSALE_LIST
+		<where>		   
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND CERTIFI_NO = #{certifiNo}
+			</if>
+			<if test="custName != null and custName !='' ">
+				AND CUST_NAME LIKE '%${custName}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CRT_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59' hour to second) from dual)
+					)	
+			</if>
+		</where>
+		 ORDER BY CRT_TIME DESC,to_number(ORDERBY_NO)
+	</select>
+
+	<select id="queryStockcustTelSaleList" parameterType="com.huaxia.opas.domain.sysparm.StockcustTelSale" resultMap="StockcustTelSaleResultMap">
+		select AUTO_ID,ACCT_NO,CERTIFI_NO,CUST_NAME,TELSALE_LIMIT,ADJUST_PROCESS,PEOPLEBANK_SCORE,
+				CRT_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS
+		 from OPAS_STOCKCUST_TELSALE_LIST
+		<where>		   
+			<if test="certifiNo != null and certifiNo !='' ">
+				AND CERTIFI_NO = #{certifiNo}
+			</if>
+			<if test="custName != null and custName !='' ">
+				AND CUST_NAME LIKE '%${custName}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(CRT_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59' hour to second) from dual)
+					)	
+			</if>
+		</where>
+		 ORDER BY CRT_TIME  DESC,to_number(ORDERBY_NO)
+	</select>
+	
+	<insert id="insertStockcustTelSale" parameterType="com.huaxia.opas.domain.sysparm.StockcustTelSale">
+		insert into
+		OPAS_STOCKCUST_TELSALE_LIST
+		(AUTO_ID,ACCT_NO,CERTIFI_NO,CUST_NAME,TELSALE_LIMIT,ADJUST_PROCESS,PEOPLEBANK_SCORE,
+				CRT_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{acctNo,jdbcType=VARCHAR},
+		#{certifiNo,jdbcType=VARCHAR},
+		#{custName,jdbcType=VARCHAR},
+		#{telSaleLimit,jdbcType=FLOAT},
+		#{adjustProcess,jdbcType=VARCHAR},
+		#{peopleBankScore,jdbcType=FLOAT},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{operator,jdbcType=VARCHAR},
+		SYSDATE,
+		#{currStatus,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<update id="updateStockcustTelSale" parameterType="com.huaxia.opas.domain.sysparm.StockcustTelSale">
+		update OPAS_STOCKCUST_TELSALE_LIST
+		<set>
+			ACCT_NO = #{acctNo,jdbcType=VARCHAR},
+			CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+			CUST_NAME = #{custName,jdbcType=VARCHAR},
+			TELSALE_LIMIT = #{telSaleLimit,jdbcType=FLOAT},
+			ADJUST_PROCESS = #{adjustProcess,jdbcType=VARCHAR},
+			PEOPLEBANK_SCORE = #{peopleBankScore,jdbcType=FLOAT},
+			CRT_TIME = #{createTime,jdbcType=TIMESTAMP},
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			OPERAT_TIME = SYSDATE, 
+			CURR_STATUS = #{currStatus,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<update id="batchStartStockcustTelSale" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_STOCKCUST_TELSALE_LIST
+			<set>
+				CURR_STATUS = #{item.currStatus,jdbcType=VARCHAR},
+				OPERATOR = #{item.operator,jdbcType=VARCHAR},
+				OPERAT_TIME = SYSDATE, 
+			</set>
+			where AUTO_ID = #{item.autoId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<update id="batchStopStockcustTelSale" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item"  open="begin" separator=";" close=";end;">
+			update OPAS_STOCKCUST_TELSALE_LIST
+			<set>
+				CURR_STATUS = #{item.currStatus,jdbcType=VARCHAR},
+				OPERATOR = #{item.operator,jdbcType=VARCHAR},
+				OPERAT_TIME = SYSDATE, 
+			</set>
+			where AUTO_ID = #{item.autoId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<delete id="deleteStockcustTelSale" parameterType="java.util.ArrayList">
+		delete from
+		OPAS_STOCKCUST_TELSALE_LIST where AUTO_ID in
+		<foreach collection="list" item="autoId"  open="(" separator="," close=")">
+		#{autoId}
+		</foreach>
+	</delete>
+	
+		
+	<insert id="insertStockImportFile" parameterType="java.util.ArrayList">
+			insert into OPAS_STOCKCUST_TELSALE_LIST
+			(AUTO_ID,ACCT_NO,CERTIFI_NO,CUST_NAME,TELSALE_LIMIT,ADJUST_PROCESS,PEOPLEBANK_SCORE,
+				CRT_TIME,OPERATOR,OPERAT_TIME,CURR_STATUS,ORDERBY_NO)
+			<foreach collection="list" item="stockcustTelSale" index="index"  separator="union all" >
+				(select
+				#{stockcustTelSale.autoId,jdbcType=VARCHAR},
+				#{stockcustTelSale.acctNo,jdbcType=VARCHAR},
+				#{stockcustTelSale.certifiNo,jdbcType=VARCHAR},
+				#{stockcustTelSale.custName,jdbcType=VARCHAR},
+				#{stockcustTelSale.telSaleLimit,jdbcType=FLOAT},
+				#{stockcustTelSale.adjustProcess,jdbcType=VARCHAR},
+				#{stockcustTelSale.peopleBankScore,jdbcType=FLOAT},
+				#{stockcustTelSale.createTime,jdbcType=TIMESTAMP},
+				#{stockcustTelSale.operator,jdbcType=VARCHAR},
+				#{stockcustTelSale.operatTime,jdbcType=TIMESTAMP},
+				#{stockcustTelSale.currStatus,jdbcType=VARCHAR},
+				#{stockcustTelSale.orderByNo,jdbcType=VARCHAR}
+				from dual)
+		</foreach>
+	</insert>
+	
+	<select id="stockcustTelSaleHistoryCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) 
+		from OPAS_STOCKCUST_TELSALE_HIS
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="stockcustTelSaleHistory" parameterType="java.lang.String" resultMap="StockcustTelSaleResultMap">
+		select AUTO_ID,OPERAT_CONTENT,OPERAT_DO,OPERATOR,OPERAT_TIME
+		 from  OPAS_STOCKCUST_TELSALE_HIS
+		 where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		 ORDER BY OPERAT_TIME DESC
+	</select>
+	
+	<insert id="insertStockcustTelSaleHis" parameterType="com.huaxia.opas.domain.sysparm.StockcustTelSale">
+		insert into
+		OPAS_STOCKCUST_TELSALE_HIS
+		(AUTO_ID,OPERAT_CONTENT,OPERAT_DO,OPERATOR,OPERAT_TIME)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{operatContent,jdbcType=VARCHAR},
+		#{operatDo,jdbcType=VARCHAR},
+		#{operator,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertStockcustTelSaleHisOfImport" parameterType="java.util.ArrayList">
+			insert into OPAS_STOCKCUST_TELSALE_HIS
+			(AUTO_ID,OPERAT_CONTENT,OPERAT_DO,OPERATOR,OPERAT_TIME)
+			<foreach collection="list" item="stockTelSale" index="index"  separator="union all" >
+				(select
+				#{stockTelSale.autoId,jdbcType=VARCHAR},
+				#{stockTelSale.operatContent,jdbcType=VARCHAR},
+				#{stockTelSale.operatDo,jdbcType=VARCHAR},
+				#{stockTelSale.operator,jdbcType=VARCHAR},
+				SYSDATE
+				from dual)
+		</foreach>
+	</insert>
+	
+	<insert id="insertStockcustTelSaleHisOfBatch" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index"   open="begin" separator=";" close=";end;">
+			insert into
+			OPAS_STOCKCUST_TELSALE_HIS
+			(AUTO_ID,OPERAT_CONTENT,OPERAT_DO,OPERATOR,OPERAT_TIME)
+			values (
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.operatContent,jdbcType=VARCHAR},
+			#{item.operatDo,jdbcType=VARCHAR},
+			#{item.operator,jdbcType=VARCHAR},
+			SYSDATE
+			)
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>联通地址信息结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding:10px;">
+<fieldset>
+	<legend>联通地址信息结果</legend>
+	<fieldset>
+		<legend><span  style="font-weight: bold">联通地址信息详情</span></legend>
+		<div id="unicomListMessage" style="width:100%;">
+		</div>
+	</fieldset>
+	
+</fieldset>	
+</body>
+<script type="text/javascript">
+
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var appId = GetQueryString("appId");
+	$(function(){
+		
+		loadUnicomAddress();
+	});
+	
+	/**
+	*加载 联通地址 unicom_address_info
+	*/
+	function loadUnicomAddress(){
+		$('#unicomListMessage').datagrid({
+			url:"/opas-naps/findunicomListMessage.json",
+			border:true,
+			fit:false,
+			//animate:true,
+			singleSelect:false,
+			//resizable:true,
+			nowrap:false,
+			//pagePosition:'bottom',
+			rownumbers:true,loadMsg:'数据加载中.....',
+			//pagination:true,pageSize:10,pageList:[10,20,50],
+			queryParams:{"appId":appId},
+			columns:[[{
+				title:'产品ID',
+				field:'apiKey',
+				width:'15%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					if(value){
+						var value=value.replace(/(^\s*)|(\s*$)/g,"");
+						if("360015"==value){
+							return "工作地址";
+						}
+						if("360016"==value){
+							return "居住地址";
+						}
+					}
+					return value;
+  				}
+			}/* ,{
+				title:'是否成功',
+				field:'success',
+				width:'10%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					if(value){
+						var value=value.replace(/(^\s*)|(\s*$)/g,"");
+						if("1"==value){
+							return "查询成功";
+						} else if("2"==value){
+							return "查询失败";
+						} else {
+							return "未发起来查询";
+						}
+					}
+					return value;
+  				}
+			} */,{
+				title:'响应编码',
+				field:'responseCode',
+				width:'10%',
+				align:'center'
+			},{
+				title:'响应描述',
+				field:'responseDesc',
+				width:'15%',
+				align:'center'
+			},{
+				title:'校验结果',
+				field:'responseResult',
+				width:'15%',
+				align:'center'
+			},{
+				title:'运营商类别',
+				field:'carrier',
+				width:'10%',
+				align:'center'
+			},{
+				title:'校验结果中文描述',
+				field:'responseResultDesc',
+				width:'30%',
+				align:'center'
+			}]]
+		});
+	}
+</script>
+</html>

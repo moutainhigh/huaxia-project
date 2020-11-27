@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--免息还款期数据库处理-->
+<!--@author liudi-->
+<mapper namespace="SysparmRepayFreeTerm">
+
+	<resultMap id="SysparmRepayFreeTermResultMap" type="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTerm">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="REPAY_FREE_CODE" property="repayFreeCode" jdbcType="VARCHAR" />
+		<result column="REPAY_FREE_VALUE" property="repayFreeValue" jdbcType="NUMERIC" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加 -->
+	<insert id="insertSysparmRepayFreeTerm" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTerm">
+		insert into
+		OPAS_SYSPARM_REPAY_FREE_TERM
+		(AUTO_ID,REPAY_FREE_CODE,REPAY_FREE_VALUE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_TIME)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{repayFreeCode,jdbcType=VARCHAR},
+		#{repayFreeValue,jdbcType=NUMERIC},
+		#{status,jdbcType=CHAR},
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteSysparmRepayFreeTermById" parameterType="java.lang.String">
+		delete from
+		OPAS_SYSPARM_REPAY_FREE_TERM
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+<!-- 全部删除 -->
+	<delete id="deleteAllSysparmRepayFreeTerm">
+		delete from
+		OPAS_SYSPARM_REPAY_FREE_TERM
+	</delete>
+<!-- 修改 -->
+	<update id="updateSysparmRepayFreeTerm" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTerm">
+		update OPAS_SYSPARM_REPAY_FREE_TERM
+		<set>
+			REPAY_FREE_VALUE = #{repayFreeValue,jdbcType=NUMERIC},
+			STATUS = #{status,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_TIME = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+
+	</update>
+<!-- 免息还款期件数查询 -->
+	<select id="querySysparmRepayFreeTermCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_SYSPARM_REPAY_FREE_TERM
+		<where>
+			<if test="repayFreeCode != null and repayFreeCode !='' ">
+				AND REPAY_FREE_CODE LIKE '%${repayFreeCode}%'
+			</if>
+			<if test="repayFreeValue != null and repayFreeValue !='' ">
+				AND REPAY_FREE_VALUE LIKE '%${repayFreeValue}%'
+			</if>
+		</where>
+	</select>
+<!-- 免息还款期信息查询 -->
+	<select id="querySysparmRepayFreeTerm1" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTerm"
+		resultMap="SysparmRepayFreeTermResultMap">
+		select
+		AUTO_ID,REPAY_FREE_CODE,REPAY_FREE_VALUE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_TIME
+		from OPAS_SYSPARM_REPAY_FREE_TERM
+		<where>
+			<if test="repayFreeCode != null and repayFreeCode !='' ">
+				AND REPAY_FREE_CODE LIKE '%${repayFreeCode}%'
+			</if>
+			<if test="repayFreeValue != null and repayFreeValue !='' ">
+				AND REPAY_FREE_VALUE LIKE '%${repayFreeValue}%'
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+<!-- 免息还款期代码是否重复 -->
+	<select id="querySysparmRepayFreeTerm2" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTerm"
+		resultMap="SysparmRepayFreeTermResultMap">
+		select
+		REPAY_FREE_CODE
+		from OPAS_SYSPARM_REPAY_FREE_TERM
+		<where>
+			<if test="repayFreeCode != null and repayFreeCode !='' ">
+				AND REPAY_FREE_CODE = #{repayFreeCode}
+			</if>
+		</where>
+	</select>
+
+</mapper>

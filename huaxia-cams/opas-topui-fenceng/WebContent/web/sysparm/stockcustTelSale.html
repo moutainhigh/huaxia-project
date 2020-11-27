@@ -1,0 +1,673 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style = "margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+<table id="tblStock"  title="客户存量电销名单" 
+	class="easyui-datagrid"  style="width: 99%;height:100%"
+		data-options="rownumbers:false,singleSelect:false,selectOnCheck:false,checkOnSelect:false,pageSize: 20,pageList: [15,20,50],pagination:true,url:'/opas-naps/stockcustTelSaleList.json',fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#stock'">
+		<thead frozen ="true">
+			<tr>
+				<th field="autoId" width="2%" align="center" checkbox="true" name="autoId">全选</th>
+				<th field="acctNo" width="6%" align="center">账号</th>
+				<th field="certifiNo" width="12%" align="center">身份证号</th>
+				<th field="custName" width="15%" align="center">客户姓名</th>
+				<th field="telSaleLimit" width="12%" align="center">电销额度</th>
+				<th field="adjustProcess" width="18%" align="center" >调额过程</th>
+				<th field="peopleBankScore" width="10%" align="center" >贷后人行评分</th>
+				<th field="createTime" width="10%" align="center" formatter="formatDate1">创建时间</th>
+				<th field=currStatus width="5%" align="center" formatter="formatStatus">启停状态</th>
+				<th field="operate" width="12%" align="center"
+							data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+<div id="stock" style="padding: 10px;">
+	<form id="searchData">
+		身份证号:<input class="easyui-textbox" name="certifiNo" id="certifiNo">&nbsp;
+		客户姓名:<input class="easyui-textbox" name="custName" id="custName">&nbsp;
+		创建时间:<input class="easyui-datebox" name="createTime" id="crtTime">&nbsp;
+		<a href="javascript:common.searchTbl('searchData','tblStock');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+		<a href="javascript:myOpenWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">新增 </a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onClick="onStart()">批量启用 </a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" onClick="onStop()">批量停用 </a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-no" onClick="onDelete()">删除 </a>
+	</form>
+	<form  id="upload-form" action="/opas-naps/common/StockUploadServlet.json" method="post" enctype="multipart/form-data" target="tartIframe">
+		<label for="file">文件名:</label>
+		<input type="file" name="file" id="file"  accept="text/plain">
+		<input type="submit" name="submit" value="提交">
+	</form>
+	<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+</div>
+
+<div id="winAdd" class="easyui-window" title="存量客户电销白名单添加" style="width: 450px; height: 350px"
+    data-options="iconCls:'icon-save',modal:true,closed:true">
+	<form id="addForm">
+		<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td align="right">账号：</td>
+				<td><input class="easyui-validatebox" id="acctNo" type="text" name="acctNo" data-options="validType:'maxLength[32]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">身份证号:</td>
+				<td><input class="easyui-validatebox" id="certifiNo" type="text" name="certifiNo" data-options="validType:'maxLength[20]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">客户姓名:</td>
+				<td><input class="easyui-validatebox" id="custName" type="text" name="custName" data-options="validType:'maxLength[32]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">电销额度:</td>
+				<td><input class="easyui-numberbox" id="telSaleLimit" name="telSaleLimit" type="text" data-options="validType:'maxLength[10]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">调额过程:</td>
+				<td><input class="easyui-validatebox" name="adjustProcess" id="adjustProcess" data-options="validType:'maxLength[200]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">贷后人行评分:</td>
+				<td><input class="easyui-numberbox" name="peopleBankScore" id="peopleBankScore" type="text" data-options="validType:'maxLength[10]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">创建时间:</td>
+				<td><input class="easyui-datebox" name="createTime"  type="text"  style="width: 130px"></input></td>
+			</tr>
+			<tr>
+				<td>启停状态:</td>
+				<td>
+					<select class="easyui-combobox" name="currStatus" editable="false" id="currStatus1"
+						style="width: 150px;">
+							<option value="1" selected="selected">启用</option>
+							<option value="0">停用</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<div style="text-align: center; padding: 5px">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			onclick="onConcle('winAdd')">取消</a> <a href="javascript:void(0)"
+			class="easyui-linkbutton" onclick="onSave()">保存</a>
+	</div>
+</div>
+
+<div id="winEdit" class="easyui-window" title="存量客户电销白名单修改" style="width: 450px; height: 500px"
+    data-options="iconCls:'icon-save',modal:true,closed:true">
+	<form id="editForm">
+		<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td><input type="hidden" name="autoId" id="autoId" /></td>
+			</tr>
+			<tr>
+				<td align="right">账号：</td>
+				<td><input class="easyui-validatebox textbox" id="acctNo" type="text" name="acctNo" data-options="validType:'maxLength[32]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">身份证号:</td>
+				<td><input class="easyui-validatebox textbox" id="certifiNo" type="text" name="certifiNo" data-options="validType:'maxLength[20]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">客户姓名:</td>
+				<td><input class="easyui-validatebox textbox" id="custName" type="text" name="custName" data-options="validType:'maxLength[32]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">电销额度:</td>
+				<td><input class="easyui-numberbox" id="telSaleLimit" name="telSaleLimit" type="text" data-options="validType:'maxLength[10]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">调额过程:</td>
+				<td><input class="easyui-validatebox textbox" name="adjustProcess" id="adjustProcess" data-options="validType:'maxLength[200]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">贷后人行评分:</td>
+				<td><input class="easyui-numberbox" name="peopleBankScore" id="peopleBankScore" type="text" data-options="validType:'maxLength[10]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">创建时间:</td>
+				<td><input class="easyui-datebox" name="createTime" id="createTime" type="text"  style="width: 150px"></input></td>
+			</tr>
+			<tr>
+				<td>启停状态:</td>
+				<td>
+					<select class="easyui-combobox" name="currStatus" editable="false"
+						style="width: 150px;">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+	</form>
+	<div style="text-align: center; padding: 5px">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')" iconCls="icon-cancel">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()" iconCls="icon-save">保存</a>
+	</div>
+</div>
+
+<div id="winShow" class="easyui-window" title="存量客户电销白名单查看" style="width: 450px; height: 500px"
+    data-options="iconCls:'icon-save',modal:true,closed:true">
+	<form id="showForm">
+		<table cellpadding="10" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td><input type="hidden" name="autoId" id="autoId" /></td>
+			</tr>
+			<tr>
+				<td align="right">账号：</td>
+				<td><input class="easyui-validatebox textbox" id="acctNo" type="text" name="acctNo" data-options="editable:false,readonly:true,validType:'maxLength[32]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">身份证号:</td>
+				<td><input class="easyui-validatebox textbox" id="certifiNo" type="text" name="certifiNo" data-options="editable:false,readonly:true,validType:'maxLength[20]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">客户姓名:</td>
+				<td><input class="easyui-validatebox textbox" id="custName" type="text" name="custName" data-options="editable:false,readonly:true,validType:'maxLength[32]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">电销额度:</td>
+				<td><input class="easyui-numberbox" id="telSaleLimit" name="telSaleLimit" type="text" data-options="editable:false,readonly:true,validType:'maxLength[10]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">调额过程:</td>
+				<td><input class="easyui-validatebox textbox" name="adjustProcess" id="adjustProcess" data-options="editable:false,readonly:true,validType:'maxLength[200]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">贷后人行评分:</td>
+				<td><input class="easyui-numberbox" name="peopleBankScore" id="peopleBankScore" type="text" data-options="editable:false,readonly:true,validType:'maxLength[10]'"></input></td>
+			</tr>
+			<tr>
+				<td align="right">创建时间:</td>
+				<td><input class="easyui-datebox" name="createTime" id="createTime1" type="text" readonly="true", style="width: 150px"></input></td>
+			</tr>
+			<tr>
+				<td>启停状态:</td>
+				<td>
+					<select class="easyui-combobox" name="currStatus" editable="false" readonly="true"
+						style="width: 150px;">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+	</form>
+</div>
+
+
+<div id="showHistory" class="easyui-window" title="存量客户电销名单操作记录" style="width: 900px;height: 500px;"
+	    data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+				<div data-options="region:'center'">
+					<table id="tblHistory" class="easyui-datagrid" 
+						data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize: 20,pageList: [15,20,50],fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+						<thead>
+							<tr>
+								<th field="operatContent" width="35%" align="center">操作内容</th>
+								<th field="operatDo" width="15%" align="center" >操作动作</th>
+								<th field="operator" width="20%" align="center" >操作用户</th>
+								<th field="operatTime" width="30%" align="center" formatter="formatDate">操作日期</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+	</div>
+</body>
+
+<script>
+
+var tblStock = $("#tblStock");
+var addForm = $("#addForm");
+var editForm = $("#editForm");
+var showForm = $("#showForm");
+var editWindow = $("#winEdit");
+var selectWindow = $("#winShow");
+var value;
+//取消所有行选中状态，选中的同时将所属行的数据保存至value
+tblStock.datagrid({
+	onSelect : function(rowIndex,rowData){
+		$(this).datagrid("unselectAll");
+		value = rowData;
+	}	
+})
+
+function formatOper(val, row, index) {
+	return "<a href=javascript:showStock(); >查看</a>&nbsp;&nbsp;<a href=javascript:editStock(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:showHistory('showHistory','tblStock','tblHistory','/opas-naps/stockcustTelSaleHistory.json','autoId');>历史修改</a>&nbsp;";
+}
+
+function formatStatus(val, row, index) {
+	if (val == "0") {
+		return "停用";
+	} else if (val == "1") {
+		return "启用";
+	}
+}
+
+myOpenWin = function(winName) {
+	winObj = $("#" + winName + "");
+	winObj.form('clear');
+	$('#currStatus1').combobox('select','1');
+	winObj.window({
+		closed : false
+	});
+}
+//对应的查看
+function showStock(){
+	var stockObj = tblStock.datagrid("getChecked");
+	var createTime = gridDateFormatYMD(value.createTime);
+	selectWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(value)
+	});
+	$('#createTime1').datebox('setValue',createTime);
+	tblStock.datagrid("clearSelections"); 
+	$("input[name='autoId']").attr("checked",false);
+}
+
+//正则表达式对页面的验证
+//日期验证正则
+var pattDate = /^(?:(?!0000)[0-9]{4}([-]?)(?:(?:0?[1-9]|1[0-2])\1(?:0?[1-9]|1[0-9]|2[0-8])|(?:0?[13-9]|1[0-2])\1(?:29|30)|(?:0?[13578]|1[02])\1(?:31))|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)([-]?)0?2\2(?:29))$/;
+//身份证号校验正则
+var	certifiPattDate = /^\d{15}(\d{2}[A-Za-z0-9])?$/ ;
+
+
+
+
+function editStock(){
+	var createTime = gridDateFormatYMD(value.createTime);
+	editWindow.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(value)
+	});
+	$('#createTime').datebox('setValue',createTime);
+	tblStock.datagrid("clearSelections"); 
+	$("input[name='autoId']").attr("checked",false);
+}
+
+function showHistory(winName, tblName, tarTblName, tarUrl, tarParam) {
+	var tblObj = $("#" + tblName + "");
+	var tblDict = $("#" + tarTblName + "");
+	winObj = $("#" + winName + "");
+	var id = value.autoId;
+	var paramObj = document.getElementsByName(tarParam);
+	for (var i = 0; i < paramObj.length; i++) {
+		paramObj[i].value = id;
+	}
+	winObj.window({
+		closed : false
+	});
+	var quryParam = {};
+	quryParam[tarParam] = id;
+	tblDict.datagrid({
+		url : tarUrl,
+		queryParams : quryParam
+	});
+	tblStock.datagrid("clearSelections"); 
+	$("input[name='autoId']").attr("checked",false);
+}
+
+function onStart(){
+ 	var stockObj = tblStock.datagrid("getChecked");
+	if(stockObj.length <= 0){
+		$.messager.alert("操作提示","请勾选要启用的名单！");
+		return;
+	}
+	for(var i=0;i<stockObj.length;i++){
+		if(stockObj[i].currStatus == "1"){
+			$.messager.alert("操作提示", "当前选中的行中已有行处于启用状态!");
+			return;
+		}
+	}
+	$.messager.confirm(
+		'请您确认',
+		'确定要启用该名单吗?',
+		function(r) {
+			if (r) {
+				$cf.ajax({
+					url : "/opas-naps/batchStartStockcustTelSale.json",
+					data :{"stockObj":stockObj},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							
+							top.$cf.showMsg("批量启用成功!");
+							
+							tblStock.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "批量启用异常，原因:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});	
+}
+
+function onStop(){
+	var stockObj = tblStock.datagrid("getChecked");
+	if(stockObj.length <= 0){
+		$.messager.alert("操作提示","请勾选要停用的名单！");
+		return;
+	}
+	for(var i=0;i<stockObj.length;i++){
+		if(stockObj[i].currStatus == "0"){
+			$.messager.alert("操作提示", "当前选中的行中已有行处于停用状态!");
+			return;
+		}
+	}
+	$.messager.confirm(
+			'请您确认',
+			'确定要启用该名单吗?',
+			function(r) {
+				if (r) {
+				$cf.ajax({
+					url : "/opas-naps/batchStopStockcustTelSale.json",
+					data :{"stockObj":stockObj},
+					onSuccess : function(data) {
+						if (data.RSP_BODY.isSuccess) {
+							
+							top.$cf.showMsg("批量停用成功!");
+							
+							tblStock.datagrid("reload");
+						} else {
+							$.messager.alert("操作提示", "批量停用异常，原因:" + data.exMsg, "error");
+							return;
+						}
+					}
+				});
+			}
+		});		
+}
+
+function onDelete(){
+	var stockObj = tblStock.datagrid("getChecked");
+	if(stockObj.length == 0){
+		$.messager.alert("操作提示","请勾选要停用的名单！");
+		return;
+	}
+	var autoIds=[];
+	for(var i=0;i<stockObj.length;i++){
+		var autoId = stockObj[i].autoId;
+		autoIds.push(autoId);
+	}	
+	$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+		if (r) {
+			$cf.ajax({
+				url : "/opas-naps/deleteStockcustTelSale.json",
+				data : {"autoIds":autoIds},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						
+						top.$cf.showMsg("删除成功！");
+						
+						tblStock.datagrid("reload");
+					}else{
+						$.messager.alert("操作提示", "删除失败，原因:" + data.exMsg, "error");
+						return;
+					}
+				}
+			});
+		}
+	});
+}
+
+function onUpdate() {
+	var jsondata = getFormData(editForm.serializeArray());
+	if (jsondata.acctNo!= null && jsondata.acctNo.trim() != "") {	
+		if (jsondata.acctNo.trim().length > 20) {	
+			$.messager.alert("操作提示", "添加失败,帐户长度不能超过20位!");
+			return;
+		}
+	}
+	if (jsondata.certifiNo!= null && jsondata.certifiNo.trim() != "") {
+		if (jsondata.certifiNo.trim().length > 20) {	
+			$.messager.alert("操作提示", "添加失败,身份证号码长度不能超过20位!");
+			return;
+		}
+		if(!certifiPattDate.test(jsondata.certifiNo)){
+			$.messager.alert("操作提示", "添加失败,身份证号码格式不正确!");
+			return;	
+		}
+	}
+	if (jsondata.custName!= null && jsondata.custName.trim() != "") {
+		if (jsondata.custName.trim().length > 32) {	
+			$.messager.alert("操作提示", "添加失败,客户姓名长度不能超过32个字!");
+			return;
+		}
+	}
+	if (jsondata.telSaleLimit!= null && jsondata.telSaleLimit.trim() != "") {
+		if (jsondata.telSaleLimit.trim().length > 10) {
+			$.messager.alert("操作提示", "添加失败,电销额度不能超过10位数!");
+			return;
+		}
+	}
+	if (jsondata.adjustProcess!= null && jsondata.adjustProcess.trim() != "") {
+		if (jsondata.adjustProcess.trim().length > 200) {
+			$.messager.alert("操作提示", "添加失败,调额过程内容不能超过200字 !");
+			return;
+		}
+	}
+	if (jsondata.peopleBankScore!= null && jsondata.peopleBankScore.trim() != "") {
+		if (jsondata.peopleBankScore.trim().length > 10) {
+			$.messager.alert("操作提示", "添加失败,贷后人行评分不能超过10位数!");
+			return;
+		}
+	}
+	if(jsondata.createTime !=null && jsondata.createTime.trim() != ""){
+		if(!pattDate.test(jsondata.createTime)){
+			$.messager.alert("操作提示", "添加失败,请设置正确的创建日期!");
+			return;
+		}
+	}
+
+
+	$cf.ajax({
+		url : "/opas-naps/updateStockcustTelSale.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				
+				top.$cf.showMsg("修改成功!");
+				
+				onConcle("winEdit");
+			
+				tblStock.datagrid("reload");
+			} else {
+				$.messager.alert("操作提示", "修改异常，原因:" + data.exMsg, "error");
+				onConcle("winEdit");
+				return;
+			}
+		}
+	});
+}
+
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window("close");
+}
+
+function onSave() {
+	var jsondata = getFormData(addForm.serializeArray());
+	if (jsondata.acctNo !=null && jsondata.acctNo.trim() !="") {	
+		if (jsondata.acctNo.trim().length > 20) {	
+			$.messager.alert("操作提示", "添加失败,帐户长度不能超过20位!");
+			return;
+		}
+	}
+	if (jsondata.certifiNo !=null && jsondata.certifiNo.trim() != "") {
+		if (jsondata.certifiNo.trim().length > 20) {	
+			$.messager.alert("操作提示", "添加失败,身份证号码长度不能超过20位!");
+			return;
+		}
+		if(!certifiPattDate.test(jsondata.certifiNo)){
+			$.messager.alert("操作提示", "添加失败,身份证号码格式不正确!");
+			return;	
+		}
+	}
+	if (jsondata.custName !=null && jsondata.custName.trim() != "") {
+		if (jsondata.custName.trim().length > 32) {	
+			$.messager.alert("操作提示", "添加失败,客户姓名长度不要超过32个字!");
+			return;
+		}
+	}
+	if (jsondata.telSaleLimit !=null && jsondata.telSaleLimit.trim() != "") {
+		if (jsondata.telSaleLimit.trim().length > 10) {
+			$.messager.alert("操作提示", "添加失败,电销额度不能超过10位数!");
+			return;
+		}
+	}
+	if (jsondata.adjustProcess !=null && jsondata.adjustProcess.trim() != "") {
+		if (jsondata.adjustProcess.trim().length > 200) {
+			$.messager.alert("操作提示", "添加失败,调额过程内容不能超过200个字!");
+			return;
+		}
+	}
+	if (jsondata.peopleBankScore !=null && jsondata.peopleBankScore.trim() != "") {
+		if (jsondata.peopleBankScore.trim().length > 10) {
+			$.messager.alert("操作提示", "添加失败,贷后人行评分不能超过10位数!");
+			return;
+		}
+	}
+	if(jsondata.createTime !=null && jsondata.createTime.trim() != ""){
+		if(!pattDate.test(jsondata.createTime)){
+			$.messager.alert("操作提示", "添加失败,请设置正确的创建日期!");
+			return;
+		}
+	}
+
+	$cf.ajax({
+		url : "/opas-naps/insertStockcustTelSale.json",
+		data : jsondata,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.isSuccess) {
+
+				top.$cf.showMsg("添加成功！");
+
+				onConcle('winAdd');
+				tblStock.datagrid("reload");
+				addForm[0].reset();
+
+			} else {
+				$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+				onConcle("winAdd");
+				return;
+			}
+		}
+
+	});
+}
+
+function setData(data) {
+	editForm.form("load", data);
+	showForm.form("load", data);
+	$("#id").attr("readonly", "readonly");
+	$("#id").attr("disabled", "disabled");
+}
+
+//获取表单数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+
+
+
+
+//日期格式转换
+ function formatDate(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+
+ function formatDate1(value) {
+		var str = getTaskTime1(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+};  
+function getTaskTime1(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	  
+	return y+"-"+m+"-"+d;  
+};  
+
+	
+var tartIframe = document.getElementById("tartIframe");
+tartIframe.src = "/opas-naps/common/StockUploadServlet.json";
+tartIframe.onload = function(){
+	responPage();			
+}
+
+
+function responPage(){
+	$.messager.progress('close'); 
+	var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+	if(value[0] == "success"){
+		top.$cf.showMsg(value[1]);
+	}
+	if(value[0] == "false"){
+		$.messager.alert("操作提示", value[1], "error");
+	}
+}
+</script>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCCreditDetailMapper">
+
+	<insert id="insertBatchForLoan" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_LOAN_CARD_INFO (
+			APP_ID,MESS_TYPE,BASIC_INFO_PROMPT,
+			LOAN_OR_CREDIT_ORG,LOAN_OR_CREDIT_ORG_TYPE,LOAN_OR_CREDIT_BUSI_NO,
+			LOAN_LOAN_TYPE_SEG,LOAN_OR_CREDIT_CCY,LOAN_OR_CREDIT_ISSU_DATE,
+			LOAN_EXP_DATE,LOAN_OR_CREDIT_CONT_AMT,LOAN_OR_CREDIT_GUARANTEE_MODE,
+			LOAN_PAYMENT_FREQ,LOAN_PAYMENT_CYC_NUM,LOAN_OR_CREDIT_ACCT_STATUS,
+			ACC_STATE_END_DATE,ACC_CLASS5STATE,ACC_CORPUS_BAL,
+			ACC_REM_PAYMENT_CYC_NUM,ACC_CUR_MDUE_PAY_BAL,ACC_DUE_PAYMENT_DATE,	
+			ACC_CUR_MREAL_PAY_AMT,ACC_LATEST_PAYMENT_DATE,CRT_TIME,
+			CRT_USER,REC_SEQ,M24_PAYMENT_STR_MONTH,
+			M24_PAYMENT_END_MONTH,M24_PAYMENT_STATUS,M60_OVER_DUE_STR_MONTH,
+			M60_OVER_DUE_END_MONTH,OVER_DUE_CUR_OVER_DUE_NUM,OVER_DUE_CUR_OVER_DUE_AMT,
+	        OVER_DUE_UN_PAY_COR31TO60D,OVER_DUE_UN_PAY_COR61TO90D,OVER_DUE_UN_PAY_COR91TO180,
+			OVER_DUE_UN_PAY_COR180DPLUS
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},#{item.messageType},#{item.cue},
+			#{item.financeOrg},#{item.financeType},#{item.account},
+			#{item.type},#{item.currency},#{item.openDate},
+			#{item.endDate},#{item.creditLimitAmount},#{item.guaranteeType},
+			#{item.paymentRating},#{item.paymentCyc},#{item.state},
+			#{item.stateEndDate},#{item.class5State},#{item.balance},
+			#{item.remainPaymentCyc},#{item.scheduledPaymentAmount},#{item.scheduledPaymentDate},
+			#{item.actualPaymentAmount},#{item.recentPayDate},SYSDATE,
+			'SYSTEM',#{item.uuid},#{item.beginMonth24OfLoan},
+			#{item.endMonth24OfLoan},#{item.latest24StateOfLoan},#{item.beginMonthOfLoan},
+			#{item.endMonthOfLoan},#{item.currOverdueCyc},#{item.currOverdueAmount},
+	        #{item.overdue31To60Amount},#{item.overdue61To90Amount},#{item.overdue91To180Amount},
+			#{item.overdueOver180Amount}
+		FROM DUAL
+		</foreach>
+	</insert>
+	
+	<insert id="insertBatchForLoancard" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_LOAN_CARD_INFO (
+			APP_ID,MESS_TYPE,OVER_DUE_CUR_OVER_DUE_NUM,OVER_DUE_CUR_OVER_DUE_AMT,OVER_DUE_UN_PAY_COR31TO60D,
+			OVER_DUE_UN_PAY_COR61TO90D,OVER_DUE_UN_PAY_COR91TO180,OVER_DUE_UN_PAY_COR180DPLUS,M24_PAYMENT_STR_MONTH,
+			M24_PAYMENT_END_MONTH,M24_PAYMENT_STATUS,M60_OVER_DUE_STR_MONTH,M60_OVER_DUE_END_MONTH,
+			DEB_CARD_PAY_SHARE_LIMIT,DEB_CARD_PAY_OVERDRAFT_AMT,DEB_CARD_PAY_6MAVG_USED_AMT,DEB_CARD_PAY_MAX_USED_BAL,
+			CRT_TIME,CRT_USER,ACC_CUR_MREAL_PAY_AMT,ACC_LATEST_PAYMENT_DATE,BASIC_INFO_PROMPT,
+			LOAN_OR_CREDIT_ORG,LOAN_OR_CREDIT_ORG_TYPE,LOAN_OR_CREDIT_BUSI_NO,
+			LOAN_LOAN_TYPE_SEG,LOAN_OR_CREDIT_CCY,LOAN_OR_CREDIT_ISSU_DATE,LOAN_EXP_DATE,LOAN_OR_CREDIT_CONT_AMT,
+			LOAN_OR_CREDIT_GUARANTEE_MODE,LOAN_PAYMENT_FREQ,LOAN_PAYMENT_CYC_NUM,LOAN_OR_CREDIT_ACCT_STATUS,
+			ACC_STATE_END_DATE,ACC_CLASS5STATE,ACC_CORPUS_BAL,ACC_REM_PAYMENT_CYC_NUM,ACC_CUR_MDUE_PAY_BAL,
+			ACC_DUE_PAYMENT_DATE,REC_SEQ
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.messageType},
+			
+			#{item.currOverdueCyc},
+			#{item.currOverdueAmount},
+			#{item.overdue31To60Amount},
+			#{item.overdue61To90Amount},
+			#{item.overdue91To180Amount},
+			#{item.overdueOver180Amount},
+			
+			#{item.beginMonthOfLatest24MonthPaymentState},
+			#{item.endMonthOfLatest24MonthPaymentState},
+			#{item.latest24StateOfLatest24MonthPaymentState},
+			
+			#{item.beginMonthOfLatest5YearOverdueRecord},
+			#{item.endMonthOfLatest5YearOverdueRecord},
+			
+			#{item.shareCreditLimitAmount},
+			#{item.usedCreditLimitAmount},
+			#{item.latest6MonthUsedAvgAmount},
+			#{item.usedHighestAmount},
+			SYSDATE,
+			'SYSTEM',
+			#{item.actualPaymentAmount},
+			#{item.recentPayDate},
+			#{item.cue},
+			
+			#{item.financeOrg},
+			#{item.financeType},
+			#{item.account},
+			#{item.type},
+			#{item.currency},
+			#{item.openDate},
+			#{item.endDate},
+			#{item.creditLimitAmount},
+			#{item.guaranteeType},
+			#{item.paymentRating},
+			#{item.paymentCyc},	
+			#{item.state},
+			#{item.stateEndDate},
+			#{item.class5State},
+			#{item.balance},
+			#{item.remainPaymentCyc},
+			#{item.scheduledPaymentAmount},
+			#{item.scheduledPaymentDate},
+			#{item.uuid}
+		FROM DUAL
+		</foreach>
+	</insert>
+	
+	<insert id="insertBatchForStandardLoancard" parameterType="java.util.Map">
+	INSERT INTO OPAS_PBOC_LOAN_CARD_INFO 
+	(APP_ID, BASIC_INFO_PROMPT,mess_type,
+	LOAN_OR_CREDIT_ACCT_STATUS,LOAN_OR_CREDIT_ORG,LOAN_OR_CREDIT_ORG_TYPE,
+	LOAN_OR_CREDIT_BUSI_NO,LOAN_OR_CREDIT_CCY,LOAN_OR_CREDIT_ISSU_DATE,
+	LOAN_OR_CREDIT_CONT_AMT,LOAN_OR_CREDIT_GUARANTEE_MODE,ACC_STATE_END_DATE,
+	DEB_CARD_PAY_SHARE_LIMIT,DEB_CARD_PAY_OVERDRAFT_AMT,DEB_CARD_PAY_6MAVG_USED_AMT,
+	DEB_CARD_PAY_MAX_USED_BAL,ACC_DUE_PAYMENT_DATE,ACC_CUR_MDUE_PAY_BAL,
+	ACC_CUR_MREAL_PAY_AMT,ACC_LATEST_PAYMENT_DATE,OVER_DUE_CUR_OVER_DUE_NUM,
+	OVER_DUE_CUR_OVER_DUE_AMT,OVER_DUE_UN_PAY_COR31TO60D,OVER_DUE_UN_PAY_COR61TO90D,
+	OVER_DUE_UN_PAY_COR91TO180,OVER_DUE_UN_PAY_COR180DPLUS,M24_PAYMENT_STR_MONTH,
+	M24_PAYMENT_END_MONTH,M24_PAYMENT_STATUS,M60_OVER_DUE_STR_MONTH,
+	M60_OVER_DUE_END_MONTH,CRT_TIME,CRT_USER)
+	<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+	#{item.appId},#{item.cue},#{item.messageType},
+	#{item.state},#{item.financeOrg},#{item.financeType},
+	#{item.account},#{item.currency},#{item.openDate},
+	#{item.creditLimitAmount},#{item.guaranteeType},#{item.stateEndDate},
+	#{item.shareCreditLimitAmount},#{item.usedCreditLimitAmount},#{item.latest6MonthUsedAvgAmount},
+	#{item.usedHighestAmount},#{item.schedulePaymentDate},#{item.schedulePaymentAmount},
+	#{item.actualPaymentAmount},#{item.recentPayDate},#{item.currOverdueCyc},
+	#{item.currOverdueAmount},#{item.overdue31To60Amount},#{item.overdue61To90Amount},
+	#{item.overdue91To180Amount},#{item.overdueOver180Amount},#{item.beginMonthOfLatest24MonthPaymentState},
+	#{item.endMonthOfLatest24MonthPaymentState},#{item.latest24StateOfLatest24MonthPaymentState},#{item.beginMonth},
+	#{item.endMonth},SYSDATE,'SYSTEM'
+	FROM DUAL
+		</foreach>
+	
+	<!-- 	INSERT INTO OPAS_PBOC_LOAN_CARD_INFO (
+			APP_ID,MESS_TYPE,OVER_DUE_CUR_OVER_DUE_NUM,OVER_DUE_CUR_OVER_DUE_AMT,OVER_DUE_UN_PAY_COR31TO60D,
+			OVER_DUE_UN_PAY_COR61TO90D,OVER_DUE_UN_PAY_COR91TO180,OVER_DUE_UN_PAY_COR180DPLUS,M24_PAYMENT_STR_MONTH,
+			M24_PAYMENT_END_MONTH,M24_PAYMENT_STATUS,M60_OVER_DUE_STR_MONTH,M60_OVER_DUE_END_MONTH,
+			DEB_CARD_PAY_SHARE_LIMIT,DEB_CARD_PAY_OVERDRAFT_AMT,DEB_CARD_PAY_6MAVG_USED_AMT,DEB_CARD_PAY_MAX_USED_BAL,
+			CRT_TIME,CRT_USER,ACC_CUR_MREAL_PAY_AMT,ACC_LATEST_PAYMENT_DATE,BASIC_INFO_PROMPT,
+			LOAN_OR_CREDIT_ORG,LOAN_OR_CREDIT_ORG_TYPE,LOAN_OR_CREDIT_BUSI_NO,
+			LOAN_LOAN_TYPE_SEG,LOAN_OR_CREDIT_CCY,LOAN_OR_CREDIT_ISSU_DATE,LOAN_EXP_DATE,LOAN_OR_CREDIT_CONT_AMT,
+			LOAN_OR_CREDIT_GUARANTEE_MODE,LOAN_PAYMENT_FREQ,LOAN_PAYMENT_CYC_NUM,LOAN_OR_CREDIT_ACCT_STATUS,
+			ACC_STATE_END_DATE,ACC_CLASS5STATE,ACC_CORPUS_BAL,ACC_REM_PAYMENT_CYC_NUM,ACC_CUR_MDUE_PAY_BAL,
+			ACC_DUE_PAYMENT_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId},
+			#{item.messageType},
+			
+			#{item.currOverdueCyc},
+			#{item.currOverdueAmount},
+			#{item.overdue31To60Amount},
+			#{item.overdue61To90Amount},
+			#{item.overdue91To180Amount},
+			#{item.overdueOver180Amount},
+			
+			#{item.beginMonthOfLatest24MonthPaymentState},
+			#{item.endMonthOfLatest24MonthPaymentState},
+			#{item.latest24StateOfLatest24MonthPaymentState},
+			
+			#{item.beginMonthOfLatest5YearOverdueRecord},
+			#{item.endMonthOfLatest5YearOverdueRecord},
+			
+			#{item.shareCreditLimitAmount},
+			#{item.usedCreditLimitAmount},
+			#{item.latest6MonthUsedAvgAmount},
+			#{item.usedHighestAmount},
+			
+			SYSDATE,
+			'SYSTEM',
+			
+			#{item.actualPaymentAmount},
+			#{item.recentPayDate},
+			#{item.cue},
+			
+			#{item.financeOrg},
+			#{item.financeType},
+			#{item.account},
+			#{item.type},
+			#{item.currency},
+			#{item.openDate},
+			#{item.endDate},
+			#{item.creditLimitAmount},
+			#{item.guaranteeType},
+			#{item.paymentRating},
+			#{item.paymentCyc},	
+			#{item.state},
+			#{item.stateEndDate},
+			#{item.class5State},
+			#{item.balance},
+			#{item.remainPaymentCyc},
+			#{item.scheduledPaymentAmount},
+			#{item.scheduledPaymentDate}
+		FROM DUAL
+		</foreach> -->
+	</insert>
+
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.fico.mapper.FicoHistoryMapper">
+	<!-- FICO_RISK_LEVEL -->
+	<resultMap id="result_ficorisklevel" type="com.huaxia.plaze.ui.fico.domain.FicoRiskLevel">
+		<result column="CERT_NO" property="idNum" jdbcType="INTEGER" />
+		<result column="MOBILE" property="telNum" jdbcType="VARCHAR" />
+		<result column="TOP_THREE_MOBILE" property="telNumForth" jdbcType="VARCHAR" />
+		<result column="INPUT_SYSDATE" property="ficoDate" jdbcType="VARCHAR" />
+		<result column="HX_FLAG" property="hxFlag" jdbcType="VARCHAR" />
+		<result column="RISK_LEVEL" property="restLevel" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="QUERY_TIME" property="queryTime" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 查询历史数据s-->
+	<select id="selectListByPage" parameterType="java.util.Map" resultMap="result_ficorisklevel">
+			SELECT CERT_NO,MOBILE,TOP_THREE_MOBILE,INPUT_SYSDATE,RISK_LEVEL,CRT_TIME,TRN_ID,QUERY_TIME,RN FROM
+	(SELECT CERT_NO,MOBILE,TOP_THREE_MOBILE,INPUT_SYSDATE,RISK_LEVEL,CRT_TIME,TRN_ID,QUERY_TIME,ROWNUM RN FROM
+	( 
+	   SELECT 
+			  t.cert_no,
+			  t.mobile,
+        t.TOP_THREE_MOBILE,
+			  t.INPUT_SYSDATE,
+			  t.RISK_LEVEL,
+			  TO_CHAR(t.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+			  AS CRT_TIME,
+			  t.TRN_ID,
+			   TO_CHAR(t.SAS_TIME, 'YYYY-MM-DD HH24:MI:SS')
+			  AS QUERY_TIME
+	FROM
+	FICO_TRN_BATCH_DETAIL t
+  where  CERT_NO = #{certNo}
+	ORDER BY 
+	t.CRT_TIME DESC
+    ) A
+	WHERE ROWNUM <![CDATA[ <= ]]>
+	#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+	(#{pageNo} - 1) * #{pageSize}
+   </select>
+   
+	<!-- 分页总数 -->
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+	SELECT 
+			 COUNT(1)	
+		FROM
+		FICO_TRN_BATCH_DETAIL t
+	  where  CERT_NO = #{certNo}
+	</select>
+</mapper>

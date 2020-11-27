@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.cams.modules.baoxin.mapper.BaoXinMapper">
+	
+	<insert id="saveBase" parameterType="com.huaxia.cams.modules.baoxin.domain.BaoXinBase">
+		INSERT INTO BXQC_BASE_DATA (
+			UUID,
+			CRT_TIME,
+			CRT_USER,
+			APP_ID,
+			RISK_VALUE_RANGE,
+			CAR_AGE,
+			CERT_NO,
+			INSURER_UUID,
+			RET_CODE,
+			RET_MESSAGE,
+			BANK_CODE,
+			RETURN_TIME
+		) VALUES (
+			sys_guid(),
+			sysdate,
+			#{crtUser, jdbcType = VARCHAR},
+			#{appId, jdbcType = VARCHAR},
+			#{riskValueRange, jdbcType = VARCHAR},
+			#{carAge, jdbcType = VARCHAR},
+			#{certNo, jdbcType = VARCHAR},
+			#{insurerUuid, jdbcType = VARCHAR},
+			#{retCode, jdbcType = VARCHAR},
+			#{retMessage, jdbcType = VARCHAR},
+			#{bankCode, jdbcType = VARCHAR},
+			#{returnTime, jdbcType = VARCHAR}
+		)	
+	</insert>
+	<select id="selectCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM BXQC_BASE_DATA WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+</mapper>

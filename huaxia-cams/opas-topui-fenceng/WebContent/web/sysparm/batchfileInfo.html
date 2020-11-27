@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table id="tblBatchfile" title="名单导入记录列表" class="easyui-datagrid"
+		style="width: 98%"
+		data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/batchfileinfo_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="Id" width="5%" align="center" checkbox="true">Id</th>
+				<th field="fileName" width="30%">文件名称</th>
+				<th field="inputCounts" width="10%">上传总条数</th>
+				<th field="fileType" width="15%" align="center" formatter="formatFileType">文件类别</th>
+				<th field="inputTime" width="12%" align="center" formatter="formatDate">上传时间</th>
+				<th field="operatCode" width="10%" align="center" >操作员编号</th>
+				<th field="operator" width="10%" align="center" >操作员姓名</th>
+				<!-- <th field="remark" width="20%" align="center" >备注</th> -->
+				<th field="fileStatus" width="10%" align="center" formatter="formatFileStatus">文件状态</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			文件类别: <select  class="easyui-combobox" name="fileType" id="fileType" style="width: 180px"  dict_type="WJLB" 	data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"></select>
+			文件名称: <input class="easyui-textbox" style="width: 110px" name="fileName" id="fileName"> 
+			上传时间: <input class="easyui-datebox" style="width: 110px" name="inputTime" id="inputTime" formatter="formatDate">
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblBatchfile');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+		</form>
+	</div>
+<div class="easyui-window"
+		style="width: 0px; height: 0px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div>
+				<form>
+					<table>
+						<tr>
+							<td>
+						   		<select class="easyui-combobox" validType="selectValueRequired['#fraudType']" style="width: 165px" dict_type="WJLB" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'" style="width: 165px">
+					           	</select>							
+						   		<select class="easyui-combobox" validType="selectValueRequired['#fraudType']" style="width: 165px" dict_type="WJZT" 
+										data-options="valueField:'dictDetailCode',textField:'dictDetailName'" style="width: 165px">
+					           	</select>							
+							</td>
+						</tr>
+					</table>
+				</form>
+     		  </div>    
+		  </div>      
+	</div>
+</body>
+<script>
+
+$cf.loadAllDict();//加载业务字典
+//文件类别
+function formatFileType(val, row, index) {
+	return $cf.getDictDetailName("WJLB", val);
+}
+
+//文件状态
+function formatFileStatus(val, row, index) {
+	return $cf.getDictDetailName("WJZT", val);
+}
+//日期格式转换
+function formatDate(value) {
+	var str = getTaskTime(value);
+	if(str.indexOf('1970')>=0){
+		return '';
+	}else{
+		return str;
+	}
+}
+
+//工具方法：格式化CST类型时间
+function getTaskTime(strDate) {   
+	if(null==strDate || ""==strDate){  
+	    return "";  
+	}  
+	var dateStr=strDate.trim().split(" ");  
+	var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+	var date = new Date(Date.parse(strGMT));  
+	var y = date.getFullYear();  
+	var m = date.getMonth() + 1;    
+		m = m < 10 ? ('0' + m) : m;  
+	var d = date.getDate();    
+		d = d < 10 ? ('0' + d) : d;  
+	var h = date.getHours();  
+		h = h < 10 ? ('0' + h) : h;  
+	var minute = date.getMinutes();    
+	    minute = minute < 10 ? ('0' + minute) : minute;  
+	var second = date.getSeconds();  
+	second = second < 10 ? ('0' + second) : second;  
+	  
+	return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+}; 
+
+
+</script>

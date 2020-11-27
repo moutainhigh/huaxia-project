@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FicoResult">
+	<!--查询Fico汇总报表 -->
+	<!--&gt;和&lt;是大于和小于的写法,直接用大于小于的符号也行  -->
+	<select id="selectFicoSummaryDataByDate" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select sum(case when t.RET_CODE = '000' then 1 else 0 end)
+		as selectSucess,
+		sum(case when t.RET_CODE != '000' then 1 else 0 end)
+		as selectBad,
+		count(*) as selectTotalCount from fico_big_data_hub t
+		where t.crt_time &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+		and
+		t.crt_time &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+	</select>
+
+	<!-- 查询Fico明细报表 -->
+	<select id="selectFicoDetailDataByDate" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select t1.app_id,
+		t2.c1_mobile,
+		t1.ret_code,
+		#{choseClass} as RESULT
+		from fico_big_data_hub t1 left join opas_biz_inp_appl_c1 t2 on t1.app_id =
+		t2.app_id
+		where t1.crt_time &gt;=
+		to_date(#{beginDate},'yyyy-mm-dd')
+		and t1.crt_time
+		&lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		<!-- 前台传输的选择条件 -->
+		<if test="choseClass == 'SELECT' ">
+			order by t1.crt_time desc
+		</if>
+		<if test="choseClass == 'SELECTSUCCESS' ">
+			and t1.ret_code = '000'  
+			order by t1.crt_time desc
+		</if>
+		<if test="choseClass == 'SELECTBAD' ">
+			and t1.ret_code != '000'  
+			order by t1.crt_time desc
+		</if>
+	</select>
+
+	<select id="getCountFicoDetailDataByDate" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		select count(*) from fico_big_data_hub t
+		where t.crt_time &gt;=
+		to_date(#{beginDate},'yyyy-mm-dd')
+		and t.crt_time &lt;=
+		(to_date(#{endDate},'yyyy-mm-dd')+1)
+		<if test="choseClass == 'SELECT' ">
+			order by t.crt_time desc
+		</if>
+		<if test="choseClass == 'SELECTSUCCESS' ">
+			and t.ret_code = '000'  
+			order by t.crt_time desc
+		</if>
+		<if test="choseClass == 'SELECTBAD' ">
+			and t.ret_code != '000'  
+			order by t.crt_time desc
+		</if>
+	</select>
+
+</mapper>

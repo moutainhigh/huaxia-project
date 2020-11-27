@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>是否预筛选客户</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		var appId = GetQueryString("appId");
+		$cf.ajax({
+			data : {
+				"appId" : appId,
+				"page":'0',
+				"rows":'300',
+				"flag" : "queryPreCreditParam_tab_view"
+			},
+			url : "/opas-naps/querySystemDecision_tab_view.json",
+			onSuccess : function(res) {
+				var jsonResult = res.RSP_BODY.rows;
+				var total=res.RSP_BODY.total;
+				var result="";
+				for(var i=0;i<jsonResult.length;i++){
+					result += "<tr>";
+					result += "<td>"+jsonResult[i].batchNo+"</td>";
+					result += "<td>"+jsonResult[i].preSellLimit+"</td>";
+					result += "<td>"+jsonResult[i].phoneNum+"</td>";
+					result += "<td>"+formatDate(jsonResult[i].startDate)+"</td>";
+					result += "<td>"+formatDate(jsonResult[i].endDate)+"</td>";
+					result += "</tr>";
+				}
+				$("#baseTable").append(result);
+			}
+		});
+	});
+	
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">是否预筛选客户</legend>
+	<form id="prefiltercustInfoForm">
+		<table id="baseTable" class="area-list area-list-style-1" >
+				<thead>
+				<tr>
+					<td>批次号</td>
+					<td>预筛选收入</td>
+					<td>手机号码</td>
+					<td>开始日期</td>
+					<td>结束日期</td>
+				</tr>
+				</thead>
+		</table>
+	</form>	
+</fieldset>	
+</body>
+</html>

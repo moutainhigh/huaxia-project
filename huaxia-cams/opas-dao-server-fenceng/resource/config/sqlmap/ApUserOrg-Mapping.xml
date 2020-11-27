@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApUserOrg">
+
+	<resultMap id="ApUserOrgResultMap" type="com.huaxia.opas.domain.system.ApUserOrg">
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="ORG_ID" property="orgId" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="DATE" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="DATE" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+	</resultMap>
+
+	<resultMap id="ApUserResultMap" type="com.huaxia.opas.domain.system.ApUser">
+		<id column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		<result column="USER_PASSWORD" property="userPassword"
+			jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="APPLYER_SEX" property="applyerSex" jdbcType="VARCHAR" />
+		<result column="CELLPHONE" property="cellphone" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="TIMESTAMP" />
+		<result column="REC_STATUS" property="recStatus" jdbcType="CHAR" />
+		<result column="SCR_LEVEL" property="scrLevel" jdbcType="CHAR" />
+		<result column="YDJ_LIMIT_LEVEL" property="ydjLimitLevel"
+			jdbcType="DECIMAL" />
+		<result column="TELEPHONE" property="telephone" jdbcType="VARCHAR" />
+		<result column="BZK_LIMIT_LEVEL" property="bzkLimitLevel"
+			jdbcType="DECIMAL" />
+		<result column="USER_VALIDITY_PERRIOD" property="userValidityPerriod"
+			jdbcType="TIMESTAMP" />
+		<result column="IP_ADDR" property="ipAddr" jdbcType="VARCHAR" />
+		<result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+		<result column="TEAM" property="team" jdbcType="VARCHAR" />
+		<result column="USER_GROUP" property="userGroup" jdbcType="VARCHAR" />
+		<result column="STATION" property="station" jdbcType="VARCHAR" />
+		<result column="FILE_RIGHT_CONTROL" property="fileRightControl"
+			jdbcType="VARCHAR" />
+		<result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+		<result column="FILE_UPLOAD_CONTROL" property="fileUploadControl" jdbcType="VARCHAR" />	
+		<result column="USER_LDNUMBER" property="userLdnamber" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insertApUserOrg" parameterType="com.huaxia.opas.domain.system.ApUserOrg">
+		insert into
+		OPAS_AP_USER_ORG
+		(USER_ID,ORG_ID,CRT_DATE,CRT_TIME,CRT_USER,LST_UPD_USER,LST_UPD_DATE,LST_UPD_TIME,BATCH_DATE,REC_STATUS,SCR_LEVEL)
+		values (
+		#{userId,jdbcType=VARCHAR},
+		#{orgId,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		CURRENT_TIMESTAMP,
+		#{batchDate,jdbcType=DATE},
+		'0',
+		'00'
+		)
+	</insert>
+
+	<insert id="insertApUserOrgSelective" parameterType="com.huaxia.opas.domain.system.ApUserOrg">
+		insert into OPAS_AP_USER_ORG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">USER_ID,</if>
+			<if test="orgId != null">ORG_ID,</if>
+			CRT_DATE,
+			CRT_TIME,
+			<if test="crtUser != null">CRT_USER,</if>
+			<if test="lstUpdUser != null">LST_UPD_USER,</if>
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			<if test="batchDate != null">BATCH_DATE,</if>
+			REC_STATUS,
+			SCR_LEVEL
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">#{userId,jdbcType=VARCHAR},</if>
+			<if test="orgId != null">#{orgId,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">#{lstUpdUser,jdbcType=VARCHAR},</if>
+			CURRENT_DATE,
+			CURRENT_TIMESTAMP,
+			<if test="batchDate != null">#{batchDate,jdbcType=DATE},</if>
+			'0',
+			'00'
+		</trim>
+	</insert>
+
+	<delete id="deleteApUserOrgByOrgIdAndUserId" parameterType="com.huaxia.opas.domain.system.ApUserOrg">
+		delete from OPAS_AP_USER_ORG
+		where ORG_ID =
+		#{orgId,jdbcType=VARCHAR}
+		and USER_ID = #{userId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateApUserOrg" parameterType="com.huaxia.opas.domain.system.ApUserOrg">
+		update OPAS_AP_USER_ORG
+		<set>
+			USER_ID = #{userId,jdbcType=VARCHAR},
+			ORG_ID =
+			#{orgId,jdbcType=VARCHAR},
+			LST_UPD_USER =
+			#{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			BATCH_DATE =
+			#{batchDate,jdbcType=DATE}
+		</set>
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+		and USER_ID =
+		#{userId,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateApUserOrgSelective" parameterType="com.huaxia.opas.domain.system.ApUserOrg">
+		update OPAS_AP_USER_ORG
+		<set>
+			<if test="userId != null">USER_ID = #{userId,jdbcType=VARCHAR},</if>
+			<if test="orgId != null">ORG_ID = #{orgId,jdbcType=VARCHAR},</if>
+			<if test="lstUpdUser != null">LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},</if>
+			LST_UPD_DATE = CURRENT_DATE,
+			LST_UPD_TIME = CURRENT_TIMESTAMP,
+			<if test="batchDate != null">BATCH_DATE = #{batchDate,jdbcType=DATE}</if>
+		</set>
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+		and USER_ID =
+		#{userId,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="queryApUserOrgByOrgIdAndUserId" parameterType="com.huaxia.opas.domain.system.ApUserOrg"
+		resultMap="ApUserOrgResultMap">
+		select
+		USER_ID,
+		ORG_ID,
+		CRT_DATE,
+		CRT_TIME,
+		CRT_USER,
+		LST_UPD_USER,
+		LST_UPD_DATE,
+		LST_UPD_TIME,
+		BATCH_DATE,
+		REC_STATUS,
+		SCR_LEVEL
+		from OPAS_AP_USER_ORG
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+		and
+		USER_ID = #{userId,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="queryApUserOrgByUserId" parameterType="com.huaxia.opas.domain.system.ApUserOrg"
+		resultMap="ApUserOrgResultMap">
+		select
+		USER_ID,
+		ORG_ID,
+		CRT_DATE,
+		CRT_TIME,
+		CRT_USER,
+		LST_UPD_USER,
+		LST_UPD_DATE,
+		LST_UPD_TIME,
+		BATCH_DATE,
+		REC_STATUS,
+		SCR_LEVEL
+		from OPAS_AP_USER_ORG
+		where USER_ID =
+		#{userId,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="queryApUserOrgByOrgId" parameterType="com.huaxia.opas.domain.system.ApUserOrg"
+		resultMap="ApUserOrgResultMap">
+		select
+		USER_ID,
+		ORG_ID,
+		CRT_DATE,
+		CRT_TIME,
+		CRT_USER,
+		LST_UPD_USER,
+		LST_UPD_DATE,
+		LST_UPD_TIME,
+		BATCH_DATE,
+		REC_STATUS,
+		SCR_LEVEL
+		from OPAS_AP_USER_ORG
+		where ORG_ID =
+		#{orgId,jdbcType=VARCHAR}
+
+	</select>
+	
+	<select id="selectApUserOrgByOrgId" parameterType="java.util.Map"
+		resultMap="ApUserOrgResultMap">
+		select
+		distinct ur.USER_ID
+		from OPAS_AP_USER_ORG ur 
+		INNER JOIN OPAS_AP_USER_ROLE h on h.user_id =ur.user_id
+   		INNER JOIN OPAS_AP_ROLE r on h.role_id=r.ROLE_ID
+   		left join OPAS_AP_USER u on u.user_id= ur.user_id 
+		where ur.ORG_ID = #{orgId,jdbcType=VARCHAR}
+		and u.status in ('1','5') 
+		<if test="roleCodes != null and roleCodes !='' ">
+			and r.role_code in 
+		  	<foreach item="item" index="index" collection="roleCodes" open="(" separator="," close=")">
+		  		#{item}
+		  	</foreach>
+	  	</if>
+	</select>
+	
+	<select id="selectApUserOrgCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		count(distinct ur.user_id)
+		from OPAS_AP_USER_ORG ur 
+		INNER JOIN OPAS_AP_USER_ROLE h on h.user_id =ur.user_id
+   		INNER JOIN OPAS_AP_ROLE r on h.role_id=r.ROLE_ID
+		left join OPAS_AP_USER u on u.user_id= ur.user_id 
+		where ur.ORG_ID = #{orgId,jdbcType=VARCHAR}
+		and u.status in ('1','5')
+		<if test="roleCodes != null and roleCodes !='' ">
+			and r.role_code in 
+		  	<foreach item="item" index="index" collection="roleCodes" open="(" separator="," close=")">
+		  		#{item}
+		  	</foreach>
+	  	</if>
+	</select>
+	
+	<select id="queryApUserOrgCountByOrgId" parameterType="com.huaxia.opas.domain.system.ApUserOrg"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_USER_ORG
+		where ORG_ID =
+		#{orgId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteApUserOrgByUserId" parameterType="com.huaxia.opas.domain.system.ApUserOrg">
+		delete from
+		OPAS_AP_USER_ORG
+		where USER_ID = #{userId,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryUserInfoByOrgId" parameterType="java.lang.String"
+		resultMap="ApUserResultMap">
+		select
+		OPAS_AP_USER.USER_ID,OPAS_AP_USER.USER_CODE,OPAS_AP_USER.USER_NAME
+		from OPAS_AP_USER
+		inner join OPAS_AP_USER_ORG
+		on OPAS_AP_USER.USER_ID =
+		OPAS_AP_USER_ORG.USER_ID
+		where
+		OPAS_AP_USER_ORG.ORG_ID =
+		#{orgId,jdbcType=VARCHAR}
+	</select>
+
+	<!--shihuan 2017-02-25 用户管理列表查询 -->
+	<select id="queryUserList" parameterType="java.util.Map"
+		resultMap="ApUserResultMap">
+		select distinct
+		u.USER_ID,
+		u.USER_CODE,
+		u.USER_NAME,
+		u.STATUS,
+		u.TEAM,
+		u.STATION,
+		u.CRT_TIME,
+		u.LST_UPD_TIME,
+		u.CELLPHONE,
+		u.EMAIL,
+		u.YDJ_LIMIT_LEVEL,
+		u.TELEPHONE,
+		u.USER_VALIDITY_PERRIOD,
+		u.BZK_LIMIT_LEVEL,
+		u.IP_ADDR,
+		u.CRT_USER,
+		u.DEPARTMENT,
+		u.LST_UPD_USER,
+		u.FILE_RIGHT_CONTROL,
+		u.FILE_UPLOAD_CONTROL,
+		u.USER_LDNUMBER,
+		(select to_char(listagg(r.role_code,',') within group (order by r.role_code))
+                   from OPAS_AP_USER_ROLE ur2,opas_ap_role r
+                  where u.user_id = ur2.user_id
+                    and r.role_id = ur2.role_id
+                    and r.role_code in ('OOO1', 'SO01')) as role_code
+		from OPAS_AP_USER u
+		left join OPAS_AP_USER_ROLE ur on u.user_id = ur.user_id
+		left join OPAS_AP_USER_ORG o on u.user_id = o.user_id
+		where
+		1=1
+		<if test="userCode != null and userCode !='' ">
+			AND u.USER_CODE LIKE '%${userCode}%'
+		</if>
+		<if test="userName != null and userName !='' ">
+			AND u.USER_NAME LIKE '%${userName}%'
+		</if>
+
+		<if test="department != null and department !='' ">
+			AND u.DEPARTMENT LIKE '%${department}%'
+		</if>
+		<if test="team != null and team !='' ">
+			AND u.TEAM LIKE '%${team}%'
+		</if>
+		<if test="station != null and station !='' ">
+			AND u.STATION LIKE '%${station}%'
+		</if>
+		<if test="orgId != null and orgId !='' ">
+			AND o.ORG_ID = #{orgId}
+		</if>
+
+		<if test="status != null and status !='' ">
+			AND u.STATUS= #{status}
+		</if>
+		<if test="roleId != null and roleId !='' ">
+			AND ur.ROLE_ID = #{roleId}
+		</if>
+		order by CRT_TIME desc
+	</select>
+
+	<!--shihuan 2017-02-25 用户管理列表查询条数 -->
+	<select id="queryUserCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from (select
+		distinct
+		u.USER_ID,
+		u.USER_CODE,
+		u.USER_NAME,
+		u.STATUS,
+		u.TEAM,
+		u.STATION,
+		u.CRT_TIME,
+		u.LST_UPD_TIME,
+		u.CELLPHONE,
+		u.EMAIL,
+		u.YDJ_LIMIT_LEVEL,
+		u.TELEPHONE,
+		u.USER_VALIDITY_PERRIOD,
+		u.BZK_LIMIT_LEVEL,
+		u.IP_ADDR,
+		u.CRT_USER,
+		u.LST_UPD_USER
+		from OPAS_AP_USER u
+		left join OPAS_AP_USER_ROLE ur on u.user_id = ur.user_id
+		left join OPAS_AP_USER_ORG o on u.user_id = o.user_id
+		where
+		1=1
+		<if test="userCode != null and userCode !='' ">
+			AND u.USER_CODE LIKE '%${userCode}%'
+		</if>
+		<if test="userName != null and userName !='' ">
+			AND u.USER_NAME LIKE '%${userName}%'
+		</if>
+
+		<if test="department != null and department !='' ">
+			AND u.DEPARTMENT LIKE '%${department}%'
+		</if>
+		<if test="team != null and team !='' ">
+			AND u.TEAM LIKE '%${team}%'
+		</if>
+
+		<if test="station != null and station !='' ">
+			AND u.STATION LIKE '%${station}%'
+		</if>
+		<if test="orgId != null and orgId !='' ">
+			AND o.ORG_ID = #{orgId}
+		</if>
+
+		<if test="status != null and status !='' ">
+			AND u.STATUS= #{status}
+		</if>
+		<if test="roleId != null and roleId !='' ">
+			AND ur.ROLE_ID = #{roleId}
+		</if>
+		)
+	</select>
+	<!-- zlb -->
+	<select id="queryApUserOrgByUserIdMember" parameterType="java.lang.String"
+		resultMap="ApUserOrgResultMap">
+		select 
+			USER_ID,
+			ORG_ID,
+			CRT_DATE,
+			CRT_TIME,
+			CRT_USER,
+			LST_UPD_USER,
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			BATCH_DATE,
+			REC_STATUS,
+			SCR_LEVEL
+		from OPAS_AP_USER_ORG
+		where USER_ID =
+		#{userId,jdbcType=VARCHAR}
+
+	</select>
+	<!--zlb  -->
+	<select id="queryApUserOrgByOrgIdCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select  count(1) from (select
+			USER_ID,
+			ORG_ID,
+			CRT_DATE,
+			CRT_TIME,
+			CRT_USER,
+			LST_UPD_USER,
+			LST_UPD_DATE,
+			LST_UPD_TIME,
+			BATCH_DATE,
+			REC_STATUS,
+			SCR_LEVEL
+		from OPAS_AP_USER_ORG
+		where ORG_ID = #{orgId,jdbcType=VARCHAR}
+		)
+	</select>
+	<!-- 根据userCode查询用户组别 -->
+	<select id="queryApUserOrgByUserCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select ORG_ID from OPAS_AP_USER_ORG a,OPAS_AP_USER b
+		where a.USER_ID=b.USER_ID and USER_CODE = #{userCode}
+	</select>
+	
+	<resultMap id="ApOrgResultMap" type="java.util.Map">
+		<result column="ORG_LEVEL" property="orgLevel" jdbcType="VARCHAR" />
+		<result column="ORG_ID" property="orgId" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectApOrgByUserCode" parameterType="java.lang.String" 
+	resultMap="ApOrgResultMap">
+		select u.ORG_LEVEL, u.ORG_ID
+	    from OPAS_AP_ORG u left join OPAS_AP_USER_ORG h on u.org_id = h.org_id
+	    left join OPAS_AP_USER g on g.user_id=h.user_id
+	    where g.user_code = #{userCode}
+	</select>
+	
+</mapper>

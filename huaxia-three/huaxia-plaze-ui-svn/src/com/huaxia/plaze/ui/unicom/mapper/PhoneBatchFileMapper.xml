@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.unicom.mapper.PhoneBatchFileMapper">
+
+	<insert id="savePhoneTrnBatchFile" parameterType="PhoneBatchFile">
+		INSERT INTO
+		UNICOM_PHONE_TRN_BATCH_FILE (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_ID,
+		BATCH_FILE_ID,
+		BATCH_FILE_NAME,
+		BATCH_FILE_RECORD_SIZE
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		#{batchId},
+		#{batchFileId},
+		#{batchFileName},
+		#{batchFileRecordSize}
+		)
+	</insert>
+
+	<resultMap id="result_file" type="PhoneBatchFile">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_ID" property="batchFileId" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_NAME" property="batchFileName" jdbcType="VARCHAR" />
+		<result column="BATCH_FILE_RECORD_SIZE" property="batchFileRecordSize" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 批次文件查询 -->
+	<select id="selectFileDetail" parameterType="string" resultMap="result_file">
+		SELECT T.BATCH_FILE_ID,T.BATCH_FILE_NAME,
+		TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+		T.BATCH_FILE_RECORD_SIZE,S.STAFF_ID,
+		S.STAFF_NAME,T.QUERY_STATUS
+		FROM UNICOM_PHONE_TRN_BATCH_FILE T
+		LEFT JOIN SYS_USER S ON T.CRT_USER=S.USER_ACCT
+		WHERE T.BATCH_ID=#{batchId}
+	</select>
+
+</mapper>

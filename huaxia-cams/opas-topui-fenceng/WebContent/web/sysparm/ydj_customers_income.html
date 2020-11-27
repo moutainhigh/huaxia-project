@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblIncome" title="客群职级替代收入(易达金)" class="easyui-datagrid"
+		style="width: 98%;height:100%"
+		data-options="pageSize:20,pageList:[15,20,50],rownumbers:true,singleSelect:false,selectOnCheck:false,checkOnSelect:false,pagination:true,fitColumns:true,
+		url:'/opas-naps/query_customers_income.json',loadMsg:'数据加载中.....',
+		method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="uuId" width="10%" align="center" checkbox="true">Id</th>
+				<th field="cityCode" width="10%" align="center"
+					formatter="formatCityCode">城市代码</th>
+				<th field="customersDetail" width="10%" align="center"
+					formatter="formatIndustryCode">客群细分</th>
+				<th field="jobLevel" width="10%" align="center"
+					formatter="formatJobCode">职级</th>
+				<th field="income" width="10%" align="center">收入</th>
+				<th field="crtDate" width="15%" align="center"
+					formatter="myformatDate" sortable="true">创建日期</th>
+					<th field="startDate" width="15%" align="center"
+					formatter="myformatDate" sortable="true">启用日期</th>
+					<th field="stopDate" width="15%" align="center"
+					formatter="myformatDate" sortable="true">停用日期</th>
+					<th field="lstUpdDate" width="15%" align="center"
+					formatter="myformatDate" sortable="true">最后修改日期</th>
+				<th field="status" width="5%" align="center"
+					formatter="formatStatus">当前状态</th>
+				<th field="operator" width="10%" align="center">创建人</th>
+				<th field="lstUpdUser" width="10%" align="center">最后操作人</th>
+				<th field="operate" width="6%" align="center"
+					data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+
+	<!-- 功能部分区设置 -->
+	<div id="positionCodeCondion" style="padding: 10px; text-align: laft;">
+		<form id="seachPositionCodeForm">
+			城市代码: <input class="easyui-textbox" style="width: 110px"
+				name="cityCode" id="cityCode" data-options="validType:'maxLength[10]'"></input>
+			客群细分: <input class="easyui-textbox" style="width: 110px"
+				name="customersDetail" id="customersDetail" data-options="validType:'maxLength[10]'"></input>
+			职级: <input class="easyui-textbox" style="width: 110px"
+				name="jobLevel" id="jobLevel" data-options="validType:'maxLength[5]'"></input>
+			当前状态: <select class="easyui-combobox" style="width: 80px" id="status"
+				name="status">
+				<option value="">请选择</option>
+				<option value="1">启用</option>
+				<option value="0">停用</option>
+			</select> 
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblIncome');"
+				class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+				<br/>
+				<a href="javascript:common.openWin('winAdd');"
+				class="easyui-linkbutton" iconCls="icon-add">新增</a>
+				<a href="javascript:deleteIncome();"
+					class="easyui-linkbutton" iconCls="icon-remove">批量删除</a>  
+				<a href="javascript:setActiveOk();"
+					class="easyui-linkbutton" iconCls="icon-ok">批量启用</a>  
+				<a href="javascript:setActiveNo();"
+					class="easyui-linkbutton" iconCls="icon-no">批量禁用</a>
+				<a href="javascript:common.openWin('winLoad')"
+				class="easyui-linkbutton" iconCls="icon-print">导入</a>
+
+		</form>
+	</div>
+</div>
+	<!--修改窗口  -->
+	<div id="winEdit" class="easyui-window" title="客群职级替代收入(修改)"
+		style="width: 300px; height: 350px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>城市代码:</td>
+					<td>
+					<input  class="easyui-textbox" id="cityCode" name="cityCode" required="true"
+							style="width: 100px" data-options="required:true">
+					</input>
+					<input type="hidden" name="uuId" id="uuId" />
+					</td>
+				</tr>
+				<tr>
+					<td>客群细分:</td>
+					<td><input  class="easyui-textbox" id="customersDetail" name="customersDetail" required="true"
+							style="width: 100px" data-options="required:true">
+					</input></td>
+				</tr>
+				<tr>
+					<td>职级:</td>
+					<td><input  class="easyui-textbox" id="jobLevel" name="jobLevel" required="true"
+							style="width: 100px" data-options="required:true">
+					</input></td>
+				</tr>
+				<tr>
+					<td>收入:</td>
+					<td><input class="easyui-validatebox textbox" id="income"
+						type="text" name="income" data-options="required:true,validType:'length[1,10]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px" data-options="required:true"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp; <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+
+	<!--新增窗口  -->
+	<div id="winAdd" class="easyui-window" title="客群职级替代收入(新增)"
+		style="width: 300px; height: 350px" top="40px" 
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>城市代码:</td>
+					<td>
+					<input type="hidden" name="uuId" id="uuId" />
+					<input class="easyui-validatebox textbox" id="cityCode"
+						type="text" name="cityCode" data-options="required:true,validType:'length[1,10]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>职级:</td>
+					<td><input class="easyui-textbox" id="customersDetail" name="customersDetail" 
+							required="true" style="width: 100px"  
+							data-options="required:true">
+					</input></td>
+				</tr>
+				<tr>
+					<td>职级:</td>
+					<td><input class="easyui-textbox" id="jobLevel" name="jobLevel" 
+							required="true" style="width: 100px"  
+							data-options="required:true">
+					</input></td>
+				</tr>
+				<tr>
+					<td>收入:</td>
+					<td><input class="easyui-validatebox textbox" id="income"
+						type="text" name="income" data-options="required:true,validType:'length[1,10]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px" data-options="required:true"
+						id="status" name="status">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+		</div>
+	</div>
+</body>
+
+<!-- 导入窗口 -->
+<div id="winLoad" class="easyui-window" title="客群职级替代收入导入"
+	style="width: 700px; height: 200px"
+	data-options="iconCls:'icon-save',modal:true,closed:true">
+	
+	<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/ydjCustomersIncomeUploadServlet.json"> 
+    	<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据导入</h3>
+		<div style="margin: 10px 0 0 30px;width:100%;">
+	        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+			<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+			<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+			<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+			<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+			<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+			<a href="javascript:importExcel()" class="easyui-linkbutton"  iconCls="icon-print">导入</a>
+		</div>
+		</form>
+</div>
+
+<!-- 对应的js方法 -->
+<script>
+	//加载业务字典
+	$cf.loadAllDict();
+
+	var tblIncome = $("#tblIncome");
+	//修改
+	var editWindow = $("#winEdit");
+	//新增窗口
+	var addWindow = $("#winAdd");
+	//创建时间
+	var editForm = $("#editForm");
+	//添加表单
+	var addForm = $("#addForm");
+
+	var menuTree = $("#menuTree");
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+	tblIncome.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})
+	//操作超链接按钮设置
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editBalanceMove();>修改</a>&nbsp;";
+	}
+
+	//给数据字典维护的字段,添加链接方法
+	//城市代码
+	function formatCityCode(val, row, index) {
+		return $cf.getDictDetailName("ZDCSDM", val);
+	}
+
+	//单位性质
+	function formatUnionType(val, row, index) {
+		return $cf.getDictDetailName("ZDDWXZ", val);
+	}
+
+	//教育程度
+	function formatEducation(val, row, index) {
+		return $cf.getDictDetailName("ZDJYCD", val);
+	}
+
+	//行业代码
+	function formatIndustryCode(val, row, index) {
+		return $cf.getDictDetailName("ZDGZHYDM", val);
+	}
+
+	//职业代码
+	function formatJobCode(val, row, index) {
+		return $cf.getDictDetailName("ZDZY", val);
+	}
+
+	//设置当前状态
+	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	}
+
+	function addRole() {
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	//超链接修改按钮方法
+	function editBalanceMove() {
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+	}
+
+	//删除方法
+	function deleteIncome() {
+		var orgObj = tblIncome.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].uuId);
+		}
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/customers_income_remove.json",
+							data : {"ids":ids},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("删除成功！");
+									tblIncome.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+
+	//设置日期的方法
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+	
+	//修改日期格式
+	function myformatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+			}
+		}
+	
+	//工具方法：格式化CST类型时间
+
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		var h = date.getHours();
+		h = h < 10 ? ('0' + h) : h;
+		var minute = date.getMinutes();
+		minute = minute < 10 ? ('0' + minute) : minute;
+		var second = date.getSeconds();
+		second = second < 10 ? ('0' + second) : second;
+
+		return y + "-" + m + "-" + d + " " + h + ":" + minute + ":"
+				+ second;
+	};
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	//修改按钮
+	function onUpdate() {
+		//var incomeData = isRequired('addForm');
+		var incomeData = getFormData(editForm.serializeArray());
+		if (incomeData.cityCode == null || incomeData.cityCode.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,请选择对应的城市代码!");
+			return;
+		}
+		if (incomeData.customersDetail == null || incomeData.customersDetail.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,请选择对应的客群细分!");
+			return;
+		}
+
+		if (incomeData.jobLevel == null || incomeData.jobLevel.trim() == "") {
+			$.messager.alert("操作提示", "修改失败,请选择对应的职级!");
+			return;
+		}
+		if (incomeData.income == null || incomeData.income.trim().length <=0 ) {
+			$.messager.alert("操作提示", "修改失败:收入不能为空!", "error");
+			return true;
+		}else if(incomeData.income.trim().length>10){
+			$.messager.alert("操作提示", "修改失败:收入不能超过10位!", "error");
+			return true;
+		}
+		if (incomeData.status != "1" && incomeData.status != "0" &&  incomeData.status != "") {
+			$.messager.alert("操作提示", "修改失败:启用状态格式不正确!", "error");
+			return true;
+		}else if(incomeData.status == ""){
+			jsondata.status = "1";
+		}
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/customers_income_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblIncome.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//添加
+	function onSave() {
+		var incomedata = isRequired('addForm');
+		//更换了取值方法来应对业务字典的取值问题
+		var incomeData = getFormData(addForm.serializeArray());
+
+		if (incomeData.cityCode == null || incomeData.cityCode.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,请选择对应的城市代码!");
+			return;
+		}
+		if (incomeData.customersDetail == null || incomeData.customersDetail.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,请填写对应的客群细分!");
+			return;
+		}
+		if (incomeData.jobLevel == null || incomeData.jobLevel.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,请填写对应的职级!");
+			return;
+		}
+		var jsondata = getFormData(addForm.serializeArray());
+		if (jsondata.income == null || jsondata.income.trim().length <=0 ) {
+			$.messager.alert("操作提示", "添加失败:收入不能为空!", "error");
+			return false;
+		}else if(jsondata.income.trim().length>10){
+			$.messager.alert("操作提示", "添加失败:收入不能超过10位!", "error");
+			return false;
+		}
+		if (jsondata.status == null  || jsondata.status == "" ) {
+			$.messager.alert("操作提示", "添加失败:请选择启用状态!", "error");
+			return false	;
+		}
+		$cf.ajax({
+			url : "/opas-naps/customers_income_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblIncome.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	//导入的方法	 
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+			$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+			$('#formFile').submit();
+			
+		}
+
+	}
+	
+	//校验的方法
+	function checkData(jsondata , cue){		
+		if (jsondata.income == null || jsondata.income.trim().length <=0 ) {
+			$.messager.alert("操作提示", cue+"失败:收入不能为空!", "error");
+			return true;
+		}else if(jsondata.income.trim().length>10){
+			$.messager.alert("操作提示", cue+"失败:收入不能超过10位!", "error");
+			return true;
+		}
+		if (jsondata.status != "1" && jsondata.status != "0" &&  jsondata.status != "") {
+			$.messager.alert("操作提示", cue+"失败:启用状态格式不正确!", "error");
+			return true;
+		}else if(jsondata.status == ""){
+			jsondata.status = "1";
+		}
+	}
+	
+	//批量启用
+	function setActiveOk() {
+		var orgObj = tblIncome.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var Status = "1";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].uuId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要启用该参数吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/customers_income_setStatusOK.json",
+						data : {"ids":ids,"Status":Status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("启用成功!");
+								tblIncome.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+	//批量禁用
+	function setActiveNo() {
+		var orgObj = tblIncome.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var Status = "0";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].uuId);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要禁用该参数吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/customers_income_setStatusNO.json",
+						data : {"ids":ids,"Status":Status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("禁用成功!");
+								tblIncome.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+</script>

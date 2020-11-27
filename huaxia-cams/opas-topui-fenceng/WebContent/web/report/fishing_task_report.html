@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:10px
+}
+</style>
+</head>
+<body>
+<div id="report_fishing_center" data-options="fit:true,boder:false">
+<div data-options="region='north',title:'查询',border:false,icons:'icon-searh'"
+ style="height:40px;overflow:hidden;">
+ <form id="report_fishing_form">
+ <table class="report_fishing_tableForm datagrid-toolbar" style="width:100%;height:100%">
+  <tr>
+   <td><label>开始时间</label><input id="report_fishing_beginDate" name="beginDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   $(this).datebox('setValue',date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate());
+   }"/><label>结束时间</label><input id="report_fishing_endDate" name="endDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   $(this).datebox('setValue',date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate());
+   }"/>
+	<a id="report_fishing_searchButton" class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>
+	<a id="report_fishing_cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+   </td>
+  </tr>
+ </table>
+ </form>
+ </div>
+ <tr><td><br><label class="alsp">选择渠道</label><input id="report_fishing_applyChannle_id" name="applyChannle" class="easyui-combobox" style="width:100px;" dict_type="ALLOT_APPCHANNEL" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+<!--                      <label>选择渠道</label><input id="report_fishing_applyChannle_id" name="applyChannle" class="easyui-combobox" style="width:100px;" dict_type="ALLOT_APPCHANNEL" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/>
+ --> <div data-options="region:'center',border:false">
+ <table id="report_fishing_datagrid"></table>
+ </div>
+</div>
+</body>
+<script type="text/javascript">
+$cf.loadAllDict();//用于引进    业务字典     
+var report_fishing_form=undefined;
+var report_fishing_datagrid=undefined;
+var report_fishing_ydjFlagType=''; //易达金卡1或标准卡2的判断依据 
+$(function(){
+	if(report_fishing_ydjFlagType==''){
+		report_fishing_ydjFlagType=getCurrentUrlParam();
+	}
+	report_fishing_form=$('#report_fishing_form');
+	$('#report_fishing_searchButton').bind('click',function(){
+		report_fishing_search();
+	});
+	$('#report_fishing_cleanButton').bind('click',function(){
+		report_fishing_clean();
+	});
+	
+	report_fishing_datagrid=$('#report_fishing_datagrid').datagrid({
+		url:"/opas-naps/showFishingData.json",
+		border:false,
+		animate:true,
+		pagination:true,
+		fitColumns:true,
+		singleSelect:false,
+		rownumbers:true,
+		pageSize:15,
+		pageList:[15,20,50],
+		columns:[[/*{
+			title:'序列值',
+			field:'autoId',
+			width:"5%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},*/{
+			title:'申请件编号',
+			field:'appId',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}/* ,{
+			title:'渠道',
+			field:'applyChannle',
+			formatter: formatAutoRow,
+			width:"5%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		} */,{
+			title:'申请人姓名',
+			field:'applyerName',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'操作人姓名',
+			field:'operName',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'证件类别',
+			field:'c1Idtype',
+			width:"10%",
+			formatter:function(value,row,index){
+				if(value=='01'){
+					return "18位身份证";
+				}else if(value=='02'){
+					return "15位身份证";
+				}else if(value=='03'){
+					return "外国护照";
+				}else if(value=='04'){
+					return "港澳台居民来往内地通行证台胞证";
+				}else if(value=='05'){
+					return "军官证";
+				}else if(value=='20'){
+					return "其他";
+				}
+			},
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'证件号码',
+			field:'c1Idnbr',
+			width:"13%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'捞返环节',
+			field:'returnLink',
+			width:"8%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'创建日期',
+			field:'crtTime',
+			width:"13%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}/* ,{
+			title:'拒绝原因',
+			field:'refuseReason',
+			width:"15%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		} */,{
+			title:'审批结果',
+			field:'approveReuslt',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},/* {
+			title:'授信额度',
+			field:'preApprovelimit',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}, */{
+			title:'拒绝码1',
+			field:'refuseCode1',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'拒绝码2',
+			field:'refuseCode2',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'拒绝码3',
+			field:'refuseCode3',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},/* {
+			title:'政策码1',
+			field:'policyCode1',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'政策码2',
+			field:'policyCode2',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'政策码3',
+			field:'policyCode3',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'违例码1',
+			field:'violateCode1',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'违例码2',
+			field:'violateCode2',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'违例码3',
+			field:'violateCode3',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}, */{
+			title:'审批备注',
+			field:'memo',
+			width:"10%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}
+		]]
+	});
+});
+function report_fishing_search(){
+	var beginDate=$('#report_fishing_beginDate').datebox('getValue');
+	var endDate=$('#report_fishing_endDate').datebox('getValue');
+	if(beginDate==""||endDate==""){//没有选择起止时间
+		$.messager.alert('提示','请选择起止时间.','warning'); return null;
+	}
+	var day = GetDateDiff(beginDate,endDate);
+	if (day>32){
+		alert("区间不能超过31天");
+		return;
+	}
+	var ydjObject=new Object();
+	ydjObject.name='ydjFlag';
+	ydjObject.value=report_fishing_ydjFlagType;
+	
+	var applyChannle=new Object();
+	applyChannle.name='applyChannle';
+	applyChannle.value=$('#report_fishing_applyChannle_id').datebox('getValue');
+	
+	var paramArray=report_fishing_form.serializeArray();
+	paramArray.push(ydjObject);
+	paramArray.push(applyChannle);
+	var jsondata =common.formToJson(paramArray);
+	report_fishing_datagrid.datagrid('load',jsondata);
+	}
+function report_fishing_clean(){
+	report_fishing_datagrid.datagrid('load',{});
+	report_fishing_form.form('clear');
+	$('#report_fishing_applyChannle_id').combobox('clear');
+	report_fishing_choseDimensionIsWhat=undefined;
+	}
+
+function getCurrentUrlParam(){
+	var currentUrl=window.location.href;
+	return  ydjFlagType=currentUrl.split("=")[1];
+}
+
+function GetDateDiff(startDate,endDate) {
+	
+	var startTime = new Date(Date.parse(startDate.replace(/-/g,"/"))).getTime();
+	var endTime = new Date(Date.parse(endDate.replace(/-/g,"/"))).getTime();
+	var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+	return dates;
+}
+//纪要信息换行
+function formatAutoRow(value){
+	var str = "";
+	if (value == "8") {
+		str = "卡中心";
+	} else if (value == "9") {
+		str = "分行";
+	} else if (value == "6") {
+		str = "直销中心";
+	} else if (value == "1") {
+		str = "其他";
+	} else if (value == "2") {
+		str = "DB德行";
+	}  else if (value == "5") {
+		str = "信而富";
+	}  else if (value == "3") {
+		str = "决策信诚";
+	} 
+	return str
+}
+
+
+
+</script>
+
+</html>

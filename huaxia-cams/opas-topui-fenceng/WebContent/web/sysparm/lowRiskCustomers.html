@@ -1,0 +1,794 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+<!-- 	初始列表展示 -->
+	<div style="margin: 2px; width: 100%;height:600px; overflow-y:scroll;">
+		<table id="tblIdentityRisk" title="低风险客户名单库" class="easyui-datagrid" style="width: 98%;height:100%"
+		       data-options="rownumbers:true,singleSelect:false,selectOnCheck:false,checkOnSelect:false,pageSize:20,pageList:[15, 20, 50,100,200,500],pagination:true,fitColumns:true,url:'/opas-naps/lowRiskCustomer_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#activeCodeCondion'">
+			<thead>
+				<tr>
+					<th field="uuid" id="uuidList" name="uuid" align="center" checkbox="true">全选</th>
+					<th field="cusName" align="center" width="10%">姓名</th>
+					<th field="credNo" align="center" width="10%">身份证号码</th>
+					<th field="mobile" align="center" width="10%">手机号码</th>
+					<th field="companyName" align="center" width="10%">单位名称</th>
+					 <th field="listType" align="center" width="10%"
+					    formatter="formatCompanyDept">名单类型</th>
+					<th field="crtUser" align="center" width="10%">操作用户</th>
+					<th field="status" align="center"  formatter="formatStatus"  width="5%">状态</th>
+					<th field="crtTime" align="center"  formatter="gridDateFormat"  width="15%">添加日期</th>
+					<th field="operate" align="center" data-options="formatter:formatOper" width="17%">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="activeCodeCondion" style="padding: 2px 5px;">
+			<form id="seachActiveCodeForm">
+					姓名:<input class="easyui-textbox" style="width: 110px" name="cusName"> 
+					身份证号码:<input class="easyui-textbox" style="width: 110px" name="credNo"> 
+					手机号码: <input class="easyui-textbox" style="width: 110px" name="mobile">
+					单位名称: <input class="easyui-textbox" style="width: 110px" name="companyName">
+					名单类型: <select class="easyui-combobox" style="width: 110px" name="listType">
+                               <option value="">--请选择--</option>
+                               <option value="1">欺诈</option>
+                               <option value="2">信用</option>
+                            </select>
+				<br>
+				<a
+				href="javascript:common.searchTbl('seachActiveCodeForm','tblIdentityRisk');"
+					class="easyui-linkbutton" iconCls="icon-search">查询
+				</a>
+				<a href="javascript:myOpenWin('winAdd');"
+					class="easyui-linkbutton" iconCls="icon-add">新增
+				</a>  
+				<a href="javascript:deleteActivCode();"
+					class="easyui-linkbutton" iconCls="icon-remove">批量删除
+				</a>  
+				<a href="javascript:setActiveOk();"
+					class="easyui-linkbutton" iconCls="icon-ok">批量启用
+				</a>  
+				<a href="javascript:setActiveNo();"
+					class="easyui-linkbutton" iconCls="icon-no">批量停用
+				</a>  
+				<a href="javascript:deleteAll();"
+					class="easyui-linkbutton" iconCls="icon-remove">全量删除
+				</a>
+				<font color="blue" size="3">批量导入格式:姓名^|身份证号码^|手机号码^|单位名称^|名单类型(信用=2,欺诈=1)</font>
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/UploadLowRiskCustomersServlet.json" target="tartIframe"> 
+				<div style="margin: 10px 0 0 30px;width:100%;">
+			        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+					<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个txt文件',accept:'.txt'" style="width:400px">
+					<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+					<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+					<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importTxt()">
+					<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+					<span class="filebox-label" style="left: 25px;"><font size="2">导入数据</font></span></span>
+				</div>
+			</form>
+			<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+		</div>
+	</div>
+<!-- 	查看修改 -->
+	<div id="winEdit" class="easyui-window" title="低风险客户名单修改"
+		style="width: 330px; height: 350px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="editForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+			<!-- 			<tr>
+							<td align="right">申请件编号:</td>
+							<td><input class="easyui-textbox" type="text" name="appId"  data-options="validType:'length[1,16]'"></input>
+								<input type="hidden" name="autoId"/>
+							</td>						
+						</tr>
+						<tr>		
+							<td align="right">单位名称:</td>
+							<td><input class="easyui-textbox" type="text" name="companyName"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">单位电话:</td>
+							<td><input class="easyui-textbox" type="text" name="companyTel"   ></input>							
+						</tr>
+						<tr>      
+                            <td align="right">部门名称:</td>
+                            <td><select class="easyui-combobox" style="width: 150px" 
+                                id = "companyDept" name="companyDept" editable="false">
+                                    <option value="">--请选择--</option>
+		                            <option value="1">欺诈</option>
+		                            <option value="2">信用</option>
+                                </select>
+                            </td>                           
+                        </tr>
+						<tr>		
+							<td align="right">电话来源:</td>
+							<td><input class="easyui-textbox" type="text" name="telSource"   ></input>							
+						</tr>
+						<tr>
+							<td align="right">状态:</td>
+							<td><select class="easyui-combobox" id="currStatus" name="currStatus" editable="false"
+								style="width: 150px;">
+							<option value="1" >启用</option>
+							<option value="0">停用</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td align="right" >添加日期:</td>
+							<td>
+								<input id="showCreateTime" class="easyui-datetimebox" name="showCreateTime"/>
+							</td>
+						</tr>						
+						<tr>
+							<td align="right">备注:</td>
+							<td><textarea class="easyui-validatebox textbox" style="height: 100px;width: 160px" data-options="multiline:true,validType:'length[1,200]'"
+								type="text" name="memo" ></textarea>
+							</td>								
+						</tr>
+						 -->
+						 <tr>
+							<td align="right"></td>
+							<td><input  type="hidden"  name="uuid">
+							</td>						
+						</tr>
+						<tr>		
+							<td align="right">姓名:</td>
+							<td><input class="easyui-validatebox" type="text" name="cusName"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">身份证号码:</td>
+							<td><input class="easyui-validatebox" type="text" name="credNo"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">手机号码:</td>
+							<td><input class="easyui-validatebox" type="text" name="mobile"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">单位名称:</td>
+							<td><input class="easyui-validatebox" type="text" name="companyName"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+                        <tr>
+							<td align="right">名单类型:</td>
+							<td><select class="easyui-combobox" id="listType" name="listType" editable="false"
+								style="width: 150px;">
+							<option value="1">欺诈</option>
+							<option value="2" selected="selected">信用</option>
+					</select></td>
+						</tr>		
+						<tr>
+							<td align="right">状态:</td>
+							<td><select class="easyui-combobox" id="STATUS" name="STATUS" editable="false"
+								style="width: 150px;">
+							<option value="1" selected="selected">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+						</tr>		
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+	</div>
+	
+	<div id="winShow" class="easyui-window" title="征信电话核查白名单查看"
+		style="width: 330px; height: 350px" 
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="showForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">申请件编号:</td>
+							<td><input class="easyui-textbox" type="text" name="appId"  data-options="editable:false,readonly:true,validType:'length[1,16]'"></input>
+								<input type="hidden" name="autoId"/>
+							</td>						
+						</tr>
+						<tr>		
+							<td align="right">单位名称:</td>
+							<td><input class="easyui-textbox" type="text" name="companyName"  data-options="editable:false,readonly:true,validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">单位电话:</td>
+							<td><input class="easyui-textbox" type="text" name="companyTel"   data-options="editable:false,readonly:true"></input>							
+						</tr>
+						<tr>      
+                            <td align="right">部门名称:</td>
+                            <td><select class="easyui-combobox" style="width: 100px" 
+                                    id = "companyDept" name="companyDept" data-options="editable:false,readonly:true">
+                                    <option value="">--请选择--</option>
+                                    <option value="01">人力</option>
+                                    <option value="02">财务</option>
+                                    <option value="03">行政</option>
+                                    <option value="04">办公室</option>
+                                    <option value="05">总机</option>
+                                     <option value="06">其它</option>
+                                </select></td>                          
+                        </tr>
+						<tr>		
+							<td align="right">电话来源:</td>
+							<td><input class="easyui-textbox" type="text" name="telSource"   data-options="editable:false,readonly:true"></input>							
+						</tr>
+						<tr>
+							<td align="right">状态:</td>
+							<td><select class="easyui-combobox" id="currStatus" name="currStatus" editable="false" readonly="true"
+								style="width: 150px;">
+							<option value="1" >启用</option>
+							<option value="0">停用</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td align="right" >添加日期:</td>
+							<td>
+								<input id="showCreateTime2" class="easyui-datetimebox" name="showCreateTime" editable="false",readonly="true",/>
+							</td>
+						</tr>						
+						<tr>
+							<td align="right">备注:</td>
+							<td><textarea class="easyui-validatebox textbox" style="height: 100px;width: 160px" data-options="editable:false,readonly:true,multiline:true,validType:'length[1,200]'"
+								type="text" name="memo" ></textarea>
+							</td>								
+						</tr>
+					</table>
+				</form>
+	</div>
+<!-- 	新增页面 -->
+	<div id="winAdd" class="easyui-window" title="低风险客户名单添加"
+		style="width: 330px; height: 370px" 
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="addForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+				<!-- 	<tr>
+							<td align="right">申请件编号:</td>
+							<td><input class="easyui-validatebox" type="text" name="appId"  data-options="validType:'length[1,16]'"></input>
+							</td>						
+						</tr> -->
+						<tr>		
+							<td align="right">姓名:</td>
+							<td><input class="easyui-validatebox" type="text" name="cusName"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">身份证号码:</td>
+							<td><input class="easyui-validatebox" type="text" name="credNo"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">手机号码:</td>
+							<td><input class="easyui-validatebox" type="text" name="mobile"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+						<tr>		
+							<td align="right">单位名称:</td>
+							<td><input class="easyui-validatebox" type="text" name="companyName"  data-options="validType:'length[1,50]'"></input>							
+						</tr>
+                        <tr>
+							<td align="right">名单类型:</td>
+							<td><select class="easyui-combobox" id="listType2" name="listType" editable="false"
+								style="width: 150px;">
+							<option value="1">欺诈</option>
+							<option value="2" selected="selected">信用</option>
+					</select></td>
+						</tr>		
+						<tr>
+							<td align="right">状态:</td>
+							<td><select class="easyui-combobox" id="currStatus1" name="STATUS" editable="false"
+								style="width: 150px;">
+							<option value="1" selected="selected">启用</option>
+							<option value="0">停用</option>
+					</select></td>
+						</tr>		
+					</table>
+				</form>
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>
+		        </div>
+	</div>	
+	<!-- 历史列表页面展示 -->
+	<div id="dictWin" class="easyui-window" title="操作历史记录"
+		style="width: 1200px; height: 600px;"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'">
+				<table id="tblDict1" class="easyui-datagrid"
+					data-options="rownumbers:true,singleSelect:true,pageSize:20,pageList:[15, 20, 50],pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+						<tr>
+							<th field="appId" align="center" width="10%">申请件编号</th>
+							<th field="companyName" align="center" width="15%">单位名称</th>
+							<th field="companyTel" align="center" width="10%">单位电话</th>
+						<!-- 	<th field="companyDept" width="8%" align="center"
+                            formatter="formatCompanyDept">部门名称</th> -->
+							<th field="telSource" align="center" width="10%">电话来源</th>
+							<th field="memo" align="center" width="20%">备注</th>
+							<th field="operator"  align="center" width="10%">操作用户</th>
+							<th field="currStatus" align="center"  formatter="formatStatus" >状态</th>
+							<th field="createTime" align="center"  formatter="gridDateFormat2" width="15%">添加日期/时间</th>
+							<th field="operatTime" align="center"  formatter="gridDateFormat2" width="15%">修改日期/时间</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script>
+	//$.parser.parse();
+	$cf.loadAllDict();//加载业务字典
+	//启用状态
+	function formatStatus(val, row, index) {
+		if (val == "0") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		}else{
+			return val;
+		}
+	}
+	
+	var tblIdentityRisk = $("#tblIdentityRisk");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	var winShow = $("#winShow");
+	var showForm = $("#showForm");
+	function formatOper(val, row, index) {
+		return "&nbsp;&nbsp;&nbsp;<a href=javascript:editActiveCode(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:editDelete("+index+"); >删除</a>";
+	}
+	
+	//选中行临时存储变量
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+	 tblIdentityRisk.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})	 
+
+	function addActive(){
+		addWindow.window({
+			closed : false
+		});
+	} 
+		//查看数据
+		function showCreditTel() {
+			winShow.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false,
+				onBeforeOpen : setData(value)
+			});
+	 		var cTime = gridDateFormat2(value.createTime);
+			$('#showCreateTime2').textbox('setValue',cTime);
+//	 		$('#showCreateTime').textbox({disabled:true});
+		} 
+	//展示编辑数据
+	function editActiveCode() {
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+ 		var cTime = gridDateFormat2(value.createTime);
+		$('#showCreateTime').textbox('setValue',cTime);
+// 		$('#showCreateTime').textbox({disabled:true});
+		tblIdentityRisk.datagrid("clearSelections"); 
+		$("input[name='uuid']").attr("checked",false);
+	}
+	//展示编辑数据
+	function editDelete(index) {
+		/* alert(index); */
+		var orgObj = tblIdentityRisk.datagrid("getData").rows[index];
+		/* if(applyObj.length <= 0){
+			$.messager.alert("操作提示", "请勾选要删除的信息!");
+			return;
+		} */
+	/* alert(applyObj); */
+		/* var uuid = orgObj.uuid; */
+		/* alert(uuid); */
+		/* var autoIds=[];
+		for(var i=0;i<applyObj.length;i++){
+			var autoId = applyObj[i].autoId;
+			autoIds.push(autoId);
+		} */	
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请勾选要删除的名单!", "error");
+			return;			
+		}
+		var ids = new Array();
+			ids.push(orgObj.uuid);
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/lowRiskCustomer_delete.json",
+						data : {"ids":ids},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单删除成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "名单删除失败！", "error");
+							}	
+						}
+					});
+				}
+			});
+	}
+	
+	function setData(data) {
+		editForm.form("load", data);
+		showForm.form("load",data);
+	}
+ 	
+ 	//批量删除
+	function deleteActivCode() {
+		var orgObj = tblIdentityRisk.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请勾选要删除的名单!", "error");
+			return;			
+		}
+		var ids = new Array();
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].uuid);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/lowRiskCustomer_delete.json",
+						data : {"ids":ids},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单删除成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "名单删除失败！", "error");
+							}	
+						}
+					});
+				}
+			});
+	}
+	//批量删除
+	function deleteAll() {
+		$.messager.confirm(
+			'请您确认',
+			'确定要全部删除数据吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/lowRiskCustomer_deleteAll.json",
+						data : {},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("全量名单删除成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "名单删除失败！", "error");
+							}	
+						}
+					});
+				}
+			});
+	}
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	
+	//修改
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		var cue = "修改"
+		if(checkData(jsondata , cue)){
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/lowRiskCustomer_update.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					onConcle("winEdit");
+					top.$cf.showMsg("名单修改成功！");
+					tblIdentityRisk.datagrid("reload");
+				} else {
+					$.messager.alert("操作提示", "修改失败:"+data.RSP_BODY.exMsg, "error");
+				}	
+			}
+		});
+	}
+	
+	//获取表单数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	
+	//数据校验
+	 function checkData(jsondata , cue){
+		
+		if (jsondata.appId != null && jsondata.appId.trim().length>0 ) {
+			 if(jsondata.appId.trim().length>16){
+				$.messager.alert("操作提示", cue+"失败:申请件编号长度不能超过16个字符!", "error");
+				return true;
+			 }
+		}
+		
+		if (jsondata.companyName != null && jsondata.companyName.trim().length >0 ) {
+			 if(jsondata.companyName.trim().length>50){
+				$.messager.alert("操作提示", cue+"失败:单位名称长度不能超过50个字符!", "error");
+				return true;
+			 }
+		}
+		
+		if (jsondata.companyTel != null && jsondata.companyTel.trim().length >0 ) {
+			 if(jsondata.companyTel.trim().length >13){
+				$.messager.alert("操作提示", cue+"失败:单位电话长度不能超过13个字符!", "error");
+				return true;
+			 }
+		}
+		
+		if (jsondata.memo != null && jsondata.memo.length >0 ) {
+			 if(jsondata.memo.trim().length>200){
+				$.messager.alert("操作提示", cue+"失败:备注格式长度不能超过200个字符!", "error");
+				return true;
+			 }
+		}	
+	}
+	
+	//保存
+	function onSave() {
+		var jsondata = getFormData(addForm.serializeArray());
+		var cue = "添加"
+			if(checkData(jsondata , cue)){
+				return;
+			}
+		$cf.ajax({
+			url : "/opas-naps/lowRiskCustomer_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					onConcle("winAdd");
+					top.$cf.showMsg("名单添加成功！");
+					tblIdentityRisk.datagrid("reload");
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.RSP_BODY.exMsg, "error");
+				}
+			}
+		});
+	}
+
+	//批量启用 
+	function setActiveOk() {
+		var orgObj = tblIdentityRisk.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请勾选要启用的名单!", "error");
+			return;			
+		}
+		for(var i=0;i<orgObj.length;i++){
+			if(orgObj[i].status == "1"){
+				$.messager.alert("操作提示", "操作失败:当前选中的名单已有处于启用状态!", "error");
+				return;	
+			}
+		}
+		var ids = new Array();
+		var status = "1";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].uuid);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要启用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/LowRiskCustomers_active_update.json",
+						data : {"ids":ids,"STATUS":status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单启用成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+	 //批量禁用
+	function setActiveNo() {
+		var orgObj = tblIdentityRisk.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请勾选要停用的名单!", "error");
+			return;			
+		}
+		for(var i=0;i<orgObj.length;i++){
+			if(orgObj[i].status == "0"){
+				$.messager.alert("操作提示", "操作失败:当前选中的名单已有处于停用状态!", "error");
+				return;	
+			}
+		}
+		var ids = new Array();
+		var status = "0";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].uuid);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要停用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/LowRiskCustomers_active_update.json",
+						data : {"ids":ids,"STATUS":status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单停用成功！");
+								tblIdentityRisk.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}	
+
+	openWinTbll = function(winName, tblName, tarTblName, tarUrl, tarParam) {
+		var tblObj = $("#" + tblName + "");
+		var tblDict = $("#" + tarTblName + "");
+		winObj = $("#" + winName + "");
+		var id = value.autoId;
+		var paramObj = document.getElementsByName(tarParam);
+		for (var i = 0; i < paramObj.length; i++) {
+			paramObj[i].value = id;
+		}
+		winObj.window({
+			closed : false
+		});
+		var quryParam = {};
+		quryParam[tarParam] = id;
+		tblDict.datagrid({
+			url : tarUrl,
+			queryParams : quryParam
+		});
+		tblIdentityRisk.datagrid("clearSelections"); 
+		$("input[name='autoId']").attr("checked",false);
+	}
+	
+	myOpenWin = function(winName) {
+		winObj = $("#" + winName + "");
+		winObj.form('clear');
+		$('#currStatus1').combobox('select','1');
+		$('#listType2').combobox('select','2');
+		winObj.window({
+			closed : false
+		});
+	}
+	
+	
+	<!-- 批量导入EXCEL文件相关js -->
+	var trigger = true;
+	$('#fb').filebox({    
+		buttonText: '选择文件', 
+		buttonAlign: 'right',
+		buttonIcon:'icon-search',
+		onChange: function (newValue, oldValue) {
+				excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+				if(".txt" != excelFile && ""!=excelFile){
+					alert("请上传TXT格式的文件");
+					$('#fb').filebox('setValue','');
+					return;
+				}
+				if (trigger) {
+					$.messager.confirm({
+						width : 700,
+						height : 200,
+						title : '请确认文件格式',
+						msg : "请确认导入的表格格式为：<br><br><br>姓名^|身份证号码^|手机号码^|单位名称^|名单类型(信用=2,欺诈=1)",
+						fn : function(r) {
+							if (!r) {
+								trigger = false;
+								$('#fb').filebox("reset");
+								$('#fb').filebox('setValue','');
+							}
+						}
+					})
+				}
+		},
+		onClickButton:function(){
+			trigger = true;
+		}
+	})
+
+	function resetValue(){
+	$('#fb').filebox('setValue','');
+	}
+
+	function importTxt() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".txt")<0 && fileValue.indexOf(".txt")<0){
+				alert("请选择正确的TXT格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+				$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+				importSave();
+		}
+	}
+
+	//保存数据
+	function importSave() {
+		$('#formFile').submit();
+ 		$.messager.progress(); 
+	}
+	
+	
+	var tartIframe = document.getElementById("tartIframe");
+	tartIframe.src = "/opas-naps/CreditTelcheckServlet.json";
+	if(tartIframe.attachEvent){
+		tartIframe.attachEvent("onload",function(){
+			responPage();
+		});
+	}else{
+		tartIframe.onload = function(){
+			responPage();			
+		}
+	}
+	
+	function responPage(){
+ 		$.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+			tblIdentityRisk.datagrid("reload");
+			top.$cf.showMsg("数据文件导入成功！");
+		}
+		if(value[0] == "false"){
+			$.messager.alert("操作提示", "数据导入失败，发生错误", "error");
+			top.$cf.showMsg(value[1]);
+		}
+	}	
+	
+	function formatCompanyDept(val,row,index){
+        if(val == "1"){
+            return "欺诈";
+        }
+        if(val == "2"){
+            return "信用";
+        }
+    }
+	
+</script>

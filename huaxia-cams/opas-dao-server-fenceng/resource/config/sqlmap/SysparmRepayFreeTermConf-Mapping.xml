@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--免息还款期配置数据库处理-->
+<!--@author liudi-->
+<mapper namespace="SysparmRepayFreeTermConf">
+
+	<resultMap id="SysparmRepayFreeTermConfResultMap" type="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CUST_LEVEL_TAG" property="custLevelTag" jdbcType="VARCHAR" />
+		<result column="REPAY_FREE_CODE" property="repayFreeCode" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加 -->
+	<insert id="insertSysparmRepayFreeTermConf" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf">
+		insert into
+		OPAS_SYSPARM_REPAY_TERM_CONF
+		(AUTO_ID,CUST_LEVEL_TAG,REPAY_FREE_CODE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_TIME)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{custLevelTag,jdbcType=VARCHAR},
+		#{repayFreeCode,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteSysparmRepayFreeTermConfById" parameterType="java.lang.String">
+		delete from
+		OPAS_SYSPARM_REPAY_TERM_CONF
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+<!-- 全部删除 -->
+	<delete id="deleteAllSysparmRepayFreeTermConf">
+		delete from
+		OPAS_SYSPARM_REPAY_TERM_CONF
+	</delete>
+<!-- 修改 -->
+	<update id="updateSysparmRepayFreeTermConf" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf">
+		update OPAS_SYSPARM_REPAY_TERM_CONF
+		<set>
+			REPAY_FREE_CODE = #{repayFreeCode,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_TIME = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 免息还款期配置件数查询 -->
+	<select id="querySysparmRepayFreeTermConfCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_SYSPARM_REPAY_TERM_CONF
+		<where>
+			<if test="custLevelTag != null and custLevelTag !='' ">
+				AND CUST_LEVEL_TAG LIKE '%${custLevelTag}%'
+			</if>
+			<if test="repayFreeCode != null and repayFreeCode !='' ">
+				AND REPAY_FREE_CODE LIKE '%${repayFreeCode}%'
+			</if>
+		</where>
+	</select>
+<!-- 免息还款期配置信息查询 -->
+	<select id="querySysparmRepayFreeTermConf1" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf"
+		resultMap="SysparmRepayFreeTermConfResultMap">
+		select
+		AUTO_ID,CUST_LEVEL_TAG,REPAY_FREE_CODE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_TIME
+		from OPAS_SYSPARM_REPAY_TERM_CONF
+		<where>
+			<if test="custLevelTag != null and custLevelTag !='' ">
+				AND CUST_LEVEL_TAG LIKE '%${custLevelTag}%'
+			</if>
+			<if test="repayFreeCode != null and repayFreeCode !='' ">
+				AND REPAY_FREE_CODE LIKE '%${repayFreeCode}%'
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+<!-- 查询免息还款期免息还款期代码是否存在 -->
+	<select id="querySysparmRepayFreeTermConf2" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf"
+		resultMap="SysparmRepayFreeTermConfResultMap">
+		select
+		REPAY_FREE_CODE
+		from OPAS_SYSPARM_REPAY_FREE_TERM
+		<where>
+			<if test="repayFreeCode != null and repayFreeCode !='' ">
+				AND REPAY_FREE_CODE LIKE '%${repayFreeCode}%'
+			</if>
+		</where>
+	</select>
+<!-- 查询免息还款期客户分层结果标签是否重复 -->
+	<select id="querySysparmRepayFreeTermConf3" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf"
+		resultMap="SysparmRepayFreeTermConfResultMap">
+		select
+		CUST_LEVEL_TAG
+		from OPAS_SYSPARM_REPAY_TERM_CONF
+		<where>
+			<if test="custLevelTag != null and custLevelTag !='' ">
+				AND CUST_LEVEL_TAG = #{custLevelTag}
+			</if>
+		</where>
+	</select>
+<!-- 查询免息还款期代码存在情况下，状态是否开启 -->
+	<select id="querySysparmRepayFreeTermConf4" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf"
+		resultMap="SysparmRepayFreeTermConfResultMap">
+		select
+		STATUS
+		from OPAS_SYSPARM_REPAY_FREE_TERM
+		<where>
+			<if test="repayFreeCode != null and repayFreeCode !='' ">
+				AND REPAY_FREE_CODE LIKE '%${repayFreeCode}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 自动归档免息还款查询 -->
+	<select id="querySysparmRepayFreeTermConf5" parameterType="com.huaxia.opas.domain.sysparm.SysparmRepayFreeTermConf"
+		resultMap="SysparmRepayFreeTermConfResultMap">
+		select
+		AUTO_ID,CUST_LEVEL_TAG,REPAY_FREE_CODE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_TIME
+		from OPAS_SYSPARM_REPAY_TERM_CONF WHERE CUST_LEVEL_TAG = #{custLevelTag}
+	</select>
+	
+</mapper>

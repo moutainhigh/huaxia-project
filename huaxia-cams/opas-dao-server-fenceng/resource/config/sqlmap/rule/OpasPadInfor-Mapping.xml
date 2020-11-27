@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasPadInfor">
+
+	<resultMap id="padInforMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	   <result column="DEVICE_ID" jdbcType="VARCHAR" property="deviceId" />
+	   <result column="PLATFORM" jdbcType="VARCHAR" property="platform" />
+	</resultMap>
+	
+	<!-- Pad设备指纹信息查询 -->
+	<select id="queryPadInforByAppId"  parameterType="java.lang.String" resultMap="padInforMap">
+  	   select APP_ID, DEVICE_ID, PLATFORM from CCARD_APP_DITCH_INFO
+  	  <where>
+		app_id = #{appId, jdbcType=VARCHAR}  ORDER BY CRT_TIME desc
+	  </where>
+	</select>
+	
+	<parameterMap type="java.util.Map" id="paramMap">
+		<parameter property="deviceId" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="c1Idnbr" jdbcType="VARCHAR" javaType="java.lang.String"/>
+	</parameterMap>
+	
+	<!-- 查询当前设备Id下所有申请件的不同申请人证件号数量 -->
+	<select id="queryIdNumberCountByDeviceId" parameterMap="paramMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct c.c1_idnbr)
+		  from ccard_app_ditch_info d
+		  left join opas_biz_inp_appl_c1 c on c.app_id = d.app_id
+  	  <where>
+		 d.device_id = #{deviceId, jdbcType=VARCHAR} and c.c1_idnbr != #{c1Idnbr, jdbcType=VARCHAR}
+	  </where>
+	</select>
+	<!-- 查询当前设备Id下决策时间7天内所有申请件的不同申请人证件号数量 -->
+	<select id="queryIdNumberCountByDeviceId4Week" parameterMap="paramMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct c.c1_idnbr)
+		  from ccard_app_ditch_info d
+		  left join opas_biz_inp_appl_c1 c on c.app_id = d.app_id
+  	  <where>
+		 d.device_id = #{deviceId, jdbcType=VARCHAR} and c.c1_idnbr != #{c1Idnbr, jdbcType=VARCHAR}
+		 and d.CRT_DATE &gt;= (trunc(sysdate)-6)
+	  </where>
+	</select>
+	<!-- 查询当前设备Id下决策时间30天内所有申请件的不同申请人证件号数量 -->
+	<select id="queryIdNumberCountByDeviceId4Month" parameterMap="paramMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct c.c1_idnbr)
+		  from ccard_app_ditch_info d
+		  left join opas_biz_inp_appl_c1 c on c.app_id = d.app_id
+  	  <where>
+		 d.device_id = #{deviceId, jdbcType=VARCHAR} and c.c1_idnbr != #{c1Idnbr, jdbcType=VARCHAR}
+		 and d.CRT_DATE &gt;= (trunc(sysdate)-29)
+	  </where>
+	</select>
+
+	<resultMap id="padRiskInforMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	   <result column="IS_ROOT" jdbcType="CHAR" property="isRoot" />
+	   <result column="IS_IDC" jdbcType="CHAR" property="isIdc" />
+	   <result column="IS_CHEAT" jdbcType="CHAR" property="isCheat" />
+	   <result column="IS_VALID_UA" jdbcType="CHAR" property="isValidUa" />
+	   <result column="IS_DEBUGGER" jdbcType="CHAR" property="isDebugger" />
+	   <result column="IS_MORE_OPEN" jdbcType="CHAR" property="isMoreOpen" />
+	   <result column="IS_VALID_TIMESTAMP" jdbcType="CHAR" property="isValidTimestamp" />
+	   <result column="IS_VALID_FILEDS" jdbcType="CHAR" property="isValidFileds" />
+	   <result column="IS_VALID_LOCAL_IP" jdbcType="CHAR" property="isValidLocalIp" />
+	   <result column="IS_VALID_TOTAL_MEMORY" jdbcType="CHAR" property="isValidTotalMemory" />
+	   
+	   <result column="IS_VALID_IMEI" jdbcType="CHAR" property="isValidImei" />
+	   <result column="IS_VALID_IMSI" jdbcType="CHAR" property="isValidImsi" />
+	   
+	   <result column="IS_VALID_UPDATE_TIME" jdbcType="CHAR" property="isValidUpdateTime" />
+	   <result column="IS_VM" jdbcType="CHAR" property="isVm" />
+	   
+	   <result column="IS_INCOGNITO" jdbcType="CHAR" property="isIncognito" />
+	   <result column="IS_VIRTUAL_BROWSER" jdbcType="CHAR" property="isVirtualBrowser" />
+	   <!-- <result column="IS_VALID_LOCALIP" jdbcType="CHAR" property="isValidLocalIp2" /> -->
+	</resultMap>
+	
+	<select id="queryPadANDRiskInfoByAppId" parameterType="java.lang.String" resultMap="padRiskInforMap">
+		select IS_ROOT, IS_IDC, IS_CHEAT, IS_VALID_UA, IS_DEBUGGER,
+		 IS_MORE_OPEN, IS_VALID_IMEI, IS_VALID_IMSI, IS_VALID_TIMESTAMP, IS_VALID_FILEDS, 
+		 IS_VALID_LOCAL_IP, IS_VALID_TOTAL_MEMORY
+		  from DEVICE_PLATFORM_AND 
+  	  <where>
+		 app_id = #{appId}
+	  </where>
+	</select>
+	<select id="queryPadIOSRiskInfoByAppId" parameterType="java.lang.String" resultMap="padRiskInforMap">
+		select IS_ROOT, IS_IDC, IS_CHEAT, IS_VALID_UA, IS_DEBUGGER, IS_MORE_OPEN, 
+		IS_VALID_TIMESTAMP, IS_VALID_FILEDS, IS_VALID_LOCAL_IP, IS_VALID_TOTAL_MEMORY, 
+		IS_VALID_UPDATE_TIME, IS_VM 
+		  from DEVICE_PLATFORM_IOS 
+  	  <where>
+		 app_id = #{appId}
+	  </where>
+	</select>
+	<select id="queryPadWAPRiskInfoByAppId" parameterType="java.lang.String" resultMap="padRiskInforMap">
+		select IS_IDC, IS_INCOGNITO, IS_VIRTUAL_BROWSER, IS_VALID_UA, IS_VALID_TIMESTAMP, IS_VALID_LOCAL_IP, IS_VALID_FILEDS
+		  from DEVICE_PLATFORM_WAP 
+  	  <where>
+		 app_id = #{appId}
+	  </where>
+	</select>
+	<select id="queryPadWEBRiskInfoByAppId" parameterType="java.lang.String"  resultMap="padRiskInforMap">
+		select IS_IDC, IS_INCOGNITO, IS_VIRTUAL_BROWSER, IS_VALID_UA, IS_VALID_TIMESTAMP, IS_VALID_LOCAL_IP, IS_VALID_FILEDS
+		  from DEVICE_PLATFORM_WEB 
+  	  <where>
+		 app_id = #{appId}
+	  </where>
+	</select>
+	<!-- Pad人像比对活体监测信息查询 -->
+	<select id="queryBodyCheckByAppId"  parameterType="java.lang.String" resultType="java.lang.String">
+  	   select IS_ALIVE from  CCARD_APP_PAD_ADDITION
+  	  <where>
+		app_id = #{appId, jdbcType=VARCHAR}  ORDER BY CRT_TIME desc
+	  </where>
+	</select>
+	<!-- 审批系统人像比对信息查询 -->
+	<select id="queryPhotoCheckByAppId"  parameterType="java.lang.String" resultType="java.lang.String">
+  	   select RESULT_FX from  POLICE_XP_INFO
+  	  <where>
+		app_id = #{appId, jdbcType=VARCHAR}  ORDER BY CRT_TIME desc
+	  </where>
+	</select>
+	
+</mapper>

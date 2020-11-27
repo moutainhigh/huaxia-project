@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCRecordInfoMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_QUERYREC_RECINFO (
+			APP_ID,QRY_APPLY_WAY, 
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{queryReqFormat, jdbcType = VARCHAR},
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+
+</mapper>

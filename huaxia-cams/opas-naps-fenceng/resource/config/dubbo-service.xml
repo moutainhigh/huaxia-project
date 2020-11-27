@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- <dubbo:application name="opas-naps" logger="slf4j" /> -->
+	<dubbo:registry address="${zookeeper_address}" />
+	<!-- <dubbo:consumer timeout="${dubbo_timeout}" retries="${dubbo_retries}" /> -->
+	<dubbo:protocol name="dubbo" port="20886" />
+    <bean id="smartVoiceServiceImpl" class="com.huaxia.opas.action.credit.SmartVoiceServiceImpl"/>	
+	<!-- 智能语音回调审批   -->
+	<dubbo:service interface="com.huaxia.opas.service.voice.SmartVoiceService" ref="smartVoiceServiceImpl" />	
+</beans>

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;width: 100%;height:600px; overflow-y:scroll;">
+	<table id="tblInfo" title="推广员风险名单库" class="easyui-datagrid"
+		style="width: 98%;height:100%"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,url:'/opas-naps/promoterRisk_list.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="autoId" width="7%" align="center" checkbox="true">唯一Id</th>
+				<th field="promoterName" width="7%"  align="center">姓名</th>
+				<th field="promoterNo" width="10%"  align="center">推广员编号</th>
+				<th field="certifiType" width="10%" align="center" 
+					formatter="ctfStatus" >证件类型</th>
+				<th field="certifiNo" width="15%"  align="center">证件号码</th>
+				<th field="mobileNo" width="10%"  align="center">手机号码</th>
+				<th field="createTime" width="12%" align="center"
+					formatter="gridDateFormat2">添加时间</th>
+				<th field="invalidTime" width="12%" align="center"
+					formatter="gridDateFormat2">失效时间</th>
+				<th field="operator" width="7%" align="center">维护人</th>
+				<th field="currStatus" width="5%" align="center"
+					formatter="formatStatus">当前状态</th>
+				<th field="infoChannel" align="center" formatter="ifcStatus" hidden="true"></th>
+				<th field="fraudType" align="center" formatter="ftStatus" hidden="true"></th>
+				<th field="operate" width="9%" align="center"
+					data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="positionCodeCondion"
+		style="padding: 10px; text-align: center;">
+		<form id="seachPositionCodeForm">
+			姓名: <input class="easyui-textbox" style="width: 110px" name="promoterName" id="promoterName"> 
+			证件号码: <input class="easyui-textbox" style="width: 110px" name="certifiNo" id="certifiNo">
+			推广员编码: <input class="easyui-textbox" style="width: 110px" name="promoterNo" id="promoterNo">
+			添加日期：<input class="easyui-datebox" name="createTime" id="createTime"
+					style="width: 100px;" editable="false"/>
+			<a href="javascript:common.searchTbl('seachPositionCodeForm','tblInfo');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>&nbsp;
+			<a href="javascript:common.openWin('winAdd');" class="easyui-linkbutton" iconCls="icon-add">新增</a>
+			<a href="javascript:openStatus()" class="easyui-linkbutton"  iconCls="icon-ok">批量启用</a>
+			<a href="javascript:closeStatus()" class="easyui-linkbutton"  iconCls="icon-remove">批量停用</a>
+			<a href="javascript:deleteInfo()" class="easyui-linkbutton"  iconCls="icon-no">删除</a>
+		</form>
+		<form id="formFile" enctype="multipart/form-data" method="post" ACTION="/opas-naps/PromoterUploadServlet.json" target="tartIframe"> 
+				<div style="margin: 10px 0 0 30px;width:100%;">
+			        <label for="impFileNamelb"><font size="2">选择导入文件:</font></label>
+					<input id="fb" name="file1" class="easyui-filebox" data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'" style="width:400px">
+					<input type="hidden" id="userCode" class="easyui-textbox"  name="userCode">
+					<input type="hidden" id="userName" class="easyui-textbox"  name="userName">
+					<span class="textbox" style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;" onclick="importExcel()">
+					<span class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span>
+					<span class="filebox-label" style="left: 10px;"><font size="2">导入数据</font></span></span>
+				</div>
+		</form>
+	 	<iframe frameborder="0" height="0" width="0" name="tartIframe" id="tartIframe"></iframe>
+	</div>
+
+	<div align="center">
+	</div>
+	
+	<div id="winAdd" class="easyui-window" title="推广员风险信息添加"
+		style="width: 600px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>姓名:</td>
+					<td><input class="easyui-validatebox textbox" maxlength=16 id="promoterName" type="text" name="promoterName"></input>
+				
+					<td>推广员编号:</td>
+					<td><input class="easyui-validatebox textbox" maxlength=20 id="promoterNo" type="text" name="promoterNo"></input>
+				
+				</tr>
+				<tr>
+					<td>证件类型:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="certifiType" editable="false" name="certifiType">
+								<option value="1">居民身份证</option>
+								<option value="2">15位身份证</option>
+								<option value="3">护照</option>
+								<option value="4">港澳内地通行证/台胞证</option>
+								<option value="5">军官证</option>
+								<option value="6">其他</option>
+						</select>
+					</td>
+				
+					<td>证件号码:</td>
+					<td><input class="easyui-validatebox textbox" maxlength=20 id="certifiNo" type="text" name="certifiNo"></input></td>
+				</tr>
+				<tr>
+					<td>手机号:</td>
+					<td><input class="easyui-validatebox textbox" id="mobileNo" type="text" name="mobileNo" data-options="validType:'mobile'"></input></td>
+				</tr>
+				<tr>
+					<td>信息来源:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="infoChannel" editable="false" name="infoChannel">
+							<option value="1">司法机关</option>
+							<option value="2">监管机构</option>
+							<option value="3">银行内部</option>
+							<option value="4">审核系统</option>
+							<option value="5">同业</option>
+							<option value="6">其他</option>
+						</select>
+					</td>
+					<td>欺诈类型:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" editable="false" id="fraudType" name="fraudType">
+							<option value="1">申请欺诈</option>
+							<option value="2">中介信息</option>
+							<option value="3">交易欺诈</option>
+							<option value="4">其他</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>失效时间:</td>
+					<td><input class="easyui-datetimebox" id="invalidTime" name="invalidTime" value="2999-12-31 23:59:59" editable="false" data-options="required:true,showSeconds:true"></input></td>
+				</tr>
+				<tr>
+					<td>当前状态:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="currStatus" name="currStatus">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">备注:</td>
+					<td><input class="easyui-textbox" name="memo" id="memo"  style="width: 210px; height:100px" data-options="multiline:true,validType:'maxLength[100]'"></input></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+		</div>
+	</div>
+		<div id="winEdit" class="easyui-window" title="推广员风险信息修改"
+		style="width: 600px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>姓名:</td>
+					<td><input class="easyui-validatebox textbox" id="promoterName" maxlength=16 type="text" name="promoterName"></input>
+				
+					<td>推广员编号:</td>
+					<td><input class="easyui-validatebox textbox" id="promoterNo" maxlength=20 type="text" name="promoterNo"></input>
+					<td><input type="hidden" name="autoId" id="autoId" /></td>
+				</tr>
+				<tr>
+					<td>证件类型:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="certifiType" editable="false" name="certifiType"> 
+								<option value="1">居民身份证</option>
+								<option value="2">15位身份证</option>
+								<option value="3">护照</option>
+								<option value="4">港澳内地通行证/台胞证</option>
+								<option value="5">军官证</option>
+								<option value="6">其他</option>
+						</select>
+					</td>
+				
+					<td>证件号码:</td>
+					<td><input class="easyui-validatebox textbox" id="certifiNo" maxlength=20 type="text" name="certifiNo"></input></td>
+				</tr>
+				<tr>
+					<td>手机号:</td>
+					<td><input class="easyui-validatebox textbox" id="mobileNo" type="text" name="mobileNo" data-options="validType:'mobile'"></input></td>
+				</tr>
+				<tr>
+					<td>信息来源:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="infoChannel" editable="false" name="infoChannel" >
+								<option value="1" id="i1">司法机关</option>
+								<option value="2" id="i2">监管机构</option>
+								<option value="3" id="i3">银行内部</option>
+								<option value="4" id="i4">审核系统</option>
+								<option value="5" id="i5">同业</option>
+								<option value="6" id="i6">其他</option>
+						</select>
+					</td>
+					<td>欺诈类型:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="fraudType" editable="false" name="fraudType">
+								<option value="1" id="f1">申请欺诈</option>
+								<option value="2" id="f2">中介信息</option>
+								<option value="3" id="f3">交易欺诈</option>
+								<option value="4" id="f4">其他</option>
+						</select>
+					</td>
+				</tr>
+				<tr hidden="true">
+					<td>添加时间:</td>
+					<td><input class="easyui-datetimebox" id="createTime" name="createTime" readonly="true" data-options="required:true,showSeconds:true"></input></td>
+				</tr>
+				<tr>
+					<td>失效时间:</td>
+					<td><input class="easyui-datetimebox" id="invalidTime1" name="invalidTime" data-options="editable:false,required:true,showSeconds:true"></input></td>
+				</tr>
+				<tr>
+					<td>当前状态:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="currStatus" name="currStatus">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">备注:</td>
+					<td><input class="easyui-textbox" name="memo" id="memo"  style="width: 210px; height:100px" data-options="multiline:true,validType:'maxLength[100]'"></input></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+	<div id="winShow" class="easyui-window" title="推广员风险信息查看"
+		style="width: 600px; height: 450px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="showForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>姓名:</td>
+					<td><input class="easyui-validatebox textbox" id="promoterName" type="text" name="promoterName" readonly="true"></input>
+				
+					<td>推广员编号:</td>
+					<td><input class="easyui-validatebox textbox" id="promoterNo" type="text" name="promoterNo" readonly="true"></input>
+					<td><input type="hidden" name="autoId" id="showWinAutoId" /></td>
+				</tr>
+				<tr>
+					<td>证件类型:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="certifiType" name="certifiType" formatter="ctfStatus" readonly="true"> 
+								<option value="1">居民身份证</option>
+								<option value="2">15位身份证</option>
+								<option value="3">护照</option>
+								<option value="4">港澳内地通行证/台胞证</option>
+								<option value="5">军官证</option>
+								<option value="6">其他</option>
+						</select>
+					</td>
+				
+					<td>证件号码:</td>
+					<td><input class="easyui-validatebox textbox" id="certifiNo" type="text" name="certifiNo"  readonly="true"></input></td>
+				</tr>
+				<tr>
+					<td>手机号:</td>
+					<td><input class="easyui-validatebox textbox" id="mobileNo" type="text" name="mobileNo" data-options="validType:'mobile'" readonly="true"></input></td>
+				</tr>
+				<tr>
+					<td>信息来源:</td>
+					<td><select class="easyui-combobox" style="width: 100px" id="infoChannel" name="infoChannel" readonly="true">
+							<option value="1">司法机关</option>
+							<option value="2">监管机构</option>
+							<option value="3">银行内部</option>
+							<option value="4">审核系统</option>
+							<option value="5">同业</option>
+							<option value="6">其他</option>
+					</select></td>
+					<td>欺诈类型:</td>
+					<td><select class="easyui-combobox" style="width: 100px" id="fraudType" name="fraudType" readonly="true">
+							<option value="1">申请欺诈</option>
+							<option value="2">中介信息</option>
+							<option value="3">交易欺诈</option>
+							<option value="4">其他</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>失效时间:</td>
+					<td><input class="easyui-datetimebox" id="invalidTime2" name="invalidTime" readonly="true" data-options="required:true,showSeconds:true"></input></td>
+				</tr>
+				<tr>
+					<td>当前状态:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 100px" id="currStatus" name="currStatus" readonly="true">
+							<option value="1">启用</option>
+							<option value="0">停用</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">备注:</td>
+					<td><input class="easyui-textbox" name="memo" id="memo"  style="width: 210px; height:100px" readonly="true" data-options="multiline:true,validType:'maxLength[200]'"></input></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: right; padding: 5px; margin-right: 30px">
+			<a href="javascript:openHiswin();">查看历史修改记录</a>
+		</div>
+	</div>
+	<div id="winHis" class="easyui-window" title="历史修改记录查看"
+		style="width: 1400px; height: 700px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<table id="hisTbl" title="历史修改记录" class="easyui-datagrid"
+		style="width: 98%"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="promoterName" width="5%"  align="center">姓名</th>
+				<th field="promoterNo" width="7%"  align="center">推广员编号</th>
+				<th field="certifiType" width="10%" align="center"
+					formatter="ctfStatus" >证件类型</th>
+				<th field="certifiNo" width="10%"  align="center">证件号码</th>
+				<th field="mobileNo" width="7%"  align="center">手机号码</th>
+				<th field="infoChannel" align="center" formatter="ifcStatus">信息来源</th>
+				<th field="fraudType" align="center" formatter="ftStatus">欺诈类型</th>
+				<th field="currStatus" width="5%" align="center"
+					formatter="formatStatus">启停状态</th>
+				<th field="memo" width="7%" align="center">备注</th>
+				<th field="operation" width="5%" align="center">操作动作</th>
+				<th field="operator" width="5%" align="center">维护人</th>
+				<th field="createTime" width="10%" align="center"
+					formatter="gridDateFormat2">添加时间</th>
+				<th field="invalidTime" width="10%" align="center"
+					formatter="gridDateFormat2">失效时间</th>
+				<th field="operatTime" width="10%" align="center"
+					formatter="gridDateFormat2">操作时间</th>
+			</tr>
+		</thead>
+		</table>
+	</div>
+</body>
+<script>
+	var tblInfo = $("#tblInfo");
+	var hisTbl = $("#hisTbl");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var showWindow = $("#winShow");
+	var showHis = $("#winHis");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	var showForm = $("#showForm");
+	var formFile = $("#formFile");
+	//15位 身份证号校验正则
+	var	certifiPattDate = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/ ;
+	//居民身份证校验（18位）
+	var certifiPattDate1 = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+// 	$(function(){
+// 		$('#cleanButton').bind('click',function(){
+// 			buttonClean();
+// 		});
+// 	})
+// 	function buttonClean(){
+// 		$("#seachPositionCodeForm").form('reset');
+// 	}
+	function formatOper(val, row, index) {
+		return "<a href=javascript:getInfo();>查看</a>&nbsp;<a href=javascript:editInfo();>修改</a>";
+	}
+	function ifcStatus(val, row, index) {
+		if (val == 1) {
+			return "司法机关";
+		} else if (val == 2) {
+			return "监管机构";
+		} else if (val == 3) {
+			return "银行内部";
+		} else if (val == 4) {
+			return "审核系统";
+		} else if (val == 5) {
+			return "同业";
+		} else if (val == 6) {
+			return "其他";
+		} else {
+			return val;
+		}
+	}
+	function ftStatus(val, row, index) {
+		if (val == 1) {
+			return "申请欺诈";
+		} else if (val == 2) {
+			return "中介信息";
+		} else if (val == 3) {
+			return "交易欺诈";
+		} else if (val == 4) {
+			return "其他";
+		} else {
+			return val;
+		}
+	}
+	function formatStatus(val, row, index) {
+		if (val == 0) {
+			return "停用";
+		} else if (val == 1) {
+			return "启用";
+		} else {
+			return val;
+		}
+	}
+	function ctfStatus(val, row, index) {
+		if (val == 1) {
+			return "居民身份证";
+		} else if (val == 2) {
+			return "15位身份证";
+		} else if (val == 3) {
+			return "护照";
+		} else if (val == 4) {
+			return "港澳内地通行证/台胞证";
+		} else if (val == 5) {
+			return "军官证";
+		} else if (val == 6) {
+			return "其他";
+		} else {
+			return val;
+		}
+	}
+
+	//日期格式转换
+	 function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	};  
+	
+	function setData(data) {
+		editForm.form("load", data);
+		//alert(data.invalidTime);
+		//alert(formatDate(data.invalidTime));
+		showForm.form("load", data);
+		$('#invalidTime1').datetimebox('setValue','2999-12-31 00:00:00');
+		$('#invalidTime2').datetimebox('setValue',formatDate(data.invalidTime));
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function addInfo() {
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	function editInfo() {
+		var infoObj = tblInfo.datagrid("getSelected");
+		/* console.log(infoObj.invalidTime);
+		if(infoObj.invalidTime==null){
+			editWindow.invalidTime
+		} 
+		console.log(infoObj);
+		alert(infoObj.invalidTime);
+		*/
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(infoObj)
+		});
+	}
+	
+	function showWindow(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	
+	function getInfo() {
+		var infoObj = tblInfo.datagrid("getSelected");
+		showWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(infoObj)
+		});
+	}
+	
+	function openHiswin() {
+		var autoId = $("#showWinAutoId").val();
+		//var infoObj = tblInfo.datagrid("getSelected");
+		//var autoId = infoObj.autoId;
+		//alert(autoId);
+		var opts = hisTbl.datagrid("options");
+		opts.url = '/opas-naps/promoterRisk_list.json';
+		var s={"autoId":autoId};
+		hisTbl.datagrid("reload", s);
+		showHis.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false
+		});
+	}
+
+	function onSave() {
+		var infoData = isRequired('addForm');
+		var jsondata = getFormData(addForm.serializeArray());
+		if (jsondata.certifiNo!= null && jsondata.certifiNo.trim() != "") {
+			if(jsondata.certifiType == "1"){
+				if(!certifiPattDate1.test(jsondata.certifiNo)){
+					$.messager.alert("操作提示", "添加失败,身份证号码格式不正确!");
+					return;	
+				}
+			}
+			if(jsondata.certifiType == "2"){
+				if(!certifiPattDate.test(jsondata.certifiNo)){
+					$.messager.alert("操作提示", "添加失败,身份证号码格式不正确!");
+					return;	
+				}
+			}
+			if (jsondata.certifiNo.trim().length > 30) {
+				$.messager.alert("操作提示", "添加失败,证件号码不能超过30位！");
+				return;
+			}
+		}
+		
+		if(jsondata.mobileNo.trim()!=""){
+			if (!/^(?:13\d|15\d|18\d)-?\d{5}(\d{3}|\*{3})$/.test(jsondata.mobileNo)) {
+				$.messager.alert("操作提示", "添加失败,请输入正确的手机号码!");
+				return;
+			}
+		}
+		if(jsondata.promoterNo.trim() == "" && jsondata.promoterName.trim() == "" && jsondata.certifiNo.trim() == "" && jsondata.mobileNo.trim() == ""){
+			$.messager.alert("操作提示", "添加失败,姓名、推广员编号、证件号码、手机号至少输入一个信息!");
+			return;
+		}
+		if (jsondata.invalidTime == null || jsondata.invalidTime.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,请输入失效时间!");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/add_promoter.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblInfo.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winAdd");
+					return;
+				}
+			}
+		});
+	}
+
+	function onUpdate() {
+		var pmtData = isRequired('editForm');
+		var jsondata = getFormData(editForm.serializeArray());
+		if (jsondata.certifiNo!= null && jsondata.certifiNo.trim() != "") {
+			if(jsondata.certifiType == "1"){
+				if(!certifiPattDate1.test(jsondata.certifiNo)){
+					$.messager.alert("操作提示", "修改失败,身份证号码格式不正确!");
+					return;	
+				}
+			}
+			if(jsondata.certifiType == "2"){
+				if(!certifiPattDate.test(jsondata.certifiNo)){
+					$.messager.alert("操作提示", "修改失败,身份证号码格式不正确!");
+					return;	
+				}
+			}
+			if (jsondata.certifiNo.trim().length > 30) {
+				$.messager.alert("操作提示", "修改失败,证件号码长度不能超过30位！");
+				return;
+			}
+		}
+		if(jsondata.promoterNo.trim() == "" && jsondata.promoterName.trim() == "" && jsondata.certifiNo.trim() == "" && jsondata.mobileNo.trim() == ""){
+			$.messager.alert("操作提示", "添加失败,姓名、推广员编号、证件号码、手机号至少输入一个信息!");
+			return;
+		}
+		if (jsondata.invalidTime == null || jsondata.invalidTime.trim() == "") {
+			$.messager.alert("操作提示", "添加失败,请输入失效时间!");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/edit_promoter.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblInfo.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+	
+	function deleteInfo() {
+		var infoObj = tblInfo.datagrid("getSelections");
+		if(infoObj.length==0){
+			$.messager.alert("信息", "请选中至少一条记录");
+		}else{
+			var ids = new Array();
+			for(var i=0; i<infoObj.length; i++){
+				ids.push(infoObj[i].autoId);
+			}
+			$.messager.confirm('请您确认', '确定要删除吗?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/remove_promoter.json",
+						data : {"ids":ids},
+						onSuccess : function(infoObj) {
+	
+							top.$cf.showMsg("数据删除成功！");
+	
+							onConcle("save");
+							tblInfo.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+	}
+	function openStatus() {
+		var infoObj = tblInfo.datagrid("getSelections");
+		if(infoObj.length==0){
+			$.messager.alert("信息", "请选中至少一条记录");
+		}else{
+			var ids = new Array();
+			for(var i=0; i<infoObj.length; i++){
+				ids.push(infoObj[i].autoId);
+			}
+			$.messager.confirm('请您确认', '确定要启用吗?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/open_promoter.json",
+						data : {"ids":ids},
+						onSuccess : function(infoObj) {
+	
+							top.$cf.showMsg("数据启用成功！");
+	
+							onConcle("save");
+							tblInfo.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+	}
+	function closeStatus() {
+		var infoObj = tblInfo.datagrid("getSelections");
+		if(infoObj.length==0){
+			$.messager.alert("信息", "请选中至少一条记录");
+		}else{
+			var ids = new Array();
+			for(var i=0; i<infoObj.length; i++){
+				ids.push(infoObj[i].autoId);
+			}
+			$.messager.confirm('请您确认', '确定要禁用吗?', function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/close_promoter.json",
+						data : {"ids":ids},
+						onSuccess : function(infoObj) {
+	
+							top.$cf.showMsg("数据禁用成功！");
+	
+							onConcle("save");
+							tblInfo.datagrid("reload");
+						}
+					});
+				}
+			});
+		}
+	}
+
+	$('#fb').filebox({    
+	    buttonText: '选择文件', 
+	    buttonAlign: 'right',
+	    buttonIcon:'icon-search',
+	    onChange: function (newValue, oldValue) {
+	    	excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+	    	//alert(newValue);
+	    	if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+				alert("请上传excel格式的文件");
+				$('#fb').filebox('setValue','');
+				return;
+			}
+	    }
+	})
+
+	function resetValue(){
+		$('#fb').filebox('setValue','');
+	}
+	
+		<!-- 批量导入EXCEL文件相关js -->
+	$('#fb').filebox({    
+	buttonText: '选择文件', 
+	buttonAlign: 'right',
+	buttonIcon:'icon-search',
+	onChange: function (newValue, oldValue) {
+			excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+			if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+				alert("请上传excel格式的文件");
+				$('#fb').filebox('setValue','');
+				return;
+			}
+		}
+	})
+
+	function resetValue(){
+	$('#fb').filebox('setValue','');
+	}
+
+	function importExcel() {
+	var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+	$('#userName').textbox('setValue',userName);
+	$('#userCode').textbox('setValue',userCode);
+	var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+				$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+				importSave();
+		}
+	}
+
+	//保存数据
+	function importSave() {
+		$('#formFile').submit();
+ 		$.messager.progress(); 
+	}
+	
+	var tartIframe = document.getElementById("tartIframe");
+	tartIframe.src = "/opas-naps/IdentityRiskServlet.json";
+	if(tartIframe.attachEvent){
+		tartIframe.attachEvent("onload",function(){
+			responPage();
+		});
+	}else{
+		tartIframe.onload = function(){
+			responPage();			
+		}
+	}
+	
+	function responPage(){
+ 		$.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+			tblInfo.datagrid("reload");
+			top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+		}
+		if(value[0] == "false"){
+			$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+		}
+		
+	}
+</script>

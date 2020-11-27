@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--审批原因码数据库处理-->
+<!-- @author liudi -->
+<mapper namespace="ApproveReasonCode">
+
+	<resultMap id="ApproveReasonCodeResultMap" type="com.huaxia.opas.domain.sysparm.ApproveReasonCode">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="REASON_CODE" property="reasonCode" jdbcType="VARCHAR" />
+		<result column="REASON_TYPE" property="reasonType" jdbcType="VARCHAR" />
+		<result column="REASON_TIMELIMIT" property="reasonTimeLimit" jdbcType="NUMERIC" />
+		<result column="REASON_DESC" property="reasonDesc" jdbcType="VARCHAR" />
+		<result column="UNI_REASON_CODE" property="uniReasonCode" jdbcType="VARCHAR" />
+		<result column="UNI_REASON_TYPE" property="uniReasonType" jdbcType="VARCHAR" />
+		<result column="UNI_REASON_DESC" property="uniReasonDesc" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE1" property="acctType" jdbcType="VARCHAR" />
+		<result column="MATCH_ROLE" property="corRole" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!--添加状态为启用-->
+	<insert id="insertApproveReasonCode1" parameterType="com.huaxia.opas.domain.sysparm.ApproveReasonCode">
+		insert into
+		OPAS_APPROVE_REASONCODE
+		(AUTO_ID,REASON_CODE,REASON_TYPE,REASON_TIMELIMIT,REASON_DESC,UNI_REASON_CODE,UNI_REASON_TYPE,UNI_REASON_DESC,ACCT_TYPE1,MATCH_ROLE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{reasonCode,jdbcType=VARCHAR},
+		#{reasonType,jdbcType=VARCHAR},
+		#{reasonTimeLimit,jdbcType=NUMERIC},
+		#{reasonDesc,jdbcType=VARCHAR},
+		#{uniReasonCode,jdbcType=VARCHAR},
+		#{uniReasonType,jdbcType=VARCHAR},
+		#{uniReasonDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{corRole,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!--添加状态为禁用-->
+	<insert id="insertApproveReasonCode2" parameterType="com.huaxia.opas.domain.sysparm.ApproveReasonCode">
+		insert into
+		OPAS_APPROVE_REASONCODE
+		(AUTO_ID,REASON_CODE,REASON_TYPE,REASON_TIMELIMIT,REASON_DESC,UNI_REASON_CODE,UNI_REASON_TYPE,UNI_REASON_DESC,ACCT_TYPE1,MATCH_ROLE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{reasonCode,jdbcType=VARCHAR},
+		#{reasonType,jdbcType=VARCHAR},
+		#{reasonTimeLimit,jdbcType=NUMERIC},
+		#{reasonDesc,jdbcType=VARCHAR},
+		#{uniReasonCode,jdbcType=VARCHAR},
+		#{uniReasonType,jdbcType=VARCHAR},
+		#{uniReasonDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{corRole,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!--删除-->
+	<delete id="deleteApproveReasonCodeById" parameterType="java.lang.String">
+		delete from
+		OPAS_APPROVE_REASONCODE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryAllApproveReasonCodeStatus"  parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_APPROVE_REASONCODE where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateApproveReasonCodeWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.ApproveReasonCode">
+		update OPAS_APPROVE_REASONCODE
+		<set>
+			REASON_TYPE = #{reasonType,jdbcType=VARCHAR},
+			REASON_TIMELIMIT = #{reasonTimeLimit,jdbcType=NUMERIC},
+			REASON_DESC = #{reasonDesc,jdbcType=VARCHAR},
+			UNI_REASON_TYPE = #{uniReasonType,jdbcType=VARCHAR},
+			UNI_REASON_DESC = #{uniReasonDesc,jdbcType=VARCHAR},
+			UNI_REASON_CODE = #{uniReasonCode,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType,jdbcType=VARCHAR},
+			MATCH_ROLE = #{corRole,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!--更新-->
+	<update id="updateApproveReasonCode" parameterType="com.huaxia.opas.domain.sysparm.ApproveReasonCode">
+		update OPAS_APPROVE_REASONCODE
+		<set>
+			REASON_TYPE = #{reasonType,jdbcType=VARCHAR},
+			REASON_TIMELIMIT = #{reasonTimeLimit,jdbcType=NUMERIC},
+			REASON_DESC = #{reasonDesc,jdbcType=VARCHAR},
+			UNI_REASON_TYPE = #{uniReasonType,jdbcType=VARCHAR},
+			UNI_REASON_DESC = #{uniReasonDesc,jdbcType=VARCHAR},
+			UNI_REASON_CODE = #{uniReasonCode,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType,jdbcType=VARCHAR},
+			MATCH_ROLE = #{corRole,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!--审批原因码查询件数-->
+	<select id="queryApproveReasonCodeCount" parameterType="com.huaxia.opas.domain.sysparm.ApproveReasonCode"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_APPROVE_REASONCODE
+		<where>
+			<if test="reasonCode != null and reasonCode !='' ">
+				AND REASON_CODE LIKE '%${reasonCode}%'
+			</if>
+			<if test="reasonType != null and reasonType !='' ">
+				AND REASON_TYPE = #{reasonType}
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+<!--审批原因码查询详细-->
+	<select id="queryApproveReasonCode1" parameterType="com.huaxia.opas.domain.sysparm.ApproveReasonCode"
+		resultMap="ApproveReasonCodeResultMap">
+		select
+		AUTO_ID,REASON_CODE,REASON_TYPE,REASON_TIMELIMIT,REASON_DESC,UNI_REASON_CODE,UNI_REASON_TYPE,UNI_REASON_DESC,ACCT_TYPE1,MATCH_ROLE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_APPROVE_REASONCODE
+		<where>
+			<if test="reasonCode != null and reasonCode !='' ">
+				AND REASON_CODE LIKE '%${reasonCode}%'
+			</if>
+			<if test="reasonType != null and reasonType !='' ">
+				AND REASON_TYPE = #{reasonType}
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by CRT_DATE
+	</select>
+<!--点击查询按钮，实现条件查询详细，排序功能-->
+	<select id="queryApproveReasonCode2" parameterType="java.util.Map"
+		resultMap="ApproveReasonCodeResultMap">
+		select
+		AUTO_ID,REASON_CODE,REASON_TYPE,REASON_TIMELIMIT,REASON_DESC,UNI_REASON_CODE,UNI_REASON_TYPE,UNI_REASON_DESC,ACCT_TYPE1,MATCH_ROLE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE 
+		from OPAS_APPROVE_REASONCODE
+		<where>
+			<if test="reasonCode != null and reasonCode !='' ">
+				AND REASON_CODE LIKE '%${reasonCode}%'
+			</if>
+			<if test="reasonType != null and reasonType !='' ">
+				AND REASON_TYPE = #{reasonType}
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CRT_DATE
+		</if>
+	</select>
+<!--审批原因编码是否重复-->
+	<select id="queryApproveReasonCode3" parameterType="com.huaxia.opas.domain.sysparm.ApproveReasonCode"
+		resultMap="ApproveReasonCodeResultMap">
+		select
+		REASON_CODE
+		from OPAS_APPROVE_REASONCODE
+		<where>
+			<if test="reasonCode != null and reasonCode !='' ">
+				AND REASON_CODE = #{reasonCode}
+			</if>
+		</where>
+	</select>
+<!--审批原因码查询详细-->
+	<select id="queryAllApproveReason" parameterType="java.util.Map" resultMap="ApproveReasonCodeResultMap">
+		select
+			REASON_CODE,REASON_DESC
+		from OPAS_APPROVE_REASONCODE
+		where 1=1
+		and STATUS = '1'
+		<if test="reasonType != null and reasonType !='' ">
+			AND REASON_TYPE = #{reasonType}
+		</if>
+		<if test="acctType != null and acctType !='' ">
+			AND ACCT_TYPE1 = #{acctType}
+		</if>
+		<if test="reasonCode != null and reasonCode !='' ">
+			AND REASON_CODE LIKE '%${reasonCode}%'
+		</if>
+		order by REASON_CODE
+	</select>
+</mapper>

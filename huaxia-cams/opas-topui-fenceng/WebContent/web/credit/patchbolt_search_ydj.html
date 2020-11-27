@@ -1,0 +1,294 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+</head>
+	<body style="width:70%;">
+	<form id="patchForm">
+		<input type="hidden" name="appId" id="appId"/>
+		<input type="hidden" name="userCode" id="userCodes"/>
+		<div>
+		<table>
+			<tr>
+				<td align="right">补件期限:</td>
+				<td><input class="easyui-datebox" id="dueDate" name="dueDate" editable="false" style="width:150px"  readonly="readonly"></input><span style="color: red">&nbsp;&nbsp;&nbsp;(万年历)</span></td>
+			</tr>
+			<h3>请选择需要补交的证明材料</h3>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="identityCard" value="1" name="identityCard" disabled="disabled"/></td>
+				<td>身份证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="payWater" value="1"  name="payWater" disabled="disabled"/></td>
+				<td>工资流水</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="workProof" value="1"  name="workProof" disabled="disabled"/></td>
+				<td>工作证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="incomeProof" value="1"  name="incomeProof" disabled="disabled"/></td>
+				<td>收入证明文件</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="socialSecurity" value="1"  name="socialSecurity" disabled="disabled"/></td>
+				<td>社保</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="houseProof" value="1"  name="houseProof" disabled="disabled"/></td>
+				<td>房产证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="accumulationFund" value="1" name="accumulationFund" disabled="disabled"/></td>
+				<td>公积金</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="educationProof" value="1" name="educationProof" disabled="disabled"/></td>
+				<td>学历证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="taxReceipt" value="1" name="taxReceipt" disabled="disabled"/></td>
+				<td>税单</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="creditCardBill" value="1"  name="creditCardBill" disabled="disabled"/></td>
+				<td>信用卡账单</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="ownerBankProof" value="1"  name="ownerBankProof" disabled="disabled"/></td>
+				<td>我行业务往来证明</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="financalProof" value="1"  name="financalProof" disabled="disabled"/></td>
+				<td>财力证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="loanSettleProof" value="1"  name="loanSettleProof" disabled="disabled"/></td>
+				<td>贷款结清证明</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="rprProof" value="1"  name="rprProof" disabled="disabled"/></td>
+				<td>户口证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="marriageCertificate" value="1"  name="marriageCertificate" disabled="disabled"/></td>
+				<td>结婚证</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="businessLicense" value="1"  name="businessLicense" disabled="disabled"/></td>
+				<td>企业营业执照</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="carProof" value="1"  name="carProof" disabled="disabled"/></td>
+				<td>车产证明</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="retricalMasterCopy" value="1"  name="retricalMasterCopy" disabled="disabled"/></td>
+				<td>调阅原件</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="imageRepair" value="1" name="imageRepair" disabled="disabled""/></td>
+				<td>影像修复</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="other" value="1"  name="other" disabled="disabled"/></td>
+				<td>其他</td>
+			</tr>
+		</table>
+		</div>
+		<table>
+			<tr>
+				<td align="right" editable="false" readonly="readonly">备注<span style="color: red" >(最多50字)</span></td>
+				<td><input class="easyui-textbox" id="memo" name="memo" data-options="multiline:true" style="width:300px;height:100px" editable="false" readonly="readonly"></input></td>
+			</tr>
+			<tr>
+				<td align="right">分机号</td>
+				<td><input class="easyui-validatebox textbox" id="optTelno" name="optTelno" maxlength=3 disabled="disabled"></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="applyerCheckbox" onclick="checkAp(this);" name="applyerCheckbox" disabled="disabled"/>&nbsp;&nbsp;&nbsp;申请人</td>
+				<td><input class="easyui-textbox" id="applyer" name="applyer" width="250px"></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="promoterCheckbox" onclick="checkPr(this);" name="promoterCheckbox" disabled="disabled"/>&nbsp;&nbsp;&nbsp;推广人</td>
+				<td><input class="easyui-textbox" id="promoter" name="promoter" width="250px" readonly="readonly" ></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="riskCheckbox" onclick="checkRi(this);" name="riskCheckbox" disabled="disabled"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;风险</td>
+				<td><input class="easyui-textbox" id="risk" name="risk" width="250px" readonly="readonly" ></input></td>
+			</tr>
+		</table>
+	</form>
+	<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" disabled="disabled"
+				onclick="onSave()">提交此补件</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')" disabled="disabled">关闭</a>
+	</div>
+	<script>
+	var aCheckbox = document.getElementById("applyerCheckbox");
+	var pCheckbox = document.getElementById("promoterCheckbox");
+	var rCheckbox = document.getElementById("riskCheckbox");
+	var patchForm = $("#patchForm");
+	var patchWin = $("#patchWin");
+	var patcauseForm = $("#patch2Form");
+	var appId = "";
+	var userCode = parent.userCode;
+	$(function(){
+		appId = GetQueryString("appId");
+		$("#appId").val(appId);
+			$cf.ajax({
+				url : "/opas-naps/queryPatchTwo_Ydj.json",
+				/* data : {"appId":"888"}, */
+				data : {"appId":appId},
+				onSuccess : function(data) {
+					var jsonpatchbolt = data.RSP_BODY.jsonpatchbolt;
+					var patchboltjson = eval('(' +jsonpatchbolt+ ')');
+					var bizInfo = data.RSP_BODY.bizInfo;
+					if(patchboltjson.applyer!=null&&patchboltjson.applyer!=''){
+						$('input[name=applyerCheckbox]').prop("checked",true);
+					}
+					if(patchboltjson.promoter!=null&&patchboltjson.promoter!=''){
+						$('input[name=promoterCheckbox]').prop("checked",true);
+					}
+					if(patchboltjson.risk!=null&&patchboltjson.risk!=''){
+						$('input[name=riskCheckbox]').prop("checked",true);
+					}
+					patchForm.form("load", patchboltjson);
+					$("#applyer").textbox('setValue',bizInfo.c1Mobile);
+					$("#promoter").textbox('setValue',bizInfo.c4Abphon);
+				}
+			});
+	})
+	function GetQueryString(name){
+	 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	 var r = window.location.search.substr(1).match(reg);
+	 if(r!=null) return unescape(r[2]);
+	 return null;
+	}
+	function checkAp(self){
+		if(aCheckbox.checked==true){
+			$("#applyer").textbox('readonly',false);
+		}else{
+			$("#applyer").textbox('readonly',true);
+		}
+	}
+	function checkPr(self){
+		if(pCheckbox.checked==true){
+			rCheckbox.checked = false;
+			$("#promoter").textbox('readonly',false);
+			$("#risk").textbox('readonly',true);
+		}else{
+			$("#promoter").textbox('readonly',true);
+			$("#risk").textbox('readonly',false);
+		}
+	}
+	function checkRi(self){
+		if(rCheckbox.checked==true){
+			pCheckbox.checked = false;
+			$("#risk").textbox('readonly',false);
+			$("#promoter").textbox('readonly',true);
+		}else{
+			$("#risk").textbox('readonly',true);
+			$("#promoter").textbox('readonly',false);
+		}
+	}
+	$(function(){
+		$("input[name=patchStatus]").change(function(){
+			var flag = $("input[name=patchStatus]:checked").attr("id");
+			if(flag=="a1"){
+		    $("#patchCode").textbox({disabled:false});			
+			}else{
+			$("#patchCode").textbox({disabled:true});	
+			$("#patchCode").textbox('setValue','');						
+			}
+		});
+	})
+
+	/* 对补件下结论 */
+	function onSave() {
+		$("#appIds").val(appId);
+		$("#userCode").val(userCode);
+		var jsondatacause = getFormData(patcauseForm.serializeArray());//对补件结果下结论，选择原因
+		var patchSta = jsondatacause.patchStatus;
+		var patchCod = jsondatacause.patchCode;
+		if(patchSta==1&&patchCod==null||patchCod==""){
+			alert("请输入补件码！");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/surePatchboltTwoYdj_save.json",
+			data : jsondatacause,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.flag==2) {
+					$.messager.alert("操作提示", "提交成功!", "info", function() {
+						onConcle("patchWin");
+					});
+				}else if(data.RSP_BODY.flag==1) {
+					$.messager.alert("操作提示", "提交成功!", "info", function() {
+						onConcle("patchWin");
+						window.parent.opener.reload();
+						window_close();
+					});
+				}else {
+					$.messager.alert("操作提示", "提交失败:" + data.exMsg, "error");
+					onConcle("patchWin");
+					return;
+				}
+			}
+
+		});
+		
+	}
+	
+	/* 二次补件 */
+	function twochange(){
+		$("#appId").val(appId);
+		$("#userCodes").val(userCode);
+		var jsondata = getFormData(patchForm.serializeArray());//勾选的补件信息
+		if(jsondata.memo.trim().length > 50){
+			$.messager.alert("操作提示", "备注字数太多,请检查!");
+			return;
+		}
+		if(jsondata.applyer.trim().length > 16){
+			$.messager.alert("操作提示", "申请人字数太多,请检查!");
+			return;
+		}
+		if(jsondata.promoter.trim().length > 16){
+			$.messager.alert("操作提示", "推广人字数太多,请检查!");
+			return;
+		}
+		if(jsondata.risk.trim().length > 16){
+			$.messager.alert("操作提示", "风险字数太多,请检查!");
+			return;
+		}
+		$cf.ajax({
+			url : "/opas-naps/patchboltTwoYdj_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "提交二次补件成功!", "info", function() {
+						onConcle("winAdd");
+						window_close();
+					});
+				} else {
+					$.messager.alert("操作提示", "提交二次补件失败:" + data.exMsg, "error");
+					onConcle("winAdd");
+					return;
+				}
+			}
+
+		});
+	}
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	function window_close(){
+		//为了屏蔽ie的 小弹框提示 
+		var newWin=parent.window.open("","_parent","");
+		newWin.opener.location.reload();
+		newWin.close();
+	}
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	</script>
+</body>
+

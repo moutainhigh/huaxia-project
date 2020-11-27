@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<bean id="dictServiceImpl" class="com.huaxia.opas.cache.service.impl.DictServiceImpl" />
+	<bean id="tokenServiceImpl" class="com.huaxia.opas.cache.service.impl.TokenServiceImpl" />
+	<bean id="lueneServiceImpl" class="com.huaxia.opas.cache.service.impl.LuceneServiceImpl"/>
+	<bean id="lueneServiceImplTest" class="com.huaxia.opas.cache.service.impl.LuceneServiceImplRepos"/>
+	<!--  规则service bean--><!-- 2017/11/03修改 -->
+	<bean id="ruleModelBuildService" class="com.huaxia.opas.cache.service.rule.impl.RuleModelBuildServiceImpl" />
+	<bean id="invokeRuleService" class="com.huaxia.opas.rule.InvokeRuleServiceImpl" />
+	<bean id="thdRuleService" class="com.huaxia.opas.rule.ThdRuleServiceImpl" />
+	<bean id="plazeRuleModelBuildService" class="com.huaxia.opas.cache.service.rule.impl.PlazeRuleModelBuildServiceImpl" />
+	<bean id="sailRuleService" class="com.huaxia.opas.rule.SailRuleServiceImpl" />
+	<bean id="ficoRuleService" class="com.huaxia.opas.rule.FicoRuleServiceImpl" />
+	<!-- <bean id="loansRuleService" class="com.huaxia.opas.rule.LoansRuleServiceImpl" /> -->
+	
+	<!-- 全国地区行政级别对比 -->
+	<bean id="addresMachLevImpl" class="com.huaxia.opas.cache.service.address.impl.AddresMachLevImpl" />
+	<!-- 风险检查 -->
+	<bean id="riskMachCheckServiceImpl" class="com.huaxia.opas.cache.service.riskcheck.impl.RiskMachCheckServiceImpl" />
+	<!-- step1 -->
+	<bean id="step1_field_Opas_Identity_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Identity_RiskList" />
+	<bean id="step1_field_Opas_Company_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Company_RiskList" />
+	<bean id="step1_field_Opas_Tel_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Tel_RiskList" />
+	<bean id="step1_field_Opas_Addr_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Addr_RiskList" />
+	<bean id="step1_field_Opas_Promoter_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Promoter_RiskList" />
+	<bean id="step1_field_Opas_SameIndustry_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_SameIndustry_RiskList" />
+	<bean id="step1_Field_Foreign_Index_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Foreign_Index_RiskList" />
+	<bean id="step1_Field_Opas_Biz_Life_Appln_RiskList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Biz_Life_Appln_RiskList" />
+	<bean id="step1_Field_Opas_Low_Risk" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Low_Risk" />
+	<bean id="step1_Field_Opas_Stakeholder_Type" class="com.huaxia.opas.cache.service.riskcheck.impl.Step1_Field_Opas_Stakeholder_Type" />
+
+	<!-- step3 -->
+	<bean id="step3_Field_Opas_Pboc_Personal_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Opas_Pboc_Personal_Info" />
+	<bean id="step3_Field_Opas_Pboc_Profession_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Opas_Pboc_Profession_Info" />
+	<bean id="step3_Field_Opas_Pboc_Residence_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Opas_Pboc_Residence_Info" />
+	<bean id="step3_Field_Sp_Aps_Ifs_Cust_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Sp_Aps_Ifs_Cust_Info" />
+	<bean id="step3_Field_Py_Pcr_Crs_Crt_Sisz2_Bi_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Py_Pcr_Crs_Crt_Sisz2_Bi_Info" />
+	<bean id="step3_Field_Ylz_Rep_Data_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Ylz_Rep_Data_Info" />
+	<bean id="step3_Field_Opas_Pboc_Public_Accfund_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Opas_Pboc_Public_Accfund_Info" />
+	<bean id="step3_Field_Hz_Gjjxx_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Hz_Gjjxx_Info" />
+	<bean id="step3_Field_Xm_Gjj_Jcxx_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Xm_Gjj_Jcxx_Info" />
+	<bean id="step3_Field_Nb_Base_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Nb_Base_Info" />
+	<bean id="step3_Field_Wz_Gr_Gjjzl_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Wz_Gr_Gjjzl_Info" />
+	<bean id="step3_Field_Yc_Gjj_Info" class="com.huaxia.opas.cache.service.riskcheck.impl.Step3_Field_Yc_Gjj_Info" />
+	
+	<!-- step2 -->
+	<bean id="step2_Field_Opas_Creait_TelCheck_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Creait_TelCheck_List" />
+	<bean id="step2_Field_Opas_MajorSchool_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_MajorSchool_List" />
+	<bean id="step2_Field_Opas_Merch_Teamdeal_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Merch_Teamdeal_List" />
+	<bean id="step2_Field_Opas_SpecialProject_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_SpecialProject_List" />
+	<bean id="step2_Field_Opas_TargetCompany_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_TargetCompany_List" />
+	<bean id="step2_Field_Opas_TeamDeal_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_TeamDeal_List" />
+	<bean id="step2_Field_Opas_Biz_Inp_Appl_C1" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Biz_Inp_Appl_C1" />
+	<bean id="step2_Field_Opas_Biz_Inp_GreyList" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Biz_Inp_GreyList" />
+	<bean id="step2_Field_Opas_NormCredit_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_NormCredit_List" />
+	<bean id="step2_Field_Opas_YdjCredit_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_YdjCredit_List" />
+	<bean id="step2_Field_Opas_Biz_IdNumber_InDate" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Biz_IdNumber_InDate" />
+	<bean id="step2_Field_Opas_Biz_IdNumber_InDate2" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Biz_IdNumber_InDate2" />
+	<bean id="step2_Field_Opas_Biz_LogicalCheck" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Biz_LogicalCheck" />
+	<bean id="step2_Field_Opas_GoodCompany_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_GoodCompany_List" />
+	<bean id="step2_Field_Opas_Inner_RiskInfo_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Inner_RiskInfo_List" />
+	<!--  2017-06-14 -->
+	<bean id="step2_Field_Opas_StockCust_TelSale" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_StockCust_TelSale" />
+	<bean id="step2_Field_Opas_Enterprise_Information" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Enterprise_Information" />
+	<bean id="step2_Field_Opas_Biz_C6_Resi_Taxid" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Biz_C6_Resi_Taxid" />
+	<bean id="step2_Field_Opas_Biz_Inp_C1_PAD" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Biz_Inp_C1_PAD" />
+	<bean id="step2_Field_Opas_Marketer_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Marketer_List" />
+	<bean id="step2_Field_Opas_Excellent_Company_List" class="com.huaxia.opas.cache.service.riskcheck.impl.Step2_Field_Opas_Excellent_Company_List" />
+	
+</beans>

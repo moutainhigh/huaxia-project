@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>历史审批结果</title>
+<!-- <link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" /> -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../../topui/topui.js"></script>
+<script type="text/javascript" src="../../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../../css/common/style.css" type="text/css"></link>
+</head>
+<script type="text/javascript">
+$(function (){
+	
+	var url = location.href;
+	var appId = url.split("=")[1];
+	//alert(appId);
+	var historyInfo=$("#historyInfo");
+	$cf.ajax({
+		data : {
+			"appId" : appId
+		},
+		url : "/opas-naps/history_audit_query.json",
+		onSuccess : function(res) {
+			//var flag = res.RSP_BODY.approveResult;//0代表审核拒绝  1代表审核批准
+			var historyInfoDetail = res.RSP_BODY.historyInfo;
+			var flag = res.RSP_BODY.historyAuditInfo.approveResult
+			//console.log(res.RSP_BODY.historyInfo.idNo);
+			//console.log(res.RSP_BODY.historyInfo['idNo']);
+			if(flag=='0'){
+				document.getElementById('guojian').style.display='none';
+			}else{
+				document.getElementById('jujian').style.display='none';
+			}
+			var historyInfojson = eval('(' +historyInfoDetail+ ')');
+			historyInfo.form("load", historyInfojson);
+		}
+	}); 
+});
+</script>
+<body>
+<div  style="width: 100%; height: 760px;">
+	<form id="historyInfo">
+	<fieldset>
+		<legend>基本信息</legend>
+			<table>
+				<tr>
+					<td>流水号：</td>
+					<td><input name="appId" id="appId" class="easyui-textbox"/></td>
+					<td>申请人姓名：</td>
+					<td><input name="applyerName" id="applyerName" class="easyui-textbox"/></td>
+					<td>证件号码：</td>
+					<td><input name="idNo" id="idNo" class="easyui-textbox"/></td>
+				</tr>
+				<tr>
+					<td>审查员姓名</td>
+					<td colspan="5"><input name="approverName" id="approverName" class="easyui-textbox"/></td>
+				</tr>
+				<tr>
+					<td>申请卡种：</td>
+					<td><input name="applyCard" id="applyCard" class="easyui-textbox"/></td>
+					<td>征信调查员姓名：</td>
+					<td><input name="" id="" class="easyui-textbox"/></td>
+					<td>调查柜员代码：</td>
+					<td><input name="" id="" class="easyui-textbox"/></td>
+				</tr>
+			</table>
+	</fieldset>
+	<fieldset id="guojian">
+		<legend>审批信息-过件</legend>
+			<table>
+				<tr>
+					<td>核批卡种：</td>
+					<td><input name="" id="" class="easyui-textbox"/></td>
+					<td>额度：</td>
+					<td><input name="preApprovelimit" id="preApprovelimit" class="easyui-textbox"/></td>
+					<td>政策码：</td>
+					<td><input name="policyCode1" id="policyCode1" class="easyui-textbox"/></td>
+				</tr>
+				<tr>
+					<td>违例码1：</td>
+					<td><input name="violateCode1" id="violateCode1" class="easyui-textbox"/></td>
+					<td>违例码2：</td>
+					<td><input name="violateCode2" id="violateCode2" class="easyui-textbox"/></td>
+					<td>违例码3：</td>
+					<td><input name="violateCode3" id="violateCode3" class="easyui-textbox"/></td>
+				</tr>
+				<tr>
+					<td>审批人：</td>
+					<td><input name="highlevleApprover" id="highlevleApprover" class="easyui-textbox"/></td>
+					<td>审批时间：</td>
+					<td colspan="3"><input name="approveTime" id="approveTime" class="easyui-textbox"/></td>
+				</tr>
+				<tr>
+					<td>审批备注：</td>
+					<td colspan="5"><input name="memo" id="memo" class="easyui-textbox"/></td>
+				</tr>
+			</table>
+	</fieldset>
+	<fieldset id="jujian">
+		<legend>审批信息-拒件</legend>
+			<table>
+				<tr>
+					<td>拒绝原因代码1：</td>
+					<td><input name="refuseCode1" id="refuseCode1" class="easyui-textbox"/></td>
+					<td>拒绝原因代码2：</td>
+					<td><input name="refuseCode2" id="refuseCode2" class="easyui-textbox"/></td>
+					<td>拒绝原因代码3：</td>
+					<td><input name="refuseCode3" id="refuseCode3" class="easyui-textbox"/></td>
+				</tr>
+				<tr>
+					<td>审批人：</td>
+					<td><input name="highlevleApprover" id="highlevleApprover" class="easyui-textbox"/></td>
+					<td>审批时间：</td>
+					<td colspan="3"><input name="approveTime" id="approveTime" class="easyui-textbox"/></td>
+				</tr>
+				<tr>
+					<td>审批备注：</td>
+					<td colspan="5"><input name="memo" id="memo" class="easyui-textbox"/></td>
+				</tr>
+			</table>
+	</fieldset>
+	</form>
+</div>	
+</body>
+</html>

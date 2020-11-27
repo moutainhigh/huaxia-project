@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblUser" title="组员信息列表" class="easyui-datagrid"
+			style="width: 98%"
+			data-options="rownumbers:true,singleSelect:false,pagination:true,pageSize:20,pageList:[20, 50,100],fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+			<thead frozen="true">
+				<tr>
+					<th field="userId" width="10%" align="center" checkbox="true">用户Id</th>
+					<th field="userCode" align="center" width="20%">登录名</th>
+					<th field="userName" align="center" width="20%">用户名称</th>
+					<th field="autoStatus" width="15%" align="center"
+						data-options="formatter:formatStatus">自动分件状态</th>
+					<th field="orgName" align="center" width="20%">组名</th>
+				</tr>
+			</thead>
+		</table>
+    </div>
+    <div class="area-function">
+    			<span style="padding-left: 40%">
+    			<a href="javascript:fnAutoAllot(1);" class="easyui-linkbutton" style="width: 160px;">参与自动分件</a>&nbsp;
+				<a href="javascript:fnAutoAllot(2);" class="easyui-linkbutton">取消</a>&nbsp;
+    			</span>
+    </div> 
+</body>
+
+<script type="text/javascript">
+    $cf.loadAllDict();//加载数据字典
+    var userCode=$cf.getStore("userRelInfo","index").userInfo.userCode;
+    var userName=$cf.getStore("userRelInfo","index").userInfo.userName;
+	var tblUser = $("#tblUser");
+	//页面初始化
+	$(function() {
+		var opts = tblUser.datagrid("options");
+		opts.url ="/opas-allot-server/showAllotUser.json";
+		var s={
+				"node":"",
+				"userCode":userCode,
+				"orgLevel":'4',
+				"auto":'1',
+				"ydjFlag":"2"
+				};
+		tblUser.datagrid("reload", s); 
+		tblUser.datagrid("clearChecked");
+	 	
+	});
+	//自动分件状态
+	function formatStatus(val, row, index) {
+		   if (val == 1) {
+				return "参与";
+			}else{
+				return "不参与 ";
+			}
+	}  
+	function fnAutoAllot(value){
+		 var orgObj = $("#tblUser").datagrid("getSelections");
+		 if (orgObj == null||orgObj.length==0) {
+			  $.messager.alert("操作提示","请勾选组员 ！","error");
+			  return;
+		 }
+		var list=new Array();
+		var autoStatus="";
+		if(value==1){
+			autoStatus="1";
+			for(var i=0;i<orgObj.length;i++){
+				if(orgObj[i].autoStatus=='1'){
+					 $.messager.alert("操作提示","有组员已参与自动分件,不能再勾选,请去掉  ！","error");
+					return;
+				}else{
+					list.push(orgObj[i].userId);
+				}
+			}
+		}else if(value==2){
+			autoStatus="2";
+			for(var i=0;i<orgObj.length;i++){
+				if(orgObj[i].autoStatus=='2'||orgObj[i].autoStatus==''||orgObj[i].autoStatus==null){
+					 $.messager.alert("操作提示","有组员已不参与自动分件,不能再勾选,请去掉   ！","error");
+					return;
+				}else{
+					list.push(orgObj[i].userId);
+				}
+			}
+		}
+	  $cf.ajax({
+	     	url:"/opas-allot-server/update_autoStatus.json",
+	     	data:{'list':list,
+	     		'autoStatus':autoStatus
+	     		},
+	     	onSuccess : function(data) {
+	     		if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "成功 !", "info", function() {
+						tblUser.datagrid("reload");
+						tblUser.datagrid("unselectAll");
+					});
+				} else {
+					$.messager.alert("操作提示", "失败 ", "error");
+					tblUser.datagrid("unselectAll");
+					return;
+				}
+			}
+	   	 });
+	}
+</script>
+</html>

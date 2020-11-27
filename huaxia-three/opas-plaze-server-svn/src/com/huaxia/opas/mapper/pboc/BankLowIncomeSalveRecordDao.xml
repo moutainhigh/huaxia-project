@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankLowIncomeSalveRecordDao">
+   <!-- 保存低保救助记录信息段 PF06A  -->
+  <insert id="insertLowIncomeSalveRecordInfo" parameterType="com.huaxia.opas.domain.pboc.pbs.PF06A" >
+    INSERT INTO OPAS_PBOC_PUBLIC_SALVATION (APP_ID, PERSONNEL_TYPE, PLACE, 
+      COMPANY, HOME_MINCOME, APP_DATE, 
+      PASS_DATE, INFO_UPD_TIME, CRT_TIME, 
+      CRT_USER, RELATE_ID)
+    VALUES (#{appId,jdbcType=CHAR}, #{PF06AD01,jdbcType=VARCHAR}, #{PF06AQ01,jdbcType=VARCHAR}, 
+      #{PF06AQ02,jdbcType=VARCHAR}, #{PF06AQ03,jdbcType=VARCHAR}, #{PF06AR01,jdbcType=VARCHAR}, 
+      #{PF06AR02,jdbcType=VARCHAR}, #{PF06AR03,jdbcType=VARCHAR}, SYSDATE, 
+      'SYSTEM', #{relateId,jdbcType=VARCHAR})
+  </insert>
+	<!--  保存低保救助记录信息的 标注及声明信息段 PF06Z/PF06Zdata  -->
+	<insert id="insertLowIncomeSalveRecordPbsLabelState" parameterType="com.huaxia.opas.domain.pboc.pbs.PF06Zdata" >
+    INSERT INTO PBOC_PBS_LABEL_STATE (UUID, APP_ID, COUNT, 
+      RELATE_ID, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PF06ZS01,jdbcType=VARCHAR}, 
+      #{relateId,jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	<!-- 保存低保救助记录信息的 标注及声明信息 PF06Z/PF06ZH 集合  -->
+	<insert id="insertLowIncomeSalveRecordPbsLabelStateInfoList" parameterType="java.util.List" >
+	INSERT INTO PBOC_PBS_LABEL_STATE_INFO (UUID, APP_ID, TYPE, 
+      CONTENT, ADD_DATE, RELATE_ID, 
+      CRT_TIME)
+	<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT
+	  SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.PF06ZD01,jdbcType=VARCHAR}, 
+      #{item.PF06ZQ01,jdbcType=VARCHAR}, #{item.PF06ZR01,jdbcType=VARCHAR}, #{item.relateId,jdbcType=VARCHAR}, 
+      SYSDATE
+	  FROM DUAL
+	 </foreach>
+	</insert>
+</mapper>

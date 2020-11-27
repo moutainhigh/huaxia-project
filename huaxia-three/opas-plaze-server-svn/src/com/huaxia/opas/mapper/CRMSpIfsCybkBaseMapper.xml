@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCybkBaseMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCybkBase">
+		INSERT INTO SP_APS_IFS_CYBK_BASE (
+			APP_ID,CUSTID,CUSTCODE,CARDID,EBANK_TYPE,OPEN_BR,BRNAME,TRANNUM,TRANAMT,SHSHSXF,YSHSXF,MOBILEPHONE,EMAIL,
+			SIGN_DATE,SIGN_VERSION,EBANK_STATUS,SIGN_TYPE,SIGN_CHANNEL,PAY_STATUS,USERID,USERNAME,LOGIN_NUM,SIGN_TIME,
+			GRANT_DATE,LLOGIN_DATE,LTRANS_DATE,ACTIVATE_DATE,TDL,D_DATE,EBANK_CUSTID
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{cardId, jdbcType = VARCHAR},
+			#{eBankType, jdbcType = VARCHAR},
+			#{openBr, jdbcType = VARCHAR},
+			#{brName, jdbcType = VARCHAR},
+			#{tranNum, jdbcType = INTEGER},
+			#{tranAmt, jdbcType = NUMERIC},
+			#{shshSxf, jdbcType = NUMERIC},
+			#{yshSxf, jdbcType = NUMERIC},
+			#{mobilePhone, jdbcType = VARCHAR},
+			#{email, jdbcType = VARCHAR},
+			#{signDate, jdbcType = VARCHAR},
+			#{signVersion, jdbcType = VARCHAR},
+			#{eBankStatus, jdbcType = VARCHAR},
+			#{signType, jdbcType = VARCHAR},
+			#{signChannel, jdbcType = VARCHAR},
+			#{payStatus, jdbcType = VARCHAR},
+			#{userId, jdbcType = VARCHAR},
+			#{userName, jdbcType = VARCHAR},
+			#{loginNum, jdbcType = INTEGER},
+			#{signTime, jdbcType = VARCHAR},
+			#{grantTime, jdbcType = VARCHAR},
+			#{lLoginDate, jdbcType = VARCHAR},
+			#{lTransDate, jdbcType = VARCHAR},
+			#{activateDate, jdbcType = VARCHAR},
+			#{tdl, jdbcType = VARCHAR},
+			#{dDate, jdbcType = VARCHAR},
+			#{eBankCustId, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CYBK_BASE (
+			APP_ID,CUSTID,CUSTCODE,CARDID,EBANK_TYPE,OPEN_BR,BRNAME,TRANNUM,TRANAMT,SHSHSXF,YSHSXF,MOBILEPHONE,EMAIL,
+			SIGN_DATE,SIGN_VERSION,EBANK_STATUS,SIGN_TYPE,SIGN_CHANNEL,PAY_STATUS,USERID,USERNAME,LOGIN_NUM,SIGN_TIME,
+			GRANT_DATE,LLOGIN_DATE,LTRANS_DATE,ACTIVATE_DATE,TDL,D_DATE,EBANK_CUSTID
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.cardId, jdbcType = VARCHAR},
+			#{item.eBankType, jdbcType = VARCHAR},
+			#{item.openBr, jdbcType = VARCHAR},
+			#{item.brName, jdbcType = VARCHAR},
+			#{item.tranNum, jdbcType = INTEGER},
+			#{item.tranAmt, jdbcType = NUMERIC},
+			#{item.shshSxf, jdbcType = NUMERIC},
+			#{item.yshSxf, jdbcType = NUMERIC},
+			#{item.mobilePhone, jdbcType = VARCHAR},
+			#{item.email, jdbcType = VARCHAR},
+			TO_DATE(#{item.signDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.signVersion, jdbcType = VARCHAR},
+			#{item.eBankStatus, jdbcType = VARCHAR},
+			#{item.signType, jdbcType = VARCHAR},
+			#{item.signChannel, jdbcType = VARCHAR},
+			#{item.payStatus, jdbcType = VARCHAR},
+			#{item.userId, jdbcType = VARCHAR},
+			#{item.userName, jdbcType = VARCHAR},
+			#{item.loginNum, jdbcType = INTEGER},
+			TO_DATE(#{item.signTime, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.grantTime, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.lLoginDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.lTransDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.activateDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.tdl, jdbcType = VARCHAR},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.eBankCustId, jdbcType = VARCHAR}
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

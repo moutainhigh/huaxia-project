@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsPyrlMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsPyrl">
+		INSERT INTO SP_APS_IFS_PYRL (
+			APP_ID,CUSTID,CUSTCODE,CARDNO,ACCNO,SIGN_DATE,L_DATE,COM_NO,COM_NAME,DKDJNUM_M,DKDJAMT_M,DKDJNUM_Y,
+			DKDJAMT_Y,DKDJNUM,DKDJAMT,DFHX_DEPTBAL,DFHX_AUM,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{cardNo, jdbcType = VARCHAR},
+			#{accNo, jdbcType = VARCHAR},
+			#{signDate, jdbcType = VARCHAR},
+			#{lDate, jdbcType = VARCHAR},
+			#{comNo, jdbcType = VARCHAR},
+			#{comName, jdbcType = VARCHAR},
+			#{dkdjNumM, jdbcType = INTEGER},
+			#{dkdjAmtM, jdbcType = NUMERIC},
+			#{dkdjNumY, jdbcType = INTEGER},
+			#{dkdjAmtY, jdbcType = NUMERIC},
+			#{dkdjNum, jdbcType = INTEGER},
+			#{dkdjAmt, jdbcType = NUMERIC},
+			#{dfhxDeptBal, jdbcType = NUMERIC},
+			#{dfhxAum, jdbcType = NUMERIC},
+			#{dDate, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_PYRL (
+			APP_ID,CUSTID,CUSTCODE,CARDNO,ACCNO,SIGN_DATE,L_DATE,COM_NO,COM_NAME,DKDJNUM_M,DKDJAMT_M,DKDJNUM_Y,
+			DKDJAMT_Y,DKDJNUM,DKDJAMT,DFHX_DEPTBAL,DFHX_AUM,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.cardNo, jdbcType = VARCHAR},
+			#{item.accNo, jdbcType = VARCHAR},
+			TO_DATE(#{item.signDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.lDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.comNo, jdbcType = VARCHAR},
+			#{item.comName, jdbcType = VARCHAR},
+			#{item.dkdjNumM, jdbcType = INTEGER},
+			#{item.dkdjAmtM, jdbcType = NUMERIC},
+			#{item.dkdjNumY, jdbcType = INTEGER},
+			#{item.dkdjAmtY, jdbcType = NUMERIC},
+			#{item.dkdjNum, jdbcType = INTEGER},
+			#{item.dkdjAmt, jdbcType = NUMERIC},
+			#{item.dfhxDeptBal, jdbcType = NUMERIC},
+			#{item.dfhxAum, jdbcType = NUMERIC},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

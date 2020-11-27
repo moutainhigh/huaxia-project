@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCustDebtMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCustDebt">
+		INSERT INTO SP_APS_IFS_CUST_DEBT (
+			APP_ID,CUSTID,CRDDEBTBAL,LOANDEBTBAL,DEBTBAL,LOAN_NUM,CREDLMT,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{crdDebtBal, jdbcType = NUMERIC},
+			#{loanDebtBal, jdbcType = NUMERIC},
+			#{debtBal, jdbcType = NUMERIC},
+			#{loanNum, jdbcType = NUMERIC},
+			#{credLmt, jdbcType = NUMERIC},
+			#{dDate, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CUST_DEBT (
+			APP_ID,CUSTID,CRDDEBTBAL,LOANDEBTBAL,DEBTBAL,LOAN_NUM,CREDLMT,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.crdDebtBal, jdbcType = NUMERIC},
+			#{item.loanDebtBal, jdbcType = NUMERIC},
+			#{item.debtBal, jdbcType = NUMERIC},
+			#{item.loanNum, jdbcType = NUMERIC},
+			#{item.credLmt, jdbcType = NUMERIC},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

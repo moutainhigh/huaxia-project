@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="JDCardInfo">
+
+	<resultMap id="JDCardInfoMap" type="com.huaxia.opas.domain.decision.JDCardInfo">
+		<result column="INFO_FLAG" 			property="infoFlag" 		jdbcType="VARCHAR"/>
+		<result column="CREDIT_SCORE" 		property="creditScore" 		jdbcType="INTEGER"/>
+		<result column="BUY_CYCLE" 			property="buyCycle" 		jdbcType="VARCHAR"/>
+		<result column="USE_ACTIVE" 		property="useActive" 		jdbcType="VARCHAR"/>
+		<result column="BUY_LEVLE" 			property="buyLevle" 		jdbcType="VARCHAR"/>
+		<result column="IS_USENAME_WHTNAME" property="isUsenameWhtname" jdbcType="VARCHAR"/>
+		<result column="IS_USETEL_WHTTEL" 	property="isUsetelWhttel" 	jdbcType="VARCHAR"/>
+		<result column="IS_USEIDNO_WHTIDNO" property="isUseidnoWhtidno" jdbcType="VARCHAR"/>
+		<result column="IS_USETEL_MALLTEL" 	property="isUsetelMalltel" 	jdbcType="VARCHAR"/>
+		<result column="IS_BLACK_IDNO" 		property="isBlackIdno" 		jdbcType="VARCHAR"/>
+		<result column="IS_BLACK_TEL" 		property="isBlackTel" 		jdbcType="VARCHAR"/>
+		<result column="WHT_LIMIT" 			property="whtLimit" 		jdbcType="VARCHAR"/>
+		<result column="WHT_USETYPE" 		property="whtUsetype" 		jdbcType="VARCHAR"/>
+		<result column="WHT_REFUSETYPE" 	property="whtRefusetype" 	jdbcType="VARCHAR"/>
+		<result column="ISDUE_CURRWHT" 		property="isdueCurrwht" 	jdbcType="VARCHAR"/>
+		<result column="WHT_MAXHIS_DUEDAYS" property="whtMaxhisDuedays" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="selectJDCardInfoByAppId" parameterType="java.lang.String" resultMap="JDCardInfoMap">
+		select INFO_FLAG,CREDIT_SCORE,BUY_CYCLE,USE_ACTIVE,BUY_LEVLE,IS_USENAME_WHTNAME,IS_USETEL_WHTTEL,IS_USEIDNO_WHTIDNO,
+			IS_USETEL_MALLTEL,IS_BLACK_IDNO,IS_BLACK_TEL,WHT_LIMIT,WHT_USETYPE,WHT_REFUSETYPE,ISDUE_CURRWHT,WHT_MAXHIS_DUEDAYS
+			from OPAS_BIZ_JD_APPLN s where s.app_Id=#{appId,jdbcType=VARCHAR}
+	</select>
+</mapper>

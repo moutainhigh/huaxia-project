@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCustInfoLnsMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCustInfoLns">
+		INSERT INTO SP_APS_IFS_CUST_INFO_LNS (
+			APP_ID,LNS_CODE,CUSTID,CUSTCODE,CUST_NAME,CERTTYPE,CERTNO,MOBILEPHONE,TELPHONE,BUSPHONE,POSTCODE,ADDRESS,
+			EMAIL,BANKID,SUBBRID,OPEN_DATE,MARRIEDSTATUS,CUST_STATUS,D_DATE,EDUCATIONSTATUS
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{lnsCode, jdbcType = VARCHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{custName, jdbcType = VARCHAR},
+			#{certType, jdbcType = VARCHAR},
+			#{certNo, jdbcType = VARCHAR},
+			#{mobilePhone, jdbcType = VARCHAR},
+			#{telPhone, jdbcType = VARCHAR},
+			#{busPhone, jdbcType = VARCHAR},
+			#{postCode, jdbcType = VARCHAR},
+			#{address, jdbcType = VARCHAR},
+			#{email, jdbcType = VARCHAR},
+			#{bankId, jdbcType = VARCHAR},
+			#{subBrId, jdbcType = VARCHAR},
+			#{openDate, jdbcType = VARCHAR},
+			#{marriedStatus, jdbcType = NUMERIC},
+			#{custStatus, jdbcType = VARCHAR},
+			#{dDate, jdbcType = VARCHAR}
+			#{educationStatus, jdbcType = NUMERIC},
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CUST_INFO_LNS (
+			APP_ID,LNS_CODE,CUSTID,CUSTCODE,CUST_NAME,CERTTYPE,CERTNO,MOBILEPHONE,TELPHONE,BUSPHONE,POSTCODE,ADDRESS,
+			EMAIL,BANKID,SUBBRID,OPEN_DATE,MARRIEDSTATUS,CUST_STATUS,D_DATE,EDUCATIONSTATUS
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.lnsCode, jdbcType = VARCHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.custName, jdbcType = VARCHAR},
+			#{item.certType, jdbcType = VARCHAR},
+			#{item.certNo, jdbcType = VARCHAR},
+			#{item.mobilePhone, jdbcType = VARCHAR},
+			#{item.telPhone, jdbcType = VARCHAR},
+			#{item.busPhone, jdbcType = VARCHAR},
+			#{item.postCode, jdbcType = VARCHAR},
+			#{item.address, jdbcType = VARCHAR},
+			#{item.email, jdbcType = VARCHAR},
+			#{item.bankId, jdbcType = VARCHAR},
+			#{item.subBrId, jdbcType = VARCHAR},
+			TO_DATE(#{item.openDate, jdbcType = VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.marriedStatus, jdbcType = NUMERIC},
+			#{item.custStatus, jdbcType = VARCHAR},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.educationStatus, jdbcType = NUMERIC}
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

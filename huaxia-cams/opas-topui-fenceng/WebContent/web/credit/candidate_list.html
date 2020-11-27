@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>候选人列表</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script src="../../topui/topui.js" type="text/javascript"></script>
+<script src="../../js/author/common.js" type="text/javascript"></script>
+<style type="text/css">
+.area-tips {
+	padding: 10px;
+	text-align: right;
+}
+
+.area-function {
+	text-align: center;
+}
+
+.area-function a {
+	width: 50px;
+}
+.area-2-level {
+	background-color: #F0F0F0;
+}
+</style>
+</head>
+<body style="padding: 10px;">
+	<div id="candidate_table_div"  title="标准卡征信策略添加" style="width:100%; height:650px" data-options="iconCls:'icon-save',modal:true,closed:true">
+				<table id="candidate_table" title="候选人列表" class="easyui-datagrid" style="width: 98%" data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-naps/select_candidate.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#n09000_tool'">
+					<thead>
+						<tr>
+							<th field="ck" checkbox="true">操作</th>
+							<th field="role_name"	width="15%"	align="center"	sortable="true">角色名称</th>
+							<th field="user_code"	width="8%"	align="center"	sortable="true">用户编码</th>
+							<th field="user_name"	width="20%"	align="center"	sortable="true">用户名称</th>
+							<th field="group_name"	width="20%"	align="center"	sortable="true">组别名称</th>
+							<th field="group_no"	width="20%"	align="center"	sortable="true">组别编码</th>
+						</tr>
+					</thead>
+				</table>	
+	</div>		
+		<!-- 按钮区 -->
+	<div id="n09000_tool" data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="text-align:left;">
+		<a href="javascript:onSelectRow();" class="easyui-linkbutton"  style="text-align:center;display:inline-block;width:93px;height:32px">确 定</a>&nbsp;
+	</div>
+
+
+
+<script type="text/javascript">
+ function onSelectRow(){
+		var tblobj = $('#candidate_table');
+		var rowobj = tblobj.treegrid("getSelected");
+		var userCode=rowobj.user_code;
+		var userName=rowobj.user_name
+		window.opener.setCandidateValue(userCode,userName);
+		window.close();
+ }
+</script>
+
+
+</body>
+</html>

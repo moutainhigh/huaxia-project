@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toprules-config>
+
+
+	<datasource id="engineDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass">oracle.jdbc.driver.OracleDriver</property>
+		<!-- SIT -->
+		<!-- <property name="jdbcUrl">jdbc:oracle:thin:@192.167.2.57:1521:opasdb</property>
+		<property name="encryptedUser">QzRFMUQ1OTVFNUVEMEE4RjQ2Mzc2NTc1OEVFQzgxMjU=</property>
+        <property name="encryptedPassword">QzRFMUQ1OTVFNUVEMEE4RjQ2Mzc2NTc1OEVFQzgxMjU=</property> -->
+		
+		<!-- UAT -->
+		<!-- <property name="jdbcUrl">jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.167.1.44)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.167.1.45)(PORT=1521)))(LOAD_BALANCE=no)(CONNECT_DATA=(SERVICE_NAME=opasdb)))</property>
+		<property name="encryptedUser">QzRFMUQ1OTVFNUVEMEE4RjQ2Mzc2NTc1OEVFQzgxMjU=</property>
+		<property name="encryptedPassword">QzRFMUQ1OTVFNUVEMEE4RjQ2Mzc2NTc1OEVFQzgxMjU=</property>
+		 -->
+		<!-- PRO2 -->
+		<!-- <property name="jdbcUrl">jdbc:oracle:thin:@106.100.80.22:1521:bpmdb</property>
+		<property name="encryptedUser">QzRFMUQ1OTVFNUVEMEE4RjQ2Mzc2NTc1OEVFQzgxMjU=</property>
+		<property name="encryptedPassword">NEM0Q0RBM0IxQjA3RjY2QUE1OTQ2N0ZBMUMxN0Q1OEM=</property> -->
+		
+		<!-- PRO -->
+		<property name="jdbcUrl">jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=106.32.6.77)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=106.32.6.79)(PORT=1521)))(LOAD_BALANCE=YES)(CONNECT_DATA=(SERVICE_NAME=cams)))</property>
+		<property name="encryptedUser">QzRFMUQ1OTVFNUVEMEE4RjQ2Mzc2NTc1OEVFQzgxMjU=</property>
+		<property name="encryptedPassword">RjhDMzFFQ0IxQ0FEODcyQzM4QjQwNjc2OTY1NUREQ0RFMjU1NzM1RjBCMTUzMDI5RUY1MDIxNTgxNEZGMzNFQg==</property>
+		
+		<property name="decryptClassName">com.huaxia.opas.util.PropertiesEncryptFactoryBean</property>
+		<property name="decryptMethodName">deEncryptString</property>
+		<property name="minPoolSize">10</property>
+		<property name="maxPoolSize">100</property>
+		<property name="initialPoolSize">10</property>
+		<property name="acquireIncrement">3</property>
+		<!-- <property name="breakAfterAcquireFailure">false</property> -->
+		<!-- <property name="idleConnectionTestPeriod">30</property> -->
+		<property name="maxIdleTime">3600</property>
+		<property name="checkoutTimeout">900000</property>
+		<property name="numHelperThreads">50</property>
+		<!-- <property name="maxIdleTimeExcessConnections">30</property> -->
+		<!-- <property name="debugUnreturnedConnectionStackTraces">true</property> -->
+	</datasource>
+	
+	<!-- refresh config -->
+	<refresh id="ruleRefreshConfig" class="com.huateng.toprules.core.config.RuleRefreshConfig">
+		<property name="refreshType">
+            <value>all</value>
+        </property>
+        <property name="projectNames">
+            <value></value>
+        </property>
+        <property name="loadJar">
+            <value>false</value>
+        </property>
+        <property name="startDelay">
+            <value>0</value>
+        </property>
+        <property name="repeatInterval">
+            <value>3600000</value>
+        </property>
+        <property name="running">
+            <value>true</value>
+        </property>
+        <property name="transaction">
+            <value>local</value>
+        </property>
+	</refresh> 
+	 
+</toprules-config>

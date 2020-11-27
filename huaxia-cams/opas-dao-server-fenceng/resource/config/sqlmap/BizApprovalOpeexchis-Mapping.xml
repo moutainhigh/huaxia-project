@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BizApprovalOpeexchis" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.input.BizApprovalOpeexchis" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="OPERATE_CODE" property="operateCode" jdbcType="VARCHAR" />
+    <result column="OPERATE_NAME" property="operateName" jdbcType="VARCHAR" />
+    <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="EXCDATELONG" property="excdatelong" jdbcType="DECIMAL" />
+    <result column="EXCDATEDATE" property="excdatedate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    ID, OPERATE_CODE, OPERATE_NAME, STARTDATE, ENDDATE, EXCDATELONG, EXCDATEDATE
+    from OPAS_BIZ_APPROVAL_OPEEXCHIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_BIZ_APPROVAL_OPEEXCHIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.input.BizApprovalOpeexchis" >
+    insert into OPAS_BIZ_APPROVAL_OPEEXCHIS (ID, OPERATE_CODE, OPERATE_NAME, 
+      STARTDATE, ENDDATE, EXCDATELONG, 
+      EXCDATEDATE)
+    values (#{id,jdbcType=VARCHAR}, #{operateCode,jdbcType=VARCHAR}, #{operateName,jdbcType=VARCHAR}, 
+      #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{excdatelong,jdbcType=DECIMAL}, 
+      #{excdatedate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.input.BizApprovalOpeexchis" >
+    insert into OPAS_BIZ_APPROVAL_OPEEXCHIS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="operateCode != null" >
+        OPERATE_CODE,
+      </if>
+      <if test="operateName != null" >
+        OPERATE_NAME,
+      </if>
+      <if test="startdate != null" >
+        STARTDATE,
+      </if>
+      <if test="enddate != null" >
+        ENDDATE,
+      </if>
+      <if test="excdatelong != null" >
+        EXCDATELONG,
+      </if>
+      <if test="excdatedate != null" >
+        EXCDATEDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="operateCode != null" >
+        #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null" >
+        #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="excdatelong != null" >
+        #{excdatelong,jdbcType=DECIMAL},
+      </if>
+      <if test="excdatedate != null" >
+        #{excdatedate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.input.BizApprovalOpeexchis" >
+    update OPAS_BIZ_APPROVAL_OPEEXCHIS
+    <set >
+      <if test="operateCode != null" >
+        OPERATE_CODE = #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null" >
+        OPERATE_NAME = #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="excdatelong != null" >
+        EXCDATELONG = #{excdatelong,jdbcType=DECIMAL},
+      </if>
+      <if test="excdatedate != null" >
+        EXCDATEDATE = #{excdatedate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.input.BizApprovalOpeexchis" >
+    update OPAS_BIZ_APPROVAL_OPEEXCHIS
+    set OPERATE_CODE = #{operateCode,jdbcType=VARCHAR},
+      OPERATE_NAME = #{operateName,jdbcType=VARCHAR},
+      STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      EXCDATELONG = #{excdatelong,jdbcType=DECIMAL},
+      EXCDATEDATE = #{excdatedate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByUserCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   select * from (select 
+    ID, OPERATE_CODE, OPERATE_NAME, STARTDATE, ENDDATE, EXCDATELONG, EXCDATEDATE
+    from OPAS_BIZ_APPROVAL_OPEEXCHIS
+    where OPERATE_CODE = #{userCode,jdbcType=VARCHAR}
+    and to_char(EXCDATEDATE, 'yyyyMMdd') = to_char(sysdate, 'yyyyMMdd') order by ENDDATE desc) where rownum = '1'
+  </select>
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--照会对象数据库处理-->
+<!--@author liudi-->
+<mapper namespace="TelObject">
+
+	<resultMap id="TelObjectResultMap" type="com.huaxia.opas.domain.sysparm.TelObject">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="TEL_OBJECT_CODE" property="telObjectCode" jdbcType="CHAR" />
+		<result column="TEL_OBJECT_DESC" property="telObjectDesc" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE" property="acctType" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加状态为Start -->
+	<insert id="insertTelObject1" parameterType="com.huaxia.opas.domain.sysparm.TelObject">
+		insert into
+		OPAS_PARAM_VISIT_OBJECT
+		(AUTO_ID,TEL_OBJECT_CODE,TEL_OBJECT_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{telObjectCode,jdbcType=CHAR},
+		#{telObjectDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 添加状态为End -->
+	<insert id="insertTelObject2" parameterType="com.huaxia.opas.domain.sysparm.TelObject">
+		insert into
+		OPAS_PARAM_VISIT_OBJECT
+		(AUTO_ID,TEL_OBJECT_CODE,TEL_OBJECT_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{telObjectCode,jdbcType=CHAR},
+		#{telObjectDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteTelObjectById" parameterType="java.lang.String">
+		delete from
+		OPAS_PARAM_VISIT_OBJECT
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryTelObject" parameterType="java.lang.String"  resultType="java.lang.String">
+		select STATUS from OPAS_PARAM_VISIT_OBJECT where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateTelObjectWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.TelObject">
+		update OPAS_PARAM_VISIT_OBJECT
+		<set>
+			TEL_OBJECT_DESC = #{telObjectDesc,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 修改 -->
+	<update id="updateTelObject" parameterType="com.huaxia.opas.domain.sysparm.TelObject">
+		update OPAS_PARAM_VISIT_OBJECT
+		<set>
+			TEL_OBJECT_DESC = #{telObjectDesc,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 件数查询 -->
+	<select id="queryTelObjectCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_VISIT_OBJECT
+		<where>
+			<if test="telObjectCode != null and telObjectCode !='' ">
+				AND TEL_OBJECT_CODE LIKE '%${telObjectCode}%'
+			</if>
+			<if test="telObjectDesc != null and telObjectDesc !='' ">
+				AND TEL_OBJECT_DESC LIKE '%${telObjectDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+<!-- 查询 -->
+	<select id="queryTelObject1" parameterType="com.huaxia.opas.domain.sysparm.TelObject"
+		resultMap="TelObjectResultMap">
+		select
+		AUTO_ID,TEL_OBJECT_CODE,TEL_OBJECT_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_VISIT_OBJECT
+		<where>
+			<if test="telObjectCode != null and telObjectCode !='' ">
+				AND TEL_OBJECT_CODE LIKE '%${telObjectCode}%'
+			</if>
+			<if test="telObjectDesc != null and telObjectDesc !='' ">
+				AND TEL_OBJECT_DESC LIKE '%${telObjectDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by CRT_DATE
+	</select>
+<!-- 点击查询后，触发查询和排序功能 -->
+	<select id="queryTelObject2" parameterType="java.util.Map"
+		resultMap="TelObjectResultMap">
+		select
+		AUTO_ID,TEL_OBJECT_CODE,TEL_OBJECT_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_VISIT_OBJECT
+		<where>
+			<if test="telObjectCode != null and telObjectCode !='' ">
+				AND TEL_OBJECT_CODE LIKE '%${telObjectCode}%'
+			</if>
+			<if test="telObjectDesc != null and telObjectDesc !='' ">
+				AND TEL_OBJECT_DESC LIKE '%${telObjectDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field == ''">
+			order by CRT_DATE
+		</if>
+	</select>
+<!-- 查询是否重复 -->
+	<select id="queryTelObject3" parameterType="com.huaxia.opas.domain.sysparm.TelObject"
+		resultMap="TelObjectResultMap">
+		select
+		TEL_OBJECT_CODE
+		from OPAS_PARAM_VISIT_OBJECT
+		<where>
+			<if test="telObjectCode != null and telObjectCode !='' ">
+				AND TEL_OBJECT_CODE = #{telObjectCode}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BatchfileLowRiskInfo" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.sysparm.BatchfileLowRiskInfo" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="INPUT_TIME" property="inputTime" jdbcType="TIMESTAMP" />
+    <result column="INPUT_COUNTS" property="inputCounts" jdbcType="DECIMAL" />
+    <result column="OPERAT_CODE" property="operatCode" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="FILE_STATUS" property="fileStatus" jdbcType="CHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.sysparm.BatchfileLowRiskInfo" >
+    insert into OPAS_LOWRISK_BATCHFILE_INFO (ID, FILE_NAME, INPUT_TIME, 
+      INPUT_COUNTS, OPERAT_CODE, 
+      OPERATOR, REMARK, FILE_STATUS
+      )
+    values (#{id,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, 
+      #{inputCounts,jdbcType=DECIMAL}, #{operatCode,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{fileStatus,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.sysparm.BatchfileInfo" >
+    insert into OPAS_LIST_BATCHFILE_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="inputTime != null" >
+        INPUT_TIME,
+      </if>
+      <if test="inputCounts != null" >
+        INPUT_COUNTS,
+      </if>
+      <if test="fileType != null" >
+        FILE_TYPE,
+      </if>
+      <if test="operatCode != null" >
+        OPERAT_CODE,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="fileStatus != null" >
+        FILE_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="inputTime != null" >
+        #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputCounts != null" >
+        #{inputCounts,jdbcType=DECIMAL},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=CHAR},
+      </if>
+      <if test="operatCode != null" >
+        #{operatCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="fileStatus != null" >
+        #{fileStatus,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 名单库上传记录 -->
+  <select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.huaxia.opas.domain.sysparm.BatchfileInfo">
+     select 
+	     ID, 
+	     FILE_NAME, 
+	     INPUT_TIME, 
+	     INPUT_COUNTS, 
+	     FILE_TYPE, 
+	     OPERAT_CODE, 
+	     OPERATOR, 
+	     REMARK, 
+	     FILE_STATUS
+	  from OPAS_LIST_BATCHFILE_INFO
+	  where
+	  1=1
+	  <if test="fileName != null and fileName !='' ">
+	  AND  upper(FILE_NAME) LIKE upper('%${fileName}%')
+	  </if>
+	  <if test="fileType != null and fileType !='' ">
+	  AND FILE_TYPE = #{fileType}
+	  </if>
+	  <if test="inputTime != null and inputTime !='' " >
+      AND 
+			(INPUT_TIME 
+				BETWEEN 
+				#{inputTime}
+				AND
+				(select #{inputTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)	
+     </if>
+     order by INPUT_TIME desc
+  </select>
+  
+  <select id="selectAllCount" resultType="java.lang.Integer"
+		parameterType="com.huaxia.opas.domain.sysparm.BatchfileInfo">
+     select count(1) from OPAS_LIST_BATCHFILE_INFO
+	  where
+	  1=1
+	  <if test="fileName != null and fileName !='' ">
+	  AND  upper(FILE_NAME) LIKE upper('%${fileName}%')
+	  </if>
+	  <if test="fileType != null and fileType !='' ">
+	  AND FILE_TYPE = #{fileType}
+	  </if>
+	  <if test="inputTime != null and inputTime !='' " >
+      AND 
+			(INPUT_TIME 
+				BETWEEN 
+				#{inputTime}
+				AND
+				(select #{inputTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)	
+     </if>
+  </select>
+  
+  <insert id="insertRist" parameterType="com.huaxia.opas.domain.sysparm.BatchfileInfo" >
+    insert into OPAS_RIST_LIST_BATCHFILE_INFO (ID, FILE_NAME, INPUT_TIME, 
+      INPUT_COUNTS, FILE_TYPE, OPERAT_CODE, 
+      OPERATOR, REMARK, FILE_STATUS
+      )
+    values (#{id,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, 
+      #{inputCounts,jdbcType=DECIMAL}, #{fileType,jdbcType=CHAR}, #{operatCode,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{fileStatus,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertRistSelective" parameterType="com.huaxia.opas.domain.sysparm.BatchfileInfo" >
+    insert into OPAS_RIST_LIST_BATCHFILE_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="inputTime != null" >
+        INPUT_TIME,
+      </if>
+      <if test="inputCounts != null" >
+        INPUT_COUNTS,
+      </if>
+      <if test="fileType != null" >
+        FILE_TYPE,
+      </if>
+      <if test="operatCode != null" >
+        OPERAT_CODE,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="fileStatus != null" >
+        FILE_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="inputTime != null" >
+        #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputCounts != null" >
+        #{inputCounts,jdbcType=DECIMAL},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=CHAR},
+      </if>
+      <if test="operatCode != null" >
+        #{operatCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="fileStatus != null" >
+        #{fileStatus,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 风险名单上传记录 -->
+  <select id="selectRistAll" resultMap="BaseResultMap"
+		parameterType="com.huaxia.opas.domain.sysparm.BatchfileInfo">
+     select 
+	     ID, 
+	     FILE_NAME, 
+	     INPUT_TIME, 
+	     INPUT_COUNTS, 
+	     FILE_TYPE, 
+	     OPERAT_CODE, 
+	     OPERATOR, 
+	     REMARK, 
+	     FILE_STATUS
+	  from OPAS_RIST_LIST_BATCHFILE_INFO
+	  where
+	  1=1
+	  <if test="fileName != null and fileName !='' ">
+	  AND  upper(FILE_NAME) LIKE upper('%${fileName}%')
+	  </if>
+	  <if test="fileType !=null and fileType !=''">
+	  AND  FILE_TYPE = #{fileType}
+	  </if>
+	  <if test="inputTime != null and inputTime !='' " >
+      AND 
+			(INPUT_TIME 
+				BETWEEN 
+				#{inputTime}
+				AND
+				(select #{inputTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)	
+     </if>
+     order by INPUT_TIME desc
+  </select>
+  
+  <select id="selectRistAllCount" resultType="java.lang.Integer"
+		parameterType="com.huaxia.opas.domain.sysparm.BatchfileInfo">
+     select count(1) from OPAS_RIST_LIST_BATCHFILE_INFO
+	  where
+	  1=1
+	  <if test="fileName != null and fileName !='' ">
+	  AND  upper(FILE_NAME) LIKE upper('%${fileName}%')
+	  </if>
+	   <if test="fileType !=null and fileType !=''">
+	  AND  FILE_TYPE = #{fileType}
+	  </if>
+	  <if test="inputTime != null and inputTime !='' " >
+      AND 
+			(INPUT_TIME 
+				BETWEEN 
+				#{inputTime}
+				AND
+				(select #{inputTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)	
+     </if>
+  </select>
+   <!-- 查询创建用户 -->
+  <select id="selectUser" resultType="java.lang.String">
+       select OPERATOR  from(
+   select 
+	    OPERATOR
+	  from OPAS_LOWRISK_BATCHFILE_INFO
+     order by INPUT_TIME desc
+     ) where rownum = 1
+  </select>
+  <update id="updateTotalCount"	parameterType="java.util.Map">
+		update OPAS_LOWRISK_BATCHFILE_INFO
+		<set>
+			INPUT_COUNTS = #{total,jdbcType=DECIMAL},
+			REMARK = #{errorMessage,jdbcType=VARCHAR}
+		</set>
+		where id in (
+		 select id  from(
+   select 
+	    id
+	  from OPAS_LOWRISK_BATCHFILE_INFO
+     order by INPUT_TIME desc
+     ) where rownum = 1
+		)
+	</update>
+	 <update id="updateStatus"	parameterType="java.lang.String">
+		update OPAS_LOWRISK_BATCHFILE_INFO
+		<set>
+			FILE_STATUS = #{status,jdbcType=VARCHAR}
+		</set>
+		where id in (
+		 select id  from(
+   select 
+	    id
+	  from OPAS_LOWRISK_BATCHFILE_INFO
+     order by INPUT_TIME desc
+     ) where rownum = 1
+		)
+	</update>
+</mapper>

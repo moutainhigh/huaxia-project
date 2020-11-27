@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="EducationManage">
+
+	<resultMap id="EducationManagemet" type="com.huaxia.opas.domain.credit.EducationManagemet">
+		<result column="AUTO_ID" 		property="edu_autoId" 			jdbcType="VARCHAR" />
+		<result column="EDU_RULE_ID" 	property="edu_eduRuleId" 		jdbcType="VARCHAR" />
+		<result column="EDU_RULE_NAME" 	property="edu_eduRuleName" 		jdbcType="VARCHAR" />
+		<result column="CURR_STATUS" 	property="edu_eduCurrStatus" 	jdbcType="CHAR" />
+		<result column="CRT_USER" 		property="edu_crtUser" 			jdbcType="VARCHAR" />
+		<result column="CRT_TIME" 		property="edu_crtTime" 			jdbcType="DATE" />
+		
+		<result column="AUTO_MAX" 			property="set_autoMax" 			jdbcType="VARCHAR" />
+		<result column="MANUAL_MAX" 		property="set_manualMax" 		jdbcType="VARCHAR" />
+		<result column="TOTAL_MAX" 			property="set_totalMax" 		jdbcType="VARCHAR" />
+		<result column="AUTO_START_TIME" 	property="set_autoStartTime" 	jdbcType="VARCHAR" />
+		<result column="AUTO_END_TIME" 		property="set_autoEndTime" 		jdbcType="VARCHAR" />
+		<result column="MANUAL_START_TIME" 	property="set_manualStartTime" 	jdbcType="VARCHAR" />
+		<result column="MANUAL_END_TIME" 	property="set_manualEndTime" 	jdbcType="VARCHAR" />
+		<result column="BATH_TIME" 			property="set_bathTime" 		jdbcType="VARCHAR" />
+		<result column="CRT_DATE" 			property="set_crtDate" 			jdbcType="VARCHAR" />
+		<result column="CRT_USER" 			property="set_crtUser" 			jdbcType="VARCHAR"/>
+		
+		<result column="LIFEQUERY" 			property="lifeQuery" 			jdbcType="VARCHAR"/>
+		<result column="LIFEQUERYFLAG" 		property="lifeQueryFlag" 		jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<!--学历查询管理查询 -->
+	<select id="selectOpasEducationSetPage" parameterType="com.huaxia.opas.domain.credit.EducationManagemet" resultMap="EducationManagemet">
+		SELECT O.AUTO_ID,O.EDU_RULE_ID,O.EDU_RULE_NAME,O.CURR_STATUS,O.CRT_USER,O.CRT_TIME FROM OPAS_EDUCATION_SET O
+		WHERE 1=1 
+		<if test="edu_eduRuleId != null and edu_eduRuleId !='' "> AND O.EDU_RULE_ID LIKE '%${edu_eduRuleId}%'</if> 
+		<if test="edu_eduRuleName != null and edu_eduRuleName !='' "> AND O.EDU_RULE_NAME LIKE '%${edu_eduRuleName}%'</if> 
+		<if test="edu_eduCurrStatus != null and edu_eduCurrStatus !='' "> AND O.CURR_STATUS =#{edu_eduCurrStatus,jdbcType=CHAR}</if> 
+	</select>
+	
+	<!--学历查询管理总条数-->
+	<select id="selectOpasEducationSetCount" parameterType="com.huaxia.opas.domain.credit.EducationManagemet" resultType="java.lang.String">
+		SELECT COUNT(1) FROM OPAS_EDUCATION_SET O WHERE 1=1 
+		<if test="edu_eduRuleId != null and edu_eduRuleId !='' "> AND O.EDU_RULE_ID LIKE '%${edu_eduRuleId}%'</if> 
+		<if test="edu_eduRuleName != null and edu_eduRuleName !='' "> AND O.EDU_RULE_NAME LIKE '%${edu_eduRuleName}%'</if> 
+		<if test="edu_eduCurrStatus != null and edu_eduCurrStatus !='' "> AND O.CURR_STATUS =#{edu_eduCurrStatus,jdbcType=CHAR}</if> 
+	</select>	
+	
+	<!--删除 学历查询管理-->
+	<delete id="deleteOpasEducationSet" parameterType="java.lang.String" >
+    	DELETE FROM OPAS_EDUCATION_SET
+     	WHERE AUTO_ID = #{edu_autoId,jdbcType=VARCHAR}
+  	</delete>
+  	
+  	<!--修改 学历查询管理-->
+	<update id="updateOpasEducationSet" parameterType="com.huaxia.opas.domain.credit.EducationManagemet">
+		UPDATE OPAS_EDUCATION_SET
+		<set>
+ 		<if test="edu_eduRuleId != null and edu_eduRuleId !='' "> EDU_RULE_ID =#{edu_eduRuleId,jdbcType=VARCHAR},</if> 
+		<if test="edu_eduRuleName != null and edu_eduRuleName !='' "> EDU_RULE_NAME=#{edu_eduRuleName,jdbcType=VARCHAR},</if> 
+		<if test="edu_eduCurrStatus != null and edu_eduCurrStatus !='' "> CURR_STATUS =#{edu_eduCurrStatus,jdbcType=CHAR}</if> 
+		</set> 
+		<where>		  
+			 AUTO_ID = #{edu_autoId,jdbcType=VARCHAR}	 
+		</where>
+	</update>  	
+	
+	<!--添加 学历查询管理-->
+	<insert id="addOpasEducationSet" parameterType="com.huaxia.opas.domain.credit.EducationManagemet">
+		INSERT INTO OPAS_EDUCATION_SET
+		(AUTO_ID,EDU_RULE_ID,EDU_RULE_NAME,CURR_STATUS,CRT_USER,CRT_TIME)
+		values(
+			#{edu_autoId,jdbcType=VARCHAR},
+			#{edu_eduRuleId,jdbcType=VARCHAR},
+			#{edu_eduRuleName,jdbcType=VARCHAR},
+			#{edu_eduCurrStatus,jdbcType=CHAR},
+			#{edu_crtUser,jdbcType=VARCHAR},
+			#{edu_crtTime,jdbcType=DATE}							
+			)
+	</insert>  	
+	
+	<!--学历年限类型查询 -->
+	<select id="selectEducationLifeType" parameterType="java.lang.String"  resultMap="EducationManagemet">
+			SELECT COUNT(1) AS LIFEQUERY,CASE WHEN T.INCOMINGDATA_TYPE='1' THEN 'SD' ELSE 'ZD' END AS LIFEQUERYFLAG
+			FROM TASK_THIRD_PARTS_SUCCESS T WHERE T.TASK_TYPE='03' GROUP BY T.INCOMINGDATA_TYPE   
+	</select>
+	
+	
+	<!--保存 学历(自动、手动)年限 时间-->
+	<insert id="saveEducationLifeType" parameterType="com.huaxia.opas.domain.credit.EducationManagemet">
+		INSERT INTO OPAS_EDUBACK_MAXCOUNT 
+		(AUTO_ID,AUTO_MAX,MANUAL_MAX,TOTAL_MAX,AUTO_START_TIME,AUTO_END_TIME,MANUAL_START_TIME,MANUAL_END_TIME,BATH_TIME,CRT_DATE,CRT_USER)
+		values(
+			#{edu_autoId,jdbcType=VARCHAR},
+			#{set_autoMax,jdbcType=VARCHAR},
+			#{set_manualMax,jdbcType=VARCHAR},
+			#{set_totalMax,jdbcType=VARCHAR},
+			#{set_autoStartTime,jdbcType=VARCHAR},
+			#{set_autoEndTime,jdbcType=VARCHAR},	
+			#{set_manualStartTime,jdbcType=VARCHAR},
+			#{set_manualEndTime,jdbcType=VARCHAR},
+			#{set_bathTime,jdbcType=VARCHAR},
+			#{set_crtDate,jdbcType=VARCHAR},
+			#{set_crtUser,jdbcType=VARCHAR}											
+			)
+	</insert> 
+	
+	
+		<!--查询 学历本年查询上限数设置表-->  
+	<select id="selectOpasEdubackMaxcount" resultMap="EducationManagemet">
+			SELECT 
+				O.AUTO_ID,
+				O.AUTO_MAX,
+				O.MANUAL_MAX,
+				O.TOTAL_MAX,
+			 	AUTO_START_TIME,
+			 	AUTO_END_TIME,
+			 	MANUAL_START_TIME,
+				MANUAL_END_TIME,
+				BATH_TIME
+				FROM OPAS_EDUBACK_MAXCOUNT  O	
+	</select>
+	
+	
+	<!--删除 学历(自动、手动)年限 时间-->
+	<delete id="deleteEducationLifeType" >
+    	DELETE FROM OPAS_EDUBACK_MAXCOUNT
+  	</delete>	
+	
+</mapper>

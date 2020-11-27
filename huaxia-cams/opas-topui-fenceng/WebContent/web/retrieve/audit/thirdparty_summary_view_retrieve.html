@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>征信信息</title>
+<link href="../../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../../topui/topui.js"></script>
+<script type="text/javascript" src="../../../js/author/common.js"></script>
+<script type="text/javascript" src="../../../js/common/json2.js"></script>
+<script type="text/javascript">
+    var txt_identity_no="";//身份证号 
+	var pboc_cid = '{"cellphone":"cellphone","ccomp_phone":"cCompPhone", "resi_tel":"resiTel", "communication_addr":"communicationAddr", "query_req_time":"queryReqTime", "company":"company", "comp_addr":"compAddr", "frs_cred_crd_issue_mon":"frsCredCrdIssueMon", "pay_comp":"payComp", "pay_comp":"payComp", "info_upd_time":"infoUpdTime", "pay_status":"payStatus", "person_deposit_rate":"personDepositRate", "monthly_deposit":"monthlyDeposit"}';
+	var c_pboc = JSON.parse(pboc_cid);
+
+	function fnFillPBOC(o) {
+		$.each(c_pboc, function(n, v) {
+			$('#txt_' + n).textbox('setValue', eval('o.' + v));
+		});
+	}
+
+	var police_cid = '{"name":"name","identity_no":"identityNo","identity_no_check_rst":"identityNoCheckRst","old_name":"oldName","jgssx_home_prov_city":"jgssxHomeProvCity","srvs_location":"srvsLocation","birth_home_prov_city":"birthHomeProvCity"}';
+	var c_police = JSON.parse(police_cid);
+
+	function fnFillPolice(o) {
+		$.each(c_police, function(n, v) {
+			$('#txt_' + n).textbox('setValue', eval('o.' + v));
+		});
+	}
+	
+	var credit100_cid = '{"id_abnormal":"idAbnormal","id_bank_lost":"idBankLost","id_nbank_p2p_bad":"idNbankP2pBad","id_nbank_p2p_lost":"idNbankP2pLost","id_nbank_p2p_refuse":"idNbankP2pRefuse","id_court_bad":"idCourtBad","id_p2p_bad":"idP2pBad","cell_abnormal":"cellAbnormal","cell_bank_lost":"cellBankLost","cell_nbank_p2p_bad":"cellNbankP2pBad","cell_p2p_bad":"cellP2pBad"}';
+	var c_credit100 = JSON.parse(credit100_cid);
+
+	function fnFillCredit100(o) {
+		$.each(c_credit100, function(n, v) {
+			var value = '';
+			var v = eval('o.' + v);
+			if (v == '') {
+				value = '未命中';
+			} else if (v == '0') {
+				value = '本人直接命中';
+			} else if (v == '1') {
+				value = '一度关系命中';
+			} else if (v == '2') {
+				value = '二度关系命中';
+			}else{
+				value = v;
+			}
+			$('#txt_' + n).textbox('setValue', value);
+		});
+	}
+
+	var education_cid ='{"user_name":"userName","education_degree":"educationDegree","study_style":"studyStyle","education_approach":"dstudyStyle","graduate":"graduate","speciality_name":"specialityName","graduate_time":"graduateTime","study_result":"studyResult"}';
+	var c_education = JSON.parse(education_cid);
+
+	function fnFillEducation(o) {
+		$.each(c_education, function(n, v) {
+			$('#txt_' + n).textbox('setValue', eval('o.' + v));
+		});
+	} 
+	var ant_cid = '{"zm_score":"zmScore","ivs_score":"ivsScore","ant_name":"name","cert_no":"certNo","ant_mobile":"mobile","ant_address":"address","ant_type":"type"}';
+	var c_ant = JSON.parse(ant_cid);
+
+	function fnFillAnt(o) {
+		$.each(c_ant, function(n, v) {
+			$('#txt_' + n).textbox('setValue', eval('o.' + v));
+		});
+	}
+
+	var sid = [ 'pboc', 'police', 'ant', 'credit100', 'education' ];
+
+	function fnInitStyle(sid) {
+		$.each(sid, function(i, v) {
+			$('#' + v + '_summary_area table tr td:even').css('width', '140')
+					.css('text-align', 'right').css('padding-right', '10px')
+					.css('font', 'normal 12px Arial');
+		});
+	}
+
+	function fnLoadPBOC(appId) {
+		$cf.ajax({
+			url : '/opas-naps/pboc_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyPbocSummary;
+					var o = JSON.parse(result);
+					fnFillPBOC(o);
+				}
+			}
+		});
+	}
+
+	function fnLoadPolice(appId) {
+		$cf.ajax({
+			url : '/opas-naps/police_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyPoliceSummary;
+					var o = JSON.parse(result);
+					fnFillPolice(o);
+				}
+			}
+		});
+	}
+
+	function fnLoadCredit100(appId) {
+		$cf.ajax({
+			url : '/opas-naps/credit100_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyCredit100Summary;
+					var o = JSON.parse(result);
+					fnFillCredit100(o);
+				}
+			}
+		});
+	}
+
+	function fnLoadEducation(appId) {
+		$cf.ajax({
+			url : '/opas-naps/education_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyEducationSummary;
+					var o = JSON.parse(result);
+					fnFillEducation(o);
+				}
+			}
+		});
+	}
+	function fnLoadAnt(appId) {
+		$cf.ajax({
+			url : '/opas-naps/ant_summary_query.json',
+			data : {
+				'appId' : appId
+			},
+			onSuccess : function(response) {
+				if (response.RSP_BODY.success) {
+					var result = response.RSP_BODY.applyAntSummary;
+					var o = JSON.parse(result);
+					fnFillAnt(o);
+				}
+			}
+		});
+	}
+	function showDetail(str){ 
+		if(str=="police"){//公安摘要信息
+			txt_identity_no=$("#txt_identity_no").textbox('getValue');
+		}
+		window.open("thirdparty_"+str+"_view.html?appId="+appId,"_blank","channelmode=no,width=600,height=600,scrollbars=yes,resizable=yes,top=200");	
+	}
+</script>
+</head>
+<body style="padding:10px;">
+	<!-- 快速定位区 开始 -->
+	<div data-options="region:'north',title:'快速定位'" style="height: 20px; padding:10px;">
+	<a href="#A"class="easyui-linkbutton">人行摘要信息</a>
+	<a href="#B"class="easyui-linkbutton">公安摘要信息</a>
+	<a href="#C"class="easyui-linkbutton">蚂蚁摘要信息</a>
+	<a href="#D"class="easyui-linkbutton">百融摘要信息</a>
+	<a href="#E"class="easyui-linkbutton">学历摘要信息</a>
+	</div>
+	<div id="pboc_summary_area">
+		<fieldset>
+			<legend><span id="A">人行摘要信息</span></legend>
+			<table>
+				<tr>
+					<td>手机</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_cellphone" disabled="disabled" /></td>
+					<td>查询时间</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_query_req_time" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>住宅电话</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_resi_tel" disabled="disabled" /></td>
+					<td>单位电话</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_ccomp_phone" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>单位名称</td>
+					<td><input type="text" class="easyui-textbox" id="txt_company"
+						disabled="disabled" /></td>
+					<td>单位地址</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_comp_addr" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>通讯地址</td>
+					<td colspan="3"><input type="text" class="easyui-textbox"
+						id="txt_communication_addr" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>首张贷记卡发卡月份</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_frs_cred_crd_issue_mon" disabled="disabled" /></td>
+					<td>缴交单位</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_pay_comp" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>缴费状态</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_pay_status" disabled="disabled" /></td>
+					<td>更新时间</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_info_upd_time" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>缴交比例</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_person_deposit_rate" disa bled="disabled" /></td>
+					<td>缴交金额</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_monthly_deposit" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><a href=javascript:showDetail('detail_pboc');>查看详情</a></td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<div id="police_summary_area" class="area-show">
+		<fieldset>
+			<legend><span id="B">公安摘要信息</span></legend>
+			<table>
+				<tr>
+					<td>姓名</td>
+					<td><input type="text" class="easyui-textbox" id="txt_name"
+						disabled="disabled" /></td>
+					<td>证件号码</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_identity_no" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>增强公安查询状态</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_identity_no_check_rst" disabled="disabled" /></td>
+					<td>曾用名</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_old_name" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>申请人籍贯</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_jgssx_home_prov_city" disabled="disabled" /></td>
+					<td>行政区划</td>
+					<td><input type="text" class="easyui-textbox" id="txt_"
+						disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>服务处所</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_srvs_location" disabled="disabled" /></td>
+					<td>出生地</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_birth_home_prov_city" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><a href=javascript:showDetail('police');>查看详情</a></td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<div id="ant_summary_area" class="area-show">
+		<fieldset>
+			<legend><span id="C">蚂蚁摘要信息</span></legend>
+			<table>
+				<tr>
+					<td>芝麻分</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_zm_score" disabled="disabled" /></td>
+					<td>IVS分</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_ivs_score" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>姓名</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_ant_name" disabled="disabled" /></td>
+					<td>证件号</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_cert_no" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>手机号</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_ant_mobile" disabled="disabled" /></td>
+					<td>地址</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_ant_address" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>风险类型</td>
+					<td colspan="2"><input type="text" class="easyui-textbox"
+						id="txt_ant_type" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><a href=javascript:showDetail('ant');>查看详情</a></td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<div id="credit100_summary_area" class="area-show">
+		<fieldset>
+			<legend><span id="D">百融摘要信息</span></legend>
+			<table>
+				<tr>
+					<td>身份证检查中欺诈</td>
+					<td colspan="3"><input type="text" class="easyui-textbox"
+						id="txt_id_abnormal" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>失联</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_id_bank_lost" disabled="disabled" /></td>
+					<td>P2P欺诈</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_id_nbank_p2p_bad" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>P2P失联</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_id_nbank_p2p_lost" disabled="disabled" /></td>
+					<td>P2P拒绝</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_id_nbank_p2p_refuse" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>保险金欺诈</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_id_p2p_bad" disabled="disabled" /></td>
+					<td>法院不良</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_id_court_bad" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>手机检查中欺诈</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_cell_abnormal" disabled="disabled" /></td>
+					<td>保险金欺诈</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_cell_p2p_bad" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>失联</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_cell_bank_lost" disabled="disabled" /></td>
+					<td>P2P欺诈</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_cell_nbank_p2p_bad" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><a href=javascript:showDetail('credit100');>查看详情</a></td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<div id="education_summary_area" class="area-show">
+		<fieldset>
+			<legend><span id="E">学历摘要信息</span></legend>
+			<table>
+				<tr>
+					<td>姓名</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_user_name" disabled="disabled" /></td>
+					<td>学历</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_education_degree" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>学历类型</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_study_style" disabled="disabled" /></td>
+					<td>学习形式</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_education_approach" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>毕业院校</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_graduate" disabled="disabled" /></td>
+					<td>专业</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_speciality_name" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td>毕业时间</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_graduate_time" disabled="disabled" /></td>
+					<td>毕业结论</td>
+					<td><input type="text" class="easyui-textbox"
+						id="txt_study_result" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><a href=javascript:showDetail('education');>查看详情</a></td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<script type="text/javascript">
+	/* function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	} */
+	var url = location.href;
+	var appId = url.split("=")[1];
+		$(function() {
+		//	alert("gaohuiappId"+appId);
+			// 初始化页面样式
+			fnInitStyle(sid);
+			// 获取申请件信息
+			//var appId = GetQueryString("appId");
+			/* var parent = window.parent;
+			//var appId = parent.applyId.value;
+			var appId = "1523241990021511"; */
+			if (appId != '') {
+				appId = $.trim(appId);
+			}
+			// 加载人行摘要信息
+			fnLoadPBOC(appId);
+			// 加载公安摘要信息
+			fnLoadPolice(appId);
+			// 加载百融摘要信息
+			fnLoadCredit100(appId);//'1512241611P10141'
+			// 加载学历摘要信息
+			fnLoadEducation(appId);//'1234567891234565'
+			//加载蚂蚁摘要信息
+			fnLoadAnt(appId);//'1601240945P00101'
+
+		});
+	</script>
+</body>
+</html>

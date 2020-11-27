@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OpasReviewDecisionResult">
+
+	<resultMap id="opasReviewDecisionResultMap"
+		type="com.huaxia.opas.domain.decision.OpasReviewDecisionResult"><!-- 用户信息 -->
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="BATCH_CODE" property="batchCode" jdbcType="VARCHAR" />
+		<result column="INDUSTRY_CODE" property="industryCode"
+			jdbcType="VARCHAR" />
+		<result column="PROFESSION_CODE" property="professinonCode"
+			jdbcType="VARCHAR" />
+		<result column="AUDITOR" property="auditor" jdbcType="VARCHAR" />
+		<result column="AUDITOR_NAME" property="auditorName" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CURR_OPT_GROUP" property="currOptGroup"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<!--征信 组员工作完成量统计  -->
+	<select id="memberJobCompletCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct(substr(t.app_id,0,15)))
+		from  OPAS_TELCHECK_RESULT t inner join
+		opas_allot_apply_allot l on l.app_id = t.app_id and l.curr_node in ('03','04','05')
+		where t.crediter = #{auditor}
+		AND t.crt_date BETWEEN to_date(#{startTime},'yyyy-mm-dd')     
+		AND (to_date(#{endTime},'yyyy-mm-dd')+1 )
+	</select>
+	<!--征信 组员工作完成量统计  -->
+	<select id="memberJobCompletCountHis" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct(substr(l.app_id,0,15)))
+		from  opas_file_application_detail l inner join
+		OPAS_TELCHECK_RESULT t on t.app_id = l.app_id
+		where crediter = #{auditor}  and l.flag='2'
+		AND to_archive_time BETWEEN to_date(#{startTime},'yyyy-mm-dd')     
+		AND (to_date(#{endTime},'yyyy-mm-dd')+1 )
+	</select>
+	<!--审批征审合一归档  组员工作完成量统计  -->
+	<select id="memberJobCompletCountApprove" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct(substr(l.app_id,0,15)))
+		from  opas_file_application_detail l inner join
+		OPAS_BIZ_APPROVAL t on t.app_id = l.app_id
+		where approver = #{auditor}  and l.flag='2'
+		AND to_archive_time BETWEEN to_date(#{startTime},'yyyy-mm-dd')     
+		AND (to_date(#{endTime},'yyyy-mm-dd')+1 )
+	</select>
+	<!--审查 归档  组员工作完成量统计  -->
+	<select id="memberJobCheckup" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct(substr(l.app_id,0,15)))
+		from  opas_file_application_detail l inner join
+		OPAS_REVIEW_DECISION_RESULT t on t.app_id = l.app_id
+		where auditor = #{auditor}  and l.flag='2'
+		AND to_archive_time BETWEEN to_date(#{startTime},'yyyy-mm-dd')     
+		AND (to_date(#{endTime},'yyyy-mm-dd')+1 )
+	</select>
+	<!-- 审查 组员工作完成量统计 -->
+	<select id="memberJobCompletCountCheckup" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(distinct substr(APP_ID,1,15)) 
+		from OPAS_REVIEW_DECISION_RESULT 
+		where CRT_DATE BETWEEN to_date(#{startTime},'yyyy-mm-dd')     
+		AND (to_date(#{endTime},'yyyy-mm-dd')+1 )
+		AND  AUDITOR =#{auditor}
+	</select>
+	<!-- 录入环节批量标识件 wangdebin -->
+	<select id="countBatchCode"  parameterType="java.lang.String" resultType="java.lang.Integer"> 
+		select count(1) from OPAS_REVIEW_DECISION_RESULT 
+		where APP_ID  = #{_parameter}
+	</select> 
+	<insert id="insertOpasReviewDecisionResult" parameterType="com.huaxia.opas.domain.decision.OpasReviewDecisionResult">
+		insert into OPAS_REVIEW_DECISION_RESULT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">AUTO_ID,</if>
+			<if test="appId != null">APP_ID,</if>
+			<if test="batchCode != null">BATCH_CODE,</if>
+			<if test="industryCode != null">INDUSTRY_CODE,</if>
+			<if test="professinonCode != null">PROFESSION_CODE,</if>
+			<if test="auditor != null">AUDITOR,</if>
+			<if test="auditorName != null">AUDITOR_NAME,</if>
+			CRT_DATE,
+			<if test="crtUser != null">CRT_USER,</if>
+			<if test="currOptGroup != null">CURR_OPT_GROUP</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">#{autoId,jdbcType=VARCHAR},</if>
+			<if test="appId != null">#{appId,jdbcType=VARCHAR},</if>
+			<if test="batchCode != null">#{batchCode,jdbcType=CHAR},</if>
+			<if test="industryCode != null">#{industryCode,jdbcType=VARCHAR},</if>
+			<if test="professinonCode != null">#{professinonCode,jdbcType=VARCHAR},</if>
+			<if test="auditor != null">#{auditor,jdbcType=VARCHAR},</if>
+			<if test="auditorName != null">#{auditorName,jdbcType=VARCHAR},</if>
+			CURRENT_TIMESTAMP,
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			<if test="currOptGroup != null">#{currOptGroup,jdbcType=VARCHAR}</if>
+		</trim>
+	</insert>
+	
+	<update id="updateBatchCode" parameterType="com.huaxia.opas.domain.decision.OpasReviewDecisionResult">
+		update OPAS_REVIEW_DECISION_RESULT
+		<set>
+			BATCH_CODE = #{batchCode,jdbcType=CHAR},
+			INDUSTRY_CODE = #{industryCode,jdbcType=VARCHAR},
+			PROFESSION_CODE = #{professinonCode,jdbcType=VARCHAR},
+			AUDITOR = #{auditor,jdbcType=VARCHAR},
+			AUDITOR_NAME = #{auditorName,jdbcType=VARCHAR},
+			CRT_USER = #{crtUser,jdbcType=VARCHAR},
+			CRT_DATE = CURRENT_TIMESTAMP
+		</set>
+		where  APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	 <insert id="insertBatchCode" parameterType="java.util.List">
+  		<!-- <selectKey keyProperty="autoId" resultType="String" order="BEFORE">
+  				select replace(uuid(),'-','')
+  				from dual 
+  		</selectKey> -->
+		insert into  OPAS_REVIEW_DECISION_RESULT  
+		(AUTO_ID, APP_ID, BATCH_CODE, 
+	      INDUSTRY_CODE, PROFESSION_CODE, CRT_DATE, 
+	      CRT_USER
+	     )
+	  	<foreach collection="list" item="item" index="index" separator="union all" > 
+	      	(select
+	      		#{item.autoId,jdbcType=VARCHAR},
+	      		#{item.appId,jdbcType=VARCHAR},
+				#{item.batchCode,jdbcType=VARCHAR},
+				#{item.industryCode,jdbcType=VARCHAR},
+				#{item.professinonCode,jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				#{item.crtUser,jdbcType=VARCHAR}
+			from dual
+			)
+	    </foreach>
+	</insert>
+</mapper>

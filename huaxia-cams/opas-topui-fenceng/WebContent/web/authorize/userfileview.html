@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%">
+		<table id="tbFile" title="文档列表信息" class="easyui-datagrid"
+			style="width: 98%;height:440px"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-naps/fileViewSelect.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#div_No2'">
+			<thead frozen="true">
+				<tr>
+					<th field="fileId" width="10%" align="center" checkbox="true"></th>
+					<th field="fileName" width="35%">文档名称</th>
+					<th field="bigCategory" width="8%" align="center">文档所属大类</th>
+					<th field="smallCategory" width="8%" align="center">文档所属小类</th>
+					<!-- <th field="filePath" width="15%">文档路径</th>
+					<th field="rightControl" width="10%" align="center">所属权限</th> -->
+					<th field="uploadDate" width="12%" align="center" formatter="formatDate">创建日期</th>
+				    <th field="operatCode" width="8%" align="center">创建人工号</th>
+				    <th field="operatPerson" width="8%" align="center">创建人名称</th>
+					<th field="operate" width="10%" align="center"
+						data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="div_No2"
+			style="padding: 10px; text-align: center;">
+			<form id="seachPositionCodeForm">
+				<div id="seachCondion" class="area-search" style="padding: 10px;">
+					<form id="seachForm">
+						<table>
+							<tr>
+								<td>文档名称：</td>
+								<td><input class="easyui-textbox" name="fileName"
+									data-options="validType:'maxLength[12]'" style="width: 150px;" />
+								</td>
+								<td>文档所属小类：</td>
+								<td><input class="easyui-textbox" name="smallCategory"
+									data-options="validType:'maxLength[12]'" style="width: 150px;" />
+								</td>
+								<td>上传日期：</td>
+								<td><input class="easyui-datebox" id="" name="uploadDate" ></input></td>
+							</tr>
+						</table>
+					</form>
+					<div class="area-function">
+						<a href="javascript:common.searchTbl('seachPositionCodeForm','tbFile');" class="easyui-linkbutton" iconCls="icon-search">文档查询 </a>		
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+<script>
+	function formatOper(val, row, index) {
+		var fileName = row.fileName;
+		var swfname = fileName.substring(0, fileName.lastIndexOf("."))+".pdf";
+		//return "<a href=swfOnlineView.html?fileName="+swfname+"  target=_blank);>浏览文档</a>";
+		return "<a href='javascript:openControlPage(\""+swfname+"\")' >浏览文档</a>";
+	}
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	};
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	/** 打开控制页面 */
+	function openControlPage(fileName){
+		var path="swfOnlineView.html?fileName="+fileName;
+		window.open(path,"","resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-50));
+	}
+</script>

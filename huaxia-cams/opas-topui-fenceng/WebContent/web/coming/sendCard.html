@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>送发卡结果查询</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	//查询
+	function onSearch(obj){
+		var appId = $("#app_id").val();
+		if (appId==null) {
+			alert("请输入正确APPID!");
+			return;
+		}
+		$cf.ajax({
+			url : '/opas-naps/querySendCard.json', 
+			data : {
+				appId:appId
+			},onSuccess : function(data) {
+				var sendCard = data.RSP_BODY.sendCard;
+			
+				//$('#sendCardForm').form("load", sendCard);
+				$('#sendCard').val(sendCard);
+				
+			}
+		}); 
+	}
+	
+	
+	//转换数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			if(objValue.indexOf('"') != -1){
+				objValue = objValue.replace(/\"/g,"\\"+"\""); 
+			} 
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">查询</legend>
+	<form id="sendCardForm">
+		<table id="sendCardTable" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td>申请流水号:</td>
+	  			<td><input id="app_id" name="app_id" type="text" style="width:240px"></input></td>
+	  			<td><input onclick="onSearch('appId')" value="查询" type="button" class="alsp" style="width:100px;"/></td>
+			</tr>
+			<tr>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+			</tr>
+			<tr>
+				<td>发卡结果:</td>
+				<td><input id="sendCard" name="sendCard" type="text" style="width:240px"></input></td>
+				<td></td>
+			</tr>
+		</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

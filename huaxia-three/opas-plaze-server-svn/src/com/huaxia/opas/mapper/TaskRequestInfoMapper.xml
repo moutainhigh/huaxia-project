@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.TaskRequestInfoMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.TaskRequestInfo">
+		INSERT INTO TASK_REQUEST_INFO (
+			UUID,CRT_TIME,CRT_USER,APP_ID
+		) VALUES (
+			#{id, jdbcType = CHAR}, SYSDATE, 'SYSTEM', #{appId, jdbcType = CHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.huaxia.opas.domain.TaskRequestInfo">
+		UPDATE TASK_REQUEST_INFO
+		<set>
+			<if test="reqVehicle != null">REQ_VEHICLE = #{reqVehicle, jdbcType = VARCHAR},</if>
+			<if test="reqFico != null">REQ_FICO = #{reqFico, jdbcType = VARCHAR},</if>
+			<if test="reqPBOC != null">REQ_PBOC = #{reqPBOC, jdbcType = VARCHAR},</if>
+			<if test="reqPolice != null">REQ_POLICE = #{reqPolice, jdbcType = VARCHAR},</if>
+			<if test="reqEducation != null">REQ_EDUCATION = #{reqEducation, jdbcType = VARCHAR},</if>
+			<if test="reqBRZX != null">REQ_CREDIT100 = #{reqBRZX, jdbcType = VARCHAR},</if>
+			<if test="reqScoreOfZMXY != null">REQ_ANT_SCORE = #{reqScoreOfZMXY, jdbcType = VARCHAR},</if>
+			<if test="reqIvsOfZMXY != null">REQ_ANT_IVS = #{reqIvsOfZMXY, jdbcType = VARCHAR},</if>
+			<if test="reqRistListOfZMXY != null">REQ_ANT_RISKLIST = #{reqRistListOfZMXY, jdbcType = VARCHAR},</if>
+			<if test="reqMsc8005OfQHZX != null">REQ_QHZX_MSC8005 = #{reqMsc8005OfQHZX, jdbcType = VARCHAR},</if>
+			<if test="reqMsc8007OfQHZX != null">REQ_QHZX_MSC8007 = #{reqMsc8007OfQHZX, jdbcType = VARCHAR},</if>
+			<if test="reqMsc8036OfQHZX != null">REQ_QHZX_MSC8036 = #{reqMsc8036OfQHZX, jdbcType = VARCHAR},</if>
+			<if test="reqMsc8037OfQHZX != null">REQ_QHZX_MSC8037 = #{reqMsc8037OfQHZX, jdbcType = VARCHAR},</if>
+			<if test="reqMsc8075OfQHZX != null">REQ_QHZX_MSC8075 = #{reqMsc8075OfQHZX, jdbcType = VARCHAR},</if>
+			<if test="reqMsc8107OfQHZX != null">REQ_QHZX_MSC8107 = #{reqMsc8107OfQHZX, jdbcType = VARCHAR},</if>
+		</set>
+		WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</update>
+	
+</mapper>	

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="opas-allot-server" logger="slf4j"/>
+
+	<!-- 使用zookeeper注册中心暴露服务地址 <dubbo:registry address="N/A" />-->
+	<dubbo:registry address="${zookeeper_address}" />
+	<dubbo:consumer timeout="${dubbo_timeout}" retries="${dubbo_retries}"/>
+
+	<!-- 分件模式 -->
+	<dubbo:reference id="allotApplyService" interface="com.huaxia.opas.service.allot.AllotApplyService" />
+	<!-- 历史记录 -->
+	<dubbo:reference id="allotApplyHisService" interface="com.huaxia.opas.service.allot.AllotApplyHisService" />
+	<!-- 用户  组  关系   -->
+	<dubbo:reference id="allotCommonService" interface="com.huaxia.opas.service.allot.AllotCommonService" />
+	
+	<!-- 规则映射 -->
+	<dubbo:reference id="allotMappingRuleService" interface="com.huaxia.opas.service.allot.AllotMappingRuleService" />
+	<!-- 队列 -->
+	<dubbo:reference id="allotQueueService" interface="com.huaxia.opas.service.allot.AllotQueueService" />
+	<!-- 规则 -->
+	<dubbo:reference id="allotRuleService" interface="com.huaxia.opas.service.allot.AllotRuleService" />
+	<!-- 自动开关 -->
+	<dubbo:reference id="allotSwitchService" interface="com.huaxia.opas.service.allot.AllotSwitchService" />
+	<!-- 备注 -->
+	<dubbo:reference id="applyRemarkService" interface="com.huaxia.opas.service.apply.ApplyRemarkService" /> 
+	<!-- 与fico交互  -->
+	<dubbo:reference id="ficoServiceImp" interface="com.huaxia.opas.service.fico.FicoService" check="false" />
+	<dubbo:reference id="reviewDecisionService" interface="com.huaxia.opas.service.allot.ReviewDecisionService" /> 
+	<!-- 生命周期记录 -->
+	<dubbo:reference id="applyLifeCicleService" interface="com.huaxia.opas.service.apply.ApplyLifeCicleService" /> 
+	<!-- 审查批量拉动工作流 -->
+	<dubbo:reference id="bizInpApplService"	interface="com.huaxia.opas.service.apply.BizInpApplService" />
+	<!-- 集体电核注记 -->
+	<dubbo:reference id="teamPhoneService" interface="com.huaxia.opas.service.credit.TeamPhoneService"  />
+	<!-- 转移 回收  挂起  解挂  备注操作 -->
+	<dubbo:reference id="allotMethodService" interface="com.huaxia.opas.service.allot.AllotMethodService"  />
+	<!-- 质检叫停 -->
+	<dubbo:reference id="qualityCheckingService" interface="com.huaxia.opas.service.checking.QualityCheckingService"  />
+	<!-- 套卡查询 -->
+	<dubbo:reference id="sysButtonCommonService" interface="com.huaxia.opas.service.decision.SysButtonCommonService"  />
+</beans>

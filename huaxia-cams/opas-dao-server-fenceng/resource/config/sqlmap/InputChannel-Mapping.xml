@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="InputChannel">
+	
+	
+	<resultMap id="InputChannelResultMap" type="com.huaxia.opas.domain.decision.InputChannel">
+		<result column="time1" property="time1" jdbcType="VARCHAR" />
+		<result column="input_channel" property="inputChannel" jdbcType="VARCHAR" />
+		<result column="turn" property="turn" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ErrorCodeResultMap" type="com.huaxia.opas.domain.input.BizInpApplC1">
+		<result column="c1_hmadd1" property="c1Hmadd1" jdbcType="VARCHAR" />
+		<result column="c1_hmadd2" property="c1Hmadd2" jdbcType="VARCHAR" />
+		<result column="c1_hmadd3" property="c1Hmadd3" jdbcType="VARCHAR" />
+		<result column="c1_hmadd4" property="c1Hmadd4" jdbcType="VARCHAR" />
+		<result column="c1_coadd1" property="c1Coadd1" jdbcType="VARCHAR" />
+		<result column="c1_coadd2" property="c1Coadd2" jdbcType="VARCHAR" />
+		<result column="c1_coadd3" property="c1Coadd3" jdbcType="VARCHAR" />
+		<result column="c1_coadd4" property="c1Coadd4" jdbcType="VARCHAR" />
+		<result column="c1_coname" property="c1Coname" jdbcType="VARCHAR" />
+		<result column="c1_rename" property="c1Rename" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryInputChannel" parameterType="java.util.Map"
+		resultMap="InputChannelResultMap">
+		select input_channel,time1,turn from opas_input_crontab 
+	</select>
+	
+	<update id="updateInputChannel" parameterType="com.huaxia.opas.domain.decision.InputChannel" >
+	    update opas_input_crontab
+		<set>
+			<if test="time1 != null">
+				TIME1 = #{time1,jdbcType=VARCHAR},
+			</if>
+			<if test="turn != null">
+				TURN = #{turn,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where input_Channel = #{inputChannel,jdbcType=VARCHAR}
+	</update>
+	
+		
+	<select id="selectErrorCode" parameterType="java.util.Map"
+		resultMap="ErrorCodeResultMap">
+		select cc.c1_hmadd1,cc.c1_hmadd2,cc.c1_hmadd3,cc.c1_hmadd4,cc.c1_coadd1,cc.c1_coadd2,app_Id,
+       		   cc.c1_coadd3,cc.c1_coadd4,cc.c1_coname,cc.c1_rename 
+        from opas_biz_inp_appl_c1 cc where app_id =  #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<update id="updateErrorCode" parameterType="com.huaxia.opas.domain.input.BizInpApplC1">
+		update opas_biz_inp_appl_c1
+		<set>
+			<if test="c1Coadd1 != null">
+				C1_COADD1 = #{c1Coadd1,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Coadd2 != null">
+				C1_COADD2 = #{c1Coadd2,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Coadd3 != null">
+				C1_COADD3 = #{c1Coadd3,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Coadd4 != null">
+				C1_COADD4 = #{c1Coadd4,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Hmadd1 != null">
+				C1_HMADD1 = #{c1Hmadd1,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Hmadd2 != null">
+				C1_HMADD2 = #{c1Hmadd2,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Hmadd3 != null">
+				C1_HMADD3 = #{c1Hmadd3,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Hmadd4 != null">
+				C1_HMADD4 = #{c1Hmadd4,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Coname != null">
+				c1_coname = #{c1Coname,jdbcType=VARCHAR},
+			</if>
+			<if test="c1Rename != null">
+				c1_rename = #{c1Rename,jdbcType=VARCHAR},
+			</if>
+			
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<resultMap id="ApplicationDetailResultMap" type="com.huaxia.opas.domain.archive.FileAppDet" >
+    <result column="BACK_FLAG" property="backFlag" jdbcType="CHAR" />
+    <result column="ALREADY_SEND_FLAG" property="alreadySendFlag" jdbcType="CHAR" />
+    <result column="QUICK_CARD_INTERFACE_FLAG" property="quickCardInterfaceFlag" jdbcType="CHAR" />
+    <result column="FLAG" property="flag" jdbcType="CHAR" />
+    <result column="INTERFACE_4092_INVOKE_FLAG" property="interface4092InvokeFlag" jdbcType="CHAR" />
+    <result column="INTERFACE_4093_INVOKE_FLAG" property="interface4093InvokeFlag" jdbcType="CHAR" />
+  </resultMap>
+	
+	<select id="queryFileApplicationDetail" parameterType="java.lang.String"
+		resultMap="ApplicationDetailResultMap">
+		select flag,interface_4093_invoke_flag,already_send_flag,back_flag 
+		from opas_file_application_detail where app_id =  #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryOpas_file_success" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select describe
+		from opas_file_success where app_id =  #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryOpas_file_failed" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select reason
+		from opas_file_failed where app_id =  #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateEveryTable" parameterType="java.util.Map">
+		update ${table}
+		<set>
+			${tableId} = #{tableValue} 
+		</set>
+		where ${tableId2} = #{tableValue2} 
+	</update>
+	
+	<resultMap id="searchEveryTableResultMap" type="java.util.Map" >
+	    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+	    <result column="comments" property="comments" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="searchEveryTable" parameterType="java.lang.String"
+		resultMap="searchEveryTableResultMap">
+		select ss.table_name, ss.column_name, ss.comments
+		from user_col_comments ss where table_name =  #{tableName,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="searchEveryTableCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(column_name)
+		from user_col_comments
+		<where>
+			<if test="tableName != null">
+				AND table_name = #{tableName}
+			</if>
+		</where>
+	</select>
+	
+	<resultMap id="AllotInfoResultMap" type="com.huaxia.opas.domain.allot.AllotApplyAllot">
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="curr_status" property="currStatus" jdbcType="VARCHAR" />
+		<result column="del_status" property="delStatus" jdbcType="VARCHAR" />
+		<result column="curr_node" property="currNode" jdbcType="VARCHAR" />
+		<result column="syn_flag" property="synFlag" jdbcType="VARCHAR" />
+		<result column="back_flag" property="backFlag" jdbcType="VARCHAR" />
+		<result column="check_meuoflag" property="check_meuoFlag" jdbcType="VARCHAR" />
+		<result column="curr_opt_user" property="currOptUser" jdbcType="VARCHAR" />
+		<result column="curr_opt_group" property="currOptGroup" jdbcType="VARCHAR" />
+		<result column="curr_opt_queue" property="currOptQueue" jdbcType="VARCHAR" />
+		<result column="submit_status" property="submitStatus" jdbcType="VARCHAR" />
+		<result column="submit_type" property="submitType" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryAllotInfo" parameterType="java.util.Map" resultMap="AllotInfoResultMap">
+		select t.curr_status, t.del_status, t.curr_node, t.syn_flag, t.back_flag,app_id,
+			t.check_meuoflag,t.curr_opt_user,t.curr_opt_group,t.curr_opt_queue
+		from opas_allot_apply_allot t where app_id =  #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<update id="updateAllotInfo" parameterType="com.huaxia.opas.domain.allot.AllotApply">
+		update opas_allot_apply_allot
+		<set>
+			<if test="currStatus != null">
+				curr_status = #{currStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="backFlag != null">
+				back_flag = #{backFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="delStatus != null">
+				del_status = #{delStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="currNode != null">
+				curr_node = #{currNode,jdbcType=VARCHAR},
+			</if>
+			<if test="synFlag != null">
+				syn_flag = #{synFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="check_meuoFlag != null">
+				check_meuoflag = #{check_meuoFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="currOptUser != null">
+				curr_opt_user = #{currOptUser,jdbcType=VARCHAR},
+			</if>
+			<if test="currOptGroup != null">
+				curr_opt_group = #{currOptGroup,jdbcType=VARCHAR},
+			</if>
+			<if test="currOptQueue != null">
+				curr_opt_queue = #{currOptQueue,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<select id="queryYsAllotInfo" parameterType="java.util.Map" resultMap="AllotInfoResultMap">
+		select t.curr_status, t.del_status, t.curr_node, t.syn_flag,t.app_id,t.submit_status,t.submit_type,
+			t.curr_opt_user
+		from ys_allot_apply_allot t where app_id =  #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<update id="updateYsAllotInfo" parameterType="com.huaxia.opas.domain.allot.AllotApply">
+		update ys_allot_apply_allot
+		<set>
+			<if test="currStatus != null">
+				curr_status = #{currStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="delStatus != null">
+				del_status = #{delStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="currNode != null">
+				curr_node = #{currNode,jdbcType=VARCHAR},
+			</if>
+			<if test="synFlag != null">
+				syn_flag = #{synFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="submitStatus != null">
+				submit_status = #{submitStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="submitType != null">
+				submit_type = #{submitType,jdbcType=VARCHAR},
+			</if>
+			<if test="currOptUser != null">
+				curr_opt_user = #{currOptUser,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryBreakFqz" resultType="java.lang.String">
+			select app_id from camsonline.opas_test_ydj 
+		</select>
+		
+	<select id="updateBreakFqz" parameterType="java.util.Map">
+		update  camsonline.opas_test_ydj  
+		<set>
+			<if test="app_id != null">
+				app_id = #{app_id,jdbcType=VARCHAR},
+			</if>
+		</set>
+	</select>
+	
+		<resultMap id="queryRepeatDataAppidResultMap" type="java.util.Map" >
+	    <result column="app_id" property="appid" jdbcType="VARCHAR" />
+	    <result column="tablename" property="tablename" jdbcType="VARCHAR" />
+	</resultMap>
+		
+	<select id="queryRepeatDataAppid" parameterType="java.util.Map"
+		resultMap="queryRepeatDataAppidResultMap">
+		select app_id,'opas_fico_sd_blaze' tablename from camsonline.opas_fico_sd_blaze 
+		where app_id = #{queryAppid,jdbcType=VARCHAR}
+		 union select app_id,'opas_fico_ydj_blaze' tablename from camsonline.opas_fico_ydj_blaze
+		 where app_id = #{queryAppid,jdbcType=VARCHAR} 
+		 
+	</select>
+	<select id="queryRepeatDataNoAppid" parameterType="java.util.Map"
+		resultMap="queryRepeatDataAppidResultMap">
+	select a.app_id, 'opas_fico_sd_blaze' tablename　from camsonline.opas_fico_sd_blaze a
+ where a.app_id in
+       (select t.subject_
+          from (select p.subject_,
+                       a.node_name_,
+                       ROW_NUMBER() over(partition by a.hproci_ order by a.start_ desc) as row_sort
+                  from topbpm.topbpm_j_process p
+                  join topbpm.topbpm_j_activity a on p.dbid_ = a.hproci_
+                 where p.status_ = 512 and p.subject_ like to_char(sysdate,'YY')||'%') t
+         where t.row_sort = 1
+           and node_name_   = 'blaze决策1')
+           union
+	select a.app_id　,'opas_fico_ydj_blaze' from camsonline.opas_fico_ydj_blaze a
+	 where a.app_id in
+	       (select t.subject_
+	          from (select p.subject_,
+	                       a.node_name_,
+	                       ROW_NUMBER() over(partition by a.hproci_ order by a.start_ desc) as row_sort
+	                  from topbpm.topbpm_j_process p
+	                  join topbpm.topbpm_j_activity a on p.dbid_ = a.hproci_
+	                 where p.status_ = 512
+	                 and p.subject_ like to_char(sysdate,'YY')||'%') t
+	         where t.row_sort = 1
+	           and node_name_ = 'blaze决策1')
+	           </select>
+	<select id="queryRepeatDataAppidCountbzk" parameterType="java.util.Map"
+		resultType="int">
+		select count(1) from  camsonline.opas_fico_sd_blaze 
+		where app_id = #{queryAppid,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryRepeatDataAppidCountydj" parameterType="java.util.Map"
+		resultType="int">
+		 select count(1)  from camsonline.opas_fico_ydj_blaze
+		 where app_id = #{queryAppid,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateAppidbzk" parameterType="java.util.Map">
+		update camsonline.opas_fico_sd_blaze
+		<set>
+			
+				app_id = #{targappid,jdbcType=VARCHAR},
+			
+		</set>
+		where APP_ID = #{appid,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateAppidydj" parameterType="java.util.Map">
+		update camsonline.opas_fico_ydj_blaze
+		<set>
+			
+				app_id = #{targappid,jdbcType=VARCHAR},
+			
+		</set>
+		where APP_ID = #{appid,jdbcType=VARCHAR}
+	</update>
+	
+	<resultMap id="queryOpasBizInpApplErrResultMap" type="com.huaxia.opas.domain.input.BizInpApplErr" >
+	    <result column="error_reason" property="errReason" jdbcType="VARCHAR" />
+	    <result column="crt_time" property="crtTime" jdbcType="TIMESTAMP" />
+	    <result column="inside_app_no" property="insideAppNo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<select id="queryOpasBizInpApplErrList" parameterType="com.huaxia.opas.domain.input.BizInpApplErr" resultMap="queryOpasBizInpApplErrResultMap">
+		select error_reason,crt_time,inside_app_no from opas_biz_inp_appl_err where inside_app_no = #{insideAppNo,jdbcType=VARCHAR} order by crt_time desc 
+	</select>
+	
+	<select id="queryOpasBizInpApplErrCount" parameterType="com.huaxia.opas.domain.input.BizInpApplErr" resultType="java.lang.Integer">
+		select count(*) 
+		from opas_biz_inp_appl_err where inside_app_no = #{insideAppNo,jdbcType=VARCHAR}
+	</select>
+	
+	<resultMap id="taskFicoFraudResultMap" type="java.util.Map" >
+	    <result column="APP_ID" property="app_id" jdbcType="VARCHAR" />
+	    <result column="APPID" property="appid" jdbcType="VARCHAR" />
+	    <result column="TASK_TYPE" property="taskType" jdbcType="VARCHAR" />
+	    <result column="REQUEST_TYPE" property="requestType" jdbcType="VARCHAR" />
+	    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+	    <result column="NODE_ID" property="nodeid" jdbcType="VARCHAR" />
+	    <result column="PROCESS_ID" property="processid" jdbcType="VARCHAR" />
+	    <result column="QUICK_FLAG" property="quickFlag" jdbcType="VARCHAR" />
+	    <result column="REQUEST_NUM" property="requestNum" jdbcType="VARCHAR" />
+	    <result column="FAILURE_NUM" property="failureNum" jdbcType="VARCHAR" />
+	    <result column="UPD_TIME" property="updTime" jdbcType="VARCHAR" />
+	    <result column="EXPMESSAGE" property="expMessage" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryTaskFicoFraudAppid" parameterType="java.util.Map" resultMap="taskFicoFraudResultMap">
+		SELECT  A.APP_ID, A.APP_ID APPID,A.TASK_TYPE,A.REQUEST_TYPE,A.STATUS,A.NODE_ID,
+		A.PROCESS_ID,A.QUICK_FLAG,A.REQUEST_NUM,A.FAILURE_NUM,to_char(A.UPD_TIME,'yyyy-mm-dd hh24:mi:ss') UPD_TIME, '查看' EXPMESSAGE <!-- ,B.EXCEPTION -->
+		FROM TASK_FICO_FRAUD_INFO A <!-- LEFT JOIN TASK_FICO_FRAUD_INFO_EXCEPTION B ON A.APP_ID = B.APP_ID  -->
+		<where>
+			<if test="appid != null and appid !='' ">
+				AND A.APP_ID = #{appid}
+			</if>
+			<if test="taskType != null and taskType !='' ">
+				AND A.TASK_TYPE = #{taskType}
+			</if>
+			<if test="requestType != null and requestType !='' ">
+				AND A.REQUEST_TYPE = #{requestType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND A.STATUS = #{status}
+			</if>
+			<if test="quickFlag != null and quickFlag !='' ">
+				AND A.QUICK_FLAG = #{quickFlag}
+			</if>
+		</where> 
+		ORDER BY A.UPD_TIME DESC, A.Failure_Num DESC
+	</select>
+	<resultMap id="topbpmExpMessageMap" type="java.util.Map">
+		<result column="EXCEPTION" property="exception" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>
+	
+	<select id="queryTopbpmExpMessageDetail" resultMap="topbpmExpMessageMap">
+		SELECT e.EXCEPTION   FROM TASK_FICO_FRAUD_INFO_EXCEPTION  e where e.app_id = #{app_id}
+	</select>
+	<insert id="insertTaskFicoFraudAppid" parameterType="java.util.Map">
+		insert into camsonline.TASK_FICO_FRAUD_INFO
+		(app_id,task_type,request_type,status,node_id,process_id,quick_flag,
+		request_num,failure_num,crt_time,upd_time,crt_user,upd_user)
+		values (
+		#{appid_},#{taskType_},#{requestType_},#{status_},#{nodeid_},#{processid_},#{quickFlag_},
+		0,0,SYSDATE,SYSDATE,'human','human')
+	</insert>
+	
+	<update id="updatefqzficoSingleOrBatch" parameterType="java.util.Map">
+		update camsonline.TASK_FICO_FRAUD_INFO
+		<set>
+				failure_num = 0, upd_time = SYSDATE, upd_user = 'human'
+				
+		</set>
+		where APP_ID = #{appid,jdbcType=VARCHAR}
+	</update>
+	<select id="queryTaskFicoFraudAppidCount" parameterType="java.util.Map"
+		resultType="int">
+		select count(1) from  camsonline.TASK_FICO_FRAUD_INFO 
+		 
+		<where>
+			<if test="appid_ != null and appid_ !='' ">
+			and	app_id = #{appid_,jdbcType=VARCHAR}
+			</if>
+			</where>
+	</select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Opasbizzmscordata">
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.rule.Opasbizzmscordata">
+    <result column="INSIDE_APP_NO" jdbcType="VARCHAR" property="insideAppNo" />
+    <result column="BIZ_NO" jdbcType="VARCHAR" property="bizNo" />
+    <result column="ZM_SCORE" jdbcType="VARCHAR" property="zmScore" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_DATE" jdbcType="DATE" property="crtDate" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_DATE" jdbcType="DATE" property="lstUpdDate" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="BATCH_DATE" jdbcType="DATE" property="batchDate" />
+    <result column="REC_STATUS" jdbcType="VARCHAR" property="recStatus" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+  </resultMap>
+  
+  
+  <select id="selectByExample" parameterType="com.huaxia.opas.domain.rule.Opasbizinpapplc1" resultMap="BaseResultMap">
+    select  
+     INSIDE_APP_NO, BIZ_NO, ZM_SCORE, CRT_TIME, CRT_DATE, CRT_USER, LST_UPD_TIME, LST_UPD_DATE, 
+    LST_UPD_USER, BATCH_DATE, REC_STATUS, APP_ID
+     from OPAS_BIZ_ZM_SCOR_DATA
+      where  APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.rule.Opasbizzmscordata">
+    insert into OPAS_BIZ_ZM_SCOR_DATA (INSIDE_APP_NO, BIZ_NO, ZM_SCORE, 
+      CRT_TIME, CRT_DATE, CRT_USER, 
+      LST_UPD_TIME, LST_UPD_DATE, LST_UPD_USER, 
+      BATCH_DATE, REC_STATUS, APP_ID
+      )
+    values (#{insideAppNo,jdbcType=VARCHAR}, #{bizNo,jdbcType=VARCHAR}, #{zmScore,jdbcType=VARCHAR}, 
+      #{crtTime,jdbcType=TIMESTAMP}, #{crtDate,jdbcType=DATE}, #{crtUser,jdbcType=VARCHAR}, 
+      #{lstUpdTime,jdbcType=TIMESTAMP}, #{lstUpdDate,jdbcType=DATE}, #{lstUpdUser,jdbcType=VARCHAR}, 
+      #{batchDate,jdbcType=DATE}, #{recStatus,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}
+      )
+  </insert>
+ 
+</mapper>

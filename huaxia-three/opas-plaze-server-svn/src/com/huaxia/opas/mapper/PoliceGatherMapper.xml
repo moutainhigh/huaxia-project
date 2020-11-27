@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PoliceGatherMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_BIZ_PUBSEC_GATHER (
+			APP_ID,IDENTITY_NO,IDENTITY_NO_CHECK_RST,NAME,NAME_CHECK_RST,OLD_NAME,OLD_NAME_RST,GENDER,GENDER_RST,
+			NATIONALITY,NATIONALITY_RST,BIRTH_DAY,BIRTH_DAY_RST,BELONG_HOME_PROV_CITY,BELONG_HOME_PROV_CITY_RST,
+			BIRTH_HOME_PROV_CITY,BIRTH_HOME_PROV_CITY_RST,JGSSXHOME_PROV_CITY,JGSSXHOME_PROV_CITY_RST,
+			MARITAL_STATUS,MARITAL_STATUS_RST,ADDRESS,ADDRESS_RST,PCSMC,PCSMC_RST,SRVS_LOCATION,SRVS_LOCATION_RST,
+			EDU_DEGREE,EDU_DEGREE_RST,PHOTO,
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{gmsfhm, jdbcType = VARCHAR},
+			#{result_gmsfhm, jdbcType = VARCHAR},
+			#{xm, jdbcType = VARCHAR},
+			#{result_xm, jdbcType = VARCHAR},
+			#{cym, jdbcType = VARCHAR},
+			#{result_cym, jdbcType = VARCHAR},
+			#{xb, jdbcType = VARCHAR},
+			#{result_xb, jdbcType = VARCHAR},
+			#{mz, jdbcType = VARCHAR},
+			#{result_mz, jdbcType = VARCHAR},
+			#{csrq, jdbcType = VARCHAR},
+			#{result_csrq, jdbcType = VARCHAR},
+			#{ssssxq, jdbcType = VARCHAR},
+			#{result_ssssxq, jdbcType = VARCHAR},
+			#{csdssx, jdbcType = VARCHAR},
+			#{result_csdssx, jdbcType = VARCHAR},
+			#{jgssx, jdbcType = VARCHAR},
+			#{result_jgssx, jdbcType = VARCHAR},
+			#{hyzk, jdbcType = VARCHAR},
+			#{result_hyzk, jdbcType = VARCHAR},
+			#{zz, jdbcType = VARCHAR},
+			#{result_zz, jdbcType = VARCHAR},
+			#{pcsmc, jdbcType = VARCHAR},
+			#{result_pcsmc, jdbcType = VARCHAR},
+			#{fwcs, jdbcType = VARCHAR},
+			#{result_fwcs, jdbcType = VARCHAR},
+			#{whcd, jdbcType = VARCHAR},
+			#{result_whcd, jdbcType = VARCHAR},
+			#{xp, jdbcType = CLOB},
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+	
+	<insert id="insertFailure" parameterType="java.util.Map">
+		INSERT INTO OPAS_BIZ_PUBSEC_GATHER (
+			APP_ID,,ERROR_CODE,ERROR_DESC,ERRORMESAGECOL,DN1,DES1,DN2,DES2,DN,ERRORMESAGE,
+			CRT_TIME,CRT_USER)
+		VALUES (
+			#{appId, jdbcType = CHAR},
+			#{errorCode, jdbcType = VARCHAR},
+			#{errorDesc, jdbcType = VARCHAR},
+			#{errorMessageCol, jdbcType = VARCHAR},
+			#{dn1, jdbcType = VARCHAR},
+			#{des1, jdbcType = VARCHAR},
+			#{dn2, jdbcType = VARCHAR},
+			#{des2, jdbcType = VARCHAR},
+			#{dn, jdbcType = VARCHAR},
+			#{errorMessage, jdbcType = VARCHAR},
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+	
+	<select id="selectCountByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		  FROM OPAS_BIZ_PUBSEC_GATHER T1, OPAS_BIZ_INP_APPL_C1 T2
+		 WHERE T1.APP_ID = T2.APP_ID
+		   AND T1.APP_ID = #{appId, jdbcType = CHAR}
+	</select>
+	
+	<select id="selectCountByCertNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		  FROM OPAS_BIZ_PUBSEC_GATHER T1, OPAS_BIZ_INP_APPL_C1 T2
+		 WHERE T1.APP_ID = T2.APP_ID
+		   AND T2.C1_IDNBR = #{certNo, jdbcType = VARCHAR}
+	</select>
+
+</mapper>

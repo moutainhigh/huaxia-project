@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+
+	<div>
+		<form id="seachRepeatCodeForm">
+			<table >
+				<tr>		
+							<td>申请件编号:</td>
+							<td><input type="text" class="easyui-textbox"
+								id="queryAppId" name="queryAppId" /></td>
+							<td><a href="javascript:void(0);" class="easyui-linkbutton" id="btnCurrQuery">查询 </a>
+						    </td>  
+						    <td><a href="javascript:void(0);" class="easyui-linkbutton" id="batchUp">批量更改 </a>
+						    </td>  
+					
+				</tr>
+			</table>
+		</form>
+		
+	</div>
+	<table id="tblInfo" title="重复条码" class="easyui-datagrid"
+		style="width: 98%;height:670px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[15,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="code" width="10%" align="center" checkbox="true">选择</th>
+				<th field="appid" width="20%" align="center" >申请件编号</th>
+				<th field=tablename width="20%"  align="center" >表名</th>
+				<!-- <th field="solve" width="15%"  align="center" data-options="formatter:formatSolve">是否解决</th> -->
+				<th field="operate" width="15%"  align="center" data-options="formatter:formatOper">操作</th>
+			</tr>
+		</thead>
+	</table>
+	
+</body>
+<script>
+		 var tblInfo = $("#tblInfo");
+		var url = location.href;
+	 	$(function(){
+			//动态获取 Url和appId
+			
+			var opts = tblInfo.datagrid("options");
+			opts.url = '/opas-naps/queryRepeatDataAppid.json';
+			var jsonFrom=$('#seachRepeatCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			tblInfo.datagrid("reload",jsondata);
+		});  
+		
+	/* 	function formatSolve(val,row,index){//0:未解决 1:已解决
+			if(row.solve=="0"){
+				return "未解决";
+			}
+			if(row.solve=="1"){
+				return "已解决";
+			}
+		} */
+		
+		function formatOper(val, row, index) {
+			return "&nbsp;<a href=javascript:resolveExcept('"+row.appid+"','1');>更改</a>&nbsp;<a href=javascript:resolveExcept('"+row.appid+"','0');>还原</a>";
+		}
+		$('#btnCurrQuery').click(function() {
+			var queryAppId = $("#queryAppId").val();
+			if(queryAppId != null && queryAppId.trim != ""){
+			
+			//表单序列化
+			var jsonFrom=$('#seachRepeatCodeForm').serializeArray();
+			var jsondata =overTrim(jsonFrom);
+			//动态加载url
+			$("#tblInfo").datagrid('options').url='/opas-naps/queryRepeatDataAppid.json';
+			$("#tblInfo").datagrid('load', jsondata);
+			}
+		}); 
+		function overTrim(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value.trim();
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+	}
+		//更改
+		function resolveExcept(appid,flag) {
+			$cf.ajax({
+				url : "/opas-naps/resolveExcept.json",
+				data : {
+					appid:appid,flag:flag
+				},
+				onSuccess : function(data) {
+					if (data.RSP_BODY.success) {
+						var msg = data.RSP_BODY.msg;
+						alert(msg);
+						//表单序列化
+						var jsonFrom=$('#seachRepeatCodeForm').serializeArray();
+						var jsondata =overTrim(jsonFrom);
+						//动态加载url
+						$("#tblInfo").datagrid('options').url='/opas-naps/queryRepeatDataAppid.json';
+						$("#tblInfo").datagrid('load', jsondata);
+					} else {
+						$.messager.alert("操作提示", "更改失败:" + data.RSP_BODY.exMsg, "error");
+						onConcle("winEdit");
+						return;
+					}
+				}
+
+			});
+		}
+		$('#batchUp').click(function() {
+			batchupdate();
+		});
+		//批量更改
+		function batchupdate() {
+			var orgObj = tblInfo.datagrid("getChecked");
+			if(orgObj.length<=0){
+				$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+				return;			
+			}
+			var ids = new Array();
+			for(var i=0; i<orgObj.length; i++){
+				ids.push(orgObj[i].appid);
+			}
+			$.messager.confirm(
+				'请您确认',
+				'确定要批量更改吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/batchResolveExcept.json",
+							data : {"code":ids},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.success) {
+									top.$cf.showMsg("批量更改成功!");
+									tblInfo.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "批量更改失败:" + data.RSP_BODY.exMsg, "error");
+								}
+							}
+						});
+					}
+				});
+		}
+</script>

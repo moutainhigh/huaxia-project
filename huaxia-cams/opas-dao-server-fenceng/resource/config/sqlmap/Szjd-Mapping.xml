@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Szjd">
+ <resultMap id="SzjdInfoMap" type="java.util.Map">
+    <result column="CRT_TIME" javaType="java.lang.String" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="RESULT_CODE" jdbcType="VARCHAR" property="resultCode" />
+    <result column="RESULT_DESC" jdbcType="VARCHAR" property="resultDesc" />
+    <result column="ORIGINATE_ORG_CODE" jdbcType="VARCHAR" property="originateOrgCode" />
+    <result column="ORIGINATE_USER_CODE" jdbcType="VARCHAR" property="originateUserCode" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="ID_TYPE" jdbcType="VARCHAR" property="idType" />
+    <result column="ID_NUM" jdbcType="VARCHAR" property="idNum" />
+    <result column="QUERY_REASON" jdbcType="VARCHAR" property="queryReason" />
+    <result column="SERVICE_CODE" jdbcType="VARCHAR" property="serviceCode" />
+    <result column="PRODUCT_DATE" jdbcType="VARCHAR" property="productDate" />
+    <result column="RESULT_TYPE" jdbcType="VARCHAR" property="resultType" />
+    <result column="SCORE" jdbcType="VARCHAR" property="score" />
+    <result column="FACTOR_NUM" jdbcType="VARCHAR" property="factorNum" />
+    <result column="FACTOR1" jdbcType="VARCHAR" property="factor1" />
+    <result column="FACTOR2" jdbcType="VARCHAR" property="factor2" />
+    <result column="FACTOR3" jdbcType="VARCHAR" property="factor3" />
+    <result column="FACTOR4" jdbcType="VARCHAR" property="factor4" />
+    <result column="FACTOR5" jdbcType="VARCHAR" property="factor5" />
+    <result column="POSITION" jdbcType="VARCHAR" property="position" />
+    <result column="SCORE_DATE" jdbcType="VARCHAR" property="scoreDate" />
+  </resultMap>
+	
+  <select id="selectSzjdInfoByAppId" parameterType="java.lang.String" resultMap="SzjdInfoMap">
+		select  CRT_TIME,CRT_USER,RESULT_CODE,RESULT_DESC,ORIGINATE_ORG_CODE,ORIGINATE_USER_CODE,USER_NAME,ID_TYPE,ID_NUM,QUERY_REASON,SERVICE_CODE,PRODUCT_DATE,RESULT_TYPE,SCORE,FACTOR_NUM,FACTOR1,FACTOR2,FACTOR3,FACTOR4,FACTOR5,POSITION,SCORE_DATE  from bank_szjd_data  where app_id = #{appId}
+  </select>
+</mapper>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+	em {
+		color: #FF0000;
+		padding: 5px;
+		vertical-align: middle;
+	}
+</style>
+</head>
+<body>
+	<!-- 增加滚轮设置 -->
+	<div
+		style="margin: 2px; width: 100%; height: 600px; overflow-y: scroll;">
+		<table id="tblBusiness" title="网申合作商户维护" class="easyui-datagrid"
+			style="width: 98%; height: 100%"
+			data-options="selectOnCheck:false,checkOnSelect:false,pageSize:20,pageList:[15,20,50,200],rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,
+			url:'/opas-naps/queryBusinessList.json',loadMsg:'数据加载中.....',
+			method:'post',toolbar:'#positionCodeCondion'">
+			<thead frozen="true">
+				<tr>
+					<th field="businessID" width="15%" align="center" checkbox="true">Id</th>
+					<th field="businessLogo" width="5%" align="left">渠道标识</th>
+					<th field="businessNumber" width="5%" align="left">公司编码</th>
+					<th field="businessName" width="22%" align="center">公司名称</th>
+					<th field="moduleNumber" width="10%" align="left">模块编码</th>
+					<th field="moduleName" width="9%" align="left">模块名称</th>
+					<th field="status" width="5%" align="left" formatter="formatStatus">启停状态</th>
+				</tr>
+			<thead>
+				<tr>
+					<th field="rcdSrc" width="9%" align="left" formatter="formatRcdSrc">推荐来源</th>
+					<th field="platType" width="9%" align="left" formatter="formatPlatType">平台类型</th>
+					<th field="coprType" width="9%" align="left" formatter="formatCoprType">合作类型</th>
+					<th field="platRiskLvl" width="9%" align="left" formatter="formatPlatRiskLvl">平台风险层级</th>
+					<th field="interfaceMode" width="9%" align="left" formatter="formatInterfaceMode">接口模式</th>
+					<th field="sceneFileDNLink" width="9%" align="left">场景备案域名链接</th>
+					<th field="blockingThreshold" width="9%" align="left">阻断阈值</th>
+					<th field="blockingSwitch" width="9%" align="left" formatter="formatBlockingSwitchStatus">阻断开关</th>
+					<th field="crtDate" width="10%" align="center"
+						formatter="myformatDate" sortable="true">创建日期</th>
+					<th field="crtUser" width="5%" align="left">操作用户</th>
+					<th field="lstUpdDate" width="10%" align="left"
+						formatter="myformatDate" sortable="true">最后修改日期</th>
+					<th field="lstUpdUser" width="6%" align="left">最后修改人</th>
+					<th field="operate" width="12%" align="center"
+						data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<!-- 查询部分 -->
+		<div id="positionCodeCondion" style="padding: 10px; text-align: laft;">
+			<form id="seachPositionCodeForm">
+				渠道标识: <input class="easyui-textbox" style="width: 120px"
+					name="businessLogo" id="businessLogo"> 
+				公司编码: <input class="easyui-textbox" style="width: 120px" 
+					name="businessNumber" id="businessNumber"> 
+				公司名称: <input class="easyui-textbox"  style="width: 120px" 
+					name="businessName" id="businessName">
+				模块编码: <input class="easyui-textbox"  style="width: 120px" 
+					name="moduleNumber" id="moduleNumber">
+				模块名称: <input class="easyui-textbox"  style="width: 120px" 
+					name="moduleName" id="moduleName">
+				启停状态: <select class="easyui-combobox" style="width: 80px"
+						id="status" name="status"  editable="false">
+						<option value="">--请选择--</option>
+						<option value="1">启用</option>
+						<option value="2">停用</option>
+						</select><br/> 
+				接口模式: <select class="easyui-combobox" name="interfaceMode" id="interfaceMode"
+							dict_type="INTERFACE_MODE" editable="false"
+							data-options="valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>
+				阻断开关: <select class="easyui-combobox" style="width: 80px"
+							id="blockingSwitch" name="blockingSwitch"  editable="false">
+							<option value="">--请选择--</option>
+							<option value="0">关闭</option>
+							<option value="1">开启</option>
+						</select> 
+					<a href="javascript:common.searchTbl('seachPositionCodeForm','tblBusiness');"
+					class="easyui-linkbutton" iconCls="icon-search">查询 </a> <a
+					href="javascript:myOpenWin('winAdd');" class="easyui-linkbutton"
+					iconCls="icon-add">新增</a> <a href="javascript:delBusiness();"
+					class="easyui-linkbutton" iconCls="icon-remove">批量删除</a> <a
+					href="javascript:setActiveOk();" class="easyui-linkbutton"
+					iconCls="icon-ok">批量启用</a> <a href="javascript:setActiveNo();"
+					class="easyui-linkbutton" iconCls="icon-no">批量停用</a>
+					<br><font color="blue" size="2">批量导入格式：渠道标识  公司编码  公司名称  模块编码  模块名称  启停状态  推荐来源  平台类型  合作类型  平台风险层级  场景备案域名链接  接口模式  阻断阈值  阻断开关</font>					
+			</form>
+			<form id="formFile" enctype="multipart/form-data" method="post"
+				ACTION="/opas-naps/common/BusinessUploadServlet.json"
+				target="tartIframe">
+				<div style="margin: 10px 0 0 30px; width: 100%;">
+					<label for="impFileNamelb"><font size="2">选择导入文件:</font></label> <input
+						id="fb" name="file1" class="easyui-filebox"
+						data-options="buttonText:'选择文件',prompt:'请选择一个excel文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'"
+						style="width: 400px"> <input type="hidden" id="userCode"
+						class="easyui-textbox" name="userCode"> <input
+						type="hidden" id="userName" class="easyui-textbox" name="userName">
+					<span class="textbox"
+						style="background: linear-gradient(rgb(229, 240, 255) 0px, rgb(220, 236, 255) 100%); width: 85px; height: 20px; left: 10px;"
+						onclick="importExcel()"> <span
+						class="l-btn-icon icon-upfile" style="left: 3px;">&nbsp;</span> <span
+						class="filebox-label" style="left: 25px;"><font size="2">导入数据</font></span></span>
+				</div>
+			</form>
+			<iframe frameborder="0" height="0" width="0" name="tartIframe"
+				id="tartIframe"></iframe>
+		</div>
+	</div>
+
+	<!-- 修改窗口 -->
+	<div id="winEdit" class="easyui-window" title="网申合作商户修改"
+		style="width: 400px; height: 450px" top="45px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>渠道标识:</td>
+					<td><input 
+						id="businessLogo" type="text" name="businessLogo"
+						data-options="required:true,validType:'length[1,512]'"></input>
+					<input type="hidden" name="businessID"/>	
+					</td>
+				</tr>
+				<tr>
+					<td>公司编码:</td>
+					<td><input 
+						id="businessNumber" type="text" name="businessNumber"
+						data-options="required:true,validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>公司名称:</td>
+					<td><input 
+						id="businessName" type="text" name="businessName"
+						data-options="required:true,validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>模块编码:</td>
+					<td><input 
+						id="moduleNumber" type="text" name="moduleNumber"
+						data-options="required:true,validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>模块名称:</td>
+					<td><input 
+						id="moduleName" type="text" name="moduleName"
+						data-options="required:true,validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>启停状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px"
+						id="status" name="status" editable="false">
+							<option value="1">启用</option>
+							<option value="2">停用</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>推荐来源：</td>
+					<td>
+						<select class="easyui-combobox" id="rcdSrc"
+						name="rcdSrc"
+						style="width: 100px"
+						dict_type="RCDSRC"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName',value:'--请选择--'">
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td>平台类型:</td>
+					<td><select class="easyui-combobox" id="platType"
+						name="platType"
+						style="width: 100px"
+						dict_type="PLATTYPE"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>合作类型：</td>
+					<td><select class="easyui-combobox" id="coprType"
+						name="coprType"
+						style="width: 100px"
+						dict_type="COPRTYPE"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>平台风险层级：</td>
+					<td><select class="easyui-combobox" id="platRiskLvl"
+						name="platRiskLvl"
+						style="width: 100px"
+						dict_type="PLATRISKLVL"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>接口模式：</td>
+					<td><select class="easyui-combobox" id="interfaceMode"
+						name="interfaceMode" style="width: 100px" dict_type="INTERFACE_MODE"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>场景备案域名链接:</td>
+					<td><input id="sceneFileDNLink" type="text" name="sceneFileDNLink"
+						data-options="validType:'length[1,100]'"></input></td>
+				</tr>
+				<tr>
+					<td>阻断阈值:</td>
+					<td>
+						<input id="blockingThreshold" type="text" name="blockingThreshold"
+							data-options="validType:'length[1,8]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>阻断开关:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 80px"
+							id="blockingSwitch" name="blockingSwitch"  editable="false">
+							<option value="0">关闭</option>
+							<option value="1">开启</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+	
+	<!-- 添加窗口 -->
+	<div id="winAdd" class="easyui-window" title="网申合作商户添加"
+		style="width: 400px; height: 450px" top="40px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="addForm" method="post">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td>渠道标志:</td>
+					<td><input 
+						id="businessLogo" type="text" name="businessLogo"
+						data-options="validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>公司编码:</td>
+					<td><input 
+						id="businessNumber" type="text" name="businessNumber"
+						data-options="validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>公司名称:</td>
+					<td><input 
+						id="businessName" type="text" name="businessName"
+						data-options="validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>模块编码:</td>
+					<td><input 
+						id="moduleNumber" type="text" name="moduleNumber"
+						data-options="validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>模块名称:</td>
+					<td><input 
+						id="moduleName" type="text" name="moduleName"
+						data-options="validType:'length[1,512]'"></input></td>
+				</tr>
+				<tr>
+					<td>启停状态:</td>
+					<td><select class="easyui-combobox" style="width: 80px"
+						id="currStatus1" name="status" editable="false">
+							<option value="1" selected="selected">启用</option>
+							<option value="2">停用</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>推荐来源：</td>
+					<td>
+						<select class="easyui-combobox" id="rcdSrc"
+						name="rcdSrc" editable="false"
+						style="width: 100px"
+						dict_type="RCDSRC"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td>平台类型:</td>
+					<td><select class="easyui-combobox" id="platType"
+						name="platType"
+						style="width: 100px"
+						dict_type="PLATTYPE"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>合作类型：</td>
+					<td><select class="easyui-combobox" id="coprType"
+						name="coprType"
+						style="width: 100px"
+						dict_type="COPRTYPE"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>平台风险层级：</td>
+					<td><select class="easyui-combobox" id="platRiskLvl"
+						name="platRiskLvl"
+						style="width: 100px"
+						dict_type="PLATRISKLVL"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>接口模式：</td>
+					<td><select class="easyui-combobox" id="interfaceMode"
+						name="interfaceMode" style="width: 100px" dict_type="INTERFACE_MODE"
+						data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'">
+					</select></td>
+				</tr>
+				<tr>
+					<td>场景备案域名链接:</td>
+					<td><input id="sceneFileDNLink" type="text" name="sceneFileDNLink"
+						data-options="validType:'length[1,100]'"></input></td>
+				</tr>
+				<tr>
+					<td>阻断阈值:</td>
+					<td>
+						<input id="blockingThreshold" type="text" name="blockingThreshold"
+							data-options="validType:'length[1,8]'"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>阻断开关:</td>
+					<td>
+						<select class="easyui-combobox" style="width: 80px"
+							id="blockingSwitchStatus" name="blockingSwitch"  editable="false">
+							<option value="0" selected="selected">关闭</option>
+							<option value="1">开启</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a> <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		</div>
+	</div>
+</body>
+<script>
+	//$.parser.parse();
+	$cf.loadAllDict();
+	//商户表单
+	var tblBusiness = $("#tblBusiness");
+	//修改
+	var editWindow = $("#winEdit");
+	//新增
+	var addWindow = $("#winAdd");
+	//创建时间
+	var editForm = $("#editForm");
+	//添加表单
+	var addForm = $("#addForm");
+	//查看页面
+	var showWindow = $("#winShow");
+	var showForm = $("#showForm");
+	
+	function formatOper(val, row, index) {
+		return "&nbsp;<a href=javascript:editBusiness();>修改</a>&nbsp;<a href=javascript:delBusiness();>删除</a>";
+	}
+	
+	//推荐来源
+	function formatRcdSrc(val, row, index){
+		return $cf.getDictDetailName("RCDSRC", val);
+	}
+	
+	//平台类型
+	function formatPlatType(val, row, index){
+		return $cf.getDictDetailName("PLATTYPE", val);
+	}
+	
+	//合作类型
+	function formatCoprType(val, row, index){
+		return $cf.getDictDetailName("COPRTYPE", val);
+	}
+	
+	//平台风险层级
+	function formatPlatRiskLvl(val, row, index){
+		return $cf.getDictDetailName("PLATRISKLVL", val);
+	}
+	
+	//接口模式
+	function formatInterfaceMode(val, row, index){
+		return $cf.getDictDetailName("INTERFACE_MODE", val);
+	}
+
+// 	$(function(){
+// 		onLoadSuccess.function(){
+// 			$('#rcdSrc').combobox("setValue","--请选择--");
+// 			$('#platType').combobox("setValue", "--请选择--");
+// 			$('#coprType').combobox("setValue", "--请选择--");
+// 			$('#platRiskLvl').combobox("setValue", "--请选择--");
+// 		}
+// 	});
+	
+	//选中行临时存储变量
+	var value;
+	//取消所有行选中状态，选中的同时将所属行的数据保存至value
+ 	 tblBusiness.datagrid({
+		onSelect : function(rowIndex,rowData){
+			$(this).datagrid("unselectAll");
+			value = rowData;
+		}	
+	})	 
+	
+	function addBusiness() {
+		addWindow.window({
+			closed : false
+		});
+	}
+	function formatStatus(val, row, index) {
+		if (val == "2") {
+			return "停用";
+		} else if (val == "1") {
+			return "启用";
+		} else {
+			return val;
+		}
+	}
+	function formatBlockingSwitchStatus(val, row, index) {
+		if (val == "0") {
+			return "关闭";
+		} else if (val == "1") {
+			return "开启";
+		} else {
+			return val;
+		}
+	}
+
+	//修改页面展示数据
+	function editBusiness() {
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+	}
+
+	//删除的方法
+	function delBusiness() {
+		var orgObj = tblBusiness.datagrid("getChecked");
+		if (orgObj.length <= 0) {
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;
+		}
+		var ids = new Array();
+		for (var i = 0; i < orgObj.length; i++) {
+			ids.push(orgObj[i].businessID);
+		}
+		$.messager.confirm(
+				'请您确认',
+				'确定要删除吗?',
+				function(r) {
+					if (r) {
+						$cf.ajax({
+							url : "/opas-naps/deleteBusiness.json",
+							data : {"ids":ids},
+							onSuccess : function(data) {
+								if (data.RSP_BODY.isSuccess) {
+									top.$cf.showMsg("名单删除成功！");
+									tblBusiness.datagrid("reload");
+								} else {
+									$.messager.alert("操作提示", "名单删除失败！", "error");
+								}	
+							}
+						});
+					}
+				});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+		showForm.form("load", data);
+		
+	}
+	
+	//修改日期格式
+	function myformatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+			}
+		}
+	
+	//工具方法：格式化CST类型时间
+
+	function getTaskTime(strDate) {
+		if (null == strDate || "" == strDate) {
+			return "";
+		}
+		var dateStr = strDate.trim().split(" ");
+		var strGMT = dateStr[0] + " " + dateStr[1] + " " + dateStr[2] + " "
+				+ dateStr[5] + " " + dateStr[3] + " GMT+0800";
+		var date = new Date(Date.parse(strGMT));
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		m = m < 10 ? ('0' + m) : m;
+		var d = date.getDate();
+		d = d < 10 ? ('0' + d) : d;
+		return y + "-" + m + "-" + d ;
+	};
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	//修改的方法
+	function onUpdate() {
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/updateBusiness.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblBusiness.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.RSP_BODY.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	//获取表单数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//清空当前窗口的函数
+	myOpenWin = function(winName) {
+		winObj = $("#" + winName + "");
+		winObj.form('clear');
+		$('#currStatus1').combobox('select','1');
+		$('#blockingSwitchStatus').combobox('select','0');
+		winObj.window({
+			closed : false
+		});
+	}
+	
+	//新增的方法
+	function onSave() {
+		var currStatus1Flag = $('#currStatus1').combobox('getValue');
+		if(currStatus1Flag == '2'){
+			$('#blockingSwitchStatus').combobox('setValue','0');
+		}
+		var jsondata = getFormData(addForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-naps/addBusiness.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblBusiness.datagrid("reload");
+					});
+
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.RSP_BODY.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+	
+	//批量启用
+	function setActiveOk() {
+		var orgObj = tblBusiness.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var status = "1";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].businessID);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要启用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/BusinesssetStatusOK.json",
+						data : {"ids":ids,"status":status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单启用成功!");
+								tblBusiness.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}
+	
+	//批量停用
+	function setActiveNo() {
+		var orgObj = tblBusiness.datagrid("getChecked");
+		if(orgObj.length<=0){
+			$.messager.alert("操作提示", "操作失败:请选择要操作的行!", "error");
+			return;			
+		}
+		var ids = new Array();
+		var status = "0";
+		for(var i=0; i<orgObj.length; i++){
+			ids.push(orgObj[i].businessID);
+		}
+		$.messager.confirm(
+			'请您确认',
+			'确定要停用该名单吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-naps/BusinesssetStatusNO.json",
+						data : {"ids":ids,"status":status},
+						onSuccess : function(data) {
+							if (data.RSP_BODY.isSuccess) {
+								top.$cf.showMsg("名单停用成功!");
+								tblBusiness.datagrid("reload");
+							} else {
+								$.messager.alert("操作提示", "修改状态失败:" + data.RSP_BODY.exMsg, "error");
+							}
+						}
+					});
+				}
+			});
+	}	
+	
+	<!-- 批量导入EXCEL文件相关js -->
+	var trigger = true;
+	$('#fb').filebox({    
+	buttonText: '选择文件', 
+	buttonAlign: 'right',
+	buttonIcon:'icon-search',
+	onChange: function (newValue, oldValue) {
+			excelFile=newValue.substr(newValue.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+			if(".xls" != excelFile && ".xlsx"!= excelFile && ""!=excelFile){
+				alert("请上传excel格式的文件");
+				$('#fb').filebox('setValue','');
+				return;
+			}
+			if (trigger) {
+				$.messager.confirm({
+					width : 1000,
+					height : 200,
+					title : '请确认文件格式',
+					msg : "请确认导入的表格格式为：<br><br><br>渠道标识  公司编码  公司名称  模块编码  模块名称  启停状态  推荐来源  平台类型  合作类型  平台风险层级  场景备案域名链接  接口模式  阻断阈值  阻断开关",
+					fn : function(r) {
+						if (!r) {
+							trigger = false;
+							$('#fb').filebox("reset");
+							$('#fb').filebox('setValue','');
+						}
+					}
+				})
+			}
+		}
+	})
+
+	function resetValue(){
+	$('#fb').filebox('setValue','');
+	}
+
+	function importExcel() {
+		var userName = $cf.getStore("userRelInfo", "index").userInfo.userName;
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		$('#userName').textbox('setValue',userName);
+		$('#userCode').textbox('setValue',userCode);
+		var fileValue = $('#fb').filebox('getValue');
+		if(fileValue != ""){
+			if(fileValue.indexOf(".xls")<0 && fileValue.indexOf(".xlsx")<0){
+				alert("请选择正确的excel格式的文件！");
+				return;
+			}
+		}
+		if (fileValue == "") {
+				$.messager.alert('提示', '请选择需要上传的文件！');
+		} else {
+				importSave();
+		}
+	}
+	
+	
+	//上传保存数据
+	function importSave() {
+		$('#formFile').submit();
+ 		$.messager.progress(); 
+	}
+	
+	var tartIframe = document.getElementById("tartIframe");
+	tartIframe.src = "/opas-naps/common/BusinessUploadServlet.json";
+	if(tartIframe.attachEvent){
+		tartIframe.attachEvent("onload",function(){
+			responPage();
+		});
+	}else{
+		tartIframe.onload = function(){
+			responPage();			
+		}
+	}
+	
+	function responPage(){
+ 		$.messager.progress('close'); 
+		var value = tartIframe.contentWindow.document.body.innerHTML.split("_");
+		if(value[0] == "success"){
+			tblBusiness.datagrid("reload");
+			top.$cf.showMsg("共计"+value[1]+"条数据导入成功！");
+		}
+		if(value[0] == "false"){
+			$.messager.alert("操作提示", "数据导入失败:第" + value[1] + "行，第" +value[2]+"列的数据导入时，发生错误", "error");
+		}
+		
+	}	
+	
+	
+	//查看历史操作
+	openWinTbll = function(winName, tblName, tarTblName, tarUrl, tarParam) {
+		var tblObj = $("#" + tblName + "");
+		var tblDict = $("#" + tarTblName + "");
+		winObj = $("#" + winName + "");
+		var id = value.businessID;
+		var paramObj = document.getElementsByName(tarParam);
+		for (var i = 0; i < paramObj.length; i++) {
+			paramObj[i].value = id;
+		}
+		winObj.window({
+			closed : false
+		});
+		var quryParam = {};
+		quryParam[tarParam] = id;
+		tblDict.datagrid({
+			url : tarUrl,
+			queryParams : quryParam
+		});
+		tblBusiness.datagrid("clearSelections"); 
+		$("input[name='businessID']").attr("checked",false);
+	}
+	
+	//查看
+	function ShowBusiness() {
+		showWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(value)
+		});
+		var cTime = gridDateFormat2(value.crtDate);
+		$('#crtDate3').textbox('setValue',cTime);
+		var lTime = gridDateFormat2(value.lstUpdDate);
+		$('#lstUpdDate3').textbox('setValue',lTime);
+	}
+</script>

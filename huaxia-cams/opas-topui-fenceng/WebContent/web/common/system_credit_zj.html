@@ -1,0 +1,1244 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+<style type="text/css">
+ .tl {width:60px;font-size: 12px } 
+ .ts {width:120px;font-size: 12px }
+ .tls {width:97px;font-size: 12px }
+ .yztb {width:50px;font-size: 12px }
+ .dhtb {width:150px;font-size: 12px }
+ .ddtb {width:68px;font-size: 6px }
+</style>
+</head>
+	<body>
+	<div class="easyui-layout" style="width: 100%; height: 1200px;">
+		<!-- 快速定位区 开始 -->
+		<div data-options="region:'north',title:'快速定位'" style="height: 100px; padding:10px;">
+		 <a href="#A"class="easyui-linkbutton">客户基本信息</a>
+		 <a href="#B"class="easyui-linkbutton">联系人信息</a> 
+		 <a href="#C"class="easyui-linkbutton">人行摘要信息</a>
+		 <a href="#D"class="easyui-linkbutton">验证信息</a>
+		 <a href="#E"class="easyui-linkbutton">核实信息</a>
+		 <a href="#F"class="easyui-linkbutton">调查纪要</a>
+		 <a href="#G"class="easyui-linkbutton">过件码</a>
+		</div>
+		<!-- 快速定位区 结束 -->
+		<div data-options="region:'center'" style="padding:10px;">
+		<form  id="custZJInfoForm">
+		<div>
+		<fieldset>
+			<legend><span id="A">客户基本信息</span></legend>
+			
+				<table id="bizInpApplC1"  style="text-align:right;width: 100%">
+				    <tr>
+						<!-- <td class="tl" align="left">申请流水号：</td><td class="ts" align="left"><input name="appId" id="appId"   class="easyui-textbox" readonly="readonly"/></td> -->
+						<td class="tl" align="left">主卡姓名：</td><td class="ts" align="left"><input name="c1Cname" id="c1Cname" class="easyui-textbox"  readonly="readonly"/></td>
+						<td class="tl" align="left">证件号码：</td><td class="ts" align="left"><input name="c1Idnbr" id="c1Idnbr" class="easyui-textbox"  readonly="readonly"/></td>
+						<td class="tl" align="left">性别：</td><td class="ts" align="left"><input name="policeGender" id="policeGender" class="easyui-textbox"   readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">证件类型：</td><td class="ts" align="left"><input name="c1Idtype" id="c1Idtype" class="easyui-combobox" dict_type="ZDSQRZJLX" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"  readonly="readonly"/></td>
+						<td class="tl" align="left">国籍：</td><td class="ts" align="left"><input name="c1Nation" id="c1Nation" class="easyui-combobox" dict_type="GUOJI" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"readonly="readonly"/></td>
+						<!-- <td class="tl" align="left">ID有效期：</td><td class="ts" align="left"><input name="c5Idte1" id="c5Idte1" class="easyui-datebox"/></td> -->
+						<td class="tl" align="left">籍贯：</td><td class="ts" align="left"><input name="policeJgssxhomeProvCity" id="policeJgssxhomeProvCity" class="easyui-textbox"  readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">拼音/英文姓名：</td><td class="ts" align="left"><input name="c1Ename" id="c1Ename" class="easyui-textbox"readonly="readonly"/></td>
+						<td class="tl" align="left">生日：</td><td class="ts" align="left"><input name="c1Birth" id="c1Birth"  class="easyui-datebox"readonly="readonly"/></td>
+						<td class="tl" align="left">申请人手机：</td><td class="ts" align="left"><input name="c1Mobile" id="c1Mobile"  class="easyui-textbox"readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">宅电区号：</td><td class="ts" align="left"><input name="c1Hmare" id="c1Hmare" class="easyui-textbox"readonly="readonly"/></td>
+						<td class="tl" align="left">宅电：</td><td class="ts" align="left"><input name="c1Hmtel" id="c1Hmtel" class="easyui-textbox"readonly="readonly"/></td>
+						<td class="tl" align="left">生肖：</td><td class="ts" align="left"><input id="shenxiao" value="" class="easyui-textbox" readonly="readonly"/> 
+					</tr>
+					<tr>
+						<td class="tl" align="left">住宅地址：</td><td colspan="5" class="ts" align="left"><input style="width:98%" name="c1HmaddTotal" id="c1HmaddTotal" class="easyui-textbox" readonly="readonly"/></td>
+						<!-- <td class="tl" align="left">主卡姓名：</td><td class="ts" align="left"><input name="" id="" class="easyui-textbox"  readonly="readonly"/></td> -->
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位名称：</td><td  colspan="5" class="ts" align="left"><input style="width:98%" name="c1Coname" id="c1Coname" class="easyui-textbox"readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位电话（区号必填）：</td><td class="ts" align="left"><input name="c1Cotel" id="c1Cotel" class="easyui-textbox"readonly="readonly"/></td>
+						<td class="tl" align="left">部门名称：</td><td class="ts" align="left"><input name="c1Codept" id="c1Codept" class="easyui-textbox"readonly="readonly"/></td>
+						<td class="tl" align="left">职务：</td><td class="ts" align="left"><input name="c1Coduty" id="c1Coduty" class="easyui-combobox" dict_type="GANGWEIZHIWU" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">分机：</td><td class="ts" align="left"><input name="c1Coext" id="c1Coext" class="easyui-textbox"readonly="readonly"/></td>
+					    <td class="tl" align="left">婚姻状况：</td><td class="ts" align="left"><input  name="c1Marst" id="c1Marst" class="easyui-combobox" dict_type="ZDSQRHYZK" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"readonly="readonly"/></td>
+						<td class="tl" align="left">教育程度：</td><td class="ts" align="left"><input  name="c1Educls" id="c1Educls" class="easyui-combobox" dict_type="ZDJYCDID" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位地址：</td><td colspan="5" class="ts" align="left"><input style="width:98%" name="c1CoaddTotal" id="c1CoaddTotal" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">现职年限：</td><td class="ts" align="left"><input name="c1Coyr" id="c1Coyr" class="easyui-textbox"readonly="readonly"/></td>
+						<td class="tl" align="left">税前收入（万）：</td><td class="ts" align="left"><input name="c1Earn" id="c1Earn" class="easyui-textbox"readonly="readonly"/></td>
+						<td class="tl" align="left">账单地址(H宅 B单)：</td><td class="ts" align="left"><select style="width:92%;" name="c4Cycadd1" disabled="disabled" id="c4Cycadd1" class="easyui-combobox" >
+                        <option value="">--请选择--</option>
+                        <option value="B">单址</option>
+                        <option value="H">宅址</option>
+                       </select>
+                        </td>
+                     </tr>
+				</table>
+		</fieldset>
+		</div>
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="B">联系人信息</span></legend>
+				<table  style="width:100%;text-align:center;">
+					<tr>
+						<td style="font-size: 12px">联系人信息</td>
+						<td style="font-size: 12px">姓名</td>
+						<td style="font-size: 12px">关系</td>
+						<td style="font-size: 12px">区号</td>
+						<td style="font-size: 12px">座机</td>
+						<td style="font-size: 12px">手机</td>
+					</tr>
+					<tr>
+						<td style="font-size: 12px">第一联系人</td>
+						<td><input name="c1Rename" id="c1Rename"  class="easyui-textbox tls" readonly="readonly"/></td>
+						<td><input name="c1Reship" id="c1Reship" style="width:140px"  class="easyui-combobox" dict_type="ZXQSRELATIONSHIP" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"readonly="readonly"/></td>
+						<td><input name="c1Retelar" id="c1Retelar"  class="easyui-textbox tls"readonly="readonly"/></td>
+						<td><input name="c1Retel" id="c1Retel"  class="easyui-textbox tls"readonly="readonly"/></td>
+						<td><input name="c1Remobil" id="c1Remobil"  class="easyui-textbox tls"readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td style="font-size: 12px">其他联系人</td>
+						<td><input name="c1Xname1" id="c1Xname1"  class="easyui-textbox tls"readonly="readonly"/></td>
+						<td><input name="c1Xship1" id="c1Xship1" style="width:140px"  class="easyui-combobox" readonly="readonly" dict_type="ZXQSRELATIONSHIP" data-options="valueField:'dictDetailCode',textField:'dictDetailName'"/></td>
+						<td><input name="c1Xtelar1" id="c1Xtelar1"  class="easyui-textbox tls"readonly="readonly"/></td>
+						<td><input name="c1Xtel1" id="c1Xtel1"  class="easyui-textbox tls"readonly="readonly"/></td>
+						<td><input name="c1Xmobil1" id="c1Xmobil1"  class="easyui-textbox tls"readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>	
+		</form>	
+		<form  id="custProcInfoForm">	
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="C">人行摘要信息</span></legend>
+				<table  style="width:100%;text-align:right;">
+					<tr>
+						<td class="tl" align="left">手机号码</td><td class="ts" align="left"><input name="cellPhone" id="cellPhone" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">单位电话</td><td class="ts" align="left"><input name="cCompPhone" id="cCompPhone" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">住宅电话</td><td class="ts" align="left"><input name="resiTel" id="resiTel" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">住址地址</td><td colspan="5" class="ts" align="left"><input style="width:98%" name="residentAddr" id="residentAddr" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称1</td><td colspan="5" class="ts" align="left"><input style="width:98%" name="company" id="company" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位地址1</td><td colspan="5" class="ts" align="left"><input style="width:98%" name="compAddr" id="compAddr" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称2</td><td colspan="5"class="ts" align="left"><input style="width:98%" name="company2" id="company2" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					    <td class="tl" align="left">单位地址2</td><td colspan="5" class="ts" align="left"><input style="width:98%" name="compAddr2" id="compAddr2" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		</form>
+		<form  id="custBankInfoForm">	
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="C">二代人行摘要信息</span></legend>
+				<table style="width:100%;text-align:right;">
+					<tr>
+						<td class="tl" align="left">手机号码1</td><td class="ts" align="left"><input name="PHONE_NUM1" id="PHONE_NUM1" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">手机号码2</td><td class="ts" align="left"><input name="PHONE_NUM2" id="PHONE_NUM2" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">住宅电话</td><td class="ts" align="left"><input name="HOME_PHONE" id="HOME_PHONE" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="tl" align="left">单位名称1</td><td class="ts" align="left"><input name="COMPANY1" id="COMPANY1" class="easyui-textbox" readonly="readonly"/></td>
+						<td class="tl" align="left">单位电话1</td><td class="ts" align="left"><input name="UNIT_PHONE1" id="UNIT_PHONE1" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td class="tl" align="left">单位地址1</td><td class="ts" align="left"><input name="COMP_ADDR1" id="COMP_ADDR1" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td class="tl" align="left">单位名称2</td><td class="ts" align="left"><input name="COMPANY2" id="COMPANY2" class="easyui-textbox" readonly="readonly"/></td>
+					<td class="tl" align="left">单位电话2</td><td class="ts" align="left"><input name="UNIT_PHONE2" id="UNIT_PHONE2" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+					<tr>
+					<td class="tl" align="left">单位地址2</td><td class="ts" align="left"><input name="COMP_ADDR2" id="COMP_ADDR2" class="easyui-textbox" readonly="readonly"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		</form>
+		<form  id="yanzhenForm">
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="D">验证信息</span></legend>
+				<table style="width:100%;text-align:center;">
+					<tr>
+						<td style="width: 50px;font-size: 12px">验证信息</td>
+						<td style="font-size: 12px">征信电话核查白名单</td>
+						<td style="font-size: 12px">CRM</td>
+						<td style="font-size: 12px">审查</td>
+						<td style="font-size: 12px">人行</td>
+						<td style="font-size: 12px;width: 100px">查询</td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">手机号码</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否" disabled="disabled"/></td>
+						<td><input name="crm_MOBILEPHONE" id="crm_MOBILEPHONE" class="easyui-linkbutton yztb"disabled="disabled"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td style="width: 120px;font-size: 12px"><input name="pboc_CELL_PHONE" disabled="disabled" id="pboc_CELL_PHONE1" type="checkbox" value="1"  style="width:10%;text-align:center;" onclick="fun('yes','#pboc_CELL_PHONE')"/>一致&nbsp;
+							<input name="pboc_CELL_PHONE" id="pboc_CELL_PHONE0" type="checkbox" disabled="disabled" value="0" style="width:10%;text-align:center;" onclick="fun('no','#pboc_CELL_PHONE')"/>不一致
+						</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="审查库" disabled="disabled"/></td> <!-- ydj审查库暂时无效5.4（业务要求）  onclick="onReviewWin()" -->
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">单位电话</td>
+						<td><input name="credit_COMPANY_TEL" id="credit_COMPANY_TEL" class="easyui-linkbutton yztb"  onclick="isOpenWin('#credit_COMPANY_TEL')"disabled="disabled"/></td>
+						<td><input name="crm_BUSPHONE" id="crm_BUSPHONE" class="easyui-linkbutton yztb" disabled="disabled"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td style="width: 120px;font-size: 12px"><input name="pboc_C_COMP_PHONE" disabled="disabled" id="pboc_C_COMP_PHONE1" type="checkbox" value="1"  style="width:10%;text-align:center;" onclick="fun('yes','#pboc_C_COMP_PHONE')"/>一致&nbsp;
+							<input name="pboc_C_COMP_PHONE" id="pboc_C_COMP_PHONE0" disabled="disabled" type="checkbox" value="0" style="width:10%;text-align:center;" onclick="fun('no','#pboc_C_COMP_PHONE')" />不一致
+						</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="问题库"  onclick="openQuestion('questionWin')" disabled="disabled"/></td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">住宅电话</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否" disabled="disabled"/></td>
+						<td><input name="crm_PHONE" id="crm_PHONE" class="easyui-linkbutton yztb"disabled="disabled"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td style="width: 120px;font-size: 12px"><input name="pboc_RESI_TEL" id="pboc_RESI_TEL1" type="checkbox"  value="1"  style="width:10%;text-align:center;" onclick="fun('yes','#pboc_RESI_TEL')" disabled="disabled"/>一致&nbsp;
+							<input name="pboc_RESI_TEL" id="pboc_RESI_TEL0" disabled="disabled" type="checkbox" value="0" style="width:10%;text-align:center;"  onclick="fun('no','#pboc_RESI_TEL')"/>不一致
+						</td>
+						<td><input class="easyui-linkbutton" style="width: 100px;font-size: 12px" disabled="disabled" value="征信白名单查询" onclick="showWin('zhenXinWhiteOrderWin')"/></td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">单位名称</td>
+						<td><input name="credit_COMPANY_NAME" id="credit_COMPANY_NAME" class="easyui-linkbutton yztb" disabled="disabled" onclick="isOpenWin('#credit_COMPANY_NAME')"/></td>
+						<td><input name="crm_COMPANY" id="crm_COMPANY" class="easyui-linkbutton yztb"disabled="disabled"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td style="width: 120px;font-size: 12px"><input name="pboc_COMPANY" id="pboc_COMPANY1" type="checkbox" value="1"  style="width:10%;text-align:center;" onclick="fun('yes','#pboc_COMPANY')"disabled="disabled"/>一致&nbsp;
+							<input name="pboc_COMPANY" id="pboc_COMPANY0" type="checkbox" value="0" style="width:10%;text-align:center;" onclick="fun('no','#pboc_COMPANY')"disabled="disabled"/>不一致
+						</td>
+						<td><input class="easyui-linkbutton " style="width: 100px;font-size: 12px" value="征信白名单添加" onclick="openZhenXinKuAddWin('zhenXinKuAddWin')"disabled="disabled"/></td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">单位地址</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td><input name="crm_BUSADDR" id="crm_BUSADDR" class="easyui-linkbutton yztb"disabled="disabled"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td style="width: 120px;font-size: 12px"><input name="pboc_COMP_ADDR" id="pboc_COMP_ADDR1" disabled="disabled" type="checkbox" value="1"  style="width:10%;text-align:center;" onclick="fun('yes','#pboc_COMP_ADDR')"/>一致&nbsp;
+							<input name="pboc_COMP_ADDR" id="pboc_COMP_ADDR0" type="checkbox" value="0" disabled="disabled" style="width:10%;text-align:center;" onclick="fun('no','#pboc_COMP_ADDR')"/>不一致
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 50px;font-size: 12px">账单地址</td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td><input name="crm_HOMEADDR" id="crm_HOMEADDR" class="easyui-linkbutton yztb"disabled="disabled"/></td>
+						<td><input name="" id="" class="easyui-linkbutton yztb" value="否"disabled="disabled"/></td>
+						<td style="width: 120px;font-size: 12px"><input name="pboc_RESIDENT_ADDR" disabled="disabled" id="pboc_RESIDENT_ADDR1" type="checkbox" value="1"  style="width:10%;text-align:center;" onclick="fun('yes','#pboc_RESIDENT_ADDR')"/>一致&nbsp;
+							<input name="pboc_RESIDENT_ADDR" id="pboc_RESIDENT_ADDR0" type="checkbox" value="0" disabled="disabled" style="width:10%;text-align:center;" onclick="fun('no','#pboc_RESIDENT_ADDR')"/>不一致
+						</td>
+					</tr>
+				</table>
+		</fieldset>
+		</div>
+		</form>
+		
+		<form  id="diaochajiyaoForm">
+		<div class="area-show">
+		<fieldset>
+			<legend><span id="E">核实信息</span></legend>
+				<table   data-options="singleSelect:true,pagination:true,fitColumns:true">
+					<tr>
+						<td style="font-size: 12px;width: 150px">款项用途是否合规：</td>
+						<td style="font-size: 12px;width: 80px"><input name="moneyUserIsCompl" id="yes_moneyUserIsCompl" type="radio" value="1" disabled="disabled" onclick="fun('yes')"/>是</td>
+						<td style="font-size: 12px;width: 80px"><input name="moneyUserIsCompl" id="no_moneyUserIsCompl" type="radio" value="0" disabled="disabled" onclick="fun('no')"/>否</td>
+					</tr>
+				</table>
+<!-- 				
+				<div id="checkMessageShowIs" style="padding: 10px; text-align: left;"></div> -->
+				<div align="right"><a href="javascript:void(0)" class="easyui-linkbutton ddtb" onclick="dianHe()" id="savedianhe">保存至电核</a>
+				</div>
+		</fieldset>
+		
+		<fieldset>
+			<legend><span id="F">调查纪要</span></legend>
+				<table  style="width:100%;" id="F_diaocha" 	data-options="fitColumns:true">
+					<tr>
+						<td class="dhtb" align="right">电话来源：</td>
+						<td align="left"><!-- <input name="telSource" id="F_telSource"  type="text"/> -->
+							<!-- <select class="easyui-combobox" id="F_telSource" 
+								style="width: 120px;" editable="false" name="telSource" 
+								dict_type="ZDTELSOURCE" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select> -->
+								<input class="easyui-combobox" id="F_telSource" name="telSource" disabled="disabled"></input>
+						</td>
+						<td class="dhtb" align="right">电话类型：</td>
+						<td align="left"><!-- <input name="telType" id="F_telType"  type="text"/> -->
+							<!-- <select class="easyui-combobox" id="F_telType" 
+								style="width: 120px;" editable="false" name="telType" 
+								dict_type="ZDTELTYPE" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select> -->
+								<input class="easyui-combobox" id="F_telType" name="telType" disabled="disabled"></input>
+						</td>
+					</tr>
+					<tr>
+						<td class="dhtb" align="right">照会对象：</td>
+						<td align="left"><!-- <input name="noteObject" id="F_noteObject" type="text"/> -->
+							<!-- <select class="easyui-combobox" id="F_noteObject" 
+								style="width: 120px;" editable="false" name="noteObject" 
+								dict_type="ZDNOTEOBJECT" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select> -->
+								<input class="easyui-combobox" id="F_noteObject" name="noteObject" disabled="disabled"></input>
+						</td>
+						<td class="dhtb" align="right">电核结论：</td>
+						<td align="left"><!-- <input name="telcheckReuslt" id="F_telcheckReuslt"  type="text"/> -->
+							<!-- <select class="easyui-combobox" id="F_telcheckReuslt" 
+								style="width: 120px;" editable="false" name="telcheckReuslt" 
+								dict_type="ZDTELCHECKREUSLT" data-options="valueField:'dictDetailCode',
+								textField:'dictDetailName'"></select> -->
+								<input class="easyui-combobox" id="F_telcheckReuslt" name="telcheckReuslt" disabled="disabled"></input>
+						</td>
+					</tr>
+					<tr>
+						<td class="dhtb" style="font-size: 12px" align="right">请输入电话号码：</td>
+						<td class="dhtb"><input name="telNo" id="F_telNo"  class="easyui-textbox"readonly="readonly"/></td>
+						<td colspan="3"><input name="" id="" class="easyui-linkbutton yztb" value="拨号" hidden="true"/></td>
+					</tr>
+					
+					<tr><td style="font-size: 12px" align="right">备注：</td>
+						<td colspan='3'>
+					<!-- 		<input name="memo" id="F_memo" class="easyui-textbox" data-options="mutiline:true" 
+						style="width:99%;hight:300px"/></td> -->
+						<textarea name="memo" id="F_memo" style="height: 80px;width: 500px"></textarea>
+					</tr>
+					<!-- <tr><td><input name="" id="" class="easyui-linkbutton" value="纪要提交"/></td>
+						<td><input name="" id="" class="easyui-linkbutton" value="纪要修改"/></td>
+						<td><input name="" id="" class="easyui-linkbutton" value="删除"/></td>
+					</tr> -->
+				</table>
+				<div class="area-function">
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSubmitJiYao('insert')" id="jiyaotijiao">纪要提交</a>&nbsp;
+<!-- 					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSubmitJiYao('update')">纪要修改</a>&nbsp;
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSubmitJiYao('delete')">删除</a> -->
+				</div>
+		</fieldset>
+		<fieldset>
+		<legend><span id="G">纪要信息</span></legend>
+			<table class="easyui-datagrid" id="datalist"  style="width:100%;table-layout:fixed;" data-options="rownumbers:true,singleSelect:true,fitColumns:true,nowrap:false">
+			<thead>
+					<tr>
+						<th width="5%" field="autoId" checkbox="true">操作</th>
+						<!-- <th width="17%" data-options="field:'appId'">申请件编号</th> -->
+						<th width="60%" data-options="field:'bigMemo'" formatter="formatAutoRow">详情</th>
+						<th width="20%" data-options="field:'crtDate'" align="center" formatter="formatDate">创建/修改日期</th>
+						<th width="15%" field="operate" width="10%" align="center" formatter="formatOper">操作</th>
+					</tr>
+			</thead>
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend><span id="E">过件码</span></legend>
+				过件码：<select id="G_passCode" name="passCode" class="easyui-combobox">
+								<option value="">请选择过件码</option>
+								<option value="1">400A</option>
+								<option value="2">900</option>
+								<option value="3">100</option>
+							</select>
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onBizInpApplC1()" id="save">保存</a>
+		</fieldset>	
+		</div>
+		</form>
+	</div>
+</div>
+	<!-- 征信电话核查白名单 查询按钮-->
+	<div id="zhenXinWhiteOrderWin" class="easyui-window" title="征信电话核查白名单"
+		style="width: 100%; height: 400px;top: 300px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="tb_zhenXinWhiteOrderWin" class="easyui-datagrid"
+				style="width: 100%; height: 310px" iconCls="icon-save"
+				data-options="rownumbers:true,singleSelect:false,pagination:true,fitColumns:true,url:'/opas-naps/creditTelCheckSelect.json',loadMsg:'数据加载中.....',method:'post',toolbar:'#dictCondion'">
+				<thead frozen="true">
+					<tr>
+						<th field="appId" width="20%">申请件编号</th>
+						<th field="createDate" width="20%">生成日期</th>
+						<th field="companyName" width="20%">单位名称</th>
+						<th field="companyTel" width="20%">单位电话</th>
+						<th field="currStatus" width="20%" formatter="formatCode">当前状态</th>
+					</tr>
+				</thead>
+			</table>
+			<div id="dictCondion" style="padding: 10px; text-align: center;">
+					<form id="seachDictForm">
+						单位名称: <input class="easyui-textbox" style="width: 110px"
+							name="companyName" id="Z_companyName"> 
+						单位电话: <input class="easyui-textbox" style="width: 110px" name="companyTel"
+							id="Z_companyTel"> 
+						<a href="javascript:common.searchTbl('seachDictForm','tb_zhenXinWhiteOrderWin');"
+							class="easyui-linkbutton" iconCls="icon-search">查询</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton"
+								onclick="saveDianHe()">保存至电核</a>
+					</form>
+				</div>
+		</div>
+	</div>
+	<!-- 征信电话核查白名单 “是”查询 -->
+	<div id="yes_zhenXinWhiteOrderWin" class="easyui-window" title="征信电话核查白名单"
+		style="width: 100%; height: 400px;top: 300px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="tb_yes_zhenXinWhiteOrderWin" class="easyui-datagrid"
+				style="width: 100%; height: 310px" iconCls="icon-save">
+				<thead frozen="false">
+					<tr>
+						<th field="appId" width="20%">申请件编号</th>
+						<th field="createDate" width="20%">生成日期</th>
+						<th field="companyName" width="20%">单位名称</th>
+						<th field="companyTel" width="20%">单位电话</th>
+						<th field="currStatus" width="20%" formatter="formatCode">当前状态</th>
+					</tr>
+				</thead>
+			</table>
+			<!-- <div id="yes_dictCondion" style="padding: 10px; text-align: center;display:none">
+					<form id="yes_seachDictForm">
+						 <input type="hidden" style="width: 110px"
+							name="companyName" id="Z_companyName_yes"> 
+						 <input  type="hidden" style="width: 110px" name="companyTel"
+							id="Z_companyTel_yes">
+						 <a href="javascript:common.searchTbl('yes_seachDictForm','tb_yes_zhenXinWhiteOrderWin');" class="easyui-linkbutton" iconCls="icon-search">查询 </a>
+					</form>
+			</div> -->
+		</div>
+	</div> 
+	<!-- 征信库添加 -->
+	<div id="zhenXinKuAddWin" class="easyui-window" title="征信库添加"
+		style="width: 100%; height: 400px;top: 300px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editForm">
+			<table id="tb_zhenXinKuAddWin" style="border-collapse: separate;width: 675px; border-spacing: 10px;" iconCls='icon-save'>
+				<tr>
+					<td align="left">来源</td>
+					<td><input class="easyui-textbox" id="Y_appId" name="appId"/></td>
+				</tr>
+				<tr>
+					<td align="left">单位名称</td>
+					<td><input style="width:98%;" class="easyui-textbox" id="Y_companyName" name="companyName"/></td>
+				</tr>
+				<tr>
+					<td align="left">单位电话</td>
+					<td><input class="easyui-textbox" id="Y_companyTel" name="companyTel"/></td>
+				</tr>
+				<tr>
+					<td align="left">生成日期</td>
+					<td><input class="easyui-datebox" id="Y_createDate" name="createDate"/></td>
+				</tr>
+				<tr>
+					<td align="left">备注</td>
+					<td><input class="easyui-textbox" id="Y_memo" name="memo"/></td>
+				</tr>
+				<tr>
+					<td align="left">操作员工号</td>
+					<td><input class="easyui-textbox" id="Y_operator" name="operator"/></td>
+				</tr>
+			</table>
+				<div style="text-align: center; padding: 5px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onZhenXinKuAddWin('zhenXinKuAddWin')">保存</a>&nbsp;
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('zhenXinKuAddWin')">取消</a>
+				</div>
+		</form>
+	</div>
+	<!-- 问题库-->
+	<div id="questionWin" class="easyui-window" title="问题库"
+		style="width: 100%; height: 400px;top: 300px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="tb_questionWin" class="easyui-datagrid"
+					style="width:100%;">
+				<!-- style="width: 100%;  iconCls="icon-save" rownumbers="true"> -->
+				<!-- <thead>
+					<tr>
+						<th field="autoId" width="10%" align="center" checkbox="true"></th>
+						<th field="questionDesc"  align="center" >问题内容</th>
+						<th field="fromTableNo"  align="center">答案</th>
+						<th field="dianHeResult"  align="center" data-options="formatter:formatOper2">回答情况</th>
+					</tr>
+				</thead> -->
+			</table>
+			自定义问题：<input class="easyui-textbox" style="width: 110px" id="zidingyi1"/><br>
+			自定义答案：<input class="easyui-textbox" style="width: 110px" id="zidingyi2"/><br>
+			电核结果：<label><input type="radio" name="result" value="一致">一致</label>
+			<label><input type="radio" name="result" value="不一致">不一致</label>
+			<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" 
+			onclick="openQuestion('questionWin')">刷新</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('questionWin')">取消</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="saveToDianHe('questionWin')">保存至电核</a>		
+			</div>
+		</div>
+	</div>
+	<!-- 纪要修改 -->
+	<div id="winEdit" class="easyui-window" title="纪要修改" style="width: 100%; height: 400px;top: 500px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="editFormJY">
+			<table>
+				<tr>
+					<td>申请件编号:</td>
+					<td><input class="easyui-validatebox textbox" id="appId"
+						type="text" name="appId" data-options="required:true" readonly="readonly"></input>
+						<input type="hidden" name="autoId" id="autoId"/>	
+					</td>
+				</tr>
+				<tr>
+					<td>纪要内容:</td>
+					<td><!-- <input class="easyui-validatebox textbox" id="bigMemo"
+						type="text" name="bigMemo" data-options="required:true"></input> -->
+						<textarea  name="bigMemo" style="width:350px; height: 200px;" id="bigMemo"></textarea>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onUpdate()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		</div>
+	</div>
+</body>
+<script>
+$cf.loadAllDict();//加载数据字典
+var appId;
+function GetQueryString(name){
+	 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	 var r = window.location.search.substr(1).match(reg);
+	 if(r!=null) return unescape(r[2]);
+	 return null;
+}
+
+var userId = parent.userCode;//'user';
+var dic01 = new Array("0:否","1:是");//ss
+var objParam;
+var pbocResultOld;
+var yanzhenMessage="";//人行，征信，公安 是  保存用
+var credit_COMPANY_NAME;
+var credit_COMPANY_TEL;
+//初始化
+$(function(){
+	var url = location.href;
+	appIdParam = url.split("=")[1];
+	appId = appIdParam.split("&")[0];
+//	alert("appId=="+appId);
+	/* var appId1 = GetQueryString("appId");//'2017030814135013';
+	var appId2 = GetQueryString("appid");//'2017030814135013';
+	
+	if(appId1==null||appId==""){
+		appId = appId2;
+	}else{
+		appId = appId1;
+	} */
+	var custZJInfoForm=$("#custZJInfoForm");
+	var custProcInfoForm = $("#custProcInfoForm");
+	var custProcInfoForm = $("#custProcInfoForm");
+	var yanzhenForm = $("#yanzhenForm");
+	$("#Y_appId").textbox('setValue',appId);
+	$("#Y_operator").textbox('setValue',userId);
+	$cf.ajax({
+		data : {
+			"appId" : appId
+		},
+		url : "/opas-naps/findZxCreditInvestigationYdjByAppId.json",
+		onSuccess : function(res) {
+			var jsoncustInfo = res.RSP_BODY.appl;
+			var custProcInfo = res.RSP_BODY.pboc;//人行摘要信息
+			var custBankInfo = res.RSP_BODY.bank;//二代人行摘要信息
+			var queryed_cert_type = "01";
+			if(custBankInfo != null){
+				queryed_cert_type = custBankInfo["QUERYED_CERT_TYPE"];
+			}
+			if(queryed_cert_type == "10"){
+				$('#custProcInfoForm').hide();
+			}else{
+				$('#custBankInfoForm').hide();
+			}
+			var resultInfo = res.RSP_BODY.result;//征信电核结果信息
+			var policData   =  res.RSP_BODY.policeData;//公安的信息 
+			$("#policeGender").textbox('setValue',policData.policeGender);//性别 
+			$("#policeJgssxhomeProvCity").textbox('setValue',policData.policeJgssxhomeProvCity);//籍贯 
+			var yanzhen = res.RSP_BODY.yanzhenResMap;
+			var yanzhenMesShowMap = res.RSP_BODY.yanzhenMesShowMap;//验证信息 “是” 的 展示 
+			objParam = jsoncustInfo;//为全局变量赋值（此处不用，为保存做准备）
+			var jsoncustInfojson = eval('(' +jsoncustInfo+ ')');
+			custZJInfoForm.form("load", jsoncustInfojson);
+			custProcInfoForm.form("load",custProcInfo);//人行摘要信息 
+			custBankInfoForm.form("load",custBankInfo);
+			yanzhenForm.form("load", yanzhen);
+			
+			$("#savedianhe").hide();
+			$("#jiyaotijiao").hide();
+			$("#save").hide();
+			
+			$('#F_telNo').textbox('textbox').attr("disabled",true);
+//			$('#bohao').textbox('textbox').attr("disabled",true);
+			$('#F_memo').prop("disabled",true);
+			
+//			$("#app").combobox({readonly:true});
+			$("#F_telcheckReuslt").combobox({disabled:true});
+			$("#F_noteObject").combobox({disabled:true});
+			$("#F_telType").combobox({disabled:true});
+			$("#F_telSource").combobox({disabled:true});
+			$("#G_zxCode2").combobox({disabled:true});
+			$("#G_passCode").combobox({disabled:true});
+////			 
+			$("#zhengxintianjia").linkbutton('disable');
+			$("#wentiku").linkbutton('disable');
+			$("#shenchaku").linkbutton('disable');
+			$("#zhengxinkuchaxun").linkbutton('disable');
+			//根据生日计算出生肖
+			if(jsoncustInfojson!=null&&jsoncustInfojson.c1Birth!=null&&jsoncustInfojson.c1Birth!=undefined&&jsoncustInfojson.c1Birth!=""){
+				var c1BirthStr=jsoncustInfojson.c1Birth+"";
+				var myZodiac=getShengXiaoByDate(c1BirthStr);
+				$("#shenxiao").textbox('setValue',myZodiac);
+			}
+		 	for(var proper in yanzhen){//验证信息 赋值 
+			if(yanzhen[proper]=="是"){
+				$("#"+proper).attr("style","background:red;");
+			}else if(yanzhen[proper]=="否"){
+			//	$("#"+proper).attr("style","background:green;"); 
+			}
+			} 
+		 	$("#yanzhenForm input").attr("readOnly","true");//使验证表单的 所有input标签 变为 只读模式 
+		 	//$("#checkMessageShowIs").append("formatter:formatOper2");
+		 	//过件码反显
+		 	if (resultInfo != null){
+				$("#G_passCode").combobox('setValue',resultInfo.blockCode);
+			}
+		 	for(var proper in yanzhenMesShowMap){
+		 		var div=document.createElement("div");
+		 		div.appendChild(document.createTextNode(""+yanzhenMesShowMap[proper]));
+		 		yanzhenMessage = yanzhenMesShowMap[proper]+";"+yanzhenMessage;
+		 		div.style="font-size: 12px;width: 310px";
+		 		$("#checkMessageShowIs").append(div);
+		 		
+		 	}
+			//为变量赋值，人行比对结果
+			pbocResultOld = yanzhen.pboc_CELL_PHONE+","+yanzhen.pboc_RESI_TEL+","+yanzhen.pboc_C_COMP_PHONE
+						+","+yanzhen.pboc_COMPANY+","+yanzhen.pboc_COMP_ADDR+","+yanzhen.pboc_RESIDENT_ADDR+",";
+			//白名单比对结果
+			credit_COMPANY_NAME=yanzhen.credit_COMPANY_NAME;
+			credit_COMPANY_TEL= yanzhen.credit_COMPANY_TEL;
+			
+		}
+	});
+	//alert("appId"+appId);
+	$('#datalist').datagrid({    
+	    url:'/opas-naps/notesMemoQuery.json',
+    	queryParams: {
+    		appId: appId
+    	}
+	});
+	//加载电话来源 下拉框 
+	loadFourSystemCreditZjCombobox('/opas-naps/findPhoneSourceTypeComboboxData.json');
+	//加载问题库datagrid 
+	$('#tb_questionWin').datagrid({
+		url:"/opas-naps/queryQuestion.json",
+		border:false,
+		animate:true,
+		fitColumns:true,
+		singleSelect:false,
+		checkOnSelect:false,
+		selectOnCheck:true,
+		rownumbers:true,
+		pageSize:3,
+		columns:[[{
+			title:'复选框 ',
+			field:'no',			 
+			checkbox:true,
+			halign:'center',
+			width:'3%',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'问题内容',
+			field:'questionDesc',
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'答案',
+			field:'fromTableNo',
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'回答情况',
+			field:'dianHeResult',
+			halign:'center',
+			formatter : formatOper2,
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}
+		]],onUncheck:function(rowIndex,rowData){
+			$("input:radio[name='radio"+rowIndex+"']:checked").attr('checked',false);
+		//	$('input:radio:checked').attr('checked',false);
+		}
+	
+	});
+});
+//加载 本页面 从数据库查出数据显示的 下拉框 
+function loadFourSystemCreditZjCombobox(comboboxUrl){
+	$cf.ajax({
+		 url:comboboxUrl,    
+		 onSuccess : function(response) {
+			var resultList = response.RSP_BODY.listMap;
+			var  listPhoneSource=resultList.listPhoneSource;
+			var  listPhoneType=resultList.listPhoneType;
+			var  listPhoneNoteObject=resultList.listPhoneNoteObject;
+			var  listPhoneCheckResult=resultList.listPhoneCheckResult;
+			//电话类型 
+			loadOneSystemCreditZjCombobox('F_telSource',listPhoneSource);
+			//照会对象
+			loadOneSystemCreditZjCombobox('F_telType',listPhoneType);
+			//照会对象
+			loadOneSystemCreditZjCombobox('F_noteObject',listPhoneNoteObject);
+			//电核结论 
+			loadOneSystemCreditZjCombobox('F_telcheckReuslt',listPhoneCheckResult);
+		}
+	});
+}
+//给某一个combobox下拉框赋值 
+function loadOneSystemCreditZjCombobox(comboboxId,resultList){
+	$('#'+comboboxId).combobox({
+		data:resultList,
+	    valueField:'dictDetailCode',
+	    textField:'dictDetailName',
+	    width:120,
+	    onLoadSuccess:function(){
+	    	var val=$(this).combobox("getData");
+	    	$(this).combobox("select",val[0]["dictDetailCode"]);
+	    }
+	});
+}
+//展示窗口
+function showWin(obj) {
+	var winObj = $("#" + obj);
+	winObj.window({
+		closed : false
+	});
+}
+//关闭窗体
+function onConcle(obj) {
+	var winObj = $("#" + obj);
+	winObj.window({
+		closed : true
+	});
+}
+//问题库颜色
+$("#tb_questionWin").datagrid({
+	rowStyler:function(index,row){
+		var rowInfo = $("#tb_questionWin").datagrid("getSelections")
+		if (rowInfo){
+			return 'background-color:white;color:black;fount-weight:bold;';
+		}
+	}
+}); 
+//人行转码
+function valueBoxChange(param,id0,id1){
+	if(param=='0'){
+		$(id0).prop("checked",true);
+		$(id1).prop("checked",false);
+	}else{
+		$(id0).prop("checked",false);
+		$(id1).prop("checked",true);
+	}
+}
+//转码，高亮
+function valueChange(oldVal,arr,gl){
+	var len = arr.length;
+	var obj = '';
+	if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+		for(var i=0;i<len;i++){
+			var temp=arr[i].split(":");
+			if(oldVal==temp[0]){
+				obj = temp[1];
+			}
+		}
+	}
+	if(oldVal!=null&&oldVal=='1'){
+		$(gl).attr("style","background-color:pink;color:red");
+	}
+	return obj;
+}
+//页面保存
+function onBizInpApplC1(){
+	/* var bizInpApplC1Data = {
+			"insideAppNo":$("#insideAppNo").val(),
+			"appId":appId,
+			"c1Nation":$("#c1Nation").val(),
+			//"c5Idte1":$("#c5Idte1").val(),
+			"c1Ename":$("#c1Ename").val(),
+			"c1Hmtel":$("#c1Hmtel").val(),
+			"c1Hmare":$("#c1Hmare").val(),
+			"c1Mobile":$("#c1Mobile").val(),
+			"c1HmaddTotal":$("#c1HmaddTotal").val(),
+			"c1Coname":$("#c1Coname").val(),
+			"c1Codept":$("#c1Codept").val(),
+			"c1Coduty":$("#c1Coduty").val(),
+			"c1Cotel":$("#c1Cotel").val(),
+			"c1Coext":$("#c1Coext").val(),
+			"c1CoaddTotal":$("#c1CoaddTotal").val(),
+			"c1Coyr":$("#c1Coyr").val(),
+			"c1Earn":$("#c1Earn").val(),
+			"c4Cycadd1":$("#c4Cycadd1").val(),
+			"c1Marst":$("#c1Marst").val(),
+			"qjRemark":$("#G_memo").val()
+	}; */
+	var gjm=$("#G_passCode").combobox('getValue');
+	if(gjm==''){
+		$.messager.alert('征信调查提示', '过件码下拉框内请选择值。', 'warning');
+		return null;
+	}
+	var custZJInfoFormData = $("#custZJInfoForm").serializeArray();
+	var obj =new Object();
+	obj.name="appId";
+	obj.value=appId;
+	custZJInfoFormData.push(obj);
+	var objBlockCode =new Object();
+	objBlockCode.name="blockCode";
+	objBlockCode.value=gjm;
+	custZJInfoFormData.push(objBlockCode);
+	var objYdjFlag =new Object();
+	objYdjFlag.name="ydjFlag";
+	objYdjFlag.value='1'; //1 易达金  2标准卡 
+	custZJInfoFormData.push(objYdjFlag);
+	var objCreUser = new Object();//userId
+	objCreUser.name="crtUser";
+	objCreUser.value=userId;//当前登录人
+	custZJInfoFormData.push(objCreUser);
+	var jsondata = getFormData(custZJInfoFormData);
+	
+	$cf.ajax({
+		url : "/opas-naps/saveOrUpdateTelcheckResult.json",
+		data : jsondata,
+		onSuccess : function(dataRes) {
+			var msg = dataRes.RSP_BODY.msg;
+			$.messager.alert('征信保存提示', msg,'warning');//alert(msg);
+		}
+	});
+}
+//转换数据
+function getFormData(dataObject) {
+	var jsonObject = '{';
+	var k = 0;
+	$.each(dataObject, function() {
+		k++;
+		var objName = this.name;
+		var objValue = this.value;
+		jsonObject += '"' + objName + '":';
+		jsonObject += '"' + objValue + '"';
+		if (k < dataObject.length) {
+			jsonObject += ",";
+		}
+	});
+	jsonObject += '}';
+	return eval("(" + jsonObject + ")");
+}
+//征信库"是"查询
+function isOpenWin(obj){
+	var companyTel;
+	var companyName;
+	if(obj=="#credit_COMPANY_TEL"&&(credit_COMPANY_TEL=='1'||credit_COMPANY_TEL=='是')){
+		companyTel = $("#c1Cotel").val();
+	}else if(obj=="#credit_COMPANY_NAME"&&(credit_COMPANY_NAME=='1'||credit_COMPANY_NAME=='是')){
+		companyName = $("#c1Coname").val();
+	}else{
+		return null;
+	}
+	$cf.ajax({
+		url : "/opas-naps/creditTelCheckSelect.json",
+		data : {
+			"companyTel" : companyTel,
+			"companyName":companyName
+		},
+		onSuccess : function(dataRes) {
+			if (dataRes.RSP_BODY.isSuccess) {
+				var dataMap = {
+					"rows" : dataRes.RSP_BODY.rows,
+					"total" : dataRes.RSP_BODY.total
+				};
+				$("#tb_yes_zhenXinWhiteOrderWin").datagrid("loadData", dataMap);
+				$("#tb_yes_zhenXinWhiteOrderWin").datagrid('getRows');
+			} 
+		}
+	}); 
+	showWin('yes_zhenXinWhiteOrderWin');
+}
+//征信库添加页面事件
+function openZhenXinKuAddWin(obj){
+	$("#Y_appId").textbox('setValue',appId);
+	$("#Y_operator").textbox('setValue',userId);
+	var date=new Date();
+	var currDay=date.getDate();
+	var currMonth=date.getMonth()+1;
+	var currDate=date.getFullYear()+'-'+currMonth+'-'+currDay;
+	$("#Y_createDate").datebox('setValue',currDate);
+	$("#Y_companyName").textbox('setValue',$("#c1Coname").val());
+	showWin(obj);
+}
+//征信库添加页面后台逻辑
+function onZhenXinKuAddWin(){
+	var zhenXinKuData = {
+		"appId":appId,
+		"companyName":$("#Y_companyName").val(),
+		"companyTel":$("#Y_companyTel").val(),
+		"createDate":$("#Y_createDate").datebox('getValue'),
+		"memo":$("#Y_memo").val(),
+		"operator":userId
+	};
+	$cf.ajax({
+		url : "/opas-naps/creditTelCheckSave.json",
+		data : {
+			"zhenXinKuData" : zhenXinKuData
+		},
+		onSuccess : function(dataRes) {
+			onConcle('zhenXinKuAddWin');
+			var msg = dataRes.RSP_BODY.msg;
+			alert(msg);
+		}
+	});
+}
+function fun(obj){
+	if(obj=='yes'){
+		$("#yes_moneyUserIsCompl").prop("checked",true);
+		$("#no_moneyUserIsCompl").prop("checked",false);
+	}else{
+		$("#yes_moneyUserIsCompl").prop("checked",false);
+		$("#no_moneyUserIsCompl").prop("checked",true);
+	}
+}
+function formatOper(val, row, index) {    
+	return "<a href=javascript:editNote();>修改</a>&nbsp;<a href=javascript:deleteNote();>删除</a>";
+}
+function formatOper2(val, row, index) {    
+	return "<input type='radio' name='"+index+"'  value='一致'/>一致&nbsp;<input type='radio' name='"+index+"' value='不一致'/>不一致&nbsp;";
+}
+function fun(obj,param){
+	var va_yes = param+"1";
+	var va_no = param+"0";
+	if(obj=='yes'){
+		$(va_yes).prop("checked",true);
+		$(va_no).prop("checked",false);
+	}else{
+		$(va_yes).prop("checked",false);
+		$(va_no).prop("checked",true);
+	}
+}
+//修改、拼接  大备注       objJsonStr:json串 实体映射,flag:0删除 ，1插入更新    此处待修改成可批量发送，
+function updateMemo(autoId,appId,objJsonStr,flag){
+	$('#datalist').datagrid({    
+	    url:'/opas-naps/saveOrUpdateNotes.json',
+    	queryParams: {
+    		autoId:autoId,
+    		appId: appId,
+    		bigMemo:objJsonStr,
+    		flagStr:flag
+    	},
+    	onLoadSuccess:function(data){
+    		//alert(data.msg);
+    	}
+	});
+}
+//问题库保存到电核
+function saveToDianHe(str){
+	//选中行
+	//var row=$("#tb_questionWin").datagrid("getSelections");
+	var row=$("#tb_questionWin").datagrid("getChecked");
+	for(var i=0;i<row.length;i++){
+		//alert($('input:radio:checked').val())
+		var items = $('input:radio:checked');
+		//var currIndex=$("#tb_questionWin").datagrid('getRowIndex',row[i]);
+		//var items = $("input:radio[name='radio"+currIndex+"']:checked");
+		//alert(items.value);
+		//console.log(items);
+		var str="问题描述："+row[i].questionDesc+"；问题答案："+row[i].fromTableNo+","+"电核结果："+items[i].value;
+		updateMemo(null,appId,str,'1');
+	}
+	if($("#zidingyi1").val()!=''){
+		var s = "问题描述："+$("#zidingyi1").val()+";问题答案："+$("#zidingyi2").val()+","+"电核结果："+$("input[name='result']:checked").val();
+		updateMemo(null,appId,s,'1');
+	//	alert($("input[name='result']:checked").val());
+	}
+	$("#zidingyi1").textbox('setValue','');
+	$("#zidingyi2").textbox('setValue','');
+	//$("#result").textbox('setValue','');
+	$("input[name='result']:checked").attr('checked',false);
+	//$("input:radio[name='radio"+rowIndex+"']:checked").attr('checked',false);
+	onConcle('questionWin');
+}
+
+//三方数据保存至电核
+function dianHe(){
+	var str = yanzhenMessage;
+	if (str == ""){
+	} else {
+		updateMemo(null,appId,str,'1');
+	}
+	
+}
+
+//征信白名单查询==保存至电核
+function saveDianHe(){
+	//选中行
+	var row=$("#tb_zhenXinWhiteOrderWin").datagrid("getSelections");
+	//var row=$("#tb_questionWin").datagrid("getChecked");
+	for(var i=0;i<row.length;i++){
+		var status = row[i].currStatus;
+		var str="申请件编号："+row[i].appId+";生成日期："+row[i].createDate+";单位名称："+row[i].companyName+";单位电话："+row[i].companyTel+";当前状态："+formatCode(status);
+		updateMemo(null,appId,str,'1');
+	}
+	onConcle('zhenXinWhiteOrderWin');
+}
+
+function editNote() {
+	var roleObj = $("#datalist").datagrid("getSelected");//alert(roleObj);
+	winObj = $("#winEdit");
+	winObj.window({
+		closed : false,
+		collapsible : false,
+		minimizable : false,
+		onBeforeOpen : setData(roleObj)
+	});
+}
+function setData(data) {
+	 $("#editFormJY").form("load", data);
+	$("#id").attr("readonly", "readonly");
+	$("#id").attr("disabled", "disabled");
+}
+//既要信息内容长时换行显示
+function formatAutoRow(value){
+	var array = value.split("&&&");
+	var length=array.length;
+	var currentData="";
+	if(length>=2){
+		for (var int = 0; int < length-1; int++) {
+			currentData+= array[int];
+		}
+		currentData=currentData+"<br>"+array[length-1];
+		return currentData;
+	}else{
+		return value;
+	}
+}
+//纪要修改
+function onUpdate(){
+	var roleData = isRequired('editFormJY');
+	var param = "autoId:"+roleData.autoId+",appId:"+roleData.appId+",bigMemo:"+roleData.bigMemo;
+	updateMemo(roleData.autoId,roleData.appId,roleData.bigMemo,'1');
+	onConcle('winEdit')
+	alert("操作成功");
+}
+function deleteNote(){
+	var roleData = $("#datalist").datagrid("getSelected");
+	if(roleData.autoId!=null||roleData.autoId!=undefined||roleData.autoId!=''){
+		if(confirm("确认要删除吗？")==true){
+			updateMemo(roleData.autoId,roleData.appId,null,'0');
+		}
+		alert("操作成功");
+	}else{
+		alert("删除失败，请刷新重试或与管理员联系");
+	}
+}
+function onReviewWin(){
+	var content = '<iframe src="../common/info_compare_zxInvestigation.html"  style="border:3px;width:660px;height:700px;top:300px"></iframe>';
+	var boarddiv='<div id="detailWin"></div>';
+	$(document.body).append(boarddiv);
+	var win = $("#detailWin").dialog({
+		content:content,
+		title:'详情展示'
+	});
+}
+// 纪要提交 
+function onSubmitJiYao(obj){
+	var telSource = ($("#F_telSource").combobox('getText')=="--请选择--")?"":("电话来源:"+ $("#F_telSource").combobox('getText')+";");
+	var telType = ($("#F_telType").combobox('getText')=="--请选择--")?"":("电话类型:"+ $("#F_telType").combobox('getText')+";");
+	var noteObject = ($("#F_noteObject").combobox('getText')=="--请选择--")?"":("照会对象:"+ $("#F_noteObject").combobox('getText')+";");
+	var telcheckReuslt = ($("#F_telcheckReuslt").combobox('getText')=="--请选择--")?"":("电核结论:"+ $("#F_telcheckReuslt").combobox('getText')+";");
+	var telNo = ($("#F_telNo").val()=="")?"":("电话号码:"+$("#F_telNo").val()+";");
+	var memo = ($("#F_memo").val()=="")?"":("备注:"+$("#F_memo").val());
+	var param = telSource+telType+noteObject+telcheckReuslt+telNo+"&&&"+memo;
+	if (param==","){
+	} else {
+		updateMemo(null,appId,param,'1');
+	}	
+	$("#F_telSource").combobox('setValue','');
+	$("#F_telType").combobox('setValue','');
+	$("#F_noteObject").combobox('setValue','');
+	$("#F_telcheckReuslt").combobox('setValue','');
+	$("#F_telNo").textbox('setValue','');
+	$("#F_memo").val('');
+	//}
+	/* 	var param = "appId:"+appId+",电话来源："+ $("#F_telSource").val()+",电话类型："+
+	$("#F_telType").val()+",电话号码："+$("#F_telNo").val()+",照会对象 "+$("#F_noteObject").val()+
+	",电核结论:"+$("#F_telcheckReuslt").val()+",备注:"+$("#F_memo").val();
+	$("#G_memo").textbox('setValue',param);
+	alert($("input[name='pboc_CELL_PHONE']:checked").val());
+	var pbocResultNew = $("input[name='pboc_CELL_PHONE']:checked").val()+""+
+					$("input[name='pboc_RESI_TEL']:checked").val()+""+
+					$("input[name='pboc_C_COMP_PHONE']:checked").val()+""+
+					$("input[name='pboc_COMPANY']:checked").val()+""+
+					$("input[name='pboc_COMP_ADDR']:checked").val()+""+
+					$("input[name='pboc_RESIDENT_ADDR']:checked").val();
+	var diaochaJiYaoData = {
+			"appId" : appId,
+			"telSource" : $("#F_telSource").val(),
+			"telType" : $("#F_telType").val(),
+			"telNo" : $("#F_telNo").val(),
+			"telSource" : $("#F_telSource").val(),
+			"noteObject" : $("#F_noteObject").val(),
+			"telcheckReuslt" : $("#F_telcheckReuslt").val(),
+			"memo" : $("#F_memo").val(),
+			"moneyUserIsCompl" : $("input[name='moneyUserIsCompl']:checked").val(),
+			"passCode":$("#G_passCode").val(),
+			"pbocResultOld":pbocResultOld,
+			"pbocResultNew":pbocResultNew,
+			"flag":obj
+		};
+	$cf.ajax({
+		url : "/opas-naps/surveyJiYaoSave.json",
+		data : {
+			"diaochaJiYaoData" : diaochaJiYaoData
+		},
+		onSuccess : function(dataRes) {
+			var msg = dataRes.RSP_BODY.msg;
+			alert(msg);
+		}
+	});  */
+}
+//字段格式转换
+function formatCode(value) {
+	if(value=='0'){
+		return "停用";
+	}else{
+		return "启用";
+	}
+}
+//问题库
+function openQuestion(obj){
+	var tbCommonWin = "tb_"+obj;
+	
+	$cf.ajax({
+		url : "/opas-naps/queryQuestion.json",
+		data : {
+			"appId" : appId,//"123456789",
+			"status" : "2"
+		},
+		onSuccess : function(dataRes) {
+			var dataMap = {
+				"rows" : dataRes.RSP_BODY.rows,
+				"total" : dataRes.RSP_BODY.total
+			};
+			$("#"+tbCommonWin).datagrid("loadData", dataMap);
+			$("#"+tbCommonWin).datagrid('getRows');
+		}
+	}); 
+	showWin(obj);
+}
+//选中行临时存储变量
+/**  var value;
+//取消所有行选中状态，选中的同时将所属行的数据保存至value
+ questionWin.datagrid({
+	onSelect : function(rowIndex,rowData){
+		$(this).datagrid("unselectAll");
+		value = rowData;
+	}	
+})*/
+/**
+ * 根据日期 获取生肖 
+ */
+function  getShengXiaoByDate(c1BirthStr){
+	var ss=(c1BirthStr.split('-'));
+	//var yearStr=c1BirthStr.substring(0,4)+"blue";//blue 是转或成数字时使用的 
+	//var yearReal=parseInt(yearStr);
+	var yy = parseInt(ss[0]+"blue");
+	var mm = parseInt(ss[1]+"blue");
+	var dd =parseInt(ss[2]+"blue");
+	var year =  parseInt(ss[0],10);
+	var month = parseInt(ss[1],10);
+	var day = parseInt(ss[2],10);
+	var zodiac = ['子鼠','丑牛','寅虎','卯兔','辰龙','巳蛇','午马','未羊','申猴','酉鸡','戌狗','亥猪'];
+	var myPos = (year - 1900)%12;
+	var myZodiac = zodiac[myPos];
+	var Y = year%100;
+	var D = 0.2422;
+	var C ;
+	var _year = Math.floor(year/100)+1;
+	switch(_year){
+	case 20:
+		C = 4.6295;
+		break;
+	case 21:
+		C = 3.87;
+		break;
+	case 22:
+		C = 4.15;
+		break;
+	default:
+		C = 3.87;
+	}
+	var L = (Y-1)/4;
+	var springDay = 0;
+	var springDay= Math.floor(Y*D+C)-Math.floor((Y-1)/4);
+	
+	switch(month){
+	case 1:
+		var _myPos = myPos-1;
+		if(_myPos<0){
+			_myPos = 11;
+		}
+		myZodiac = zodiac[_myPos];
+		break;
+	case 2:
+		if(day<springDay){
+			var _myPos = myPos-1;
+			if(_myPos<0){
+				_myPos = 11;
+			}
+			myZodiac = zodiac[_myPos];
+		}
+		break;
+	}
+	
+	return myZodiac;
+}
+</script>

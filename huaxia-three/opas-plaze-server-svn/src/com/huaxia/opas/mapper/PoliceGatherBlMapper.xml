@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PoliceGatherBlMapper">
+
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO OPAS_BIZ_PUBSEC_GATHER_BL (
+			APP_ID,NAME,CARDNUM,CASECODE,GISTUNIT,AREANAME,PERFORMANCE,DISREPUTTYPENAME,PUBLISHDATE,DN,
+			CRT_TIME,CRT_USER)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+		SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.result_name, jdbcType = VARCHAR},
+			#{item.result_cardnum, jdbcType = VARCHAR},
+			#{item.result_case_code, jdbcType = VARCHAR},
+			#{item.result_gist_unit, jdbcType = VARCHAR},
+			#{item.result_area_name, jdbcType = VARCHAR},
+			#{item.result_performance, jdbcType = VARCHAR},
+			#{item.result_disreput_type_name, jdbcType = VARCHAR},
+			#{item.result_publish_date, jdbcType = VARCHAR},
+			#{item.dn, jdbcType = VARCHAR},
+			SYSDATE,
+			'SYSTEM'
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,57 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>备注</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+	<body>
+			<table id="tblSeach" class="easyui-datagrid" style="width: 99%;height:470px;">
+			<thead>
+				<tr>
+					<th field="opasPfxcTime" width="30%" align="left" sortable="true" hidden="true">进入派发协查时间</th>
+					<th field="ysPfxcTime" width="30%" align="left" sortable="true" hidden="true">退回卡中心时间</th>
+					<th field="pfxcDay"  align="center" sortable="true"  style = "width:100%">协查天数</th>
+				</tr>
+			</thead>
+		</table>
+		<script>
+		var tblObj=$("#tblSeach");
+		
+	    var opasPfxcTime = tblObj.opasPfxcTime;     
+
+		function myformatDate(value,row) {
+			//派发协查时间
+			var opasPfxcTime = row.opasPfxcTime;
+			alert(opasPfxcTime);
+			//退回卡中心时间
+			var ysPfxcTime = row.ysPfxcTime;
+			alert(ysPfxcTime);
+			
+			var date = new Date(value);
+			date.setHours(date.getHours()-14);
+			var year = date.getFullYear().toString();
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			var hour = date.getHours();
+			var minute = date.getMinutes();
+			var second = date.getSeconds();
+
+			if (year == '1970') {
+				return '';
+			} else{
+				return year + '-' + (month < 10 ? ('0' + month) : month) + '-' + (day < 10 ? ('0' + day) : day) + ' ' + (hour < 10 ? ('0' + hour) : hour) + ':' + (minute < 10 ? ('0' + minute) : minute) + ':' + (second < 10 ? ('0' + second) : second);
+			}
+		}
+		$(function() {
+			var url = location.href;
+			var appId = url.split("=")[1];
+			var opts = tblObj.datagrid("options");
+			opts.url = "/opas-naps/pxcTime.json";
+			var s={"appId":appId};
+			tblObj.datagrid("reload", s);
+		})
+		</script>
+		
+	</body>
+

@@ -1,0 +1,93 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>内部风险信息</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<!-- 内部数据检查 2-->
+				<table id="tb_inDataCheckOtherWin" style="border-collapse: separate; border-spacing: 5px;">
+					
+				</table>
+				<!-- <div style="text-align: center; padding: 5px">
+					<a href="javascript:void(0)"class="easyui-linkbutton" onclick="onConcle('inDataCheckOtherWin')">取消</a>
+				</div> -->
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var autoId;
+	var appId;
+	var ishaveInriskInfo_column;
+	var obj;
+	 $(function(){
+		 //获取参数
+		appId=GetQueryString("appId");
+		obj=GetQueryString("obj");
+		ishaveInriskInfo_column=GetQueryString("ishaveInriskInfo_column");
+		var ss=location.href.split("&");
+		autoId=decodeURI(ss[3]).split("=")[1];
+		openInDataCheckOtherWin();
+	 });
+		
+	//内部数据检查add 20170322
+	function openInDataCheckOtherWin(){
+		var td1;
+		var td2;
+		var td3;
+		if("applyinfoBuscheck"==obj){
+			td1 = '<tr><td>申请信息逻辑检查</td>';
+			td2 = '<td><input class="easyui-textbox" name="data_applyinfoBuscheck" id="data_applyinfoBuscheck"/></td></tr>';
+		}else if("ishaveInriskInfo"==obj){
+			td1 = '<tr><td>单位名称</td>'+
+				'<td><input class="easyui-textbox" name="data_COMPANY_NAME" id="data_COMPANY_NAME"/></td>'+
+				'<td>单位电话</td>'+
+				'<td><input class="easyui-textbox" name="data_COMPANY_TEL" id="data_COMPANY_TEL"/></td></tr>';
+			td2 = '<tr><td>推广人员</td>'+
+				'<td><input class="easyui-textbox" name="data_SPREAD_PER" id="data_SPREAD_PER"/></td>'+
+				'<td>推广机构</td>'+
+				'<td><input class="easyui-textbox" name="data_SPREAD_ORG" id="data_SPREAD_ORG"/></td></tr>';
+			td3='<tr><td>推广人工号</td>'+
+				'<td><input class="easyui-textbox" name="data_SPREAD_NO" id="data_SPREAD_NO"/></td>'+
+				'<td>户籍</td>'+
+				'<td><input class="easyui-textbox" name="data_HOUSEHOLD" id="data_HOUSEHOLD"/></td></tr>';
+		}
+		$("#tb_inDataCheckOtherWin").empty();
+		$("#tb_inDataCheckOtherWin").append(td1+td2+td3); 
+		if("ishaveInriskInfo"==obj && ishaveInriskInfo_column!=null && ishaveInriskInfo_column!=""){
+			if(ishaveInriskInfo_column.indexOf("1")>-1){
+				$("#data_COMPANY_NAME").attr("style","color:red");
+			}
+			if(ishaveInriskInfo_column.indexOf("2")>-1){
+				$("#data_COMPANY_TEL").attr("style","color:red");
+			}
+			if(ishaveInriskInfo_column.indexOf("3")>-1){
+				$("#data_SPREAD_ORG").attr("style","color:red");
+			}
+			if(ishaveInriskInfo_column.indexOf("4")>-1){
+				$("#data_SPREAD_PER").attr("style","color:red");
+			}
+			if(ishaveInriskInfo_column.indexOf("5")>-1){
+				$("#data_SPREAD_NO").attr("style","color:red");
+			}
+		}
+		$cf.ajax({
+			url : "/opas-naps/inDataChecK.json",
+			data : {
+				"appId" : appId,
+				"flag" : obj,
+				"autoId" : autoId
+			},
+			onSuccess : function(dataRes) {
+				var res = dataRes.RSP_BODY.specilMap;
+				$("#tb_inDataCheckOtherWin").form("load",res);
+			}
+		});
+		//showWin("inDataCheckOtherWin");
+	} 
+</script>
+</html>

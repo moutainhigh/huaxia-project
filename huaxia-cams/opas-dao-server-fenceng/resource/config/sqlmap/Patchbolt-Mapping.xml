@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Patchbolt">
+		<resultMap id="PatchboltResultMap" type="com.huaxia.opas.domain.sysparm.Patchbolt">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="PATCH_CODE" property="patchCode" jdbcType="VARCHAR" />
+		<result column="IDENTITY_CARD" property="identityCard" jdbcType="CHAR" />
+		<result column="INCOME_CONFIRM" property="incomeConfirm" jdbcType="CHAR" />
+		<result column="DRIVING_LICENSE" property="drivingLicense" jdbcType="CHAR" />
+		<result column="OTHER_CREDITCARD" property="otherCreditcard" jdbcType="CHAR" />
+		<result column="OTHERS" property="others" jdbcType="CHAR" />
+		<result column="IS_HAVESIGN" property="isHavesign" jdbcType="CHAR" />
+		<result column="LIVE_CONFIRM" property="liveConfirm" jdbcType="CHAR" />
+		<result column="EDU_CONFIRM" property="eduConfirm" jdbcType="CHAR" />
+		<result column="OWNER_BANK_CONFIRM" property="ownerBankConfirm" jdbcType="CHAR" />
+		<result column="NON_ADDFILES" property="nonAddfiles" jdbcType="CHAR" />
+		<result column="WORK_CONFIRM" property="workConfirm" jdbcType="CHAR" />
+		<result column="HOUSE_CONFIRM" property="houseConfirm" jdbcType="CHAR" />
+		<result column="TITLE_CONFIRM" property="titleConfirm" jdbcType="CHAR" />
+		<result column="FINANCAL_CONFIRM" property="financalConfirm" jdbcType="CHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="DATE" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="APPLYER" property="applyer" jdbcType="VARCHAR" />
+		<result column="PROMOTER" property="promoter" jdbcType="VARCHAR" />
+		<result column="RISK" property="risk" jdbcType="VARCHAR" />
+		<result column="DUE_DATE" property="dueDate" jdbcType="DATE" />
+		<result column="OPT_TELNO" property="optTelno" jdbcType="VARCHAR" />
+		<result column="MESSAGE_FLAG" property="msgFlag" jdbcType="CHAR" />
+		<result column="SEND_FLAG" property="sendFlag" jdbcType="CHAR" />
+		<result column="COMPLETED_FLAG" property="completedFlag" jdbcType="CHAR" />
+		<result column="WORK_ORDER" property="workerOrder" jdbcType="CHAR" />
+		<result column="VIP_ATTR" property="vipAttr" jdbcType="CHAR" />
+	</resultMap>
+	
+	<insert id="insertPatchbolt" parameterType="com.huaxia.opas.domain.sysparm.Patchbolt">
+		insert into OPAS_PATCHBOLT_INFO
+		(AUTO_ID,APP_ID,PATCH_CODE,IDENTITY_CARD,INCOME_CONFIRM,DRIVING_LICENSE,
+		OTHER_CREDITCARD,OTHERS,IS_HAVESIGN,LIVE_CONFIRM,EDU_CONFIRM,OWNER_BANK_CONFIRM,
+		NON_ADDFILES,WORK_CONFIRM,HOUSE_CONFIRM,TITLE_CONFIRM,FINANCAL_CONFIRM,CRT_DATE,
+		CRT_USER,MEMO,APPLYER,PROMOTER,RISK,DUE_DATE,OPT_TELNO,MESSAGE_FLAG,SEND_FLAG,COMPLETED_FLAG,WORK_ORDER,VIP_ATTR)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{appId,jdbcType=VARCHAR},
+		#{patchCode,jdbcType=VARCHAR},
+		#{identityCard,jdbcType=CHAR},
+		#{incomeConfirm,jdbcType=CHAR},
+		#{drivingLicense,jdbcType=CHAR},
+		#{otherCreditcard,jdbcType=CHAR},
+		#{others,jdbcType=CHAR},
+		#{isHavesign,jdbcType=CHAR},
+		#{liveConfirm,jdbcType=CHAR},
+		#{eduConfirm,jdbcType=CHAR},
+		#{ownerBankConfirm,jdbcType=CHAR},
+		#{nonAddfiles,jdbcType=CHAR},
+		#{workConfirm,jdbcType=CHAR},
+		#{houseConfirm,jdbcType=CHAR},
+		#{titleConfirm,jdbcType=CHAR},
+		#{financalConfirm,jdbcType=CHAR},
+		#{crtDate,jdbcType=DATE},
+		#{crtUser,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{applyer,jdbcType=VARCHAR},
+		#{promoter,jdbcType=VARCHAR},
+		#{risk,jdbcType=VARCHAR},
+		#{dueDate,jdbcType=DATE},
+		#{optTelno,jdbcType=VARCHAR},
+		#{msgFlag,jdbcType=CHAR},
+		#{sendFlag,jdbcType=CHAR},
+		#{completedFlag,jdbcType=CHAR},
+		#{workerOrder,jdbcType=CHAR},
+		#{vipAttr,jdbcType=CHAR}
+		)
+	</insert>
+		
+	<select id="queryPatchboltCountByAppId" parameterType="com.huaxia.opas.domain.sysparm.Patchbolt"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PATCHBOLT_INFO where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 用于二次补件 shihuan 2017-03-28 -->
+	<update id="updateByAppId" parameterType="com.huaxia.opas.domain.sysparm.Patchbolt" >
+    update OPAS_PATCHBOLT_INFO
+    set
+        PATCH_CODE = #{patchCode,jdbcType=VARCHAR},
+        IDENTITY_CARD = #{identityCard,jdbcType=CHAR},
+        INCOME_CONFIRM = #{incomeConfirm,jdbcType=CHAR},
+        DRIVING_LICENSE = #{drivingLicense,jdbcType=CHAR},
+        OTHER_CREDITCARD = #{otherCreditcard,jdbcType=CHAR},
+        OTHERS = #{others,jdbcType=CHAR},
+        IS_HAVESIGN = #{isHavesign,jdbcType=CHAR},
+        LIVE_CONFIRM = #{liveConfirm,jdbcType=CHAR},
+        EDU_CONFIRM = #{eduConfirm,jdbcType=CHAR},
+        OWNER_BANK_CONFIRM = #{ownerBankConfirm,jdbcType=CHAR},
+        NON_ADDFILES = #{nonAddfiles,jdbcType=CHAR},
+        WORK_CONFIRM = #{workConfirm,jdbcType=CHAR},
+        HOUSE_CONFIRM = #{houseConfirm,jdbcType=CHAR},
+        TITLE_CONFIRM = #{titleConfirm,jdbcType=CHAR},
+        FINANCAL_CONFIRM = #{financalConfirm,jdbcType=CHAR},
+        MEMO = #{memo,jdbcType=VARCHAR},
+        APPLYER = #{applyer,jdbcType=VARCHAR},
+        PROMOTER = #{promoter,jdbcType=VARCHAR},
+        RISK = #{risk,jdbcType=VARCHAR},
+        DUE_DATE = #{dueDate,jdbcType=DATE},
+        OPT_TELNO = #{optTelno,jdbcType=VARCHAR},
+        MESSAGE_FLAG = #{msgFlag,jdbcType=CHAR},
+        SEND_FLAG = #{sendFlag,jdbcType=CHAR},
+        COMPLETED_FLAG = #{completedFlag,jdbcType=CHAR},
+        WORK_ORDER = #{workerOrder,jdbcType=CHAR},
+		VIP_ATTR = #{vipAttr,jdbcType=CHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <update id="updatePatchCode" parameterType="com.huaxia.opas.domain.sysparm.Patchbolt" >
+    update OPAS_PATCHBOLT_INFO
+    set
+        PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+    
+      <update id="updatePatchCodeYdj" parameterType="com.huaxia.opas.domain.sysparm.PatchboltYdj" >
+    update OPAS_PATCHBOLT_YDJ_INFO
+    set
+        PATCH_CODE = #{patchCode,jdbcType=VARCHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  
+    <!-- 提取指定天數工作日后的日期 wjf 2017-04-26  -->
+    <select id="queryTargetDate" parameterType="java.util.Map" resultType="java.util.Date">
+	    select endday(
+	    to_date(#{beforeDate},'yyyy-mm-dd'),
+	    #{dayNum}
+	    ) from dual
+  	</select>
+  	
+    <!--用于二次补件反显已勾选数据 shihuan 2017-03-28  -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="PatchboltResultMap">
+	    select 
+		AUTO_ID,APP_ID,PATCH_CODE,IDENTITY_CARD,INCOME_CONFIRM,DRIVING_LICENSE,
+		OTHER_CREDITCARD,OTHERS,IS_HAVESIGN,LIVE_CONFIRM,EDU_CONFIRM,OWNER_BANK_CONFIRM,
+		NON_ADDFILES,WORK_CONFIRM,HOUSE_CONFIRM,TITLE_CONFIRM,FINANCAL_CONFIRM,CRT_DATE,
+		CRT_USER,MEMO,APPLYER,PROMOTER,RISK,DUE_DATE,OPT_TELNO,MESSAGE_FLAG,VIP_ATTR,WORK_ORDER
+	    from OPAS_PATCHBOLT_INFO
+	    where APP_ID = #{appId,jdbcType=VARCHAR}
+  	</select>
+  	
+	<resultMap id="PatchboltYdjMap" type="com.huaxia.opas.domain.sysparm.PatchboltYdj">
+	    <result column="AUTO_ID" jdbcType="VARCHAR" property="autoId" />
+	    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	    <result column="PATCH_CODE" jdbcType="VARCHAR" property="patchCode" />
+	    <result column="IDENTITY_CARD" jdbcType="CHAR" property="identityCard" />
+	    <result column="PAY_WATER" jdbcType="CHAR" property="payWater" />
+	    <result column="WORK_PROOF" jdbcType="CHAR" property="workProof" />
+	    <result column="INCOME_PROOF" jdbcType="CHAR" property="incomeProof" />
+	    <result column="SOCIAL_SECURITY" jdbcType="CHAR" property="socialSecurity" />
+	    <result column="HOUSE_PROOF" jdbcType="CHAR" property="houseProof" />
+	    <result column="ACCUMULATION_FUND" jdbcType="CHAR" property="accumulationFund" />
+	    <result column="EDUCATION_PROOF" jdbcType="CHAR" property="educationProof" />
+	    <result column="TAX_RECEIPT" jdbcType="CHAR" property="taxReceipt" />
+	    <result column="CREDIT_CARD_BILL" jdbcType="CHAR" property="creditCardBill" />
+	    <result column="OWNER_BANK_PROOF" jdbcType="CHAR" property="ownerBankProof" />
+	    <result column="FINANCAL_PROOF" jdbcType="CHAR" property="financalProof" />
+	    <result column="LOAN_SETTLE_PROOF" jdbcType="CHAR" property="loanSettleProof" />
+	    <result column="RPR_PROOF" jdbcType="CHAR" property="rprProof" />
+	    <result column="MARRIAGE_CERTIFICATE" jdbcType="CHAR" property="marriageCertificate" />
+	    <result column="BUSINESS_LICENSE" jdbcType="CHAR" property="businessLicense" />
+	    <result column="CAR_PROOF" jdbcType="CHAR" property="carProof" />
+	    <result column="RETRICAL_MASTER_COPY" jdbcType="CHAR" property="retricalMasterCopy" />
+	    <result column="IMAGE_REPAIR" jdbcType="CHAR" property="imageRepair" />
+	    <result column="OTHER" jdbcType="CHAR" property="other" />
+	    <result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+	    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+	    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+	    <result column="APPLYER" jdbcType="VARCHAR" property="applyer" />
+	    <result column="PROMOTER" jdbcType="VARCHAR" property="promoter" />
+	    <result column="RISK" jdbcType="VARCHAR" property="risk" />
+	    <result column="DUE_DATE" jdbcType="DATE" property="dueDate" />
+	    <result column="OPT_TELNO" property="optTelno" jdbcType="VARCHAR" />
+	    <result column="MESSAGE_FLAG" property="msgFlag" jdbcType="CHAR" />
+	    <result column="SEND_FLAG" property="sendFlag" jdbcType="CHAR" />
+	    <result column="COMPLETED_FLAG" property="completedFlag" jdbcType="CHAR" />
+	    <result column="WORK_ORDER" property="workerOrder" jdbcType="CHAR" />
+	    <result column="VIP_ATTR" property="vipAttr" jdbcType="CHAR" />
+	</resultMap>
+	<insert id="insertPatchboltYdj" parameterType="com.huaxia.opas.domain.sysparm.PatchboltYdj">
+ 	   insert into OPAS_PATCHBOLT_YDJ_INFO 
+    		(AUTO_ID, APP_ID, PATCH_CODE, 
+			 IDENTITY_CARD, PAY_WATER, WORK_PROOF, 
+			 INCOME_PROOF, SOCIAL_SECURITY, HOUSE_PROOF, 
+			 ACCUMULATION_FUND, EDUCATION_PROOF, TAX_RECEIPT, 
+			 CREDIT_CARD_BILL, OWNER_BANK_PROOF, FINANCAL_PROOF, 
+			 LOAN_SETTLE_PROOF, RPR_PROOF, MARRIAGE_CERTIFICATE, 
+			 BUSINESS_LICENSE, CAR_PROOF, RETRICAL_MASTER_COPY, 
+			 IMAGE_REPAIR, OTHER, CRT_DATE, 
+			 CRT_USER, MEMO, APPLYER, 
+			 PROMOTER, RISK, DUE_DATE,OPT_TELNO,MESSAGE_FLAG,SEND_FLAG,COMPLETED_FLAG,WORK_ORDER,VIP_ATTR)
+    	values (
+    	  #{autoId,jdbcType=VARCHAR}, 
+    	  #{appId,jdbcType=VARCHAR}, 
+    	  #{patchCode,jdbcType=VARCHAR}, 
+	      #{identityCard,jdbcType=CHAR}, 
+	      #{payWater,jdbcType=CHAR}, 
+	      #{workProof,jdbcType=CHAR}, 
+	      #{incomeProof,jdbcType=CHAR}, 
+	      #{socialSecurity,jdbcType=CHAR}, 
+	      #{houseProof,jdbcType=CHAR}, 
+	      #{accumulationFund,jdbcType=CHAR}, 
+	      #{educationProof,jdbcType=CHAR}, 
+	      #{taxReceipt,jdbcType=CHAR}, 
+	      #{creditCardBill,jdbcType=CHAR}, 
+	      #{ownerBankProof,jdbcType=CHAR}, 
+	      #{financalProof,jdbcType=CHAR}, 
+	      #{loanSettleProof,jdbcType=CHAR}, 
+	      #{rprProof,jdbcType=CHAR}, 
+	      #{marriageCertificate,jdbcType=CHAR}, 
+	      #{businessLicense,jdbcType=CHAR}, 
+	      #{carProof,jdbcType=CHAR}, 
+	      #{retricalMasterCopy,jdbcType=CHAR}, 
+	      #{imageRepair,jdbcType=CHAR}, 
+	      #{other,jdbcType=CHAR}, 
+	      #{crtDate,jdbcType=TIMESTAMP}, 
+	      #{crtUser,jdbcType=VARCHAR}, 
+	      #{memo,jdbcType=VARCHAR}, 
+	      #{applyer,jdbcType=VARCHAR}, 
+	      #{promoter,jdbcType=VARCHAR}, 
+	      #{risk,jdbcType=VARCHAR}, 
+	      #{dueDate,jdbcType=DATE},
+	      #{optTelno,jdbcType=VARCHAR},
+	      #{msgFlag,jdbcType=CHAR},
+	      #{sendFlag,jdbcType=CHAR},
+	      #{completedFlag,jdbcType=CHAR},
+	      #{workerOrder,jdbcType=CHAR},
+		  #{vipAttr,jdbcType=CHAR})
+ 	 </insert>
+ 	 
+	<select id="queryPatchboltYdjCountByAppId" parameterType="com.huaxia.opas.domain.sysparm.PatchboltYdj"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PATCHBOLT_YDJ_INFO where APP_ID = #{appId,jdbcType=VARCHAR}
+	</select>
+	
+	 <resultMap id="BizInpApplResultMap" type="com.huaxia.opas.domain.input.BizInpApplC1">
+		<result column="C1_IDNBR" property="c1Idnbr" jdbcType="VARCHAR" />
+		<result column="C1_CNAME" property="c1Cname" jdbcType="VARCHAR" />
+		<result column="C4_ABPHON" property="c4Abphon" jdbcType="VARCHAR" />
+		<result column="C1_MOBILE" property="c1Mobile" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="CHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+	 </resultMap>
+	 
+	 <!-- 用于二次补件 易达金 shihuan 2017-03-28 -->
+	<update id="updateByAppIdYdj" parameterType="com.huaxia.opas.domain.sysparm.PatchboltYdj" >
+    update OPAS_PATCHBOLT_YDJ_INFO
+    set
+        PATCH_CODE = #{patchCode,jdbcType=VARCHAR},
+        IDENTITY_CARD = #{identityCard,jdbcType=CHAR},
+        PAY_WATER = #{payWater,jdbcType=CHAR},
+        WORK_PROOF = #{workProof,jdbcType=CHAR},
+        INCOME_PROOF = #{incomeProof,jdbcType=CHAR},
+        SOCIAL_SECURITY = #{socialSecurity,jdbcType=CHAR},
+        HOUSE_PROOF = #{houseProof,jdbcType=CHAR},
+        ACCUMULATION_FUND = #{accumulationFund,jdbcType=CHAR},
+        EDUCATION_PROOF = #{educationProof,jdbcType=CHAR},
+        TAX_RECEIPT = #{taxReceipt,jdbcType=CHAR},
+        CREDIT_CARD_BILL = #{creditCardBill,jdbcType=CHAR},
+        OWNER_BANK_PROOF = #{ownerBankProof,jdbcType=CHAR},
+        FINANCAL_PROOF = #{financalProof,jdbcType=CHAR},
+        LOAN_SETTLE_PROOF = #{loanSettleProof,jdbcType=CHAR},
+        RPR_PROOF = #{rprProof,jdbcType=CHAR},
+        MARRIAGE_CERTIFICATE = #{marriageCertificate,jdbcType=CHAR},
+        BUSINESS_LICENSE = #{businessLicense,jdbcType=CHAR},
+        CAR_PROOF =  #{carProof,jdbcType=CHAR},
+        RETRICAL_MASTER_COPY = #{retricalMasterCopy,jdbcType=CHAR},
+        IMAGE_REPAIR = #{imageRepair,jdbcType=CHAR},
+        MEMO = #{memo,jdbcType=VARCHAR},
+        APPLYER = #{applyer,jdbcType=VARCHAR},
+        PROMOTER = #{promoter,jdbcType=VARCHAR},
+        RISK = #{risk,jdbcType=VARCHAR},
+        DUE_DATE = #{dueDate,jdbcType=DATE},
+        OPT_TELNO = #{optTelno,jdbcType=VARCHAR},
+        OTHER = #{other,jdbcType=CHAR},
+        MESSAGE_FLAG = #{msgFlag,jdbcType=CHAR},
+        SEND_FLAG = #{sendFlag,jdbcType=CHAR},
+        COMPLETED_FLAG = #{completedFlag,jdbcType=CHAR},
+        WORK_ORDER = #{workerOrder,jdbcType=CHAR},
+		VIP_ATTR = #{vipAttr,jdbcType=CHAR}
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </update>
+  
+    <!--用于二次补件反显已勾选数据  易达金 shihuan 2017-03-28  -->
+    <select id="selectByPrimaryKeyYdj" parameterType="java.lang.String" resultMap="PatchboltYdjMap">
+	    select 
+		 AUTO_ID, APP_ID, PATCH_CODE, 
+		 IDENTITY_CARD, PAY_WATER, WORK_PROOF, 
+		 INCOME_PROOF, SOCIAL_SECURITY, HOUSE_PROOF, 
+		 ACCUMULATION_FUND, EDUCATION_PROOF, TAX_RECEIPT, 
+		 CREDIT_CARD_BILL, OWNER_BANK_PROOF, FINANCAL_PROOF, 
+		 LOAN_SETTLE_PROOF, RPR_PROOF, MARRIAGE_CERTIFICATE, 
+		 BUSINESS_LICENSE, CAR_PROOF, RETRICAL_MASTER_COPY, 
+		 IMAGE_REPAIR, OTHER, CRT_DATE, 
+		 CRT_USER, MEMO, APPLYER, 
+		 PROMOTER, RISK, DUE_DATE,OPT_TELNO,MESSAGE_FLAG
+		 FROM OPAS_PATCHBOLT_YDJ_INFO
+	    where APP_ID = #{appId,jdbcType=VARCHAR}
+  	</select>
+	 
+	 <!-- 查询推广人手机号，申请人电话，姓名，证件号  ,易达金标识shihuan 2017-03-28 -->
+ 	 <select id="querybizInpApplList" parameterType="java.lang.String"
+		resultMap="BizInpApplResultMap">
+		select C1_IDNBR,C1_CNAME,C4_ABPHON,C1_MOBILE,MATCHING_CARD_FLAG,YDJ_FLAG from OPAS_BIZ_INP_APPL_C1 where APP_ID	= #{appId,jdbcType=VARCHAR}	  
+	 </select>
+	 
+	 <!-- 将补件结果、时间、操作人存入大备注 shihuan 2017-03-29 -->
+	 <insert id="insertBigMemo" parameterType="com.huaxia.opas.domain.decision.TelcheckAddnote" >
+	    insert into OPAS_TELCHECK_ADDNOTE (AUTO_ID, APP_ID,BIG_MEMO,CRT_DATE,CRT_USER,TYPE_FLAG,TAL_ID)
+	    values (
+	    #{autoId,jdbcType=VARCHAR}, 
+	    #{appId,jdbcType=VARCHAR}, 
+	    #{bigMemo,jdbcType=CLOB},
+	    CURRENT_DATE,
+	    #{crtUser,jdbcType=VARCHAR},
+	    #{typeFlag,jdbcType=CHAR},
+	    #{talId,jdbcType=VARCHAR}
+	      )
+     </insert>
+     <resultMap id="AllotApplyResultMap" type="com.huaxia.opas.domain.allot.AllotApplyAllotHis" >
+	   <id column="ID" property="id" jdbcType="CHAR" />
+    	<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+	    <result column="CURR_OPT_QUEUE" property="currOptQueue" jdbcType="VARCHAR" />
+	    <result column="LAST_OPT_QUEUE" property="lastOptQueue" jdbcType="VARCHAR" />
+	    <result column="CURR_OPT_GROUP" property="currOptGroup" jdbcType="VARCHAR" />
+	    <result column="LAST_OPT_GROUP" property="lastOptGroup" jdbcType="VARCHAR" />
+	    <result column="CURR_OPT_USER" property="currOptUser" jdbcType="VARCHAR" />
+	    <result column="LAST_OPT_USER" property="lastOptUser" jdbcType="VARCHAR" />
+	    <result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+	    <result column="DEL_STATUS" property="delStatus" jdbcType="CHAR" />
+	    <result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+	    <result column="CRT_TEAM_DATE" property="crtTeamDate" jdbcType="TIMESTAMP" />
+	    <result column="QUEUE_DATE" property="queueDate" jdbcType="TIMESTAMP" />
+	    <result column="GROUP_DATE" property="groupDate" jdbcType="TIMESTAMP" />
+	    <result column="SUBMIT_STATUS" property="submitStatus" jdbcType="CHAR" />
+	    <result column="REVIEW_STATUS" property="reviewStatus" jdbcType="VARCHAR" />
+	    <result column="SUBMIT_TYPE" property="submitType" jdbcType="VARCHAR" />
+	    <result column="LST_TEAM_DATE" property="lstTeamDate" jdbcType="TIMESTAMP" />
+	    <result column="SUBMIT_MEMO" property="submitMemo" jdbcType="VARCHAR" />
+  </resultMap>
+     
+  	<!-- 用于修改申请件的状态  -->
+    <update id="updateDelStatusByAppId" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllot" >
+        update OPAS_ALLOT_APPLY_ALLOT 
+            set DEL_STATUS = #{delStatus,jdbcType=VARCHAR},
+            	USER_DATE =	SYSDATE,
+           	    LST_TEAM_DATE = #{lstTeamDate,jdbcType=TIMESTAMP},
+           	    LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR}
+        where APP_ID = #{appId,jdbcType=VARCHAR}
+    </update>
+    
+    <!-- 根据申请件appid查询申请件分配表数据 -->
+    <select id="selectAllotApplyByAppId" resultMap="AllotApplyResultMap" parameterType="java.lang.String" >
+    select 
+	    APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, 
+	    LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+	    SUBMIT_STATUS, REVIEW_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO
+    from OPAS_ALLOT_APPLY_ALLOT
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 补件修改申请件分配状态时，在历史表中插入数据 -->
+  <insert id="insertAllotApplyHis" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllotHis" >
+    insert into OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE, 
+      LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, 
+      CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, RECORD_TEAM_DATE, 
+      QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+      REVIEW_STATUS, SUBMIT_TYPE, CRT_TEAM_DATE, 
+      LST_TEAM_DATE, USER_DATE,SUBMIT_MEMO)
+    values (#{id,jdbcType=CHAR}, #{appId,jdbcType=VARCHAR}, #{currOptQueue,jdbcType=VARCHAR}, 
+      #{lastOptQueue,jdbcType=VARCHAR}, #{currOptGroup,jdbcType=CHAR}, #{lastOptGroup,jdbcType=CHAR}, 
+      #{currOptUser,jdbcType=CHAR}, #{lastOptUser,jdbcType=CHAR}, #{currStatus,jdbcType=CHAR}, 
+      #{delStatus,jdbcType=CHAR}, #{currNode,jdbcType=VARCHAR}, #{recordTeamDate,jdbcType=TIMESTAMP}, 
+      #{queueDate,jdbcType=TIMESTAMP}, #{groupDate,jdbcType=TIMESTAMP}, #{submitStatus,jdbcType=CHAR}, 
+      #{reviewStatus,jdbcType=CHAR}, #{submitType,jdbcType=VARCHAR}, #{crtTeamDate,jdbcType=TIMESTAMP}, 
+      #{lstTeamDate,jdbcType=TIMESTAMP}, SYSDATE,#{submitMemo,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 根据autoId查询标准卡补件信息表中是否存在这条数据 -->
+  <select id="queryCountById" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(1) from OPAS_PATCHBOLT_INFO where auto_id = #{autoId}
+  </select>
+  
+  <!-- 根据autoId更新标准卡补件信息表 -->
+  <update id="updateByAutoId" parameterType="java.util.Map" >
+  	update OPAS_PATCHBOLT_INFO set COMPLETED_FLAG = #{completedFlag} 
+  	where auto_Id = #{autoId}
+  </update>
+  <!-- 根据autoId更新易达金卡补件信息表 -->
+  <update id="updateYdjByAutoId" parameterType="java.util.Map" >
+  	update OPAS_PATCHBOLT_YDJ_INFO set COMPLETED_FLAG = #{completedFlag} 
+  	where auto_Id = #{autoId}
+  </update>
+  
+  	<resultMap id="SuppArResultMap" type="com.huaxia.opas.domain.archive.SuppArchive">
+		<result column="PATCH_CODE" property="patchCode" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="PATCH_STATUS" property="patchStatus" jdbcType="CHAR" />
+	</resultMap>
+	  <select id="selectByAppId" parameterType="java.lang.String" resultMap="SuppArResultMap">
+	 	 select PATCH_CODE,PATCH_STATUS from OPAS_FILE_PATCHBOLT where app_id = #{appId}
+ 	 </select>
+ 	  <select id="selectAppIdByAutoId" parameterType="java.util.Map" resultType="java.lang.String">
+	 	 select app_id from OPAS_PATCHBOLT_YDJ_INFO where auto_Id = #{autoId}
+ 	 </select>
+ 	 
+ 	  <select id="updateBzkByAppId" parameterType="java.util.Map" resultType="java.lang.Integer">
+	 	 update OPAS_PATCHBOLT_INFO set COMPLETED_FLAG = #{completedFlag} 
+  		 where app_id = #{appId}
+ 	 </select>
+ 	 
+ 	 <select id="querySomeFlagFromAllot" parameterType="java.lang.String" resultType="java.util.Map">
+			select  YDJ_FLAG,LAOJIANFLAG,MATCHING_CARD_FLAG from OPAS_ALLOT_APPLY_ALLOT
+			where app_id = #{appId}
+	</select>
+	
+	 <delete id="deleteByAppId" parameterType="java.lang.String" >
+			delete from OPAS_FILE_PATCHBOLT where app_id = #{appId,jdbcType=VARCHAR}
+	</delete>
+	
+	
+	<!-- 添加一部分对预审补件表的操作 -->
+	
+	<!-- 根据autoId查询标准卡补件信息表中是否存在这条数据 -->
+  	<select id="queryYsCountById" parameterType="java.lang.String" resultType="java.lang.Integer">
+  		select count(1) from YS_PATCHBOLT_INFO where auto_id = #{autoId}
+  	</select>
+  
+  	 <!-- 根据autoId更新标准卡补件信息表 -->
+  	<update id="updateYsByAutoId" parameterType="java.util.Map" >
+  		update YS_PATCHBOLT_INFO set COMPLETED_FLAG = #{completedFlag} 
+  		where auto_Id = #{autoId}
+  	</update>
+  
+</mapper>

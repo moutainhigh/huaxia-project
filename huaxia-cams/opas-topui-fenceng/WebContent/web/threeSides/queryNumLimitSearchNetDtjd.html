@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body style="padding: 10px;">
+	<div id="queryNumLimitSearch_div">
+	
+		<fieldset>
+			<legend>互联网多头借贷查询数量设置</legend>
+			<div align="center">
+			<form id="queryNumLimitSearch_form">
+			开始时间：<input id="queryNumLimitSearch_beginDate" name="limitStartDate" class="easyui-datebox" style="width:150px;"
+			data-options="required:true,editable:false"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			截止时间：<input id="queryNumLimitSearch_endDate" name="limitEndDate" class="easyui-datebox" style="width:150px;"
+			data-options="required:true,editable:false"/>
+			<br><br><br>
+			当前实际查询成功条数<input id="successedSearchNum" type="text" name="successedSearchNum" style="width:310px" readOnly="readonly"/>
+			<br><br>
+			<!-- 当前多头借贷查得条数<input id="nowSearchNum" type="text" name="nowSearchNum" style="width:310px" readOnly="readonly"/>
+			<br><br> -->
+			最大多头借贷查得条数<input id="limitQueryCount" type="text"  name="limitQueryCount" style="width:310px" />
+			</form>
+			<br><br>
+			<a href="javascript:void(0)"class="easyui-linkbutton" onclick="openDetailWindow()">查询结果明细统计</a>
+			<br><br>
+			<a href="javascript:void(0)"class="easyui-linkbutton" onclick="saveOrUpdateSearchNumControl()">保存</a>
+			</div>
+		</fieldset>
+	</div>
+	<!-- 查询详情窗口   -->
+	<div id="winQuery"  title="查询详情展示" class="easyui-window"
+		style="width: 320px; height: 435px; padding:10px;"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="queryLoanSeccussDetail">
+			请输入查询年: <input class="easyui-textbox" style="width: 110px" name="queryYear" id="queryYear">
+			<a href="javascript:void(0)"class="easyui-linkbutton" onclick="queryQiYeDetail()">查询</a>
+			<br><br>
+		<table>
+			<tr><td> </td>
+			<td style="width: 100px">各月实际查询成功条数</td>
+			<!-- <td style="width: 100px">多头借贷查得条数</td></tr> -->
+			<tr>
+				<td>1月份:</td>
+				<td><input name="JAN" style="width: 100px" type="text" class="monthText"  readonly="readonly" /></td>
+				<!-- <td><input name="JAN1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>2月份:</td>
+				<td><input name="FEB" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="FEB1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>3月份:</td>
+				<td><input name="MAR" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="MAR1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>4月份:</td>
+				<td><input name="APR" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="APR1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>
+				<td>5月份:</td>
+				<td><input name="MAY" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="MAY1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>6月份:</td>
+				<td><input name="JUN" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="JUN1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>7月份:</td>
+				<td><input name="JUL" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="JUL1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>8月份:</td>
+				<td><input name="AUG" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="AUG1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>9月份:</td>
+				<td><input name="SEP" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="SEP1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>10月份:</td>
+				<td><input name="OCT" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="OCT1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>11月份:</td>
+				<td><input name="NOV" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="NOV1" style="width: 100px" type="text"  readonly="readonly" /></td> -->
+			</tr>
+			<tr>	
+				<td>12月份:</td>
+				<td><input name="DEC" style="width: 100px" type="text" class="monthText" readonly="readonly" /></td>
+				<!-- <td><input name="DEC1" style="width: 100px" type="text"  readonly="readonly" /></td> -->	
+			</tr>
+		</table>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+
+var currentType=getCurrentUrlParam(); //0002-FICO  0900-车辆   1000-天御  0003-多头借贷
+$(function(){
+	querySearchNumControlTimeQuantum();
+});
+//查询 时间段内的 条数限制 和 实际查询成功条数 
+function  querySearchNumControlTimeQuantum(){
+	var param=new Object();
+	param.limitModuleType=currentType;
+	$cf.ajax({
+		url : "/opas-naps/querySearchNumControlTimeQuantum.json",
+		data : param,
+		async:false,
+		onSuccess : function(data) {
+			if(data.RSP_BODY.success){
+				var searchData= eval('(' + data.RSP_BODY.htmlMap + ')');
+				$('#queryNumLimitSearch_form').form("load", searchData);
+			}
+		}
+	});
+}
+
+
+
+//保存查询数量的控制 
+function saveOrUpdateSearchNumControl(){
+	var limitStartDate="";
+	var limitEndDate="";
+	var beginDate=$('#queryNumLimitSearch_beginDate').datebox('getValue');
+	if(beginDate!=null&&beginDate!=""&&beginDate!=undefined){
+		limitStartDate=beginDate;
+	}
+	var endDate=$('#queryNumLimitSearch_endDate').datebox('getValue');
+	if(endDate!=null&&endDate!=""&&endDate!=undefined){
+		limitEndDate=endDate;
+	}
+	if(limitStartDate==""&&limitEndDate==""){
+		$.messager.alert("提示","请选择起止日期。", "warning");
+		return ;
+	}
+	if(endDate<beginDate){
+		$.messager.alert("提示","开始时间不能大于截止时间。", "warning");
+		return ;
+	}
+	var limitQueryCount="";
+	var maxNum=$('#limitQueryCount').val();
+	var re=/^[0-9]+.?[0-9]*$/;  //判断字符串是否为数字 
+	if(!re.test(maxNum)){
+		$.messager.alert("提示","最大查询条数,请输入数字。", "warning");
+		return ;
+	}else{
+		limitQueryCount=maxNum;
+	}
+	var param=new Object();
+	param.limitModuleType=currentType;
+	param.limitStartDate=limitStartDate;
+	param.limitEndDate=limitEndDate;
+	param.limitQueryCount=limitQueryCount;
+	$cf.ajax({
+		url : "/opas-naps/saveOrUpdateSearchNumControl.json",
+		data : param,
+		async:false,
+		onSuccess : function(data) {
+			 if (data.RSP_BODY.success) {
+				 querySearchNumControlTimeQuantum();
+				$.messager.alert("提示", "保存成功。", "warning");
+			} else{
+				$.messager.alert("操作提示", "保存失败。", "warning");
+			}
+		}
+	});
+}
+function getCurrentUrlParam(){
+	var currentUrl=window.location.href;
+	return  currentUrl.split("=")[1];
+}
+//打开查询结果详情窗口
+var winQuery = $('#winQuery');
+function openDetailWindow() {
+			winQuery.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+		});
+}
+
+//查询结果详情展示
+function queryQiYeDetail(){
+	$('.monthText').val('0');
+	var year=$('#queryYear').val();
+	var re=/^[0-9]+.?[0-9]*$/;  //判断字符串是否为数字 
+	if(!re.test(year)){
+		$.messager.alert("提示","请输入数字。", "warning");
+		return ;
+	}else{
+		queryYear=year;
+	}
+	//建立一个object传给后台
+	var param=new Object();
+	param.queryYear=queryYear;
+	$cf.ajax({
+		url : '/opas-naps/queryLoanNumberNet.json',
+		data : param,
+		async:false,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+				$('#queryLoanSeccussDetail').form("load", data.RSP_BODY.yearMap);
+				/* $('#queryLoanSeccussDetail').form("load", data.RSP_BODY.yearMap1); */
+			}
+	}
+	});
+}
+</script>
+</html>

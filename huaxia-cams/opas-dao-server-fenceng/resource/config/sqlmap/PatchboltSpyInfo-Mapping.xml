@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="PatchboltSpyInfo">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.collect.PatchboltSpyInfo">
+		<id column="AUTO_ID" property="autoId" jdbcType="CHAR" />
+		<result column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="ENTERPRISE_PROPRRTY" property="enterpriseProprrty"
+			jdbcType="CHAR" />
+		<result column="PRIVATE_ENTPRSE_CLIENT_TYPE" property="privateEntprseClientType"
+			jdbcType="CHAR" />
+		<result column="LICENSE_OFFERED" property="licenseOffered"
+			jdbcType="CHAR" />
+		<result column="FOUND_TIME" property="foundTime" jdbcType="CHAR" />
+		<result column="REGISTERED_CAPITAL" property="registeredCapital"
+			jdbcType="CHAR" />
+		<result column="PRIVATE_ENTPRSE_CLIENT_PAPER" property="privateEntprseClientPaper"
+			jdbcType="CHAR" />
+		<result column="PRIVATE_ENTPRSE_CPAPER_TYPE" property="privateEntprseCpaperType"
+			jdbcType="VARCHAR" />
+		<result column="EDUCATION_BACKGROUND_CHECK" property="educationBackgroundCheck"
+			jdbcType="CHAR" />
+		<result column="PRODUCT_PRICE" property="productPrice"
+			jdbcType="DECIMAL" />
+		<result column="CRT_DATE" property="crtDate"
+			jdbcType="DATE" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select * from OPAS_PATCHBOLT_SPY_INFO
+		where APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_PATCHBOLT_SPY_INFO
+		where AUTO_ID = #{autoId,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.collect.PatchboltSpyInfo">
+		insert into OPAS_PATCHBOLT_SPY_INFO (AUTO_ID, APP_ID,
+		ENTERPRISE_PROPRRTY,
+		PRIVATE_ENTPRSE_CLIENT_TYPE, LICENSE_OFFERED, FOUND_TIME,
+		REGISTERED_CAPITAL, PRIVATE_ENTPRSE_CLIENT_PAPER,
+		PRIVATE_ENTPRSE_CPAPER_TYPE, EDUCATION_BACKGROUND_CHECK,
+		PRODUCT_PRICE,CRT_DATE)
+		values (#{autoId,jdbcType=CHAR}, #{appId,jdbcType=CHAR},
+		#{enterpriseProprrty,jdbcType=CHAR},
+		#{privateEntprseClientType,jdbcType=CHAR},
+		#{licenseOffered,jdbcType=CHAR}, #{foundTime,jdbcType=CHAR},
+		#{registeredCapital,jdbcType=CHAR},
+		#{privateEntprseClientPaper,jdbcType=CHAR},
+		#{privateEntprseCpaperType,jdbcType=VARCHAR},
+		#{educationBackgroundCheck,jdbcType=CHAR},
+		#{productPrice,jdbcType=DECIMAL},
+		#{crtDate,jdbcType=DATE})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.collect.PatchboltSpyInfo">
+		update OPAS_PATCHBOLT_SPY_INFO
+		set APP_ID = #{appId,jdbcType=CHAR},
+		ENTERPRISE_PROPRRTY = #{enterpriseProprrty,jdbcType=CHAR},
+		PRIVATE_ENTPRSE_CLIENT_TYPE = #{privateEntprseClientType,jdbcType=CHAR},
+		LICENSE_OFFERED = #{licenseOffered,jdbcType=CHAR},
+		FOUND_TIME = #{foundTime,jdbcType=CHAR},
+		REGISTERED_CAPITAL = #{registeredCapital,jdbcType=CHAR},
+		PRIVATE_ENTPRSE_CLIENT_PAPER = #{privateEntprseClientPaper,jdbcType=CHAR},
+		PRIVATE_ENTPRSE_CPAPER_TYPE =
+		#{privateEntprseCpaperType,jdbcType=VARCHAR},
+		EDUCATION_BACKGROUND_CHECK =
+		#{educationBackgroundCheck,jdbcType=CHAR},
+		PRODUCT_PRICE = #{productPrice,jdbcType=DECIMAL},
+		CRT_DATE = #{crtDate,jdbcType=DATE}
+		where AUTO_ID = #{autoId,jdbcType=CHAR}
+	</update>
+	
+	<update id="updateByAppIdKey" parameterType="com.huaxia.opas.domain.collect.PatchboltSpyInfo">
+		update OPAS_PATCHBOLT_SPY_INFO
+		set ENTERPRISE_PROPRRTY = #{enterpriseProprrty,jdbcType=CHAR},
+		PRIVATE_ENTPRSE_CLIENT_TYPE = #{privateEntprseClientType,jdbcType=CHAR},
+		LICENSE_OFFERED = #{licenseOffered,jdbcType=CHAR},
+		FOUND_TIME = #{foundTime,jdbcType=CHAR},
+		REGISTERED_CAPITAL = #{registeredCapital,jdbcType=CHAR},
+		PRIVATE_ENTPRSE_CLIENT_PAPER = #{privateEntprseClientPaper,jdbcType=CHAR},
+		PRIVATE_ENTPRSE_CPAPER_TYPE =
+		#{privateEntprseCpaperType,jdbcType=VARCHAR},
+		EDUCATION_BACKGROUND_CHECK =
+		#{educationBackgroundCheck,jdbcType=CHAR},
+		PRODUCT_PRICE = #{productPrice,jdbcType=DECIMAL},
+		CRT_DATE = #{crtDate,jdbcType=DATE}
+		where APP_ID = #{appId,jdbcType=CHAR}
+	</update>
+</mapper>

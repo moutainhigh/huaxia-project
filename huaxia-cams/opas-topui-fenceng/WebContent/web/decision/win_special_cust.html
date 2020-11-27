@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>是否特殊客户</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<script type="text/javascript">
+	$(function(){
+		var bigStr="P01,P02,P03,P04,P05,P06,";
+		var specialCust=window.opener.specialCust;
+		var codeList=specialCust.replace(/\s*/g,"").split(",");
+		var result='';
+		//去掉数组中的空值
+		for(var j=0;j<codeList.length;j++){
+			if(codeList[j]==''||codeList[j]==null||typeof(codeList[j])==undefined){
+				codeList.splice(j,1);
+				j=j-1;
+			}
+		}
+		var a=0;
+		for(var i=0;i<codeList.length;i++){
+			if(bigStr.indexOf(codeList[i])>-1){
+				result+="<tr>";
+				result += "<td>"+(a+1)+"</td>";
+				result += "<td>"+codeList[i]+"</td>";
+				if(codeList[i]=="P01"){
+					result += "<td>账户状态正常的已持我行信用卡客户</td>";
+				}else if(codeList[i]=="P02"){
+					result += "<td>本行员工</td>";
+				}else if(codeList[i]=="P03"){
+					result += "<td>VIP客户</td>";
+				}else if(codeList[i]=="P04"){
+					result += "<td>预筛选客户</td>";
+				}else if(codeList[i]=="P05"){
+					result += "<td>特殊项目/团办客户</td>";
+				}else if(codeList[i]=="P06"){
+					result += "<td>单独申请附属卡客户</td>";
+				}
+				result+="</tr>";
+				a++;
+			}
+		}
+		if(result==""){//存在不确定的码值
+			result+="<tr><td>存在不确定的码值</td></tr>";
+		}
+		$("#rzLableTable").append(result);
+		
+	});
+	
+</script>
+<body >
+<fieldset>
+	<legend  align="center" style="font-size:20px;font-weight:bolder">是否特殊客户</legend>
+	<form id="jdCardInfoForm">
+		<table id="rzLableTable" style="border-collapse: separate; border-spacing: 10px;">
+ 				
+		</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

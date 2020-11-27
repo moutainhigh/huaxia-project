@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>提报反欺诈编辑页面</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/constant.js"></script>
+<script type="text/javascript">
+var appId="";
+$(function(){
+	var parent = window.parent;
+	var parentAppId = parent.appId;
+	if(parentAppId==undefined){
+		appId="";
+	}else{
+		appId=parentAppId
+	}
+	load();
+});
+
+
+/****************************
+ *@describe:添加数据
+ *@author:xiaoJianFeng 改 gaohui 2017-4-7
+ *@date:2017-03-29
+ *****************************/
+function load(){
+	var table=createTable();
+	for(var i=0;i<resionList.length;i++){
+		var typeMap=resionList[i].type;
+		var typeId=typeMap.id;
+		var typeName=typeMap.name;
+		var typeValue=typeMap.value;
+		var tr=createTr(table);
+		var td=createTd(tr);
+		td.align='right';
+		td.style.width='30%';
+		//创建div
+		var div=createDiv(typeId,typeName,typeValue,'1');
+		//div追加在td里面
+		td.appendChild(div);
+		var td1=createTd(tr);
+		var subtypeList=resionList[i].subtype;
+		for(var j=0;j<subtypeList.length;j++){
+			var subTypeMap=subtypeList[j];
+			var subId=subTypeMap.id;
+			var subType=subTypeMap.name;
+			var subValue=subTypeMap.value;
+			var div1=createDiv(subId,subType,subValue,'2');
+			td1.appendChild(div1);
+		}
+	}
+	//创建一行 两列并且每二列中有textarea
+	var memotr=createTr(table);
+	var memotd=createTd(memotr);
+		memotd.align='right';
+		memotd.style.width='30%';
+		memotd.appendChild(document.createTextNode("提交备注"));
+		var memotd1=createTd(memotr);
+	var textarea=createTestArea();
+	memotd1.appendChild(textarea);
+	$("#cheatResion").html(table);
+	loadReasonDate();
+}
+/****************************
+ *@describe:动态创建表格
+ *@author:xiaoJianFeng
+ *@date:2017-03-29
+ *****************************/
+function createTable(){
+	var table=document.createElement("table");
+	table.border='1';
+	table.style.width='100%';
+	table.style.fontSize='12px';
+	table.style.borderCollapse='collapse';
+	return table;
+}
+/****************************
+ *@describe:动态创建DIV
+ *@author:xiaoJianFeng 改 gaohui 2017-4-7
+ *@date:2017-03-29
+ *****************************/
+function createDiv(typeId,typeName,typeValue,falg){
+	var div=document.createElement("div");
+	var input=document.createElement("input");
+	input.type='checkbox';
+	input.id=typeId;
+	if(flag=='1'){input.disabled='disabled';}
+	input.name=typeName;
+	input.value=typeValue;
+	input.onclick=function(){selectCheckFunction(this);};
+	div.appendChild(input);
+	div.appendChild(document.createTextNode(""+typeValue));
+	return div;
+}
+/****************************
+ *@describe:动态创建tr
+ *@author:xiaoJianFeng
+ *@date:2017-03-29
+ *****************************/
+function createTr(table){
+	return table.insertRow();
+	
+}
+/****************************
+ *@describe:动态创建td
+ *@author:xiaoJianFeng
+ *@date:2017-03-29
+ *****************************/
+function createTd(row){
+	return row.insertCell();
+}
+/****************************
+ *@describe:动态创建testArea
+ *@author:xiaoJianFeng
+ *@date:2017-03-29
+ *****************************/
+function createTestArea(){
+	var textarea=document.createElement("textarea");
+	textarea.rows='5';
+	textarea.id='check_memo';
+	textarea.style.width='99%';
+	textarea.onchange=function(){change(this);};
+	return textarea;
+}
+/****************************
+ *@describe:添加已有的原因码
+ *@author:xiaoJianFeng
+ *@date:2017-03-29
+ *****************************/
+var flag = parent.type;
+function loadReasonDate(){
+	var jsondata={};
+	jsondata.appId=appId;
+	$cf.ajax({
+		url:"/opas-naps/select_submitReason.json",
+		data:jsondata,
+		onSuccess:function(data) {
+			if(data.RSP_BODY.success) {
+				//查询返回提报原因码
+				var creditChecks=data.RSP_BODY.creditChecks;
+				//循环
+				for(var i=0;i<creditChecks.length;i++){
+					var checkMemo=creditChecks[0].check_memo;//提示备注 
+					$("#check_memo").text(checkMemo);
+					if(flag=="1"){
+						$("#check_memo").attr("disabled","disabled")
+					}
+					//获取原因码子类型id
+					var reasonCode=creditChecks[i].check_reasonCode;
+					//获取原因码父类型id
+					var reasonTypeCode=creditChecks[i].check_reasonTypeCode;
+					//默认选中父 checkbox
+					$("#"+reasonTypeCode).attr("checked","checked");
+					if(flag==1){
+						$("#"+reasonTypeCode).attr("disabled","disabled");
+					}
+					//默认选中父checkbox子类型checkbox
+					var checkBox=$("input[type=checkbox][name='"+reasonTypeCode+"Sub']").removeAttr("disabled");
+					var reasonCodes=reasonCode.split(',');
+					for(var c=0;c<reasonCodes.length;c++){
+						var code=reasonCodes[c];
+						//默认选中子类型checkbox
+						$("#"+code).attr("checked","checked");
+						if(flag==1){
+							$("#"+code).attr("disabled","disabled");
+						}
+					}
+				}
+			} 
+		}
+	});
+}
+</script>
+</head>
+ <body style="padding: 10px;">
+	<fieldset style="margin-top:10px;border:0px"> 
+		<div id="cheatResion"> 
+<!-- 		<table  style="width:100%;border-collapse:collapse;font-size:12px" border="1px" > -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"  style="width:30%"> -->
+<!-- 					<input type="checkbox" id="other" name="other" onclick="selectCheckFunction(this)" value="其它"/>其它 -->
+<!-- 				</td> -->
+<!-- 				<td style="font-size:12px"> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub0" value="申请人人行信用报告中公积金信息明显不符"/>申请人人行信用报告中公积金信息明显不符</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub1" value="申请人人行信用报告中多条职业信心均此公司"/>申请人人行信用报告中多条职业信心均此公司</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub2" value="红盾、工商类网站核查无此企业"/>红盾、工商类网站核查无此企业</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub3" value="全国组织机构代码查询中心查无此企业"/>全国组织机构代码查询中心查无此企业</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub4" value="申请人所在单位在网上有大量招聘信息，招聘职位较高，要求较低、但一般注明须邮寄简历肯身份证明文件复印件 "/>申请人所在单位在网上有大量招聘信息，招聘职位较高，要求较低、但一般注明须邮寄简历肯身份证明文件复印件 </div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub5" value="申请人文件程序领域专业问题无法解答"/>申请人文件程序领域专业问题无法解答</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub6" value="照会申请人时其不能顺利回答合理表外问题"/>照会申请人时其不能顺利回答合理表外问题</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="otherSub" id="otherSub7" value="电话核实中接电人不能分辨夹带的员工姓名"/>电话核实中接电人不能分辨夹带的员工姓名</div> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"> -->
+<!-- 					<div> -->
+<!-- 						<input type="checkbox" id="falseIdCard" name="falseIdCard" onclick="selectCheckFunction(this)" value="身份证明文件虚假人行联系方式找到证件持有人否认办卡"/>身份证明文件虚假人行联系方式找到证件持有人否认办卡 -->
+<!-- 					</div> -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseIdCardSub" id="falseIdCardSub0" value="身份证明文件字体异常"/>身份证明文件字体异常</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseIdCardSub" id="falseIdCardSub1" value="身份证明文件照片异常"/>身份证明文件照片异常</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseIdCardSub" id="falseIdCardSub2"  value="身份证明文件防伪点异常（须备注）"/>身份证明文件防伪点异常（须备注）<input type="text" style="width:50%;"></div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseIdCardSub" id="falseIdCardSub3" value="身份证明文件有效期异常"/>身份证明文件有效期异常</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseIdCardSub" id="falseIdCardSub4" value="号码与姓名不匹配且经询问申请人无曾用名"/>号码与姓名不匹配且经询问申请人无曾用名</div> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"> -->
+<!-- 					<input type="checkbox" id="falseApplication" name="falseApplication" onclick="selectCheckFunction(this)" value="申请附件虚假"/>申请附件虚假 -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseApplicationSub" id="falseApplicationSub0" value="工作证明文件疑假"/>工作证明文件疑假</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseApplicationSub" id="falseApplicationSub1" value="财力证明文件疑假"/>财力证明文件疑假</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="falseApplicationSub" id="falseApplicationSub2" value="其他附件疑假"/>其他附件疑假</div> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"> -->
+<!-- 					<input type="checkbox" id="professionalFalse" name="professionalFalse" onclick="selectCheckFunction(this)" value="职业信息虚假"/>职业信息虚假 -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="professionalFalseSub" id="professionalFalseSub0" value="侧核确认申请单位信息真实，但人力部门确认无此人"/>侧核确认申请单位信息真实，但人力部门确认无此人</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="professionalFalseSub" id="professionalFalseSub1" value="侧核确认申请单位名称真实有效，但具体地址或电话与申请表信息不符的"/>侧核确认申请单位名称真实有效，但具体地址或电话与申请表信息不符的</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="professionalFalseSub" id="professionalFalseSub2" value="申请人或其家属、联系人明确表示申请人不在单位上班的且其所提供的单位证实申请人在职的"/>申请人或其家属、联系人明确表示申请人不在单位上班的且其所提供的单位证实申请人在职的</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="professionalFalseSub" id="professionalFalseSub3" value="申请人文化程度与所处公司、职位、行业存在重大差距的（辅）"/>申请人文化程度与所处公司、职位、行业存在重大差距的（辅）</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="professionalFalseSub" id="professionalFalseSub4" value="申请人人行信用报告中多条职业信息均无此公司且行业差距较大的（辅）"/>申请人人行信用报告中多条职业信息均无此公司且行业差距较大的（辅）</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="professionalFalseSub" id="professionalFalseSub5" value="申请人人行信用报告中单位人力部门确认在职但与申请信息不一致的"/>申请人人行信用报告中单位人力部门确认在职但与申请信息不一致的</div> -->
+<!-- 				</td> -->
+<!-- 			</tr>				 -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"> -->
+<!-- 					<input type="checkbox" id="applicationUnitFalse" name="applicationUnitFalse" onclick="selectCheckFunction(this)" value="申请单位信息虚假"/>申请单位信息虚假 -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="applicationUnitFalseSub" id="applicationUnitFalseSub0" value="红盾、工商类政府公共查询网站核查无此企业（辅）"/>红盾、工商类政府公共查询网站核查无此企业（辅）</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="applicationUnitFalseSub" id="applicationUnitFalseSub1" value="上级单位核查确认无此机构"/>上级单位核查确认无此机构</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="applicationUnitFalseSub" id="applicationUnitFalseSub2" value="监督机构确认无此机构"/>监督机构确认无此机构</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="applicationUnitFalseSub" id="applicationUnitFalseSub3" value="申请单位地址物业公司确认无此名称公司的"/>申请单位地址物业公司确认无此名称公司的</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="applicationUnitFalseSub" id="applicationUnitFalseSub4" value="红盾、工商类网站核查企业执照被吊销"/>红盾、工商类网站核查企业执照被吊销</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="applicationUnitFalseSub" id="applicationUnitFalseSub5" value="单位电话与单位名称不符或单位电话为申请人私人注册且非公司法人"/>单位电话与单位名称不符或单位电话为申请人私人注册且非公司法人</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="applicationUnitFalseSub" id="applicationUnitFalseSub6" value="致电申请表单位电话称非申请表单位或为私人宅电"/>致电申请表单位电话称非申请表单位或为私人宅电</div> -->
+<!-- 				</td> -->
+<!-- 			</tr>				 -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"> -->
+<!-- 					<input type="checkbox" id="identityTheftApplication" name="identityTheftApplication" onclick="selectCheckFunction(this)" value="身份被盗用申请"/>身份被盗用申请 -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="identityTheftApplicationSub" id="identityTheftApplicationSub0" value="第三方信息联系到身份证持有人否认办卡"/>第三方信息联系到身份证持有人否认办卡</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="identityTheftApplicationSub" id="identityTheftApplicationSub1" value="人行职业信息与申请单位跨行业严重，且申请人不能回答人行中历史单位信息或其他正常信息"/>人行职业信息与申请单位跨行业严重，且申请人不能回答人行中历史单位信息或其他正常信息</div> -->
+<!-- 				</td> -->
+<!-- 			</tr>			 -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"> -->
+<!-- 					<input type="checkbox" id="lllegalEntry" name="lllegalEntry" onclick="selectCheckFunction(this)" value="非法中介进件"/>非法中介进件 -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="lllegalEntrySub" id="lllegalEntrySub0" value="网络查询该公司存在房贷、套现等信息"/>网络查询该公司存在房贷、套现等信息</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="lllegalEntrySub" id="lllegalEntrySub1" value="申请表联系方式中出现融资、房贷、空卡套现等信息发布号码的"/>申请表联系方式中出现融资、房贷、空卡套现等信息发布号码的</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="lllegalEntrySub" id="lllegalEntrySub2" value="申请人明确表示申请过程中有付费情况"/>申请人明确表示申请过程中有付费情况</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="lllegalEntrySub" id="lllegalEntrySub3" value="照会申请人时其不能顺利回答合理表外问题（辅)"/>照会申请人时其不能顺利回答合理表外问题（辅)</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="lllegalEntrySub" id="lllegalEntrySub4" value="电话核实中接电人不能分辨夹带的员工姓名（辅）"/>电话核实中接电人不能分辨夹带的员工姓名（辅）</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="lllegalEntrySub" id="lllegalEntrySub5" value="其他"/>其他</div> -->
+<!-- 				</td> -->
+<!-- 			</tr>				 -->
+<!-- 			<tr> -->
+<!-- 				<td align="right"> -->
+<!-- 					<input type="checkbox" id="iAuthorizeApplication" name="iAuthorizeApplication" onclick="selectCheckFunction(this)" value="非本人授权申请"/>非本人授权申请 -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="iAuthorizeApplicationSub" id="iAuthorizeApplicationSub0" value="与申请人确认手机号码不符"/>与申请人确认手机号码不符</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="iAuthorizeApplicationSub" id="iAuthorizeApplicationSub1" value="致电申请手机号码称非本人"/>致电申请手机号码称非本人</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="iAuthorizeApplicationSub" id="iAuthorizeApplicationSub2" value="家庭住址虚假的或多人同一家庭地址（卡片寄往家庭地址）"/>家庭住址虚假的或多人同一家庭地址（卡片寄往家庭地址）</div> -->
+<!-- 					<div><input type="checkbox" disabled="disabled" name="iAuthorizeApplicationSub" id="iAuthorizeApplicationSub3" value="申请表信息均真实但本人否认办卡，同一单位三件以上的"/>申请表信息均真实但本人否认办卡，同一单位三件以上的</div> -->
+<!-- 				</td> -->
+<!-- 			</tr>				 -->
+<!-- 			<tr> -->
+<!-- 				<td align="right">提交备注:</td> -->
+<!-- 				<td><textarea rows="5"  id="check_memo"  style="width:99%" onchange="change(this)"></textarea></td> -->
+<!-- 			</tr>  -->
+<!-- 		</table> -->
+		</div>
+	</fieldset>  
+
+	<!-- <div id="n09000_tool" data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="height:50px;text-align:center;">
+			<a href="javascript:onSave();" class="easyui-linkbutton"  style="text-align:center;display:inline-block;width:200px;height:32px">提报该疑似欺诈申请件(按键)</a>&nbsp;
+	</div> -->
+
+<script type="text/javascript">
+/**********************************
+ *@describe:选择类型激活后面选项
+ *@author:xiaoJianFeng
+ *@date:2017-03-09
+ ***********************************/
+/* function selectCheckFunction(obj){
+	var cname = $(obj).attr("name");
+	var other=$("input[type=checkbox][name='"+cname+"Sub']");
+	if ($(obj).is(":checked")) {
+		for(i=0;i<other.length;i++){
+			$(other[i]).removeAttr("disabled");
+		}
+	} else {
+		for(i=0;i<other.length;i++){
+			$(other[i]).attr("disabled","disabled");
+			$(other[i]).removeAttr("checked");
+		}
+	}
+} */
+/**********************************
+ *@describe:提报该疑似欺诈申请件(按键)
+ *@author:xiaoJianFeng
+ *@date:2017-03-09
+ ***********************************/
+/* function onSave(){  
+	 var reasonCode="";
+	 var map=new Map();
+	 //循环定义的每个类型checkBox
+	 for(var i=0;i<resionList.length;i++){
+		 var typeId=resionList[i].type.id;
+		 var typeName=resionList[i].type.name;
+		 	//获取当前checkBox
+		 	var checkID=$("input[type=checkbox][name='"+typeName+"']");
+		 	//判断当前checkBox是否选中
+			if($(checkID).is(":checked")){
+				reasonCode=reasonCode+typeId+",";
+				var saveArry=new Array();
+				var checkValue=$("#"+typeId).val()+"&"+typeId;
+				var checkIdSub=typeId+"Sub";
+				//获取选择checkBox子 checkBox 多个
+				var checkSubID=$("input[type=checkbox][name='"+checkIdSub+"']");
+				 var reasonTypeCode="";
+				for(j=0;j<checkSubID.length;j++){
+					//循环子checkBox判断是否选中
+					if($("#"+checkIdSub+j).is(":checked")){
+						var checkSubValue=$("#"+checkIdSub+j).val();
+						reasonTypeCode=reasonTypeCode+checkIdSub+j+",";
+						//获取子checkBox选中的值保存 Array中
+						saveArry.push(checkSubValue+"||");
+					}
+				}
+				//父check值做ke，子checkBox array做value
+				map.set(checkValue,reasonTypeCode+"&"+saveArry);
+			}
+	 }
+	var check_reason="";
+	map.forEach(function(value,key){
+		check_reason += "<icon>"+key+"="+value+"</icon><end>";
+	});
+	if(check_reason==""){
+		alert("请先勾选提报原因再进行提报");
+		return;
+	}
+	var check_memo=$("#check_memo").val();
+	 if(check_memo.length>200){
+		 alert("提交备注不能超过200字!");
+		 return;
+	 }
+	jsondata={};
+	jsondata.check_reason=check_reason; 
+	jsondata.check_memo=check_memo; 
+	jsondata.appId=appId;// 流水号
+	jsondata.check_submitType="1";//1 提报反欺诈 2 提报催收 3提报账号 4 提报授权
+	jsondata.check_SubmitStatus="1";
+	$cf.ajax({
+		url:"/opas-naps/submit_cheat.json",
+		data:jsondata,
+		onSuccess:function(data) {
+			if (data.RSP_BODY.isSuccess) {
+				alert("提报反欺诈通过");
+				window.parent.close();
+				window.parent.opener.reload();
+			} else {
+				alert("提报反欺诈失败");
+				return;
+			}
+		}
+	});
+}
+ 
+
+function change(obj){
+	 if(obj.value.length>200){
+		 alert("提交备注不能超过200字!");
+		 return;
+	 }
+} */
+</script>
+
+</body>
+</html>

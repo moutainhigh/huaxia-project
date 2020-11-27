@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Fishing">
+  <resultMap id="FishingResultMap" type="com.huaxia.opas.domain.report.Fishing">
+    <id column="AUTO_ID" jdbcType="CHAR" property="autoId" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="APPLY_CHANNLE" jdbcType="VARCHAR" property="applyChannle" />
+    <result column="APPLYER_NAME" jdbcType="VARCHAR" property="applyerName" />
+    <result column="OPER_NAME" jdbcType="VARCHAR" property="operName" />
+    <result column="C1_IDTYPE" jdbcType="VARCHAR" property="c1Idtype" />
+    <result column="C1_IDNBR" jdbcType="VARCHAR" property="c1Idnbr" />
+    <result column="RETURN_LINK" jdbcType="VARCHAR" property="returnLink" />
+    <result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+    <result column="CRT_TIME" jdbcType="VARCHAR" property="crtTime" />
+    <result column="REFUSE_REASON" jdbcType="VARCHAR" property="refuseReason" />
+    <result column="APPROVE_REUSLT" jdbcType="VARCHAR" property="approveReuslt" />
+    <result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+    <result column="PRE_APPROVELIMIT" jdbcType="DECIMAL" property="preApprovelimit" />
+	<result column="POLICY_CODE1" jdbcType="VARCHAR" property="policyCode1" />
+    <result column="POLICY_CODE2" jdbcType="VARCHAR" property="policyCode2" />
+    <result column="POLICY_CODE3" jdbcType="VARCHAR" property="policyCode3" />
+    <result column="VIOLATE_CODE1" jdbcType="VARCHAR" property="violateCode1" />
+    <result column="VIOLATE_CODE2" jdbcType="VARCHAR" property="violateCode2" />
+    <result column="VIOLATE_CODE3" jdbcType="VARCHAR" property="violateCode3" />
+    <result column="refuse_code1" jdbcType="VARCHAR" property="refuseCode1" />
+    <result column="refuse_code2" jdbcType="VARCHAR" property="refuseCode2" />
+    <result column="refuse_code3" jdbcType="VARCHAR" property="refuseCode3" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+  <select id="getFishingCountByCrtDateOrApplyChannle" parameterType="java.util.Map"  resultType="java.lang.String">
+    select count(auto_id) from  OPAS_REPORT_FISHING_INFO u 
+    <where>
+    	 u.YDJ_FLAG = #{ydjFlag} and 
+		 u.CRT_DATE &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+		 AND  u.CRT_DATE  &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+	    <if test="applyChannle != null and applyChannle !='' ">
+				 AND substr(u.app_id, 8, 1) = #{applyChannle}
+		</if>
+		
+	</where>	
+  </select>
+  <select id="findFishingListByCrtDateOrApplyChannle" parameterType="java.util.Map" resultMap="FishingResultMap">
+	select u.app_id,substr(APP_ID,8,1) as apply_channle,u.applyer_name,u.oper_name,u.c1_idtype,u.c1_idnbr,u.return_link,
+	to_char(u.crt_date,'yyyy-mm-dd: hh24:mi:ss') as CRT_TIME,u.refuse_reason,u.approve_reuslt,u.ydj_flag,u.approve_way,
+	u.pre_approvelimit,u.policy_code1,u.policy_code2,u.policy_code2,u.policy_code3,u.violate_code1,u.violate_code2,
+	u.violate_code3,u.memo,u.refuse_code1,u.refuse_code2,u.refuse_code3
+ 	from OPAS_REPORT_FISHING_INFO u 
+	<where>
+		 u.YDJ_FLAG = #{ydjFlag} and
+		 u.CRT_DATE &gt;= to_date(#{beginDate},'yyyy-mm-dd')
+		 AND  u.CRT_DATE  &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		<if test="applyChannle != null and applyChannle !='' ">
+			     AND substr(u.app_id, 8, 1) = #{applyChannle}
+		</if>
+	</where>
+  </select>
+   <insert id="insertFishing" parameterType="com.huaxia.opas.domain.report.Fishing" >
+    insert into OPAS_REPORT_FISHING_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="applyChannle != null" >
+        APPLY_CHANNLE,
+      </if>
+      <if test="applyerName != null" >
+        APPLYER_NAME,
+      </if>
+      <if test="operName != null" >
+        OPER_NAME,
+      </if>
+      <if test="c1Idtype != null" >
+        C1_IDTYPE,
+      </if>
+      <if test="c1Idnbr != null" >
+        C1_IDNBR,
+      </if>
+      <if test="returnLink != null" >
+        RETURN_LINK,
+      </if>
+      <if test="crtDate != null" >
+        CRT_DATE,
+      </if>
+      <if test="refuseReason != null" >
+        REFUSE_REASON,
+      </if>
+      <if test="approveReuslt != null" >
+        APPROVE_REUSLT,
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG,
+      </if>
+      <if test="approveWay != null" >
+        APPROVE_WAY,
+      </if>
+      <if test="preApprovelimit != null" >
+        PRE_APPROVELIMIT,
+      </if>
+      <if test="policyCode1 != null" >
+        POLICY_CODE1,
+      </if>
+      <if test="policyCode2 != null" >
+        POLICY_CODE2,
+      </if>
+      <if test="policyCode3 != null" >
+        POLICY_CODE3,
+      </if>
+      <if test="violateCode1 != null" >
+        VIOLATE_CODE1,
+      </if>
+      <if test="violateCode2 != null" >
+        VIOLATE_CODE2,
+      </if>
+      <if test="violateCode3 != null" >
+        VIOLATE_CODE3,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="refuseCode1 != null" >
+        REFUSE_CODE1,
+      </if>
+      <if test="refuseCode2 != null" >
+        REFUSE_CODE2,
+      </if>
+      <if test="refuseCode3 != null" >
+        REFUSE_CODE3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=CHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=CHAR},
+      </if>
+      <if test="applyChannle != null" >
+        #{applyChannle,jdbcType=VARCHAR},
+      </if>
+      <if test="applyerName != null" >
+        #{applyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="operName != null" >
+        #{operName,jdbcType=VARCHAR},
+      </if>
+      <if test="c1Idtype != null" >
+        #{c1Idtype,jdbcType=VARCHAR},
+      </if>
+      <if test="c1Idnbr != null" >
+        #{c1Idnbr,jdbcType=VARCHAR},
+      </if>
+      <if test="returnLink != null" >
+        #{returnLink,jdbcType=VARCHAR},
+      </if>
+      <if test="crtDate != null" >
+        #{crtDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseReason != null" >
+        #{refuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="approveReuslt != null" >
+        #{approveReuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        #{ydjFlag,jdbcType=CHAR},
+      </if>
+      <if test="approveWay != null" >
+        #{approveWay,jdbcType=CHAR},
+      </if>
+      <if test="preApprovelimit != null" >
+         #{preApprovelimit,jdbcType=DECIMAL},
+      </if>
+     <if test="policyCode1 != null" >
+         #{policyCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode2 != null" >
+       #{policyCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode3 != null" >
+         #{policyCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode1 != null" >
+         #{violateCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode2 != null" >
+         #{violateCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode3 != null" >
+         #{violateCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+         #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode1 != null" >
+         #{refuseCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode2 != null" >
+         #{refuseCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode3 != null" >
+         #{refuseCode3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+   <resultMap id="OutsourceDetailResultMap" type="com.huaxia.opas.domain.report.OutsourceDetail">
+   		<result column="app_id" jdbcType="VARCHAR" property="appId" />
+	    <result column="USER_CODE" jdbcType="VARCHAR" property="userCode" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	    <result column="NOW_SUB_NUM" jdbcType="INTEGER" property="nowSubNum" />
+	    <result column="NOW_DETAIL_NUM" jdbcType="INTEGER" property="nowDetailNum" />
+	    <result column="NOW_INVENTORY_NUM" jdbcType="INTEGER" property="nowInventoryNum" />
+	    <result column="BACK_NUM" jdbcType="INTEGER" property="backNum" />
+	    <result column="ONE_DAY" jdbcType="INTEGER" property="oneDay" />
+	    <result column="TWO_DAY" jdbcType="INTEGER" property="twoDay" />
+	    <result column="THREE_DAY" jdbcType="INTEGER" property="threeDay" />
+	    <result column="FOUR_DAY" jdbcType="INTEGER" property="fourDay" />
+	    <result column="FIVE_DAY" jdbcType="INTEGER" property="fiveDay" />
+  </resultMap>
+  <!-- 外包组所有人 -->
+  <select id="selectListOutsource" parameterType="java.util.Map"  resultMap="OutsourceDetailResultMap">
+    select USER_CODE, USER_NAME
+       from opas_ap_user
+      where user_id in
+            (SELECT user_id
+               FROM OPAS_AP_USER_ORG
+              where ORG_ID in
+                    (select org_id from OPAS_AP_ORG where org_no like 'WB3%'))
+      and status = 1
+  </select>
+  
+   <!-- 当日提交量 -->
+  <select id="selectTodaySubmitNum" parameterType="java.util.Map"  resultType="java.lang.Integer">
+	     <!-- select  count(distinct(substr(t.app_id,0,15)))  from OPAS_TELCHECK_RESULT t
+	         left join opas_fico_ydj_blaze y on y.app_id  = t.app_id 
+	         left join OPAS_FICO_SD_BLAZE b on b.app_id  = t.app_id
+	     where 1=1 
+        <if test="userCode != null and userCode !='' ">
+			 AND t.crt_user = #{userCode}
+		</if>  
+		and t.crt_date &gt;= to_date(#{beginDate}, 'yyyy-mm-dd')
+		and t.crt_date &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1) -->
+		select count(distinct(substr(s.app_id, 0, 15)))
+		  from OPAS_ALLOT_APPLY_ALLOT_HIS s
+		  <where>
+		  	   s.DEL_STATUS = '1'
+			   AND s.CURR_NODE = '02'
+			  <if test="userCode != null and userCode !='' ">
+				 AND s.CURR_OPT_USER = #{userCode}
+			  </if>  
+			   AND (s.RECORD_TEAM_DATE BETWEEN to_date(#{beginDate}, 'yyyy-mm-dd') AND
+			       (select to_date(#{endDate}, 'yyyy-mm-dd') +
+			                (INTERVAL '23:59:59' hour to second)
+			           from dual))
+		   </where>
+  </select>
+  
+  <!-- 当日归档量 -->
+  <select id="selectTodayDetailNum" parameterType="java.util.Map"  resultType="java.lang.Integer">
+	     select count(distinct(substr(t.app_id,0,15))) from OPAS_TELCHECK_RESULT t
+	     left join (select app_id,to_archive_time from OPAS_FILE_APPLICATION_DETAIL where flag = '2')l 
+	     on l.app_id = t.app_Id
+	     <where>
+	         <if test="userCode != null and userCode !='' ">
+				 AND t.crt_user = #{userCode}
+			 </if>  
+			 and l.to_archive_time &gt;= to_date(#{beginDate}, 'yyyy-mm-dd')
+			 and l.to_archive_time &lt;= (to_date(#{endDate},'yyyy-mm-dd')+1)
+		 </where>
+  </select>
+  
+   <!-- 当日库存 -->
+  <select id="selectTodayInventoryNum" parameterType="java.util.Map"  resultType="java.lang.Integer">
+	     select  count(distinct(substr(app_id,0,15))) from OPAS_ALLOT_APPLY_ALLOT 
+	     where CURR_NODE ='02'
+	     and check_meuoFlag = '1'
+        <if test="userCode != null and userCode !='' ">
+			 AND curr_opt_user = #{userCode}
+		</if>  
+  </select>
+  
+  <!-- 当日退件量 -->
+  <select id="selectTodayBackNum" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(*) from (select app_id from  (select app_id
+        from OPAS_ALLOT_APPLY_ALLOT
+        where CURR_NODE = '02'
+        and DEL_STATUS = '3'
+        and check_meuoFlag = '1'
+        <if test="userCode != null and userCode !='' ">
+			 AND curr_opt_user = #{userCode}
+		</if> 
+       )union
+
+		(select app_id
+        from OPAS_ALLOT_APPLY_ALLOT_HIS
+        where  back_flag = '4'
+        <if test="userCode != null and userCode !='' ">
+			 AND curr_opt_user = #{userCode}
+		</if> 
+		AND (RECORD_TEAM_DATE BETWEEN to_date(#{beginDate}, 'yyyy-mm-dd') AND
+			       (select to_date(#{endDate}, 'yyyy-mm-dd') +
+			                (INTERVAL '23:59:59' hour to second)
+			           from dual)) ) )
+  </select>
+  <!-- 历史退件量 -->
+  <select id="selectHistoryBackNum" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(distinct(app_id))
+        from OPAS_ALLOT_APPLY_ALLOT_HIS
+        where  back_flag = '4'
+        <if test="userCode != null and userCode !='' ">
+			 AND curr_opt_user = #{userCode}
+		</if> 
+		AND (RECORD_TEAM_DATE BETWEEN to_date(#{beginDate}, 'yyyy-mm-dd') AND
+			       (select to_date(#{endDate}, 'yyyy-mm-dd') +
+			                (INTERVAL '23:59:59' hour to second)
+			           from dual)) 
+		
+  </select>
+  
+  <!-- 进入未完成队列申请件天数 用的是分组天数-->
+  <select id="selectEnterQueueDayNum" parameterType="java.util.Map"  resultMap="OutsourceDetailResultMap">
+        select sum(case when QUEDATE =1 then 1 else 0 end) as oneDay,
+	          sum (case when QUEDATE =2 then 1 else 0 end) as twoDay,
+	          sum(case when QUEDATE =3 then 1 else 0 end) as threeDay,
+	          sum (case when QUEDATE =4 then 1 else 0 end) as fourDay,
+	          sum (case when QUEDATE =5 then 1 else 0 end) as fiveDay from 
+   		(select (select workday(trunc(group_date),trunc(sysdate)) from dual) as QUEDATE,LST_TEAM_DATE,curr_opt_user,
+   		check_meuoFlag,CURR_NODE from  OPAS_ALLOT_APPLY_ALLOT) l
+   	    where l.CURR_NODE = '02'
+        and l.check_meuoFlag = '1'
+        <if test="userCode != null and userCode !='' ">
+			 AND l.curr_opt_user = #{userCode}
+		</if>  
+  </select>
+  
+  <!--退件详情查询 -->
+  <select id="selectReturnNumInfo" parameterType="java.util.Map"  resultMap="OutsourceDetailResultMap">
+		select a.app_id ,a.curr_opt_user,a.lst_team_date,a.memo from OPAS_ALLOT_APPLY_ALLOT_his a,(select app_id from  (select app_id
+        from OPAS_ALLOT_APPLY_ALLOT
+        where CURR_NODE = '02'
+        and DEL_STATUS = '3'
+        and check_meuoFlag = '1'
+        <if test="userCode != null and userCode !='' ">
+			 AND curr_opt_user = #{userCode}
+		</if> 
+       )union
+
+		(select app_id
+        from OPAS_ALLOT_APPLY_ALLOT_HIS
+        where  back_flag = '4'
+        <if test="userCode != null and userCode !='' ">
+			 AND curr_opt_user = #{userCode}
+		</if> 
+		AND (RECORD_TEAM_DATE BETWEEN to_date(#{beginDate}, 'yyyy-mm-dd') AND
+			       (select to_date(#{endDate}, 'yyyy-mm-dd') +
+			                (INTERVAL '23:59:59' hour to second)
+			           from dual)) ) ) b 
+			           where a.app_id =b.app_id and a.back_flag='4' order by a.lst_team_date desc
+  </select>
+  
+   <!--退件详情查询 -->
+  <select id="selectNowdayInfo" parameterType="java.util.Map"  resultMap="OutsourceDetailResultMap">
+      select t.app_id, t.curr_opt_user, t.lst_team_date, s.memo, t.back_flag
+      FROM OPAS_ALLOT_APPLY_ALLOT t
+      left join (select row_number() over(partition by app_Id order by record_team_date desc) as rn,
+                        app_id,
+                        record_team_date,
+                        memo
+                   from OPAS_ALLOT_APPLY_ALLOT_HIS) s on s.app_id = t.app_id and s.rn = '1'
+      where t.curr_opt_user = #{userCode}
+      and t.back_flag = '4'
+  </select>
+  
+</mapper>

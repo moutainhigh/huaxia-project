@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.setting.mapper.ConfigSettingMapper">
+
+	<resultMap id="result_BaseConfigSetting" type="ConfigSetting">
+		<result column="CONFIG_ID" property="configId" jdbcType="CHAR" />
+		<result column="CONFIG_NAME" property="configName" jdbcType="VARCHAR" />
+		<result column="MAX_COUNT" property="maxCount" jdbcType="INTEGER" />
+		<result column="START_TIME" property="startTime" jdbcType="VARCHAR" />
+		<result column="END_TIME" property="endTime" jdbcType="VARCHAR" />
+		<result column="INTERVAL_TIME" property="intervalTime" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_BaseConfigSetting">
+		SELECT CONFIG_ID,CONFIG_NAME,MAX_COUNT,TO_CHAR(START_TIME, 'YYYY-MM-DD HH24:MI:SS') START_TIME,TO_CHAR(END_TIME, 'YYYY-MM-DD HH24:MI:SS') END_TIME,INTERVAL_TIME 
+		  FROM SYS_CONFIG_SETTING
+		 WHERE CONFIG_ID = #{id,jdbcType=CHAR}
+	</select>
+	
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM SYS_CONFIG_SETTING WHERE CONFIG_ID = #{id,jdbcType=CHAR}
+	</delete>
+	
+	<insert id="insert" parameterType="ConfigSetting">
+		INSERT INTO SYS_CONFIG_SETTING (
+			UUID,CRT_TIME,CRT_USER,CONFIG_ID,CONFIG_NAME,MAX_COUNT,START_TIME,END_TIME,INTERVAL_TIME
+		) VALUES (
+			SYS_GUID(),SYSDATE,
+			#{crtUser,jdbcType=VARCHAR},
+			#{id,jdbcType=CHAR},
+			#{configName,jdbcType=VARCHAR},
+			#{maxCount,jdbcType=INTEGER},
+			TO_DATE(#{startTime,jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{endTime,jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS'),
+			#{intervalTime,jdbcType=INTEGER}
+		)
+	</insert>
+   <select id="selecMaxCountById" parameterType="java.lang.String" resultMap="result_BaseConfigSetting">
+		SELECT MAX_COUNT,INTERVAL_TIME
+	    FROM SYS_CONFIG_SETTING
+	    WHERE CONFIG_ID = #{id}
+	</select>
+
+</mapper>

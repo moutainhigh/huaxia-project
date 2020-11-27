@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<property name="LOG_DIR" value="/app/opas/logs/cache" />
+	<property name="fileLayoutPattern" value="[%d{yyyy-MM-dd_HH:mm:ss.SSS}][%level][%thread][%class.%method:%line] %msg%n"  />
+	<property name="consoleLayoutPattern" value="[%d{yyyy-MM-dd_HH:mm:ss.SSS}][%level][%thread][%class.%method:%line] %msg%n" />
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<layout name="StandardFormat" class="ch.qos.logback.classic.PatternLayout">
+			<pattern>${consoleLayoutPattern}</pattern>
+		</layout>
+	</appender>
+	
+	<appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/cache.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/cache_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>7</maxHistory><!-- days -->
+		</rollingPolicy>
+		<layout>
+			<pattern>${fileLayoutPattern}</pattern>
+		</layout>
+	</appender>
+	
+	<logger name="com.huaxia.opas" level="DEBUG" additivity="false" >
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ROLLING" />
+	</logger>
+	
+	<root level="ERROR">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ROLLING" />
+	</root>
+
+</configuration>

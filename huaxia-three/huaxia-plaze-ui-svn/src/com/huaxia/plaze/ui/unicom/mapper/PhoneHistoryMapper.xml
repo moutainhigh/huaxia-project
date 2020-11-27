@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.unicom.mapper.PhoneHistoryMapper">
+
+	<resultMap id="result_pil" type="PhoneHistory">
+		<result column="TRN_ID" property="trnId" jdbcType="CHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="OPERATE_TIME" property="operateTime" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="HistoryListByPage" resultMap="result_pil">
+		SELECT
+		TRN_ID,NAME,CERT_NO,MOBILE,STATUS,OPERATE_TIME,CODE,CHECK_RESULT,CRT_TIME,STAFF_ID
+		FROM(
+		SELECT
+		TRN_ID,NAME,CERT_NO,MOBILE,STATUS,OPERATE_TIME,CODE,CHECK_RESULT,CRT_TIME,STAFF_ID,ROWNUM
+		RN
+		FROM(
+		SELECT
+		U.TRN_ID TRN_ID,S.NAME NAME,S.CERT_NO CERT_NO,S.MOBILE
+		MOBILE,U.STATUS STATUS,TO_CHAR(S.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		OPERATE_TIME,U.CODE CODE, U.CHECK_RESULT CHECK_RESULT,TO_CHAR(U.CRT_TIME, 'YYYY-MM-DD
+		HH24:MI:SS')
+		CRT_TIME,S.STAFF_ID STAFF_ID
+		FROM UNICOM_PHONE_TRN_SINGLE S
+		LEFT JOIN
+		UNICOM_PHONE_DATA U
+		ON
+		S.TRN_ID=U.TRN_ID
+		WHERE
+		S.CERT_NO=#{certNo}
+		AND
+		U.CRT_TIME BETWEEN ADD_MONTHS(SYSDATE,-12) and SYSDATE
+		AND
+		ROWNUM <![CDATA[ <= ]]>
+		100
+		ORDER BY S.CRT_TIME DESC) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+	</select>
+
+	<select id="queryHistoryListCountByPage" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(1)
+		FROM
+		UNICOM_PHONE_DATA L
+		LEFT JOIN
+		UNICOM_PHONE_TRN_SINGLE S
+		ON
+		L.TRN_ID=S.TRN_ID
+		WHERE S.CERT_NO=#{certNo}
+	</select>
+	
+</mapper>

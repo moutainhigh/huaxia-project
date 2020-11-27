@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.QHZXMsc8036Mapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.QHZXMsc8036">
+		INSERT INTO QHZX_QUERY_MSC8036 (
+			APP_ID,CRT_TIME,CRT_USER,
+			OEG_CODE,CHNL_ID,TRANS_NO,TRANS_DATE,AUTH_CODE,AUTH_DATE,RT_CODE,RT_MSG,BATCH_NO,ID_NO,ID_TYPE,NAME,SEQ_NO,
+			SOURCE_ID,RSK_SCORE,RSK_MARK,DATA_BUILD_TIME,DATA_STATUS,ER_CODE,ER_MSG,SIGNATURE_VALUE,REASON_NO
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			SYSDATE,
+			'SYSTEM',
+			#{orgCode, jdbcType = VARCHAR},
+			#{chnlId, jdbcType = VARCHAR},
+			#{transNo, jdbcType = VARCHAR},
+			#{transDate, jdbcType = VARCHAR},
+			#{authCode, jdbcType = VARCHAR},
+			#{authDate, jdbcType = VARCHAR},
+			#{rtCode, jdbcType = VARCHAR},
+			#{rtMsg, jdbcType = VARCHAR},
+			#{batchNo, jdbcType = VARCHAR},
+			#{idNo, jdbcType = VARCHAR},
+			#{idType, jdbcType = VARCHAR},
+			#{name, jdbcType = VARCHAR},
+			#{seqNo, jdbcType = VARCHAR},
+			#{sourceId, jdbcType = VARCHAR},
+			#{rskScore, jdbcType = VARCHAR},
+			#{rskMark, jdbcType = VARCHAR},
+			#{dataBuildTime, jdbcType = VARCHAR},
+			#{dataStatus, jdbcType = VARCHAR},
+			#{erCode, jdbcType = VARCHAR},
+			#{erMsg, jdbcType = VARCHAR},
+			#{signatureValue, jdbcType = VARCHAR},
+			#{reasonNo, jdbcType = CHAR}
+		)
+	</insert>
+
+	<select id="selectCountMsc8036ByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM QHZX_QUERY_MSC8036 WHERE APP_ID = #{appId, jdbcType = CHAR}
+	</select>
+</mapper>	

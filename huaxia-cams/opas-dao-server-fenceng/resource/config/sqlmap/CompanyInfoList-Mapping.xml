@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="CompanyInfoList">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.sysparm.CompanyInfoList">
+		<id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="SECURITIES_ABBREVIATION" property="securitiesAbbreviation" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR" />
+		<result column="COMPANY_PROPERTY" property="companyProperty" jdbcType="VARCHAR" />
+		<result column="BIZ_INDUSTRY" property="bizIndustry" jdbcType="VARCHAR" />
+		<result column="BUSINESS_LEVEL" property="businessLevel" jdbcType="VARCHAR" />
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<!-- <sql id="Base_Column_List" > AUTO_ID, PROJECT_CODE, COMPANY_NAME, AREA, 
+		START_TIME, END_TIME, OPERATOR, OPERAT_TIME, CURR_STATUS </sql> -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		AUTO_ID, COMPANY_NAME, SECURITIES_ABBREVIATION, BUSINESS_TYPE, COMPANY_PROPERTY, BIZ_INDUSTRY, BUSINESS_LEVEL,
+		CREATE_TIME,
+		CREATE_USER,OPERAT_TIME,OPERATOR
+		from OPAS_EXCELLENT_ENTERPRISE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByCondtion" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	   select
+		AUTO_ID, COMPANY_NAME, SECURITIES_ABBREVIATION, BUSINESS_TYPE, COMPANY_PROPERTY, BIZ_INDUSTRY, BUSINESS_LEVEL,
+		CREATE_TIME,
+		CREATE_USER,OPERAT_TIME,OPERATOR
+		from OPAS_EXCELLENT_ENTERPRISE
+	    <where>
+	    <if test="securitiesAbbreviation != null and securitiesAbbreviation != ''" >
+	      and  upper(SECURITIES_ABBREVIATION) LIKE upper('%${securitiesAbbreviation}%')
+	    </if>
+	    <if test="companyName != null and companyName != ''" >
+	      and  upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	    </if>
+	     <if test="businessType != null and businessType != ''" >
+	      and  upper(BUSINESS_TYPE) LIKE upper('%${businessType}%')
+	    </if>
+	    </where>
+  	</select>
+  	<select id="queryCountList" resultType="java.lang.Integer" parameterType="java.util.Map" >
+	   select count(1)
+		from OPAS_EXCELLENT_ENTERPRISE
+	   <where>
+	    <if test="securitiesAbbreviation != null and securitiesAbbreviation != ''" >
+	      and  upper(SECURITIES_ABBREVIATION) LIKE upper('%${securitiesAbbreviation}%')
+	    </if>
+	    <if test="companyName != null and companyName != ''" >
+	      and  upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+	    </if>
+	     <if test="businessType != null and businessType != ''" >
+	      and  upper(BUSINESS_TYPE) LIKE upper('%${businessType}%')
+	    </if>
+	    </where>
+  	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_EXCELLENT_ENTERPRISE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.sysparm.CompanyInfoList">
+		insert into OPAS_EXCELLENT_ENTERPRISE (AUTO_ID, COMPANY_NAME,
+		SECURITIES_ABBREVIATION,
+		BUSINESS_TYPE, COMPANY_PROPERTY, BIZ_INDUSTRY,
+		BUSINESS_LEVEL, CREATE_TIME, CREATE_USER,OPERAT_TIME,OPERATOR
+		)
+		values (#{autoId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR},
+		#{securitiesAbbreviation,jdbcType=VARCHAR},
+		#{businessType,jdbcType=VARCHAR}, #{companyProperty,jdbcType=VARCHAR}, #{bizIndustry,jdbcType=VARCHAR},
+		#{businessLevel,jdbcType=VARCHAR}, sysdate, #{createUser,jdbcType=VARCHAR}, 
+		sysdate,#{operator,jdbcType=VARCHAR} 
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.sysparm.CompanyInfoList">
+		insert into OPAS_EXCELLENT_ENTERPRISE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME,
+			</if>
+			<if test="securitiesAbbreviation != null">
+				SECURITIES_ABBREVIATION,
+			</if>
+			<if test="businessType != null">
+				BUSINESS_TYPE,
+			</if>
+			<if test="companyProperty != null">
+				COMPANY_PROPERTY,
+			</if>
+			<if test="bizIndustry != null">
+				BIZ_INDUSTRY,
+			</if>
+			<if test="businessLevel != null">
+				BUSINESS_LEVEL,
+			</if>
+				CREATE_TIME,
+			<if test="createUser != null">
+				CREATE_USER,
+			</if>
+				OPERAT_TIME,
+			<if test="operator != null">
+				OPERATOR
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="securitiesAbbreviation != null">
+				#{securitiesAbbreviation,jdbcType=VARCHAR},
+			</if>
+			<if test="businessType != null">
+				#{businessType,jdbcType=VARCHAR},
+			</if>
+			<if test="companyProperty != null">
+				#{companyProperty,jdbcType=VARCHAR},
+			</if>
+			<if test="bizIndustry != null">
+				#{bizIndustry,jdbcType=VARCHAR},
+			</if>
+			<if test="businessLevel != null">
+				#{businessLevel,jdbcType=VARCHAR},
+			</if>
+			CURRENT_DATE,
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			CURRENT_DATE,
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.sysparm.CompanyInfoList">
+		update OPAS_EXCELLENT_ENTERPRISE
+		<set>
+			<if test="companyName != null">
+				COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="securitiesAbbreviation != null">
+				SECURITIES_ABBREVIATION = #{securitiesAbbreviation,jdbcType=VARCHAR},
+			</if>
+			<if test="businessType != null">
+				BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+			</if>
+			<if test="companyProperty != null">
+				COMPANY_PROPERTY = #{companyProperty,jdbcType=VARCHAR},
+			</if>
+			<if test="bizIndustry != null">
+				BIZ_INDUSTRY = #{bizIndustry,jdbcType=VARCHAR},
+			</if>
+			<if test="businessLevel != null">
+				BUSINESS_LEVEL = #{businessLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				OPERATOR = #{operator,jdbcType=VARCHAR},
+			</if>
+				OPERAT_TIME = CURRENT_DATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.sysparm.CompanyInfoList">
+		update OPAS_EXCELLENT_ENTERPRISE
+		set 
+		SECURITIES_ABBREVIATION = #{securitiesAbbreviation,jdbcType=VARCHAR},
+		COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+		BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+		COMPANY_PROPERTY = #{companyProperty,jdbcType=VARCHAR},
+		BIZ_INDUSTRY = #{bizIndustry,jdbcType=VARCHAR},
+		BUSINESS_LEVEL = #{businessLevel,jdbcType=VARCHAR},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		CREATE_USER = #{createUser,jdbcType=VARCHAR},
+		OPERATOR = #{operator,jdbcType=VARCHAR},
+		OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP}
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+	<!--chenmeng 2019-04-13   3311企业名单库列表查询条数 -->
+	<select id="queryCompanyInfoList" parameterType="com.huaxia.opas.domain.sysparm.CompanyInfoList"
+		resultMap="BaseResultMap">
+		select
+		AUTO_ID, 
+		COMPANY_NAME,
+		SECURITIES_ABBREVIATION,
+		BUSINESS_TYPE, 
+		COMPANY_PROPERTY,
+		BIZ_INDUSTRY,
+		BUSINESS_LEVEL, 
+		CREATE_TIME, 
+		CREATE_USER,
+		OPERAT_TIME,
+		OPERATOR
+		from OPAS_EXCELLENT_ENTERPRISE
+		<where>
+		<if test="securitiesAbbreviation != null and securitiesAbbreviation !='' ">
+			AND upper(SECURITIES_ABBREVIATION) LIKE upper('%${securitiesAbbreviation}%')
+		</if>
+		<if test="businessType != null and businessType !='' ">
+			AND upper(BUSINESS_TYPE) LIKE upper('%${businessType}%')
+		</if>
+		<if test="companyName != null and companyName !='' ">
+			AND upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+		</if>
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+		</where>
+		order by CREATE_TIME desc
+	</select>
+
+	<!--chenmeng 2019-04-13     3311企业名单库列表查询条数 -->
+	<select id="queryCompanyInfoCount" parameterType="com.huaxia.opas.domain.sysparm.CompanyInfoList"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_EXCELLENT_ENTERPRISE
+		<where>
+		<if test="securitiesAbbreviation != null and securitiesAbbreviation !='' ">
+			AND upper(SECURITIES_ABBREVIATION) LIKE upper('%${securitiesAbbreviation}%')
+		</if>
+		<if test="businessType != null and businessType !='' ">
+			AND upper(BUSINESS_TYPE) LIKE upper('%${businessType}%')
+		</if>
+		<if test="companyName != null and companyName !='' ">
+			AND upper(COMPANY_NAME) LIKE upper('%${companyName}%')
+		</if>
+		<if test="companyProperty != null and companyProperty !='' ">
+			AND upper(COMPANY_PROPERTY) LIKE upper('%${companyProperty}%')
+		</if>
+		<if test="bizIndustry != null and bizIndustry !='' ">
+			AND upper(BIZ_INDUSTRY) LIKE upper('%${bizIndustry}%')
+		</if>
+		<if test="businessLevel != null and businessLevel !='' ">
+			AND upper(BUSINESS_LEVEL) LIKE upper('%${businessLevel}%')
+		</if>
+		<if test="createTime != null and createTime !='' ">
+			AND
+			(CREATE_TIME
+			BETWEEN
+			#{createTime}
+			AND
+			(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+			)
+		</if>
+		</where>
+	</select>
+	<!--chenmeng 2019-04-13  3311企业名单库批量启动修改状态 1:启用 0:停用 -->
+	<!-- <update id="updateStartStatus" parameterType="java.lang.String">
+		update OPAS_EXCELLENT_ENTERPRISE
+		set CURR_STATUS = '1'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update> -->
+
+	<!--chenmeng 2019-04-13 	3311企业名单库批量停用修改状态 1:启用 0:停用 -->
+	<!-- <update id="updateStopStatus" parameterType="java.lang.String">
+		update OPAS_EXCELLENT_ENTERPRISE
+		set CURR_STATUS = '0'
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update> -->
+
+	<!-- chenmeng 2019-04-13     添加历史修改记录表 -->
+	<!-- <insert id="insertHisSelective" parameterType="com.huaxia.opas.domain.sysparm.CompanyInfoList">
+		insert into OPAS_EXCELLENT_ENTERPRISE_HISTORY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				ID,
+			</if>
+			<if test="autoId != null">
+				AUTO_ID,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME,
+			</if>
+			<if test="securitiesAbbreviation != null">
+				SECURITIES_ABBREVIATION,
+			</if>
+			<if test="businessType != null">
+				BUSINESS_TYPE,
+			</if>
+			<if test="companyProperty != null">
+				COMPANY_PROPERTY,
+			</if>
+			<if test="bizIndustry != null">
+				BIZ_INDUSTRY,
+			</if>
+			<if test="businessLevel != null">
+				BUSINESS_LEVEL,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="createUser != null">
+				CREATE_USER,
+			</if>
+			<if test="operatTime != null">
+				OPERAT_TIME,
+			</if>
+			<if test="operator != null">
+				OPERATOR,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="Id != null">
+				#{Id,jdbcType=VARCHAR},
+			</if>
+			<if test="autoId != null">
+				#{autoId,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="securitiesAbbreviation != null">
+				#{securitiesAbbreviation,jdbcType=VARCHAR},
+			</if>
+			<if test="businessType != null">
+				#{businessType,jdbcType=VARCHAR},
+			</if>
+			<if test="companyProperty != null">
+				#{companyProperty,jdbcType=VARCHAR},
+			</if>
+			<if test="bizIndustry != null">
+				#{bizIndustry,jdbcType=VARCHAR},
+			</if>
+			<if test="businessLevel != null">
+				#{businessLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="operatTime != null">
+				#{operatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert> -->
+
+	<!--chenmeng 2019-04-13     重点院校列表查询 -->
+	<!-- <select id="queryCompanyInfoHistory" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		ID,
+		AUTO_ID,
+		COMPANY_NAME,
+		SECURITIES_ABBREVIATION,
+		BUSINESS_TYPE, 
+		COMPANY_PROPERTY,
+		BIZ_INDUSTRY,
+		BUSINESS_LEVEL, 
+		CREATE_TIME, 
+		CREATE_USER,
+		OPERAT_TIME,
+		OPERATOR
+		from OPAS_EXCELLENT_ENTERPRISE_HISTORY
+		where AUTO_ID = #{autoId,jdbcType=CHAR}
+		order by OPERAT_TIME desc
+	</select> -->
+
+	<!--chenmeng 2019-04-13      重点院校列表查询条数 -->
+	<!-- <select id="queryCompanyInfoHistoryCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_EXCELLENT_ENTERPRISE_HISTORY where
+		AUTO_ID = #{autoId,jdbcType=CHAR}
+	</select> -->
+
+	<!-- 批量导入    chenmeng 2019-04-13 -->
+	<insert id="insertCompanyInfoUpload" parameterType="java.util.List">
+		insert into OPAS_EXCELLENT_ENTERPRISE(
+		AUTO_ID,
+		COMPANY_NAME,
+		SECURITIES_ABBREVIATION,
+		BUSINESS_TYPE, 
+		COMPANY_PROPERTY,
+		BIZ_INDUSTRY,
+		BUSINESS_LEVEL, 
+		CREATE_TIME, 
+		CREATE_USER,
+		OPERAT_TIME,
+		OPERATOR)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			(select
+			#{item.autoId,jdbcType=VARCHAR},
+			#{item.companyName,jdbcType=VARCHAR},
+			#{item.securitiesAbbreviation,jdbcType=VARCHAR},
+			#{item.businessType,jdbcType=VARCHAR},
+			#{item.companyProperty,jdbcType=VARCHAR},
+			#{item.bizIndustry,jdbcType=VARCHAR},
+			#{item.businessLevel,jdbcType=VARCHAR},
+			SYSDATE,
+			#{item.createUser,jdbcType=VARCHAR},
+			SYSDATE,
+			#{item.operator,jdbcType=VARCHAR}
+			from dual)
+		</foreach>
+	</insert>
+	<!--chenmeng 2019-04-13    校验公司名称不能重复-->
+	<select id="queryCompanyName" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_EXCELLENT_ENTERPRISE where
+		COMPANY_NAME = #{companyName,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

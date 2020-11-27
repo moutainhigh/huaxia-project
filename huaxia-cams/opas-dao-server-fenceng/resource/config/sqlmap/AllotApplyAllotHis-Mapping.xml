@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AllotApplyAllotHis">
+
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.allot.AllotApplyAllotHis">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+	    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	    <result column="CURR_OPT_QUEUE" jdbcType="VARCHAR" property="currOptQueue" />
+	    <result column="LAST_OPT_QUEUE" jdbcType="VARCHAR" property="lastOptQueue" />
+	    <result column="CURR_OPT_GROUP" jdbcType="VARCHAR" property="currOptGroup" />
+	    <result column="LAST_OPT_GROUP" jdbcType="VARCHAR" property="lastOptGroup" />
+	    <result column="CURR_OPT_USER" jdbcType="VARCHAR" property="currOptUser" />
+	     <result column="CURR_USER_NAME" jdbcType="VARCHAR" property="currUserName" />
+	    <result column="LAST_OPT_USER" jdbcType="VARCHAR" property="lastOptUser" />
+	    <result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+	    <result column="DEL_STATUS" jdbcType="CHAR" property="delStatus" />
+	    <result column="CURR_NODE" jdbcType="VARCHAR" property="currNode" />
+	    <result column="CRT_TEAM_DATE" jdbcType="TIMESTAMP" property="crtTeamDate" />
+	    <result column="QUEUE_DATE" jdbcType="TIMESTAMP" property="queueDate" />
+	    <result column="GROUP_DATE" jdbcType="TIMESTAMP" property="groupDate" />
+	    <result column="SUBMIT_STATUS" jdbcType="CHAR" property="submitStatus" />
+	    <result column="SUBMIT_TYPE" jdbcType="VARCHAR" property="submitType" />
+	    <result column="LST_TEAM_DATE" jdbcType="TIMESTAMP" property="lstTeamDate" />
+	    <result column="SUBMIT_MEMO" jdbcType="VARCHAR" property="submitMemo" />
+	    <result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+	    <result column="REVIEW_STATUS" jdbcType="CHAR" property="reviewStatus" />
+	    <result column="MATCHING_CARD_FLAG" jdbcType="CHAR" property="matchingCardFlag" />
+	    <result column="PROCESS_ID" jdbcType="VARCHAR" property="processId" />
+	    <result column="RECORD_TEAM_DATE" jdbcType="TIMESTAMP" property="recordTeamDate" />
+	    <result column="USER_DATE" jdbcType="TIMESTAMP" property="userDate" />
+	    <result column="BACK_FLAG" jdbcType="VARCHAR" property="backFlag" />
+	    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+	    <result column="SYN_FLAG" jdbcType="CHAR" property="synFlag" />
+	    <result column="LAOJIANFLAG" jdbcType="VARCHAR" property="laojianflag" />
+	    <result column="GROUP_TEAM_DATE" property="groupTeamDate" jdbcType="TIMESTAMP"/>
+		<result column="FRAUD_DATE" property="fraudDate" jdbcType="TIMESTAMP"/>
+		<result column="CHECK_MEUOFLAG" property="check_meuoFlag" jdbcType="CHAR"/>
+	</resultMap>
+
+	<resultMap id="result_ApplyAllotHistoryInfo" type="com.huaxia.opas.domain.allot.AllotApplyAllotHis">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="CURR_OPT_QUEUE" property="currOptQueue" jdbcType="VARCHAR" />
+		<result column="LAST_OPT_QUEUE" property="lastOptQueue" jdbcType="VARCHAR" />
+		<result column="CURR_OPT_GROUP" property="currOptGroup" jdbcType="VARCHAR" />
+		<result column="LAST_OPT_GROUP" property="lastOptGroup" jdbcType="VARCHAR" />
+		<result column="CURR_OPT_USER" property="currOptUser" jdbcType="VARCHAR" />
+		<result column="CURR_USER_NAME" jdbcType="VARCHAR" property="currUserName" />
+		<result column="LAST_OPT_USER" property="lastOptUser" jdbcType="VARCHAR" />
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+		<result column="DEL_STATUS" property="delStatus" jdbcType="CHAR" />
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR" />
+		<result column="CRT_TEAM_DATE" property="crtTeamDate" jdbcType="TIMESTAMP" />
+		<result column="QUEUE_DATE" property="queueDate" jdbcType="TIMESTAMP" />
+		<result column="GROUP_DATE" property="groupDate" jdbcType="TIMESTAMP" />
+		<result column="RECORD_TEAM_DATE" property="recordTeamDate" jdbcType="TIMESTAMP" />
+		<result column="SUBMIT_STATUS" property="submitStatus" jdbcType="CHAR" />
+		<result column="SUBMIT_TYPE" property="submitType" jdbcType="VARCHAR" />
+		<result column="LST_TEAM_DATE" property="lstTeamDate" jdbcType="TIMESTAMP" />
+		<result column="SUBMIT_MEMO" property="submitMemo" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="CHAR" />
+		<result column="REVIEW_STATUS" property="reviewStatus" jdbcType="CHAR" />
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="CHAR" />
+		<result column="PROCESS_ID" property="processId" jdbcType="VARCHAR" />
+		<result column="USER_DATE" property="userDate" jdbcType="TIMESTAMP" />
+		<result column="SUBDATE" property="subDate" jdbcType="NUMERIC" />
+		<result column="LSTDATE" jdbcType="VARCHAR" property="lstDate" />
+		<result column="SYN_FLAG" property="synFlag" jdbcType="VARCHAR" />
+		<result column="GROUP_TEAM_DATE" property="groupTeamDate" jdbcType="TIMESTAMP"/>
+		<result column="FRAUD_DATE" property="fraudDate" jdbcType="TIMESTAMP"/>
+		<result column="CHECK_MEUOFLAG" property="check_meuoFlag" jdbcType="CHAR"/>
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+			ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, CURR_USER_NAME,
+		    LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+		    SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, 
+		    MATCHING_CARD_FLAG, PROCESS_ID, RECORD_TEAM_DATE, USER_DATE, BACK_FLAG, MEMO, SYN_FLAG, 
+		    LAOJIANFLAG
+		from
+		OPAS_ALLOT_APPLY_ALLOT_HIS
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="selectLastOneByAppId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select * from (select
+			ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, CURR_USER_NAME,
+		    LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+		    SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, 
+		    MATCHING_CARD_FLAG, PROCESS_ID, RECORD_TEAM_DATE, USER_DATE, BACK_FLAG, MEMO, SYN_FLAG, 
+		    LAOJIANFLAG
+		from
+		OPAS_ALLOT_APPLY_ALLOT_HIS
+		where APP_ID = #{appId,jdbcType=VARCHAR} and lst_team_date is not null order by lst_team_date desc) where rownum = '1'
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		OPAS_ALLOT_APPLY_ALLOT_HIS
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllotHis">
+		insert into OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE, 
+	      LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, 
+	      CURR_OPT_USER,CURR_USER_NAME, LAST_OPT_USER, CURR_STATUS, 
+	      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, 
+	      QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+	      SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, 
+	      YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG, 
+	      PROCESS_ID, RECORD_TEAM_DATE, USER_DATE, 
+	      BACK_FLAG, MEMO, SYN_FLAG, 
+	      LAOJIANFLAG)
+	    values (#{id,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{currOptQueue,jdbcType=VARCHAR}, 
+	      #{lastOptQueue,jdbcType=VARCHAR}, #{currOptGroup,jdbcType=VARCHAR}, #{lastOptGroup,jdbcType=VARCHAR}, 
+	      #{currOptUser,jdbcType=VARCHAR}, #{currUserName,jdbcType=VARCHAR}, #{lastOptUser,jdbcType=VARCHAR}, #{currStatus,jdbcType=CHAR}, 
+	      #{delStatus,jdbcType=CHAR}, #{currNode,jdbcType=VARCHAR}, #{crtTeamDate,jdbcType=TIMESTAMP}, 
+	      #{queueDate,jdbcType=TIMESTAMP}, #{groupDate,jdbcType=TIMESTAMP}, #{submitStatus,jdbcType=CHAR}, 
+	      #{submitType,jdbcType=VARCHAR}, sysdate, #{submitMemo,jdbcType=VARCHAR}, 
+	      #{ydjFlag,jdbcType=CHAR}, #{reviewStatus,jdbcType=CHAR}, #{matchingCardFlag,jdbcType=CHAR}, 
+	      #{processId,jdbcType=VARCHAR}, #{recordTeamDate,jdbcType=TIMESTAMP}, #{userDate,jdbcType=TIMESTAMP}, 
+	      #{backFlag,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{synFlag,jdbcType=CHAR}, 
+	      #{laojianflag,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllotHis">
+		insert into OPAS_ALLOT_APPLY_ALLOT_HIS
+	    <trim prefix="(" suffix=")" suffixOverrides=",">
+	      <if test="id != null">
+	        ID,
+	      </if>
+	      <if test="appId != null">
+	        APP_ID,
+	      </if>
+	      <if test="currOptQueue != null">
+	        CURR_OPT_QUEUE,
+	      </if>
+	      <if test="lastOptQueue != null">
+	        LAST_OPT_QUEUE,
+	      </if>
+	      <if test="currOptGroup != null">
+	        CURR_OPT_GROUP,
+	      </if>
+	      <if test="lastOptGroup != null">
+	        LAST_OPT_GROUP,
+	      </if>
+	      <if test="currOptUser != null">
+	        CURR_OPT_USER,
+	      </if>
+	       <if test="currUserName != null">
+	        CURR_USER_NAME,
+	      </if>
+	      <if test="lastOptUser != null">
+	        LAST_OPT_USER,
+	      </if>
+	      <if test="currStatus != null">
+	        CURR_STATUS,
+	      </if>
+	      <if test="delStatus != null">
+	        DEL_STATUS,
+	      </if>
+	      <if test="currNode != null">
+	        CURR_NODE,
+	      </if>
+	      <if test="crtTeamDate != null">
+	        CRT_TEAM_DATE,
+	      </if>
+	      <if test="queueDate != null">
+	        QUEUE_DATE,
+	      </if>
+	      <if test="groupDate != null">
+	        GROUP_DATE,
+	      </if>
+	      <if test="submitStatus != null">
+	        SUBMIT_STATUS,
+	      </if>
+	      <if test="submitType != null">
+	        SUBMIT_TYPE,
+	      </if>
+	      <if test="lstTeamDate != null">
+	        LST_TEAM_DATE,
+	      </if>
+	      <if test="submitMemo != null">
+	        SUBMIT_MEMO,
+	      </if>
+	      <if test="ydjFlag != null">
+	        YDJ_FLAG,
+	      </if>
+	      <if test="reviewStatus != null">
+	        REVIEW_STATUS,
+	      </if>
+	      <if test="matchingCardFlag != null">
+	        MATCHING_CARD_FLAG,
+	      </if>
+	      <if test="processId != null">
+	        PROCESS_ID,
+	      </if>
+	      <if test="recordTeamDate != null">
+	        RECORD_TEAM_DATE,
+	      </if>
+	      <if test="userDate != null">
+	        USER_DATE,
+	      </if>
+	      <if test="backFlag != null">
+	        BACK_FLAG,
+	      </if>
+	      <if test="memo != null">
+	        MEMO,
+	      </if>
+	      <if test="synFlag != null">
+	        SYN_FLAG,
+	      </if>
+	      <if test="laojianflag != null">
+	        LAOJIANFLAG,
+	      </if>
+	      <if test="check_meuoFlag != null">
+			CHECK_MEUOFLAG,
+			</if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides=",">
+	      <if test="id != null">
+	        #{id,jdbcType=VARCHAR},
+	      </if>
+	      <if test="appId != null">
+	        #{appId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptQueue != null">
+	        #{currOptQueue,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptQueue != null">
+	        #{lastOptQueue,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptGroup != null">
+	        #{currOptGroup,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptGroup != null">
+	        #{lastOptGroup,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptUser != null">
+	        #{currOptUser,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currUserName != null">
+	        #{currUserName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptUser != null">
+	        #{lastOptUser,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currStatus != null">
+	        #{currStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="delStatus != null">
+	        #{delStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="currNode != null">
+	        #{currNode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="crtTeamDate != null">
+	        #{crtTeamDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="queueDate != null">
+	        #{queueDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="groupDate != null">
+	        #{groupDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="submitStatus != null">
+	        #{submitStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="submitType != null">
+	        #{submitType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lstTeamDate != null">
+	        sysdate,
+	      </if>
+	      <if test="submitMemo != null">
+	        #{submitMemo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="ydjFlag != null">
+	        #{ydjFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="reviewStatus != null">
+	        #{reviewStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="matchingCardFlag != null">
+	        #{matchingCardFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="processId != null">
+	        #{processId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="recordTeamDate != null">
+	        #{recordTeamDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="userDate != null">
+	        #{userDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="backFlag != null">
+	        #{backFlag,jdbcType=VARCHAR},
+	      </if>
+	      <if test="memo != null">
+	        #{memo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="synFlag != null">
+	        #{synFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="laojianflag != null">
+	        #{laojianflag,jdbcType=VARCHAR},
+	      </if>
+	      <if test="check_meuoFlag != null">
+				#{check_meuoFlag,jdbcType=CHAR},
+			</if> 
+	    </trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllotHis">
+		update CAMSONLINE.OPAS_ALLOT_APPLY_ALLOT_HIS
+	    <set>
+	      <if test="appId != null">
+	        APP_ID = #{appId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptQueue != null">
+	        CURR_OPT_QUEUE = #{currOptQueue,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptQueue != null">
+	        LAST_OPT_QUEUE = #{lastOptQueue,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptGroup != null">
+	        CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptGroup != null">
+	        LAST_OPT_GROUP = #{lastOptGroup,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currOptUser != null">
+	        CURR_OPT_USER = #{currOptUser,jdbcType=VARCHAR},
+	      </if>
+	       <if test="currUserName != null">
+	        CURR_USER_NAME = #{currUserName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lastOptUser != null">
+	        LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR},
+	      </if>
+	      <if test="currStatus != null">
+	        CURR_STATUS = #{currStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="delStatus != null">
+	        DEL_STATUS = #{delStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="currNode != null">
+	        CURR_NODE = #{currNode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="crtTeamDate != null">
+	        CRT_TEAM_DATE = #{crtTeamDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="queueDate != null">
+	        QUEUE_DATE = #{queueDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="groupDate != null">
+	        GROUP_DATE = #{groupDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="submitStatus != null">
+	        SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="submitType != null">
+	        SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lstTeamDate != null">
+	        LST_TEAM_DATE = sysdate,
+	      </if>
+	      <if test="submitMemo != null">
+	        SUBMIT_MEMO = #{submitMemo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="ydjFlag != null">
+	        YDJ_FLAG = #{ydjFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="reviewStatus != null">
+	        REVIEW_STATUS = #{reviewStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="matchingCardFlag != null">
+	        MATCHING_CARD_FLAG = #{matchingCardFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="processId != null">
+	        PROCESS_ID = #{processId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="recordTeamDate != null">
+	        RECORD_TEAM_DATE = #{recordTeamDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="userDate != null">
+	        USER_DATE = #{userDate,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="backFlag != null">
+	        BACK_FLAG = #{backFlag,jdbcType=VARCHAR},
+	      </if>
+	      <if test="memo != null">
+	        MEMO = #{memo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="synFlag != null">
+	        SYN_FLAG = #{synFlag,jdbcType=CHAR},
+	      </if>
+	      <if test="laojianflag != null">
+	        LAOJIANFLAG = #{laojianflag,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.allot.AllotApplyAllotHis">
+		update OPAS_ALLOT_APPLY_ALLOT_HIS
+	    set APP_ID = #{appId,jdbcType=VARCHAR},
+	      CURR_OPT_QUEUE = #{currOptQueue,jdbcType=VARCHAR},
+	      LAST_OPT_QUEUE = #{lastOptQueue,jdbcType=VARCHAR},
+	      CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+	      LAST_OPT_GROUP = #{lastOptGroup,jdbcType=VARCHAR},
+	      CURR_OPT_USER = #{currOptUser,jdbcType=VARCHAR},
+	       CURR_USER_NAME = #{currUserName,jdbcType=VARCHAR},
+	      LAST_OPT_USER = #{lastOptUser,jdbcType=VARCHAR},
+	      CURR_STATUS = #{currStatus,jdbcType=CHAR},
+	      DEL_STATUS = #{delStatus,jdbcType=CHAR},
+	      CURR_NODE = #{currNode,jdbcType=VARCHAR},
+	      CRT_TEAM_DATE = #{crtTeamDate,jdbcType=TIMESTAMP},
+	      QUEUE_DATE = #{queueDate,jdbcType=TIMESTAMP},
+	      GROUP_DATE = #{groupDate,jdbcType=TIMESTAMP},
+	      SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+	      SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+	      LST_TEAM_DATE = sysdate,
+	      SUBMIT_MEMO = #{submitMemo,jdbcType=VARCHAR},
+	      YDJ_FLAG = #{ydjFlag,jdbcType=CHAR},
+	      REVIEW_STATUS = #{reviewStatus,jdbcType=CHAR},
+	      MATCHING_CARD_FLAG = #{matchingCardFlag,jdbcType=CHAR},
+	      PROCESS_ID = #{processId,jdbcType=VARCHAR},
+	      RECORD_TEAM_DATE = #{recordTeamDate,jdbcType=TIMESTAMP},
+	      USER_DATE = #{userDate,jdbcType=TIMESTAMP},
+	      BACK_FLAG = #{backFlag,jdbcType=VARCHAR},
+	      MEMO = #{memo,jdbcType=VARCHAR},
+	      SYN_FLAG = #{synFlag,jdbcType=CHAR},
+	      LAOJIANFLAG = #{laojianflag,jdbcType=VARCHAR}
+	    where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<!-- zlb -->
+	<select id="queryBizInpApplHisCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_ALLOT_APPLY_ALLOT_HIS
+		where
+		CURR_OPT_USER =#{userCode}
+		and CURR_NODE =#{currNode} and
+		DEL_STATUS='1'
+	</select>
+	<select id="queryDetailBizInpApplHisByCurrOptUser" resultMap="result_ApplyAllotHistoryInfo"
+		parameterType="java.util.Map">
+		SELECT APP_ID, CURR_OPT_QUEUE,
+		LAST_OPT_QUEUE,
+		CURR_OPT_GROUP, LAST_OPT_GROUP,
+		CURR_OPT_USER,CURR_USER_NAME, LAST_OPT_USER,
+		CURR_NODE,MATCHING_CARD_FLAG,YDJ_FLAG,
+		CURR_STATUS,
+		DEL_STATUS, CURR_NODE, RECORD_TEAM_DATE,
+		QUEUE_DATE,
+		GROUP_DATE, SUBMIT_STATUS,
+		REVIEW_STATUS, SUBMIT_TYPE, CRT_TEAM_DATE,
+		to_char(LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,SUBMIT_MEMO,trunc(sysdate)-trunc(USER_DATE) as SUBDATE
+		FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		WHERE DEL_STATUS='1'
+		AND CURR_NODE
+		=#{currNode}
+		AND CURR_OPT_USER=#{userCode} 
+	</select>
+	<select id="selectByCurrNodeAndUserCode" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		WHERE
+		CURR_OPT_USER =#{userCode}
+		AND CURR_NODE =#{currNode} and
+		DEL_STATUS=#{delStatus}
+	</select>
+	<select id="querySingleInfoHis" parameterType="java.lang.String"
+		resultMap="result_ApplyAllotHistoryInfo">
+		SELECT ID, APP_ID, CURR_OPT_QUEUE,
+		LAST_OPT_QUEUE,
+		CURR_OPT_GROUP, LAST_OPT_GROUP,
+		CURR_OPT_USER,CURR_USER_NAME, LAST_OPT_USER,
+		CURR_STATUS,
+		DEL_STATUS, CURR_NODE, RECORD_TEAM_DATE,
+		QUEUE_DATE,
+		GROUP_DATE, SUBMIT_STATUS,
+		REVIEW_STATUS, SUBMIT_TYPE, CRT_TEAM_DATE,
+		to_char(LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,SUBMIT_MEMO,trunc(sysdate)-trunc(USER_DATE) AS SUBDATE
+		FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		WHERE APP_ID LIKE '%${_parameter}%'
+	</select>
+	
+	<select id="queryAllotApplyAllotHisByAppId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from (SELECT ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE,
+		CURR_OPT_GROUP,
+		LAST_OPT_GROUP, CURR_OPT_USER,
+		CURR_USER_NAME,LAST_OPT_USER,
+		CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE,
+		GROUP_DATE,
+		SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO,
+		YDJ_FLAG, REVIEW_STATUS,BACK_FLAG,
+		MATCHING_CARD_FLAG, PROCESS_ID,USER_DATE
+		FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		WHERE APP_ID = #{appId}
+		and CURR_NODE = #{currNode}
+		<if test="currStatus != null and currStatus!= '' ">
+	       and  CURR_STATUS = #{currStatus,jdbcType=CHAR}
+	    </if>
+	    <if test="backFlagList != null">
+			AND BACK_FLAG in
+			<foreach item="item" index="index" collection="backFlagList" open="(" separator=","
+			close=")">
+				#{item}
+			</foreach>
+		</if>
+	    <if test="backFlag != null and backFlag != '' ">
+	       and  BACK_FLAG = #{backFlag,jdbcType=CHAR}
+	    </if>
+		order by LST_TEAM_DATE desc)
+		where rownum = '1'
+	</select>
+	<select id="queryAllotApplyAllotHisSPByAppId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from (SELECT ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE,
+		CURR_OPT_GROUP,
+		LAST_OPT_GROUP, CURR_OPT_USER,
+		CURR_USER_NAME,LAST_OPT_USER,
+		CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE,
+		GROUP_DATE,
+		SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO,
+		YDJ_FLAG, REVIEW_STATUS,CHECK_MEUOFLAG,
+		MATCHING_CARD_FLAG, PROCESS_ID,USER_DATE
+		FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		WHERE APP_ID = #{appId}
+		and CURR_NODE = #{currNode}
+		and CURR_OPT_USER = #{currOptUser}
+		<if test="backFlag != null and backFlag != '' ">
+	       and  BACK_FLAG != #{backFlag,jdbcType=CHAR}
+	    </if>
+		order by RECORD_TEAM_DATE desc)
+		where rownum = '1'
+	</select>
+	<select id="queryAllotApplyAllotHisNozjByAppId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from (SELECT ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE,
+		CURR_OPT_GROUP,
+		LAST_OPT_GROUP, CURR_OPT_USER,
+		CURR_USER_NAME,LAST_OPT_USER,
+		CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE,
+		GROUP_DATE,
+		SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO,
+		YDJ_FLAG, REVIEW_STATUS,CHECK_MEUOFLAG,
+		MATCHING_CARD_FLAG, PROCESS_ID,USER_DATE
+		FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		WHERE APP_ID = #{appId}
+		and CURR_NODE = #{currNode}
+		and CURR_OPT_USER != #{currOptUser}
+		<if test="backFlag != null and backFlag != '' ">
+	       and  BACK_FLAG != #{backFlag,jdbcType=CHAR}
+	    </if>
+		order by RECORD_TEAM_DATE desc)
+		where rownum = '1'
+	</select>
+	 <select id="queryStaffJobDetailByCurrNodeHis" parameterType="java.lang.String" resultMap="result_ApplyAllotHistoryInfo">
+		select  APP_ID, CURR_OPT_QUEUE, 
+     		LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, 
+     		CURR_OPT_USER, CURR_USER_NAME,LAST_OPT_USER, CURR_STATUS, 
+    	 	DEL_STATUS, CURR_NODE, 
+     		QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+     		REVIEW_STATUS, SUBMIT_TYPE, CRT_TEAM_DATE, 
+     		to_char(LST_TEAM_DATE,'yyyy-mm-dd') as lstDate,SUBMIT_MEMO,trunc(sysdate)-trunc(USER_DATE) as  subDate  from OPAS_ALLOT_APPLY_ALLOT
+     	where CURR_NODE =#{currNode}
+	</select>
+	<!-- wdb -->
+	 <resultMap id="AllotApplyHis" type="java.util.Map">
+		<result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	    <result column="CURR_OPT_QUEUE" jdbcType="VARCHAR" property="currQueue" />
+	    <result column="LAST_OPT_QUEUE" jdbcType="VARCHAR" property="lastQueue" />
+	    <result column="CURR_OPT_GROUP" jdbcType="VARCHAR" property="currGroup" />
+	    <result column="LAST_OPT_GROUP" jdbcType="VARCHAR" property="lastGroup" />
+	    <result column="CURR_OPT_USER" jdbcType="VARCHAR" property="currUser" />
+	    <result column="LAST_OPT_USER" jdbcType="VARCHAR" property="lastUser" />
+	    <result column="CURR_STATUS" jdbcType="CHAR" property="currStatus" />
+	    <result column="DEL_STATUS" jdbcType="CHAR" property="delStatus" />
+	    <result column="CURR_NODE" jdbcType="VARCHAR" property="currNode" />
+	    <result column="CRT_TEAM_DATE" jdbcType="TIMESTAMP" property="crtTeamDate" />
+	    <result column="QUEUE_DATE" jdbcType="TIMESTAMP" property="queueDate" />
+	    <result column="GROUP_DATE" jdbcType="TIMESTAMP" property="groupDate" />
+	    <result column="SUBMIT_STATUS" jdbcType="CHAR" property="submitStatus" />
+	    <result column="SUBMIT_TYPE" jdbcType="VARCHAR" property="submitType" />
+	    <result column="LST_TEAM_DATE" jdbcType="TIMESTAMP" property="lstTeamDate" />
+	    <result column="SUBMIT_MEMO" jdbcType="VARCHAR" property="submitMemo" />
+	    <result column="YDJ_FLAG" jdbcType="CHAR" property="ydjFlag" />
+	    <result column="REVIEW_STATUS" jdbcType="CHAR" property="reviewStatus" />
+	    <result column="PROCESS_ID" jdbcType="VARCHAR" property="processId" />
+	    <result column="USER_DATE" jdbcType="TIMESTAMP" property="userDate" />
+	    <result column="MATCHING_CARD_FLAG" jdbcType="CHAR" property="matchingCardFlag" />
+	    <result column="SYN_FLAG" jdbcType="CHAR" property="synFlag" />
+	    <result column="BACK_FLAG" jdbcType="VARCHAR" property="backFlag" />
+	    <result column="LAOJIANFLAG" jdbcType="VARCHAR" property="laoJianFlag" />
+	    <result column="CURR_USER_NAME" property="currUserName" jdbcType="VARCHAR" />
+	    <result column="GROUP_TEAM_DATE" property="groupTeamDate" jdbcType="TIMESTAMP"/>
+		<result column="FRAUD_DATE" property="fraudDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	<select id="queryHisByMap" parameterType="java.util.Map" resultMap="AllotApplyHis">
+		select * from (SELECT APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE,
+		CURR_OPT_GROUP,LAST_OPT_GROUP, CURR_OPT_USER,LAST_OPT_USER,
+		CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE,
+		GROUP_DATE,SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO,
+		YDJ_FLAG, REVIEW_STATUS, PROCESS_ID,USER_DATE,MATCHING_CARD_FLAG,
+		SYN_FLAG,BACK_FLAG,LAOJIANFLAG,CURR_USER_NAME
+		FROM OPAS_ALLOT_APPLY_ALLOT_HIS
+		WHERE APP_ID = #{appId}
+		and CURR_NODE = #{currNode}
+		<if test="currStatus != null and currStatus!= '' ">
+	       and  CURR_STATUS = #{currStatus,jdbcType=CHAR}
+	    </if>
+	    <if test="backFlagList != null and backFlagList.size() != 0 ">
+			AND BACK_FLAG in
+			<foreach item="item" index="index" collection="backFlagList" open="(" separator=","
+			close=")">
+				#{item}
+			</foreach>
+		</if>
+	    <if test="backFlag != null and backFlag != '' ">
+	       and  BACK_FLAG = #{backFlag,jdbcType=CHAR}
+	    </if>
+		order by RECORD_TEAM_DATE desc)
+		where rownum = '1'
+	</select>
+	 <insert id="insertCopyOpasAllotToAllotHis"  parameterType="java.util.Map">
+		  insert into OPAS_ALLOT_APPLY_ALLOT_HIS (ID, APP_ID, CURR_OPT_QUEUE, 
+	      LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, 
+	      CURR_OPT_USER,LAST_OPT_USER, CURR_STATUS, 
+	      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, 
+	      QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+	      SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, 
+	      YDJ_FLAG, REVIEW_STATUS,PROCESS_ID,USER_DATE, MATCHING_CARD_FLAG, 
+	       RECORD_TEAM_DATE, BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME,
+	      GROUP_TEAM_DATE,FRAUD_DATE,CHECK_MEUOFLAG )
+	       select (select sys_guid() from dual),
+	      APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER,
+	      LAST_OPT_USER, CURR_STATUS, DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE, 
+	     SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, 
+	     PROCESS_ID,USER_DATE,MATCHING_CARD_FLAG,sysdate, BACK_FLAG,SYN_FLAG,LAOJIANFLAG,
+	     CURR_USER_NAME,GROUP_TEAM_DATE,FRAUD_DATE,CHECK_MEUOFLAG
+	      from OPAS_ALLOT_APPLY_ALLOT where APP_ID=#{appId}
+	</insert>
+	<!-- 批量插入历史记录 -->
+	<insert id="insertHisBatch" parameterType="java.util.List">
+	  insert into OPAS_ALLOT_APPLY_ALLOT_HIS 
+	  (ID, APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, CURR_OPT_GROUP,
+	   LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS, 
+      DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, 
+       QUEUE_DATE, GROUP_DATE, SUBMIT_STATUS, 
+       SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO,
+        YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG, 
+      PROCESS_ID, RECORD_TEAM_DATE, USER_DATE,BACK_FLAG,
+      SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME,GROUP_TEAM_DATE,FRAUD_DATE) 
+	<foreach item="item" index="index" collection="list"  separator="union all" >
+	 (select (select sys_guid() from dual),APP_ID, CURR_OPT_QUEUE, LAST_OPT_QUEUE, 
+	 CURR_OPT_GROUP, LAST_OPT_GROUP, CURR_OPT_USER, LAST_OPT_USER, CURR_STATUS,
+	 DEL_STATUS, CURR_NODE, CRT_TEAM_DATE, QUEUE_DATE, GROUP_DATE,
+	  SUBMIT_STATUS, SUBMIT_TYPE, LST_TEAM_DATE, SUBMIT_MEMO, YDJ_FLAG, REVIEW_STATUS, MATCHING_CARD_FLAG,
+	  PROCESS_ID,sysdate,USER_DATE,BACK_FLAG,SYN_FLAG,LAOJIANFLAG,CURR_USER_NAME,GROUP_TEAM_DATE,FRAUD_DATE 
+	  from OPAS_ALLOT_APPLY_ALLOT WHERE  APP_ID= #{item}
+	  
+	  )
+    </foreach>    
+	</insert>
+	<parameterMap type="java.util.Map" id="callParame">
+		<parameter property="list" mode="IN" jdbcType="ARRAY" javaType="java.util.List" typeHandler="com.huaxia.opas.util.ListHandler" />
+		<parameter property="v_result" mode="OUT" jdbcType="DECIMAL" javaType="java.lang.Integer"/>
+	</parameterMap>
+	<insert id="executeOpasPoAllot" statementType="CALLABLE" parameterMap="callParame" >
+ 		<![CDATA[CALL OPAS_PO_ALLOT(?,?)]]>
+	</insert>
+	<parameterMap type="java.util.Map" id="appParame">
+		<parameter property="list" mode="IN" jdbcType="ARRAY" javaType="java.util.List" typeHandler="com.huaxia.opas.util.ListHandler" />
+		<parameter property="v_currNode" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="v_ydjFlag" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="v_flag" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="v_recoverNode" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="v_result" mode="OUT" jdbcType="DECIMAL" javaType="java.lang.Integer"/>
+	</parameterMap>
+	<insert id="insertAutoApply" statementType="CALLABLE" parameterMap="appParame" >
+ 		<![CDATA[CALL OPAS_PO_ALLOT2(?,?,?,?,?,?)]]>
+	</insert>
+</mapper>

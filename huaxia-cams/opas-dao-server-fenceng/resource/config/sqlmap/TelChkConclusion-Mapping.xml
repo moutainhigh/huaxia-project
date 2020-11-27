@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--电核结论数据库处理-->
+<!--@author liudi-->
+<mapper namespace="TelChkConclusion">
+
+	<resultMap id="TelChkConclusionResultMap" type="com.huaxia.opas.domain.sysparm.TelChkConclusion">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="TEL_CHK_CONCLUSION_CODE" property="telChkConclusionCode" jdbcType="CHAR" />
+		<result column="TEL_CHK_CONCLUSION_DESC" property="telChkConclusionDesc" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE" property="acctType" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加状态为Start -->
+	<insert id="insertTelChkConclusion1" parameterType="com.huaxia.opas.domain.sysparm.TelChkConclusion">
+		insert into
+		OPAS_PARAM_PHONE_CONCLUSION
+		(AUTO_ID,TEL_CHK_CONCLUSION_CODE,TEL_CHK_CONCLUSION_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{telChkConclusionCode,jdbcType=CHAR},
+		#{telChkConclusionDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 添加状态为End -->
+	<insert id="insertTelChkConclusion2" parameterType="com.huaxia.opas.domain.sysparm.TelChkConclusion">
+		insert into
+		OPAS_PARAM_PHONE_CONCLUSION
+		(AUTO_ID,TEL_CHK_CONCLUSION_CODE,TEL_CHK_CONCLUSION_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{telChkConclusionCode,jdbcType=CHAR},
+		#{telChkConclusionDesc,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteTelChkConclusionById" parameterType="java.lang.String">
+		delete from
+		OPAS_PARAM_PHONE_CONCLUSION
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryTelChkConclusionStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_PARAM_PHONE_CONCLUSION where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateTelChkConclusionWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.TelChkConclusion">
+		update OPAS_PARAM_PHONE_CONCLUSION
+		<set>
+			TEL_CHK_CONCLUSION_DESC = #{telChkConclusionDesc,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 修改 -->
+	<update id="updateTelChkConclusion" parameterType="com.huaxia.opas.domain.sysparm.TelChkConclusion">
+		update OPAS_PARAM_PHONE_CONCLUSION
+		<set>
+			TEL_CHK_CONCLUSION_DESC = #{telChkConclusionDesc,jdbcType=VARCHAR},
+			ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 件数查询 -->
+	<select id="queryTelChkConclusionCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_PHONE_CONCLUSION
+		<where>
+			<if test="telChkConclusionCode != null and telChkConclusionCode !='' ">
+				AND TEL_CHK_CONCLUSION_CODE LIKE '%${telChkConclusionCode}%'
+			</if>
+			<if test="telChkConclusionDesc != null and telChkConclusionDesc !='' ">
+				AND TEL_CHK_CONCLUSION_DESC LIKE '%${telChkConclusionDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+<!-- 查询 -->
+	<select id="queryTelChkConclusion1" parameterType="com.huaxia.opas.domain.sysparm.TelChkConclusion"
+		resultMap="TelChkConclusionResultMap">
+		select
+		AUTO_ID,TEL_CHK_CONCLUSION_CODE,TEL_CHK_CONCLUSION_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_PHONE_CONCLUSION
+		<where>
+			<if test="telChkConclusionCode != null and telChkConclusionCode !='' ">
+				AND TEL_CHK_CONCLUSION_CODE LIKE '%${telChkConclusionCode}%'
+			</if>
+			<if test="telChkConclusionDesc != null and telChkConclusionDesc !='' ">
+				AND TEL_CHK_CONCLUSION_DESC LIKE '%${telChkConclusionDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+<!-- 点击查询后，触发查询和排序功能 -->
+	<select id="queryTelChkConclusion2" parameterType="java.util.Map"
+		resultMap="TelChkConclusionResultMap">
+		select
+		AUTO_ID,TEL_CHK_CONCLUSION_CODE,TEL_CHK_CONCLUSION_DESC,ACCT_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_PHONE_CONCLUSION
+		<where>
+			<if test="telChkConclusionCode != null and telChkConclusionCode !='' ">
+				AND TEL_CHK_CONCLUSION_CODE LIKE '%${telChkConclusionCode}%'
+			</if>
+			<if test="telChkConclusionDesc != null and telChkConclusionDesc !='' ">
+				AND TEL_CHK_CONCLUSION_DESC LIKE '%${telChkConclusionDesc}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CRT_DATE
+		</if>
+	</select>
+<!-- 查询电核结论编号是否重复 -->
+	<select id="queryTelChkConclusion3" parameterType="com.huaxia.opas.domain.sysparm.TelChkConclusion"
+		resultMap="TelChkConclusionResultMap">
+		select
+		TEL_CHK_CONCLUSION_CODE
+		from OPAS_PARAM_PHONE_CONCLUSION
+		<where>
+			<if test="telChkConclusionCode != null and telChkConclusionCode !='' ">
+				AND TEL_CHK_CONCLUSION_CODE = #{telChkConclusionCode}
+			</if>
+		</where>
+	</select>
+
+
+</mapper>

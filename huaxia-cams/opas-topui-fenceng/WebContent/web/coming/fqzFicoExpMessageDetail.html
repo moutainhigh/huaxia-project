@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>异常信息详情</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding:10px;">
+<fieldset>
+	<legend></legend>
+	<form id="expMessageDetailForm" style="width:100%">
+	<div>
+		<textarea rows="50" cols="200" id="exception" name="exception"  ></textarea>
+	</div>
+	</form>
+	
+</fieldset>	
+</body>
+<script type="text/javascript">
+
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var expMessageDetailForm=$("#expMessageDetailForm");
+	var dbid = GetQueryString("app_id");
+	$(function(){
+		$cf.ajax({
+			data : {
+				"app_id" : dbid
+			},
+			url : "/opas-naps/queryfqzFicoExpMessageDetail.json",
+			onSuccess : function(res) {
+				expMessageDetailForm.form("load", res.RSP_BODY.fqzFicoExpMessageDetail);
+				
+			}
+		});
+		
+	});
+	
+	
+</script>
+</html>

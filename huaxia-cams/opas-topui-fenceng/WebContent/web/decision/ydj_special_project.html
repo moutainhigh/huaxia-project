@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title> 特殊项目名单</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<!-- 特殊项目名单 -->
+			<table id="tb_specialProjectWin" class="easyui-datagrid"
+				style="width: 99%; height: 99%"  iconCls="icon-save" 
+				data-options="nowrap:false,rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#specialProjectWinCondion'">
+				<thead>
+					<tr>
+						<th field="projectCode" width="15%" align="left">项目代码</th>
+						<th field="companyName" width="50%" align="left">项目名称</th>
+						<th field="startDate" width="15%" align="left"  formatter="formatDate">开始日期</th>
+						<th field="endDate" width="15%" align="left"  formatter="formatDate">结束日期</th>
+					</tr>
+				</thead>
+			</table>
+			<div id="specialProjectWinCondion" style="padding: 10px; text-align: center;">
+				<form id="seachDictForm">
+					项目代码:<input class="easyui-textbox" style="width: 110px" name="projectCode" id="specialProjectWin_projectCode" >
+					项目名称:<input class="easyui-textbox" style="width: 110px" name="companyName" id="specialProjectWin_companyName" >
+					<a href="javascript:specialProjectWin('specialProjectWin')"
+					      class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</form>
+			</div>
+			<!-- <div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('specialProjectWin')">取消</a>
+			</div> -->
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var appId;
+	 $(function(){
+		 //获取参数
+		 appId = GetQueryString("appId");
+		 var obj= GetQueryString("obj");
+		 var param= GetQueryString("param");
+		 if(param=='yes'){
+			 openSpecialProjectWin(obj);
+		 }else if(param=='no'){
+			 showOpenWin(obj,'tsProjectMindan');
+		 }
+	 });
+		//特殊项目名单
+		function openSpecialProjectWin(obj){
+			if($("#tsProjectMindan").val()==='否'|| $("#tsProjectMindan").val()=="")
+				return;
+			var urljson = "querySpecialProject_tab_view";
+			openCommonWinYjd(obj,urljson,appId);
+		}
+		//特殊项目名单
+		function specialProjectWin(obj){
+			var urljson = "querySpecialProject_tab_view";
+			var paramMap = {
+					projectCode:$("#specialProjectWin_projectCode").textbox('getValue'),
+					companyName:$("#specialProjectWin_companyName").textbox('getValue').toUpperCase()
+			};
+			commonWinYjd(obj,urljson,appId,paramMap);
+		}
+</script>
+</html>

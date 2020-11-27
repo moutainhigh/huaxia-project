@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>²Ëµ¥Ê÷</title>
+<script type="text/javascript" src="topui/topui.js"></script>
+<script type="text/javascript">
+	function loadtree() {
+		var paramData = {
+			"roleId" : "e5f7874ca8ed42f89b023a7354ec5f6f",
+			"loginId" : "90000000000000000000000000000008",
+			"orgId" : "aae60dd2f6d9478884fb913ae7e29a27"
+		};
+		$cf.ajax({
+			url : "/opas-manualnode-auth/userRelationInfo.json",
+			data : paramData,
+			onSuccess : function(node) {
+				var dataObj = node.RSP_BODY;
+				if (dataObj.exceptionMsg) {
+					alert(dataObj.exceptionMsg);
+					return;
+				} else if (dataObj.roleInfo) {
+					alert('ok');
+					//fillData(dataObj);
+				}
+			}
+		});
+	}
+</script>
+</head>
+<body>
+	<a href="javascript:loadtree();">¼ÓÔØ</a>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblAudit" title="批核额度权限列表" class="easyui-datagrid" style="width: 98%"
+		       data-options="rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,url:'/opas-manualnode-auth/queryAuditQuotaLmtList.json',loadMsg:'数据加载中.....',method:'get',toolbar:'#auditCodeCondion'">
+			<thead>
+				<tr>
+				    <th field="auditQuotaLmtId" width="10%" align="center" checkbox="true">批核额度权限ID</th>
+				    <th field="orderNo" width="10%" align="center" >序号</th>
+					<th field="newCusAudQuoLmt" width="10%" align="center">新客户审批额度权限</th>
+					<th field="newCusSpeCasAudReaLmt" width="10%" align="center">新客户特例批核原因权限</th>
+					<th field="oldCusAudQuoLmt" width="10%" align="center">老客户审批额度权限</th>
+					<th field="oldCusSpeCasAudReaLmt" width="10%" align="center">老客户特例批核原因权限</th>
+					<th field="crtDate" width="15%" align="center">创建日期</th>
+					<th field="crtUser" width="8%" align="center">创建人</th>
+					<th field="operate" width="12%" align="center" data-options="formatter:formatOper">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="auditCodeCondion" style="padding: 2px 5px;">
+			<form id="seachAuditCodeForm">
+				<a href="javascript:addAuditQuotaLmt();"
+					class="easyui-linkbutton" iconCls="icon-add">新增
+				</a> 
+					批核额度权限ID:
+					<input class="easyui-textbox" style="width: 110px" name="auditQuotaLmtId" id="auditQuotaLmtId"> 
+				<a href="javascript:common.searchTbl('seachAuditCodeForm','tblAudit');"
+					class="easyui-linkbutton" iconCls="icon-search">查询
+				</a>
+			</form>
+		</div>
+	</div>
+
+	<div id="winEdit" class="easyui-window" title="批核额度权限信息修改"
+		style="width: 350px; height: 300px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="editForm" method="post">
+					<table cellpadding="5">
+						<tr>
+							<td align="right">序号:</td>
+							<td>
+								<input class="easyui-numberbox" style="width: 150px" name="orderNo" id="orderNo" data-options="min:0,precision:0,validType:'length[0,8]'"/>
+								<input type="hidden" name="auditQuotaLmtId" id="auditQuotaLmtId" />
+							</td>
+						</tr>
+					    <tr>
+							<td align="right">新客户审批额度权限:</td>
+							<td>
+								<input class="easyui-numberbox" style="width: 150px" name="newCusAudQuoLmt" id="newCusAudQuoLmt" data-options="min:0,precision:3,validType:'length[0,9]'"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">新客户特例批核原因权限:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="newCusSpeCasAudReaLmt" type="text" name="newCusSpeCasAudReaLmt" maxlength='200'></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">老客户审批额度权限:</td>
+							<td>
+								<input class="easyui-numberbox" style="width: 150px" name="oldCusAudQuoLmt" id="oldCusAudQuoLmt" data-options="min:0,precision:3,validType:'length[0,9]'"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">老客户特例批核原因权限:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="oldCusSpeCasAudReaLmt" type="text" name="oldCusSpeCasAudReaLmt"></input>
+							</td>
+						</tr>
+					</table>
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winEdit')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onUpdate()">保存</a>
+		        </div>
+	</div>
+
+	<div id="winAdd" class="easyui-window" title="批核额度权限信息添加"
+		style="width: 400px; height: 400px" top="200"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+				<form id="addForm" method="post">
+					<table cellpadding="5" style="border-collapse:separate; border-spacing:10px;">
+						<tr>
+							<td align="right">序号:</td>
+							<td>
+								<input class="easyui-numberbox" style="width: 150px" name="orderNo" id="orderNo" data-options="min:0,precision:0,validType:'length[0,8]'"/>
+								<input type="hidden" name="auditQuotaLmtId" id="auditQuotaLmtId" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">新客户审批额度权限:</td>
+							<td>
+								<input class="easyui-numberbox" style="width: 150px" name="newCusAudQuoLmt" id="newCusAudQuoLmt" data-options="min:0,precision:3,validType:'length[0,9]'"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">新客户特例批核原因权限:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="newCusSpeCasAudReaLmt" type="text" name="newCusSpeCasAudReaLmt" ></input>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">老客户审批额度权限:</td>
+							<td>
+								<input class="easyui-numberbox" style="width: 150px" name="oldCusAudQuoLmt" id="oldCusAudQuoLmt" data-options="min:0,precision:3,validType:'length[0,9]'"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">老客户特例批核原因权限:</td>
+							<td>
+								<input class="easyui-validatebox textbox" id="oldCusSpeCasAudReaLmt" type="text" name="oldCusSpeCasAudReaLmt" ></input>
+							</td>
+						</tr>
+					</table>
+				</form>
+				
+				<div style="text-align:center;padding:5px">
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onConcle('winAdd')">取消</a>
+		            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="onSave()">保存</a>
+		        </div>
+	</div>	
+
+</body>
+<script>
+	//$.parser.parse();
+	var tblAudit = $("#tblAudit");
+	var editWindow = $("#winEdit");
+	var addWindow = $("#winAdd");
+	var editForm = $("#editForm");
+	var addForm = $("#addForm");
+	function formatOper(val, row, index) {
+		return "<a href=javascript:editAuditQuotaLmt(); >修改</a>&nbsp;&nbsp;&nbsp;<a href=javascript:deleteAuditQuotaLmt();>删除</a>";
+	}
+
+	function addAuditQuotaLmt(){
+		
+		addForm[0].reset();
+		addWindow.window({
+			closed : false
+		});
+	}
+
+	function editAuditQuotaLmt() {
+		var orgObj = tblAudit.datagrid("getSelected");
+		editWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(orgObj)
+		});
+	}
+
+	function deleteAuditQuotaLmt() {
+		var orgObj = tblAudit.datagrid("getSelected");
+		$.messager.confirm(
+			'请您确认',
+			'确定要删除吗?',
+			function(r) {
+				if (r) {
+					$cf.ajax({
+						url : "/opas-manualnode-auth/deleteAuditQuotaLmt.json",
+						data : orgObj,
+						onSuccess : function(orgObj) {
+							onConcle("save");
+							tblAudit.datagrid("reload");
+						}
+					});
+				}
+			});
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	function onUpdate() {
+		
+		var orderNoLen =  $("#editForm input[id=orderNo]").val().length;
+		
+		if (orderNoLen == 0){
+			
+			$.messager.alert("操作提示", "修改异常,原因:序号为空" , "error");
+			return;
+		}
+		
+		if (orderNoLen > 8){
+			
+			$.messager.alert("操作提示", "修改异常,原因:序号超长，请输入8位以内" , "error");
+			return;
+		}
+		
+		var newCusAudQuoLmtLen =  $("#editForm input[id=newCusAudQuoLmt]").val().length;
+		
+		if (newCusAudQuoLmtLen > 9){
+			
+			$.messager.alert("操作提示", "修改异常,原因:请输入五位整数以内的新客户审批额度权限" , "error");
+			return;
+		}
+		
+		var newCusSpeLen = getByteLen($("#editForm input[id=newCusSpeCasAudReaLmt]").val());
+		if (newCusSpeLen > 200) {
+			$.messager.alert("操作提示", "修改异常,原因:新客户特例批核原因权限超长，请输入200位以内" , "error");
+			return;
+		}
+		
+		var oldCusAudQuoLmtLen = $("#editForm input[id=oldCusAudQuoLmt]").val().length;
+		
+		if (oldCusAudQuoLmtLen > 9){
+			
+			$.messager.alert("操作提示", "修改异常,原因:请输入五位整数以内的老客户审批额度权限", "error");
+			return;
+		}
+		
+		var oldCusSpeLen = getByteLen($("#editForm input[id=oldCusSpeCasAudReaLmt]").val());
+		if (oldCusSpeLen > 200) {
+			$.messager.alert("操作提示", "修改异常,原因:老客户特例批核原因权限超长，请输入200位以内" , "error");
+			return;
+		}
+		
+		var jsondata = getFormData(editForm.serializeArray());
+		$cf.ajax({
+			url : "/opas-manualnode-auth/updateAuditQuotaLmt.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "修改成功!", "info", function() {
+						onConcle("winEdit");
+						tblAudit.datagrid("reload");
+					});
+				} else {
+					$.messager.alert("操作提示", "修改异常,原因:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+		});
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function onSave() {
+		
+		var orderNoLen =  $("#addForm input[id=orderNo]").val().length;
+		
+		if (orderNoLen == 0){
+			
+			$.messager.alert("操作提示", "修改异常,原因:序号为空" , "error");
+			return;
+		}
+		
+		if (orderNoLen > 8){
+			
+			$.messager.alert("操作提示", "修改异常,原因:序号超长，请输入8位以内" , "error");
+			return;
+		}
+		
+		var newCusAudQuoLmtLen =  $("#addForm input[id=newCusAudQuoLmt]").val().length;
+		
+		if (newCusAudQuoLmtLen > 9){
+			
+			$.messager.alert("操作提示", "修改异常,原因:请输入五位整数以内的新客户审批额度权限" , "error");
+			return;
+		}
+		
+		var newCusSpeLen = getByteLen($("#addForm input[id=newCusSpeCasAudReaLmt]").val());
+		if (newCusSpeLen > 200) {
+			$.messager.alert("操作提示", "修改异常,原因:新客户特例批核原因权限超长，请输入200位以内" , "error");
+			return;
+		}
+		
+		var oldCusAudQuoLmtLen = $("#addForm input[id=oldCusAudQuoLmt]").val().length;
+		
+		if (oldCusAudQuoLmtLen > 9){
+			
+			$.messager.alert("操作提示", "修改异常,原因:请输入五位整数以内的老客户审批额度权限", "error");
+			return;
+		}
+		
+		var oldCusSpeLen = getByteLen($("#addForm input[id=oldCusSpeCasAudReaLmt]").val());
+		if (oldCusSpeLen > 200) {
+			$.messager.alert("操作提示", "修改异常,原因:老客户特例批核原因权限超长，请输入200位以内" , "error");
+			return;
+		}
+		
+		var paramData = isRequired('addForm');
+		$cf.ajax({
+			url : "/opas-manualnode-auth/addAuditQuotaLmt.json",
+			data : paramData,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "添加成功!", "info", function() {
+						onConcle("winAdd");
+						tblAudit.datagrid("reload");
+					});
+					
+				} else {
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					onConcle("winEdit");
+					return;
+				}
+			}
+
+		});
+	}
+
+</script>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/modify/modify.js"></script>
+<style type="text/css">
+.area-option {
+	padding: 10px 10px 15px;
+	text-align: center;
+}
+
+.area-option a {
+	margin: 0; /* 2 */
+	padding: 5px 10px;
+	text-decoration: none;
+	color: #464646;
+	font: bold 100% sans-serif;
+	line-height: 1.15; /* 1 */
+	overflow: visible;
+	text-transform: none;
+	-webkit-appearance: button;
+	line-height: 2;
+	text-decoration: none; /* 2 */
+}
+
+.area-option a input {
+	vertical-align: middle;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; /* 1 */
+	padding: 0; /* 2 */
+	height: 12px;
+}
+
+.option-button {
+	border: 1px solid #C0C0C0;
+}
+</style>
+</head>
+<body class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div
+		data-options="region:'west',title:'左区域',split:false,noheader:true,border:false"
+		style="padding: 5px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<!-- <div id="tab_l_1" title="征信信息" style="overflow: hidden"></div> -->
+			<div id="tab_l_2" title="申请表信息" style="overflow: hidden"></div>
+			<!-- <div title="征信详情信息" style="overflow: hidden"><iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/thirdparty_detail_view.html"></iframe></div> -->
+		</div>
+	</div>
+	<div
+		data-options="region:'east',title:'右区域',split:false,noheader:true,border:false"
+		style="padding: 5px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div id="tab_r_1" title="录入" style="overflow: hidden"></div>
+			<div id="tab_r_2" title="比对" style="overflow: hidden"></div>
+		</div>
+	</div>
+	<!-- 按钮区域 -->
+	<div
+		data-options="region:'south',title:'按钮区域',split:true,noheader:true,border:false"
+		class="area-option" style="overflow: hidden;"> <a href="#" id="tui_hui"
+			class="option-button" onclick="javascript:creditControlUpdateMessageRecord();">信息修改记录</a> <a
+			href="#" class="option-button" onclick="javascript:showView();">影像调阅</a>
+	</div>
+	<div id="dd" data="0" style="left: 534px"></div>
+	<!-- 申请表信息修改查看 -->
+	<div id="applyDealView" class="easyui-window" title="申请表信息修改查看"
+		style="width: 98%; height: 670px;"
+		data-options="iconCls:'icon-search',maximized:false,modal:true,closed:true">
+		<div id="tb_applyDealView"></div>
+	</div>
+	<input type="hidden" id="appId" name="appId" value="">
+</body>
+<script type="text/javascript">
+	var appId = "";
+	var userId = "";
+	var userCode = "";
+	var reviewStatus = ''; //审查状态  0是未完成  4是挂起 
+	var bigSaveButtonFlag = false;//是否操作 大保存按钮 的标志    
+	var comingExamineCommit = false;//作为是否进行录入提交的标志 
+	var currNode = '01';//用于标卡信息采集修改时是否记录至申请信息日志表
+	var flag = "";//控制页面加载
+	var flag1 = "";
+	var flag2 = "";
+	$(function() {
+		var url = location.href;
+		appId = url.split("=")[1].split("&")[0];
+		userId = url.split("=")[2];
+		userCode = userId;
+		var length = url.split("=")[0].length;
+		reviewStatus = url.split("=")[0].substring(length - 1, length);
+		if (reviewStatus === "4") {
+			$('#ti_jiao').hide();
+		}
+		if (window.opener.zidongPushCheckboxFlag) {
+			$("#zidongPushCheckbox").attr("checked", true);
+		}
+		$("#applyId").val(appId);
+		if (flag == "") {
+			/* $("#tab_l_1").html(
+							'<iframe name="iframe_l_1" id="iframe_l_1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/thirdparty_summary_scbzk_view.html?appId='
+									+ appId + '"></iframe>'); */
+			$("#tab_l_2").html(
+							'<iframe name="iframe_l_2" id="iframe_l_2" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/apply_info_view_readonly.html?appId='
+													+ appId + '=lvru"></iframe>');
+			$("#tab_r_1").html(
+							'<iframe name="iframe_r_1" id="iframe_r_1" style="border: 0; width: 100%; height: 100%" src="../shenpi/bzk_info_collect_view.html?appId='
+									+ appId + '"></iframe>');
+		}
+
+		var liLeft = document.getElementById("right-ta").getElementsByTagName(
+				"li");
+		for (var i = 0; i < liLeft.length; i++) {
+			liLeft[i].number = (i + 1);
+			liLeft[i].onclick = function() {
+				loadCurrentPageLeft(this);
+			};
+		}
+		var liRtght = document.getElementById("right-tb").getElementsByTagName(
+				"li");
+		liRtght[0].number = undefined;
+		for (var i = 0; i < liRtght.length; i++) {
+			liRtght[i].number = (i + 1);
+			liRtght[i].onclick = function() {
+				loadCurrentPageRight(this);
+			};
+		}
+	});
+	function loadCurrentPageLeft(currentObject) {
+		var number = currentObject.number;
+		if (number == 2 && flag1 == '') {
+			$("#tab_l_2")
+					.html(
+							'<iframe name="iframe_l_2" id="iframe_l_2" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/apply_info_view_readonly.html?appId='
+									+ appId + '=lvru"></iframe>');
+			flag1 = "1";
+		}
+	}
+	function loadCurrentPageRight(currentObject) {
+		var number = currentObject.number;
+		if (number == 2 && flag2 == '') {
+			$("#tab_r_2")
+					.html(
+							'<iframe name="iframe_r_2" id="iframe_r_2" style="border: 0; width: 100%; height: 100%" src="../common/info_compare_zxInvestigation.html?appId='
+									+ appId
+									+ "&userId="
+									+ userId
+									+ '"></iframe>');
+			flag2 = "1";
+		}
+	}
+
+	function showView() {
+		window
+				.open("../win/image_new/imgShow.html?appId=" + appId,
+						"newWindow");
+	}
+
+	/*********** 人行摘要手机信息 ***********/
+	function getRCellphone() {
+		var txt_ant_mobile = document.getElementById("iframe1").contentWindow.document
+				.getElementById("txt_cellphone").value;
+		return txt_ant_mobile;
+	}
+	/*********** 申请表手机信息 ***********/
+	function getSCellphone() {
+		var c1Mobile = document.getElementById("iframe2").contentWindow.document
+				.getElementById("c1Mobile").value;
+		return c1Mobile;
+	}
+</script>
+</html>

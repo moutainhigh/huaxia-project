@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="AllotRule">
+	<resultMap id="AllotRuleResultMap" type="com.huaxia.opas.domain.allot.AllotRule">
+		<result column="RULE_CODE" property="ruleCode" jdbcType="CHAR"/>
+		<result column="RULE_NAME" property="ruleName" jdbcType="VARCHAR"/>
+		<result column="RULE_SCRIPT" property="ruleScript" jdbcType="VARCHAR"/>
+		<result column="RULE_SCRIPT_DESC" property="ruleScriptDesc" jdbcType="VARCHAR"/>
+		<result column="RULE_STATUS" property="ruleStatus" jdbcType="CHAR"/>
+		<result column="RULE_TYPE" property="ruleType" jdbcType="CHAR"/>
+		<result column="SORT_FLAG" property="sortFlag" jdbcType="NUMERIC"/>
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	<insert id="insertAllotRule" parameterType="com.huaxia.opas.domain.allot.AllotRule">
+		insert into OPAS_ALLOT_RULE (RULE_CODE,RULE_NAME,RULE_SCRIPT,RULE_SCRIPT_DESC,RULE_STATUS,RULE_TYPE,SORT_FLAG,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)  
+		values (
+			#{ruleCode,jdbcType=CHAR},
+			#{ruleName,jdbcType=VARCHAR},
+			#{ruleScript,jdbcType=VARCHAR},
+			#{ruleScriptDesc,jdbcType=VARCHAR},
+			#{ruleStatus,jdbcType=CHAR},
+			#{ruleType,jdbcType=CHAR},
+			#{sortFlag,jdbcType=NUMERIC},
+			#{crtUser,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			#{lstUpdUser,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+
+	<insert id="insertAllotRuleSelective" parameterType="com.huaxia.opas.domain.allot.AllotRule">
+		insert into OPAS_ALLOT_RULE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ruleCode != null">RULE_CODE,</if>
+			<if test="ruleName != null">RULE_NAME,</if>
+			<if test="ruleScript != null">RULE_SCRIPT,</if>
+			<if test="ruleScriptDesc != null">RULE_SCRIPT_DESC,</if>
+			<if test="ruleStatus != null">RULE_STATUS,</if>
+			<if test="ruleType != null">RULE_TYPE,</if>
+			<if test="sortFlag != null">SORT_FLAG,</if>
+			<if test="crtUser != null">CRT_USER,</if>
+			CRT_DATE,
+			<if test="lstUpdUser != null">LST_UPD_USER,</if>
+			LST_UPD_DATE
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ruleCode != null">#{ruleCode,jdbcType=CHAR},</if>
+			<if test="ruleName != null">#{ruleName,jdbcType=VARCHAR},</if>
+			<if test="ruleScript != null">#{ruleScript,jdbcType=VARCHAR},</if>
+			<if test="ruleScriptDesc != null">#{ruleScriptDesc,jdbcType=VARCHAR},</if>
+			<if test="ruleStatus != null">#{ruleStatus,jdbcType=CHAR},</if>
+			<if test="ruleType != null">#{ruleType,jdbcType=CHAR},</if>
+			<if test="sortFlag != null">#{sortFlag,jdbcType=NUMERIC},</if>
+			<if test="crtUser != null">#{crtUser,jdbcType=VARCHAR},</if>
+			CURRENT_TIMESTAMP,
+			<if test="lstUpdUser != null">#{lstUpdUser,jdbcType=VARCHAR}</if>
+			CURRENT_TIMESTAMP
+		</trim>
+	</insert>
+
+	<delete id="deleteAllotRuleByRuleCode" parameterType="java.lang.String">
+		delete from OPAS_ALLOT_RULE
+		where RULE_CODE = #{ruleCode,jdbcType=CHAR}
+	</delete>
+
+	<update id="updateAllotRule" parameterType="com.huaxia.opas.domain.allot.AllotRule">
+		update OPAS_ALLOT_RULE
+		<set>
+			RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+			RULE_TYPE = #{ruleType,jdbcType=CHAR},
+			RULE_SCRIPT = #{ruleScript,jdbcType=VARCHAR},
+			RULE_SCRIPT_DESC = #{ruleScriptDesc,jdbcType=VARCHAR},
+			RULE_STATUS = #{ruleStatus,jdbcType=CHAR},
+			SORT_FLAG=#{sortFlag,jdbcType=NUMERIC},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE=CURRENT_TIMESTAMP
+		</set>
+		where RULE_CODE = #{ruleCode,jdbcType=CHAR}
+
+	</update>
+
+	<update id="updateAllotRuleSelective" parameterType="com.huaxia.opas.domain.allot.AllotRule">
+		update OPAS_ALLOT_RULE
+		<set>
+			<if test="ruleName != null">RULE_NAME = #{ruleName,jdbcType=VARCHAR},</if>
+			<if test="ruleScript != null">RULE_SCRIPT = #{ruleScript,jdbcType=VARCHAR},</if>
+			<if test="ruleScriptDesc != null">RULE_SCRIPT_DESC = #{ruleScriptDesc,jdbcType=VARCHAR},</if>
+			<if test="ruleStatus != null">RULE_STATUS = #{ruleStatus,jdbcType=CHAR},</if>
+			<if test="sortFlag != null">SORT_FLAG = #{sortFlag,jdbcType=NUMERIC},</if>
+			LST_UPD_DATE=CURRENT_TIMESTAMP
+		</set>
+		where RULE_CODE = #{ruleCode,jdbcType=CHAR}
+
+	</update>
+
+	<select id="selectAllotRuleByRuleCode" parameterType="java.lang.String" resultMap="AllotRuleResultMap">
+		select RULE_CODE,RULE_NAME,RULE_SCRIPT,RULE_SCRIPT_DESC,RULE_STATUS,RULE_TYPE,SORT_FLAG,
+		CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE from OPAS_ALLOT_RULE
+		where RULE_CODE = '${_parameter}'
+	</select>
+	<!-- 模糊查询  -->
+	<select id="countAllotRuleByCondition"  parameterType="java.util.Map" resultType="int"> 
+		select count(1) from OPAS_ALLOT_RULE 
+		where 1=1 
+			<if test="ruleName != null and ruleName !='' ">
+				AND RULE_NAME LIKE '%${ruleName}%'
+			</if>
+			<if test="ruleType != null and ruleType !='' ">
+				AND RULE_TYPE = #{ruleType}
+			</if>
+			<if test='crtUser != null and crtUser !="" '>
+				AND CRT_USER= #{crtUser}
+			</if>
+			<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+			 	AND RULE_TYPE in
+				<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+				close=")">
+					#{item}
+				</foreach>
+			</if>
+	</select>
+	<select id="queryAllotRuleByCondition"  parameterType="java.util.Map" resultMap="AllotRuleResultMap"> 
+		select RULE_CODE,RULE_NAME,RULE_SCRIPT,RULE_SCRIPT_DESC,RULE_STATUS,
+		RULE_TYPE,SORT_FLAG,CRT_USER,LST_UPD_USER,CRT_DATE,LST_UPD_DATE
+		from OPAS_ALLOT_RULE 
+		where 1=1 
+		<if test="sortFlag != null and sortFlag !='' ">
+			    AND SORT_FLAG = #{sortFlag}
+		</if>
+		<if test="ruleName != null and ruleName !='' ">
+			AND RULE_NAME LIKE '%${ruleName}%'
+		</if>
+		<if test="ruleType != null and ruleType !='' ">
+			AND RULE_TYPE = #{ruleType}
+		</if>
+		<if test='crtUser != null and crtUser !="" '>
+			AND CRT_USER= #{crtUser}
+		</if>
+		<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+			 AND RULE_TYPE in
+			<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+			close=")">
+				#{item}
+			</foreach>
+		</if>
+		order by SORT_FLAG,CRT_DATE desc
+	</select>
+	<!-- 规则名查询 -->
+	<select id="countRule"  parameterType="java.util.Map" resultType="int"> 
+		select count(1) from OPAS_ALLOT_RULE 
+		where  (SORT_FLAG= #{sortFlag} or RULE_NAME = #{ruleName}) 
+			<if test="ruleTypeList != null and ruleTypeList.size() != 0 ">
+			 	AND RULE_TYPE in
+				<foreach item="item" index="index" collection="ruleTypeList" open="(" separator=","
+				close=")">
+					#{item}
+				</foreach>
+			</if>
+	</select>
+	<select id="queryAllotRule"   resultMap="AllotRuleResultMap"> 
+		select *  from OPAS_ALLOT_RULE
+		 order by CRT_DATE desc
+	</select>
+
+</mapper>

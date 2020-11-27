@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/modify/modify.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/index/index.css" type="text/css"></link>
+</head>
+<body id="n09000_body" class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div data-options="region:'west',title:'左区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div id="leftTab1" title="征信信息" style="overflow: hidden"></div>
+			<div id="leftTab2" title="申请表信息" style="overflow: hidden"></div>
+			<!-- <div title="征信详情信息" style="overflow: hidden"><iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/thirdparty_detail_view.html"></iframe></div> -->
+		</div>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle" style="height: 100%; width: 100%;">
+			<div id="rightTab1" title="录入" style="overflow: hidden"></div>
+			<div id="rightTab2" title="比对" style="overflow: hidden"></div>
+		</div>
+	</div>
+	<!-- 按钮区 --> 
+	<div id="n09000_tool" data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="height:50px;text-align:center;">
+		<a href="javascript:creditControlUpdateMessageRecord();" class="bt_public_107">信息修改记录</a>&nbsp;
+		<a herf="#" class="bt_public_107" onclick="save();">保存</a>
+		<a href="javascript:showView();" class="bt_public_107">影像展现</a>		
+	</div>
+	<div id="dd" data="0" style="left: 534px"></div>
+	<!-- 申请表信息修改查看 -->
+	<div id="applyDealView" class="easyui-window" title="申请表信息修改查看" style="width: 98%;height:670px;" data-options="iconCls:'icon-search',maximized:false,modal:true,closed:true">
+			<div id="tb_applyDealView"></div>
+	</div>
+	<input type="hidden" id="appId" name="appId" value="">
+</body>
+<script type="text/javascript">
+var appId="";
+var userId="";
+var userCode = "";
+var reviewStatus='';  //审查状态  0是未完成  4是挂起 
+var bigSaveButtonFlag=false;//是否操作 大保存按钮 的标志    
+var comingExamineCommit=false;//作为是否进行录入提交的标志 
+
+$(function() {
+	var url = location.href;
+	appId = url.split("=")[1].split("&")[0];
+	userId = url.split("=")[2];
+	userCode = userId;
+	var length=url.split("=")[0].length;
+	reviewStatus=url.split("=")[0].substring(length-1,length);
+	if(reviewStatus==="4"){
+		$('#ti_jiao').hide();
+	}
+	if(window.opener.zidongPushCheckboxFlag){
+		$("#zidongPushCheckbox").attr("checked",true);
+	}
+	$("#applyId").val(appId);
+	$("#leftTab1").html('<iframe name="iframe1" id="iframe1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/thirdparty_summary_scbzk_view.html?appId='+appId+'"></iframe>');
+	$("#leftTab2").html('<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/apply_info_view.html?appId='+appId+'=lvru"></iframe>');
+	$("#rightTab1").html('<iframe name="iframe3" id="iframe3" style="border: 0; width: 100%; height: 100%" src="../common/info_collect.html?appId='+appId+'"></iframe>');
+	$("#rightTab2").html('<iframe name="iframe4" id="iframe4" style="border: 0; width: 100%; height: 100%" src="../common/info_compare.html?appId='+appId+"&userId="+userId+'"></iframe>');	
+});
+	function save() {
+		bigSaveButtonFlag = true;
+		var applyTableWindow = document.getElementById("iframe2").contentWindow;//申请表信息页面 
+		var infoCollectWindow = document.getElementById("iframe3").contentWindow;//录入页面
+		var infoCompareWindow = document.getElementById("iframe4").contentWindow;//比对页面
+		infoCollectWindow.onSave();
+		var infoCollectWindowIsSuccess = infoCollectWindow.isSaveSuccess;
+		applyTableWindow.checkPageData();
+		var applyTableWindowIsSuccess = applyTableWindow.isSaveSuccess;
+		infoCompareWindow.onSave();
+		var infoCompareWindowIsSuccess = infoCompareWindow.isSaveSuccess;
+		var message = "";
+		if(infoCompareWindow.compareFlag){
+			return;
+		}
+		if (!applyTableWindowIsSuccess) {
+			message += "  <font color='red' size='2' >申请表信息页面: </font>"
+					+ applyTableWindow.waringMessage + '<br><br>';
+		}
+		if (!infoCollectWindowIsSuccess) {
+			message += "  <font color='red' size='2' >录入页面: </font>"
+					+ infoCollectWindow.waringMessage + '<br><br>';
+		}
+		if (!infoCompareWindowIsSuccess) {
+			message += "  <font color='red' size='2' >比对页面: </font>"
+					+ infoCompareWindow.waringMessage;
+		}
+		bigSaveButtonFlag = false;
+		if (applyTableWindowIsSuccess && infoCollectWindowIsSuccess
+				&& infoCompareWindowIsSuccess) {//如果3个页面都没有问题
+			if (comingExamineCommit) {//执行的操作是提交
+				examineSubmit();
+				comingExamineCommit = false;
+				return;
+			} else {//执行的操作是大保存
+				top.$cf.showMsg("保存成功！");
+				return;
+			}
+		} else {
+			if (applyTableWindowIsSuccess == false
+					&& infoCompareWindowIsSuccess == true
+					&& infoCollectWindowIsSuccess == true) {//申请表信息有未填项
+				if (comingExamineCommit) {//正在进行的是录入提交操作
+					$.messager.confirm({
+						width : 500,
+						height : 200,
+						title : '请确认，是否强制提交',
+						msg : message,
+						fn : function(r) {
+							if (r) {//忽略 申请表信息页面的 警告 强制提交 
+								examineSubmit();
+								comingExamineCommit = false;
+							}
+						}
+					});
+					return;
+				} else {//正在进行的是页面的大保存
+					$.messager.show({
+						title : '我的消息',
+						msg : message + "<br><br>保存成功！",
+						showType : 'slide',
+						width : 500,
+						height : 200,
+						draggable : true,
+						collapsible : true,
+						timeout : 0,
+						style : {
+							right : '',
+							top : document.body.scrollTop
+									+ document.documentElement.scrollTop,
+							bottom : ''
+						}
+					});
+					return;
+				}
+			} else {
+				$.messager.show({
+					title : '我的消息',
+					msg : message + "<br><br>操作失败！",
+					showType : 'slide',
+					width : 500,
+					height : 200,
+					draggable : true,
+					collapsible : true,
+					timeout : 0,
+					style : {
+						right : '',
+						top : document.body.scrollTop
+								+ document.documentElement.scrollTop,
+						bottom : ''
+					}
+				});
+				return;
+			}
+		}
+	}
+	function showView() {
+		window.open("../win/image_new/imgShow.html?appId=" + appId,"newWindow");
+	}
+	function examineSubmitAfterSave() {
+		comingExamineCommit = true;//表示正在进行的是录入提交操作
+		//在未保存之前直接提交，默认保存
+		save();
+	}
+	function examineSubmit() {
+		var object = new Object() ;
+		object.name = 'appId';
+		object.value = appId;
+		var object1 = new Object();
+		object1.name = 'userCode';
+		object1.value = userCode;
+		var object2 = new Object();
+		object2.name = 'userUuid';
+		object2.value = window.opener.userUuid;
+		//appId
+		var paramArray = new Array();
+		paramArray.push(object);
+		paramArray.push(object1);
+		paramArray.push(object2);
+		var jsondata = common.formToJson(paramArray);
+		$cf.ajax({
+			url : "/opas-naps/lineNewUrlClient.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					alert("提交成功!");
+					setTimeout("afterSubmitRefreshParentPage()", 1500);
+				} else {
+					alert("提交失败!" + data.RSP_BODY.exMsg);
+				}
+			}
+		});
+	}
+	//提交成功后 刷新父页面  
+
+	function afterSubmitRefreshParentPage() {
+		window.opener.fnGetFirst();
+	    var checkStr = window.opener.checkStr;
+		if ($("#zidongPushCheckbox").is(":checked")) {
+			zidongPushCheckboxFlag = true;
+			$cf.ajax({
+				url : "/opas-naps/Examine_Auto_Push.json",
+				data : {"currNode":"01","delStatus":"0","currStatus":"3","userCode":userCode,"checkStr":checkStr},
+				onSuccess : function(data) {
+					var allot = data.RSP_BODY.allot;
+					if(allot==null||allot==""){
+						alert("已经没有申请件可供自动推送！");
+						window.opener.$("#tblSeach").datagrid("reload",{"checkStr":checkStr,"delStatus":"0"});
+						var newWin = window.open("", "_parent", "");
+						newWin.close();
+						return;
+					}
+					var appId = allot.appId;
+					window.opener.$("#tblSeach").datagrid("reload",{"checkStr":checkStr,"delStatus":"0"});
+					window.opener.zidongPushCheckboxFlag = true;//自动推送标志
+					location.href="examine_detail.html?appId0=" + appId + "&userId="+ userCode;
+				}
+			})
+		} else {
+			window.opener.$("#tblSeach").datagrid("reload",{"checkStr":checkStr,"delStatus":"0"});
+			// 为了屏蔽ie的 小弹框提示
+			var newWin = window.open("", "_parent", "");
+			newWin.close();
+		}
+		
+	}
+
+
+	/*********** 人行摘要手机信息 ***********/
+	function getRCellphone() {
+		var txt_ant_mobile = document.getElementById("iframe1").contentWindow.document
+				.getElementById("txt_cellphone").value;
+		return txt_ant_mobile;
+	}
+	/*********** 申请表手机信息 ***********/
+	function getSCellphone() {
+		var c1Mobile = document.getElementById("iframe2").contentWindow.document
+				.getElementById("c1Mobile").value;
+		return c1Mobile;
+	}
+	
+</script>
+</html>

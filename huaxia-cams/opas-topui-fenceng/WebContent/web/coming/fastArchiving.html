@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=UTF-8>
+<title>授信审批主页面</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../topui/framework/framework.util.js"></script>
+<style type="text/css">
+.area-option {
+	padding: 10px 10px 15px;
+	text-align: center;
+}
+
+.area-option a {
+	margin: 0; /* 2 */
+	padding: 5px 10px;
+	text-decoration: none;
+	color: #464646;
+	font: bold 100% sans-serif;
+	line-height: 1.15; /* 1 */
+	overflow: visible;
+	text-transform: none;
+	-webkit-appearance: button;
+	line-height: 2;
+	text-decoration: none; /* 2 */
+}
+
+.area-option a input {
+	vertical-align: middle;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; /* 1 */
+  	padding: 0; /* 2 */
+  	height: 12px;
+}
+
+.option-button {
+	border: 1px solid #C0C0C0;
+}
+</style>
+</head>
+<body class="easyui-layout">
+	<div
+		data-options="region:'west',title:'左区域',split:true,noheader:true,border:false"
+		style="width: 50%;">
+		<div class="easyui-tabs" style="height: 100%; width: 100%;">
+			<div title="申请表信息"  data-options="tabWidth:85" style="overflow: hidden" id="div1"></div>
+		</div>
+	</div>
+	<div
+		data-options="region:'east',title:'右区域',split:true,noheader:true,border:false"
+		style="width: 50%;">
+		<div class="easyui-tabs" style="height: 100%; width: 100%;">
+			<div title="授信审批" style="overflow: hidden" id="div10"></div>
+		</div>
+	</div>
+	<!-- 按钮区域 -->
+	<div
+		data-options="region:'south',title:'按钮区域',split:true,noheader:true,border:false"
+		class="area-option" style="overflow:hidden;">
+		<a href="#"class="option-button" onclick="saveButton();">保存</a> <a href="#"
+			class="option-button" onclick="submit('1');">提交</a>
+	</div>
+</body>
+<script type="text/javascript">
+	/**
+	 * 功能：加载TAB页内容
+	 * @param id TAB页ID
+	 */
+	function _fnLoadIframe(id) {
+		var o = $("#div" + id);
+		if ($("#iframe" + id).prop("name") == "iframe" + id) {
+			return false;
+		}
+		var src = '', url1 = '<iframe name="iframe' + id + '" id="iframe' + id
+				+ '"  style="border: 0; width: 100%; height: 98%" src="', url2 = '?appId='
+				+ appId + '"></iframe>';
+		if (id == 10) {// 授信审批
+			src = '../coming/credit_approveaction.html';
+		} else if (id == 1) {// 申请表信息
+			src = '../common/apply_info_view_bzk.html';
+		} 
+		o.append(url1 + src + url2);
+	}
+
+	/** 功能：初始化事件设置 */
+	function fnEventUI() {
+		var id = 1;
+		$("ul.tabs li a").each(function(i, o){
+			$(this).attr('onclick','_fnLoadIframe(' + id + ')');
+			id += 1;
+		});
+		
+		_fnLoadIframe(1); // 系统决策结果
+		_fnLoadIframe(10); // 授信审批
+	}
+
+	var appId = $.fnGetAppId('appId');
+	var param;
+	var userId;
+	var ydjFlag = "2";
+	var check_meuoFlag="1";
+	var zidongSubmit;
+	var caozuoFlag = "0";//4：退回征信，1：退回审批，2转上级，3为：提交
+	var userCode;
+	var tsZidongFlag = true;
+	var index = "0";
+	var zxQueue='0';
+	var bcFlag='0';
+	var matchingCardFlag;
+	var currNode = '03';
+	/***********页面初始化***********/
+	$(function() {
+		userId = $.fnGetAppId('userId');
+		userCode = userId;
+		check_meuoFlag = $.fnGetAppId('check_meuoFlag');
+		zidongSubmit = $.fnGetAppId('zidongSubmit');
+		index = $.fnGetAppId('index');
+		bcFlag=$.fnGetAppId('bcFlag');
+		matchingCardFlag=$.fnGetAppId('matchingCardFlag');
+		/* if(index==null||index==''||index=='undefined'){
+			index = "0";
+		} */
+		/** 初始化事件设置 */
+		fnEventUI();
+		if(check_meuoFlag.length>1){
+			check_meuoFlag = check_meuoFlag.substr(0,1);
+			tsZidongFlag = false;
+		}
+		if(zidongSubmit=="1"){
+			$("#zidongPushCheckbox").prop("checked",true);
+		}
+	});
+	
+	/*********** 申请表手机信息 ***********/
+	function getSCellphone(){
+		var c1Mobile = document.getElementById("iframe1").contentWindow.document.getElementById("c1Mobile").value;
+		return c1Mobile;
+	}
+	/*********** 获得当前所在节点 ***********/
+	function getCurrNode(){
+		return "03";//审批节点
+	}
+	/*********** userId ***********/
+	function getUserId(){
+		return userId;
+	}
+	
+	var submitType="";
+	/***********保存按钮*************/
+	function saveButton(){//审批保存
+		caozuoFlag = "0";
+		save(false);
+	}
+	//保存、提交公共代码部分
+	var saveRes = true;
+	var saveCommit = true;
+	var bigSaveButtonFlag=false;
+	var applyTable = true;
+	var violateCode1,violateCode2,violateCode3;
+	function save(submitFlag){
+		bigSaveButtonFlag = true;
+		applyTable = true;
+		//submitFlag = false;
+		var message="";
+		var applyTableWindow=null;//申请表信息页面 
+		//var applyTableWindowIsCanCommit=false;//申请表信息，出现警告也可强制提交 
+		var isCanCommitNew=false;//申请表信息，true强制拦截不能提交
+		var spsave = document.getElementById("iframe10").contentWindow;//授权审批保存
+		//获得审批违例码
+		violateCode1 = spsave.$("#violateCode1").val();
+		//获得审批违例码
+		violateCode2 = spsave.$("#violateCode2").val();
+		//获得审批违例码
+		violateCode3 = spsave.$("#violateCode3").val();
+		//获得批准结果,即批准还是拒绝
+		var approveResult = spsave.$("#radio_approveResult").val();
+		var pzResult =  spsave.document.getElementById("radio_pizhun").checked;
+		var pzResult_fk =  spsave.document.getElementById("radio_pizhun_fk").checked;
+		var matchingCardFlag = spsave.matchingCardFlag;
+		//申请表信息页面是否点击加载(二期修改：征信批量提交需每次点击申请表信息页面,普通征信件不需要)
+		var applyTableFlag=document.getElementById("iframe1");
+		if(applyTableFlag==null&&bcFlag=='1'){
+			//alert("保存之前,申请表信息页面必须点击加载");
+			$.messager.alert('我的消息','保存之前,申请表信息页面必须点击加载','warning');
+			return;
+		}
+		//调用申请表信息页面保存按钮  yq
+		if((pzResult||(pzResult_fk&&matchingCardFlag=="2"))&&bcFlag=='1'){
+			applyTableWindow=document.getElementById("iframe1").contentWindow;
+			applyTableWindow.checkPageData();
+		}
+		spsave.queryGlResultQT();
+		//onsole.log(spsave.cardlist(0).productCode)
+		console.log(spsave.cardlist)
+		var appResult =  spsave.bizApproval.approveResult;
+		console.log()
+		var applyCard =  $("#applyCard").val();
+		console.log(applyCard)
+		var result = false;
+		var num = 0;
+		//快速归档件只用于uat使用
+		$cf.ajax({
+			url : "/opas-naps/submitOpasFileApplication.json",
+			data : {
+				"flag":"2",
+				"appId" : appId,
+				"applyCard":applyCard,
+				"appResult":appResult
+			},
+			onSuccess : function(resData) {
+				var isSuccess = resData.RSP_BODY.isSuccess;
+				var msg = resData.RSP_BODY.msg;
+				window.close();
+			}
+			
+		});
+	} 
+	/***********提交按钮***********/
+	var submitNum = 0;
+	var submitFlag = false;
+	function submit(obj){//审批提交
+		caozuoFlag = "3";
+		save(true);
+	}
+	
+	/***********触发业务数据保存按钮 ************/
+	function saveCommon(){
+		document.getElementById("iframe10").contentWindow.queryGlResult();//授权审批保存
+	}
+
+	function showWin(obj) {
+		var winObj = $("#"+obj);
+		winObj.window({
+			closed : false
+		});
+	}
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : true
+		});
+	}
+	/* 关闭窗口 */
+	function window_close(){
+		window.opener.reload();
+		window.opener=null;
+		window.open('','_self');
+		window.close();
+		window.top.close();
+	}
+	function showViewCreditControl(){
+		window.open("../win/image_new/imgShow.html?appId=" + appId,"newWindow");
+	}
+	/** 打开控制页面 */
+	function openControlPage(path,appId){
+		window.opener.open(path,""+appId,"resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="+(screen.availWidth-10)+",height="+(screen.availHeight-50));
+		window.close();
+	}
+</script>
+</html>

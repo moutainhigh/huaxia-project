@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/modify/modify.js"></script>
+<style type="text/css">
+.area-option {
+	padding: 10px 10px 15px;
+	text-align: center;
+}
+
+.area-option a {
+	margin: 0; /* 2 */
+	padding: 5px 10px;
+	text-decoration: none;
+	color: #464646;
+	font: bold 100% sans-serif;
+	line-height: 1.15; /* 1 */
+	overflow: visible;
+	text-transform: none;
+	-webkit-appearance: button;
+	line-height: 2;
+	text-decoration: none; /* 2 */
+}
+
+.area-option a input {
+	vertical-align: middle;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; /* 1 */
+	padding: 0; /* 2 */
+	height: 12px;
+}
+
+.option-button {
+	border: 1px solid #C0C0C0;
+}
+</style>
+</head>
+<body class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div
+		data-options="region:'west',title:'左区域',split:false,noheader:true,border:false"
+		style="padding: 5px; background: #eaf2ff; width: 50%;">
+		<div id="right-ta" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div id="tab_l_1" title="申请表信息" style="overflow: hidden"></div>
+		</div>
+	</div>
+	<div
+		data-options="region:'east',title:'右区域',split:false,noheader:true,border:false"
+		style="padding: 5px; background: #eaf2ff; width: 50%;">
+		<div id="right-tb" class="easyui-tabs" border="fasle"
+			style="height: 100%; width: 100%;">
+			<div id="tab_r_1" title="录入" style="overflow: hidden"></div>
+			<div id="tab_r_2" title="比对" style="overflow: hidden"></div>
+		</div>
+	</div>
+	<!-- 按钮区域 -->
+	<div
+		data-options="region:'south',title:'按钮区域',split:true,noheader:true,border:false"
+		class="area-option" style="overflow: hidden;">
+		<a href="#" id="zi" class="option-button"><input type="checkbox"
+			id="zidongPushCheckbox" />自动推送</a> <a href="#" id="tui_hui"
+			class="option-button"
+			onclick="javascript:creditControlUpdateMessageRecord();">信息修改记录</a> <a
+			href="#" class="option-button" onclick="save('0');">保存</a> <a href="#"
+			class="option-button" onclick="examineSubmitAfterSave();" id="examineSubmitButton">提交</a> <a
+			href="#" class="option-button" onclick="javascript:showView();">影像调阅</a>
+	</div>
+	<div id="dd" data="0" style="left: 534px"></div>
+	<!-- 申请表信息修改查看 -->
+	<div id="applyDealView" class="easyui-window" title="申请表信息修改查看"
+		style="width: 98%; height: 670px;"
+		data-options="iconCls:'icon-search',maximized:false,modal:true,closed:true">
+		<div id="tb_applyDealView"></div>
+	</div>
+	<input type="hidden" id="appId" name="appId" value="">
+</body>
+<script type="text/javascript">
+	var appId = "";
+	var userId = "";
+	var userCode = "";
+	var reviewStatus = ''; //审查状态  0是未完成  4是挂起 
+	var bigSaveButtonFlag = false;//是否操作 大保存按钮 的标志    
+	var comingExamineCommit = false;//作为是否进行录入提交的标志 
+	var currNode = '01';//用于标卡信息采集修改时是否记录至申请信息日志表
+	var flag = "";//控制页面加载
+	$(function() {
+		var url = location.href;
+		appId = url.split("=")[1].split("&")[0];
+		userId = url.split("=")[2];
+		userCode = userId;
+		var length = url.split("=")[0].length;
+		reviewStatus = url.split("=")[0].substring(length - 1, length);
+		if (reviewStatus === "4") {
+			$('#ti_jiao').hide();
+		}
+		if (window.opener.zidongPushCheckboxFlag) {
+			$("#zidongPushCheckbox").attr("checked", true);
+		}
+		$("#applyId").val(appId);
+		if (flag == "") {
+			$("#tab_l_1")
+					.html(
+							'<iframe name="iframe_l_2" id="iframe_l_1" style="border: 0; width: 100%; height: 100%" scrolling="auto" src="../common/apply_info_view_patchbolt.html?appId='
+									+ appId + '=lvru"></iframe>');
+			$("#tab_r_1")
+					.html(
+							'<iframe name="iframe_r_1" id="iframe_r_1" style="border: 0; width: 100%; height: 100%" src="../common/bzk_info_collect_action.html?appId='
+									+ appId + '"></iframe>');
+		}
+
+		var liRtght = document.getElementById("right-tb").getElementsByTagName(
+				"li");
+		liRtght[0].number = undefined;
+		for (var i = 0; i < liRtght.length; i++) {
+			liRtght[i].number = (i + 1);
+			liRtght[i].onclick = function() {
+				loadCurrentPageRight(this);
+			};
+		}
+	});
+	function loadCurrentPageRight(currentObject) {
+		var number = currentObject.number;
+		if (number == 2 && flag == '') {
+			$("#tab_r_2")
+					.html(
+							'<iframe name="iframe_r_2" id="iframe_r_2" style="border: 0; width: 100%; height: 100%" src="../common/info_compare.html?appId='
+									+ appId
+									+ "&userId="
+									+ userId
+									+ '"></iframe>');
+			flag = "1";
+		}
+	}
+	function save(obj) {
+		if (flag == "") {
+			alert("比对页面未检查！");
+			return;
+		}
+		bigSaveButtonFlag = true;
+		var infoCollectWindow = document.getElementById("iframe_r_1").contentWindow;//录入页面
+		var infoCompareWindow = document.getElementById("iframe_r_2").contentWindow;//比对页面
+		if (infoCompareWindow.alreadyFlag == false) {
+			$.messager.alert("操作提示", "操作过快，比对页面未完全加载，请重新打开此申请件！");
+			return;
+		}
+		infoCollectWindow.onSave(obj);
+		var infoCollectWindowIsSuccess = infoCollectWindow.isSaveSuccess;
+		var industryCodeMatFlag = infoCollectWindow.industryCodeMatFlag;
+		
+		if(!infoCollectWindowIsSuccess || !industryCodeMatFlag){
+			obj = '0';
+		}
+		infoCompareWindow.onSave(obj);
+		var infoCompareWindowIsSuccess = infoCompareWindow.isSaveSuccess;
+		var message = "";
+		if (infoCompareWindow.compareFlag) {
+			infoCompareWindow.compareFlag = false;
+			return;
+		}
+		if (!infoCollectWindowIsSuccess) {
+			message += "  <font color='red' size='2' >录入页面: </font>"
+					+ infoCollectWindow.waringMessage + '<br><br>';
+		}
+		if (!infoCompareWindowIsSuccess) {
+			message += "  <font color='red' size='2' >比对页面: </font>"
+					+ infoCompareWindow.waringMessage;
+		}
+		bigSaveButtonFlag = false;
+		if (infoCollectWindowIsSuccess && infoCompareWindowIsSuccess) {//如果2个页面都没有问题
+			if (comingExamineCommit) {//执行的操作是提交
+				examineSubmit();
+				comingExamineCommit = false;
+				return;
+			} else {//执行的操作是大保存
+				top.$cf.showMsg("保存成功！");
+				return;
+			}
+		} else {
+			$.messager.show({
+				title : '我的消息',
+				msg : message + "<br><br>操作失败！",
+				showType : 'slide',
+				width : 500,
+				height : 200,
+				draggable : true,
+				collapsible : true,
+				timeout : 0,
+				style : {
+					right : '',
+					top : document.body.scrollTop
+							+ document.documentElement.scrollTop,
+					bottom : ''
+				}
+			});
+			return;
+		}
+	}
+	function showView() {
+		window
+				.open("../win/image_new/imgShow.html?appId=" + appId,
+						"newWindow");
+	}
+	function examineSubmitAfterSave() {
+		comingExamineCommit = true;//表示正在进行的是录入提交操作
+		//在未保存之前直接提交，默认保存
+		save("1");
+	}
+	function examineSubmit() {
+		//$("#examineSubmitButton").attr("disabled",true);
+		//$("#examineSubmitButton").css("pointer-events","none");
+		var infoCollectWindow = document.getElementById("iframe_r_1").contentWindow;//录入页面
+		var industryCode = infoCollectWindow.industryCode.value;
+		var infoCollectWindow = document.getElementById("iframe_r_1").contentWindow;//录入页面
+		var industryCode = infoCollectWindow.industryCode.value;
+		var object = new Object();
+		object.name = 'appId';
+		object.value = appId;
+		var object1 = new Object();
+		object1.name = 'userCode';
+		object1.value = userCode;
+		var object2 = new Object();
+		object2.name = 'userUuid';
+		object2.value = window.opener.userUuid;
+		var object3 = new Object();
+		object3.name = 'industryCode';
+		object3.value = industryCode;
+		//appId
+		var paramArray = new Array();
+		paramArray.push(object);
+		paramArray.push(object1);
+		paramArray.push(object2);
+		paramArray.push(object3);
+		var jsondata = common.formToJson(paramArray);
+		$cf.ajax({
+			url : "/opas-naps/lineNewUrlClient.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					afterSubmitRefreshParentPage();
+				} else {
+					alert("提交失败!" + data.RSP_BODY.exMsg);
+				}
+			}
+		});
+	}
+	//提交成功后 刷新父页面  
+
+	function afterSubmitRefreshParentPage() {
+		window.opener.fnGetFirst();
+		var checkStr = window.opener.checkStr;
+		if ($("#zidongPushCheckbox").is(":checked")) {
+			zidongPushCheckboxFlag = true;
+			$cf.ajax({
+				url : "/opas-naps/Examine_Auto_Push.json",
+				data : {
+					"currNode" : "01",
+					"delStatus" : "0",
+					"currStatus" : "3",
+					"userCode" : userCode,
+					"checkStr" : checkStr
+				},
+				onSuccess : function(data) {
+					var allot = data.RSP_BODY.allot;
+					if (allot == null || allot == "") {
+						alert("已经没有申请件可供自动推送！");
+						window.opener.$("#tblSeach").datagrid("reload", {
+							"checkStr" : checkStr,
+							"delStatus" : "0"
+						});
+						var newWin = window.open("", "_parent", "");
+						newWin.close();
+						return;
+					}
+					var appId = allot.appId;
+					window.opener.$("#tblSeach").datagrid("reload", {
+						"checkStr" : checkStr,
+						"delStatus" : "0"
+					});
+					window.opener.zidongPushCheckboxFlag = true;//自动推送标志
+					location.href = "examine_detail.html?appId0=" + appId
+							+ "&userId=" + userCode;
+					$("#examineSubmitButton").removeAttr("disabled");
+				}
+			})
+		} else {
+			window.opener.$("#tblSeach").datagrid("reload", {
+				"checkStr" : checkStr,
+				"delStatus" : "0"
+			});
+			// 为了屏蔽ie的 小弹框提示
+			var newWin = window.open("", "_parent", "");
+			newWin.close();
+		}
+	}
+	
+	var right_tab = $("#right-tb");
+	var hrefFlag = '0';
+	document.onkeydown = function(event) {
+		if (window.event.altKey && window.event.keyCode == "20") {
+			var liRtght = document.getElementById("right-tb").getElementsByTagName("li");
+			if (liRtght[0].className.indexOf('tabs-selected') != -1) {
+				if(flag==''){
+					$("#tab_r_2")
+					.html(
+							'<iframe name="iframe_r_2" id="iframe_r_2" style="border: 0; width: 100%; height: 100%" src="../common/info_compare.html?appId='
+									+ appId
+									+ "&userId="
+									+ userId
+									+ '"></iframe>');
+				}
+				right_tab.tabs('select', '比对');
+				flag='1';
+			} else {
+				right_tab.tabs('select', '录入');
+			}
+		}
+		if( window.event.keyCode == "13"){
+			examineSubmitAfterSave();
+		}
+	}
+</script>
+</html>

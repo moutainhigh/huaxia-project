@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasUniAddrInfo">
+	
+	<resultMap id="UniAddrMap" type="java.util.Map">
+	   <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+	   <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+	   <result column="API_KEY" jdbcType="VARCHAR" property="apiKey" />
+	   <result column="SUCCESS" jdbcType="VARCHAR" property="success" />
+	   <result column="RESPONSE_CODE" jdbcType="VARCHAR" property="responseCode" />
+	   <result column="RESPONSE_DESC" jdbcType="VARCHAR" property="responseDesc" />
+	   <result column="RESPONSE_RESULT" jdbcType="VARCHAR" property="responseResult" />
+	   <result column="CARRIER" jdbcType="VARCHAR" property="carrier" />
+	</resultMap>
+	  
+	<select id="queryUniAddrInforByAppId" parameterType="java.lang.String" resultMap="UniAddrMap">
+  	 select APP_ID, CRT_TIME, API_KEY, SUCCESS, RESPONSE_CODE, RESPONSE_DESC, RESPONSE_RESULT, CARRIER from UNICOM_ADDRESS_INFO
+  	  <where>
+			APP_ID = #{appId,jdbcType=VARCHAR} ORDER BY CRT_TIME DESC
+	  </where>
+	</select>
+	
+</mapper>

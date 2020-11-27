@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCrcdPrycrtMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCrcdPrycrt">
+		INSERT INTO SP_APS_IFS_CRCD_PRYCRT (
+			APP_ID,CUSTID,CUSTCODE,CUSTNAME,CERTTYPE,CERTNO,YSX_BG_DT,PRODUCT_NM1,PRODUCT_NM2,PRODUCT_NM3,CREDIT_CL,
+			CASHLOAN_CL,YSX_END_DT,RH_FLAG,EXPIRE_FLAG
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{custName, jdbcType = VARCHAR},
+			#{certType, jdbcType = VARCHAR},
+			#{certNo, jdbcType = VARCHAR},
+			#{ysxBgDt, jdbcType = DATE},
+			#{productNm1, jdbcType = VARCHAR},
+			#{productNm2, jdbcType = VARCHAR},
+			#{productNm3, jdbcType = VARCHAR},
+			#{creditCl, jdbcType = VARCHAR},
+			#{cashLoanCl, jdbcType = VARCHAR},
+			#{ysxEndDt, jdbcType = DATE},
+			#{rhFlag, jdbcType = VARCHAR},
+			#{expireFlag, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CRCD_PRYCRT (
+			APP_ID,CUSTID,CUSTCODE,CUSTNAME,CERTTYPE,CERTNO,YSX_BG_DT,PRODUCT_NM1,PRODUCT_NM2,PRODUCT_NM3,CREDIT_CL,
+			CASHLOAN_CL,YSX_END_DT,RH_FLAG,EXPIRE_FLAG
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.custName, jdbcType = VARCHAR},
+			#{item.certType, jdbcType = VARCHAR},
+			#{item.certNo, jdbcType = VARCHAR},
+			TO_DATE(#{item.ysxBgDt, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.productNm1, jdbcType = VARCHAR},
+			#{item.productNm2, jdbcType = VARCHAR},
+			#{item.productNm3, jdbcType = VARCHAR},
+			#{item.creditCl, jdbcType = VARCHAR},
+			#{item.cashLoanCl, jdbcType = VARCHAR},
+			TO_DATE(#{item.ysxEndDt, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{item.rhFlag, jdbcType = VARCHAR},
+			#{item.expireFlag, jdbcType = VARCHAR}
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

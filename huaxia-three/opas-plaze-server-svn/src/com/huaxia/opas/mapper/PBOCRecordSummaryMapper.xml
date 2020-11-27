@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCRecordSummaryMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.QueryRecordSummary">
+		INSERT INTO PBOC_QUERYINFO_NEW (
+			APP_ID,
+			QUERY_ORG_1M_SUM1,QUERY_ORG_1M_SUM2,QUERY_ORG_1M_SUM3,QUERY_ORG_1M_SUM4,QUERY_ORG_1M_SUM5,QUERY_ORG_1M_SUM6,
+			QUERY_REC_1M_SUM1,QUERY_REC_1M_SUM2,QUERY_REC_1M_SUM3,QUERY_REC_1M_SUM4,QUERY_REC_1M_SUM5,QUERY_REC_1M_SUM6,
+			QUERY_REC_2Y_SUM1,QUERY_REC_2Y_SUM2,QUERY_REC_2Y_SUM3,QUERY_REC_2Y_SUM4,QUERY_REC_2Y_SUM5,QUERY_REC_2Y_SUM6,
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{queryOrg1MSum1, jdbcType = INTEGER},
+			#{queryOrg1MSum2, jdbcType = INTEGER},
+			#{queryOrg1MSum3, jdbcType = INTEGER},
+			#{queryOrg1MSum4, jdbcType = INTEGER},
+			#{queryOrg1MSum5, jdbcType = INTEGER},
+			#{queryOrg1MSum6, jdbcType = INTEGER},
+			#{queryRec1MSum1, jdbcType = INTEGER},
+			#{queryRec1MSum2, jdbcType = INTEGER},
+			#{queryRec1MSum3, jdbcType = INTEGER},
+			#{queryRec1MSum4, jdbcType = INTEGER},
+			#{queryRec1MSum5, jdbcType = INTEGER},
+			#{queryRec1MSum6, jdbcType = INTEGER},
+			#{queryRec2YSum1, jdbcType = INTEGER},
+			#{queryRec2YSum2, jdbcType = INTEGER},
+			#{queryRec2YSum3, jdbcType = INTEGER},
+			#{queryRec2YSum4, jdbcType = INTEGER},
+			#{queryRec2YSum5, jdbcType = INTEGER},
+			#{queryRec2YSum6, jdbcType = INTEGER},
+			SYSDATE,
+			'SYSTEM'
+		)
+	</insert>
+
+</mapper>

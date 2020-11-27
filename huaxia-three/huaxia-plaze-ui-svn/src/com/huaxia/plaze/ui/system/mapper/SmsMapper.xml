@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.SmsMapper">
+
+    <resultMap id="result_msg" type="Sms">
+		<result column="sms_text" property="msgText" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_msg">
+		 SELECT sms_text
+		  FROM sys_sms_template 
+		 WHERE sms_id = #{sms_id,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

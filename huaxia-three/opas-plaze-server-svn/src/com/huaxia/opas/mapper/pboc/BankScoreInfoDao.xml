@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankScoreInfoDao">
+	<!-- 保存评分信息单元数据 PC01data/PC01data -->
+	<insert id="insertScoreInfoDao" parameterType="com.huaxia.opas.domain.pboc.psm.PC01data">
+		INSERT INTO OPAS_PBOC_CREDIT_CUE (
+			APP_ID,
+			NUMBER_READ,OPPOSITE_POSITION,SCORE_EXPLAIN_COUNT,
+			CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{PC010Q01, jdbcType = VARCHAR},#{PC010Q02, jdbcType = VARCHAR},#{PC010S01, jdbcType = VARCHAR},
+			SYSDATE,'SYSTEM'
+		)
+	</insert>
+	<!-- 保存分数说明信息  PC01/PC010D01 -->
+	<insert id="insertScoreEleList" parameterType="java.util.List">
+		INSERT INTO OPAS_PBOC_CREDITSCORE_SCOREELE (
+			 APP_ID,DESC_CONTENT, CRT_USER,  CRT_TIME
+		) 	
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			 #{item.appId},#{item.PC010D01},'SYSTEM',SYSDATE
+		FROM DUAL
+		</foreach>
+	</insert>
+</mapper>

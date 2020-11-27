@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--政策码数据库处理-->
+<!--@author liudi-->
+<mapper namespace="Policy">
+
+	<resultMap id="PolicyResultMap" type="com.huaxia.opas.domain.sysparm.Policy">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="POLICY_CODE" property="policyCode" jdbcType="VARCHAR" />
+		<result column="POLICY_NAME" property="policyName" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE1" property="acctType" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE2" property="acctType2" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加状态为Start -->
+	<insert id="insertPolicy1" parameterType="com.huaxia.opas.domain.sysparm.Policy">
+		insert into
+		OPAS_APPROVE_POLICYCODE
+		(AUTO_ID,POLICY_CODE,POLICY_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{policyCode,jdbcType=CHAR},
+		#{policyName,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 添加状态为End -->
+	<insert id="insertPolicy2" parameterType="com.huaxia.opas.domain.sysparm.Policy">
+		insert into
+		OPAS_APPROVE_POLICYCODE
+		(AUTO_ID,POLICY_CODE,POLICY_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{policyCode,jdbcType=VARCHAR},
+		#{policyName,jdbcType=VARCHAR},
+		#{acctType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deletePolicyById" parameterType="java.lang.String">
+		delete from
+		OPAS_APPROVE_POLICYCODE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryPolicyStatus" parameterType="java.lang.String" resultType="java.lang.String">
+		select STATUS from OPAS_APPROVE_POLICYCODE where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updatePolicyWithoutStatus" parameterType="com.huaxia.opas.domain.sysparm.Policy">
+		update OPAS_APPROVE_POLICYCODE
+		<set>
+			POLICY_NAME = #{policyName,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType,jdbcType=VARCHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 修改 -->
+	<update id="updatePolicy" parameterType="com.huaxia.opas.domain.sysparm.Policy">
+		update OPAS_APPROVE_POLICYCODE
+		<set>
+			POLICY_NAME = #{policyName,jdbcType=VARCHAR},
+			ACCT_TYPE1 = #{acctType,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 件数查询 -->
+	<select id="queryPolicyCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_APPROVE_POLICYCODE
+		<where>
+			<if test="policyCode != null and policyCode !='' ">
+				AND POLICY_CODE LIKE '%${policyCode}%'
+			</if>
+			<if test="policyName != null and policyName !='' ">
+				AND POLICY_NAME LIKE '%${policyName}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+
+	</select>
+<!-- 查询 -->
+	<select id="queryPolicy1" parameterType="com.huaxia.opas.domain.sysparm.Policy"
+		resultMap="PolicyResultMap">
+		select
+		AUTO_ID,POLICY_CODE,POLICY_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_APPROVE_POLICYCODE
+		<where>
+			<if test="policyCode != null and policyCode !='' ">
+				AND POLICY_CODE LIKE '%${policyCode}%'
+			</if>
+			<if test="policyName != null and policyName !='' ">
+				AND POLICY_NAME LIKE '%${policyName}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by CRT_DATE
+	</select>
+<!-- 点击查询后，触发查询和排序功能 -->
+	<select id="queryPolicy2" parameterType="java.util.Map"
+		resultMap="PolicyResultMap">
+		select
+		AUTO_ID,POLICY_CODE,POLICY_NAME,ACCT_TYPE1,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_APPROVE_POLICYCODE
+		<where>
+			<if test="policyCode != null and policyCode !='' ">
+				AND POLICY_CODE LIKE '%${policyCode}%'
+			</if>
+			<if test="policyName != null and policyName !='' ">
+				AND POLICY_NAME LIKE '%${policyName}%'
+			</if>
+			<if test="acctType != null and acctType !='' ">
+				AND ACCT_TYPE1 = #{acctType}
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+		<if test="field == null or field ==''">
+			order by CRT_DATE
+		</if>
+	</select>
+<!-- 查询是否重复 -->
+	<select id="queryPolicy3" parameterType="com.huaxia.opas.domain.sysparm.Policy"
+		resultMap="PolicyResultMap">
+		select
+		POLICY_CODE
+		from OPAS_APPROVE_POLICYCODE
+		<where>
+			<if test="policyCode != null and policyCode !='' ">
+				AND POLICY_CODE = #{policyCode}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询 政策码 by xzg-->
+	<select id="queryPolicyCondition" parameterType="java.util.Map" resultMap="PolicyResultMap">
+		select
+			AUTO_ID,POLICY_CODE,POLICY_NAME,ACCT_TYPE1,ACCT_TYPE2,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_APPROVE_POLICYCODE
+		where
+			status = '1'
+		<if test="policyCode != null and policyCode !='' ">
+			AND POLICY_CODE = #{policyCode}
+		</if>
+		<if test="acctType != null and acctType !='' ">
+			AND ACCT_TYPE1 = #{acctType}
+		</if>
+		<if test="acctType2 != null and acctType2 !='' ">
+			AND ACCT_TYPE2 = #{acctType2}
+		</if>
+		order by POLICY_CODE
+	</select>
+</mapper>

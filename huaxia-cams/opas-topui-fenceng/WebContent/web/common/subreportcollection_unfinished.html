@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+
+<body>
+	<div style="margin: 2px; width: 100%;">
+		<table id="tblSubReportCollection" title="提报催收未完成" class="easyui-datagrid"
+		style="width: 98%"
+		data-options="pageSize:15,pageList:[15,20,50],rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+		<thead>
+			<tr>
+				<th field="operate" width="10%" align="center"
+					data-options="formatter:formatOper">操作</th>
+				<th field="appId" align="center" width="20%">申请件流水号</th>
+				<th field="c1Name" align="center" width="10%">客户姓名</th>
+				<th field="c1Idnbr" align="center" width="20%">身份证号</th>
+				<th field="product1" align="center" width="20%" >二卡</th>
+				<th field="crtDate" width="20%" align="center" data-options="formatter:formatDate">提报催收时间</th>
+				<th field="submitType"  align="center" hidden="true"></th>
+				<th field="delStatus"  align="center" hidden="true"></th>
+				<th field="crtUser" width="10%" hidden="true" align="center"></th>
+				
+			</tr>
+		</thead>
+	</table>		
+	</div>
+
+	<div id="winSub" class="easyui-window" title="提报催收"
+		style="width: 450px; height: 500px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="subForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td><input type="hidden" name="appIId" id="appIId" /></td>
+					<td><input type="hidden" name="submitType" value="账户" /></td>
+					<td><input type="hidden" name="delStatus" /></td>
+				</tr>
+
+				<tr>
+					<td align="right">提报原因:</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input id="subReason1" type="radio" name="subReason"
+						value="0"  >卡片状态异常,逾期停用</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input id="subReason2" type="radio" name="subReason"
+						value="1">当前逾期M1/M2等,额度使用率为<input type="text" id="percent1" name="percent1" style="botder-left-width:0px;botder-top-width:0px;botder-right-width:0px;botder-bottom-color:black" size="1">%,正常催收</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input id="subReason3" type="radio" name="subReason"
+						value="2"  >当前账户状态正常,额度使用率为<input type="text" id="percent2" name="percent2" style="botder-left-width:0px;botder-top-width:0px;botder-right-width:0px;botder-bottom-color:black" size="1">%</td>
+				</tr>
+				<tr>
+					<td>其他(说明100字内)</td>
+					<td><textarea rows="4" cols="25" name="memo"></textarea></td>
+				</tr>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onCommit()">提交</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onSave('winSub')">保存</a>
+		</div>
+	</div>
+</body>
+<script>
+	var tblSubReportCollection = $("#tblSubReportCollection");
+	
+	var subWindow = $("#winSub");
+	
+	var subForm = $("#subForm");
+	
+	var tblObj = $("#tblSubReportCollection");
+	
+	var userId=$cf.getStore("userRelInfo","index").userInfo.userCode;
+
+	$(function() {
+		var opts = tblObj.datagrid("options");
+		opts.url = "/opas-naps/subReport_unfinished_list.json";
+		var s = {
+			"submitType" : "2"
+		};
+		tblObj.datagrid("reload", s);
+	});
+
+	function formatOper(val, row, index) {
+		return "<a href=javascript:subReportCollection();>提报催收</a>";
+	}	
+
+	
+
+	function subReportCollection() {
+		
+		var subReportCollectionObj = tblSubReportCollection.datagrid("getSelected");
+		var subReason = subReportCollectionObj.subReason;
+		  if(subReason=='1'){
+			$("#percent1").val(subReportCollectionObj.percent);
+			$("#percent2").val('');
+		}if(subReason=='2'){
+			$("#percent2").val(subReportCollectionObj.percent);
+			$("#percent1").val('');
+		}if(subReason=='0'){
+			subReportCollectionObj.percent = '';
+			$("#percent1").val('');
+			$("#percent2").val('');
+		}  
+		
+		subReportCollectionObj.appIId = subReportCollectionObj.appId;
+		
+		subWindow.window({
+			closed : false,
+			collapsible : false,
+			minimizable : false,
+			onBeforeOpen : setData(subReportCollectionObj)
+		});
+	}			
+
+	function setData(data) {
+		subForm.form("load", data);
+	}
+
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}	
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	//提交到已完成
+	function onCommit() {
+		var subReportData = isRequired('subForm');
+		var jsondata = getFormData(subForm.serializeArray());
+		var reason = subReportData.subReason;
+		var percent;
+		if(reason=='2'){
+			percent = $("#percent2").val();
+		}else if(reason=='1'){
+			percent = $("#percent1").val();
+
+		}else{
+			percent = '';
+		}
+	//	validate();
+		jsondata.crtUser = userId;
+		jsondata.percent = percent;
+		if (subReportData.subReason == null || subReportData.subReason.trim() == "") {
+			$.messager.alert("操作提示", "保存失败,请选择提报原因!");
+			return;
+		}		
+		if(reason!='0'){			
+			var flag = true; 
+			 flag = validate();
+			if(!flag){
+				return;
+			}
+		}
+		$cf.ajax({
+			url : "/opas-naps/subReport_toFinished.json",
+			data : jsondata,
+			onSuccess : function(response) {
+				if (response.RSP_BODY.isSuccess) {
+
+					top.$cf.showMsg("提交成功！");
+
+					onConcle('winSub');
+					
+					var data = {
+							"rows" : response.RSP_BODY.rows,
+							"total" : response.RSP_BODY.total
+						};
+					$('#tblSubReportCollection').datagrid('loadData', data);
+					reload();
+				} else {
+					$.messager.alert("操作提示", "提交失败:" + response.exMsg, "error");
+					/*
+					*?????????????????????
+					*/					
+					onConcle("edit");
+					return;
+				}
+			}
+
+		});
+	}	
+	
+	
+	//保存当前操作
+	function onSave() {
+		var subReportData = isRequired('subForm');
+		var reason = subReportData.subReason;
+		var percent;
+		if(reason=='2'){
+			percent = $("#percent2").val();
+			
+		}else if(reason=='1'){
+			percent = $("#percent1").val();
+		}else{
+			percent = '';
+		}
+		if(reason!='0'){			
+			var flag = true; 
+			 flag = validate();
+			if(!flag){
+				return;
+			}
+		}
+		var jsondata = getFormData(subForm.serializeArray());
+			jsondata.percent = percent;
+	//	var tblSubReportCollection = tblSubReportCollection.datagrid("getSelected");
+		jsondata.crtUser = userId;
+		/* if (subReportData.subReason == null || subReportData.subReason.trim() == "") {
+			$.messager.alert("操作提示", "保存失败,请选择提报原因!");
+			return;
+		} */		
+
+		$cf.ajax({
+			url : "/opas-naps/subReport_save.json",
+			data : jsondata,
+			onSuccess : function(response) {
+				if (response.RSP_BODY.isSuccess) {
+
+					top.$cf.showMsg("保存成功！");
+
+					onConcle('winSub');
+					
+					/* var data = {
+							"rows" : response.RSP_BODY.rows,
+							"total" : response.RSP_BODY.total
+						};
+					
+					$('#tblSubReportCollection').datagrid('loadData', data); */					
+					reloadnow();
+	
+				} else {
+					$.messager.alert("操作提示", "保存失败:" + response.exMsg, "error");
+					onConcle("edit");
+					return;
+				}
+			}
+
+		});
+	}
+	//刷新当前页面
+	function reload(){
+		tblSubReportCollection.datagrid("reload");
+	}
+	//刷新队列谁
+	function reloadnow(){
+		var opts = tblObj.datagrid("options");
+		opts.url = "/opas-naps/subReport_unfinished_list.json";
+		var s = {
+			"submitType" : "2"
+		};
+		tblObj.datagrid("reload", s);
+	}
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	/***********数字校验*************/
+	function validate(){
+		var precent2 = $("#percent2").val();
+		var precent1 = $("#percent1").val();
+		/* var reg = new RegExp("^[0-9]*$"); */
+		var reg = new RegExp("^\\d+(\\.\\d{0,2})?$");
+		var subReportData = isRequired('subForm');
+		var reason = subReportData.subReason;
+		if(reason=='2'){
+	
+			if(precent2!=null&&precent2!=''){
+				if(!reg.test(precent2)){
+					$.messager.alert("操作提示", "请填写数字!");
+					return false;
+				}if(precent2.length>5){
+					$.messager.alert("操作提示", "超过最大百分比!");
+					return false;
+				}else {
+					return true;
+				}
+			}else{
+				return true;
+			}	
+		}else if(reason=='1'){			
+			if(precent1!=''){
+				if(!reg.test(precent1)){
+					$.messager.alert("操作提示", "请填写数字!");
+					return false;
+				} if(precent1.length>5){
+					$.messager.alert("操作提示", "超过最大百分比!");
+					return false;
+				} else {
+					return true;
+				}
+			}else{
+				return true;
+			}			
+		}else{
+			return true;
+		}
+		
+	}
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	}; 
+
+</script>

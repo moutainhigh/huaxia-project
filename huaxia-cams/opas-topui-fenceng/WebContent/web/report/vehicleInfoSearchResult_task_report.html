@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<style type="text/css">
+.alsp{
+	font-family:"宋体";font-size:10px
+}
+</style>
+</head>
+<body>
+<div id="report_vehicleInfoSearchResult_center"  data-options="fit:true,boder:true">
+<div data-options="region='north',border:true,fit:true" style="overflow:auto;">
+ <form id="report_vehicleInfoSearchResult_form">
+ <table class="report_vehicleInfoSearchResult_tableForm datagrid-toolbar" style="width:100%;height:100%">
+  <tr>
+   <td><label class="alsp">开始时间</label><input id="report_vehicleInfoSearchResult_beginDate" name="beginDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+  var beginDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',beginDate);
+   $('#report_vehicleInfoSearchResult_table_beginDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;<label class="alsp">截止时间</label><input id="report_vehicleInfoSearchResult_endDate" name="endDate" class="easyui-datebox" style="width:150px;"data-options="required:true,onSelect:function(date){
+   var endDate=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+   $(this).datebox('setValue',endDate);
+   $('#report_vehicleInfoSearchResult_table_endDate').html($(this).datebox('getValue'));
+   }"/>&nbsp;&nbsp;&nbsp;
+   <a id="report_vehicleInfoSearchResult_searchButton" class='easyui-linkbutton' data-options="iconCls:'icon-search'">查询</a>&nbsp;
+   <a id="report_vehicleInfoSearchResult_cleanButton" class='easyui-linkbutton' data-options="iconCls:'icon-clear'">清空</a>
+   </td>
+  </tr>
+ </table>
+ </form>
+ </div>
+ <div data-options="region:'center',border:true,fit:true">
+<!--  进件核准率统计表(按选择维度) -->
+<br><table><tr><td id="report_vehicleInfoSearchResult_table_beginDate" style="width:80px;"></td><td>至</td><td id="report_vehicleInfoSearchResult_table_endDate" style="width:80px;"></td></tr></table>
+<h4 align="center">车辆信息查询结果汇总报表</h4><br> 
+ <table id="report_vehicleInfoSearchResult_datagrid" style="height: 400px"></table>
+ </div>
+</div>
+</body>
+<script type="text/javascript">
+var report_vehicleInfoSearchResult_form=undefined;
+var report_vehicleInfoSearchResult_datagrid=undefined;
+$(function(){
+	report_vehicleInfoSearchResult_form=$('#report_vehicleInfoSearchResult_form');
+	$('#report_vehicleInfoSearchResult_searchButton').bind('click',function(){
+		report_vehicleInfoSearchResult_search();
+	});
+	$('#report_vehicleInfoSearchResult_cleanButton').bind('click',function(){
+		report_vehicleInfoSearchResult_clean();
+	});
+	report_vehicleInfoSearchResult_datagrid=$('#report_vehicleInfoSearchResult_datagrid').datagrid({
+		url:"/opas-naps/queryVehicleInfoSearchResultDataByDate.json",
+		border:true,
+		animate:true,
+		singleSelect:false,
+		rownumbers:true,
+		columns:[[{
+			title:'查询成功且“有车”',
+			field:'SELECTSUCCANDOWNVEHICLE',
+			width:"19%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'查询成功且“无车”',
+			field:'SELECTSUCCANDNOVEHICLE',
+			width:"19%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'查询失败',
+			field:'SELECTFAIL',
+			width:"19%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'姓名和身份证号不匹配',
+			field:'NAMEANDCARDISNOTMATCH',
+			width:"19%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		},{
+			title:'发起查询总量',
+			field:'SELECTTOTALCOUNT',
+			width:"19%",
+			halign:'center',
+			editor:{
+				type:'validatebox',
+				options:{
+					required:true
+				}
+			}
+		}
+		]]
+	});
+});
+
+function showWaringBox(message){
+	$.messager.alert('提示',message,'warning');
+}
+
+function report_vehicleInfoSearchResult_search(){
+	var beginDate=$('#report_vehicleInfoSearchResult_beginDate').datebox('getValue');
+	var endDate=$('#report_vehicleInfoSearchResult_endDate').datebox('getValue');
+	
+	if(beginDate==""||endDate==""){//没有选择起止时间
+		showWaringBox('请选择起止时间.');
+		return null;
+	}else{
+		var paramArray=report_vehicleInfoSearchResult_form.serializeArray();
+		var jsondata =common.formToJson(paramArray);
+		report_vehicleInfoSearchResult_datagrid.datagrid('load',jsondata);
+	}
+}
+
+function report_vehicleInfoSearchResult_clean(){
+	report_vehicleInfoSearchResult_datagrid.datagrid('load',{});
+	$('#report_vehicleInfoSearchResult_table_beginDate').html('');
+	$('#report_vehicleInfoSearchResult_table_endDate').html('');
+	report_vehicleInfoSearchResult_form.form('reset');
+}
+
+</script>
+
+</html>

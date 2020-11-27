@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<!-- 1.页面引入win.js脚本文件 -->
+<script type="text/javascript" src="../../js/common/win.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+</head>
+<body  class="easyui-layout">
+	<input type="hidden" id="win-image" value="" />
+	<div data-options="region:'west',title:'左区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 85%;height: 100%">
+		<input type="hidden" id="appId" name="appId" /><input type="hidden" id="flag" name="flag" value="1" />
+		<iframe name="iframe2" id="iframe2" style="border: 0; width: 100%; height: 800px;" scrolling="auto" src="../archive/ar_apply_info_view.html"></iframe>
+	</div>
+	<div data-options="region:'east',title:'右区域',split:false,noheader:true,border:false" style="padding:5px; background: #eaf2ff; width: 15%;height: 100%">
+	<table>
+	<tr><td>拒绝原因：
+	</td></tr>
+	<tr><td>
+	<textarea   style ="width: 100px;height: 500px;" id="reason" name="reason" disabled="disabled" ></textarea>
+	</td></tr>
+	<!-- <tr><td>
+	<input type="button" id="close" value="关闭" onclick="window.close()"/>
+	</tr></td> -->
+	</table>
+	</div>
+	<!-- 按钮区 -->
+	<!-- <div id="n09000_tool" data-options="region:'south',title:'工具栏',split:true,noheader:true,border:false" style="height:50px;text-align:center;">
+		<a herf="#" class="ti_jiao" id="ti_jiao"></a>
+		<a herf="#" onclick="save();" class="bao_cun"></a>
+		<a href="javascript:showView();" class="easyui-linkbutton"  style="text-align:center;display:inline-block;width:93px;height:32px">影像展现</a>&nbsp;		
+	</div>
+	<div id="dd" data="0" style="left: 534px"></div>
+	<input type="hidden" id="applyId" name="applyId" value="1234567890123456"> -->
+</body>
+<script>
+	var url=location.search;
+	var theRequest=new Object();
+	if(url.indexOf("?")!=-1){
+		var str=url.substr(1);
+		var strs=str.split("&");
+		for(var i=0;i<strs.length;i++){
+		theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+		}
+	}
+	var appId=theRequest.appId;//获取流程号
+
+	var appId="";
+	var reason = "";
+	var userCode = "";
+	$(function() {
+		var reason = window.opener.document.getElementById('reason').value;
+		document.getElementById('reason').value = reason;
+		 //var url = location.href;
+		appId = theRequest.appId;
+		userCode = theRequest.userCode;
+		$("#appId").val(appId);  
+	
+	})
+	</script>
+</html>

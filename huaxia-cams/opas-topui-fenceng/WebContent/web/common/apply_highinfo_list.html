@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px; scroll: auto;">
+	<div style="height: 690px; overflow-y: auto;">
+		<table id="tblInfo" title="申请件高级查询页面" class="easyui-datagrid"
+			style="width: 98%; height: 100%"
+			data-options="iconCls:'icon-exprot',lrownumbers:true,singleSelect:false,url:'',pagination:true,fitColumns:true,pageSize:20,nowrap:false,
+			pageList:[15,20,50],loadMsg:'数据加载中.....',method:'post',toolbar:'#positionCodeCondion'">
+			<thead>
+				<tr>
+					<th field="code" width="0%" align="center" checkbox="true">选择</th>
+					<th field="appId" width="15%" align="center"
+						data-options="formatter:formatCheckNumber">条形码</th>
+					<th field="c1Cname" width="10%" align="center">姓名</th>
+					<th field="c1Idnbr" width="15%" align="center">证件号码</th>
+					<th field="c1Coname" width="15%" align="center">单位名称</th>
+					<th field="c1Coadd" width="20%" align="center">单位地址</th>
+					<th field="c1Cotel" width="10%" align="center">单位电话</th>
+					<th field="c1Hmtel" width="10%" align="center">家庭电话</th>
+					<th field="c4Apbatch" width="10%" align="center">团办号</th>
+					<th field="c1Mobile" width="10%" align="center">手机号码</th>
+					<th field="c1Rename" width="10%" align="center">联系人姓名</th>
+					<th field="c1Xname1" width="10%" align="center" hidden="true">联系人姓名</th>
+					<th field="c1Xname2" width="10%" align="center" hidden="true">联系人姓名</th>
+					<th field="c1Remobil" width="10%" align="center">联系人手机</th>
+					<th field="c1Retel" width="10%" align="center">联系人固定电话</th>
+					<th field="c5Abcode" width="10%" align="center">推广机构</th>
+					<th field="c4Abuser" width="10%" align="center">推广员</th>
+					<th field="approveResult" width="10%" align="center"
+						data-options="formatter:formatApproveResult">审批结果</th>
+					<th field="remark" width="4%" align="center"
+						data-options="formatter:formatRemark">备注</th>
+					<th field="ydjFlag" width="10%" align="center" hidden="true"></th>
+					<th field="appProd" width="10%" align="center" hidden="true"></th>
+					<!-- 商品易达金85 , 其它：80,82,83,84 -->
+					<th field="matchingCardFlag" width="10%" align="center"
+						hidden="true"></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div id="positionCodeCondion" style="padding: 10px; text-align: left">
+		<form id="seachPositionCodeForm">
+			<table>
+				<tr>
+					<td width="30%">单位名称:</td>
+					<td><input type="text" class="easyui-textbox" id="c1Coname"
+						name="c1Coname" /></td>
+					<td width="30%">联系人姓名:</td>
+					<td><input type="text" class="easyui-textbox" id="c1Rename"
+						name="c1Rename" /></td>
+				</tr>
+				<tr>
+					<td width="30%">单位电话:</td>
+					<td><input type="text" class="easyui-textbox" id="c1Cotel"
+						name="c1Cotel" /></td>
+					<td width="30%">联系人固定电话:</td>
+					<td><input type="text" class="easyui-textbox" id="c1Retel"
+						name="c1Retel" /></td>
+				</tr>
+				<tr>
+					<td width="30%">家庭电话:</td>
+					<td><input type="text" class="easyui-textbox" id="c1Hmtel"
+						name="c1Hmtel" /></td>
+					<td width="30%">联系人手机:</td>
+					<td><input type="text" class="easyui-textbox" id="c1Remobil"
+						name="c1Remobil" /></td>
+				</tr>
+				<tr>
+					<td width="30%">证件号码:</td>
+					<td><input type="text" class="easyui-textbox" id="c1Idnbr"
+						name="c1Idnbr" /></td>
+					<td width="30%">团办号:</td>
+					<td colspan="3"><input type="text" class="easyui-textbox"
+						id="c4Apbatch" name="c4Apbatch" /></td>
+				</tr>
+
+				<tr>
+					<td width="30%">手机号码:</td>
+					<td><input class="easyui-validatebox" id="c1Mobile"
+						type="text" name="c1Mobile"></input></td>
+					<td width="30%">审批结果:</td>
+					<td colspan="3"><select class="easyui-combobox"
+						name="approveResult" multiple="true" id="approveResult">
+							<option value="" selected>--请选择--</option>
+							<option value="0">拒绝</option>
+							<option value="1">批准</option>
+							<option value="2">未归档</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td width="30%">推广机构代码:</td>
+					<td><input type="text" class="easyui-textbox" id="c5Abcode"
+						name="c5Abcode" /></td>
+					<td>性别:</td>
+					<td colspan="3"><select class="easyui-combobox"
+						name="c1Gender">
+							<option value="" selected>--请选择--</option>
+							<option value="M">男</option>
+							<option value="F">女</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td width="30%">推广员编号:</td>
+					<td><input type="text" class="easyui-textbox" id="c4Abuser"
+						name="c4Abuser" /></td>
+					<td width="30%">开始日期:</td>
+					<td colspan="3"><input type="text" class="easyui-datebox"
+						id="crtDate" name="crtDate" /></td>
+				</tr>
+				<tr>
+					<td width="30%">账户类型:</td>
+					<td><select class="easyui-combobox" name="ydjFlag">
+							<option value="" selected>--请选择--</option>
+							<option value="1">易达金</option>
+							<option value="2">标准卡</option>
+					</select></td>
+					<td width="30%">结束日期:</td>
+					<td colspan="3"><input type="text" class="easyui-datebox"
+						id="crtDate1" name="crtDate1" /></td>
+				</tr>
+				<tr>
+					<td><a href="javascript:void(0);" class="easyui-linkbutton"
+						id="btnCurrQuery">当前查询 </a> &nbsp; <a href="javascript:void(0);"
+						class="easyui-linkbutton" id="btnHistQuery">历史查询 </a> &nbsp; <a
+						href="javascript:void(0);" class="easyui-linkbutton"
+						id="btnHistExprot">批量导出</a></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+<script>
+	var tblInfo = $("#tblInfo");
+	var showWindow = $("#winShow");
+	var editForm = $("#editForm");
+	var showForm = $("#showForm");
+	var exportFalg = '';
+	$(function() {
+		//批量导出
+		$('#btnHistExprot').click(
+				function() {
+					var infoObj = tblInfo.datagrid("getSelections"); //获取当前选中的行
+
+					var idsObj = new Array();
+					for (var i = 0; i < infoObj.length; i++) {
+						idsObj.push(infoObj[i].appId);
+					}
+
+					var flag = true;
+					for (i = 0; i < idsObj.length; i++) {
+						if (idsObj[i].value != '') {
+							flag = false;
+						}
+					}
+					if (flag) {
+						alert("请至少选择一条数据导出！")
+						return;
+					}
+
+					var src = '/opas-naps/ApplyExportServlet.json?idsObj='
+							+ idsObj + '&exportFalg=' + exportFalg;
+					location.href = src;
+				});
+
+		$("#approveResult").combobox({
+			onChange : function() {
+				moreSelect("approveResult");
+			}
+		});
+		
+	// 当前查询
+	$('#btnCurrQuery')
+				.click(
+						function() {
+							exportFalg = 'c';//标示当前查询 导出
+							//表单序列化
+							var jsonFrom = $('#seachPositionCodeForm').serializeArray();
+							var jsondata = overTrim(jsonFrom);
+							//追加条件
+							var approveResult = jsondata.approveResult;
+							var c1Gender = jsondata.c1Gender;
+							var crtDate = jsondata.crtDate;
+							var crtDate1 = jsondata.crtDate1;
+							var ydjFlag = jsondata.ydjFlag;
+							//判断条件
+							var c1Coname = jsondata.c1Coname;
+							var c1Rename = jsondata.c1Rename;
+							var c1Cotel = jsondata.c1Cotel;
+							var c1Retel = jsondata.c1Retel;
+							var c1Hmtel = jsondata.c1Hmtel;
+							var c1Remobil = jsondata.c1Remobil;
+							var c1Idnbr = jsondata.c1Idnbr;
+							var c4Apbatch = jsondata.c4Apbatch;
+							var c1Mobile = jsondata.c1Mobile;
+							var c5Abcode = jsondata.c5Abcode;
+							var c4Abuser = jsondata.c4Abuser;
+							//单位名称校验
+							if (c1Coname != null && c1Coname != "") {
+								var len = getByteLen(c1Coname);
+								if (len < 6) {
+									alert("亲，单位名称至少输入3个汉字!");
+									document.getElementById("c1Coname").value = "";
+									return;
+								}
+							}
+							//联系人姓名校验
+							if (c1Rename != null && c1Rename != "") {
+								var len = getByteLen(c1Rename);
+								if (len < 4) {
+									alert("亲，联系人姓名至少输入2个汉字!");
+									document.getElementById("c1Rename").value = "";
+									return;
+								}
+							}
+							//手机号码校验
+							if (c1Mobile != null && c1Mobile != "") {
+								var len = getByteLen(c1Mobile);
+								if (len < 3) {
+									alert("亲，至少输入3位手机号码!");
+									document.getElementById("c1Mobile").value = "";
+									return;
+								}
+							}
+							//单位电话校验
+							if (c1Cotel != null && c1Cotel != "") {
+								var len = getByteLen(c1Cotel);
+								if (len < 7) {
+									alert("亲，至少输入7位单位电话!");
+									document.getElementById("c1Cotel").value = "";
+									return;
+								}
+							}
+							//联系人固定电话校验
+							if (c1Retel != null && c1Retel != "") {
+								var len = getByteLen(c1Retel);
+								if (len < 7) {
+									alert("亲，至少输入7位联系人固定电话!");
+									document.getElementById("c1Retel").value = "";
+									return;
+								}
+							}
+							//家庭电话校验
+							if (c1Hmtel != null && c1Hmtel != "") {
+								var len = getByteLen(c1Hmtel);
+								if (len < 7) {
+									alert("亲，至少输入7位家庭电话!");
+									document.getElementById("c1Hmtel").value = "";
+									return;
+								}
+							}
+							//联系人手机校验
+							if (c1Remobil != null && c1Remobil != "") {
+								var len = getByteLen(c1Remobil);
+								if (len < 3) {
+									alert("亲，至少输入3位联系人手机!");
+									document.getElementById("c1Remobil").value = "";
+									return;
+								}
+							}
+							//证件号码校验
+							if (c1Idnbr != null && c1Idnbr != "") {
+								var len = getByteLen(c1Idnbr);
+								if (len < 6) {
+									alert("亲，至少输入6位证件号码!");
+									document.getElementById("c1Idnbr").value = "";
+									return;
+								}
+							}
+							 
+						    if ((approveResult != null && approveResult != "") || (c1Gender != null && c1Gender != "")
+								|| (ydjFlag != null && ydjFlag != "") || (crtDate != null && crtDate != "")) {
+								if (c1Coname == '' && c1Rename == '' && c1Cotel == '' && c1Retel == '' && c1Hmtel == '' && c1Remobil == ''
+									&& c1Idnbr == '' && c4Apbatch == '' && c1Mobile == '' && c5Abcode == '' && c4Abuser == '') {
+									alert("亲，审批结果，性别，账户类型，日期以外条件至少填一个!");
+									return;
+								}
+							}
+							if (crtDate != null && crtDate != "") {
+								if (crtDate1 == '') {
+									alert("亲，请填写结束日期!");
+									return;
+								}
+							}
+							if (crtDate1 != null && crtDate1 != "") {
+								if (crtDate == '') {
+									alert("亲，请填写开始日期!");
+									return;
+								}
+							}
+							
+							//判断是否输入查询条件
+							var flag = true;
+							for (var i = 0; i < jsonFrom.length; i++) {
+								if (jsonFrom[i].value != null
+										&& jsonFrom[i].value.trim() != '') {
+									flag = false;
+								}
+							}
+							if (flag) {
+								alert("请至少输入一项要查询条件！");
+								return;
+							}
+							//动态加载url
+							$("#tblInfo").datagrid('options').url = '/opas-naps/query_highCurrent_info.json';
+							$("#tblInfo").datagrid('load', jsondata);
+						});
+
+		// 历史查询
+		$('#btnHistQuery')
+				.click(
+						function() {
+							exportFalg = 'h';//标示当前查询 导出
+							//表单序列化
+							var jsonFrom = $('#seachPositionCodeForm').serializeArray();
+							var jsondata = overTrim(jsonFrom);
+
+							//追加条件
+							var approveResult = jsondata.approveResult;
+							var c1Gender = jsondata.c1Gender;
+							var crtDate = jsondata.crtDate;
+							var crtDate1 = jsondata.crtDate1;
+							var ydjFlag = jsondata.ydjFlag;
+							//判断条件
+							var c1Coname = jsondata.c1Coname;
+							var c1Rename = jsondata.c1Rename;
+							var c1Cotel = jsondata.c1Cotel;
+							var c1Retel = jsondata.c1Retel;
+							var c1Hmtel = jsondata.c1Hmtel;
+							var c1Remobil = jsondata.c1Remobil;
+							var c1Idnbr = jsondata.c1Idnbr;
+							var c4Apbatch = jsondata.c4Apbatch;
+							var c1Mobile = jsondata.c1Mobile;
+							var c5Abcode = jsondata.c5Abcode;
+							var c4Abuser = jsondata.c4Abuser;
+							
+							//单位名称校验
+							if (c1Coname != null && c1Coname != "") {
+								var len = getByteLen(c1Coname);
+								if (len < 6) {
+									alert("亲，单位名称至少输入3个汉字!");
+									document.getElementById("c1Coname").value = "";
+									return;
+								}
+							}
+							//联系人姓名校验
+							if (c1Rename != null && c1Rename != "") {
+								var len = getByteLen(c1Rename);
+								if (len < 4) {
+									alert("亲，联系人姓名至少输入2个汉字!");
+									document.getElementById("c1Rename").value = "";
+									return;
+								}
+							}
+							//手机号码校验
+							if (c1Mobile != null && c1Mobile != "") {
+								var len = getByteLen(c1Mobile);
+								if (len < 3) {
+									alert("亲，至少输入3位手机号码!");
+									document.getElementById("c1Mobile").value = "";
+									return;
+								}
+							}
+							//单位电话校验
+							if (c1Cotel != null && c1Cotel != "") {
+								var len = getByteLen(c1Cotel);
+								if (len < 7) {
+									alert("亲，至少输入7位单位电话!");
+									document.getElementById("c1Cotel").value = "";
+									return;
+								}
+							}
+							//联系人固定电话校验
+							if (c1Retel != null && c1Retel != "") {
+								var len = getByteLen(c1Retel);
+								if (len < 7) {
+									alert("亲，至少输入7位联系人固定电话!");
+									document.getElementById("c1Retel").value = "";
+									return;
+								}
+							}
+							//家庭电话校验
+							if (c1Hmtel != null && c1Hmtel != "") {
+								var len = getByteLen(c1Hmtel);
+								if (len < 7) {
+									alert("亲，至少输入7位家庭电话!");
+									document.getElementById("c1Hmtel").value = "";
+									return;
+								}
+							}
+							//联系人手机校验
+							if (c1Remobil != null && c1Remobil != "") {
+								var len = getByteLen(c1Remobil);
+								if (len < 3) {
+									alert("亲，至少输入3位联系人手机!");
+									document.getElementById("c1Remobil").value = "";
+									return;
+								}
+							}
+							//证件号码校验
+							if (c1Idnbr != null && c1Idnbr != "") {
+								var len = getByteLen(c1Idnbr);
+								if (len < 6) {
+									alert("亲，至少输入6位证件号码!");
+									document.getElementById("c1Idnbr").value = "";
+									return;
+								}
+							}
+
+							if ((approveResult != null && approveResult != "") || (c1Gender != null && c1Gender != "")
+								|| (ydjFlag != null && ydjFlag != "") || (crtDate != null && crtDate != "")) {
+								if (c1Coname == '' && c1Rename == '' && c1Cotel == '' && c1Retel == '' && c1Hmtel == '' && c1Remobil == ''
+									&& c1Idnbr == '' && c4Apbatch == '' && c1Mobile == '' && c5Abcode == '' && c4Abuser == '') {
+									alert("亲，审批结果，性别，账户类型，日期以外条件至少填一个!");
+									return;
+								}
+							}
+							if (crtDate != null && crtDate != "") {
+								if (crtDate1 == '') {
+									alert("亲，请填写结束日期!");
+									return;
+								}
+							}
+							if (crtDate1 != null && crtDate1 != "") {
+								if (crtDate == '') {
+									alert("亲，请填写开始日期!");
+									return;
+								}
+							}
+							//判断是否输入查询条件
+							var flag = true;
+							for (var i = 0; i < jsonFrom.length; i++) {
+								if (jsonFrom[i].value != null
+										&& jsonFrom[i].value.trim() != '') {
+									flag = false;
+								}
+							}
+							if (flag) {
+								alert("请至少输入一项要查询条件！！");
+								return;
+							}
+							//动态加载url
+							$("#tblInfo").datagrid('options').url = '/opas-naps/query_highHistory_info.json';
+							$("#tblInfo").datagrid('load', jsondata);
+						});
+
+	});
+
+	//申请件全局信息备注信息查询
+	function formatRemark(val, row, index) {
+		var remark = row.remark;
+		if (remark == 0) {
+			return "";
+		} else {
+			return "<a href=javascript:getInfo1();>查看</a>";
+		}
+	}
+	function getInfo1() {
+		var infoObj = tblInfo.datagrid("getSelected");
+		var appIdObj = infoObj["appId"]; //动态传参数 appId 
+		window
+				.open("apply_remark_view.html?appId =" + appIdObj, "_blank",
+						"channelmode=no,width=1300,height=600,scrollbars=yes,resizable=yes,top=200");
+	}
+	function formatCheckNumber(val, row, index) {
+		var appId = row.appId;
+		var ydjFlag = row.ydjFlag;
+		var appProd = row.appProd;
+		var matchingCardFlag = row.matchingCardFlag;
+		return "<a href=javascript:getInfo('" + appId + "','" + ydjFlag + "','"
+				+ appProd + "','" + matchingCardFlag + "');>" + appId + "</a>";
+	}
+
+	function formatApproveResult(val, row, index) {
+		if (val == 0) {
+			return "拒绝";
+		} else if (val == 1) {
+			return "批准";
+		} else {
+			return "";
+		}
+	}
+
+	function setData(data) {
+		editForm.form("load", data);
+		showForm.form("load", data);
+		$("#id").attr("readonly", "readonly");
+		$("#id").attr("disabled", "disabled");
+	}
+
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	function showWindow(obj) {
+		var winObj = $("#" + obj);
+		winObj.window({
+			closed : false
+		});
+	}
+
+	function getInfo(appId, ydjFlag, appProd, matchingCardFlag) {
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;//当前用户登录名 
+		if (ydjFlag == "1") {//1为易达金
+			if (matchingCardFlag == '1') {
+				window.open("copy_credit_control_zxBzk.html?appId=" + appId
+						+ "&ydjFlag=" + ydjFlag + "&userCode=" + userCode
+						+ "&appProd=" + appProd + "&matchingCardFlag="
+						+ matchingCardFlag, "",
+						"resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="
+								+ (screen.availWidth - 10) + ",height="
+								+ (screen.availHeight - 67));
+			} else {
+				window.open("copy_credit_control_zxYdj.html?appId=" + appId
+						+ "&ydjFlag=" + ydjFlag + "&appProd=" + appProd
+						+ "&userCode=" + userCode + "&matchingCardFlag="
+						+ matchingCardFlag, "",
+						"resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="
+								+ (screen.availWidth - 10) + ",height="
+								+ (screen.availHeight - 67));
+			}
+		} else {//2为非易达金
+			window.open("copy_credit_control_zxBzk.html?appId=" + appId
+					+ "&ydjFlag=" + ydjFlag + "&userCode=" + userCode
+					+ "&matchingCardFlag=" + matchingCardFlag, "",
+					"resizable=no,status=no,menubar=no,toolbar=no,location=no,left=0,top=0,width="
+							+ (screen.availWidth - 10) + ",height="
+							+ (screen.availHeight - 67));
+		}
+		
+		// 操作留痕  appId
+		var menuName = self.frameElement.getAttribute("name");
+		operaMarkRecord(appId, menuName);
+	}
+	
+	// 后台记录操作留痕
+	function operaMarkRecord(appId, menuName) {
+		$cf.ajax({
+			url : "/opas-naps/opera_mark_record.json",
+			data : {
+				"appId" : appId,
+				"menuName" : menuName
+			}
+		});
+	}
+
+	function overTrim(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue;
+			if (objName == "approveResult") {
+				objValue = $("#" + objName + "").combobox("getValues");
+			} else {
+				objValue = this.value.trim();
+			}
+
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+
+	//选择框多选优化
+	function moreSelect(idFlag) {
+		var str = $("#" + idFlag).combobox('getText');
+		if (str.indexOf("--请选择--") > -1 && str != '--请选择--') {
+			if (str.substr(-1) == '-') {
+				$("#" + idFlag).combobox('setText', str.replace('--请选择--', ''));
+			} else {
+				$("#" + idFlag)
+						.combobox('setText', str.replace('--请选择--,', ''));
+			}
+			//移除请选择
+			$("#" + idFlag).combobox('unselect', '');
+		} else if (str == '') {//添加请选择
+			$("#" + idFlag).combobox('setText', '--请选择--');
+			$("#" + idFlag).combobox('select', '');
+		}
+	}
+</script>

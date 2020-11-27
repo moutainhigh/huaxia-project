@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>进件管理</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	$(function(){
+		
+		loadInputChannel();
+	});
+	
+	//加载页面
+	function loadInputChannel(){
+		$cf.ajax({
+			url : '/opas-naps/queryInputChannel.json',
+			data : {
+			},
+			onSuccess : function(response) {
+				var channel = response.RSP_BODY.inputChannel;
+				for (let entry of channel){
+					
+					$("#"+entry.inputChannel).val(entry.time1);
+					otherInit(entry.inputChannel+"1",entry.turn);
+				} 
+			}
+		});
+	}
+	
+	//关闭或者开启
+	function onOpenAndClose(obj){
+		var turn = $('#'+obj+'1').val();
+		if(turn=='开启') {
+			turn = '2';
+		} else {
+			turn = '1';
+		}
+		var inputChannel = obj;
+		$cf.ajax({
+			url : '/opas-naps/updateInputChannel.json', 
+			data : {
+				inputChannel:inputChannel,
+				turn:turn,
+				flag:"1"
+			},onSuccess : function(data) {
+				var msg = data.RSP_BODY.msg;
+				alert(msg);
+				window.location.reload
+				loadInputChannel();
+			}
+		}); 
+	}
+	
+	//重置
+	function onReset(obj){
+		var inputChannel = obj;
+		var time = "111";
+		if(inputChannel=='bulu'){
+			time = '15:20';
+		} else if (inputChannel=='ptjj') {
+			time = '04:40,06:30,10:00,12:00,14:00,16:50,19:10';
+		} else if (inputChannel=='app01') {
+			time = '04:30';
+		} else if (inputChannel=='ksjj') {
+			time = '';
+		} else if (inputChannel=='i02') {
+			time = '08:54,11:54,15:54,18:54';
+		}else if (inputChannel=='bound') {
+			time = '04:00';
+		}else if (inputChannel=='result') {
+			time = '11:00,13:30,17:10,21:00,23:15';
+		}
+		$cf.ajax({
+			url : '/opas-naps/updateInputChannel.json', 
+			data : {
+				inputChannel:inputChannel,
+				time1:time,
+				flag:"3"
+			},onSuccess : function(data) {
+				var msg = data.RSP_BODY.msg;
+				alert(msg);
+				window.location.reload
+				loadInputChannel();
+			}
+		}); 
+	}
+	//更新
+	function onUpdate(obj){
+		var time1 = $('#'+obj).val();
+		var inputChannel = obj;
+		$cf.ajax({
+			url : '/opas-naps/updateInputChannel.json', 
+			data : {
+				inputChannel:inputChannel,
+				time1:time1,
+				flag:"3"
+			},onSuccess : function(data) {
+				var msg = data.RSP_BODY.msg;
+				alert(msg);
+			}
+		}); 
+	}
+	
+	function otherInit(res,value){
+		if(value=='1'){
+			$("#"+res).val("开启");
+		}else if(value=='2'){
+			$("#"+res).val("关闭");
+		}
+	}
+	
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">进件管理</legend>
+	<form id="inputChannelForm">
+		<table id="inputChannelTable" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td>快速进件:</td>
+				<td><input id="ksjj" name="ksjj" type="text" style="width:400px"></input></td>
+				<td><input id="ksjj1" name="ksjj1" type="button" onclick="onOpenAndClose('ksjj')" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onUpdate('ksjj')" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onReset('ksjj')" value="重置" type="button" class="alsp" style="width:100px;"/></td>
+	  		</tr>
+	  		<tr>
+				<td>纸质进件:</td>
+				<td><input id="app01" name="app01" type="text" style="width:400px"></input></td>
+				<td><input id="app011" name="app011" type="button" onclick="onOpenAndClose('app01')" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onUpdate('app01')" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onReset('app01')" value="重置" type="button" class="alsp" style="width:100px;"/></td>
+	  		</tr>	
+			<tr>
+	  			<td>普通进件:</td>
+	  			<td><input id="ptjj" name="ptjj" type="text" style="width:400px"></input></td>
+	  			<td><input id="ptjj1" name="ptjj1" type="button" onclick="onOpenAndClose('ptjj')" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onUpdate('ptjj')" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onReset('ptjj')" value="重置" type="button" class="alsp" style="width:100px;"/></td>
+	  		</tr>
+	  		<tr/>
+	  		<tr>
+	  			<td>送发卡文件:</td>
+	  			<td><input id="i02" name="i02" type="text" style="width:400px"></input></td>
+	  			<td><input id="i021" name="i021" type="button" onclick="onOpenAndClose('i02')" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onUpdate('i02')" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onReset('i02')" value="重置" type="button" class="alsp" style="width:100px;"/></td>
+	  		</tr>
+	  	    <tr>
+	  			<td>送发卡结果:</td>
+	  			<td><input id="result" name="result" type="text" style="width:400px"></input></td>
+	  			<td><input id="result1" name="result1" type="button" onclick="onOpenAndClose('result')" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onUpdate('result')" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onReset('result')" value="重置" type="button" class="alsp" style="width:100px;"/></td>
+	  		</tr>
+	  		<tr/>		  			  		
+	  		<tr>
+				<td>补录文件:</td>
+				<td><input id="bulu" name="bulu" type="text" style="width:400px"></input></td>
+				<td><input id="bulu1" name="bulu1" type="button" onclick="onOpenAndClose('bulu')" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onUpdate('bulu')" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onReset('bulu')" value="重置" type="button" class="alsp" style="width:100px;"/></td>
+	  		</tr>
+	  		<tr>
+	  			<td>外呼易达金:</td>
+	  			<td><input id="bound" name="bound" type="text" style="width:400px"></input></td>
+	  			<td><input id="bound1" name="bound1" type="button" onclick="onOpenAndClose('bound')" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onUpdate('bound')" value="更新" type="button" class="alsp" style="width:100px;"/></td>
+				<td><input onclick="onReset('bound')" value="重置" type="button" class="alsp" style="width:100px;"/></td>
+	  		</tr>
+		</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

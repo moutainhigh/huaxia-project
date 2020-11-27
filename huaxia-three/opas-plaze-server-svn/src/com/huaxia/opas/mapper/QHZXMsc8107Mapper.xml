@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.QHZXMsc8107Mapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.QHZXMsc8107">
+		INSERT INTO QHZX_VERIFY_MSC8107 (
+			APP_ID,CRT_TIME,CRT_USER,
+			OEG_CODE,CHNL_ID,TRANS_NO,TRANS_DATE,AUTH_CODE,AUTH_DATE,RT_CODE,RT_MSG,BATCH_NO,ID_NO,ID_TYPE,NAME,
+			MOBILE_NO,SEQ_NO,IS_REAL_IDENTITY,IS_VALID_ADDRESS,ADDRESS_TYPE,IS_REAL_COMPANY,COMPANY_SIM_DEG,
+			APPEAR_1TH_DATE,APPEAR_LAST_DATE,IS_OWNER_MOBILE,OWNER_MOBILE_STATUS,USE_TIME_SCORE,IS_EXIST_REL,REL_LEVEL,
+			CAR_CHK_RESULT,IS_ASYNED,CAR_TYPE_INC,CAR_FACTORY_INC,CAR_PRICE,DRV_STATUS_QRY_ID,HOUSE_CHK_RESULT,
+			HOUSE_DATA_DATE,PHOTO_CMP_RESULT,PHOTO_SIM_DEG,IS_HIGHEST_EDU_BKG,DATA_DATE,GRADUATE_SCHOOL,GRADUATE_MAJOR,
+			GRADUATE_YEAR,IS_OWNER_MOBILE2,OWNER_MOBILE_STATUS2,USE_TIME_SCORE2,ERROR_INFO,REASON_NO
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			SYSDATE,
+			'SYSTEM',
+			#{orgCode, jdbcType = VARCHAR},
+			#{chnlId, jdbcType = VARCHAR},
+			#{transNo, jdbcType = VARCHAR},
+			#{transDate, jdbcType = VARCHAR},
+			#{authCode, jdbcType = VARCHAR},
+			#{authDate, jdbcType = VARCHAR},
+			#{rtCode, jdbcType = VARCHAR},
+			#{rtMsg, jdbcType = VARCHAR},
+			#{batchNo, jdbcType = VARCHAR},
+			#{idNo, jdbcType = VARCHAR},
+			#{idType, jdbcType = VARCHAR},
+			#{name, jdbcType = VARCHAR},
+			#{mobileNo, jdbcType = VARCHAR},
+			#{seqNo, jdbcType = VARCHAR},
+			#{isRealIdentity, jdbcType = VARCHAR},
+			#{isValidAddress, jdbcType = VARCHAR},
+			#{addressType, jdbcType = VARCHAR},
+			#{isRealCompany, jdbcType = VARCHAR},
+			#{companySimDeg, jdbcType = VARCHAR},
+			#{appear1ThDate, jdbcType = VARCHAR},
+			#{appearLastDate, jdbcType = VARCHAR},
+			#{isOwnerMobile, jdbcType = VARCHAR},
+			#{ownerMobileStatus, jdbcType = VARCHAR},
+			#{useTimeScore, jdbcType = VARCHAR},
+			#{isExistRel, jdbcType = VARCHAR},
+			#{relLevel, jdbcType = VARCHAR},
+			#{carChkResult, jdbcType = VARCHAR},
+			#{isAsyned, jdbcType = VARCHAR},
+			#{carTypeInc, jdbcType = VARCHAR},
+			#{carFactoryInc, jdbcType = VARCHAR},
+			#{carPrice, jdbcType = VARCHAR},
+			#{drvStatusQryId, jdbcType = VARCHAR},
+			#{houseChkResult, jdbcType = VARCHAR},
+			#{houseDataDate, jdbcType = VARCHAR},
+			#{photoCmpResult, jdbcType = VARCHAR},
+			#{photoSimDeg, jdbcType = VARCHAR},
+			#{isHighestEduBkg, jdbcType = VARCHAR},
+			#{dataDate, jdbcType = VARCHAR},
+			#{graduateSchool, jdbcType = VARCHAR},
+			#{graduateMajor, jdbcType = VARCHAR},
+			#{graduateYear, jdbcType = VARCHAR},
+			#{isOwnerMobile2, jdbcType = VARCHAR},
+			#{ownerMobileStatus2, jdbcType = VARCHAR},
+			#{useTimeScore2, jdbcType = VARCHAR},
+			#{errorInfo, jdbcType = VARCHAR},
+			#{reasonNo, jdbcType = CHAR}
+		)
+	</insert>
+
+	<select id="selectCountMsc8107ByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM QHZX_VERIFY_MSC8107 WHERE APP_ID = #{appId, jdbcType = CHAR}
+	</select>
+	
+</mapper>	

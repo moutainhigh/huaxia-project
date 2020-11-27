@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--利率差异化数据库处理-->
+<!--@author liudi-->
+<mapper namespace="SysparmRate">
+
+	<resultMap id="SysparmRateResultMap" type="com.huaxia.opas.domain.sysparm.SysparmRate">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="RATE_CODE" property="rateCode" jdbcType="VARCHAR" />
+		<result column="RATE_NAME" property="rateName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加 -->
+	<insert id="insertSysparmRate" parameterType="com.huaxia.opas.domain.sysparm.SysparmRate">
+		insert into
+		OPAS_SYSPARM_RATE
+		(AUTO_ID,RATE_CODE,RATE_NAME,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{rateCode,jdbcType=VARCHAR},
+		#{rateName,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteSysparmRateById" parameterType="java.lang.String">
+		delete from
+		OPAS_SYSPARM_RATE
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+<!-- 全部删除 -->
+	<delete id="deleteAllSysparmRate">
+		delete from
+		OPAS_SYSPARM_RATE
+	</delete>
+<!-- 修改 -->
+	<update id="updateSysparmRate" parameterType="com.huaxia.opas.domain.sysparm.SysparmRate">
+		update OPAS_SYSPARM_RATE
+		<set>
+			RATE_NAME = #{rateName,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 利率差异化件数查询 -->
+	<select id="querySysparmRateCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_SYSPARM_RATE
+		<where>
+			<if test="rateCode != null and rateCode !='' ">
+				AND RATE_CODE LIKE '%${rateCode}%'
+			</if>
+			<if test="rateName != null and rateName !='' ">
+				AND RATE_NAME LIKE '%${rateName}%'
+			</if>
+		</where>
+	</select>
+<!-- 利率差异化信息查询 -->
+	<select id="querySysparmRate1" parameterType="com.huaxia.opas.domain.sysparm.SysparmRate"
+		resultMap="SysparmRateResultMap">
+		select
+		AUTO_ID,RATE_CODE,RATE_NAME,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_SYSPARM_RATE
+		<where>
+			<if test="rateCode != null and rateCode !='' ">
+				AND RATE_CODE LIKE '%${rateCode}%'
+			</if>
+			<if test="rateName != null and rateName !='' ">
+				AND RATE_NAME LIKE '%${rateName}%'
+			</if>
+		</where>
+		order by CRT_DATE
+	</select>
+<!-- 查询利率差异化代码是否重复 -->
+	<select id="querySysparmRate2" parameterType="com.huaxia.opas.domain.sysparm.SysparmRate"
+		resultMap="SysparmRateResultMap">
+		select
+		RATE_CODE
+		from OPAS_SYSPARM_RATE
+		<where>
+			<if test="rateCode != null and rateCode !='' ">
+				AND RATE_CODE = #{rateCode}
+			</if>
+		</where>
+	</select>
+
+</mapper>

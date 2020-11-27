@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.id5.mapper.EducationConfigurate">
+
+	<!-- <select id="">
+		select a.old_data + b.d_data
+		from (select sum(r.query_count) old_data
+		from rpt_query_count_day r
+		where r.source_code = #{sourceCode}
+		and r.channel_code = #{channelCode}
+		and r.query_date &gt; (select start_date
+		from CONF_QUERY_COUNT c
+		where c.source_code = #{sourceCode}
+		and c.channel_code = #{channelCode})
+		and r.query_date &lt; trunc(sysdate-1)) a,
+		(select count(1) d_data
+		from BANK_REPORT_MARK_INFO a
+		where a.crt_time &gt;= trunc(sysdate - 1)
+		and SOURCE = #{source}) b
+
+	</select> -->
+
+	<select id="selectCountByTime" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT '00030000' TASK_TYPE, COUNT(1) TASK_COUNT
+		FROM ID5_MSG_RESPONSE
+		WHERE CRT_USER = 'SINGLE'
+		<if test="startTime != null and endTime != null">
+			AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD
+			HH24:MI:SS')
+			AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		UNION
+		SELECT '00030001' TASK_TYPE, COUNT(1) TASK_COUNT
+		FROM ID5_MSG_RESPONSE
+		WHERE CRT_USER = 'BATCH'
+		<if test="startTime != null and endTime != null">
+			AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD
+			HH24:MI:SS')
+			AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		UNION
+		SELECT '00030010' TASK_TYPE, COUNT(1) TASK_COUNT
+		FROM ID5_MSG_RESPONSE
+		WHERE CRT_USER = 'CAMS'
+		<if test="startTime != null and endTime != null">
+			AND CRT_TIME BETWEEN TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD
+			HH24:MI:SS')
+			AND TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+	</select>
+
+</mapper>

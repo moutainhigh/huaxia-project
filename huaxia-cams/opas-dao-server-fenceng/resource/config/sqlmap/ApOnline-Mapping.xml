@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ApOnline">
+	<resultMap id="ApOnlineResultMap" type="com.huaxia.opas.domain.system.ApOnline">
+		<id column="ONLINE_ID" property="onlineId" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="IP_ADDR" property="ipAddr" jdbcType="VARCHAR" />
+		<result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP" />
+		<result column="LOGOUT_TIME" property="logoutTime" jdbcType="TIMESTAMP" />
+		<result column="SESSION_ID" property="sessionId" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+	</resultMap>
+
+	<insert id="insertApOnline" parameterType="com.huaxia.opas.domain.system.ApOnline">
+		insert into OPAS_AP_ONLINE
+		(ONLINE_ID, 
+		USER_ID,
+		USER_CODE,
+		USER_NAME,
+		IP_ADDR,
+		LOGIN_TIME,
+		LOGOUT_TIME,
+		SESSION_ID,
+		STATUS)
+		values (
+		#{onlineId,jdbcType=VARCHAR},
+		#{userId,jdbcType=VARCHAR},
+		#{userCode,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR},
+		#{ipAddr,jdbcType=VARCHAR},
+		#{loginTime,jdbcType=TIMESTAMP},
+		#{logoutTime,jdbcType=TIMESTAMP},
+		#{sessionId,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR})
+	</insert>
+	
+	<update id="updateApOnline" parameterType="com.huaxia.opas.domain.system.ApOnline">
+		update OPAS_AP_ONLINE
+		<set>
+			<if test="userId != null and userId !='' ">
+				USER_ID = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null and userName !='' ">
+				USER_NAME = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="ipAddr != null and ipAddr !='' ">
+				IP_ADDR = #{ipAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="loginTime != null and loginTime !='' ">
+				LOGIN_TIME = #{loginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="logoutTime != null and logoutTime !='' ">
+				LOGOUT_TIME = #{logoutTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sessionId != null and sessionId !='' ">
+				SESSION_ID = #{sessionId,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status !='' ">
+				STATUS = #{status,jdbcType=CHAR},
+			</if>
+		</set>
+		where ONLINE_ID = #{onlineId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryOnlineList" parameterType="java.util.Map"
+		resultMap="ApOnlineResultMap">
+		select
+		u.ONLINE_ID,
+		u.USER_ID,
+		u.USER_CODE,
+		u.USER_NAME,
+		u.IP_ADDR,
+		u.LOGIN_TIME,
+		u.LOGOUT_TIME,
+		u.SESSION_ID,
+		u.STATUS
+		from OPAS_AP_ONLINE u
+		where
+		1=1
+		<if test="userId != null and userId !='' ">
+			AND u.USER_ID LIKE '%${userId}%'
+		</if>
+		<if test="userCode != null and userCode !='' ">
+			AND u.USER_CODE LIKE '%${userCode}%'
+		</if>
+		<if test="userName != null and userName !='' ">
+			AND u.USER_NAME LIKE '%${userName}%'
+		</if>
+		<if test="ipAddr != null and ipAddr !='' ">
+			AND u.IP_ADDR LIKE '%${ipAddr}%'
+		</if>
+
+		<if test="sessionId != null and sessionId !='' ">
+			AND u.SESSION_ID LIKE '%${sessionId}%'
+		</if>
+		<if test="status != null and status !='' ">
+			AND u.STATUS LIKE '%${status}%'
+		</if>
+		order by ONLINE_ID desc
+	</select>
+	
+	<select id="queryOnlineCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_AP_ONLINE u
+		where
+		1=1
+		<if test="userId != null and userId !='' ">
+			AND u.USER_ID LIKE '%${userId}%'
+		</if>
+		<if test="userCode != null and userCode !='' ">
+			AND u.USER_CODE LIKE '%${userCode}%'
+		</if>
+		<if test="userName != null and userName !='' ">
+			AND u.USER_NAME LIKE '%${userName}%'
+		</if>
+		<if test="ipAddr != null and ipAddr !='' ">
+			AND u.IP_ADDR LIKE '%${ipAddr}%'
+		</if>
+
+		<if test="sessionId != null and sessionId !='' ">
+			AND u.SESSION_ID LIKE '%${sessionId}%'
+		</if>
+		<if test="status != null and status !='' ">
+			AND u.STATUS LIKE '%${status}%'
+		</if>
+	</select>
+	
+	<select id="queryOnlineByUserId" parameterType="java.lang.String"
+		resultMap="ApOnlineResultMap">
+		select
+		u.ONLINE_ID,
+		u.USER_ID,
+		u.USER_CODE,
+		u.USER_NAME,
+		u.IP_ADDR,
+		u.LOGIN_TIME,
+		u.LOGOUT_TIME,
+		u.SESSION_ID,
+		u.STATUS
+		from OPAS_AP_ONLINE u
+		where u.USER_ID =
+		#{userId,jdbcType=VARCHAR}
+	</select>
+</mapper>

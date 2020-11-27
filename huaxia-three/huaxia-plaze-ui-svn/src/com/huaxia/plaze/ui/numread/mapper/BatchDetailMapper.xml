@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.numread.mapper.BatchDetailMapper">
+	<resultMap id="result_file" type="NumReadBatchDetail">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="ID_NUM" property="certNo" jdbcType="VARCHAR" />
+		<result column="ID_TYPE" property="certType" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="name" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="PRODUCT_DATE" property="productDate" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="saveNumReadBatchDetail" parameterType="NumReadBatchDetail" >
+		INSERT INTO PBOC_SZJD_BATCH_REQUEST (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		USER_NAME,
+		ID_TYPE,
+		ID_NUM,
+		QUERY_REASON,
+		STATUS,
+		FILE_ID,
+		PRODUCT_DATE,
+		TRN_ID,
+		BATCH_NO
+		)
+		values(
+			SYS_GUID(),
+			SYSDATE,
+			#{crtUser},
+			#{name},
+			#{certType},
+			#{certNo},
+			#{queryReason},
+			#{status},
+			#{fileId},
+			#{productDate},
+			#{trnId},
+			#{batchNo}
+		)
+	</insert>
+	
+	<!-- 批次文件明细查询 -->
+	<select id="selectDetail" parameterType="java.util.Map" resultMap="result_file">
+		SELECT UUID,ID_NUM,USER_NAME,ID_TYPE,STATUS,TRN_ID,PRODUCT_DATE, RN
+		FROM
+		(SELECT
+		UUID,ID_NUM,USER_NAME,ID_TYPE,STATUS,TRN_ID,PRODUCT_DATE,ROWNUM RN
+		FROM
+		(SELECT
+		UUID,ID_NUM,USER_NAME,ID_TYPE,STATUS,TRN_ID,
+		PRODUCT_DATE
+		FROM
+		PBOC_SZJD_BATCH_REQUEST WHERE FILE_ID=#{fileId}
+		ORDER
+		BY
+		CRT_TIME DESC
+		) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+		<!-- 查询批次文件总数量 -->
+	<select id="selectCountDetail" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PBOC_SZJD_BATCH_REQUEST WHERE FILE_ID=#{batchFileId}
+	</select>
+	
+	<resultMap id="result_response" type="NumReadBatchResponse">
+		<result column="RESULT_CODE" property="resultCode" jdbcType="VARCHAR" />
+		<result column="RESULT_DESC" property="resultDesc" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="name" jdbcType="VARCHAR" />
+		<result column="ID_TYPE" property="idType" jdbcType="VARCHAR" />
+		<result column="ID_NUM" property="idNum" jdbcType="VARCHAR" />
+		<result column="PRODUCT_DATE" property="productDate" jdbcType="VARCHAR" />
+		<result column="RESULT_TYPE" property="resultType" jdbcType="VARCHAR" />
+		<result column="SCORE" property="score" jdbcType="VARCHAR" />
+		<result column="FACTOR_NUM" property="factorNum" jdbcType="VARCHAR" />
+		<result column="FACTOR1" property="factor1" jdbcType="VARCHAR" />
+		<result column="FACTOR2" property="factor2" jdbcType="VARCHAR" />
+		<result column="FACTOR3" property="factor3" jdbcType="VARCHAR" />
+		<result column="FACTOR4" property="factor4" jdbcType="VARCHAR" />
+		<result column="FACTOR5" property="factor5" jdbcType="VARCHAR" />
+		<result column="POSITION" property="position" jdbcType="VARCHAR" />
+		<result column="PRODUCT_DATE" property="productDate" jdbcType="VARCHAR" />
+		<result column="SCORE_DATE" property="scoreDate" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectDetailResponseByTrnId" parameterType="String" resultMap="result_response">
+		SELECT 
+			RESULT_CODE,
+			RESULT_DESC,
+			USER_NAME,
+			ID_TYPE,
+			ID_NUM,
+			PRODUCT_DATE,
+			RESULT_TYPE,
+			SCORE,
+			FACTOR_NUM,
+			FACTOR1,
+			FACTOR2,
+			FACTOR3,
+			FACTOR4,
+			FACTOR5,
+			POSITION,
+			SCORE_DATE
+		 FROM PBOC_SZJD_BATCH_RESPONSE WHERE TRN_ID = #{trnId}
+	</select>
+		<!-- 查询历史分页数据 -->
+	<select id="selectDetailByCertNoAndSuccess" parameterType="java.util.Map" resultMap="result_file">
+		SELECT UUID,ID_NUM,USER_NAME,ID_TYPE,STATUS,TRN_ID,PRODUCT_DATE, RN
+		FROM
+		(SELECT
+		UUID,ID_NUM,USER_NAME,ID_TYPE,STATUS,TRN_ID,PRODUCT_DATE,ROWNUM RN
+		FROM
+		(SELECT
+		UUID,ID_NUM,USER_NAME,ID_TYPE,STATUS,TRN_ID,
+		PRODUCT_DATE
+		FROM
+		PBOC_SZJD_BATCH_REQUEST WHERE STATUS=3 
+		<if test="certNo != null and certNo != '' ">
+				AND ID_NUM = #{certNo}
+		</if>
+		ORDER
+		BY
+		CRT_TIME DESC
+		) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+	<!-- 查询历史数量统计 -->
+	<select id="selectCountDetailSuccess" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PBOC_SZJD_BATCH_REQUEST 
+		WHERE STATUS=3 
+		<if test="certNo != null and certNo != '' ">
+				AND ID_NUM = #{certNo}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FileRoleRelation">
+	<resultMap id="BaseResultMap"
+		type="com.huaxia.opas.domain.system.FileRoleRelation">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+		<result column="BIG_CATEGORY" property="bigCategory" jdbcType="VARCHAR" />
+		<result column="SMALL_CATEGORY" property="smallCategory"
+			jdbcType="VARCHAR" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		ID, ROLE_CODE, BIG_CATEGORY, SMALL_CATEGORY
+		from OPAS_FILE_ROLE_RELATION
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_FILE_ROLE_RELATION
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByCondition" parameterType="java.lang.String">
+		delete from OPAS_FILE_ROLE_RELATION
+		where 1 = 1
+		<if test="roleCode != null">
+			and ROLE_CODE = #{roleCode,jdbcType=VARCHAR}
+		</if>
+		<if test="bigCategory != null">
+			and BIG_CATEGORY = #{bigCategory,jdbcType=VARCHAR}
+		</if>
+		<if test="smallCategory != null">
+			and SMALL_CATEGORY = #{smallCategory,jdbcType=VARCHAR}
+		</if>
+	</delete>
+	
+	<insert id="insert" parameterType="com.huaxia.opas.domain.system.FileRoleRelation">
+		insert into OPAS_FILE_ROLE_RELATION (ID, ROLE_CODE, BIG_CATEGORY,
+		SMALL_CATEGORY)
+		values (#{id,jdbcType=VARCHAR}, #{roleCode,jdbcType=VARCHAR},
+		#{bigCategory,jdbcType=VARCHAR},
+		#{smallCategory,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.system.FileRoleRelation">
+		insert into OPAS_FILE_ROLE_RELATION
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="roleCode != null">
+				ROLE_CODE,
+			</if>
+			<if test="bigCategory != null">
+				BIG_CATEGORY,
+			</if>
+			<if test="smallCategory != null">
+				SMALL_CATEGORY,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="roleCode != null">
+				#{roleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="bigCategory != null">
+				#{bigCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="smallCategory != null">
+				#{smallCategory,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.system.FileRoleRelation">
+		update OPAS_FILE_ROLE_RELATION
+		<set>
+			<if test="roleCode != null">
+				ROLE_CODE = #{roleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="bigCategory != null">
+				BIG_CATEGORY = #{bigCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="smallCategory != null">
+				SMALL_CATEGORY = #{smallCategory,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.system.FileRoleRelation">
+		update OPAS_FILE_ROLE_RELATION
+		set ROLE_CODE = #{roleCode,jdbcType=VARCHAR},
+		BIG_CATEGORY = #{bigCategory,jdbcType=VARCHAR},
+		SMALL_CATEGORY = #{smallCategory,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 角色文档浏览查询 by xzg -->
+	<select id="selectSmallCategoryByUserCode" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select distinct s.small_category
+		from opas_file_role_relation s
+		where s.role_code in
+		(select distinct b.role_code
+		from opas_ap_user a, opas_ap_role b, opas_ap_user_role c
+		where a.user_id = c.user_id
+		and b.role_id = c.role_id
+		and a.user_code = #{userCode}) order by small_category
+	</select>
+	<!-- 角色文档配置查询 by xzg -->
+	<select id="queryFileRoleCount" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from (
+			select
+				b.role_code
+			from opas_file_role_relation a, opas_ap_role b
+			where 1=1
+				and b.role_code = a.role_code(+)
+			<if test="smallCategory != null and smallCategory !=''">
+				and instr(a.SMALL_CATEGORY,#{smallCategory}) > 0
+			</if>
+			<if test="roleName != null and roleName !=''">
+				and instr(b.role_name,#{roleName}) > 0
+			</if>
+			group by b.role_code,b.role_name)
+	</select>
+	<select id="queryFileRoleList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+	select * from 
+		(select 
+			(select to_char(listagg(small_category,',') within group (order by small_category)) from 
+					(select * from opas_file_role_relation
+						order by big_category,length(small_category),small_category) a
+					where a.role_code = b.role_code) as small_category,
+			b.role_name,
+			b.role_code,
+			(select s.file_right_control
+				from opas_ap_user s
+				where s.user_code = #{userCode}) as file_type
+		from opas_ap_role b
+		where 1 = 1
+		<if test="roleName != null and roleName !=''">
+			and instr(b.role_name,#{roleName}) > 0
+		</if>
+		group by b.role_code, b.role_name)
+	where 1 = 1
+	<if test="smallCategory != null and smallCategory !=''">
+		and instr(SMALL_CATEGORY,#{smallCategory}) > 0
+	</if>
+	</select>
+</mapper>

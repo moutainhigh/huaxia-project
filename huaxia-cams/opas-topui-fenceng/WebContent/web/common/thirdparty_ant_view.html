@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>蚂蚁核查详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+</head>
+<body style="padding:10px;">
+<fieldset>
+	<legend>蚂蚁信息核查详细结果</legend>
+	<form id="antDetailForm" style="width:100%">
+	<div>
+		<fieldset>
+			<legend><span style="font-weight: bold">蚂蚁</span></legend>
+		<table  style="width:100%">
+			<tr>
+				<td>芝麻分：<input name="zmScore" id="zmScore"  type="text" style="width:35%;border:none;text-align:left;"/></td>
+				<td>IVS分：<input name="ivsScore" id="ivsScore"  type="text" style="width:18%;border:none;text-align:left;"/></td>
+				<td>状态：<input name="searchStatus" id="searchStatus"  type="text" style="width:20%;border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+	    <fieldset>
+		   <legend><span  style="font-weight: bold">IVS-欺诈关注名单</span></legend>
+		   <div id="riskListConcerned" style="width:100%;"></div>
+		</fieldset>
+		<fieldset>
+			<legend><span  style="font-weight: bold">IVS-欺诈信息验证</span></legend>
+		<table  style="width:100%">
+			<tr>
+				<td>证件号：<input name="descriptionCertno" id="descriptionCertno" style="border:none;text-align:left;width:500px"
+				type="text"/>&nbsp;&nbsp;姓名：<input name="descriptionName" id="descriptionName" style="border:none;text-align:left;width:500px"
+				type="text"/></td>
+			</tr>	
+			<tr>
+				<td>手机号：<input name="descriptionPhone" id="descriptionPhone" style="border:none;text-align:left;width:500px"
+				type="text"/>&nbsp;&nbsp;地址：<input name="descriptionAddr" id="descriptionAddr" style="border:none;text-align:left;width:500px"
+				type="text"/></td>
+			</tr>	
+			<tr>
+				<td>邮箱：<input name="descriptionEmail" id="descriptionEmail" style="border:none;text-align:left;width:500px"
+				type="text"/></td>
+			</tr>	
+			</table>
+		</fieldset>
+	</div>
+	</form>
+		<fieldset>
+			<legend><span  style="font-weight: bold">风险名单信息（行业关注名单）</span></legend>
+		<div id="riskListMessage" style="width:100%;">
+			<!-- <tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;是否有风险：</td>
+				<td colspan="3"><input name="isRisk" id="isRisk"  type="text" style="border:none;text-align:left;width:450px"/></td>
+				<td>行业类型：</td>
+				<td colspan="3"><input name="riskType" id="riskType"  type="text" style="border:none;text-align:left;width:450px"/></td>
+			</tr>	
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;风险类型：</td>
+				<td colspan="3"><input name="type" id="type"  type="text" style="border:none;text-align:left;width:450px"/></td>
+				<td>风险代码：</td>
+				<td colspan="3"><input name="riskCode" id="riskCode"  type="text" style="border:none;text-align:left;width:450px"/></td>
+			</tr>	
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;数据更新时间：</td>
+				<td colspan="3"><input name="updateTime" id="updateTime"  type="text" style="border:none;text-align:left;width:450px"/></td>
+				<td>是否结清： </td>
+				<td colspan="3"><input name="settlement" id="settlement"  type="text" style="border:none;text-align:left;width:450px"/></td>
+			</tr>	
+			<tr>
+				<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;用户对负面记录是否有异议：</td>
+				<td colspan="2"><input name="status" id="status"  type="text" style="border:none;text-align:left;width:100px"/></td>
+				<td colspan="2">用户对已处理异议是否仍有异议 ：</td>
+				<td colspan="2"><input name="statement" id="statement"  type="text" style="border:none;text-align:left;width:100px"/></td>
+			</tr>	 -->
+			</div>
+		</fieldset>
+	<!-- <div>
+		<fieldset>
+			<legend><span id="C" style="font-weight: bold">信用报告</span></legend>
+		<table class="formtable" style="width:100%">
+			<tr>
+				<td>手机稳定性：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>近一年曾用手机号码数：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>地址稳定性时长：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>近一年常用收货地址数：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+			</tr>	
+			<tr>
+				<td>区域稳定性时长：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>是否存在实名消费记录：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>信用账户历史时长：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>已履约的信用场景数：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+			</tr>	
+			<tr>
+				<td>是否法院老赖名单：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>消费档次：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>消费稳定度：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>生活缴费层次 <input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+			</tr>	
+			<tr>
+				<td>支付宝账户活跃度：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>近一年支付宝活跃场景数： <input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>兴趣标签：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>社交影响力： <input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+			</tr>	
+			<tr>
+				<td>支人脉圈平均信用分：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>近一年支付宝活跃场景数：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td>近一年人脉圈稳定度：<input name="" id=""  type="text" style="border:none;text-align:left;"/></td>
+				<td></td>
+			</tr>	
+			</table>
+		</fieldset>
+	</div> -->
+	
+</fieldset>	
+</body>
+<script type="text/javascript">
+
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	var antDetailForm=$("#antDetailForm");
+	var appId = GetQueryString("appId");
+	$(function(){
+		$cf.ajax({
+			data : {
+				"appId" : appId//'1601240945P00101'
+			},
+			url : "/opas-naps/ant_detail_query.json",
+			onSuccess : function(res) {
+			 	var jsonAntDetail = res.RSP_BODY.applyAntDetail;
+				var antDetailjson = eval('(' +jsonAntDetail+ ')');
+				antDetailForm.form("load", antDetailjson); 
+			}
+		});
+		loadRiskListMessage();
+		loadRiskListConcerned();
+	});
+	/**
+	*加载风险名单信息
+	*/
+	function loadRiskListMessage(){
+		$('#riskListMessage').datagrid({
+			url:"/opas-naps/findZMriskListMessage.json",
+			border:true,
+			fit:false,
+			//animate:true,
+			singleSelect:false,
+			//resizable:true,
+			nowrap:false,
+			//pagePosition:'bottom',
+			rownumbers:true,loadMsg:'数据加载中.....',
+			//pagination:true,pageSize:10,pageList:[10,20,50],
+			queryParams:{"appId":appId},
+			columns:[[{
+				title:'是否有<br>风险',
+				field:'isRisk',
+				width:'4%',
+				align:'center'
+			},{
+				title:'行业类型',
+				field:'type',
+				width:'6%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					var chineseShow = "";
+					if("AA"==value){
+					    return	chineseShow="金融信贷类";
+					}
+					if("AB"==value){
+						return	chineseShow="公检法";
+					}
+					if("AC"==value){
+						return	chineseShow="支付行业";
+					}
+					if("AD"==value){
+						return	chineseShow="出行行业";
+					}
+					if("AE"==value){
+						return	chineseShow="酒店行业";
+					}
+					if("AF"==value){
+						return	chineseShow="电商行业";
+					}
+					if("AG"==value){
+						return	chineseShow="租房行业";
+					}
+					if("AH"==value){
+						return	chineseShow="运营商行业";
+					}
+					if("AI"==value){
+						return	chineseShow="保险行业";
+					}
+					if("AK"==value){
+						return	chineseShow="租赁行业";
+					}
+					return	chineseShow=value;
+  				}
+			},{
+				title:'风险类型',
+				field:'riskType',
+				width:'10%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					var chineseShow = "";
+					if("AA001"==value){
+						return	chineseShow="逾期未还款";
+					}
+					if("AA002"==value){
+						return	chineseShow="套现";
+					}
+					if("AB001"==value){
+						return	chineseShow="被执行人";
+					}
+					if("AC001"==value){
+						return	chineseShow="盗卡者/盗卡者同伙";
+					}
+					if("AC002"==value){
+						return	chineseShow="欺诈者/欺诈同伙";
+					}
+					if("AC003"==value){
+						return	chineseShow="盗用操作/盗用者同伙";
+					}
+					if("AC004"==value){
+						return	chineseShow="盗用支出/盗用者同伙";
+					}
+					if("AC005"==value){
+						return	chineseShow="骗赔";
+					}
+					if("AC007"==value){
+						return	chineseShow="案件库黑名单";
+					}
+					if("AD001"==value){
+						return	chineseShow="汽车租赁逾期未付款";
+					}
+					if("AD002"==value){
+						return	chineseShow="汽车租赁逾期未还车";
+					}
+					if("AD003"==value){
+						return	chineseShow="汽车租赁违章逾期未付款";
+					}
+					if("AD004"==value){
+						return	chineseShow="汽车租赁其他逾期未付款";
+					}
+					if("AD005"==value){
+						return	chineseShow="单车租赁逾期未付款";
+					}
+					if("AD006"==value){
+						return	chineseShow="单车租赁逾期未还车";
+					}
+					if("AD007"==value){
+						return	chineseShow="交通工具乘用费逾期未付款";
+					}
+					if("AD008"==value){
+						return	chineseShow="路桥费逾期未付款";
+					}
+					if("AD009"==value){
+						return	chineseShow="停车费逾期未付款";
+					}
+					if("AD010"==value){
+						return	chineseShow="相关违约";
+					}
+					if("AE001"==value){
+						return	chineseShow="逾期未付款";
+					}
+					if("AF001"==value){
+						return	chineseShow="虚假交易";
+					}
+					if("AF002"==value){
+						return	chineseShow="恶意差评";
+					}
+					if("AF003"==value){
+						return	chineseShow="涉嫌售假";
+					}
+					if("AF004"==value){
+						return	chineseShow="卖家套现";
+					}
+					if("AF005"==value){
+						return	chineseShow="逾期未还款";
+					}
+					if("AG001"==value){
+						return	chineseShow="房租逾期未付款";
+					}
+					if("AG002"==value){
+						return	chineseShow="杂费逾期未付款";
+					}
+					if("AG003"==value){
+						return	chineseShow="其他违约未付款";
+					}
+					if("AG004"==value){
+						return	chineseShow="租客其他违约";
+					}
+					if("AG005"==value){
+						return	chineseShow="非正常解约";
+					}
+					if("AH001"==value){
+						return	chineseShow="逾期未还款";
+					}
+					if("AI003"==value){
+						return	chineseShow="逾期未还款";
+					}
+					if("AK001"==value){
+						return	chineseShow="逾期未付款";
+					}
+					if("AK002"==value){
+						return	chineseShow="逾期未归还";
+					}
+					return	chineseShow=value;
+  				}
+			},{
+				title:'风险代码',
+				field:'riskCode',
+				width:'14%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					var chineseShow = "";
+					if(value!=""&&value!=null&&value.length==8){
+						var startfive=value.substring(0,5);//前5位
+						var endThree=value.substring(5,3);//后2位
+						var endThreeNum=parseInt(endThree,10);
+						if(startfive=="AA001"||startfive=="AH001"||startfive=="AI003"){
+							if(1==endThreeNum){
+							    return	chineseShow="逾期 1-30 天";
+							}
+							if(2==endThreeNum){
+							    return	chineseShow="逾期 31-60 天";
+							}
+							if(3==endThreeNum){
+							    return	chineseShow="逾期 61-90 天";
+							}
+							if(4==endThreeNum){
+							    return	chineseShow="逾期 91-120 天";
+							}
+							if(5==endThreeNum){
+							    return	chineseShow="逾期 121-150 天";
+							}
+							if(6==endThreeNum){
+							    return	chineseShow="逾期 151-180 天";
+							}
+							if(7==endThreeNum){
+							    return	chineseShow="逾期 180 天以上";
+							}
+							if(10==endThreeNum){
+							    return	chineseShow="逾期 1 期";
+							}
+							if(11==endThreeNum){
+							    return	chineseShow="逾期 2 期";
+							}
+							if(12==endThreeNum){
+							    return	chineseShow="逾期 3 期";
+							}
+							if(13==endThreeNum){
+							    return	chineseShow="逾期 4 期";
+							}
+							if(14==endThreeNum){
+							    return	chineseShow="逾期 5 期";
+							}
+							if(15==endThreeNum){
+							    return	chineseShow="逾期 6 期";
+							}
+							if(16==endThreeNum){
+							    return	chineseShow="逾期 6 期以上";
+							}
+						}
+						if("AA002001"==value){
+						    return	chineseShow="严重逾期且套现";
+						}
+						if("AB001001"==value){
+						    return	chineseShow="失信被执行人";
+						}
+						if("AB001002"==value){
+						    return	chineseShow="被执行人";
+						}
+						if("AC001001"==value){
+						    return	chineseShow="盗卡者/盗卡者同伙";
+						}
+						if("AC002001"==value){
+						    return	chineseShow="欺诈者/欺诈同伙";
+						}
+						if("AC003001"==value){
+						    return	chineseShow="盗用操作/盗用者同伙";
+						}
+						if("AC004001"==value){
+						    return	chineseShow="盗用支出/盗用者同伙";
+						}
+						if("AC005001"==value){
+						    return	chineseShow="骗赔";
+						}
+						if("AC007001"==value){
+						    return	chineseShow="营销作弊名单";
+						}
+						if(startfive=="AD001"||startfive=="AD002"||startfive=="AD003"||
+						   startfive=="AD004"||startfive=="AD005"||startfive=="AD006"||
+						   startfive=="AD007"||startfive=="AD008"||startfive=="AD009"||
+						   startfive=="AE001"||startfive=="AF005"||startfive=="AG001"||
+						   startfive=="AG002"||startfive=="AG003"||startfive=="AK001"||
+						   startfive=="AK002"){
+							if(1==endThreeNum){
+								 return	chineseShow="逾期 1-7 天";
+							}
+							if(2==endThreeNum){
+							    return	chineseShow="逾期 8-14 天";
+							}
+							if(3==endThreeNum){
+							    return	chineseShow="逾期 15-30 天";
+							}
+							if(4==endThreeNum){
+							    return	chineseShow="逾期 31-60 天";
+							}
+							if(5==endThreeNum){
+							    return	chineseShow="逾期 61-90 天";
+							}
+							if(6==endThreeNum){
+							    return	chineseShow="逾期 91-120 天";
+							}
+							if(7==endThreeNum){
+							    return	chineseShow="逾期 121-150 天";
+							}
+							if(8==endThreeNum){
+							    return	chineseShow="逾期 151-180 天";
+							}
+							if(9==endThreeNum){
+							    return	chineseShow="逾期 180 天以上";
+							}
+						}
+						if("AD010001"==value){
+						    return	chineseShow="相关违约";
+						}
+						if("AF001001"==value){
+						    return	chineseShow="炒信（买家通过虚假购买商品等形式抬高商品销量和评级，误导真实的消费者）";
+						}
+						if("AF002001"==value){
+						    return	chineseShow="恶意差评（买家对卖家售卖的商品或服务进行恶意差评，并以此要求卖家给予经济补偿）";
+						}
+						if("AF003001"==value){
+						    return	chineseShow="涉嫌售假（卖家涉嫌销售假货）";
+						}
+						if("AF004001"==value){
+						    return	chineseShow="卖家套现（卖家为客户提供套现的服务）";
+						}
+						if("AG004001"==value){
+						    return	chineseShow="改变房屋用途（擅自改变房屋用途，比如民宅改为商用）";
+						}
+						if("AG004002"==value){
+						    return	chineseShow="拆改房屋结构（擅自改拆房屋固定结构，比如墙身）";
+						}
+						if("AG004003"==value){
+						    return	chineseShow="屋内非法活动（比如在房屋内吸毒）";
+						}
+						if("AG004004"==value){
+						    return	chineseShow="扰民被投诉（比如制造噪音，被邻居投诉）";
+						}
+						if("AG004005"==value){
+						    return	chineseShow="擅自转租（比如擅自转租整个房屋，或部分房间）";
+						}
+						if("AG005001"==value){
+						    return	chineseShow="违约被清退（如因违约行为被强制清退）";
+						}
+						if("AG005002"==value){
+						    return	chineseShow="违约并失联（如逃租）";
+						}
+						 return	 value;
+					}else{
+						 return	 value;
+					}
+					
+  				}
+			},{
+				title:'数据更新时间',
+				field:'updateTime',
+				width:'10%',
+				align:'center'
+			},{
+				title:'是否结清',
+				field:'steelement',
+				width:'10%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					if(value){
+					var value=value.replace(/(^\s*)|(\s*$)/g,"");
+					if("T"==value){
+						return "结清";
+					}
+					if("F"==value){
+						return "未结清";
+					}
+					}
+					return "";
+				}
+			},{
+				title:'用户对负面记录是否有异议',
+				field:'status',
+				width:'20%',
+				align:'left',
+				formatter:function(value,currentRow,index){
+					if(value){
+					var value=value.replace(/(^\s*)|(\s*$)/g,"");
+					if("0"==value){
+						return "原始状态";
+					}
+					if("1"==value){
+						return "用户有异议，信息核查中";
+					}
+					if("2"==value){
+						return "核查完毕，信息无误";
+					}
+					if("3"==value){
+						return "核查完毕，信息已修改";
+					}
+					if("5"==value){
+						return "用户对此记录有异议，但异议主张经核查未获支持";
+					}
+					}
+					return value;
+				}
+			},{
+				title:'用户对已处理异议是否仍有异议 ',
+				field:'statement',
+				width:'24%',
+				align:'left'
+			}]]
+		});
+	}
+	/**
+	*加载  欺诈关注名单
+	*/
+	function loadRiskListConcerned(){
+		$('#riskListConcerned').datagrid({
+			url:"",
+			border:true,
+			fit:false,
+			//animate:true,
+			singleSelect:false,
+			//resizable:true,
+			nowrap:false,
+			//pagePosition:'bottom',
+			rownumbers:true,loadMsg:'数据加载中.....',
+			//pagination:true,pageSize:10,pageList:[10,20,50],
+			queryParams:{"appId":appId},
+			columns:[[{
+				title:'信息项',
+				field:'isRisk',
+				width:'30%',
+				align:'center'
+			},{
+				title:'中文说明',
+				field:'type',
+				width:'30%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					
+  				}
+			},{
+				title:'建议风险',
+				field:'riskType',
+				width:'35%',
+				align:'center',
+				formatter:function(value,currentRow,index){
+					
+  				}
+			}]]
+		});
+	}
+</script>
+</html>

@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="TeamdealList" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.decision.TeamdealList" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="TEAMDEAL_TYPE" property="teamdealType" jdbcType="VARCHAR" />
+    <result column="TEAMDEAL_CODE" property="teamdealCode" jdbcType="VARCHAR" />
+    <result column="APPROVE_DATE" property="approveDate" jdbcType="VARCHAR" />
+    <result column="REPORTING_ORG" property="reportingOrg" jdbcType="VARCHAR" />
+    <result column="COMPANY_TYPE" property="companyType" jdbcType="VARCHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="APPLY_REQUEST" property="applyRequest" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+    <result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.huaxia.opas.domain.decision.TeamdealList" extends="BaseResultMap" >
+    <result column="COMPANY_NAME" property="companyName" jdbcType="CLOB" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE, APPROVE_DATE, REPORTING_ORG, COMPANY_TYPE, 
+    APPLY_REQUEST, OPERATOR, OPERAT_TIME, CURR_STATUS,COMPANY_NAME
+    from OPAS_TEAMDEAL_LIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByCondtion" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map" >
+    select 
+    AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE, APPROVE_DATE, REPORTING_ORG, COMPANY_TYPE, 
+    APPLY_REQUEST, OPERATOR, OPERAT_TIME, CURR_STATUS,COMPANY_NAME
+    from OPAS_TEAMDEAL_LIST
+    where CURR_STATUS = '1'
+    <if test="teamdealCode != null and teamdealCode != ''" >
+      and  upper(TEAMDEAL_CODE) LIKE upper('%${teamdealCode}%')
+    </if>
+    <if test="companyName != null and companyName != ''" >
+      and  COMPANY_NAME LIKE '%${companyName}%'
+    </if>
+  </select>
+  <select id="queryCountList" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select count(2)
+    from OPAS_TEAMDEAL_LIST
+    where  curr_status = '1'
+    <if test="teamdealCode != null and teamdealCode != ''" >
+      and  upper(TEAMDEAL_CODE) LIKE upper('%${teamdealCode}%')
+    </if>
+    <if test="companyName != null and companyName != ''" >
+      and  COMPANY_NAME LIKE '%${companyName}%'
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_TEAMDEAL_LIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.decision.TeamdealList" >
+    insert into OPAS_TEAMDEAL_LIST (AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE, 
+      APPROVE_DATE, REPORTING_ORG, COMPANY_TYPE, 
+      APPLY_REQUEST, OPERATOR, OPERAT_TIME, 
+      CURR_STATUS, COMPANY_NAME)
+    values (#{autoId,jdbcType=VARCHAR}, #{teamdealType,jdbcType=VARCHAR}, #{teamdealCode,jdbcType=VARCHAR}, 
+      #{approveDate,jdbcType=VARCHAR}, #{reportingOrg,jdbcType=VARCHAR}, #{companyType,jdbcType=VARCHAR}, 
+      #{applyRequest,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{operatTime,jdbcType=TIMESTAMP}, 
+      #{currStatus,jdbcType=CHAR}, #{companyName,jdbcType=CLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.decision.TeamdealList" >
+    insert into OPAS_TEAMDEAL_LIST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="teamdealType != null" >
+        TEAMDEAL_TYPE,
+      </if>
+      <if test="teamdealCode != null" >
+        TEAMDEAL_CODE,
+      </if>
+      <if test="approveDate != null" >
+        APPROVE_DATE,
+      </if>
+      <if test="reportingOrg != null" >
+        REPORTING_ORG,
+      </if>
+      <if test="companyType != null" >
+        COMPANY_TYPE,
+      </if>
+      <if test="applyRequest != null" >
+        APPLY_REQUEST,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="operatTime != null" >
+        OPERAT_TIME,
+      </if>
+      <if test="currStatus != null" >
+        CURR_STATUS,
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="teamdealType != null" >
+        #{teamdealType,jdbcType=VARCHAR},
+      </if>
+      <if test="teamdealCode != null" >
+        #{teamdealCode,jdbcType=VARCHAR},
+      </if>
+      <if test="approveDate != null" >
+        #{approveDate,jdbcType=VARCHAR},
+      </if>
+      <if test="reportingOrg != null" >
+        #{reportingOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null" >
+        #{companyType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRequest != null" >
+        #{applyRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null" >
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null" >
+        #{currStatus,jdbcType=CHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.decision.TeamdealList" >
+    update OPAS_TEAMDEAL_LIST
+    <set >
+      <if test="teamdealType != null" >
+        TEAMDEAL_TYPE = #{teamdealType,jdbcType=VARCHAR},
+      </if>
+      <if test="teamdealCode != null" >
+        TEAMDEAL_CODE = #{teamdealCode,jdbcType=VARCHAR},
+      </if>
+      <if test="approveDate != null" >
+        APPROVE_DATE = #{approveDate,jdbcType=VARCHAR},
+      </if>
+      <if test="reportingOrg != null" >
+        REPORTING_ORG = #{reportingOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null" >
+        COMPANY_TYPE = #{companyType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRequest != null" >
+        APPLY_REQUEST = #{applyRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null" >
+        OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null" >
+        CURR_STATUS = #{currStatus,jdbcType=CHAR},
+      </if>
+      <if test="companyName != null" >
+        COMPANY_NAME = #{companyName,jdbcType=CLOB},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.huaxia.opas.domain.decision.TeamdealList" >
+    update OPAS_TEAMDEAL_LIST
+    set TEAMDEAL_TYPE = #{teamdealType,jdbcType=VARCHAR},
+      TEAMDEAL_CODE = #{teamdealCode,jdbcType=VARCHAR},
+      APPROVE_DATE = #{approveDate,jdbcType=VARCHAR},
+      REPORTING_ORG = #{reportingOrg,jdbcType=VARCHAR},
+      COMPANY_TYPE = #{companyType,jdbcType=VARCHAR},
+      APPLY_REQUEST = #{applyRequest,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      OPERAT_TIME = sysdate,
+      CURR_STATUS = #{currStatus,jdbcType=CHAR},
+      COMPANY_NAME = #{companyName,jdbcType=CLOB}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.decision.TeamdealList">
+	update OPAS_TEAMDEAL_LIST
+	set TEAMDEAL_TYPE = #{teamdealType,jdbcType=VARCHAR},
+	TEAMDEAL_CODE = #{teamdealCode,jdbcType=VARCHAR},
+	APPROVE_DATE = #{approveDate,jdbcType=VARCHAR},
+	REPORTING_ORG = #{reportingOrg,jdbcType=VARCHAR},
+	COMPANY_TYPE = #{companyType,jdbcType=VARCHAR},
+	APPLY_REQUEST = #{applyRequest,jdbcType=VARCHAR},
+	OPERATOR = #{operator,jdbcType=VARCHAR},
+	OPERAT_TIME = sysdate,
+	CURR_STATUS = #{currStatus,jdbcType=CHAR}
+	where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+   
+  <!-- luzhen.ou 部分名单库维护  -->
+ 	<select id="selectById"
+		parameterType="com.huaxia.opas.domain.decision.TeamdealList"
+		resultMap="BaseResultMap">
+		select 
+		AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE,APPROVE_DATE, REPORTING_ORG, COMPANY_NAME, COMPANY_TYPE, APPLY_REQUEST, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		from OPAS_TEAMDEAL_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryTeamdealList"
+		parameterType="com.huaxia.opas.domain.decision.TeamdealList"
+		resultMap="BaseResultMap">
+		select 
+		AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE,APPROVE_DATE, REPORTING_ORG, COMPANY_NAME,  COMPANY_TYPE, APPLY_REQUEST, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		FROM OPAS_TEAMDEAL_LIST t
+		<where>
+			<if test="teamdealType != null and teamdealType != ''"> 
+			    AND upper(TEAMDEAL_TYPE) LIKE upper('%${teamdealType}%')
+			</if>
+			<if test="teamdealCode != null and teamdealCode != ''">
+				AND upper(TEAMDEAL_CODE) LIKE upper('%${teamdealCode}%')
+			</if>
+			<if test="reportingOrg != null and reportingOrg != ''">
+				AND REPORTING_ORG LIKE '%${reportingOrg}%'
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyType != null and companyType != ''">
+				AND upper(COMPANY_TYPE) LIKE upper('%${companyType}%')
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(t.CREATE_TIME 
+						BETWEEN 
+						#{createTime,jdbcType=DATE}
+						AND
+						(select #{createTime,jdbcType=DATE} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+		</where>
+		ORDER BY t.CREATE_TIME DESC,to_number(t.ORDERBY_NO)
+	</select>
+	
+	<select id="queryTeamdealCount"
+		parameterType="com.huaxia.opas.domain.decision.TeamdealList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID)
+		FROM OPAS_TEAMDEAL_LIST t
+		<where>
+		<if test="teamdealType != null and teamdealType != ''"> 
+			    AND upper(TEAMDEAL_TYPE) LIKE upper('%${teamdealType}%')
+			</if>
+			<if test="teamdealCode != null and teamdealCode != ''">
+				AND upper(TEAMDEAL_CODE) LIKE upper('%${teamdealCode}%')
+			</if>
+			<if test="reportingOrg != null and reportingOrg != ''">
+				AND REPORTING_ORG LIKE '%${reportingOrg}%'
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyType != null and companyType != ''">
+				AND upper(COMPANY_TYPE) LIKE upper('%${companyType}%')
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(t.CREATE_TIME 
+						BETWEEN 
+						#{createTime,jdbcType=DATE}
+						AND
+						(select #{createTime,jdbcType=DATE} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+		</where>	
+	</select>
+	
+	<delete id="delete" parameterType="com.huaxia.opas.domain.decision.TeamdealList">
+		delete from
+		OPAS_TEAMDEAL_LIST
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+    
+	<update id="update" parameterType="com.huaxia.opas.domain.decision.TeamdealList">
+		update OPAS_TEAMDEAL_LIST
+		<set>
+			TEAMDEAL_TYPE = #{teamdealType,jdbcType=VARCHAR},
+			TEAMDEAL_CODE = #{teamdealCode,jdbcType=VARCHAR},
+			APPROVE_DATE = #{approveDate,jdbcType=VARCHAR},
+			REPORTING_ORG = #{reportingOrg,jdbcType=VARCHAR},
+			COMPANY_NAME = #{companyName,jdbcType=CLOB},
+			COMPANY_TYPE = #{companyType,jdbcType=VARCHAR},
+			APPLY_REQUEST = #{applyRequest,jdbcType=VARCHAR},
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>	
+	
+	<update id="updateTeamdealActive" parameterType="com.huaxia.opas.domain.decision.TeamdealList">
+		update OPAS_TEAMDEAL_LIST
+		<set>
+			CURR_STATUS = #{currStatus,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<select id="queryTeamdealHistoryList"
+		parameterType="com.huaxia.opas.domain.decision.TeamdealList"
+		resultMap="BaseResultMap">
+		select 
+		AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE,APPROVE_DATE, REPORTING_ORG, COMPANY_NAME,  COMPANY_TYPE, APPLY_REQUEST, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		from OPAS_TEAMDEAL_LIST_HISTORY
+		WHERE AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		ORDER BY OPERAT_TIME DESC
+	</select>
+	
+	<select id="queryTeamdealHistoryCount"
+		parameterType="com.huaxia.opas.domain.decision.TeamdealList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID)
+		from OPAS_TEAMDEAL_LIST_HISTORY
+		where
+		AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	<insert id="insert1" parameterType="com.huaxia.opas.domain.decision.TeamdealList">
+		insert into OPAS_TEAMDEAL_LIST
+		(AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE,APPROVE_DATE, REPORTING_ORG, COMPANY_NAME,  COMPANY_TYPE, APPLY_REQUEST, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS)
+		values (
+			#{autoId,jdbcType=VARCHAR},
+			#{teamdealType,jdbcType=VARCHAR},
+			#{teamdealCode,jdbcType=VARCHAR},
+			#{approveDate,jdbcType=VARCHAR},
+			#{reportingOrg,jdbcType=VARCHAR},
+			#{companyName,jdbcType=CLOB},
+			#{companyType,jdbcType=VARCHAR},
+			#{applyRequest,jdbcType=VARCHAR},
+			#{operator,jdbcType=VARCHAR},
+			CURRENT_DATE,
+			CURRENT_DATE,
+			#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+ 	
+	<insert id="insertTeamdealList" parameterType="java.util.List">
+		insert into OPAS_TEAMDEAL_LIST 
+		(AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE,APPROVE_DATE, REPORTING_ORG, COMPANY_NAME,  COMPANY_TYPE, APPLY_REQUEST, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS,ORDERBY_NO)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+				#{item.autoId,jdbcType=VARCHAR},
+				#{item.teamdealType,jdbcType=VARCHAR},
+				#{item.teamdealCode,jdbcType=VARCHAR},
+				#{item.approveDate,jdbcType=VARCHAR},
+				#{item.reportingOrg,jdbcType=VARCHAR},
+				#{item.companyName,jdbcType=VARCHAR},
+				#{item.companyType,jdbcType=VARCHAR},
+				#{item.applyRequest,jdbcType=VARCHAR},
+				#{item.operator,jdbcType=VARCHAR},
+				sysdate,
+				#{item.createTime,jdbcType=TIMESTAMP},
+				#{item.currStatus,jdbcType=CHAR},
+				#{item.orderByNo,jdbcType=VARCHAR}	
+			from dual)
+		</foreach>
+	</insert>
+			
+	<insert id="insertTeamdealHistory"
+		parameterType="com.huaxia.opas.domain.decision.TeamdealList">
+		INSERT INTO OPAS_TEAMDEAL_LIST_HISTORY
+		(OPRETION_ID, AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE,APPROVE_DATE, REPORTING_ORG, COMPANY_NAME,  COMPANY_TYPE, APPLY_REQUEST, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS) 
+	    values
+	    (
+	   		#{opretionId,jdbcType=VARCHAR},
+			#{autoId,jdbcType=VARCHAR},
+			#{teamdealType,jdbcType=VARCHAR},
+			#{teamdealCode,jdbcType=VARCHAR},
+			#{approveDate,jdbcType=VARCHAR},
+			#{reportingOrg,jdbcType=VARCHAR},
+			#{companyName,jdbcType=CLOB},
+			#{companyType,jdbcType=VARCHAR},
+			#{applyRequest,jdbcType=VARCHAR},
+			#{operator,jdbcType=VARCHAR},
+			sysdate,
+			#{createTime,jdbcType=TIMESTAMP},
+			#{currStatus,jdbcType=CHAR}
+		)
+	</insert>	
+ 	
+	<insert id="insertTeamdealHistoryList" parameterType="java.util.List">
+		insert into OPAS_TEAMDEAL_LIST_HISTORY 
+	 	(OPRETION_ID, AUTO_ID, TEAMDEAL_TYPE, TEAMDEAL_CODE,APPROVE_DATE, REPORTING_ORG, COMPANY_NAME,  COMPANY_TYPE, APPLY_REQUEST, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+				(SELECT
+			 		#{item.opretionId,jdbcType=VARCHAR},	    
+					#{item.autoId,jdbcType=VARCHAR},
+					#{item.teamdealType,jdbcType=VARCHAR},
+					#{item.teamdealCode,jdbcType=VARCHAR},
+					#{item.approveDate,jdbcType=VARCHAR},
+					#{item.reportingOrg,jdbcType=VARCHAR},
+					#{item.companyName,jdbcType=VARCHAR},
+					#{item.companyType,jdbcType=VARCHAR},
+					#{item.applyRequest,jdbcType=VARCHAR},
+					#{item.operator,jdbcType=VARCHAR},
+					sysdate,
+					#{item.createTime,jdbcType=TIMESTAMP},
+					#{item.currStatus,jdbcType=CHAR}	
+				FROM dual)
+		</foreach>
+	</insert> 
+</mapper>

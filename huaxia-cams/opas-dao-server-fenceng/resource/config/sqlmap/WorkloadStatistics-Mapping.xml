@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WorkloadStatistics">
+	<resultMap id="workloadStatisticsMap" type="java.util.Map">
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="input_sum" property="input" jdbcType="VARCHAR" />
+		<result column="search_sum" property="search" jdbcType="VARCHAR" />
+		<result column="apply_sum" property="apply" jdbcType="VARCHAR" />
+	</resultMap>
+  <select id="queryWorkloadStatisticsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+	  select count(1) from 
+	  (select tab1.org_name as org_name,tab1.org_no,
+       tab1.name as name ,
+       count(f.app_id) as input_sum,
+       count(f1.app_id) as search_sum,
+       count(f2.app_id) as apply_sum
+	  from (select tab.org_name, w1.user_code, max(w1.user_name) as name,tab.org_no
+      from opas_ap_user_org w,
+       opas_ap_user w1,
+       (select distinct g.org_id, g1.org_name,g1.org_no
+      	 from opas_ap_user_org g, opas_ap_org g1, opas_ap_user u
+         where g.user_id = u.user_id
+           and g.org_id = g1.org_id
+           and g1.org_level in ('4','5')) tab
+         where w.org_id = tab.org_id
+           and w.user_id = w1.user_id 
+     <if test="userOrg !=null and userOrg !=''">
+     and tab.org_no=#{userOrg}
+     </if>
+     <if test="user != null and user !='' ">
+     and w1.user_code=#{user}
+     </if>
+  	  group by tab.org_name,w1.user_code,tab.org_no
+      order by tab.org_name) tab1
+	  inner join OPAS_FILE_APPLICATION_DETAIL l on l.flag='2' and
+	   l.TO_ARCHIVE_TIME &gt;= to_date(#{startTime}, 'yyyy-mm-dd')
+	   and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endTime},'yyyy-mm-dd')+1)
+	  left join OPAS_REVIEW_DECISION_RESULT f on f.app_id = l.app_id
+	                                         and f.auditor = tab1.user_code
+	  left join OPAS_TELCHECK_RESULT f1 on f1.app_id = l.app_id
+	                                   and f1.crediter = tab1.user_code
+	  left join OPAS_BIZ_APPROVAL f2 on f2.app_id = l.app_id
+	                                and f2.APPROVER = tab1.user_code
+	                                
+	  group by tab1.org_name,tab1.name,tab1.org_no)
+  </select>
+  
+  <select id="queryWorkloadStatistics" parameterType="java.util.Map" resultMap="workloadStatisticsMap">
+	  select tab1.org_name as org_name,tab1.org_no,
+       tab1.name as name,
+       count(f.app_id) as input_sum,
+       count(f1.app_id) as search_sum,
+       count(f2.app_id) as apply_sum
+	  from (select tab.org_name, w1.user_code, max(w1.user_name) as name,tab.org_no
+      from opas_ap_user_org w,
+       opas_ap_user w1,
+       (select distinct g.org_id, g1.org_name,g1.org_no
+      	 from opas_ap_user_org g, opas_ap_org g1, opas_ap_user u
+         where g.user_id = u.user_id
+           and g.org_id = g1.org_id
+           and g1.org_level in ('4','5')) tab
+         where w.org_id = tab.org_id
+           and w.user_id = w1.user_id 
+     <if test="userOrg !=null and userOrg !=''">
+     and tab.org_no=#{userOrg}
+     </if>
+     <if test="user != null and user !='' ">
+     and w1.user_code=#{user}
+     </if>
+  	  group by tab.org_name，w1.user_code,tab.org_no
+      order by tab.org_name) tab1
+	  inner join OPAS_FILE_APPLICATION_DETAIL l on l.flag='2' and
+	  l.TO_ARCHIVE_TIME &gt;= to_date(#{startTime}, 'yyyy-mm-dd')
+	   and l.TO_ARCHIVE_TIME &lt;= (to_date(#{endTime},'yyyy-mm-dd')+1)
+	  left join OPAS_REVIEW_DECISION_RESULT f on f.app_id = l.app_id
+	                                         and f.auditor = tab1.user_code
+	  left join OPAS_TELCHECK_RESULT f1 on f1.app_id = l.app_id
+	                                   and f1.crediter = tab1.user_code
+	  left join OPAS_BIZ_APPROVAL f2 on f2.app_id = l.app_id
+	                                and f2.APPROVER = tab1.user_code
+	                                
+	  group by tab1.org_name,tab1.name,tab1.org_no
+  </select>
+
+        
+</mapper>

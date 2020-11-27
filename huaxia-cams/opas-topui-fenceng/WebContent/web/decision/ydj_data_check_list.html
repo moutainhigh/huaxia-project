@@ -1,0 +1,160 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>内部数据检查 3</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+		<!-- 内部数据检查 3-->
+
+				<table id="tb_inDataCheckListWin" class="easyui-datagrid" iconCls="icon-save"
+				style="width: 99%;hight:98%" 
+					data-options="rownumbers:true,fit:true,singleSelect:true,pagination:true,pagination:true,pageSize:20,pageList:[15, 20, 50],fitColumns:true,loadMsg:'数据加载中.....',method:'post'">
+					<thead>
+					<tr >
+						<th field="ck" checkbox="true">操作</th>
+						<th field="appId" align="left" sortable="true" data-options="formatter:formatappId">关联件的条形码</th>
+						<th field="c1Cname" align="left" sortable="true" >申请人姓名</th>
+						<th field="c1Idnbr" align="left" sortable="true" >身份证号码</th>
+						<th field="c1Hmtel" align="left" sortable="true" >住宅电话</th>
+						<th field="c1Idnbrh" align="left" sortable="true"  data-options="formatter:valc1Idnbr">灰名单（个人）</th> 
+						<th field="c1Coname" align="left" sortable="true" >单位名称</th>
+						<th field="c1Mobile" align="left" sortable="true" >手机号</th>
+						<th field="prodName" align="left" sortable="true">申请卡种</th>
+						<th field="flag" align="left" sortable="true" data-options="formatter:applyStatus">申请状态</th>
+						<th field="approveResult" align="left" sortable="true" data-options="formatter:approveResultFormat">审批结果</th>
+						<th field="approveCreditLimit" align="left" sortable="true" data-options="formatter:approveCreditLimitFormat">审批额度</th>
+						<th field="creditRefuseReason" align="left" sortable="true" data-options="formatter:approveResonCode">拒绝（核批）原因代码</th>
+						<th field="approverName" align="left" sortable="true" >当前操作员</th>
+						<th field="c1Idnbrc" align="left" sortable="true" data-options="formatter:valc1Idnbr">重复申请检查-身份证号</th>
+						<th field="c1HmaddTotal" align="left" sortable="true" id="homeAdress">家庭地址(非公司邮寄地址)</th>
+						<th field="c1Mobilec" align="left" sortable="true" data-options="formatter:valc1Mobile">关联性检查-手机</th>
+						<th field="c1Remobil" align="left" sortable="true" id="zxqssj">直系亲属手机号码</th>
+						<th field="c1Rename" align="left" sortable="true" id="zxqsx">直系亲属姓名</th>
+						<th field="c1Retelar" align="left" sortable="true">直系亲属住宅电话</th>
+						<th field="c4Reladd" align="left" sortable="true">直系亲属家庭地址</th>
+						<th field="appProd" align="left" hidden="true">卡产品编号</th>
+						<th field="matchingCardFlag" align="left" hidden="true"></th>
+					</tr>
+					</thead>
+				</table>
+				<!-- <div style="text-align: center; padding: 5px">
+					<a href="javascript:void(0)"class="easyui-linkbutton" onclick="onConcle('inDataCheckListWin')">取消</a>
+				</div> -->
+	
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var appIds;
+	 $(function(){
+		 //获取父页面参数 
+		 appIds = window.opener.appIds;
+		 var obj= GetQueryString("obj");
+		 openInDataCheckListWin(obj);
+	 });
+		
+	 /*******************内部数据列表显示部分************************/
+	  	function openInDataCheckListWin(obj){
+			//showOpenWinList();
+		 	 if("repeatCheck"==obj){
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1HmaddTotal");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Hmtel");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Mobilec");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Remobil");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Rename");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrh");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrc");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c4Reladd");
+			}else if("relatedcheckHomeaddr"==obj){
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrc");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Mobilec");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Remobil");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Rename");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrh");
+		 		$("#tb_inDataCheckListWin").datagrid("showColumn","c1HmaddTotal");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c4Reladd");
+			}else if("relatedcheckCompanyaddr"==obj){
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Hmtel");
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrc");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Mobilec");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Remobil");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Rename");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrh");
+		 		$("#tb_inDataCheckListWin").datagrid("showColumn","c1HmaddTotal");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c4Reladd");
+			}else if("relatedcheckTel"==obj){
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Hmtel");
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1HmaddTotal");
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrc");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Remobil");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Rename");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrh");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Mobilec");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Retelar");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c4Reladd");
+			}else if("relatedcheckNearlyTelno"==obj){
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1HmaddTotal");
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrc");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Mobilec");
+		 		$("#tb_inDataCheckListWin").datagrid("showColumn","c1Rename");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrh");
+		 		$("#tb_inDataCheckListWin").datagrid("showColumn","c1Remobil");
+			}else if("graylist"==obj){
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Hmtel");
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1HmaddTotal");
+				$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrc");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Mobilec");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Rename");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Idnbrh");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c1Remobil");
+		 		$("#tb_inDataCheckListWin").datagrid("hideColumn","c4Reladd");
+			}
+				//$("inDataCheckListWin").empty();
+				var url = location.href;
+				var opts = $("#tb_inDataCheckListWin").datagrid("options");
+				var s = {"appId":appIds,"flag":obj};
+				opts.url = "/opas-naps/inDataChecKList.json";
+				$("#tb_inDataCheckListWin").datagrid("reload", s);		
+				//showWin("inDataCheckListWin");  
+		} 
+	  	function formatappId(val,row,index){
+			var appId = row.appId;
+			var ydjFlag = row.ydjFlag;
+			var path = "";
+			var appProd = row.appProd;
+			var matchingCardFlag = row.matchingCardFlag;
+			var userId=row.approverName;
+			var flag='3';
+			if(ydjFlag=="1"){//1为易达金
+				path = "../common/copy_credit_control_zxYdj.html?appId="+appId+"&ydjFlag="+ydjFlag+"&appProd="+appProd+"&userCode="+userId+"&flag="+flag+"&matchingCardFlag="+matchingCardFlag;
+			}else {//2为非易达金
+				path = "../common/copy_credit_control_zxBzk.html?appId="+appId+"&ydjFlag="+ydjFlag+"&userCode="+userId+"&flag="+flag+"&matchingCardFlag="+matchingCardFlag;	
+			}
+			return "<a href="+path+" target=_blank>"+val+"</a>";
+		} 
+		//提示
+		function valc1Mobile(val, row, index) {
+			return row.c1Mobile;
+		} 
+		function valc1Idnbr(val, row, index) {
+			return row.c1Idnbr;
+		}
+		function showOpenWinList() {
+			var dataMap = {
+					"rows" : new Array(),
+					"total" : 0
+			};
+			$("#tb_inDataCheckListWin").datagrid("loadData",dataMap);
+			$("#tb_inDataCheckListWin").datagrid('getRows');
+			var winObj = $("#inDataCheckListWin");
+			winObj.window({
+				closed : false
+			});
+		}
+</script>
+</html>

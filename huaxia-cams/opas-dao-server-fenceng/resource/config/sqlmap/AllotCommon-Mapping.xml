@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="AllotCommon">
+	<resultMap id="AllotCommonResultMap" type="com.huaxia.opas.domain.allot.AllotCommon">
+		<result column="USER_ID" property="userId" jdbcType="CHAR"/>
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR"/>
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+		<result column="AUTO_STATUS" property="autoStatus" jdbcType="CHAR"/>
+		<result column="ORG_ID" property="orgId" jdbcType="CHAR"/>
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR"/>
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR"/>
+		<result column="ORG_ADDR" property="orgAddr" jdbcType="VARCHAR"/>
+		<result column="ORG_LEVEL" property="orgLevel" jdbcType="VARCHAR"/>
+		<result column="ROLE_ID" property="roleId" jdbcType="CHAR"/>
+		<result column="ROLE_CODE" property="roleCode" jdbcType="CHAR"/>
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="CHAR"/>
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP"/> 
+		<result column="orgNum" property="orgNum" jdbcType="NUMERIC"/>
+		<result column="userNum" property="userNum" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<!--通过组员 查询 组-->
+	<select id="selectGroupByUserCode" parameterType="java.lang.String" resultMap="AllotCommonResultMap">
+		select a.ORG_NO,a.ORG_NAME,a.ORG_ID,a.ORG_LEVEL,us.USER_NAME,us.USER_ID,us.USER_CODE
+		 from opas_ap_org a,OPAS_AP_USER_ORG b, 
+		(select c.user_Id,c.USER_NAME,c.USER_CODE from OPAS_AP_USER c where c.user_Code= #{_parameter} ) us
+		where a.ORG_ID=b.ORG_ID 
+		and  b.USER_ID=us.USER_ID
+	</select>
+	
+	<select id="selectAllotGroup" parameterType="java.util.Map"
+		resultMap="AllotCommonResultMap">
+		select org_id,org_name,org_no from opas_ap_org 
+		where ORG_LEVEL =
+		#{orgLevel,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="countAllotGroup" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from opas_ap_org 
+		where ORG_LEVEL = #{orgLevel,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="selectUserRoleByOrgId" parameterType="java.lang.String" resultType="java.lang.String">
+		select distinct a.ROLE_CODE from OPAS_AP_ROLE a where a.ROLE_ID in
+		(select distinct b.ROLE_ID from OPAS_AP_USER_ROLE  b where b.USER_ID in
+		(select c.USER_ID from OPAS_AP_USER_ORG c where c.ORG_ID = #{orgId,jdbcType=VARCHAR}) )
+	</select>
+	
+	<select id="countUserRoleByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_ROLE a where a.ROLE_ID in
+		(select ROLE_ID from OPAS_AP_USER_ROLE  b where b.USER_ID in
+		(select USER_ID from OPAS_AP_USER_ORG c where c.ORG_ID = #{orgId,jdbcType=VARCHAR}))
+	</select>
+	
+	<select id="selectUserIdByOrgId" parameterType="java.lang.String" resultType="java.lang.String">
+		select uo.USER_ID
+		  from OPAS_AP_USER_ORG uo
+		  join opas_ap_org ao on uo.ORG_ID = ao.ORG_ID and uo.ORG_ID = #{orgId,jdbcType=VARCHAR} 
+		  join opas_ap_user t on uo.user_id = t.user_id
+	  	  group by uo.USER_ID,t.user_code
+ 		order by t.user_code
+	</select>
+	
+	<!-- 查询全组员信息 -->	
+	<select id="selectAllotUserByList" parameterType="java.util.List" resultMap="AllotCommonResultMap">
+		select distinct u.user_name,u.user_id,u.user_code,r.role_code
+		 from OPAS_AP_USER_ROLE ur,OPAS_AP_USER u, OPAS_AP_ROLE r
+		where  
+		ur.USER_ID=u.USER_ID
+		and ur.ROLE_ID=r.ROLE_ID
+		ur.USER_ID in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<!-- userCode查该组员所有角色 -->
+	<select id="selectRoleCodeByUserId" parameterType="java.lang.String" resultType="java.lang.String">
+		select r.role_code from OPAS_AP_USER_ROLE ur,OPAS_AP_ROLE r
+		where  
+		 ur.ROLE_ID=r.ROLE_ID and 
+		 ur.USER_ID ='${_parameter}'
+	</select>
+	
+	<!-- 组编号查询组信息 -->
+	<select id="selectGroupByOrgNo" parameterType="java.lang.String" resultMap="AllotCommonResultMap">
+		select ORG_ID,ORG_NO,ORG_ADDR,ORG_LEVEL,ORG_NAME from OPAS_AP_ORG
+		where  ORG_NO = '${_parameter}'
+	</select>
+	
+	<!--查询用户信息  -->
+	<select id="selectUser" parameterType="java.util.Map"  resultMap="AllotCommonResultMap">
+		select a.ORG_NO,a.ORG_NAME,a.ORG_ID,a.ORG_LEVEL,us.USER_NAME,us.USER_ID,us.USER_CODE,us.AUTO_STATUS
+		 from opas_ap_org a,OPAS_AP_USER_ORG b, 
+		(select c.user_Id,c.USER_NAME,c.USER_CODE,c.STATUS,c.AUTO_STATUS from OPAS_AP_USER c 
+		     where c.STATUS in ('1','5')
+			<if test="userCode !=null and userCode !=''">
+				and c.USER_CODE = #{userCode,jdbcType=VARCHAR}
+			</if>
+			<if test="userId !=null and userId !=''">
+				and c.USER_ID = #{userId,jdbcType=VARCHAR}
+			</if>
+			<if test="autoStatus !=null and autoStatus !=''">
+				and c.AUTO_STATUS = #{autoStatus,jdbcType=CHAR}
+			</if>
+			 ) us
+		    where a.ORG_ID=b.ORG_ID 
+		    and  b.USER_ID=us.USER_ID
+	</select>
+	<!-- 更新用户表 -->
+	<update id="updateAutoStatus" parameterType="com.huaxia.opas.domain.allot.AllotCommon">
+		update OPAS_AP_USER
+		<set>
+			AUTO_STATUS = #{autoStatus,jdbcType=CHAR}
+		</set>
+		WHERE
+		<foreach collection="ids" item="item" open="" close="" separator="OR">
+		       USER_ID = #{item} 
+		</foreach>
+	</update>
+	<!-- 组长权限排查 -->
+	<select id="selectCountShen" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(distinct ur.USER_ID) from OPAS_AP_USER_ROLE ur
+		  left join OPAS_AP_USER au on ur.user_id=au.user_id
+		  left join OPAS_AP_ROLE ar  on ur.ROLE_ID=ar.ROLE_ID
+		  left join OPAS_AP_USER_ORG uo on ur.USER_ID=uo.USER_ID
+		<where>
+			<if test="orgId !=null and orgId !=''">
+				 uo.ORG_ID = #{orgId,jdbcType=VARCHAR}
+			</if>
+			<if test="roleCodes != null and roleCodes.size()>0 ">
+				AND ar.ROLE_CODE in 
+					<foreach item="item" index="index" collection="roleCodes" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+		</where>
+	</select>
+	<!-- 查询审批角色的所有人 -->
+	<select id="selectApprovers" parameterType="java.util.Map" resultMap="AllotCommonResultMap">
+	   select c.USER_CODE,c.USER_NAME,c.USER_ID from OPAS_AP_USER  c      
+        join (select distinct a.USER_ID from OPAS_AP_USER_ROLE a
+        join OPAS_AP_ROLE b on a.ROLE_ID=b.ROLE_ID
+       	<where>
+			<if test="roleCodes != null and roleCodes.size()>0 ">
+				AND b.ROLE_CODE in 
+					<foreach item="item" index="index" collection="roleCodes" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+		</where>
+        ) d  on c.USER_ID=d.USER_ID
+        join (select f.org_level,e.user_id from OPAS_AP_USER_ORG  e, OPAS_AP_ORG f
+           where f.ORG_ID=e.ORG_ID
+           ) j  on j.USER_ID=c.USER_ID
+       where  c.STATUS in ('1','5')
+       <if test="orgLevel != null and orgLevel!='' ">
+				AND j.ORG_LEVEL =#{orgLevel} 
+	   </if> 
+	</select>
+	<!-- 特定征信到审批  审批池内所有件及征信环节的征信人员  或具体组所有件及征信环节的征信人员 -->
+	<select id="selectSpecialMen" parameterType="java.util.Map" resultMap="AllotCommonResultMap">
+		select  ap.USER_CODE,ap.USER_NAME,count(ap.USER_CODE) as userNum2  
+		from  OPAS_AP_USER ap 
+		<!-- join  (select   APP_ID,CURR_OPT_USER,lst_team_date from  
+        (select row_number() over(partition by APP_ID order by lst_team_date desc)rn,t.APP_ID,t.CURR_OPT_USER,t.lst_team_date from OPAS_ALLOT_APPLY_ALLOT_HIS t  where  curr_node='02'
+        and curr_opt_user is not null )
+        where  rn = 1)m on  m.CURR_OPT_USER=ap.USER_CODE -->
+         join opas_telcheck_result m on m.CREDITER=ap.USER_CODE
+		 join  OPAS_ALLOT_APPLY_ALLOT  allot on allot.APP_ID=m.APP_ID
+	 	left join (select rn,APP_ID,STOP_FLAG from (select row_number() over (partition by app_id order by crt_date desc) as rn,APP_ID,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO ) 
+         where rn=1) info on allot.APP_ID=info.APP_ID
+		 where 
+		 	allot.SYN_FLAG='0' 
+		 	and allot.DEL_STATUS in ('0', '2','3')
+		 	and allot.CURR_NODE='03'
+		 	and allot.BATCH_CREDIT_FLAG='0'
+			<if test="ydjFlag != null and ydjFlag !='' ">
+					AND allot.YDJ_FLAG = #{ydjFlag}
+			</if>
+			<if test="ydjStr != null and ydjStr !='' ">
+				${ydjStr}
+			</if>
+			<if test="currGroup != null and currGroup !='' ">
+					AND allot.CURR_OPT_GROUP = #{currGroup}
+			</if>
+			<if test="currStatusList != null and currStatusList.size()>0 ">
+					AND allot.CURR_STATUS in 
+					<foreach item="item" index="index" collection="currStatusList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			<if test="submitStr != null and submitStr !='' ">
+				 AND (allot.SUBMIT_TYPE is null and (allot.SUBMIT_STATUS='0' or allot.SUBMIT_STATUS is null))
+			</if>
+			<if test="submitStr == null or submitStr =='' ">
+				 AND allot.SUBMIT_TYPE is not null
+			</if>
+             group by ap.USER_CODE,ap.USER_NAME
+	</select> 
+	<select id="countCreditDict" parameterType="java.lang.String"  resultType="int">
+		select count(1) from  opas_ap_dict_detail a 
+		where a.dict_id =(select b.dict_id from (select d.dict_id,rownum from opas_ap_dict d where d.dict_code='ALLOT_BZK_CREDIT') b
+		 where rownum=1)
+	</select>
+	<select id="selectGroupByMap" parameterType="java.util.Map" resultMap="AllotCommonResultMap">
+		select a.ORG_NAME,a.org_no,count(distinct substr(f.app_id,1,15)) as orgNum from opas_ap_org a
+		left join opas_ap_user_org b on a.org_id=b.org_id
+        left join opas_ap_user_role c on c.user_id=b.user_id
+        left join opas_ap_role d on d.role_id=c.role_id
+        left join (
+            select allot.curr_opt_group,allot.app_id from opas_allot_apply_allot allot
+            left join (select rn,APP_ID,STOP_FLAG from (select row_number() over (partition by app_id order by crt_date desc) as rn,APP_ID,STOP_FLAG from OPAS_CHECKINGR_RESULTINFO ) 
+ 	        where rn=1) info on allot.APP_ID=info.APP_ID 
+            where
+            allot.SYN_FLAG='0' 
+			AND allot.DEL_STATUS in ('0','2','3') 
+			AND (info.STOP_FLAG is null or info.STOP_FLAG in('0','1'))
+            AND (allot.MATCHING_CARD_FLAG in ('0','2') or allot.LAOJIANFLAG='01' or allot.LAOJIANFLAG='02' or allot.DEL_STATUS='3' )
+           	<if test="ydjFlag != null and ydjFlag !='' ">
+				AND allot.YDJ_FLAG = #{ydjFlag}
+			</if>
+            <if test="currStatus != null and currStatus !='' ">
+				AND allot.CURR_STATUS=#{currStatus,jdbcType=VARCHAR} 
+			</if>
+			<if test="currStatusList != null and currStatusList.size()>0 ">
+				AND allot.CURR_STATUS in 
+					<foreach item="item" index="index" collection="currStatusList" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+			AND allot.CURR_NODE = #{currNode,jdbcType=VARCHAR} 
+			<if test="submitStr != null and submitStr !='' ">
+				AND (allot.SUBMIT_TYPE is null and (allot.SUBMIT_STATUS='0' or allot.SUBMIT_STATUS is null))
+			</if>
+			<if test="submitStr == null or submitStr =='' ">
+				AND allot.SUBMIT_TYPE is not null
+			</if>
+         ) f
+         on f.curr_opt_group=a.org_no
+         where a.ORG_LEVEL = #{orgLevel,jdbcType=VARCHAR} 
+        	<if test="roleCodes != null and roleCodes.size()>0 ">
+				AND d.ROLE_CODE in 
+					<foreach item="item" index="index" collection="roleCodes" open="(" separator="," close=")">  
+	  					#{item}  
+	 				</foreach>
+			</if>
+		   group by a.ORG_NAME,a.org_no,a.sort_flag,a.sort_flag2
+		   <choose>
+				<when test="sortFlag2 != null and sortFlag2 != '' ">
+					order by a.sort_flag2
+				</when>
+				<otherwise>
+					order by a.sort_flag
+				</otherwise>
+		   </choose>
+	</select>
+</mapper>

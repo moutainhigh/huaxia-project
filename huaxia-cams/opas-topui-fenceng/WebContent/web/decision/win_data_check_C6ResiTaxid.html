@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>国家/证件信息与税收居民逻辑检查</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+
+</head>
+<script type="text/javascript">
+	$(function(){
+		$("#baseTable").empty();
+		var autoId=location.href.split("=");
+		var resSplit=decodeURI(autoId[1]).split("|");
+		var finalRes = "";
+		var num = 0;
+		for(var i = 0 ; i < resSplit.length ; i++){
+			if(resSplit[i]==""){
+				continue;
+			}
+			num++;
+			finalRes = finalRes + "【"+num+"】"+resSplit[i] +"</br>"
+		} 
+		$("#baseTable").append(finalRes);
+	});
+	
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">国家/证件信息与税收居民逻辑检查</legend>
+	<div style="width:99%;height:99%;overflow:auto;">
+		<form >
+		<table id="baseTable" class="area-list area-list-style-1" >
+		</table>
+	    </form>	
+	</div>
+</fieldset>	
+</body>
+</html>

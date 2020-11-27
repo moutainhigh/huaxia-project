@@ -1,0 +1,122 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/task 
+		http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<bean id="autoTimingAction" class="com.huaxia.opas.allot.action.AutoTimingAction" />
+	<!-- <bean id="allotAction" class="com.huaxia.opas.allot.action.autoTimingAction" /> -->
+	
+	<!-- <task:scheduled-tasks>
+	    <task:scheduled ref="allotAction" method="ydjFastCreditMain" cron="0 0/3 * * * ?" />	
+		<task:scheduled ref="allotAction" method="ydjCreditMain" cron="0 0/5 * * * ?" />
+		<task:scheduled ref="allotAction" method="bzkReviewMain" cron="0 0/4 * * * ?" />
+		<task:scheduled ref="allotAction" method="bzkCreditMain"  cron="0 0/5 * * * ?" />
+		<task:scheduled ref="allotAction" method="bzkApprovalMain" 	cron="0 0/6 * * * ?" />
+	</task:scheduled-tasks>  -->
+	<!-- 定时执行分件操作  调度工厂 -->
+   <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+    <property name="triggers">  
+        <list> 
+        	<ref bean="YdjFastCreditBean"/>
+        	<ref bean="YdjCreditBean"/>
+        	<ref bean="bzkReviewMainBean"/> 
+        	<ref bean="CronTriggerBean"/>
+            <ref bean="bzkApprovalMainBean"/> 
+        </list>  
+    </property>  
+   </bean> 
+   <!-- 易达金征信快速 -->
+   	<bean id="YdjFastCreditMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+	   	<!--注入目标对象 -->
+	    <property name="targetObject">  
+	        <ref bean="autoTimingAction"/>  
+	    </property>  
+	    <!--注入目标方法 -->
+	    <property name="targetMethod">
+	        <value>ydjFastCreditMain</value>  
+	    </property>  
+	    <!-- 设置为false：当上一个trigger执行完后才会执行下一个job，保证不会并打执行 -->
+		<property name="concurrent" value="false"></property>
+	</bean>  
+	<!--注册触发器，指定触发时间 -->
+	<bean id="YdjFastCreditBean" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+	    <property name="jobDetail" ref="YdjFastCreditMethod"></property> 
+	    <!--表达式，用于定义触发的时间 --> 
+	    <property name="cronExpression" value="0 0/4 * * * ? *"></property>  
+	</bean>
+   <!-- 易达金征信普通 -->
+   	<bean id="YdjCreditMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+	    <property name="targetObject">  
+	        <ref bean="autoTimingAction"/>  
+	    </property>  
+	    <property name="targetMethod">
+	        <value>ydjCreditMain</value>  
+	    </property>  
+	     <!-- 设置为false：当上一个trigger执行完后才会执行下一个job，保证不会并打执行 -->
+		<property name="concurrent" value="false"></property>
+	</bean>  
+	<bean id="YdjCreditBean" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+	    <property name="jobDetail" ref="YdjCreditMethod"></property>  
+	    <property name="cronExpression" value="10 0/8 * * * ? *"></property>  
+	</bean>
+   <!-- 标准卡审查-->
+   	<bean id="bzkReviewMainMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+	    <property name="targetObject">  
+	        <ref bean="autoTimingAction"/>  
+	    </property>  
+	    <property name="targetMethod">
+	        <value>bzkReviewMain</value>  
+	    </property> 
+	     <!-- 设置为false：当上一个trigger执行完后才会执行下一个job，保证不会并打执行 -->
+		<property name="concurrent" value="false"></property> 
+	</bean>  
+	<bean id="bzkReviewMainBean" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+	    <property name="jobDetail" ref="bzkReviewMainMethod"></property>  
+	    <property name="cronExpression" value="15 0/8 * * * ? *"></property>  
+	</bean>
+   <!-- 标准卡征信 -->
+    <bean id="SpringQtzJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+	    <property name="targetObject">  
+	        <ref bean="autoTimingAction"/>  
+	    </property>  
+	    <property name="targetMethod">
+	        <value>bzkCreditMain</value>  
+	    </property>  
+	     <!-- 设置为false：当上一个trigger执行完后才会执行下一个job，保证不会并打执行 -->
+		<property name="concurrent" value="false"></property>
+	</bean>  
+	<bean id="CronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+	    <property name="jobDetail" ref="SpringQtzJobMethod"></property>  
+	    <property name="cronExpression" value="20 0/8 * * * ?"></property>  
+	</bean>
+   <!-- 标准卡审批 -->
+	<bean id="bzkApprovalMainMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+	    <property name="targetObject">  
+	        <ref bean="autoTimingAction"/>  
+	    </property>  
+	    <property name="targetMethod">
+	        <value>bzkApprovalMain</value>  
+	    </property>
+	     <!-- 设置为false：当上一个trigger执行完后才会执行下一个job，保证不会并打执行 -->
+		<property name="concurrent" value="false"></property>  
+	</bean>  
+	<bean id="bzkApprovalMainBean" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+	    <property name="jobDetail" ref="bzkApprovalMainMethod"></property>  
+	    <property name="cronExpression" value="30 0/8 * * * ? *"></property>  
+	</bean>
+	<!-- ========================线程池=========================== -->
+<!-- 	<bean id="threadPoolExecutor" class="com.huaxia.opas.common.util.ThreadPoolExecutorManager"
+		destroy-method="disConnect">
+		<property name="corePoolSize" value="2" />
+		<property name="maximumPoolSize" value="10" />
+		<property name="keepAliveTime" value="300" />
+		<property name="workQueueSize" value="1000" />
+	</bean> -->
+
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.SimplifyPoliceMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.SimplifyPolice">
+		INSERT INTO POLICE_SIMPLIFY_INFO (
+			APP_ID,CRT_TIME,CRT_USER,
+			GMSFHM,RESULT_GMSFHM,XM,RESULT_XM,XP,ERROR_CODE,ERROR_MESSAGE,ERROR_MESSAGE_COL,CARD_FLAG
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			SYSDATE,
+			'SYSTEM',
+			#{gmsfhm, jdbcType = VARCHAR},
+			#{gmsfhmResult, jdbcType = VARCHAR},
+			#{xm, jdbcType = VARCHAR},
+			#{xmResult, jdbcType = VARCHAR},
+			#{xp, jdbcType = CLOB},
+			#{errorCode, jdbcType = VARCHAR},
+			#{errorMessage, jdbcType = VARCHAR},
+			#{errorMessageCol, jdbcType = VARCHAR},
+			#{cardFlag , jdbcType = CHAR}
+		)
+	</insert>
+	
+	<select id="selectCountByAppId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM POLICE_SIMPLIFY_INFO  WHERE  APP_ID = #{appId, jdbcType = CHAR}
+	</select>
+	
+	<select id="selectCountByCertNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		  FROM POLICE_SIMPLIFY_INFO T1, OPAS_BIZ_INP_APPL_C1 T2
+		 WHERE T1.APP_ID = T2.APP_ID
+		   AND T2.C1_IDNBR = #{certNo, jdbcType = VARCHAR}
+	</select>
+
+</mapper>

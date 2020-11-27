@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="AllotBatch">
+	<resultMap id="AllotBatchMap" type="java.util.Map">
+	    <result column="ID" property="tempId" jdbcType="VARCHAR"/>
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP"/>
+		<result column="LST_DATE" property="lstDate" jdbcType="TIMESTAMP"/>
+		<result column="INPUT_XML" property="inputXml" jdbcType="CLOB"/>
+		<result column="CURR_NODE" property="currNode" jdbcType="VARCHAR"/>
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR"/>
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR"/>
+		<result column="PROCESS_IP" property="processIp" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insertFailApply" parameterType="java.lang.String">
+		insert into OPAS_BATCH_SUBMIT_FAIL (ID,APP_ID,CRT_DATE) 
+		values
+		(sys_guid(),#{appId,jdbcType=VARCHAR},SYSDATE)
+	</insert>
+	<insert id="insertFailApplySelective" parameterType="java.util.Map">
+		insert into OPAS_BATCH_SUBMIT_FAIL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			ID,
+			<if test="appId != null">APP_ID,</if>
+			CRT_DATE,
+			LST_DATE,
+			<if test="inputXml != null">INPUT_XML,</if>
+			<if test="currNode != null">CURR_NODE,</if>
+			<if test="ydjFlag != null">YDJ_FLAG,</if>
+			<if test="userCode != null">USER_CODE,</if>
+			<if test="processIp != null">PROCESS_IP,</if>
+			<if test="status != null">STATUS</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			sys_guid(),
+			<if test="appId != null">#{appId,jdbcType=VARCHAR},</if>
+			sysdate,
+			sysdate,
+			<if test="inputXml != null">#{inputXml,jdbcType=CLOB},</if>
+			<if test="currNode != null">#{currNode,jdbcType=VARCHAR},</if>
+			<if test="ydjFlag != null">#{ydjFlag,jdbcType=VARCHAR},</if>
+			<if test="userCode != null">#{userCode,jdbcType=VARCHAR},</if>
+			<if test="processIp != null">#{processIp,jdbcType=VARCHAR},</if>
+			<if test="status != null">#{status,jdbcType=VARCHAR}</if>
+		</trim>
+	</insert>
+	<update id="updateFailApply" parameterType="java.util.Map">
+		update OPAS_BATCH_SUBMIT_FAIL
+		<set>
+			LST_DATE=CURRENT_TIMESTAMP,
+			<if test="inputXml != null  ">INPUT_XML =#{inputXml,jdbcType=CLOB},</if>
+			<if test="currNode != null  ">CURR_NODE = #{currNode,jdbcType=VARCHAR},</if>
+			<if test="ydjFlag != null  ">YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR},</if>
+			<if test="userCode != null  ">USER_CODE = #{userCode,jdbcType=VARCHAR},</if>
+			<if test="processIp != null  ">PROCESS_IP = #{processIp,jdbcType=VARCHAR},</if>
+			<if test="status != null  ">STATUS = #{status,jdbcType=VARCHAR}</if>
+		</set>
+		where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</update>
+	
+	<select id="selectCount"  parameterType="java.util.Map" resultType="java.lang.Integer"> 
+		select count(1) from OPAS_BATCH_SUBMIT_FAIL
+		where APP_ID = #{appId,jdbcType=VARCHAR} 
+	</select> 
+	
+</mapper>

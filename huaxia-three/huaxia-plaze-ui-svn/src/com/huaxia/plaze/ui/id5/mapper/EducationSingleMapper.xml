@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.id5.mapper.EducationSingleMapper">
+
+	<resultMap id="result_Base" type="EducationSingle">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="UPD_TIME" property="updTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="resultDetailInfo" type="Education">
+		<!-- <result column="INSIDE_APP_NO" property="insideAppNo" jdbcType="VARCHAR" 
+			/> -->
+		<result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="IDENTITYCARD" property="identityCard" jdbcType="VARCHAR" />
+		<result column="GRADUATE" property="graduate" jdbcType="VARCHAR" />
+		<result column="EDUCATIONDEGREE" property="educationDegree"
+			jdbcType="VARCHAR" />
+		<result column="ENROLDATE" property="enrolDate" jdbcType="VARCHAR" />
+		<result column="SPECIALITYNAME" property="specialityName"
+			jdbcType="VARCHAR" />
+		<result column="GRADUATETIME" property="graduateTime" jdbcType="VARCHAR" />
+		<result column="STUDYRESULT" property="studyResult" jdbcType="VARCHAR" />
+		<result column="STUDYSTYLE" property="studyStyle" jdbcType="VARCHAR" />
+		<result column="SCHOOLTYPE" property="schoolType" jdbcType="VARCHAR" />
+		<result column="PHOTO" property="photo" jdbcType="VARCHAR" />
+		<result column="HISNAME" property="hisName" jdbcType="VARCHAR" />
+		<result column="SCHOOLCITY" property="schoolCity" jdbcType="VARCHAR" />
+		<result column="SCHOOLTRADE" property="schoolTrade" jdbcType="VARCHAR" />
+		<result column="ORGANIZATION" property="organization" jdbcType="VARCHAR" />
+		<result column="SCHOOLNATURE" property="schoolNature" jdbcType="VARCHAR" />
+		<result column="SCHOOLCATEGORY" property="schoolCategory"
+			jdbcType="VARCHAR" />
+		<result column="LEVEL_" property="level_" jdbcType="VARCHAR" />
+		<result column="EDUCATIONAPPROACH" property="educationApproach"
+			jdbcType="VARCHAR" />
+		<result column="CREATEDATE" property="createDate" jdbcType="VARCHAR" />
+		<result column="CREATEYEAR" property="createYear" jdbcType="VARCHAR" />
+		<result column="ACADEMICIANNUM" property="academiciannum"
+			jdbcType="VARCHAR" />
+		<result column="BSHLDZNUM" property="bshldzNum" jdbcType="VARCHAR" />
+		<result column="BSDNUM" property="bsdNum" jdbcType="VARCHAR" />
+		<result column="SSDNUM" property="ssdNum" jdbcType="VARCHAR" />
+		<result column="ZDXKNUM" property="zdxkNum" jdbcType="VARCHAR" />
+		<result column="LKLQPC" property="lklqpc" jdbcType="VARCHAR" />
+		<result column="WKLQPC" property="wklqpc" jdbcType="VARCHAR" />
+		<result column="DSTUDYSTYLE" property="dstudyStyle" jdbcType="VARCHAR" />
+		<result column="IDCORICT2" property="idcorict2" jdbcType="VARCHAR" />
+		<result column="BIRTHDAY2" property="birthday2" jdbcType="VARCHAR" />
+		<result column="SEX2" property="sex2" jdbcType="CHAR" />
+		<result column="NO" property="no" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR"
+			javaType="java.lang.String" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="QUERY_STATUS" property="queryStatus" jdbcType="VARCHAR" />
+		<result column="QUERY_RESULT" property="queryResult" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<insert id="insert" parameterType="EducationSingle">
+		INSERT INTO ID5_EDU_TRN_SINGLE
+		(
+		UUID,CRT_TIME,CRT_USER,TRN_ID,CERT_NO,NAME,QUERY_STATUS
+		) VALUES (
+		SYS_GUID(),SYSDATE,#{crtUser},#{trnId},#{certNo},#{name},#{queryStatus}
+		)
+	</insert>
+
+	<update id="updateStatusById" parameterType="java.util.Map">
+		UPDATE
+		ID5_EDU_TRN_SINGLE SET QUERY_STATUS = #{status} WHERE TRN_ID = #{id}
+	</update>
+	<select id="query24HoursCountByParams" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ID5_INFO WHERE
+		IDENTITYCARD=#{certNo}
+		AND CRT_TIME
+		BETWEEN sysdate-1
+		AND sysdate
+	</select>
+	<select id="query24HoursDataTrnIDByParams" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		select TRN_ID from (
+		SELECT *  FROM ID5_INFO WHERE
+		IDENTITYCARD=#{certNo}
+		AND CRT_TIME
+		BETWEEN sysdate-1
+		AND sysdate order by crt_time desc
+		) where rownum &lt; 2
+	</select>
+	<select id="selectSingleResultByTrnId" parameterType="java.lang.String"
+		resultMap="resultDetailInfo">
+		SELECT
+		USERNAME,IDENTITYCARD,GRADUATE,EDUCATIONDEGREE,ENROLDATE,SPECIALITYNAME,
+		GRADUATETIME,STUDYRESULT,STUDYSTYLE,SCHOOLTYPE,PHOTO,HISNAME,SCHOOLCITY,SCHOOLTRADE,
+		ORGANIZATION,SCHOOLNATURE,SCHOOLCATEGORY,LEVEL_,EDUCATIONAPPROACH,CREATEDATE,
+		CREATEYEAR,ACADEMICIANNUM,BSHLDZNUM,BSDNUM,SSDNUM,ZDXKNUM,LKLQPC,WKLQPC,DSTUDYSTYLE,
+		IDCORICT2,BIRTHDAY2,SEX2,NO,CRT_TIME,CRT_USER,QUERY_STATUS,QUERY_RESULT,TRN_ID
+		FROM id5_info
+		WHERE TRN_ID = #{trnId}
+		AND CRT_USER='SINGLE'
+	</select>
+	
+	
+</mapper>

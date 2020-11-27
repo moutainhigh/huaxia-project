@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>影像</title>
+<script type="text/javascript" src="../../topui/jquery/default/jquery.min.js"></script>
+</head>
+<body>
+<body class="popup">
+	<div align="center">
+		切换影像：<select id="image-operate-area"></select>
+	</div>
+	<hr>
+	<div>
+		<img id="image-view" src="" />
+	</div>
+</body>
+<script type="text/javascript">
+$(function() {
+	$('#image-operate-area').empty();
+	
+	var options = [];
+	var json = window.opener.windata;
+    $.each(json, function (index, image) {
+    	if (index == 0) {
+    		$('#image-view').attr('src', image.url);
+    	}
+    	var option = '<option value="' + index + '">' + image.img + '</option>';
+    	options.push(option);
+    });
+   	$('#image-operate-area').html(options.join(''));
+    $('#image-operate-area option[value=0]').attr('selected', 'selected');
+    
+    // Event: [change]
+    $('#image-operate-area').on('change', function() {
+    	for (var i = 0; i < json.length; i++) {
+        	if (i == Number($(this).val())) {
+        		$('#image-view').attr('src', json[i].url);
+        	}
+        }
+    });
+});
+</script>
+</html>

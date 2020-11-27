@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasThdCarMsg">
+
+	  <resultMap id="dateAndCountLimitMap" type="java.util.Map">
+	    <result column="LIMIT_START_DATE" jdbcType="DATE" property="limitStartDate" />
+	    <result column="LIMIT_END_DATE" jdbcType="DATE" property="limitEndDate" />
+	    <result column="LIMIT_QUERY_COUNT" jdbcType="DECIMAL" property="limitQueryCount" />
+	  </resultMap>
+	  
+	<select id="queryDateAndCountLimit" resultMap="dateAndCountLimitMap">
+		select LIMIT_START_DATE,LIMIT_END_DATE,LIMIT_QUERY_COUNT from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0900' 
+	</select>
+	
+	<select id="queryVehicleCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		SELECT count(1) FROM  VEHICLE_INFO 
+		WHERE 
+		CRT_TIME &gt;= (select LIMIT_START_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0900') 
+	    AND   CRT_TIME &lt;= (select LIMIT_END_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '0900')
+		AND  ERROR_CODE='0'  AND  QUERY_RESULT ='1'
+	</select>
+	
+	<select id="queryVehicleMsg"  resultType="java.lang.String">
+  	  select rule_setting_value from CONF_QUERY_TYPE_RULE where b_rule_type = '0900' and flag_active = '1'
+	</select>
+	
+	 <resultMap id="ruleContentMap" type="java.util.Map">
+	    <result column="input_trader" jdbcType="VARCHAR" property="inputTrader" />
+	    <result column="channel" jdbcType="VARCHAR" property="channel" />
+	    <result column="city" jdbcType="VARCHAR" property="city" />
+	  </resultMap>
+	
+	<select id="queryRuleContent"  resultType="java.lang.Integer" resultMap="ruleContentMap">
+  	  select input_trader,channel,city from CONF_QUERY_LIMIT_RULE where b_rule_type = '0900'
+	</select>
+	
+	<resultMap id="tyDateAndCountLimitMap" type="java.util.Map">
+	    <result column="LIMIT_START_DATE" jdbcType="DATE" property="limitStartDate" />
+	    <result column="LIMIT_END_DATE" jdbcType="DATE" property="limitEndDate" />
+	    <result column="LIMIT_QUERY_COUNT" jdbcType="DECIMAL" property="limitQueryCount" />
+	  </resultMap>
+	
+	<select id="queryTyDateAndCountLimit" resultMap="tyDateAndCountLimitMap">
+		select LIMIT_START_DATE,LIMIT_END_DATE,LIMIT_QUERY_COUNT from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '1000' 
+	</select>
+	
+	<select id="queryTyCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		SELECT count(1) FROM  OPAS_TIANYU_ANTIFRAUD_DATA 
+		WHERE 
+		CRT_TIME &gt;= (select LIMIT_START_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '1000') 
+	    AND   CRT_TIME &lt;= (select LIMIT_END_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '1000')
+		AND  CODE='0'
+	</select>
+	
+	<resultMap id="companyDateAndCountLimitMap" type="java.util.Map">
+	    <result column="LIMIT_START_DATE" jdbcType="DATE" property="limitStartDate" />
+	    <result column="LIMIT_END_DATE" jdbcType="DATE" property="limitEndDate" />
+	    <result column="LIMIT_QUERY_COUNT" jdbcType="DECIMAL" property="limitQueryCount" />
+	  </resultMap>
+	
+	<select id="queryCompanyDateAndCountLimit" resultMap="companyDateAndCountLimitMap">
+		select LIMIT_START_DATE,LIMIT_END_DATE,LIMIT_QUERY_COUNT from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '1200' 
+	</select>
+	
+	<select id="queryCompanyCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+ 		SELECT count(1) FROM  TRD_QYHY_INFO_DATA 
+		WHERE 
+		CRT_TIME &gt;= (select LIMIT_START_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '1200') 
+	    AND   CRT_TIME &lt;= (select LIMIT_END_DATE from CONF_QUERY_LIMIT_RECORD_COUNT where limit_module_type = '1200')
+		AND  CODE='200' AND QYK_FLAG='0'
+	</select>
+	
+	<select id="queryCompanyMsg"  resultType="java.lang.String">
+  	  select rule_setting_value from CONF_QUERY_TYPE_RULE where b_rule_type = '1200' and flag_active = '1'
+	</select>
+</mapper>

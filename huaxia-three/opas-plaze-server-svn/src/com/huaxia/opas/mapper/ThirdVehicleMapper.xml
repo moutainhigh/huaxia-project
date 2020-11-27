@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.ThirdVehicleMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.vehicle.Vehicle">
+		INSERT INTO VEHICLE_INFO (
+			UUID,APP_ID,QUERY_RESULT,ERROR_CODE,QUANTITY,PRICE,MONTHS,CRT_USER,CRT_TIME,STATUS
+		) VALUES (
+			#{uuid, jdbcType = CHAR},
+			#{appId, jdbcType = CHAR},
+			#{queryResult, jdbcType = VARCHAR},
+			#{errorCode, jdbcType = VARCHAR},
+			#{quantity, jdbcType = INTEGER},
+			#{price, jdbcType = VARCHAR},
+			#{months, jdbcType = VARCHAR},
+			#{crtUser, jdbcType = VARCHAR},
+			#{crtTime, jdbcType = TIMESTAMP},
+			#{status, jdbcType = CHAR}
+			
+		)
+	</insert>
+	
+	<select id="selectCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM VEHICLE_INFO WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+
+</mapper>

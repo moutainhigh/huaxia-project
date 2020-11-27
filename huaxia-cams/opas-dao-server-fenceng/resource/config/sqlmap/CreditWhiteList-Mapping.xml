@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 
+	征信白名单维护复核Mapping文件
+ -->
+<mapper namespace="CreditWhiteList">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+		<result column="COMPANY_ADDR" property="companyAddr" jdbcType="VARCHAR" />
+		<result column="COMPANY_DEPT" property="companyDept" jdbcType="VARCHAR" />
+		<result column="LEGALER" property="legaler" jdbcType="VARCHAR" />
+		<result column="REGISTER_FUND" property="registerFund" jdbcType="VARCHAR" />
+		<result column="REGISTER_ADDR" property="registerAddr" jdbcType="VARCHAR" />
+		<result column="MANAGE_STATUS" property="manageStatus" jdbcType="VARCHAR" />
+		<result column="PARTNER_INFO" property="partnerInfo" jdbcType="VARCHAR" />
+		<result column="MANAGE_EXCETIONINFO" property="manageExceptionInfo" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERAT_STATUS" property="operatStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap2" type="java.util.Map">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR" />
+		<result column="COMPANY_ADDR" property="companyAddr" jdbcType="VARCHAR" />
+		<result column="COMPANY_DEPT" property="companyDept" jdbcType="VARCHAR" />
+		<result column="LEGALER" property="legaler" jdbcType="VARCHAR" />
+		<result column="REGISTER_FUND" property="registerFund" jdbcType="VARCHAR" />
+		<result column="REGISTER_ADDR" property="registerAddr" jdbcType="VARCHAR" />
+		<result column="MANAGE_STATUS" property="manageStatus" jdbcType="VARCHAR" />
+		<result column="PARTNER_INFO" property="partnerInfo" jdbcType="VARCHAR" />
+		<result column="MANAGE_EXCETIONINFO" property="manageExceptionInfo" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR" />
+		<result column="APP_PROD" property="appProd" jdbcType="VARCHAR" />
+		<result column="MATCHING_CARD_FLAG" property="matchingCardFlag" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryCount" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+	 resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_CREDITINFO_LIST_TEMP
+		<where>
+			1=1
+			<if test="companyName != null">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>		
+			<if test="companyTel != null ">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>		
+			<if test="companyAddr != null">
+				AND COMPANY_ADDR LIKE '%${companyAddr}%'
+			</if>
+			<if test="companyDept != null">
+				AND COMPANY_DEPT LIKE '%${companyDept}%'
+			</if>					
+			<if test="legaler != null ">
+				AND LEGALER LIKE '%${legaler}%'
+			</if>		
+			<if test="appId != null ">
+				AND APP_ID LIKE '%${appId}%'
+			</if>		
+			<if test="operator != null">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>
+			and OPERAT_STATUS is null		
+		</where>
+	</select>
+	
+	<select id="queryCreditWhiteList" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+	 resultMap="BaseResultMap2">
+		<!-- select
+		AUTO_ID,
+		APP_ID,
+		COMPANY_NAME,
+		COMPANY_TEL,
+		COMPANY_ADDR,
+		LEGALER,
+		REGISTER_FUND,
+		REGISTER_ADDR,
+		MANAGE_STATUS,
+		PARTNER_INFO,
+		MANAGE_EXCETIONINFO,
+		OPERATOR
+		from OPAS_CREDITINFO_LIST_TEMP
+		<where>
+			1=1
+			<if test="companyName != null ">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>		
+			<if test="companyTel != null ">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>		
+			<if test="companyAddr != null ">
+				AND COMPANY_ADDR LIKE '%${companyAddr}%'
+			</if>		
+			<if test="legaler != null">
+				AND LEGALER LIKE '%${legaler}%'
+			</if>		
+			<if test="appId != null ">
+				AND APP_ID LIKE '%${appId}%'
+			</if>		
+			<if test="operator != null">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>	
+			and OPERAT_STATUS is null	
+		</where> -->
+		select
+		AUTO_ID,
+		t.APP_ID,
+		COMPANY_NAME,
+		COMPANY_TEL,
+		COMPANY_ADDR,
+		COMPANY_DEPT,
+		LEGALER,
+		REGISTER_FUND,
+		REGISTER_ADDR,
+		MANAGE_STATUS,
+		PARTNER_INFO,
+		MANAGE_EXCETIONINFO,
+		OPERATOR,
+		t1.ydj_flag,
+   		t1.app_prod,
+    	t1.matching_card_flag
+		from OPAS_CREDITINFO_LIST_TEMP t left join OPAS_BIZ_INP_APPL_C1 t1 on t.app_id = t1.app_id
+		<where>
+			1=1
+			<if test="companyName != null ">
+				AND t.COMPANY_NAME LIKE '%${companyName}%'
+			</if>		
+			<if test="companyTel != null ">
+				AND t.COMPANY_TEL LIKE '%${companyTel}%'
+			</if>		
+			<if test="companyAddr != null ">
+				AND t.COMPANY_ADDR LIKE '%${companyAddr}%'
+			</if>
+			<if test="companyDept != null">
+                AND COMPANY_DEPT LIKE '%${companyDept}%'
+            </if>		
+			<if test="legaler != null">
+				AND t.LEGALER LIKE '%${legaler}%'
+			</if>		
+			<if test="appId != null ">
+				AND t.APP_ID LIKE '%${appId}%'
+			</if>		
+			<if test="operator != null">
+				AND t.OPERATOR LIKE '%${operator}%'
+			</if>	
+			and OPERAT_STATUS is null	
+		</where>
+	</select>
+	<!-- 白名单征信库查询 -->
+	<select id="queryCreditWhiteCountInfo" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+	 resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM OPAS_CREDITINFO_LIST
+		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="companyName != null and companyName != ''">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>		
+			<if test="companyTel != null and companyTel != ''">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>		
+			<if test="companyAddr != null and companyAddr != ''">
+				AND COMPANY_ADDR LIKE '%${companyAddr}%'
+			</if>		
+			<if test="legaler != null and legaler != ''">
+				AND LEGALER LIKE '%${legaler}%'
+			</if>		
+			<if test="operator != null and operator != ''">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>
+			<if test="appId != null and appId != ''">
+				AND APP_ID LIKE '%${appId}%'
+			</if>	
+		</trim>
+	</select>
+	
+	<select id="queryCreditWhiteListInfo" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+	 resultMap="BaseResultMap">
+		SELECT
+		APP_ID,
+		AUTO_ID,
+		COMPANY_NAME,
+		COMPANY_TEL,
+		COMPANY_ADDR,
+		LEGALER,
+		REGISTER_FUND,
+		REGISTER_ADDR,
+		MANAGE_STATUS,
+		PARTNER_INFO,
+		MANAGE_EXCETIONINFO,
+		OPERATOR
+		FROM OPAS_CREDITINFO_LIST
+		<trim   prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="companyName != null and companyName != '' ">
+				AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>		
+			<if test="companyTel != null and companyTel != '' ">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>		
+			<if test="companyAddr != null and companyAddr != '' ">
+				AND COMPANY_ADDR LIKE '%${companyAddr}%'
+			</if>		
+			<if test="legaler != null and legaler != ''">
+				AND LEGALER LIKE '%${legaler}%'
+			</if>		
+			<if test="operator != null and operator != ''">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>	
+			<if test="appId != null  and appId != ''">
+				AND APP_ID LIKE '%${appId}%'
+			</if>	
+			and curr_status = '1'
+		</trim>
+	</select>
+	<!-- 单条更新 -->
+	<update id="updateOne" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList" >
+		update OPAS_CREDITINFO_LIST_TEMP
+		set OPERAT_STATUS = '1'		
+		where APP_ID = #{appId}
+	</update>
+	<!-- 拒绝添加 -->
+	<update id="refuse" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList" >
+		update OPAS_CREDITINFO_LIST_TEMP
+		set OPERAT_STATUS = '0'		
+		where APP_ID = #{appId}
+	</update>
+	<!-- 多条更新 -->
+	<update id="updateList" parameterType="java.util.List">
+		update OPAS_CREDITINFO_LIST_TEMP
+		set OPERAT_STATUS = '1'		
+		where AUTO_ID in 
+		<foreach collection="list" open= "(" close=")" item="item" separator=",">
+			#{item.autoId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<!-- 单条数据插入 -->
+ 	<insert id="insertOne" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		insert into OPAS_CREDITINFO_LIST
+		(AUTO_ID,COMPANY_NAME,COMPANY_TEL,COMPANY_ADDR,LEGALER,REGISTER_FUND,REGISTER_ADDR,MANAGE_STATUS,PARTNER_INFO,MANAGE_EXCETIONINFO,OPERATOR,OPERAT_TIME,CURR_STATUS,CREATE_TIME,APP_ID)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{companyTel,jdbcType=VARCHAR},
+		#{companyAddr,jdbcType=VARCHAR},
+		#{legaler,jdbcType=VARCHAR},
+		#{registerFund,jdbcType=VARCHAR},
+		#{registerAddr,jdbcType=VARCHAR},
+		#{manageStatus,jdbcType=CHAR},
+		#{partnerInfo,jdbcType=VARCHAR},
+		#{manageExceptionInfo,jdbcType=VARCHAR},
+		#{operator,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{currStatus,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{appId,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertCreditWhiteCenter" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		insert into OPAS_CREDITINFO_LIST_TEMP
+		(AUTO_ID,COMPANY_NAME,COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT,LEGALER,REGISTER_FUND,REGISTER_ADDR,MANAGE_STATUS,PARTNER_INFO,MANAGE_EXCETIONINFO,OPERATOR,CURR_STATUS,OPERAT_TIME,CREATE_TIME,APP_ID)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR},
+		#{companyTel,jdbcType=VARCHAR},
+		#{companyAddr,jdbcType=VARCHAR},
+		#{companyDept,jdbcType=VARCHAR},
+		#{legaler,jdbcType=VARCHAR},
+		#{registerFund,jdbcType=VARCHAR},
+		#{registerAddr,jdbcType=VARCHAR},
+		#{manageStatus,jdbcType=CHAR},
+		#{partnerInfo,jdbcType=VARCHAR},
+		#{manageExceptionInfo,jdbcType=VARCHAR},
+		#{operator,jdbcType=VARCHAR},
+		#{currStatus,jdbcType=CHAR},
+		#{operatTime},
+		#{createTime}, 
+		#{appId,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertList" parameterType="java.util.List">
+		insert into OPAS_CREDITINFO_LIST
+		(AUTO_ID,COMPANY_NAME,COMPANY_TEL,COMPANY_ADDR,LEGALER,REGISTER_FUND,REGISTER_ADDR,MANAGE_STATUS,PARTNER_INFO,MANAGE_EXCETIONINFO,OPERATOR,OPERAT_TIME,CURR_STATUS,CREATE_TIME,APP_ID) 
+	
+		<foreach collection="list" item="item" index="index" separator="union all">
+		(select 
+		#{item.autoId,jdbcType=VARCHAR},
+		#{item.companyName,jdbcType=VARCHAR},
+		#{item.companyTel,jdbcType=VARCHAR},
+		#{item.companyAddr,jdbcType=VARCHAR},
+		#{item.legaler,jdbcType=VARCHAR},
+		#{item.registerFund,jdbcType=VARCHAR},
+		#{item.registerAddr,jdbcType=VARCHAR},
+		#{item.manageStatus,jdbcType=CHAR},
+		#{item.partnerInfo,jdbcType=VARCHAR},
+		#{item.manageExceptionInfo,jdbcType=VARCHAR},
+		#{item.operator,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		1,
+		CURRENT_DATE,
+		<!-- #{item.operatTime},
+		#{item.currStatus,jdbcType=VARCHAR},
+		#{item.createTime}, -->
+		#{item.appId,jdbcType=VARCHAR}
+		from dual) 
+		</foreach>
+	</insert>
+	<!-- <insert id="insertList" parameterType="java.util.List">
+		insert into Test_Obj (num,name,age,score)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+			#{item.num,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.age,jdbcType=VARCHAR},
+			#{item.score,jdbcType=VARCHAR} 
+			from dual)
+		</foreach>
+	</insert> -->
+	<!-- 批量删除(含单条数据) -->
+	<delete id="deleteList" parameterType="java.util.List">
+		delete from OPAS_CREDITINFO_LIST_TEMP
+		where AUTO_ID in 
+		<foreach collection="list" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- 工作量查询 -->
+	<select id="queryFinishedCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_TELCHECK_RESULT
+		<where>
+			<if test="crediter != null">
+				AND CREDITER = #{crediter}
+			</if>	
+			<if test="date != null ">
+				AND (CREDIT_TIME 
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>	
+		</where>
+	</select>
+	<select id="queryUnfinishedCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_ALLOT_APPLY_ALLOT_HIS
+		<where>
+			<if test="crediter != null ">
+				AND CURR_OPT_USER = #{crediter}
+			</if>	
+			<if test="date != null ">
+				AND (RECORD_TEAM_DATE 
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>
+			and CURR_NODE = '02' and DEL_STATUS in (0,2,3)	
+		</where>
+	</select>
+	<select id="querySub2othersCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1)
+		from OPAS_ALLOT_APPLY_ALLOT_HIS
+		<where>
+			<if test="crediter != null">
+				AND CURR_OPT_USER = #{crediter}
+			</if>	
+			<if test="start != null and end != null ">
+				AND (RECORD_TEAM_DATE 
+						BETWEEN 
+						#{start}
+						AND
+						(select #{end} + (INTERVAL '23:59:59'hour to second) from dual)
+					)
+			</if>
+			and CURR_NODE = '02' and SUBMIT_TYPE != null	
+		</where>
+	</select>
+</mapper>

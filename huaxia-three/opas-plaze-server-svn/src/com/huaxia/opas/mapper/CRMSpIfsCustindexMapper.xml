@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsCustindexMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsCustindex">
+		INSERT INTO SP_APS_IFS_CUSTINDEX (
+			APP_ID,CUSTID,DEPT_BAL,TD_BAL,CURT_BAL,FIN_BAL,FUND_BAL,DEBT_BAL,INSUR_BAL,GOLD_BAL,STOCK_BAL,TRUST_BAL,
+			PAS_BAL,AUM,USE_AUM,HIGH_BAL,HIGHBAL_DATE,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{deptBal, jdbcType = NUMERIC},
+			#{tdBal, jdbcType = NUMERIC},
+			#{curtBal, jdbcType = NUMERIC},
+			#{finBal, jdbcType = NUMERIC},
+			#{fundBal, jdbcType = NUMERIC},
+			#{debtBal, jdbcType = NUMERIC},
+			#{insurBal, jdbcType = NUMERIC},
+			#{goldBal, jdbcType = NUMERIC},
+			#{stockBal, jdbcType = NUMERIC},
+			#{trustBal, jdbcType = NUMERIC},
+			#{pasBal, jdbcType = NUMERIC},
+			#{aum, jdbcType = NUMERIC},
+			#{useAum, jdbcType = NUMERIC},
+			#{highBal, jdbcType = NUMERIC},
+			TO_DATE(#{highBalDate, jdbcType = TIMESTAMP}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{dDate, jdbcType = TIMESTAMP}, 'YYYY-MM-DD HH24:MI:SS')
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_CUSTINDEX (
+			APP_ID,CUSTID,DEPT_BAL,TD_BAL,CURT_BAL,FIN_BAL,FUND_BAL,DEBT_BAL,INSUR_BAL,GOLD_BAL,STOCK_BAL,TRUST_BAL,
+			PAS_BAL,AUM,USE_AUM,HIGH_BAL,HIGHBAL_DATE,D_DATE
+		) 
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.deptBal, jdbcType = NUMERIC},
+			#{item.tdBal, jdbcType = NUMERIC},
+			#{item.curtBal, jdbcType = NUMERIC},
+			#{item.finBal, jdbcType = NUMERIC},
+			#{item.fundBal, jdbcType = NUMERIC},
+			#{item.debtBal, jdbcType = NUMERIC},
+			#{item.insurBal, jdbcType = NUMERIC},
+			#{item.goldBal, jdbcType = NUMERIC},
+			#{item.stockBal, jdbcType = NUMERIC},
+			#{item.trustBal, jdbcType = NUMERIC},
+			#{item.pasBal, jdbcType = NUMERIC},
+			#{item.aum, jdbcType = NUMERIC},
+			#{item.useAum, jdbcType = NUMERIC},
+			#{item.highBal, jdbcType = NUMERIC},
+			TO_DATE(#{item.highBalDate, jdbcType = TIMESTAMP}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{item.dDate, jdbcType = TIMESTAMP}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

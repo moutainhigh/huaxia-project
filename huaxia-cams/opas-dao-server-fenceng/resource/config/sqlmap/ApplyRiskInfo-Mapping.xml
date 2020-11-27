@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApplyRiskInfo">
+
+	<resultMap id="ApplyRiskInfoResultMap" type="com.huaxia.opas.domain.sysparm.ApplyRiskInfo">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="ABCODE" property="abCode" jdbcType="VARCHAR" />
+		<result column="CON_NAME" property="conName" jdbcType="VARCHAR" />
+		<result column="TEL_RISK" property="telRisk" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_TIME" property="lstUpdTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+
+	<select id="queryApplyRiskInfoCount" parameterType="com.huaxia.opas.domain.sysparm.ApplyRiskInfo"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_APPLY_RISK
+		<where>
+			<if test="abCode != null and abCode !='' ">
+				AND ABCODE LIKE '${abCode}%'
+			</if>
+			<if test="conName != null and conName !='' ">
+				AND CON_NAME LIKE '${conName}%'
+			</if>
+			<if test="telRisk != null and telRisk !='' ">
+				AND TEL_RISK LIKE '${telRisk}%'
+			</if>
+		</where>
+
+	</select>
+
+	<select id="queryApplyRiskInfoList" parameterType="com.huaxia.opas.domain.sysparm.ApplyRiskInfo"
+		resultMap="ApplyRiskInfoResultMap">
+		select
+		AUTO_ID,ABCODE,CON_NAME,TEL_RISK,CRT_DATE,CRT_USER,LST_UPD_USER,
+		LST_UPD_TIME
+		from OPAS_PARAM_APPLY_RISK
+		<where>
+			<if test="abCode != null and abCode !='' ">
+				AND ABCODE LIKE '${abCode}%'
+			</if>
+			<if test="conName != null and conName !='' ">
+				AND CON_NAME LIKE '${conName}%'
+			</if>
+			<if test="telRisk != null and telRisk !='' ">
+				AND TEL_RISK LIKE '${telRisk}%'
+			</if>
+		</where>
+		ORDER BY CRT_DATE desc
+	</select>
+
+	<insert id="addApplyRiskInfo" parameterType="com.huaxia.opas.domain.sysparm.ApplyRiskInfo">
+		insert into OPAS_PARAM_APPLY_RISK
+		(AUTO_ID,ABCODE,CON_NAME,TEL_RISK,CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_TIME)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{abCode,jdbcType=VARCHAR},
+		#{conName,jdbcType=VARCHAR},
+		#{telRisk,jdbcType=VARCHAR},
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=TIMESTAMP},
+		SYSDATE
+		)
+	</insert>
+
+	<update id="updateApplyRiskInfo" parameterType="com.huaxia.opas.domain.sysparm.ApplyRiskInfo">
+        update OPAS_PARAM_APPLY_RISK set 
+        ABCODE = #{abCode,jdbcType=VARCHAR},
+        CON_NAME = #{conName,jdbcType=VARCHAR},
+        TEL_RISK = #{telRisk,jdbcType=VARCHAR},
+        LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+        LST_UPD_TIME = sysdate
+        where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteApplyRiskInfo" parameterType="java.util.ArrayList">
+		delete from
+		OPAS_PARAM_APPLY_RISK where AUTO_ID in
+		<foreach collection="list" item="autoId"  open="(" separator="," close=")">
+		#{autoId}
+		</foreach>
+	</delete>
+	
+	<insert id="insertApplyRiskInfoImportFile" parameterType="java.util.ArrayList">
+			insert into OPAS_PARAM_APPLY_RISK
+			(AUTO_ID,ABCODE,CON_NAME,TEL_RISK,CRT_DATE,CRT_USER,LST_UPD_USER,LST_UPD_TIME)
+			<foreach collection="list" item="applyRiskInfo" index="index"  separator="union all" >
+				(select
+				#{applyRiskInfo.autoId,jdbcType=VARCHAR},
+				#{applyRiskInfo.abCode,jdbcType=VARCHAR},
+				#{applyRiskInfo.conName,jdbcType=VARCHAR},
+				#{applyRiskInfo.telRisk,jdbcType=VARCHAR},
+				sysdate,
+				#{applyRiskInfo.crtUser,jdbcType=VARCHAR},
+				#{applyRiskInfo.lstUpdUser,jdbcType=VARCHAR},
+				sysdate
+				from dual)
+		</foreach>
+	</insert>
+	<resultMap id="ApplyRiskInfoMap" type="java.util.Map">
+		<result column="ABCODE" property="abCode" jdbcType="VARCHAR" />
+		<result column="CON_NAME" property="conName" jdbcType="VARCHAR" />
+		<result column="TEL_RISK" property="telRisk" jdbcType="VARCHAR" />
+	</resultMap>  
+	<select id="queryAllApplyRiskInfo" resultMap="ApplyRiskInfoMap">
+		select distinct ABCODE from OPAS_PARAM_APPLY_RISK order by ABCODE
+	</select>
+	
+	
+	<select id="queryApplyRiskInfoByAbCodeCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_APPLY_RISK where ABCODE=#{abCode}
+	</select>
+	<select id="queryApplyRiskInfoByAbCode" parameterType="java.lang.String"
+		resultMap="ApplyRiskInfoResultMap">
+		select CON_NAME,TEL_RISK from OPAS_PARAM_APPLY_RISK where ABCODE=#{abCode}
+	</select>
+	
+	
+	<select id="queryC5AbCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select nvl(r.abcode,c1.c5_abcode) c5_abcode from opas_biz_inp_appl_c1 c1
+     left join opas_param_apply_risk r on substr(r.abcode,1,5)=c1.c5_abcode
+     where c1.app_id =  #{appId}
+	</select>
+</mapper>

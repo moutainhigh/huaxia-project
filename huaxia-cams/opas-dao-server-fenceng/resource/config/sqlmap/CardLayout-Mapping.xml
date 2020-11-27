@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--卡产品降级卡版面维护-->
+<mapper namespace="CardLayout">
+
+	<resultMap id="CardLayoutMap" type="com.huaxia.opas.domain.sysparm.CardDegradeFace">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="START_CARD" property="startCard" jdbcType="VARCHAR" />
+		<result column="END_CARD" property="endCard" jdbcType="VARCHAR" />
+		<result column="FACE_REATION" property="faceReation" jdbcType="VARCHAR" />
+		<result column="FACE_REATION_DESC" property="faceReationDesc" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="TIMESTAMP" />
+		<result column="LAST_USER" property="lastUser" jdbcType="VARCHAR" />
+		<result column="LAST_TIME" property="lastTime" jdbcType="TIMESTAMP" />
+	</resultMap> 
+	<resultMap id="ProductCodeResultMap" type="com.huaxia.opas.domain.sysparm.ProductCode">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CARD_CODE" property="productCode" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="CARD_FACE" property="productFace" jdbcType="VARCHAR" />
+		<result column="ACCT_TYPE1" property="acctType1" jdbcType="CHAR" />
+		<result column="ACCT_TYPE2" property="acctType2" jdbcType="CHAR" />
+		<result column="STAFF_CARD" property="staffCard" jdbcType="CHAR" />
+		<result column="CARD_TYPE" property="cardType" jdbcType="CHAR" />
+		<result column="LINE_LOW" property="lineLow" jdbcType="NUMERIC" />
+		<result column="LINE_HIGH" property="lineHight" jdbcType="NUMERIC" />
+		<result column="DOUBLE_CURR" property="doubleCurr" jdbcType="CHAR" />
+		<result column="CURR_NO" property="currNo" jdbcType="VARCHAR" />
+		<result column="INTEGER_LINE" property="integerLine" jdbcType="NUMERIC" />
+		<result column="FLAG" property="flag" jdbcType="VARCHAR" />
+		<result column="SIGNEDCARD" property="signedCard" jdbcType="VARCHAR" />
+		<result column="RATE_EXPIRE_LINE" property="rateExpireLine" jdbcType="NUMERIC" />
+		<result column="YEAR_FEE_DERATE_TYPE" property="yearFeeDerateType" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		
+		<result column="YEAR_FEE_DERATE_TYPE_NAME" property="yearFeeDerateTypeName" jdbcType="VARCHAR" />
+		<result column="CARD_FACE_NAME" property="productFaceName" jdbcType="VARCHAR" />
+		<result column="CARD_FACE_DEFAULT" property="productFaceDefault" jdbcType="VARCHAR" />
+		<result column="YEAR_FEE_DERATE_TYPE_Default" property="yearFeeDerateTypeDefault" jdbcType="VARCHAR" />
+	</resultMap> 
+	
+	<!--查询卡产品版面-->
+	<select id="queryCardFace" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select CARD_FACE
+         from OPAS_PARAM_CARD_PRODUCT
+         where  card_code = #{productCode} and STATUS = '1'
+	</select>
+	<!--查询卡产品版面关系实体-->
+	<select id="queryCardLayout" parameterType="java.util.Map"
+		resultMap="CardLayoutMap">
+		select
+		ID,START_CARD,END_CARD,FACE_REATION,FACE_REATION_DESC,STATUS,CRT_USER,CRT_TIME,LAST_USER,LAST_TIME
+		from OPAS_CARD_DEGRADE_REATION 
+		WHERE 1=1
+		<if test="startCard != null and startCard !='' ">
+			AND START_CARD = #{startCard}
+		</if>
+		<if test="endCard != null and endCard !='' ">
+			AND END_CARD = #{endCard}
+		</if>
+		<if test="status != null and status !='' ">
+			AND STATUS = #{status,jdbcType=CHAR}
+		</if>
+	</select>
+	<!--保存卡产品信息卡版面对应关系-->
+	 <insert id="saveCardLayout" parameterType="java.util.Map">
+		insert into
+		OPAS_CARD_DEGRADE_REATION
+		(ID,START_CARD,END_CARD,FACE_REATION,FACE_REATION_DESC,STATUS,CRT_USER,CRT_TIME,LAST_USER,LAST_TIME) 
+		values (
+		sys_guid(),
+		#{startCard,jdbcType=VARCHAR},
+		#{endCard,jdbcType=VARCHAR},
+		#{faceReation,jdbcType=VARCHAR},
+		#{faceReationDesc,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lastUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+	<!--卡版面对应关系-->
+	<select id="queryCardLayoutCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_CARD_DEGRADE_REATION
+		<where>
+			<if test="startCard != null and startCard !='' ">
+				AND START_CARD LIKE '%${startCard}%'
+			</if>
+			<if test="endCard != null and endCard !='' ">
+				AND END_CARD LIKE '%${endCard}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+	<!-- 列表展示 -->
+	<select id="queryCardLayoutList" parameterType="java.util.Map"
+		resultMap="CardLayoutMap">
+		   select
+		a.ID,ID,a.START_CARD,a.END_CARD,a.FACE_REATION,a.FACE_REATION_DESC,
+		a.STATUS,a.CRT_USER,a.CRT_TIME,a.LAST_USER,a.LAST_TIME,
+		(select b.PROD_NAME from OPAS_PARAM_CARD_PRODUCT b where a.START_CARD=b.card_code) as startCardName,
+        (select c.PROD_NAME from OPAS_PARAM_CARD_PRODUCT c where a.END_CARD=c.card_code) as endCardName
+		 from OPAS_CARD_DEGRADE_REATION a
+		<where>
+			<if test="startCard != null and startCard !='' ">
+				AND a.START_CARD LIKE '%${startCard}%'
+			</if>
+			<if test="endCard != null and endCard !='' ">
+				AND a.END_CARD LIKE '%${endCard}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND a.STATUS = #{status,jdbcType=CHAR}
+			</if>
+		</where>
+		order by a.START_CARD asc
+	</select>
+	<!-- 删除 -->
+	<delete id="deleteCardLayoutById" parameterType="java.lang.String">
+		delete from
+		OPAS_CARD_DEGRADE_REATION
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<!-- 卡版面维护更新 -->
+	<update id="updateCardLayout" parameterType="com.huaxia.opas.domain.sysparm.CardDegradeFace">
+		update OPAS_CARD_DEGRADE_REATION
+		<set>
+			<if test="startCard != null and startCard !='' ">
+				START_CARD = #{startCard,jdbcType=VARCHAR},
+			</if>
+			<if test="endCard != null and endCard !='' ">
+				END_CARD = #{endCard,jdbcType=VARCHAR},
+			</if>
+			FACE_REATION = #{faceReation,jdbcType=VARCHAR},
+			<if test="status != null and status !='' ">
+				STATUS = #{status,jdbcType=CHAR},
+			</if>
+			LAST_USER = #{lastUser,jdbcType=VARCHAR},
+			LAST_TIME = SYSDATE
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

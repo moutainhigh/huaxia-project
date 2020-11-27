@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankCivilJudgeRecordDao">
+   <!-- 保存 民事判决记录信息段 PF02A  -->
+  <insert id="insertCivilJudgeRecordInfo" parameterType="com.huaxia.opas.domain.pboc.pcj.PF02A" >
+    INSERT INTO OPAS_PBOC_PUBLIC_CIVJUDGE (APP_ID, REG_COURT, CASE_REASON, 
+      REG_DATE, CLOSE_CASE_WAY, JUDG_MEDIATE_RST, 
+      JUDG_MEDIATE_EFFCT_DT, LAW_OBJECT, LAW_OBJECT_AMT, 
+      CRT_USER, CRT_TIME, RELATE_ID)
+    VALUES (#{appId,jdbcType=CHAR}, #{PF02AQ01,jdbcType=VARCHAR}, #{PF02AQ02,jdbcType=VARCHAR}, 
+      #{PF02AR01,jdbcType=VARCHAR}, #{PF02AD01,jdbcType=VARCHAR}, #{PF02AQ03,jdbcType=VARCHAR}, 
+      #{PF02AR02,jdbcType=VARCHAR}, #{PF02AQ04,jdbcType=VARCHAR}, #{PF02AJ01,jdbcType=VARCHAR}, 
+      'SYSTEM', SYSDATE, #{relateId,jdbcType=VARCHAR})
+  </insert>
+	<!-- 保存 民事判决记录的标注及声明信息段PF02Z/PF02Zdata -->
+	<insert id="insertCivilJudgeRecordPcjLabelState" parameterType="com.huaxia.opas.domain.pboc.pcj.PF02Zdata" >
+    INSERT INTO PBOC_PCJ_LABEL_STATE (UUID, APP_ID, COUNT, 
+      RELATE_ID, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PF02ZS01,jdbcType=VARCHAR}, 
+      #{relateId,jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	<!-- 保存 民事判决记录的 标注及声明信息 PF02Z/PF02ZH集合 -->
+	<insert id="insertCivilJudgeRecordPcjLabelStateInfoList" parameterType="java.util.List" >
+	INSERT INTO PBOC_PCJ_LABEL_STATE_INFO (UUID, APP_ID, TYPE, 
+      CONTENT, ADD_DATE, RELATE_ID, 
+      CRT_TIME)
+	<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT
+	  SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.PF02ZD01,jdbcType=VARCHAR}, 
+      #{item.PF02ZQ01,jdbcType=VARCHAR}, #{item.PF02ZR01,jdbcType=VARCHAR}, #{item.relateId,jdbcType=VARCHAR}, 
+      SYSDATE
+	  FROM DUAL
+	 </foreach>
+	</insert>
+</mapper>

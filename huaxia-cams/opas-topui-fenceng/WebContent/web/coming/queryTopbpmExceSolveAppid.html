@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+	<table>
+		</tr>
+			<td>&nbsp;<a
+						href="javascript:callbackSingleOrBatch();"
+						class="easyui-linkbutton">梯队环节回调工作流</a></td>
+		</tr>
+	</table>
+	<table id="tblInfo" title="待处理条码" class="easyui-datagrid"
+		style="width: 98%;height:670px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:20,
+		pageList:[15,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="code" width="10%" align="center" checkbox="true">选择</th>
+				<th field="appId" width="20%" align="center" >申请件编号</th>
+				<th field="currNode" width="15%"  align="center" >当前环节</th>
+				<th field="status" width="15%"  align="center" hidden="true">状态</th>
+				<th field="solve" width="15%"  align="center" data-options="formatter:formatSolve">是否解决</th>
+			</tr>
+		</thead>
+	</table>
+	
+</body>
+<script>
+		var tblInfo = $("#tblInfo");
+		var url = location.href;
+		$(function(){
+			//动态获取 Url和appId
+			
+			var opts = tblInfo.datagrid("options");
+			opts.url = '/opas-naps/queryTopbpmExceSolveAppid.json';
+			tblInfo.datagrid("reload");
+		});
+		
+		
+		function callbackSingleOrBatch(){
+			var appIds = tblInfo.datagrid("getSelections");//选中的记录
+			if(appIds.length==0){
+				alert("请至少选中一条记录!");
+				return;
+			}
+			
+			var appList = new Array();
+			for(var i=0;i<appIds.length;i++){
+				var appId = appIds[i].appId;
+				if(appIds[i].solve!='2'||appIds[i].status!='T'){
+					alert('申请件['+appId+']不能手动回调工作流！');
+					return;
+				}
+				appList.push(appId);
+				
+			}	
+			$cf.ajax({
+				url : "/opas-naps/callbackSingleOrBatch.json",
+				data : {
+					"appIds" : appList
+				},
+				onSuccess : function(dataRes) {
+					var msg = dataRes.RSP_BODY.msg;
+					alert(msg);
+					tblInfo.datagrid("reload");	
+				}
+			});
+		}
+		
+		
+		function formatSolve(val,row,index){//0:待筛选 1:已解决 2:已筛选
+			if(row.solve=="0"){
+				return "待筛选";
+			}
+			if(row.solve=="1"){
+				return "已解决";
+			}
+			else{
+				return "已筛选";
+			}
+		}
+</script>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.CRMSpIfsLoanDtlMapper">
+
+	<insert id="insert" parameterType="com.huaxia.opas.domain.CRMSpIfsLoanDtl">
+		INSERT INTO SP_APS_IFS_LOAN_DTL (
+			APP_ID,CUSTID,CUSTCODE,ACCNO,PAY_ACCNO,PS_DUE_DT,PAY_INTE,PAY_CAPITAL,INTEREST_BAL,CAPITAL_BAL,
+			MUST_PAY_INTE,MUST_PAY_CAPITAL,D_DATE
+		) VALUES (
+			#{appId, jdbcType = CHAR},
+			#{custId, jdbcType = VARCHAR},
+			#{custCode, jdbcType = VARCHAR},
+			#{accNo, jdbcType = VARCHAR},
+			#{payAccNo, jdbcType = VARCHAR},
+			#{psDueDt, jdbcType = VARCHAR},
+			#{payInte, jdbcType = NUMERIC},
+			#{payCapital, jdbcType = NUMERIC},
+			#{interestBal, jdbcType = NUMERIC},
+			#{capitalBal, jdbcType = NUMERIC},
+			#{mustPayInte, jdbcType = NUMERIC},
+			#{mustPayCapital, jdbcType = NUMERIC},
+			#{dDate, jdbcType = VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="java.util.Map">
+		INSERT INTO SP_APS_IFS_LOAN_DTL (
+			APP_ID,CUSTID,CUSTCODE,ACCNO,PAY_ACCNO,PS_DUE_DT,PAY_INTE,PAY_CAPITAL,INTEREST_BAL,CAPITAL_BAL,
+			MUST_PAY_INTE,MUST_PAY_CAPITAL,D_DATE
+		)
+		<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+			#{item.appId, jdbcType = CHAR},
+			#{item.custId, jdbcType = VARCHAR},
+			#{item.custCode, jdbcType = VARCHAR},
+			#{item.accNo, jdbcType = VARCHAR},
+			#{item.payAccNo, jdbcType = VARCHAR},
+			#{item.psDueDt, jdbcType = VARCHAR},
+			#{item.payInte, jdbcType = NUMERIC},
+			#{item.payCapital, jdbcType = NUMERIC},
+			#{item.interestBal, jdbcType = NUMERIC},
+			#{item.capitalBal, jdbcType = NUMERIC},
+			#{item.mustPayInte, jdbcType = NUMERIC},
+			#{item.mustPayCapital, jdbcType = NUMERIC},
+			TO_DATE(#{item.dDate, jdbcType = DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		FROM DUAL
+		</foreach>
+	</insert>
+
+</mapper>	

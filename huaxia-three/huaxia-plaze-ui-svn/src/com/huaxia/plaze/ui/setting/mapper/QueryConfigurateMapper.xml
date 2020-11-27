@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.setting.mapper.QueryConfigurateMapper">
+
+	<resultMap id="result_SelectSettingByParams" type="QueryConfiguration">
+		<result column="SOURCE_CODE" property="sourceCode" jdbcType="CHAR" />
+		<result column="CHANNEL_CODE" property="channelCode" jdbcType="CHAR" />
+		<result column="MAX_COUNT" property="maxCount" jdbcType="NUMERIC" />
+		<result column="START_DATE" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="END_DATE" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="START_TIME_STRING" property="startTimeString" jdbcType="VARCHAR" />
+		<result column="END_TIME_STRING" property="endTimeString" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectSettingByParams" parameterType="java.util.Map" resultMap="result_SelectSettingByParams">
+		<![CDATA[
+		SELECT SOURCE_CODE,CHANNEL_CODE,MAX_COUNT,START_DATE,END_DATE,TO_CHAR(START_DATE,'YYYY-MM-DD HH24:MI:SS') START_TIME_STRING,TO_CHAR(END_DATE,'YYYY-MM-DD HH24:MI:SS') END_TIME_STRING
+	       FROM CONF_QUERY_COUNT
+	       WHERE SOURCE_CODE =  #{sourceCode,jdbcType=CHAR}
+	       AND CHANNEL_CODE = #{channelCode,jdbcType=CHAR}
+		]]>
+	</select>
+	
+	<update id="insertSetting" parameterType="java.util.Map">
+		INSERT INTO CONF_QUERY_COUNT (
+			UUID,CRT_TIME,CRT_USER,SOURCE_CODE,CHANNEL_CODE,MAX_COUNT,START_DATE,END_DATE
+		) VALUES (
+			SYS_GUID(),SYSDATE,#{createUser,jdbcType=VARCHAR},
+			#{sourceCode,jdbcType=CHAR},
+			#{channelCode,jdbcType=VARCHAR},
+			#{maxCount,jdbcType=INTEGER},
+			TO_DATE(#{startTime}||'00:00:00','YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{endTime}||'23:59:59','YYYY-MM-DD HH24:MI:SS')
+		)
+	</update>
+	
+	<update id="updateSetting" parameterType="java.util.Map">
+		UPDATE CONF_QUERY_COUNT
+		   SET UPD_TIME = SYSDATE,
+		       UPD_USER = #{updateUser,jdbcType=VARCHAR},
+		       MAX_COUNT = #{maxCount,jdbcType=INTEGER},
+		       START_DATE = TO_DATE(#{startTime}||'00:00:00', 'YYYY-MM-DD HH24:MI:SS'), 
+		       END_DATE = TO_DATE(#{endTime}||'23:59:59', 'YYYY-MM-DD HH24:MI:SS') 
+	     WHERE SOURCE_CODE =  #{sourceCode,jdbcType=CHAR}
+       AND CHANNEL_CODE = #{channelCode,jdbcType=CHAR}
+	</update>
+	
+    <select id="selectSettingByTaskType" parameterType="java.util.Map" resultMap="result_SelectSettingByParams">
+		SELECT SOURCE_CODE,CHANNEL_CODE,MAX_COUNT,START_DATE,END_DATE,TO_CHAR(START_DATE,'YYYY-MM-DD HH24:MI:SS') START_TIME_STRING,TO_CHAR(END_DATE,'YYYY-MM-DD HH24:MI:SS') END_TIME_STRING
+	       FROM CONF_QUERY_COUNT
+	       WHERE SOURCE_CODE =  #{sourceCode,jdbcType=CHAR}
+	       AND CHANNEL_CODE = #{channelCode,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectSettingByArgs" parameterType="java.util.Map" resultMap="result_SelectSettingByParams">
+		<![CDATA[
+		SELECT SOURCE_CODE,CHANNEL_CODE,MAX_COUNT,START_DATE,END_DATE,TO_CHAR(START_DATE,'YYYY-MM-DD HH24:MI:SS') START_TIME_STRING,TO_CHAR(END_DATE,'YYYY-MM-DD HH24:MI:SS') END_TIME_STRING
+	       FROM CONF_QUERY_COUNT
+	       WHERE SOURCE_CODE =  #{sourceCode,jdbcType=CHAR}
+		]]>
+	</select>
+</mapper>

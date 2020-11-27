@@ -1,0 +1,38 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>申请信息逻辑检查</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+		<!-- 内部数据检查申请信息逻辑检查 -->
+			<table id="tb_inDataCheckOtherListWin">
+			</table>
+</body>
+<script type="text/javascript">
+	var autoId;
+	 $(function(){
+		 //获取参数
+		 var autoId=location.href.split("=");
+		 openInDataCheckOtherListWin(autoId);
+	 });
+		
+	/****************内部数据检查申请信息逻辑检查********************/
+  	function openInDataCheckOtherListWin(obj){
+		$("#tb_inDataCheckOtherListWin").empty();
+		var resSplit=decodeURI(obj[1]).split("|");
+		var finalRes = "";
+		var num = 0;
+		for(var i = 0 ; i < resSplit.length ; i++){
+			if(resSplit[i]==""){
+				continue;
+			}
+			num++;
+			finalRes = finalRes + "【"+num+"】"+resSplit[i] +"</br>"
+		} 
+		$("#tb_inDataCheckOtherListWin").append(finalRes);
+		//showWin("inDataCheckOtherListWin");
+	} 
+</script>
+</html>

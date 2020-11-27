@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.cams.modules.pengyuan.mapper.RecordMapper">
+
+	<select id="selectPcrCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PY_PCR_CRS WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+	
+	<select id="selecPwsltCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PY_PWSL_CRS WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+	
+	<select id="selectYlzCountByAppId" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM YLZ_REP_DATA WHERE APP_ID = #{appId, jdbcType=CHAR}
+	</select>
+	
+</mapper>

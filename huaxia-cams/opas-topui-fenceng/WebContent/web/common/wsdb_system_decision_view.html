@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>系统决策结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.min.js"></script>
+<style type="text/css">
+input[type="button"] {
+	width: 180px;
+}
+
+button {
+	width: 102px;
+	height: 20px;
+}
+
+textarea {
+	border: 1px solid #C0C0C0;
+	outline: none;
+	-webkit-transition: .1s ease-in-out;
+	-moz-transition: .1s ease-in-out;
+	-o-transition: .1s ease-in-out;
+	background-color: #fff;
+}
+/** 快速定位导航区 */
+#ksdw_nav {
+	top: 0;
+	text-align: center;
+	width: 100%;
+	background: #EFEFEF;
+}
+
+#ksdw_nav ul:after {
+	content: '';
+	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+}
+
+#ksdw_nav ul {
+	width: 100%;
+	background: #EFEFEF;
+	border-bottom: 1px solid #C0C0C0;
+}
+
+#ksdw_nav ul li {
+	float: left;
+	padding: 5px;
+}
+
+#ksdw_nav ul li a {
+	display: block;
+	padding: 1px;
+	border: 1px solid #EFEFEF;
+	text-decoration: none;
+	color: #696969;
+}
+
+#ksdw_nav ul li a:hover {
+	color: #FF0000;
+	border-color: #FF0000;
+}
+
+;
+#ksdw_area {
+	width: 100%;
+	height: 700px;
+	overflow-y: auto;
+	position: absolute;
+}
+
+/** 快速定位内容区 */
+fieldset {
+	margin: 10px;
+}
+
+.wrapper {
+	position: relative;
+}
+
+.area-view {
+	text-align: right;
+}
+
+.fqz-desc {
+	width: 155px;
+}
+
+.area-view caption {
+	padding: 5px 0;
+	text-align: center;
+	padding-left: 10px;
+	background: #ECECEC;
+	font-weight:700;
+}
+legend{
+    font-weight:700;
+}
+</style>
+</head>
+<body>
+	<div class="wrapper">
+		<!-- 快速定位区 开始 -->
+		<div id="ksdw_nav">
+			<ul>
+				<li><a href="#A" class="active">客户基本信息</a></li>
+				<li><a href="#C">主卡决策结果</a></li>
+				<li><a href="#E">筛选结果</a></li>
+			</ul>
+		</div>
+		<div id="ksdw_area">
+			<!-- 客户基本信息 -->
+			<fieldset>
+				<legend>
+					<label id="A">客户基本信息</label>
+				</legend>
+				<table class="area-view">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>流水号：</label></td>
+							<td><input type="text" id="appId" name="appId"
+								readonly="readonly" /></td>
+							<td><label>客户姓名：</label></td>
+							<td><input type="text" id="name" name="name"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>证件类型：</label></td>
+							<td><input type="text" id="certType" name="certType"
+								readonly="readonly" /></td>
+							<td><label>证件号码：</label></td>
+							<td><input type="text" id="certNo" name="certNo"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>手机号码：</label></td>
+							<td><input type="text" id="mobile" name="mobile"
+								readonly="readonly" /></td>
+							<td><label>公司名称：</label></td>
+							<td><input type="text" id="enterpriseName" name="enterpriseName"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>工作地省市：</label></td>
+							<td><input type="text" id="workProvince" name="workProvince"
+								readonly="readonly" /></td>
+							<td><label>工作地区：</label></td>
+							<td><input type="text" id="workArea" name="workArea"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>工作地详细地址：</label></td>
+							<td><input type="text" id="workAddress" name="workAddress"
+								readonly="readonly" /></td>
+							<td><label>分行名称：</label></td>
+							<td><input type="text" id="brnchName" name="brnchName"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>推广机构代码：</label></td>
+							<td><input type="text" id="promtOrg" name="promtOrg"
+								readonly="readonly" /></td>
+							<td><label>三方公司编号：</label></td>
+							<td><input type="text" id="companyNo3rd" name="companyNo3rd"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>三方模块编号：</label></td>
+							<td><input type="text" id="channelNo3rd" name="channelNo3rd"
+								readonly="readonly" /></td>
+							<td><label>手机号实名：</label></td>
+							<td><input type="text" id="mobileIdentified" name="mobileIdentified"
+								readonly="readonly" /></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</fieldset>
+			<!-- 主卡决策结果 -->
+			<fieldset>
+				<legend>
+					<label id="C">主卡决策结果</label>
+				</legend>
+				<table class="area-view">
+					<caption>反欺诈决策</caption>
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>反欺诈决策结果：</label></td>
+							<td><input type="text" id="fqzValue" name="fqzValue"
+								readonly="readonly" /></td>
+							<td><label> 反欺诈决策时间：</label></td>
+							<td><input type="text" id="fqzRstTime" name="fqzRstTime"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>反欺诈结果描述：</label></td>
+							<td><input type="button" id="fqzRiskno"
+								onclick="openIsFqzRstDespWin('fqzRiskno')" 
+								name="fqzRiskno"/></td>
+								<input name="fqzRisknoZ" id="fqzRisknoZ" type="hidden" />
+								<input name="fqzRisknoW" id="fqzRisknoW" type="hidden" />
+								<input name="fqzRisknoH" id="fqzRisknoH" type="hidden" />
+								<input name="fqzRequesttype" id="fqzRequesttype" type="hidden" />
+							</td>
+							<td ><label> 反欺诈决策关注：</label></td>
+							<td align="left"><input type="text" id="fqzRemarks" name="fqzRemarks"
+									readonly="readonly" /></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+				<table class="area-view">
+					<caption>审核决策</caption>
+					<thead>
+					</thead>
+					<tbody>
+						<tr>
+							<td><label>审核决策结果：</label></td>
+							<td><input type="text" id="decisionResult"
+								name="decisionResult" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>审核决策结果描述：</label></td>
+							<td colspan="3"><textarea id="decisionDesp"
+									name="decisionDesp" readonly="readonly"
+									style="width: 305px; height: 50px;"></textarea></td>
+						</tr>
+						<tr>
+							<td><label>审核建议额度：</label></td>
+							<td><input type="text" id="proposedLmt" name="proposedLmt"
+								readonly="readonly" /></td>
+							<td><label>审核建议授信产品：</label></td>
+							<td><input type="text" id="cpRst" name="cpRst"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>申请评分：</label></td>
+							<td><input type="text" id="appScore" name="appScore"
+								readonly="readonly" /></td>
+							<td><label>征信评分：</label></td>
+							<td><input type="text" id="triggerType" name="triggerType"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>审核决策时间：</label></td>
+							<td><input type="text" id="crtTime" name="crtTime"
+								readonly="readonly" /></td>
+							<td><label>可认定月收入（元）：</label></td>
+							<td><input type="text" id="comfirmAmt" name="comfirmAmt"
+								readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td><label>标准卡DTI检查（%）：</label></td>
+							<td><input type="text" id="dti" name="dti"
+								readonly="readonly" /></td>
+							<td><label>标准DL（元）：</label></td>
+							<td><input type="text" id="dlLmt" name="dlLmt"
+								readonly="readonly" /></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</fieldset>
+			<fieldset>
+				<legend>
+					<label id="E">筛选结果</label>
+				</legend>
+				<table class="area-view">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td><label>筛选结果：</label></td>
+							<td colspan="3"><input type="text" id="approveResult"
+								name="approveResult" readonly="readonly" /></td>
+						</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</fieldset>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+/**
+ * 功能：固定顶端导航栏
+ * @param id 对象ID
+ * @param top 距离顶端距离
+ */
+function fnFixed(id,top) {
+	var o = $('#' + id);
+	if (o.length != 1) return false;
+	var offsetTop = arguments[1] ? arguments[1] : 0;
+	$(document).scroll(function() {
+		o.css({
+			'position':'relative',
+			'top':0
+		});
+		timer = setInterval(function() {
+			if ($(document).scrollTop() <= offsetTop) {
+				o.css({
+					'position':'relative',
+					'top':0
+				});
+			} else {
+				o.css({
+					'position':'fixed',
+					'top':0 + offsetTop + 'px',
+					'z-index':1
+				});
+				clearInterval(timer);
+			}
+		}, 100);
+	});
+}
+
+/****************反欺诈结果描述 ********************/
+function openIsFqzRstDespWin(obj){
+	var fqzRequesttype = $("#fqzRequesttype").val();
+	var fqzRisknoZ = $("#fqzRisknoZ").val();
+	var fqzRisknoH = $("#fqzRisknoH").val();
+	var fqzRisknoW = $("#fqzRisknoW").val();
+	if($("#"+obj).text()=="满足") {
+		return;
+	} else {
+		window.open(encodeURI('../decision/win_fqz_result.html?appId='+appId+'&fqzRequesttype='+fqzRequesttype+"&fqzRisknoZ="+fqzRisknoZ+"&fqzRisknoW="+fqzRisknoW+"&fqzRisknoH="+fqzRisknoH+"&fqzRiskno="+fqzRiskno+"&obj="+obj),""+obj,'height=400px,width=1000px,top=300px,left=300px');
+	}
+}
+
+//转码，高亮 
+function valueChange(oldVal,arr,gl){
+	var len = arr.length;
+	var obj = '';
+	if(oldVal!=null&&oldVal!=undefined&&oldVal!=""){
+		//var cc = new Array("0:否","1:是");
+		for(var i=0;i<len;i++){
+			var temp=arr[i].split(":");
+			if(oldVal=='0'){
+				return temp[1];
+			}else if(oldVal!='0'&&i==1){
+				obj = temp[1];
+			}
+		}
+	}else{
+		return "否";
+	}
+	if(oldVal!=null&&oldVal!='0'){
+		$(gl).attr("style","color:red");
+	}
+	return obj;
+}
+function valueChangeOther(oldVal,arr){
+	var len = arr.length;
+	if(oldVal!==null&&oldVal!==undefined&&oldVal!==""){
+		for(var i=0;i<len;i++){
+			var temp=arr[i].split(":");
+			if(oldVal==temp[0]){
+				return temp[1];
+			}
+		}
+	}
+	return oldVal;
+}
+//反欺诈决策关注
+function valueChangeRemarke(oldVal,arr,gl){
+	if (oldVal == 1) {
+		return "命中特殊客户违例规则";
+	} else if (oldVal == 2) {
+		return "命中特殊产品违例规则";
+	} else if (oldVal == 3) {
+		return "网申非合作第三方商户";
+	} else if (oldVal == 4) {
+		return "易达金进件人工核验";
+	} else if (oldVal == 5) {
+		return "申请人合规性、完整性不满足";
+	} else if (oldVal == 6) {
+		return "ETC迅卡客户违例规则";
+	}
+	return oldVal;
+}
+//反欺诈结果描述 不满足的时候变红色
+function valueChangeFQZ(oldVal,arr,gl){
+	if(oldVal=='排查'){
+		$(gl).attr("style","color:red;");
+	} else if(oldVal=='直接拒绝'){
+		$(gl).attr("style","color:red;");
+	} else if(oldVal=='建议拒绝'){
+		$(gl).attr("style","color:red;");
+	} 
+	return oldVal;
+}
+/* 证件类型反显
+01-居民身份证
+03-外国护照
+04-港澳台居民来往内地通行证台胞证
+05-军官证
+07-外国人永久居留身份证
+90-港澳居民居住证
+91-台湾居民居住证
+20-其他'; */
+function valChangeCertType(str){
+	if(str=='01'){
+		return "居民身份证";
+	}else if(str=='03'){
+		return "外国护照";
+	}else if(str=='04'){
+		return "港澳台居民来往内地通行证台胞证";
+	}else if(str=='05'){
+		return "军官证";
+	}else if(str=='07'){
+		return "外国人永久居留身份证";
+	}else if(str=='90'){
+		return "港澳居民居住证";
+	}else if(str=='91'){
+		return "台湾居民居住证";
+	}else{
+		return "其他";
+	}
+}
+function valChangeApproveResult(str){
+	if(str=='1'){
+		return "通过";
+	}else if(str=='2'){
+		return "拒绝";
+	}
+}
+var appId = $.fnGetAppId("appId");
+$(function() {
+	var timer = null;
+	fnFixed('ksdw_nav ul',0);
+	
+	/** 快速定位 */
+	$('#ksdw_nav ul li a').on('click', function() {
+		var href = $(this).attr('href');
+		var position = parseInt($(href).offset().top);
+		if (position > 40) {
+			$('html,body').animate({scrollTop: position - 40 - $('#ksdw_nav').height()}, 100);
+		} else {
+			$('html,body').animate({scrollTop: 0}, 100);
+		}
+		return false;
+	});
+	
+	$('#ksdw_nav ul li a.active').trigger('click');
+	
+	var rule = new Array();//规则
+	var cc = new Array("0:否","1:是");//
+	$cf.ajax({
+		url : "/opas-naps/queryWsdbDecisionInfoByAppID.json",
+		data : {
+			"appId" : appId
+		},
+		onSuccess : function(res) {
+			var jsonResult = res.RSP_BODY.jsonStr;
+			var ctrStr = res.RSP_BODY.ctrStr;
+			var custBaseInfojson = eval('(' +jsonResult+ ')');
+			var fqzRst = res.RSP_BODY.dataMap;
+			var wsdbInfo = res.RSP_BODY.wsdbMap;
+			// ========== 客户基本信息 ==========
+			//name certType certNo mobile enterpriseName workProvince workArea workAddress brnchName promtOrg		 
+			$("#appId").val(appId);//申请流水号
+			$("#name").val(wsdbInfo.name);//客户姓名 
+			$("#certType").val(valChangeCertType(wsdbInfo.certType));//客户证件类型
+			$("#certNo").val(wsdbInfo.certNo);//客户证件号码
+			$("#mobile").val(wsdbInfo.mobile);//客户手机号
+			$("#enterpriseName").val(wsdbInfo.enterpriseName);//单位名称 
+			$("#workProvince").val(wsdbInfo.workProvince);//工作地省市
+			$("#workArea").val(wsdbInfo.workArea);//工作地区
+			$("#workAddress").val(wsdbInfo.workAddress);//工作地详细地址 
+			$("#brnchName").val(wsdbInfo.brnchName);//分行名称 
+			$("#promtOrg").val(wsdbInfo.promtOrg);//推广机构代码
+			$("#companyNo3rd").val(wsdbInfo.companyNo3rd);//三方公司编号
+			$("#channelNo3rd").val(wsdbInfo.channelNo3rd);//三方模块编号
+			$("#mobileIdentified").val(wsdbInfo.mobileIdentified);//手机号实名
+			$("#approveResult").val(valChangeApproveResult(wsdbInfo.approveResult));//审批结果
+			// ========== 主卡决策结果 ==========
+			// 反欺诈
+			var fqz = fqzRst.fqzRstDesp
+			if(fqz.length==0){
+				$("#fqzRstTime").val("");//反欺诈决策时间
+				$("#fqzValue").val("");//反欺诈决策结果
+				$("#fqzRemarks").val("");//反欺诈决策关注
+				$("#fqzRequesttype").val("");//反欺詐结果描述
+				$("#fqzRisknoZ").val("");//反欺詐结果描述
+				$("#fqzRisknoW").val("");//反欺詐结果描述
+				$("#fqzRisknoH").val("");//反欺詐结果描述
+			}else if(fqz.length==1){
+				$("#fqzRstTime").val(fqz[0].crt_date);//反欺诈决策时间
+				$("#fqzValue").val(fqz[0].fqzValue);//反欺诈决策结果
+				$("#fqzRemarks").val(valueChangeRemarke(fqz[0].fqzRemarks,cc,"#fqzRemarks"));//反欺诈决策关注
+				$("#fqzRequesttype").val(fqz[0].fqzRequesttype);//反欺詐结果描述
+				if (fqz[0].fqzRiskno == "满足") {
+					$("#fqzRiskno").val("满足");
+				} else {
+					if (fqz[0].fqzValue1 =="D" ||fqz[0].fqzValue1=="E") {
+						$("#fqzRiskno").val(valueChangeFQZ("排查",cc,"#fqzRiskno"));//反欺詐结果描述
+					} else {
+						$("#fqzRiskno").val("排查");//反欺詐结果描述
+					}
+				}
+				$("#fqzRisknoZ").val(fqz[0].fqzRiskno1);
+				$("#fqzRisknoW").val("");//反欺詐结果描述
+				$("#fqzRisknoH").val("");//反欺詐结果描述
+			}else if(fqz.length==2){
+				$("#fqzRstTime").val(fqz[0].crt_date);//反欺诈决策时间
+				$("#fqzValue").val(fqz[0].fqzValue);//反欺诈决策结果
+				$("#fqzRemarks").val(fqz[0].fqzRemarks);//反欺诈决策关注
+				$("#fqzRequesttype").val(fqz[0].fqzRequesttype);//反欺詐结果描述
+
+				if (fqz[0].fqzRiskno == "满足" && fqz[1].fqzRiskno == "满足") {
+					$("#fqzRiskno").val("满足");
+				} else {
+					if (fqz[0].fqzValue1 =="D" ||fqz[0].fqzValue1=="E") {
+						$("#fqzRiskno").val(valueChangeFQZ("排查",cc,"#fqzRiskno"));//反欺詐结果描述
+					} else {
+						$("#fqzRiskno").val("排查");//反欺詐结果描述
+					}
+				}
+				$("#fqzRisknoZ").val(fqz[0].fqzRiskno1);
+				$("#fqzRisknoW").val(fqz[1].fqzRiskno1);//反欺詐结果描述
+				$("#fqzRisknoH").val("");//反欺詐结果描述
+			}else{
+				$("#fqzRstTime").val(fqz[0].crt_date);//反欺诈决策时间
+				$("#fqzValue").val(fqz[0].fqzValue);//反欺诈决策结果
+				$("#fqzRemarks").val(valueChangeRemarke(fqz[0].fqzRemarks,cc,"#fqzRemarks"));//反欺诈决策关注
+				$("#fqzRequesttype").val(fqz[0].fqzRequesttype);//反欺詐结果描述
+				if (fqz[0].fqzRiskno == "满足" && fqz[1].fqzRiskno == "满足" && fqz[2].fqzRiskno == "满足") {
+					$("#fqzRiskno").val("满足");
+				} else {
+					if (fqz[0].fqzValue1 =="D" ||fqz[0].fqzValue1=="E") {
+						$("#fqzRiskno").val(valueChangeFQZ("排查",cc,"#fqzRiskno"));//反欺詐结果描述
+					} else {
+						$("#fqzRiskno").val("排查");//反欺詐结果描述
+					}
+				}
+				$("#fqzRisknoZ").val(fqz[0].fqzRiskno1);
+				$("#fqzRisknoW").val(fqz[1].fqzRiskno1);//反欺詐结果描述
+				$("#fqzRisknoH").val(fqz[2].fqzRiskno1);//反欺詐结果描述
+			}
+			// 审核决策
+			$("#decisionResult").val(valueChangeFQZ(custBaseInfojson.decisionResult,cc,"#decisionResult"));//审核决策结果
+			$("#decisionDesp").val(custBaseInfojson.decisionDesp);//审核决策结果描述
+			$("#proposedLmt").val(custBaseInfojson.proposedLmt);//审核建议额度
+			$("#cpRst").val(custBaseInfojson.cpRst);//审核建议授信产品
+			$("#appScore").val(custBaseInfojson.appScore);//申请评分
+			$("#triggerType").val(custBaseInfojson.triggerType);//征信评分
+			$("#crtTime").val(ctrStr);//审核决策时间/系统决策时间
+			$("#comfirmAmt").val(custBaseInfojson.comfirmAmt);//可认定月收入（元）/系统月收入（元）
+			$("#dti").val(custBaseInfojson.dti);//标准卡DTI检查（%）
+			if(custBaseInfojson.dti>=1){
+				$("#dti").attr("style","color:red;")
+			}
+			if(parent.ydjFlag=='1'){
+				$("#dlLmt").val('');//标准DL（元）
+			}else{
+				$("#dlLmt").val(custBaseInfojson.dlLmt);//标准DL（元）
+			}
+			
+		}
+	}); 
+	
+});
+
+
+
+</script>
+</html>

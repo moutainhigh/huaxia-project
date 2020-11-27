@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body style="padding: 10px;">
+	<div id="accountTypeLimitSearch_div">
+		<fieldset>
+			<legend>账户类型设置</legend>
+			<div align="center">
+			<input  type="checkbox" value="BZK" name="AccountType" />标准卡账户&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input  type="checkbox" value="YDJ" name="AccountType" />易达金账户
+			<br>
+			<a href="javascript:void(0)"class="easyui-linkbutton" onclick="saveOrUpdateTypeLimitSearch()">保存</a>
+			</div>
+		</fieldset>
+	</div>
+</body>
+<script type="text/javascript">
+var currentType=getCurrentUrlParam();    ///0002-FICO  0900-车辆   1000-天御 0003-多头借贷
+$(function(){
+	queryTypeLimitSearch();
+});
+
+function queryTypeLimitSearch(){
+	$("input[name=AccountType]:checkbox").prop('checked',false);
+	var param=new Object();
+	param.bRuleType=currentType;//代表多头借贷
+	param.sRuleType="AccountType";
+	param.flagActive="1";//启用 
+	$cf.ajax({
+		url : "/opas-naps/queryTypeLimitSearch.json",
+		data : param,
+		async:false,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+			var searchData= eval('(' + data.RSP_BODY.htmlMap + ')');
+			var dataLength = searchData.length;
+			  if(dataLength>0){
+				for (var i = 0; i < dataLength; i++) {
+					var array_element = searchData[i];
+					$(":checkbox[name='AccountType']").each(function(){
+						var curCheckbox=$(this);
+						if(array_element.ruleSettingValue==curCheckbox.val()){
+							curCheckbox.prop('checked',true);
+						}
+					});
+				}
+			  }
+			}
+		}
+	});
+	
+}
+
+
+//限制查询中 保存账户类型 
+function saveOrUpdateTypeLimitSearch(){
+	var param=new Array();
+	//获取name为AccountType的 checkbox 
+	$(":checkbox[name='AccountType']").each(function(){
+		var curCheckbox=$(this);
+		var obj=new Object();
+		obj.bRuleType=currentType;//代表多头借贷
+		obj.sRuleType="AccountType";
+		obj.ruleSettingValue=curCheckbox.val();
+		if(curCheckbox[0].checked){//选中 
+			obj.flagActive="1"; 
+		}else{
+			obj.flagActive="0"; 
+		}
+		param.push(obj);
+	});
+	$cf.ajax({
+		url : "/opas-naps/saveOrUpdateTypeLimitSearch.json",
+		data : {"typeObjList":param},
+		async:false,
+		onSuccess : function(data) {
+			if (data.RSP_BODY.success) {
+				queryTypeLimitSearch();
+				$.messager.alert("提示", "保存成功。", "warning");
+			} else{
+				$.messager.alert("操作提示", "保存失败。", "warning");
+			}
+		}
+	});
+	
+}
+function getCurrentUrlParam(){
+	var currentUrl=window.location.href;
+	return  currentUrl.split("=")[1];
+}
+
+</script>
+</html>

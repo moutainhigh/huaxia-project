@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Monitor3rdList">
+	<resultMap id="Monitor3rdResultMap" type="com.huaxia.opas.domain.monitor.Monitor3rdList">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="APP_ID" jdbcType="VARCHAR" property="app_ID" />
+		<result column="TASK_TYPE" jdbcType="VARCHAR" property="task_TYPE" />
+		<result column="TASK_STATUS" jdbcType="CHAR" property="task_STATUS" />
+		<result column="TIME_STAMP" jdbcType="TIMESTAMP" property="time_STAMP" />
+		<result column="IDENTITY_TYPE" jdbcType="CHAR" property="identity_TYPE" />
+		<result column="IDENTITY_NO" jdbcType="CHAR" property="identity_NO" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="PROCESS_ID" jdbcType="CHAR" property="process_ID" />
+		<result column="NODE_ID" jdbcType="VARCHAR" property="node_ID" />
+		<result column="SYSDATE" jdbcType="TIMESTAMP" property="sysdate" />
+	</resultMap>
+
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.monitor.Monitor3rdList">
+		update task_call_status
+		set	TASK_STATUS = #{task_STATUS,jdbcType=CHAR}
+		where TASK_TYPE = #{task_TYPE,jdbcType=VARCHAR}
+		and APP_ID = #{app_ID,jdbcType=VARCHAR}
+		and TASK_STATUS != '2'
+	</update>
+
+	<!--丁国峰 三方 monitor -->
+	<select id="queryMonitor3rdList" parameterType="com.huaxia.opas.domain.monitor.Monitor3rdList"
+		resultMap="Monitor3rdResultMap">
+		select
+		ID,
+		APP_ID,
+		TASK_TYPE,
+		TASK_STATUS,
+		TIME_STAMP,
+		IDENTITY_TYPE,
+		IDENTITY_NO,
+		NAME,
+		PROCESS_ID,
+		NODE_ID,
+		SYSDATE
+		from task_call_status
+		where
+		blank1 = '1'
+		<if test="app_ID != null and app_ID !='' ">
+			AND
+			APP_ID = #{app_ID}
+		</if>
+		<if test="task_STATUS != null and task_STATUS !='' ">
+			AND
+			TASK_STATUS = #{task_STATUS}
+		</if>
+		<if test="task_TYPE != null and task_TYPE !='' ">
+			AND
+			TASK_TYPE = #{task_TYPE}
+		</if>
+		order by TIME_STAMP desc
+	</select>
+
+	<!--丁国峰 三方 monitor -->
+	<select id="queryMonitor3rdCount" parameterType="com.huaxia.opas.domain.monitor.Monitor3rdList"
+		resultType="java.lang.Integer">
+		select count(1) from task_call_status
+		where
+		blank1 = '1'
+		<if test="app_ID != null and app_ID !='' ">
+			AND
+			APP_ID = #{app_ID}
+		</if>
+		<if test="task_STATUS != null and task_STATUS !='' ">
+			AND
+			TASK_STATUS = #{task_STATUS}
+		</if>
+		<if test="task_TYPE != null and task_TYPE !='' ">
+			AND
+			TASK_TYPE = #{task_TYPE}
+		</if>
+	</select>
+
+</mapper>

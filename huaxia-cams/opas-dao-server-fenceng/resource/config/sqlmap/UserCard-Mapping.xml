@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserCard">
+	<resultMap id="userCardBaseResultMap" type="com.huaxia.opas.domain.sysparm.UserCard">
+		<id column="CARD_ID" jdbcType="VARCHAR" property="cardId" />
+		<result column="CARD_CODE" jdbcType="VARCHAR" property="cardCode" />
+		<result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+		<result column="CRT_DATE" jdbcType="TIMESTAMP" property="crtDate" />
+		<result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+		<result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+		<result column="LST_UPD_DATE" jdbcType="TIMESTAMP" property="lstUpdDate" />
+		<result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="userCardBaseResultMap">
+		select *
+		from OPAS_USER_CARD
+		where CARD_ID = #{cardId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_USER_CARD
+		where CARD_ID = #{cardId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.sysparm.UserCard">
+		insert into OPAS_USER_CARD (
+		CARD_ID,
+		CARD_CODE,
+		USER_ID,
+		CRT_DATE,
+		CRT_USER,
+		LST_UPD_USER,
+		LST_UPD_DATE)
+		values (
+		#{cardId,jdbcType=VARCHAR},
+		#{cardCode,jdbcType=VARCHAR},
+		#{userId,jdbcType=VARCHAR},
+		CURRENT_DATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		CURRENT_DATE)
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.sysparm.UserCard">
+		insert into OPAS_USER_CARD
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cardId != null">
+				CARD_ID,
+			</if>
+			<if test="cardCode != null">
+				CARD_CODE,
+			</if>
+			<if test="userId != null">
+				USER_ID,
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="crtUser != null">
+				CRT_USER,
+			</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER,
+			</if>
+			<if test="lstUpdDate != null">
+				LST_UPD_DATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cardCode != null">
+				#{cardCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="crtDate != null">
+				CURRENT_DATE,
+			</if>
+			<if test="crtUser != null">
+				#{crtUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdUser != null">
+				#{lstUpdUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdDate != null">
+				CURRENT_DATE,
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.sysparm.UserCard">
+		update OPAS_USER_CARD
+		<set>
+			<if test="cardCode != null">
+				CARD_CODE = #{cardCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				USER_ID = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdUser != null">
+				LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lstUpdDate != null">
+				CURRENT_DATE,
+			</if>
+		</set>
+		where CARD_ID = #{cardId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.sysparm.UserCard">
+		update OPAS_USER_CARD
+		set CARD_CODE = #{cardCode,jdbcType=VARCHAR},
+		USER_ID = #{userId,jdbcType=VARCHAR},
+		LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+		LST_UPD_DATE = CURRENT_DATE
+		where CARD_ID = #{cardId,jdbcType=VARCHAR}
+	</update>
+	<!-- 根据用户ID查询 用于用户修改信息时 反显卡种类型 shihuan 2017-02-28 -->
+	<select id="selectByUserid" parameterType="java.lang.String"
+		resultMap="userCardBaseResultMap">
+		select c.CARD_CODE, p.PROD_NAME, p.AUTO_ID from OPAS_USER_CARD c,OPAS_PARAM_CARD_PRODUCT p where c.CARD_CODE=p.CARD_CODE
+		and USER_ID = #{userId,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据用户ID删除 用于用户修改审批卡种是先删除后插入 shihuan 2017-03-03 -->
+	<delete id="deleteByUserId" parameterType="java.lang.String">
+		delete from OPAS_USER_CARD
+		where USER_ID = #{userId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!--shihuan 2017-04-17 查询时用户审批卡种 -->
+	<select id="queryUserCardList" 
+		resultMap="userCardBaseResultMap">
+		select
+		AUTO_ID,CARD_CODE,PROD_NAME,CARD_FACE,ACCT_TYPE1,ACCT_TYPE2,STAFF_CARD,CARD_TYPE,LINE_LOW,LINE_HIGH,DOUBLE_CURR,CURR_NO,INTEGER_LINE,FLAG,SIGNEDCARD,RATE_EXPIRE_LINE,YEAR_FEE_DERATE_TYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_PARAM_CARD_PRODUCT
+	</select>
+
+	<!--shihuan 2017-04-17 查询时用户审批卡种数目 -->
+	<select id="queryUserCardCount" 
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_CARD_PRODUCT
+	</select>
+	
+</mapper>

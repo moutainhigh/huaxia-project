@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--配发卡信息数据库处理-->
+<!--@author liudi-->
+<mapper namespace="MatchingCard">
+
+	<resultMap id="MatchingCardResultMap" type="com.huaxia.opas.domain.sysparm.MatchingCard">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="PROD_CODE" property="prodCode" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+		<result column="MATCHING_CARD" property="allotProdCode" jdbcType="VARCHAR" />
+		<result column="MATCHING_NAME" property="allotProdName" jdbcType="VARCHAR" />
+		<result column="CARD_FACE" property="prductFace" jdbcType="VARCHAR" />
+		<result column="ANNUAL_COST_ID" property="annualFeeCode" jdbcType="VARCHAR" />
+		<result column="RMB_AUTOPURCHPAY" property="rmbAutoPay" jdbcType="VARCHAR" />
+		<result column="AUTOPURCH_PAYTYPE" property="autoPayMode" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+		<result column="VCN_YN" property="vcnYn" jdbcType="DOUBLE" />
+		<result column="VCN_CHNL" property="vcnChnl" jdbcType="DOUBLE" />
+	</resultMap>
+	<resultMap id="DictDetailResultMap" type="com.huaxia.opas.domain.sysparm.CardFace">
+		<result column="DICT_DETAIL_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_CODE" property="cardFaceCode" jdbcType="VARCHAR" />
+		<result column="DICT_DETAIL_NAME" property="cardFaceDesc" jdbcType="VARCHAR" />
+	</resultMap> 
+	<resultMap id="ProductCodeResultMap" type="com.huaxia.opas.domain.sysparm.ProductCode">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CARD_CODE" property="productCode" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="productName" jdbcType="VARCHAR" />
+	</resultMap> 
+<!-- 添加状态为Start -->
+	<insert id="insertMatchingCard1" parameterType="com.huaxia.opas.domain.sysparm.MatchingCard">
+		insert into
+		OPAS_MATCHINGCARD_INFO
+		(AUTO_ID,PROD_CODE,PROD_NAME,MATCHING_CARD,MATCHING_NAME,CARD_FACE,ANNUAL_COST_ID,RMB_AUTOPURCHPAY,AUTOPURCH_PAYTYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,VCN_YN,VCN_CHNL) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{prodCode,jdbcType=VARCHAR},
+		#{prodName,jdbcType=VARCHAR},
+		#{allotProdCode,jdbcType=VARCHAR},
+		#{allotProdName,jdbcType=VARCHAR},
+		#{prductFace,jdbcType=VARCHAR},
+		#{annualFeeCode,jdbcType=VARCHAR},
+		#{rmbAutoPay,jdbcType=VARCHAR},
+		#{autoPayMode,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{vcnYn,jdbcType=DOUBLE},
+		#{vcnChnl,jdbcType=DOUBLE}
+		)
+	</insert>
+<!-- 添加状态为End -->
+	<insert id="insertMatchingCard2" parameterType="com.huaxia.opas.domain.sysparm.MatchingCard">
+		insert into
+		OPAS_MATCHINGCARD_INFO
+		(AUTO_ID,PROD_CODE,PROD_NAME,MATCHING_CARD,MATCHING_NAME,CARD_FACE,ANNUAL_COST_ID,RMB_AUTOPURCHPAY,AUTOPURCH_PAYTYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,VCN_YN,VCN_CHNL) 
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{prodCode,jdbcType=VARCHAR},
+		#{prodName,jdbcType=VARCHAR},
+		#{allotProdCode,jdbcType=VARCHAR},
+		#{allotProdName,jdbcType=VARCHAR},
+		#{prductFace,jdbcType=VARCHAR},
+		#{annualFeeCode,jdbcType=VARCHAR},
+		#{rmbAutoPay,jdbcType=VARCHAR},
+		#{autoPayMode,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{vcnYn,jdbcType=DOUBLE},
+		#{vcnChnl,jdbcType=DOUBLE}
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteMatchingCardById" parameterType="java.lang.String">
+		delete from
+		OPAS_MATCHINGCARD_INFO
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+<!-- 修改 -->
+	<update id="updateMatchingCard" parameterType="com.huaxia.opas.domain.sysparm.MatchingCard">
+		update OPAS_MATCHINGCARD_INFO
+		<set>
+			PROD_NAME = #{prodName,jdbcType=VARCHAR},
+			MATCHING_NAME = #{allotProdName,jdbcType=VARCHAR},
+			CARD_FACE = #{prductFace,jdbcType=VARCHAR},
+			ANNUAL_COST_ID = #{annualFeeCode,jdbcType=VARCHAR},
+			RMB_AUTOPURCHPAY = #{rmbAutoPay,jdbcType=VARCHAR},
+			AUTOPURCH_PAYTYPE = #{autoPayMode,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE,
+			VCN_YN = #{vcnYn,jdbcType=DOUBLE},
+			VCN_CHNL = #{vcnChnl,jdbcType=DOUBLE}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 配发卡件数查询 -->
+	<select id="queryMatchingCardCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_MATCHINGCARD_INFO
+		<where>
+			<if test="prodCode != null and prodCode !='' ">
+				AND PROD_CODE LIKE '%${prodCode}%'
+			</if>
+			<if test="allotProdCode != null and allotProdCode !='' ">
+				AND MATCHING_CARD LIKE '%${allotProdCode}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+<!-- 卡版面件数查询 -->
+	<select id="queryCardFaceCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_AP_DICT_DETAIL
+		<where>
+				DICT_ID = '3c567624d6214c5a925088baa726735c'
+			<if test="cardFaceCode != null and cardFaceCode !='' ">
+				AND DICT_DETAIL_CODE LIKE '%${cardFaceCode}%'
+			</if>
+			<if test="cardFaceDesc != null and cardFaceDesc !='' ">
+				AND DICT_DETAIL_NAME LIKE '%${cardFaceDesc}%'
+			</if>
+		</where>
+	</select>
+<!-- 配发卡信息查询 -->
+	<select id="queryMatchingCard1" parameterType="com.huaxia.opas.domain.sysparm.MatchingCard"
+		resultMap="MatchingCardResultMap">
+		select
+		AUTO_ID,PROD_CODE,PROD_NAME,MATCHING_CARD,MATCHING_NAME,CARD_FACE,ANNUAL_COST_ID,RMB_AUTOPURCHPAY,AUTOPURCH_PAYTYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,VCN_YN,VCN_CHNL 
+		from OPAS_MATCHINGCARD_INFO
+		<where>
+			<if test="prodCode != null and prodCode !='' ">
+				AND PROD_CODE LIKE '%${prodCode}%'
+			</if>
+			<if test="allotProdCode != null and allotProdCode !='' ">
+				AND MATCHING_CARD LIKE '%${allotProdCode}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		order by PROD_CODE
+	</select>
+<!-- 点击查询后，触发配发卡信息查询和排序功能 -->
+	<select id="queryMatchingCard2" parameterType="java.util.Map"
+		resultMap="MatchingCardResultMap">
+		select
+		AUTO_ID,PROD_CODE,PROD_NAME,MATCHING_CARD,MATCHING_NAME,CARD_FACE,ANNUAL_COST_ID,RMB_AUTOPURCHPAY,AUTOPURCH_PAYTYPE,STATUS,START_DATE,STOP_DATE,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE,VCN_YN,VCN_CHNL 
+		from OPAS_MATCHINGCARD_INFO
+		<where>
+			<if test="prodCode != null and prodCode !='' ">
+				AND PROD_CODE LIKE '%${prodCode}%'
+			</if>
+			<if test="allotProdCode != null and allotProdCode !='' ">
+				AND MATCHING_CARD LIKE '%${allotProdCode}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		<if test="field !=null and field !=''">
+			<![CDATA[ORDER BY ${field} ${sort}]]>
+		</if>
+	</select>
+<!-- 卡版面查询 -->
+	<select id="queryCardFace" parameterType="com.huaxia.opas.domain.sysparm.CardFace"
+		resultMap="DictDetailResultMap">
+		select
+		DICT_DETAIL_ID,DICT_DETAIL_CODE,DICT_DETAIL_NAME
+		from OPAS_AP_DICT_DETAIL
+		<where>
+				DICT_ID = '3c567624d6214c5a925088baa726735c'
+			<if test="cardFaceCode != null and cardFaceCode !='' ">
+				AND DICT_DETAIL_CODE LIKE '%${cardFaceCode}%'
+			</if>
+			<if test="cardFaceDesc != null and cardFaceDesc !='' ">
+				AND DICT_DETAIL_NAME LIKE '%${cardFaceDesc}%'
+			</if>
+		</where>
+	</select>
+
+<!--卡产品件数查询-->
+	<select id="queryProductCodeCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE LIKE '%${productCode}%'
+			</if>
+			<if test="productName != null and productName !='' ">
+				AND PROD_NAME LIKE '%${productName}%'
+			</if>
+		</where>
+	</select>
+<!-- 卡产品详细信息查询 -->
+	<select id="queryProductCode" parameterType="com.huaxia.opas.domain.sysparm.ProductCode"
+		resultMap="ProductCodeResultMap">
+		select
+		AUTO_ID,CARD_CODE,PROD_NAME
+		from OPAS_PARAM_CARD_PRODUCT
+		<where>
+			<if test="productCode != null and productCode !='' ">
+				AND CARD_CODE LIKE '%${productCode}%'
+			</if>
+			<if test="productName != null and productName !='' ">
+				AND PROD_NAME LIKE '%${productName}%'
+			</if>
+		</where>
+	</select>
+<!--查询卡产品信息和配发卡产品信息是否重复-->
+	<select id="queryMatchingCard3" parameterType="com.huaxia.opas.domain.sysparm.MatchingCard"
+		resultMap="MatchingCardResultMap">
+		select
+		PROD_CODE,MATCHING_CARD
+		from OPAS_MATCHINGCARD_INFO
+		<where>
+			<if test="prodCode != null and prodCode !='' ">
+				AND PROD_CODE = #{prodCode}
+			</if>
+			<if test="allotProdCode != null and allotProdCode !='' ">
+				AND MATCHING_CARD = #{allotProdCode}
+			</if>
+		</where>
+	</select>
+
+</mapper>

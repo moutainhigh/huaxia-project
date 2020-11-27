@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.tongdun.mapper.MulBorBatchDetailMapper">
+	<resultMap id="result_Base" type="com.huaxia.plaze.ui.tongdun.domain.MulBorQueryReview">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="UPD_TIME" property="updTime" jdbcType="VARCHAR" />
+		<result column="UPD_USER" property="updUser" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CERT_TYPE" property="certType" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="QUERY_TYPE" property="queryType" jdbcType="VARCHAR" />
+		<result column="QUERY_REASON" property="queryReason" jdbcType="VARCHAR" />
+		<result column="FILE_ID" property="fileId" jdbcType="VARCHAR" />
+		<result column="SOURCE_ID" property="sourceId" jdbcType="VARCHAR" />
+		<result column="REFUSE_REASON" property="refuseReason" jdbcType="VARCHAR" />
+		<result column="REFUSE_TIME" property="refuseTime" jdbcType="VARCHAR" />
+		<result column="REVIEW_STATUS" property="reviewStatus" jdbcType="VARCHAR" />
+		<result column="REVIEW_TIME" property="reviewTime" jdbcType="VARCHAR" />
+		<result column="QUERY_FROM" property="queryFrom" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="IMAGE_MATCH" property="imageMatch" jdbcType="VARCHAR" />
+		<!-- 冗余字段 -->
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="STAFF_CERT" property="staffCert" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 批次文件明细记录查询 -->
+	<select id="selectDetailListByPage" parameterType="string"
+	resultMap="result_Base">
+		 SELECT T.CERT_NO,T.NAME,T.TRN_ID,
+		        TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') CRT_TIME,
+	            TO_CHAR(T.QUERY_TIME, 'YYYY-MM-DD HH24:MI:SS') REVIEW_TIME,
+		        T.QUERY_STATUS  REVIEW_STATUS
+		 FROM MULBOR_TRN_BATCH_DETAIL T
+		 WHERE T.BATCH_FILE_ID=#{batchFileId}
+		  ORDER BY 
+		T.CRT_TIME DESC
+   </select>
+	
+	 <resultMap id="SearchStringTypeMap" type="java.util.Map">
+	    <result column="UUID" jdbcType="CHAR" property="uuId" />
+	    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+	    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+	    <result column="BATCH_FILE_ID" jdbcType="CHAR" property="batchFileId" />
+	    <result column="TRN_ID" jdbcType="CHAR" property="trnId" />
+	    <result column="CERT_TYPE" jdbcType="VARCHAR" property="certType" />
+	    <result column="CERT_NO" jdbcType="VARCHAR" property="certNo" />
+	    <result column="NAME" jdbcType="VARCHAR" property="name" />
+	    <result column="MOBILE" jdbcType="VARCHAR" property="mobile" />
+	    <result column="QUERY_STATUS" jdbcType="CHAR" property="queryStatus" />
+	  </resultMap>
+	  <select id="selectFormularyNumTasksByType"  parameterType="java.util.Map" resultMap="SearchStringTypeMap">
+				SELECT
+					  UUID,
+					  CRT_TIME,
+					  CRT_USER,
+					  BATCH_FILE_ID,
+					  TRN_ID,
+					  CERT_TYPE,
+					  CERT_NO,
+					  NAME,
+					  MOBILE,
+					  QUERY_STATUS
+				FROM MULBOR_TRN_BATCH_DETAIL
+				WHERE QUERY_STATUS = #{taskStatus}
+				AND ROWNUM &lt;= #{taskCount}
+	  </select>
+	  
+	<update id="updateSingleTask" parameterType="java.util.Map">
+			UPDATE MULBOR_TRN_BATCH_DETAIL
+			<set >
+		      <if test="status != null" >
+		         QUERY_STATUS = #{status, jdbcType=VARCHAR},
+		      </if>
+		   </set>
+			 WHERE UUID = #{uuId, jdbcType=CHAR}
+	</update>
+	
+	<insert id="insertObject" parameterType="com.huaxia.plaze.ui.tongdun.domain.MulBorBatchDetail">
+		INSERT INTO MULBOR_TRN_BATCH_DETAIL (
+		      UUID,
+			  CRT_TIME,
+			  CRT_USER,
+			  BATCH_FILE_ID,
+			  TRN_ID,
+			  CERT_TYPE,
+			  CERT_NO,
+			  NAME,
+			  MOBILE,
+			  QUERY_STATUS
+		)
+		values
+		(
+			SYS_GUID(),
+			SYSDATE,
+			#{crtUser, jdbcType = VARCHAR},
+			#{batchFileId, jdbcType = CHAR},
+			SYS_GUID(),
+			#{certType, jdbcType = VARCHAR},
+			#{certNo, jdbcType = VARCHAR},
+			#{name, jdbcType = VARCHAR},
+			#{mobile, jdbcType = VARCHAR},
+			#{queryStatus, jdbcType = CHAR}
+		)
+	</insert>
+	
+</mapper>

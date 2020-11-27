@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>企业及行业信息详细结果</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/json2.js"></script>
+<style type="text/css">
+ .tl {width:60px;font-size: 12px }
+ .tll {width:78px;font-size: 12px }  
+ .ts {width:120px;font-size: 12px }
+ .tls {width:97px;font-size: 12px }
+ .tss {width:187px;font-size: 12px }
+ .yztb {width:50px;font-size: 12px }
+ .dhtb {width:150px;font-size: 12px }
+ .style2{font-size:13px;border:1px; width:auto; }
+ .bk {border:1px solid #0099CC; }
+ .bodyPanel {background-color:#E6E6FA;color:#003476;}
+/*  html, body {
+	font: normal 1em Arial;
+} */
+table {
+	border-collapse: collapse;
+}
+*{margin:0px;padding:0px;}
+tr.jiYaoColor td{
+	background-color:pink;
+}
+select {
+	width: 135px;
+	height: 20px;
+	border:1px solid #A4D3EE;
+}
+table.tableTdColor td{
+border: 1px solid #c0c0c0;
+}
+fieldset{
+border:1px solid #A4D3EE;
+}
+</style>
+</head>
+<script type="text/javascript">
+function GetQueryString(name){
+	 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	 var r = window.location.search.substr(1).match(reg);
+	 if(r!=null) return unescape(r[2]);
+	 return null;
+}
+
+$(function(){
+	var qiYeDetailForm=$("#qiYeDetailForm");
+	var appId = GetQueryString("appId");
+		$cf.ajax({
+			data : {
+				"appId" : appId
+			},
+			url : "/opas-naps/qiye_detail_query.json",
+			onSuccess : function(data) {
+				console.log(data);
+				if (data.RSP_BODY.success) {
+					  $('#qiYeDetailForm').form("load", data.RSP_BODY.qiYeCode);
+					  $('#qiYeDetailForm').form("load", data.RSP_BODY.qiYedatails);
+					 
+					/* $('#qiYePersonlist').html(''); 
+					 //加载企业基本信息
+					 $('#qiYeDetailForm').form("load", data.RSP_BODY.basic[0]);
+					 //加载组织机构详情
+					 $('#qiYeDetailForm').form("load", data.RSP_BODY.orgdateil[0]);
+					 //加载主要管理人员
+					 var person = data.RSP_BODY.person;
+					 var table=document.createElement("table");
+						table.style='width:100%;';
+						var tr1=table.insertRow();
+						var td0=tr1.insertCell();
+						console.log(person);
+						createDivInTd(td0,"序号",'30px',"1");
+						var td1=tr1.insertCell();
+						createDivInTd(td1,"人员姓名",'150px',"1");
+						var td2=tr1.insertCell();
+						createDivInTd(td2,"人员总数量",'150px',"1");
+						var td3=tr1.insertCell();
+						createDivInTd(td3,"职位",'150px',"1");
+						console.log(222);
+					 	for(var i=0;i<person.length;i++){
+					 		console.log(333);
+					 		var tr2=table.insertRow();
+					 		var td4=tr2.insertCell();
+							createDivInTd(td4,i+1,'30px',"1");
+							var td5=tr2.insertCell();
+							console.log(person[i]["pername"]);
+							createDivInTd(td5,person[i]["pername"],'150px',"0");
+							var td6=tr2.insertCell();
+							createDivInTd(td6,person[i]["personamount"],'150px',"0");
+							var td7=tr2.insertCell();
+							createDivInTd(td7,person[i]["position"],'150px',"0");
+					 	}
+					 	$("#qiYePersonlist").html(table);
+					 //加载失信被执行人信息
+					 data.RSP_BODY.punishbreak; */
+				}
+				//过滤null
+				nullChange();
+			}
+			});
+		//将页面所有input变为只读 
+		$("input[type='text']").each(function(){
+			$(this).attr("readonly","readonly");
+		});		
+	});
+		
+	function nullChange(){
+		var inputs = $("input");
+		inputs.each(function(){
+			if($(this).val() == "null"){
+				$(this).val("");
+			}
+		});
+	}
+
+	/*在指定td标签 创建Div标签 并赋值 */
+	function createDivInTd(td,value,width,fontType){
+		td.style.width=width;
+		var div=document.createElement("div");
+		div.style.class="word-wrap:break-word;overflow:hidden;"
+		if(value){
+			var textNode=document.createElement('p');
+			textNode.innerHTML=value;
+			div.appendChild(textNode);
+		}else{
+			//div.appendChild(document.createTextNode(""+typeValue));
+		}
+		/* input.style.width=width;
+		input.style.fontSize='12px';
+		input.style.textAlign='center'; */
+		if(fontType=="1"){
+			div.style.fontWeight='bold';
+		}
+		if(fontType=="0"){
+			//div.style.color='blue';
+		}
+		div.readOnly='readOnly';
+		td.appendChild(div);
+	}	
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+</script>
+<body style="padding:10px;">
+<fieldset>
+	<legend>企业及行业信息详细结果</legend>
+	<form id="qiYeDetailForm" style="width:85%">
+		<table>
+				<tr>	
+					<td>&nbsp;&nbsp;查询结果:</td>
+					<td><input name="code" style="width: 300px" type="text"  readonly="readonly" /></td>
+				</tr>
+				<tr>	
+					<td>&nbsp;&nbsp;企业名称:</td>
+					<td><input name="entname" style="width: 300px" type="text"  readonly="readonly" /></td>
+					<td>&nbsp;&nbsp;注册资本(万元):</td>
+					<td>
+					<input name="regcap" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+				</tr>
+
+				<tr>
+					<td>&nbsp;&nbsp;国民经济行业名称:</td>
+					<td>
+					<input name="industryconame" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;注册资本币种:</td>
+					<td>
+					<input name="regcapcur" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+				</tr>
+				<tr>	
+					<td>&nbsp;&nbsp;法定代表人/负责人/执行事务合伙人:</td>
+					<td>
+					<input name="frname" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;经营状态:</td>
+					<td>
+					<input id="entStatus" name="entstatus" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+				</tr>	
+				<tr>
+					<td>&nbsp;&nbsp;联系人电话:</td>
+					<td>
+					<input name="tel" style="width: 300px" type="text"  readonly="readonly" />
+					</td>	
+					<td>&nbsp;&nbsp;企业(机构)类型:</td>
+					<td>
+					<input name="enttype" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;员工人数:</td>
+					<td>
+					<input name="empnum" style="width: 300px" type="text"  readonly="readonly" />
+					</td>			
+					<td>&nbsp;&nbsp;所在省份:</td>
+					<td>
+					<input name="regorgprovince" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;曾用名:</td>
+					<td>
+					<input name="entnameold" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;经营期限自:</td>
+					<td>
+					<input name="opfrom" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;成立日期:</td>
+					<td>
+					<input name="esdate" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+					<td>&nbsp;&nbsp;经营期限至:</td>
+					<td>
+					<input name="opto" style="width: 300px" type="text"  readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;住址:</td>
+					<td colspan="3">
+					<input name="dom" style="width: 693px" type="text"  readonly="readonly" />
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;经营业务范围:</td>
+					<td colspan="3">
+					<textarea name="zsopscope" style="width: 693px;  height:80px;" readonly="readonly"></textarea>
+					</td>
+				</tr>	
+		</table>
+	<!-- <div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">企业基本信息</span></legend>
+		<table   style="width:95%">
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;许可经营项目：<input name="abuitem" id="abuitem"  type="text" style="border:none;text-align:left;"/></td>
+				<td>国民经济行业代码：<input name="industrycocode" id="industrycocode"  type="text" style="border:none;text-align:left;"/></td>
+				<td>企业英文名称：<input name="entnameeng" id="entnameeng"  type="text" style="border:none;text-align:left;"/></td>
+				<td>原注册号：<input name="oriregno" id="oriregno"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+			    <td>&nbsp;&nbsp;&nbsp;&nbsp;组织机构代码：<input name="orgcodes" id="orgcodes"  type="text" style="border:none;text-align:left;"/></td>
+				<td>注册号：<input name="regno" id="regno"  type="text" style="border:none;text-align:left;"/></td>
+				<td>实收资本(万元)：<input name="reccap" id="reccap"  type="text" style="border:none;text-align:left;"/></td>
+				<td>统一信用代码：<input name="creditcode" id="creditcode"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;企业ID：<input name="id" id="id"  type="text" style="border:none;text-align:left;"/></td>
+				<td>所在城市：<input name="regorgcity" id="regorgcity"  type="text" style="border:none;text-align:left;"/></td>
+				<td>所在区/县：<input name="regorgdistrict" id="regorgdistrict"  type="text" style="border:none;text-align:left;"/></td>
+				<td>最后年检年度：<input name="ancheyear" id="ancheyear"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;邮箱：<input name="email" id="email"  type="text" style="border:none;text-align:left;"/></td>
+				<td>吊销日期：<input name="revdate" id="revdate"  type="text" style="border:none;text-align:left;"/></td>
+				<td>注销日期：<input name="candate" id="candate"  type="text" style="border:none;text-align:left;"/></td>
+				<td>住所所在行政区划：<input name="domdistrict" id="domdistrict"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;注册地址行政编号：<input name="regorgcode" id="regorgcode"  type="text" style="border:none;text-align:left;"/></td>
+				<td>中数处理过后的：<input name="zsopscope" id="zsopscope"  type="text" style="border:none;text-align:left;"/></td>
+				<td>核准日期：<input name="apprdate" id="apprdate"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			</table>
+		</fieldset>
+	</div>
+	<fieldset>
+			<legend><span>主要管理人员</span></legend>
+			<div id="qiYePersonlist"></div>
+		</fieldset>
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">失信被执行人信息</span></legend>
+		<table   style="width:95%">
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;发布时间：<input name="publishdateclean" id="publishdateclean"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">执行法院：<input name="courtname" id="courtname"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;生效法律文书确定的义务：<input name="duty" id="duty"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;被执行人履行情况：<input name="performance" id="performance"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;" >失信被执行人行为具体情形：<input name="disrupttypename" id="disrupttypename"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;案件状态：<input name="casestate" id="casestate"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">股东及出资信息</span></legend>
+		<table >
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;出资日期：<input name="condate" id="condate"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">认缴出资额（万元）：<input name="subconam" id="subconam"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;出资比例：<input name="fundedratio" id="fundedratio"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">股东类型：<input name="invtype" id="invtype"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;出资方式：<input name="conform" id="conform"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">认缴出资币种：<input name="regcapcur" id="regcapcur"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;股东名称：<input name="shaname" id="shaname"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">国别：<input name="country" id="country"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>	
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">组织机构列表</span></legend>
+		<table >
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;组织机构代码：<input name="jgdm" id="jgdm"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">组织机构名称：<input name="jgmc" id="jgmc"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;机构地址：<input name="jgdz1" id="jgdz1"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">质疑标志：<input name="zybz" id="zybz"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>
+	<div>
+		<fieldset>
+			<legend><span   style="font-weight: bold">组织机构详情</span></legend>
+		<table >
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;统一社会信用代码：<input name="creditcode" id="creditcode"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">注册号：<input name="regno" id="regno"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;法人代表姓名 ：<input name="fddbr" id="fddbr"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">办证机构 ：<input name="bzjg" id="bzjg"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;注册日期 ：<input name="zcrq" id="zcrq"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">行政区划：<input name="xzqh" id="xzqh"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;机构类型 ：<input name="jglx" id="jglx"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">机构地址 ：<input name="jgdz" id="jgdz"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;代码证办证日期 ：<input name="bzrq" id="bzrq"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">代码证作废日期：<input name="zfrq" id="zfrq"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;经营状态：<input name="jyzt" id="jyzt"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">校核标志 ：<input name="jhbz" id="jhbz"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;" >&nbsp;&nbsp;&nbsp;发照日期 ：<input name="bgrq" id="bgrq"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">经济类型名称：<input name="jjlxdm" id="jjlxdm"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;生产经营地址：<input name="jydz" id="jydz"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">经济行业名称：<input name="jjhydm" id="jjhydm"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;上级主管部门：<input name="zgmc" id="zgmc"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">电话号码：<input name="dhhm" id="dhhm"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">&nbsp;&nbsp;电子邮箱：<input name="email" id="email"  type="text" style="border:none;text-align:left;"/></td>
+				<td style="text-align:left;">职工人数：<input name="zgrs" id="zgrs"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+			<tr>
+				<td style="text-align:left;">&nbsp;&nbsp;&nbsp;网址：<input name="url" id="url"  type="text" style="border:none;text-align:left;"/></td>
+			</tr>
+		</table>
+		</fieldset>
+	</div>		 -->
+	</form>
+</fieldset>	
+</body>
+</html>

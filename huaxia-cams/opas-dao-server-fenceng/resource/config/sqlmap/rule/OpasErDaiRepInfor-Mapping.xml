@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasErDaiRepInfor">
+	<!-- 贷款、贷记卡历史逾期 | 人行信用报告是否有一贷款/贷记卡账户状态异常 | 是否有不良表现 | 申请人所持全部贷记卡账户状态是否存在异常-->
+	<select id="selectCreditAndLoan" parameterType="java.lang.String" resultMap="creditAndLoanMap">
+	    SELECT s.REPAY_STATUS,s.ACCOUNT_STATUS as NEW_STATUS,m.ACCOUNT_STATUS as MON_STATUS,b.ACCOUNT_TYPE
+  		FROM  PBOC_DEBIT_CREDIT_BASIC_INFO b 
+  		LEFT JOIN PBOC_DEBIT_CREDIT_NEWST_SHOW s 
+      ON  s.RELATE_ID = b.RELATE_ID 
+      LEFT JOIN PBOC_DEBIT_CREDIT_NEAREST_M m
+  		ON  m.RELATE_ID = b.RELATE_ID 
+	    WHERE b.APP_ID = #{appId,jdbcType=VARCHAR}  
+  	</select>
+  	<resultMap id="creditAndLoanMap" type="java.util.Map">
+	    <result column="REPAY_STATUS" jdbcType="VARCHAR" property="repayStatus" />
+	    <result column="NEW_STATUS" jdbcType="VARCHAR" property="newStatus" />
+	    <result column="MON_STATUS" jdbcType="VARCHAR" property="monStatus" />
+	    <result column="ACCOUNT_TYPE" jdbcType="VARCHAR" property="accountType" />
+  	</resultMap>
+  	
+  	<!-- 人行 近一个月查询次数 -->
+  	<select id="selectCheckNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+	  SELECT NVL(SUM(t.QUERY_REC_1M_SUM2 + t.QUERY_REC_1M_SUM3),0) AS CHECK_NUM 
+	  FROM PBOC_QUERYINFO_NEW t WHERE t.APP_ID = #{appId,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<!-- 对外担保提示 -->
+  	<resultMap id="assureHintMap" type="java.util.Map">
+	    <result column="FIVE_CLASSIFY" jdbcType="VARCHAR" property="fiveClassify" />
+  	</resultMap>
+  	
+  	<select id="selectAssureHint" parameterType="java.lang.String" resultMap="assureHintMap">
+	   select t.FIVE_CLASSIFY
+       FROM PBOC_DEBIT_CREDIT_basic_info b
+       left join PBOC_RELATE_REPAY_DUTY_INFO t on b.relate_id = t.relate_id
+      where b.app_id = #{appId,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<!-- 首张贷记卡发卡距今月份  | 首次发放贷款帐龄 -->
+  	<select id="selectMonthNum" parameterType="java.lang.String" resultMap="monthNumMap">
+	   SELECT FIRST_YW_GRANT_MONTH,REPORT_TIME,SERVICE_DL FROM
+ 		(SELECT d.FIRST_YW_GRANT_MONTH, i.REPORT_TIME, d.SERVICE_DL
+   		FROM PBOC_CREDIT_TRANSACTION_DEL d
+   		LEFT JOIN OPAS_PBOC_PERSONAL_INFO i ON d.APP_ID = i.APP_ID
+  		WHERE d.APP_ID = #{appId,jdbcType=VARCHAR} AND d.SERVICE_DL = '1' ORDER BY d.FIRST_YW_GRANT_MONTH) WHERE ROWNUM = 1
+   	   UNION ALL
+       SELECT FIRST_YW_GRANT_MONTH,REPORT_TIME,SERVICE_DL FROM
+		(SELECT d.FIRST_YW_GRANT_MONTH, i.REPORT_TIME, d.SERVICE_DL
+		FROM PBOC_CREDIT_TRANSACTION_DEL d
+		LEFT JOIN OPAS_PBOC_PERSONAL_INFO i ON d.APP_ID = i.APP_ID
+		WHERE d.APP_ID = #{appId,jdbcType=VARCHAR} AND d.SERVICE_DL = '2' ORDER BY d.FIRST_YW_GRANT_MONTH) WHERE ROWNUM = 1
+  	</select>
+  	<resultMap id="monthNumMap" type="java.util.Map">
+	    <result column="FIRST_YW_GRANT_MONTH" jdbcType="VARCHAR" property="firstYWGrantMonth" />
+	    <result column="REPORT_TIME" jdbcType="VARCHAR" property="reportTime" />
+	    <result column="SERVICE_DL" jdbcType="VARCHAR" property="serviceDL" />
+  	</resultMap>
+  	
+  	<resultMap id="loanSumMap" type="java.util.Map">
+	    <result column="CUR_OVERDUE_TOTAL" jdbcType="VARCHAR" property="curOverdueTotal" />
+  	</resultMap>
+  	
+  	<!-- 贷款和贷记卡逾期金额是否大于0 -->
+  	<select id="selectHaveLoanSum" parameterType="java.lang.String" resultMap="loanSumMap">
+	    SELECT to_number(case
+                    when (m.CUR_OVERDUE_TOTAL is null or
+                         trim(m.CUR_OVERDUE_TOTAL) is null) then
+                     '0'
+                    else
+                     m.CUR_OVERDUE_TOTAL
+                  end) CUR_OVERDUE_TOTAL 
+   FROM PBOC_DEBIT_CREDIT_BASIC_INFO b
+   LEFT JOIN PBOC_DEBIT_CREDIT_NEAREST_M m ON m.RELATE_ID = b.RELATE_ID
+  WHERE b.APP_ID = #{appId}
+    AND b.account_type in ('D1', 'R1', 'R2', 'R4')
+  	</select>
+  	
+	<!-- <resultMap id="haveLoanSumMap" type="java.util.Map">
+	    <result column="CUR_OVERDUE_TOTAL" jdbcType="VARCHAR" property="curOverdueTotal" />
+  	</resultMap> -->
+	
+	<!-- 所有贷记卡状态是否有一张6个月以上  | 最新发卡贷记卡卡龄  | 最新发放贷款帐龄  -->
+  	<select id="selectHave6MonCard" parameterType="java.lang.String" resultMap="have6MonCard">
+	   SELECT b.KL_DATE,i.REPORT_TIME,b.ACCOUNT_TYPE
+  	   FROM PBOC_DEBIT_CREDIT_BASIC_INFO b
+  	   LEFT JOIN OPAS_PBOC_PERSONAL_INFO i ON b.APP_ID = i.APP_ID
+ 	   WHERE b.APP_ID = #{appId,jdbcType=VARCHAR}
+  	</select>
+	<resultMap id="have6MonCard" type="java.util.Map">
+	    <result column="KL_DATE" jdbcType="VARCHAR" property="klDate" />
+	    <result column="REPORT_TIME" jdbcType="VARCHAR" property="reportTime" />
+	    <result column="ACCOUNT_TYPE" jdbcType="VARCHAR" property="accountType" />
+  	</resultMap>
+	
+	<!-- 人行是否存在信贷记录  | 人行有无贷记卡 | 人行有无贷款记录 -->
+  	<select id="selectIsLoanCard" parameterType="java.lang.String" resultMap="isLoanCardMap">
+	   SELECT b.ACCOUNT_TYPE FROM PBOC_DEBIT_CREDIT_BASIC_INFO b WHERE b.APP_ID = #{appId,jdbcType=VARCHAR} 
+  	</select>
+	<resultMap id="isLoanCardMap" type="java.util.Map">
+	    <result column="ACCOUNT_TYPE" jdbcType="VARCHAR" property="accountType" />
+  	</resultMap>
+	
+	<!-- 最新一张贷记卡额度使用率 | 最近一张贷记卡当前逾期金额-->
+  	<select id="selectDCNM" parameterType="java.lang.String" resultMap="dcnmMap">
+	 SELECT MAX(CUR_OVERDUE_TOTAL) CUR_OVERDUE_TOTAL,max( DECODE(USED_LIMIT,NULL,0,USED_LIMIT)/DECODE(ACCO_CREDIT_LIMIT,0,NULL,ACCO_CREDIT_LIMIT) ) AMTRATE
+	  FROM (SELECT to_number(case
+                    when (m.CUR_OVERDUE_TOTAL is null or
+                         trim(m.CUR_OVERDUE_TOTAL) is null) then
+                     '0'
+                    else
+                     m.CUR_OVERDUE_TOTAL
+                  end) CUR_OVERDUE_TOTAL 
+                  ,m.USED_LIMIT,b.ACCO_CREDIT_LIMIT,b.ACCOUNT_TYPE FROM PBOC_DEBIT_CREDIT_BASIC_INFO b 
+  	   LEFT JOIN PBOC_DEBIT_CREDIT_NEAREST_M m  ON m.RELATE_ID = b.RELATE_ID
+	   WHERE b.ACCOUNT_TYPE = 'R2' AND b.APP_ID = #{appId} 
+     and b.KL_DATE = (select max(KL_DATE) from PBOC_DEBIT_CREDIT_BASIC_INFO where ACCOUNT_TYPE = 'R2' AND APP_ID = #{appId}  )
+   ) 
+  	</select>
+  	<resultMap id="dcnmMap" type="java.util.Map">
+	    <result column="CUR_OVERDUE_TOTAL" jdbcType="NUMERIC" property="curOverdueTotal" />
+	    <result column="AMTRATE" jdbcType="NUMERIC" property="amtRate" />
+  	</resultMap>
+  	
+  	<!-- 人行当前所有信贷是否有金额逾期 -->
+  	<select id="selectOverdueStatu" parameterType="java.lang.String" resultType="java.lang.String">
+       SELECT NVL(SUM(m.CUR_OVERDUE_TOTAL),0) AS CUR_OVERDUE_TOTAL_SUM FROM PBOC_DEBIT_CREDIT_BASIC_INFO b 
+  	   LEFT JOIN PBOC_DEBIT_CREDIT_NEAREST_M m  ON  m.RELATE_ID = b.RELATE_ID
+	   WHERE b.APP_ID = #{appId,jdbcType=VARCHAR} ORDER BY b.KL_DATE DESC
+  	</select>
+</mapper>

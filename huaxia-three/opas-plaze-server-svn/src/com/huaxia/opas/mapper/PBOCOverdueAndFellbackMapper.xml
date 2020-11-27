@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.PBOCOverdueAndFellbackMapper">
+
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO OPAS_PBOC_OVERDUEANDFELLBACK (
+			APP_ID,BAD_DEBT_NUM,BAD_DEBT_BALANCE,
+			ASS_DIS_NUM,ASS_DIS_BALANCE,GUA_COMPEN_NUM,
+			GUA_COMPEN_BALANCE,LOAN_OVERDUE_ACCT_NUM,LOAN_OVERDUE_MONTH_NUM,
+			LOAN_OVERDUE_OVER_DUE_AMT,LOAN_OVERDUE_LONGEST_OVER_DUE,
+			DEBIT_CARD_OVER_DUE_ACCT_NUM,DEBIT_CARD_OVER_DUE_MONTH_NUM,
+			DEBIT_CO_DUE_OVER_DUE_AMT,DEBIT_CO_DUE_LONGEST_OVER_DUE,
+			DEB_C60OVERD_ACCT_NUM,DEB_C60OVERD_MONTH_NUM,DEB_C60OVERD_OVER_DUE_AMT,
+			DEB_C60OVERD_LONGEST_OVER_DUE,CRT_TIME,CRT_USER
+		) VALUES (
+			#{appId, jdbcType = CHAR},#{countOfFellbackSummary, jdbcType = VARCHAR},#{balanceOfFellbackSummary, jdbcType = VARCHAR},
+			#{countOfAssetDispositionSum, jdbcType = VARCHAR},#{balanceOfAssetDispositionSum, jdbcType = VARCHAR},#{countOfAssureerRepaySum, jdbcType = VARCHAR},
+			#{balanceOfAssureerRepaySum, jdbcType = VARCHAR},#{countOfLoanSum, jdbcType = VARCHAR},#{monthsOfLoanSum, jdbcType = VARCHAR},
+			#{highestOverdueAmountPerMonOfLoanSum, jdbcType = VARCHAR},#{maxDurationOfLoanSum, jdbcType = VARCHAR},
+			#{countOfLoancardSum, jdbcType = VARCHAR},#{monthsOfLoancardSum, jdbcType = VARCHAR},
+			#{highestOverdueAmountPerMonOfLoancardSum, jdbcType = VARCHAR},#{maxDurationOfLoancardSum, jdbcType = VARCHAR},
+			#{countOfStandardLoancardSum, jdbcType = VARCHAR},#{monthsOfStandardLoancardSum, jdbcType = VARCHAR},
+			#{highestOverdueAmountPerMonOfStandardLoancardSum, jdbcType = VARCHAR},#{maxDurationOfStandardLoancardSum, jdbcType = VARCHAR},
+			SYSDATE,'SYSTEM'
+		)
+	</insert>
+
+</mapper>

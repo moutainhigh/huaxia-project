@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.pboc.mapper.BatchQueryMapper">
+
+	<resultMap id="result_Base" type="BatchQueryReview">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="BATCH_ID" property="batchId" jdbcType="VARCHAR" />
+		<result column="FILE_ID" property="fileId" jdbcType="VARCHAR" />
+		<result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+		<result column="TOTAL_RECORD" property="totalRecord" jdbcType="VARCHAR" />
+		<result column="REVIEW_STATUS" property="reviewStatus" jdbcType="VARCHAR" />
+		<result column="REFUSE_REASON" property="refuseReason" jdbcType="VARCHAR" />
+		<result column="REFUSE_TIME" property="refuseTime" jdbcType="VARCHAR" />
+		<result column="QUERY_TYPE" property="queryType" jdbcType="VARCHAR" />
+		<!-- 冗余字段 -->
+		<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="CERT_NO" property="certNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<insert id="insertObject" parameterType="BatchQueryReview">
+		insert into PBOC_TRN_BATCH_REVIEW (
+		UUID,
+		CRT_TIME,
+		CRT_USER,
+		BATCH_ID,
+		FILE_ID,
+		FILE_NAME,
+		TOTAL_RECORD,
+		REVIEW_STATUS,
+		QUERY_TYPE
+		)
+		values
+		(SYS_GUID(),
+		SYSDATE,
+		#{crtUser},
+		#{batchId},
+		#{fileId},
+		#{fileName},
+		#{totalRecord},
+		#{reviewStatus},
+		#{queryType}
+		)
+	</insert>
+	<!-- 批次查询 -->
+	<select id="selectBatchListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM PBOC_TRN_BATCH_REVIEW T
+		LEFT JOIN SYS_USER S ON 
+	    T.CRT_USER = S.USER_ACCT
+		WHERE 
+	    S.TEAM= #{team}	
+	</select>
+	<!-- 批次查询 -->
+	<select id="selectBatchListByPage" parameterType="java.util.Map"
+	resultMap="result_Base">
+	SELECT  BATCH_ID,FILE_ID,FILE_NAME,CRT_TIME,TOTAL_RECORD,STAFF_ID,STAFF_NAME, RN FROM
+	(SELECT BATCH_ID,FILE_ID,FILE_NAME,CRT_TIME,TOTAL_RECORD,STAFF_ID,STAFF_NAME,ROWNUM RN FROM
+	(SELECT 
+	T.BATCH_ID,
+	T.FILE_ID,
+	T.FILE_NAME,
+	TO_CHAR(T.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+	AS CRT_TIME,
+	T.TOTAL_RECORD,
+	S.STAFF_ID,
+	S.STAFF_NAME
+	FROM
+	PBOC_TRN_BATCH_REVIEW T
+	LEFT JOIN SYS_USER S ON T.CRT_USER=S.USER_ACCT
+	WHERE
+	S.TEAM= #{team}	
+	ORDER BY 
+	T.CRT_TIME DESC
+    ) A
+	WHERE ROWNUM <![CDATA[ <= ]]>
+	#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+	(#{pageNo} - 1) * #{pageSize}
+
+   </select>
+	<update id="updateStatus" parameterType="java.util.Map">
+	UPDATE PBOC_TRN_BATCH_REVIEW
+	SET 
+	REVIEW_STATUS =#{reviewStatus},
+	refuse_reason=#{refuseReason},
+	REFUSE_TIME=SYSDATE
+     WHERE BATCH_ID =#{batchId}
+   </update>
+   <select id="selectBatchIdListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT(1) 
+		 FROM 
+		 (SELECT DISTINCT T.BATCH_ID FROM PBOC_TRN_BATCH_REVIEW T 
+		 LEFT JOIN SYS_USER S ON 
+	     T.CRT_USER = S.USER_ACCT
+		 WHERE 
+	     S.TEAM= #{team}	
+		 AND
+		 T.REVIEW_STATUS  =#{reviewStatus}
+		 )
+	</select>
+	<!-- 批量查询复核-->
+	<select id="selectBatchIdListByPage" parameterType="java.util.Map"
+	resultMap="result_Base">
+	SELECT BATCH_ID,FILE_NAME,TOTAl_RECORD,STAFF_ID,STAFF_NAME,CERT_NO ,RN FROM
+	(SELECT BATCH_ID,FILE_NAME,TOTAl_RECORD,STAFF_ID,STAFF_NAME,CERT_NO ,ROWNUM RN FROM
+	(
+      SELECT B.BATCH_ID,
+      LISTAGG(B.FILE_NAME,',') within group (order by B.FILE_NAME) AS FILE_NAME,
+      SUM(B.TOTAL_RECORD) AS TOTAl_RECORD,
+      B.STAFF_ID,
+      B.STAFF_NAME,
+      B.CERT_NO
+      FROM 
+      (SELECT 
+      T.BATCH_ID,
+      T.FILE_NAME,
+      T.TOTAL_RECORD,
+      S.STAFF_NAME,
+      S.STAFF_ID,
+      S.CERT_NO
+      FROM PBOC_TRN_BATCH_REVIEW T
+      LEFT JOIN SYS_USER S 
+      ON T.CRT_USER= S.USER_ACCT 
+      WHERE
+      S.TEAM= #{team}
+      AND
+      T.REVIEW_STATUS=#{reviewStatus})B
+      GROUP BY B.BATCH_ID,B.STAFF_NAME,B.STAFF_ID,B.CERT_NO
+      ORDER BY B.BATCH_ID DESC
+    ) A
+	WHERE ROWNUM <![CDATA[ <= ]]>
+	#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+	(#{pageNo} - 1) * #{pageSize}
+
+   </select>
+   <!-- 批量复核退回-->
+ 	<select id="selectBatchIdRefuseListByPage" parameterType="java.util.Map"
+	resultMap="result_Base">                                        
+	SELECT BATCH_ID,STAFF_ID,STAFF_NAME,REFUSE_REASON,REFUSE_TIME, CERT_NO,QUERY_TYPE,RN  FROM                                                   
+	(SELECT BATCH_ID,STAFF_ID,STAFF_NAME,REFUSE_REASON,REFUSE_TIME, CERT_NO,QUERY_TYPE,ROWNUM RN FROM                                      
+	(                                                               
+      SELECT
+       B.BATCH_ID,                                          
+      B.STAFF_ID,                                                 
+      B.STAFF_NAME,                                                
+	  B.REFUSE_REASON,                                              
+	  TO_CHAR(B.REFUSE_TIME, 'YYYY-MM-DD HH24:MI:SS') AS REFUSE_TIME,
+	  B.CERT_NO,
+	  B.QUERY_TYPE                                              
+      FROM                                                        
+      (SELECT                                                     
+      T.BATCH_ID,                                                 
+      S.STAFF_NAME,                                               
+      S.STAFF_ID,
+       S.CERT_NO,                                                
+	  T.REFUSE_REASON,                                              
+	  T.REFUSE_TIME,
+	  T.QUERY_TYPE                                               
+      FROM PBOC_TRN_BATCH_REVIEW T                                     
+      LEFT JOIN SYS_USER S                                        
+      ON T.CRT_USER= S.USER_ACCT                                  
+      WHERE 
+      S.TEAM= #{team}
+      AND                                                      
+      T.REVIEW_STATUS=#{reviewStatus})                            
+      B                                                           
+      GROUP BY
+       B.BATCH_ID,
+       B.STAFF_NAME,
+       B.STAFF_ID,
+       B.CERT_NO,                 
+	  B.REFUSE_REASON,                                              
+	  B.REFUSE_TIME,
+	  B.QUERY_TYPE                                                
+      ORDER BY B.REFUSE_TIME DESC                                    
+    ) A                                                           
+	WHERE ROWNUM <![CDATA[ <= ]]>                                   
+	#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>                
+	(#{pageNo} - 1) * #{pageSize}                                   
+                                                                  
+   </select> 
+    <!-- 批量复核退回 修改  删除旧的记录-->                                                     
+   <delete id="deleteBatchBybatchId" parameterType="java.lang.String">
+	 delete FROM PBOC_TRN_BATCH_REVIEW
+	 WHERE
+	 BATCH_ID=#{oldBatchNo} 
+   </delete>
+</mapper>

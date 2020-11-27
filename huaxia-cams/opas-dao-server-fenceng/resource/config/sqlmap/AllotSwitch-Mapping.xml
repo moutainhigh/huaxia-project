@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+  PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="AllotSwitch">
+	<resultMap id="AllotSwitchResultMap" type="com.huaxia.opas.domain.allot.AllotSwitch">
+		<result column="SWITCH_ID" property="switchId" jdbcType="CHAR"/>
+		<result column="SWITCH_NAME" property="switchName" jdbcType="VARCHAR"/>
+		<result column="SWITCH_STATUS" property="switchStatus" jdbcType="CHAR"/>
+		<result column="SWITCH_CODE" property="switchCode" jdbcType="CHAR"/>
+		<result column="num" property="num" jdbcType="NUMERIC"/>
+	</resultMap>
+	<select id="countAllotSwitch"  parameterType="java.lang.String" resultType="java.lang.Integer"> 
+		select count(1) from OPAS_ALLOT_SWITCH 
+				where  SWITCH_CODE = '${_parameter}'
+	</select> 
+	<insert id="insertAllotSwitch" parameterType="com.huaxia.opas.domain.allot.AllotSwitch">
+		insert into OPAS_ALLOT_SWITCH (SWITCH_ID,SWITCH_NAME,SWITCH_STATUS,SWITCH_CODE) 
+		values (
+			#{switchId,jdbcType=CHAR},
+			#{switchName,jdbcType=VARCHAR},
+			#{switchStatus,jdbcType=CHAR},
+			#{switchCode,jdbcType=CHAR}
+		)
+	</insert>
+	<update id="updateAllotSwitch" parameterType="com.huaxia.opas.domain.allot.AllotSwitch">
+		update OPAS_ALLOT_SWITCH
+		  <set>
+            <if test="switchStatus !=null and switchStatus!=''">
+               SWITCH_STATUS = #{switchStatus,jdbcType=CHAR}
+            </if>
+          </set>
+		where SWITCH_CODE = #{switchCode,jdbcType=CHAR}
+	</update>
+
+	<select id="queryAllotSwitchByCode" parameterType="java.lang.String" resultMap="AllotSwitchResultMap">
+		select SWITCH_ID, SWITCH_NAME,SWITCH_STATUS,SWITCH_CODE,
+		(select count(1) from opas_holiday h where to_char(h.holiday,'yyyyMMdd')=to_char(sysdate,'yyyyMMdd'))
+		 as num
+		from OPAS_ALLOT_SWITCH
+		where SWITCH_CODE = '${_parameter}'
+	</select>
+	<select id="selectHoliday" parameterType="java.util.Map" resultType="int">
+		select count(1) from opas_holiday h where to_char(h.holiday,'yyyyMMdd')=to_char(sysdate,'yyyyMMdd')
+	</select>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.tongdun.mapper.MulBorSingleMapper">
+	  <resultMap id="SearchStringTypeMap" type="java.util.Map">
+	    <result column="UUID" jdbcType="CHAR" property="uuId" />
+	    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+	    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+	    <result column="TRN_ID" jdbcType="INTEGER" property="trnId" />
+	    <result column="CERT_TYPE" jdbcType="CHAR" property="certType" />
+	    <result column="CERT_NO" jdbcType="CHAR" property="certNo" />
+	    <result column="NAME" jdbcType="VARCHAR" property="name" />
+	    <result column="MOBILE" jdbcType="VARCHAR" property="mobile" />
+	    <result column="QUERY_STATUS" jdbcType="VARCHAR" property="queryStatus" />
+	  </resultMap>
+	  <select id="selectFormularyNumTasksByType"  parameterType="java.util.Map" resultMap="SearchStringTypeMap">
+			SELECT
+			  UUID,
+			  CRT_TIME,
+			  CRT_USER,
+			  TRN_ID,
+			  CERT_TYPE,
+			  CERT_NO,
+			  NAME,
+			  MOBILE,
+			  QUERY_STATUS 
+				FROM MULBOR_TRN_SINGLE
+				WHERE QUERY_STATUS = #{taskStatus}
+				AND ROWNUM &lt;= #{taskCount}
+	  </select>
+	  
+	<update id="updateStatusById" parameterType="java.util.Map">
+			UPDATE MULBOR_TRN_SINGLE
+			<set >
+		      <if test="status != null" >
+		         QUERY_STATUS = #{status, jdbcType=VARCHAR},
+		      </if>
+		   </set>
+			 WHERE TRN_ID = #{trnId, jdbcType=CHAR}
+	</update>
+	
+	<insert id="insertObject" parameterType="com.huaxia.plaze.ui.tongdun.domain.MulBorSingle">
+		INSERT INTO MULBOR_TRN_SINGLE (
+		  UUID,
+		  CRT_TIME,
+		  CRT_USER,
+		  TRN_ID,
+		  CERT_TYPE,
+		  CERT_NO,
+		  NAME,
+		  MOBILE,
+		  QUERY_STATUS 
+		)
+		values
+		(
+			SYS_GUID(),
+			SYSDATE,
+			#{crtUser, jdbcType = VARCHAR},
+			#{trnId, jdbcType = CHAR},
+			#{certType, jdbcType = VARCHAR},
+			#{certNo, jdbcType = VARCHAR},
+			#{name, jdbcType = VARCHAR},
+			#{mobile, jdbcType = VARCHAR},
+			#{queryStatus, jdbcType = CHAR}
+		)
+	</insert>
+	
+</mapper>

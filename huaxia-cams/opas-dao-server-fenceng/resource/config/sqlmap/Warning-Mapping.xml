@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 对应Dao层的namespaces属性 -->
+<mapper namespace="WarningList">
+
+	<!--将数据库表的字段和实体类属性对应起来 -->
+	<resultMap id="WarningListResultMap" type="com.huaxia.opas.domain.sysparm.Warning">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="STOP_DATE" property="stopDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!--分页查询 -->
+	<select id="queryWarningList" parameterType="com.huaxia.opas.domain.sysparm.Warning"
+		resultMap="WarningListResultMap">
+		select
+		AUTO_ID,
+		RISK_TYPE,
+		STATUS,
+		START_DATE,
+		STOP_DATE,
+		CRT_DATE,
+		CRT_USER,
+		LST_UPD_USER,
+		LST_UPD_DATE
+		from OPAS_WARNINGLIST
+		<where>
+			<if test="riskType != null and riskType !='' ">
+				AND RISK_TYPE LIKE '%${riskType}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+		ORDER BY CRT_DATE
+	</select>
+
+	<select id="queryWarningCount" parameterType="com.huaxia.opas.domain.sysparm.Warning"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_WARNINGLIST
+		<where>
+			<if test="riskType != null and riskType !='' ">
+				AND RISK_TYPE LIKE '%${riskType}%'
+			</if>
+			<if test="status != null and status !='' ">
+				AND STATUS = #{status}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteWarningListByAutoId" parameterType="com.huaxia.opas.domain.sysparm.Warning">
+		delete from
+		OPAS_WARNINGLIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insertWarningList" parameterType="com.huaxia.opas.domain.sysparm.Warning">
+		insert into OPAS_WARNINGLIST
+		(AUTO_ID,
+		RISK_TYPE,
+		STATUS,
+		START_DATE,
+		STOP_DATE,
+		CRT_DATE,
+		CRT_USER,
+		LST_UPD_USER,
+		LST_UPD_DATE)
+		values
+		(#{autoId,jdbcType=VARCHAR},
+		#{riskType,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		SYSDATE,
+		NULL,
+		SYSDATE,
+		#{crtUser,jdbcType=VARCHAR},
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateWarningList" parameterType="com.huaxia.opas.domain.sysparm.Warning">
+		update OPAS_WARNINGLIST
+		<set>
+			<if test="riskType != null">
+			RISK_TYPE = #{riskType,jdbcType=VARCHAR},</if>
+			<if test="status != null">
+			STATUS = #{status,jdbcType=CHAR},</if>			
+			<if test="status == '1'.toString() ">START_DATE = SYSDATE,</if>
+			<if test="status == '0'.toString() ">STOP_DATE = SYSDATE,</if>
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CreditWhiteList">
+
+	<resultMap id="CreditInfoResultMap" type="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR"/>
+		<result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR"/>
+		<result column="COMPANY_TEL" property="companyTel" jdbcType="VARCHAR"/>
+		<result column="COMPANY_ADDR" property="companyAddr" jdbcType="VARCHAR"/>
+		<result column="COMPANY_DEPT" property="companyDept" jdbcType="VARCHAR"/>		
+		<result column="LEGALER" property="legaler" jdbcType="VARCHAR"/>
+		<result column="REGISTER_FUND" property="registerFund" jdbcType="VARCHAR"/>
+		<result column="REGISTER_ADDR" property="registerAddr" jdbcType="VARCHAR"/>
+		<result column="MANAGE_STATUS" property="manageStatus" jdbcType="VARCHAR"/>
+		<result column="PARTNER_INFO" property="partnerInfo" jdbcType="VARCHAR"/>
+		<result column="MANAGE_EXCETIONINFO" property="manageExceptionInfo" jdbcType="VARCHAR"/>
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR"/>
+		<result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="CURR_STATUS" property="currStatus" jdbcType="CHAR"/>
+		<result column="ORDERBY_NO" property="orderByNo" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="queryCreditInfo"
+		parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+		resultMap="CreditInfoResultMap">
+		select 
+		AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		from OPAS_CREDITINFO_LIST
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryCreditInfoList"
+		parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+		resultMap="CreditInfoResultMap">
+		select 
+		AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS 
+		FROM OPAS_CREDITINFO_LIST t
+		<where>
+			<if test="appId != null and appId != ''">
+				AND upper(APP_ID) LIKE upper('%${appId}%')
+			</if>			
+			<if test="companyName != null and companyName != ''"> 
+			    AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>
+			<if test="companyAddr != null and companyAddr != ''">
+				AND COMPANY_ADDR LIKE '%${companyAddr}%'
+			</if>
+			<if test="companyDept != null and companyDept != ''">
+				AND COMPANY_DEPT LIKE '%${companyDept}%'
+			</if>
+			<if test="operator != null and operator != ''">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(t.CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+		</where>
+		ORDER BY t.CREATE_TIME DESC,to_number(t.ORDERBY_NO)
+	</select>
+	
+	<select id="queryCreditInfoListWithOutOperator"
+		parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+		resultMap="CreditInfoResultMap">
+		select 
+		AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS 
+		FROM OPAS_CREDITINFO_LIST t
+		<where>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+		</where>
+		ORDER BY t.CREATE_TIME DESC,to_number(t.ORDERBY_NO)
+	</select>
+	
+	<select id="queryCreditInfoCount"
+		parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID)
+		FROM OPAS_CREDITINFO_LIST t
+		<where>
+			<if test="appId != null and appId != ''">
+				AND upper(APP_ID) LIKE upper('%${appId}%')
+			</if>			
+			<if test="companyName != null and companyName != ''"> 
+			    AND COMPANY_NAME LIKE '%${companyName}%'
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				AND COMPANY_TEL LIKE '%${companyTel}%'
+			</if>
+			<if test="companyAddr != null and companyAddr != ''">
+				AND COMPANY_ADDR LIKE '%${companyAddr}%'
+			</if>
+			<if test="companyDept != null and companyDept != ''">
+				AND COMPANY_DEPT LIKE '%${companyDept}%'
+			</if>
+			<if test="operator != null and operator != ''">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND 
+					(t.CREATE_TIME 
+						BETWEEN 
+						#{createTime}
+						AND
+						(select #{createTime} + (INTERVAL '23:59:59'hour to second) from dual)
+					)	
+			</if>
+			<if test="ids != null and ids != ''">
+					AND AUTO_ID in
+					<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+						#{id,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+		</where>	
+		ORDER BY t.CREATE_TIME DESC
+	</select>
+	
+	<delete id="deleteCreditInfo" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		delete from
+		OPAS_CREDITINFO_LIST
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<update id="updateCreditInfo" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		update OPAS_CREDITINFO_LIST
+		<set>
+			APP_ID = #{appId,jdbcType=VARCHAR},
+			COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+			COMPANY_TEL = #{companyTel,jdbcType=VARCHAR},
+			COMPANY_ADDR = #{companyAddr,jdbcType=VARCHAR},
+			COMPANY_DEPT = #{companyDept,jdbcType=VARCHAR},
+			LEGALER = #{legaler,jdbcType=VARCHAR},
+			REGISTER_FUND = #{registerFund,jdbcType=VARCHAR},
+			REGISTER_ADDR = #{registerAddr,jdbcType=VARCHAR},
+			MANAGE_STATUS = #{manageStatus,jdbcType=VARCHAR},
+			PARTNER_INFO = #{partnerInfo,jdbcType=VARCHAR},
+			MANAGE_EXCETIONINFO = #{manageExceptionInfo,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR},
+			CURR_STATUS = #{currStatus,jdbcType=CHAR}
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>	
+	
+	<update id="updateCreditInfoActive" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		update OPAS_CREDITINFO_LIST
+		<set>
+			CURR_STATUS = #{currStatus,jdbcType=VARCHAR},
+			OPERAT_TIME = CURRENT_DATE,
+			OPERATOR = #{operator,jdbcType=VARCHAR}
+		</set>
+		where AUTO_ID in 
+		<foreach collection="ids" open= "(" close=")" item="id" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	
+	<select id="queryCreditInfoHistoryList"
+		parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+		resultMap="CreditInfoResultMap">
+		select 
+		APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS
+		from OPAS_CREDITINFO_LIST_HISTORY
+		WHERE AUTO_ID = #{autoId,jdbcType=VARCHAR}
+		ORDER BY OPERAT_TIME DESC
+	</select>
+	
+	<select id="queryCreditInfoHistoryCount"
+		parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList"
+		resultType="java.lang.Integer">
+		select count(AUTO_ID)
+		from OPAS_CREDITINFO_LIST_HISTORY
+		where
+		AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</select>
+	 
+	<insert id="insertCreditInfo" parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		insert into OPAS_CREDITINFO_LIST
+		(AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS)
+		values (
+			#{autoId,jdbcType=VARCHAR},
+			#{appId,jdbcType=VARCHAR},
+			#{companyName,jdbcType=VARCHAR},
+			#{companyTel,jdbcType=VARCHAR},
+			#{companyAddr,jdbcType=VARCHAR},
+			#{companyDept,jdbcType=VARCHAR},
+			#{legaler,jdbcType=VARCHAR},
+			#{registerFund,jdbcType=VARCHAR},
+			#{registerAddr,jdbcType=VARCHAR},
+			#{manageStatus,jdbcType=VARCHAR},
+			#{partnerInfo,jdbcType=VARCHAR},
+			#{manageExceptionInfo,jdbcType=VARCHAR},
+			#{operator,jdbcType=VARCHAR},
+			CURRENT_DATE,
+			CURRENT_DATE,
+			#{currStatus,jdbcType=CHAR}
+		)
+	</insert>
+ 	
+	<insert id="insertCreditInfoList" parameterType="java.util.List">
+		insert into OPAS_CREDITINFO_LIST 
+		(AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS,ORDERBY_NO)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			(select
+				#{item.autoId,jdbcType=VARCHAR},
+				#{item.appId,jdbcType=VARCHAR},
+				#{item.companyName,jdbcType=VARCHAR},
+				#{item.companyTel,jdbcType=VARCHAR},
+				#{item.companyAddr,jdbcType=VARCHAR},
+				#{item.companyDept,jdbcType=VARCHAR},
+				#{item.legaler,jdbcType=VARCHAR},
+				#{item.registerFund,jdbcType=VARCHAR},
+				#{item.registerAddr,jdbcType=VARCHAR},
+				#{item.manageStatus,jdbcType=VARCHAR},
+				#{item.partnerInfo,jdbcType=VARCHAR},
+				#{item.manageExceptionInfo,jdbcType=VARCHAR},
+				#{item.operator,jdbcType=VARCHAR},
+				#{item.operatTime,jdbcType=TIMESTAMP},
+				#{item.createTime,jdbcType=TIMESTAMP},
+				#{item.currStatus,jdbcType=CHAR},
+				#{item.orderByNo,jdbcType=VARCHAR}	
+			from dual)
+		</foreach>
+	</insert>
+			
+	<insert id="insertCreditInfoHistory"
+			parameterType="com.huaxia.opas.domain.sysparm.CreditWhiteList">
+		INSERT INTO OPAS_CREDITINFO_LIST_HISTORY
+		(OPRETION_ID, AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS) 
+	    values
+	    (
+	 		#{opretionId,jdbcType=VARCHAR},	    
+			#{autoId,jdbcType=VARCHAR},
+			#{appId,jdbcType=VARCHAR},
+			#{companyName,jdbcType=VARCHAR},
+			#{companyTel,jdbcType=VARCHAR},
+			#{companyAddr,jdbcType=VARCHAR},
+			#{companyDept,jdbcType=VARCHAR},
+			#{legaler,jdbcType=VARCHAR},
+			#{registerFund,jdbcType=VARCHAR},
+			#{registerAddr,jdbcType=VARCHAR},
+			#{manageStatus,jdbcType=VARCHAR},
+			#{partnerInfo,jdbcType=VARCHAR},			
+			#{manageExceptionInfo,jdbcType=VARCHAR},
+			#{operator,jdbcType=VARCHAR},
+			#{operatTime,jdbcType=TIMESTAMP},
+			#{createTime,jdbcType=TIMESTAMP},
+			#{currStatus,jdbcType=CHAR}
+		)
+	</insert>	
+ 	
+	<insert id="insertCreditInfoHistoryList" parameterType="java.util.List">
+		insert into OPAS_CREDITINFO_LIST_HISTORY 
+	 	(OPRETION_ID, AUTO_ID, APP_ID, COMPANY_NAME, COMPANY_TEL,COMPANY_ADDR,COMPANY_DEPT, LEGALER, REGISTER_FUND, REGISTER_ADDR, MANAGE_STATUS, PARTNER_INFO, MANAGE_EXCETIONINFO, OPERATOR, OPERAT_TIME, CREATE_TIME, CURR_STATUS) 
+		<foreach collection="list" item="item" index="index" separator="union all">
+				(SELECT
+			 		#{item.opretionId,jdbcType=VARCHAR},	    
+					#{item.autoId,jdbcType=VARCHAR},
+					#{item.appId,jdbcType=VARCHAR},
+					#{item.companyName,jdbcType=VARCHAR},
+					#{item.companyTel,jdbcType=VARCHAR},
+					#{item.companyAddr,jdbcType=VARCHAR},
+					#{item.companyDept,jdbcType=VARCHAR},
+					#{item.legaler,jdbcType=VARCHAR},
+					#{item.registerFund,jdbcType=VARCHAR},
+					#{item.registerAddr,jdbcType=VARCHAR},
+					#{item.manageStatus,jdbcType=VARCHAR},
+					#{item.partnerInfo,jdbcType=VARCHAR},
+					#{item.manageExceptionInfo,jdbcType=VARCHAR},
+					#{item.operator,jdbcType=VARCHAR},
+					#{item.operatTime,jdbcType=TIMESTAMP},
+					#{item.createTime,jdbcType=TIMESTAMP},
+					#{item.currStatus,jdbcType=CHAR}
+				FROM dual)
+		</foreach>
+	</insert>
+
+</mapper>

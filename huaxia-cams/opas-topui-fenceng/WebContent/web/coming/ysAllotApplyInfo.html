@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>预审分件修改</title>
+<link href="../../css/normalize.css" type="text/css" rel="stylesheet" />
+<link href="../../css/normalize-ext.css" type="text/css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+ <style type="text/css">
+ 	input[type="text"] {
+	    width:300px;
+	}
+ </style>
+</head>
+<script type="text/javascript">
+	function GetQueryString(name){
+		 var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		 var r = window.location.search.substr(1).match(reg);
+		 if(r!=null) return unescape(r[2]);
+		 return null;
+	}
+	//更新
+	function onUpdate(obj){
+		var allotInfoFormData = $("#allotInfoForm").serializeArray();
+		var jsondata = getFormData(allotInfoFormData);
+		$cf.ajax({
+			url : '/opas-naps/updateYsAllotInfo.json', 
+			data : jsondata,
+			onSuccess : function(data) {
+				var msg = data.RSP_BODY.msg;
+				alert(msg);
+			}
+		}); 
+	}
+	//查询
+	function onSearch(obj){
+		var appId = $("#app_id").val();
+		if (appId==null) {
+			alert("请输入正确APPID!");
+			return;
+		}
+		$cf.ajax({
+			url : '/opas-naps/queryYsAllotInfo.json', 
+			data : {
+				appId:appId
+			},onSuccess : function(data) {
+				var allotInfo = data.RSP_BODY.allotInfo;
+				$('#allotInfoForm').form("load", allotInfo);
+			}
+		}); 
+	}
+	
+	
+	//转换数据
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			if(objValue.indexOf('"') != -1){
+				objValue = objValue.replace(/\"/g,"\\"+"\""); 
+			} 
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	
+	
+</script>
+<body >
+<fieldset>
+	<legend align="center" style="font-size:20px;font-weight:bolder">分件修改</legend>
+	<form id="allotInfoForm">
+		<table id="allotInfoTable" style="border-collapse: separate; border-spacing: 10px;">
+			<tr>
+				<td>申请流水号:</td>
+	  			<td><input id="app_id" name="app_id" type="text" style="width:240px"></input></td>
+	  			<td><input onclick="onSearch('appId')" value="查询" type="button" class="alsp" style="width:100px;"/></td>
+	  			<td></td>
+			</tr>
+			<tr>
+				<td></td>
+	  			<td></td>
+	  			<td></td>
+	  			<td></td>
+			</tr>
+			<tr>
+				<td>分配状态:</td>
+				<td><input id="currStatus" name="currStatus" type="text" style="width:240px"></input></td>
+				<td>处理状态:</td>
+				<td><input id="delStatus" name="delStatus" type="text" style="width:240px"></input></td>
+				<td><input id="appId" name="appId" hidden="hidden" style="width:240px"></input></td>
+				
+			</tr>
+			<tr>
+				<td>当前环节:</td>
+				<td><input id="currNode" name="currNode" type="text" style="width:240px"></input></td>
+				<td>隐藏状态:</td>
+				<td><input id="synFlag" name="synFlag" type="text" style="width:240px"></input></td>
+	  		</tr>
+			<tr>
+				<td>提报状态:</td>
+				<td><input id="submitStatus" name="submitStatus" type="text" style="width:240px"></input></td>
+				<td>提报类型:</td>
+				<td><input id="submitType" name="submitType" type="text" style="width:240px"></input></td>
+	  		</tr>
+	  		<tr>
+				<td>当前操作人:</td>
+				<td><input id="currOptUser" name="currOptUser" type="text" style="width:240px"></input></td>
+				<td></td>
+	  			<td></td>
+			</tr>
+	  		<tr>
+	  			<td></td>
+	  			<td align="center"><input onclick="onUpdate('appId')" value="保存" type="button" class="alsp" style="width:100px;"/></td>
+	  			<td></td>
+	  			<td></td>
+	  		</tr>
+		</table>
+	</form>	
+</fieldset>	
+		
+</body>
+</html>

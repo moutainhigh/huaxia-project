@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.nciic.mapper.XpInfoMapper">
+
+	<resultMap id="result_Base" type="com.huaxia.plaze.ui.nciic.domain.NciicXpInfo">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="GMSFHM" property="gmsfhm" jdbcType="VARCHAR" />
+		<result column="RESULT_GMSFHM" property="gmsfhmResult" jdbcType="VARCHAR" />
+		<result column="XM" property="xm" jdbcType="VARCHAR" />
+		<result column="RESULT_XM" property="xmResult" jdbcType="VARCHAR" />
+		<result column="XP" property="xp" jdbcType="VARCHAR" />
+		<result column="RESULT_FX" property="resultFx" jdbcType="VARCHAR" />
+		<result column="RESULT_FS" property="resultFs" jdbcType="VARCHAR" />
+		<result column="ERROR_CODE" property="errorCode" jdbcType="VARCHAR" />
+		<result column="ERROR_MESSAGE" property="errorMessage" jdbcType="VARCHAR" />
+		<result column="ERROR_MESSAGE_COL" property="errorMessageCol" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 分页总数 -->
+	<select id="selectHistoryListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM NCIIC_XP_INFO
+		<where>
+			<if test="gmsfhm != null">
+				AND GMSFHM = #{gmsfhm}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据身份证号查询列表 -->
+	<select id="selectHistoryListByPage" parameterType="java.util.Map"
+		resultMap="result_Base">
+		SELECT TRN_ID,CRT_USER,CRT_TIME,GMSFHM,RESULT_GMSFHM,XM,RESULT_XM,XP,RESULT_FX,RESULT_FS,ERROR_CODE,ERROR_MESSAGE,ERROR_MESSAGE_COL,RN FROM (
+			SELECT TRN_ID,CRT_USER,CRT_TIME,GMSFHM,RESULT_GMSFHM,XM,RESULT_XM,XP,RESULT_FX,RESULT_FS,ERROR_CODE,ERROR_MESSAGE,ERROR_MESSAGE_COL,ROWNUM RN FROM (
+				SELECT TRN_ID,CRT_USER,TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS') AS CRT_TIME,GMSFHM,RESULT_GMSFHM,XM,RESULT_XM,XP,RESULT_FX,RESULT_FS,ERROR_CODE,ERROR_MESSAGE,ERROR_MESSAGE_COL 
+				  FROM NCIIC_XP_INFO
+				  <where>
+					<if test="gmsfhm != null">
+						AND GMSFHM = #{gmsfhm}
+					</if>
+				  </where>
+				ORDER BY CRT_TIME DESC ) A
+			WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize}) 
+		WHERE RN<![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+</mapper>

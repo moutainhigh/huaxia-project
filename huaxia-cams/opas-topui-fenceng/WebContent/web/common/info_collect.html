@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<link rel="stylesheet" href="../../css/shouye_style1.css" type="text/css"></link>
+<link type="text/css" rel="stylesheet" href="../../css/common/layout.css" />
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+</head>
+<body>
+<form id="infoCollForm">
+<div id="aa" class="easyui-accordion" style="width:99%;">   
+    <div title="行业职位信息" style="overflow:auto;padding:10px;" data-options="selected:true">   
+			<table class="formtable">
+				<tr>
+					<td>行业代码</td>
+					<td>
+					<input class="easyui-validatebox textbox" id="industryCode" type="text" maxlength="3" name="industryCode" >
+					</td>
+					<td>
+					<input type="hidden" id="appId" name="appId" value=""/>
+					</td> 
+					<td>职位代码</td>
+					<td><input class="easyui-validatebox textbox" id="jobCode" type="text" maxlength="2" name="jobCode" ></td>
+				</tr>
+			</table>
+    </div>  
+ </div>   
+ <div id="bb" class="easyui-accordion" style="width:99%;">   
+    <div title="财力信息" style="padding:10px;" data-options="selected:true">   
+			<fieldset>
+			<legend align="left">
+				<font size="2">房产信息</font>
+			</legend>
+			<table class="formtable">
+				<tr>
+					<td>房产信息来源</td>
+					<td>
+					<select id="houseInfoFrom"  class="easyui-combobox" name="houseInfoFrom" dict_type="FCXXLY" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 90px;">
+					</select>		
+					</td>
+					<td>房产价值</td>
+					<td><input class="easyui-numberbox" precision="2" id="houseCost"
+						type="text" name="houseCost"> 
+					</td>
+					<td>(万元)</td>
+				</tr>
+				<tr>
+					<td>房产面积</td>
+					<td><input class="easyui-numberbox" precision="2" id="houseArea"
+						type="text" name="houseArea" > 
+					</td>
+					<td>(平米)</td>
+					<td></td>
+				</tr>
+			</table>
+			</fieldset>
+			<br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">行驶证</font>
+			</legend>
+			<div style="padding:10px">
+			<table class="formtable">
+				<tr>
+					<td>车产价值</td>
+					<td><input class="easyui-validatebox textbox"  id="carCost"
+						type="text" name="carCost" > 
+					</td>
+					<td>(万元)</td>
+					<td>车龄</td>
+					<td><input class="easyui-validatebox textbox"  id="carOld" precision="2" 
+						type="text" name="carOld" > 
+					</td>
+					<td>(月)</td>
+				</tr>
+				<tr>
+					<td>注册时间</td>
+					<td><input class="easyui-datebox" id="registerDate"
+						type="text" name="registerDate" > 
+					</td>
+					<td></td>	
+					<td>发证时间</td>
+					<td><input class="easyui-datebox" id="issueDate"
+						type="text" name="issueDate" > 
+					</td>
+				</tr>
+				<tr>
+					<td>车辆手别</td>
+					<td colspan="3">
+					<input type="radio" name="carHand" value="1">一手
+					<input type="radio" name="carHand" value="2">二手
+					</td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+    </div>  
+ </div> 
+ <div id="cc" class="easyui-accordion" style="width:99%;">   
+    <div title="客户类别" style="padding:10px;" >
+    	<br><br><b><input type="checkbox"  value="07" >交叉销售客户</b><br><br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">个人客户</font>
+			</legend>
+			<div style="padding:10px">
+			<table class="formtable">
+				<tr>
+					<td>最早开户日期</td>
+					<td><input class="easyui-datebox" id="perOpendate"
+						type="text" name="perOpendate" > 
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>日均总资产余额(ADB)</td>
+					<td><input class="easyui-numberbox" precision="2" id="perAssetBalance"
+						type="text" name="perAssetBalance" > 
+					</td>
+					<td>(万元)</td>
+				</tr>
+				<tr>
+					<td>贷款本金</td>
+					<td><input class="easyui-numberbox" precision="2" id="perLoanpri"
+						type="text" name="perLoanpri" > 
+					</td>
+					<td>(万元)</td>
+					<td>月代发工资额</td>
+					<td><input class="easyui-numberbox" precision="2" id="perPayWage"
+						type="text" name="perPayWage" > 
+					</td>
+					<td>(万元)</td>
+				</tr>
+				<tr>
+					<td>金融资产可用总额</td>
+					<td><input class="easyui-numberbox" precision="2" id="perFinAssetSum"
+						type="text" name="perFinAssetSum" > 
+					</td>
+					<td>(万元)</td>
+					<td>贷款状态</td>
+					<td>
+					<input type="radio" name="perLoanstatus" value="1">正常
+					<input type="radio" name="perLoanstatus" value="0">非正常
+					</td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+			<br><br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">对公客户</font>
+			</legend>
+			<div style="padding:10px">
+			<table class="formtable">
+				<tr>
+					<td>最早开户日期</td>
+					<td><input class="easyui-datebox" id="pubOpendate"
+						type="text" name="pubOpendate" > 
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;授信额度</td>
+					<td><input class="easyui-numberbox" precision="2" id="pubCreditlimit"
+						type="text" name="pubCreditlimit" > 
+					</td>
+					<td>(万元)</td>
+				</tr>
+				<tr>
+					<td>贷款状态</td>
+					<td>
+					<input type="radio" name="pubLoanstatus" value="1">正常
+					<input type="radio" name="pubLoanstatus" value="0">非正常
+					</td>
+					<td>对公存款余额</td>
+					<td><input class="easyui-numberbox" precision="2" id="pubSavebalance"
+						type="text" name="pubSavebalance" > 
+					</td>
+					<td>(万元)</td>
+				</tr>
+				<tr>
+					<td>对公存款日均余额</td>
+					<td><input class="easyui-numberbox" precision="2" id="pubSaveDaybalance"
+						type="text" name="pubSaveDaybalance" > 
+					</td>
+					<td>(万元)</td>
+					<td></td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+			<br><br><b><input type="checkbox"  value="03" editable="false" readonly="true">本行员工</b><br><br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">华夏卡中心员工</font>
+			</legend>
+			<div style="padding:10px">
+			<table >
+				<tr>
+					<td>用工性质</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select id="hxCardcentreStaff" class="easyui-combobox" name="hxCardcentreStaff" dict_type="KZXYGYGXZ" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>	
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>职级</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select id="hxCardcentreStaffLevel" class="easyui-combobox" name="hxCardcentreStaffLevel" dict_type="KZXYGZJ" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width:150px;">
+						</select>	
+					</td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+			<br><br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">华夏银行员工</font>
+			</legend>
+			<div style="padding:10px">
+			<table >
+				<tr>
+					<td>用工性质</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select id="hxBankStaff" class="easyui-combobox" name="hxBankStaff" dict_type="ZHYGYGXZ" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width:150px;">
+						</select>
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>职级</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>
+					<select id="hxBankStaffLevel" class="easyui-combobox" name="hxBankStaffLevel" dict_type="ZHYGZJ" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 150px;">
+						</select>	
+					</td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+			<br><br><b><input type="checkbox"  value="04" editable="false" readonly="true">VIP客户</b><br><br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">我行对公客户</font>
+			</legend>
+			<div style="padding:10px">
+			<table >
+				<tr>
+					<td>推荐人</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input class="easyui-validatebox textbox" id="refree"
+						type="text" name="refree" style="height:20px" > 
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>推荐额度</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input class="easyui-validatebox textbox" id="refreeLimit"
+						type="text" name="refreeLimit" style="height:20px"> 
+					</td>
+					<td>(万元)</td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+			<br><br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">我行个人客户</font>
+			</legend>
+			<div style="padding:10px">
+			<table >
+				<tr>
+					<td>推荐人</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input class="easyui-validatebox textbox" id="refree2"
+						type="text" name="refree2" style="height:20px"> 
+					</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>推荐额度</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input class="easyui-validatebox textbox" id="refreeLimit2"
+						type="text" name="refreeLimit2" style="height:20px"> 
+					</td>
+					<td>(万元)</td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+			<br><br>
+			<fieldset>
+			<legend align="left">
+				<font size="2">非我行客户</font>
+			</legend>
+			<div style="padding:10px">
+			<table >
+				<tr>
+					<td>推荐人</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input class="easyui-validatebox textbox" id="refree3"
+						type="text" name="refree3" style="height:20px"> 
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>推荐额度</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input class="easyui-validatebox textbox" id="refreeLimit3"
+						type="text" name="refreeLimit3" style="height:20px"> 
+					</td>
+					<td>(万元)</td>
+				</tr>
+			</table>
+			</div>
+			</fieldset>
+			<br><br><b><input type="checkbox"  value="13" editable="false" readonly="true">社保客户</b><br><br>
+			<fieldset>
+			<table >
+				<tr>
+					<td>当前缴交状态</td>
+					<td>
+						<input type="radio" name="sbCurrPayStatus" value="1">正常
+						<input type="radio" name="sbCurrPayStatus" value="0">非正常
+					</td>
+					<td>月缴交金额</td>
+					<td><input class="easyui-numberbox" precision="2" id="sbMonthPayment"
+						type="text" name="sbMonthPayment" style="height:20px" > 
+					</td>
+					<td>(万元)</td>
+				</tr>
+				<tr>
+					<td>参保日期</td>
+					<td><input class="easyui-datebox" id="sbPayDate"
+						type="text" name="sbPayDate" style="height:20px"> 
+					</td>
+					<td>当前单位缴交月数</td>
+					<td><input class="easyui-validatebox textbox" data-options="validType:'integer'" id="sbCurrCompanyMonth"
+						type="text" name="sbCurrCompanyMonth" style="height:20px"> 
+					</td>
+				</tr>
+				<tr>
+					<td>月缴交基数</td>
+					<td><input class="easyui-numberbox" precision="2" id="sbMonthPaybase"
+						type="text" name="sbMonthPaybase" style="height:20px" > 
+					</td>
+					<td>(万元)</td>
+					<td>当前缴交单位</td>
+					<td><input class="easyui-validatebox textbox" data-options="validType:'chinese'" id="sbCurrPaycompany"
+						type="text" name="sbCurrPaycompany" style="height:20px"> 
+					</td>
+				</tr>
+			</table>
+			</fieldset>
+			
+			<br><br><b><input type="checkbox"  value="12" editable="false" readonly="true">公积金客户</b><br><br>
+			<fieldset>
+			<table >
+				<tr>
+					<td>公积金缴交状态</td>
+					<td>
+						<select id="gjjPayStatus" class="easyui-combobox" name="gjjPayStatus" dict_type="GJIJINZT" data-options="editable:false,valueField:'dictDetailCode',textField:'dictDetailName'"
+							style="width: 90px;">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>公积金月缴交金额</td>
+					<td><input class="easyui-numberbox" precision="2" id="gjjMonthPayment"
+						type="text" name="gjjMonthPayment" > 
+					</td>
+					<td>(万元)</td>
+					<td>个人缴存比例(%)</td>
+					<td><input class="easyui-validatebox textbox" data-options="validType:'onetohundred'" id="gjjPerPayrate"
+						type="text" name="gjjPerPayrate" style="height:20px"> 
+					</td>
+				</tr>
+				<tr>
+					<td>参缴日期</td>
+					<td><input class="easyui-datebox" id="gjjPayDate"
+						type="text" name="gjjPayDate" > 
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>缴至月份</td>
+					<td>
+						<input id="gjjEndMonth" class="easyui-datebox" name="gjjEndMonth" 
+							type="text" data-options="formatter:myformatter,parser:myparser">
+					</td>
+				</tr>
+			</table>
+			</fieldset>
+			<br><br><b><input type="checkbox"  value="08" readonly="readonly">高学历白领                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </b><br>
+			<br><br><b><input type="checkbox"  value="09" readonly="readonly">精英盈利客户</b><br>
+			<br><br><b><input type="checkbox"  value="10" readonly="readonly">年轻较高学历客户</b><br><br><br>
+			<fieldset>
+			<table class="formtable">
+				<tr>
+					<td>学历类型</td>
+					<td>
+					<input type="radio" value="1" name="eduType">大专
+					<input type="radio" value="2" name="eduType">本科
+					<input type="radio" value="3" name="eduType">硕士
+					<input type="radio" value="4" name="eduType">博士及以上
+					<input type="radio" value="0" name="eduType">其他
+					</td>
+				</tr>
+				<tr>
+					<td>学习形式</td>
+					<td>
+					<input type="radio" value="0" name="eduModel">全日制
+					<input type="radio" value="1" name="eduModel">非全日制
+					</td>
+				</tr>
+			</table>
+			</fieldset>
+			<br><br><b><input type="checkbox"  value="11"  readonly="readonly">普通盈利客户</b><br>
+			<br><br><b><input type="checkbox"  value="05"  readonly="readonly">预筛选客户</b><br>
+			<br><br><b><input type="checkbox"  value="06"  readonly="readonly">特殊项目/团办客户</b><br>
+			<br><br><b><input type="checkbox"  value="14"  readonly="readonly">其他目标客户</b><br><br><br>
+    </div>   
+</div>
+</form>
+<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="onSave()">保存</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+</div>
+<script>
+$cf.loadAllDict();
+var infoCollForm=$("#infoCollForm");
+var url = location.href;
+function GetQueryString(name){
+	var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+ 	var r = window.location.search.substr(1).match(reg);
+	if(r!=null) return unescape(r[2]);
+ 	return null;
+}
+var appId = GetQueryString("appId");
+var userCode = window.parent.userCode;
+var currNode = window.parent.currNode;
+$('#appId').val(appId);
+var roleObj={"appId":appId};
+var isCanCommit = false;//判断是否是  进行父页面是否可提交 	
+var isSaveSuccess=true;//保存是否成功的标志 父页面调用 
+var waringMessage="";//保存失败时父页面要用的 提示的信息 
+var bigSaveButtonFlag=false;//判断是否是  进行父页面大保存操作的依据 	
+
+var radios = $("input[type='radio']");
+radios.each(function(){
+	var _this = this;
+	this.onclick = function(){
+		if($(_this).attr('checked')){
+			$(_this).removeAttr('checked');
+		}else{
+			$(_this).attr('checked','checked');
+		}
+	}
+});
+
+$(function(){
+		$("#industryCode").keyup(function(){
+			var industryCode = $("#industryCode").val();
+			if(industryCode.length==3){
+				$("#jobCode").focus();
+			}
+		})
+		$cf.ajax({
+			url : "/opas-naps/query_infoCollect.json",
+			data : roleObj,
+			onSuccess : function(ret) {
+				//给输入框和下拉框赋值写法（后台传给前台一个json串）
+				var jsonapprovaInfoSupp = ret.RSP_BODY.jsonapprovaInfoSupp;
+				var approvaInfoSupp = ret.RSP_BODY.approvaInfoSupp;
+				var approvaInfoSuppjson;
+				var custType = '';
+				var gjjEndMonth = '';
+				if(jsonapprovaInfoSupp!=""&&jsonapprovaInfoSupp!=null){
+					approvaInfoSuppjson = eval('(' +jsonapprovaInfoSupp+ ')');
+					custType = approvaInfoSuppjson.custType;
+				}
+				var approvaInfoSuppExamine;
+				if(approvaInfoSupp!=""&&approvaInfoSupp!=null){
+					approvaInfoSuppExamine = eval('(' +approvaInfoSupp+ ')');
+				}
+				infoCollForm.form('load',approvaInfoSuppjson);
+				infoCollForm.form('load',approvaInfoSuppExamine);
+				var plaze_id = new Array("perAssetBalance","perLoanpri",
+						"perPayWage","perFinAssetSum","sbMonthPaybase",
+						"sbMonthPayment","gjjMonthPayment"); 
+				for(var s=0;s<plaze_id.length;s++){
+					if(approvaInfoSuppjson!=null&&approvaInfoSuppjson!=""){
+						var value = approvaInfoSuppjson[plaze_id[s]];
+						if(value!=null&&value!=""&&value!=undefined){
+							$("#"+plaze_id[s]).numberbox('setValue',value/10000);
+						}
+					}
+				}
+				if(custType!=undefined&&custType!=null&&custType!=''){
+					 var i=custType.length;
+					 for(var a=0;a<i;a+=2){//设置用户类型相关复选框 禁用 
+						 var value=custType.substring(a,a+2);
+						$(":checkbox[value='"+value+"']").prop("checked",true);
+					 }
+				}
+				//客户类型不可编辑
+				var checkboxs = $("input[type='checkbox']");
+				checkboxs.each(function(){
+					value = $(this).val();
+					$(this).attr("disabled",true);
+				});
+				//将时间格式 blaze返回有值的禁用
+			 	$(".easyui-datebox").each(function(){
+			 		var id = $(this).attr('id');
+			 		var blazeValue = approvaInfoSuppjson[id];
+					 if(blazeValue!==null&&blazeValue!==undefined&&blazeValue!==""){
+						$(this).datebox("readonly","readonly");
+					 }
+		       }); 
+				//下拉框格式有blaze返回有值的禁用 
+				$(".easyui-combobox").each(function(){
+					var id = $(this).attr('id');
+					var blazeValue = approvaInfoSuppjson[id];
+				    if(blazeValue!==null&&blazeValue!==undefined&&blazeValue!==""){
+					 $(this).combobox("readonly","readonly");
+				    }  
+		       }); 
+				var eduModel=approvaInfoSuppjson.eduModel;//教育模式 全日制 
+				var eduType=approvaInfoSuppjson.eduType;//教育类型 
+				//设置有值的单选框只读（循环单选框选中的值，如果值不为空，找到这个值对应的name属性，然后把所有name等于这个的万元素设置为只读）
+				if(eduModel!=null&&eduModel!=''){
+					$(":radio[name='eduModel']").attr("disabled",true);
+				}
+				if(eduType!=null&&eduType!=''){
+					$(":radio[name='eduType']").attr("disabled",true);
+				}
+			
+				//设置blaze返回有值的输入框只读
+			 	$("input[type='text']").each(function(){
+			 		var id = $(this).attr('id');
+			 		var blazeValue = approvaInfoSuppjson[id];
+			 		if(id=='gjjPerPayrate'&&approvaInfoSuppjson[id]!=null&&approvaInfoSuppjson[id]!=""){
+			 			$(this).attr("readonly","readonly");
+			 		}
+			 		if(id=='carCost'&&approvaInfoSuppjson[id]!=null&&approvaInfoSuppjson[id]!=""){
+			 			$(this).attr("readonly","readonly");
+			 		}
+			 		if(id=='carOld'&&approvaInfoSuppjson[id]!=null&&approvaInfoSuppjson[id]!=""){
+			 			$(this).attr("readonly","readonly");
+			 		}
+			 		if(id!='carCost' && id != 'carOld' && blazeValue!=''&& blazeValue !=undefined && blazeValue != null){
+			 			$(this).numberbox("readonly","readonly");
+			 		}
+			 		if(id=='industryCode'&&approvaInfoSuppjson[id]!=null&&approvaInfoSuppjson[id]!=""&&currNode=='01'){
+			 			$(this).attr("readonly","readonly");
+			 		}
+			 		if(id=='jobCode'&&approvaInfoSuppjson[id]!=null&&approvaInfoSuppjson[id]!=""&&currNode=='01'){
+			 			$(this).attr("readonly","readonly");
+			 		}
+				});
+			}
+		});
+})
+	function onSave() {
+		isSaveSuccess=true;
+		waringMessage="";
+		if(parent.bigSaveButtonFlag){
+			bigSaveButtonFlag=parent.bigSaveButtonFlag;
+		}else{
+			bigSaveButtonFlag=false;
+		}
+// 		 $(":radio[name='carHand']").attr("disabled",false);
+		 $(":radio[name='eduModel']").attr("disabled",false);
+		 $(":radio[name='eduType']").attr("disabled",false);
+		 var jsondata = getFormData(infoCollForm.serializeArray());
+		 if (jsondata.industryCode == null || jsondata.industryCode.trim() == "") {
+		    waringMessage+="添加失败,请输入行业代码!";
+		    if(!bigSaveButtonFlag){
+				$.messager.alert("操作提示", "添加失败,请输入行业代码!");
+		    }
+			isSaveSuccess=false;
+			return;
+		}else if (jsondata.industryCode.trim().length !=3) {
+		    waringMessage+="添加失败,行业代码只能输入3位数字!";
+		    if(!bigSaveButtonFlag){
+				$.messager.alert("操作提示", "添加失败,行业代码只能输入3位数字!");
+		    }
+			isSaveSuccess=false;
+			return;
+		}
+		if (jsondata.jobCode == null || jsondata.jobCode.trim() == "") {
+		    waringMessage+="添加失败,请输入职位代码!";
+		    if(!bigSaveButtonFlag){
+				$.messager.alert("操作提示", "添加失败,请输入职位代码!");
+		    }
+			isSaveSuccess=false;
+			return;
+		}else if (jsondata.jobCode.trim().length !=2) {
+			waringMessage+="添加失败,职位代码只能输入2位数字!";
+			if(!bigSaveButtonFlag){
+				$.messager.alert("操作提示", "添加失败,职位代码只能输入2位数字!");
+			}
+			isSaveSuccess=false;
+			return;
+		}
+		jsondata['userCode'] = userCode;
+		jsondata['currNode'] = currNode;
+		$cf.ajax({
+			url : "/opas-naps/info_collect_save.json",
+			data : jsondata,
+			async:false,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					isCanCommit = true;
+					if(!bigSaveButtonFlag){
+				 	top.$cf.showMsg("录入信息保存成功！");
+					}
+// 				    $(":radio[name='carHand']").attr("disabled",true);
+				    $(":radio[name='eduModel']").attr("disabled",true);
+				    $(":radio[name='eduType']").attr("disabled",true);
+				} else {
+					isCanCommit = false;
+					isSaveSuccess=false;
+					waringMessage+="数据异常，保存失败。";
+					if(!bigSaveButtonFlag){
+					$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+					}
+					onConcle("winEdit");
+				}
+			}
+		});
+	}
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value;
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	function myformatter(date){
+		if(null==date || ""==date){  
+		    return "";  
+		}  
+		var y=date.getFullYear();
+		var m=date.getMonth()+1;
+		var d=date.getDate();
+		return y+'.'+(m<10?('0'+m):m);
+		
+	}
+	function myparser(s){
+		if(!s){
+			return null;
+		}else{
+			var ss = "";
+			if(s.indexOf("-")!=-1){
+				ss = (s.split('-'));
+			}else{
+				ss=(s.split('.'));
+			}
+			var y=parseInt(ss[0], 10);
+			var m=parseInt(ss[1], 10);
+			if(!isNaN(y)&&!isNaN(m)){
+				return new Date(y,m-1,1);
+			}
+				return null;
+		}
+			
+	}
+	
+</script>
+</body>
+</html>

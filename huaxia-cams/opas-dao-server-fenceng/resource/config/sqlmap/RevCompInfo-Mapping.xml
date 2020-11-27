@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="RevCompInfo">
+	<resultMap id="BaseResultMap" type="com.huaxia.opas.domain.compare.RevCompInfo">
+		<id column="APP_ID" property="appId" jdbcType="CHAR" />
+		<result column="APPLY_INPUTFULL" property="applyInputfull"
+			jdbcType="CHAR" />
+		<result column="SIGN_FULL" property="signFull" jdbcType="CHAR" />
+		<result column="NATIONAL_INUTFULL" property="nationalInutfull"
+			jdbcType="CHAR" />
+		<result column="CERTIFI_PERIODFULL" property="certifiPeriodfull"
+			jdbcType="CHAR" />
+		<result column="APPLY_WORK_TURE" property="applyWorkTure"
+			jdbcType="CHAR" />
+		<result column="PEOBANK_COMPANY_NAME" property="company"
+			jdbcType="CHAR" />
+		<result column="PEOBANK_COMPANY_NAME_ADDR" property="peobankCompanyNameAddr"
+			jdbcType="CHAR" />
+		<result column="PEOBANK_COMPANY_NAME_TEL" property="peobankCompanyNameTel"
+			jdbcType="CHAR" />
+		<result column="COMPANY_114_NAME_ADDR" property="company114NameAddr"
+			jdbcType="CHAR" />
+		<result column="COMPANY_114_NAME_TEL" property="company114NameTel"
+			jdbcType="CHAR" />
+		<result column="PYUAN_COMPANY_NAME_ADDR" property="pyuanCompanyNameAddr"
+			jdbcType="CHAR" />
+		<result column="PYUAN_COMPANY_NAME_TEL" property="pyuanCompanyNameTel"
+			jdbcType="CHAR" />
+		<result column="NO_OFFICWEB_NAME_ADDR" property="noOfficwebNameAddr"
+			jdbcType="CHAR" />
+		<result column="NO_OFFICWEB_NAME_TEL" property="noOfficwebNameTel"
+			jdbcType="CHAR" />
+		<result column="OTHER_THIRD_NAME_ADDR" property="otherThirdNameAddr"
+			jdbcType="CHAR" />
+		<result column="OFFICWEB_NAME_ADDR" property="officwebNameAddr"
+			jdbcType="CHAR" />
+		<result column="OFFICWEB_NAME_TEL" property="officwebNameTel"
+			jdbcType="CHAR" />
+		<result column="THIRDDATA_ADDR" property="thirddataAddr"
+			jdbcType="CHAR" />
+		<result column="APPLY_WORKINFO_TURE" property="applyWorkinfoTure"
+			jdbcType="CHAR" />
+		<result column="SBANDGJJ_6MONTHS_STATUS" property="sbandgjj6monthsStatus"
+			jdbcType="CHAR" />
+		<result column="BUSINETWORK_LEGAL" property="businetworkLegal"
+			jdbcType="CHAR" />
+		<result column="OTHERS" property="others" jdbcType="CHAR" />
+		<result column="OTHER_MEMO" property="otherMemo" jdbcType="CHAR" />
+		<result column="PUB_POLICE" property="pubPolice" jdbcType="CHAR" />
+		<result column="BUSINETWORK_MINOR" property="businetworkMinor"
+			jdbcType="CHAR" />
+		<result column="PEOBANK_FIRSTCARD_6MONTHS" property="peobankFirstcard6months"
+			jdbcType="CHAR" />
+		<result column="INSURANCE" property="insurance" jdbcType="CHAR" />
+		<result column="APPLYER_TRUE" property="applyerTrue" jdbcType="CHAR" />
+		<result column="PEOBANK_PHONE" property="peobankPhone"
+			jdbcType="CHAR" />
+		<result column="THIRD_PHONE" property="thirdPhone" jdbcType="CHAR" />
+		<result column="OTHERTHIRD_INFO" property="otherthirdInfo"
+			jdbcType="CHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="ORDER_ADDRESS" property="orderAddress" jdbcType="CHAR" />
+		<result column="HOME_ADDRESS" property="homeAddress" jdbcType="CHAR" />
+		<result column="REGIONAL_DATA_LISTNAME" property="regionalDataListName" jdbcType="CHAR" />
+		<result column="PAD_POSITION_ADDR" property="padPositionAddr" jdbcType="CHAR" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select APP_ID,
+		APPLY_INPUTFULL, SIGN_FULL,
+		NATIONAL_INUTFULL, CERTIFI_PERIODFULL, APPLY_WORK_TURE,
+		PEOBANK_COMPANY_NAME,
+		PEOBANK_COMPANY_NAME_ADDR, PEOBANK_COMPANY_NAME_TEL,
+		COMPANY_114_NAME_ADDR, COMPANY_114_NAME_TEL, PYUAN_COMPANY_NAME_ADDR,
+		PYUAN_COMPANY_NAME_TEL, NO_OFFICWEB_NAME_ADDR, NO_OFFICWEB_NAME_TEL,
+		OTHER_THIRD_NAME_ADDR, OFFICWEB_NAME_ADDR, OFFICWEB_NAME_TEL,
+		THIRDDATA_ADDR, APPLY_WORKINFO_TURE, SBANDGJJ_6MONTHS_STATUS,
+		BUSINETWORK_LEGAL, OTHERS, OTHER_MEMO,
+		PUB_POLICE, BUSINETWORK_MINOR, PEOBANK_FIRSTCARD_6MONTHS,
+		INSURANCE, APPLYER_TRUE, PEOBANK_PHONE,
+		THIRD_PHONE, OTHERTHIRD_INFO,CRT_DATE,ORDER_ADDRESS,HOME_ADDRESS,REGIONAL_DATA_LISTNAME,
+		PAD_POSITION_ADDR
+		 from OPAS_REVIEENTRY_COMPARE_INFO
+		where APP_ID = #{appId,jdbcType=CHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OPAS_REVIEENTRY_COMPARE_INFO
+		where APP_ID = #{appId,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="com.huaxia.opas.domain.compare.RevCompInfo">
+		insert into OPAS_REVIEENTRY_COMPARE_INFO (APP_ID,
+		APPLY_INPUTFULL, SIGN_FULL,
+		NATIONAL_INUTFULL, CERTIFI_PERIODFULL, APPLY_WORK_TURE,PEOBANK_COMPANY_NAME,
+		PEOBANK_COMPANY_NAME_ADDR, PEOBANK_COMPANY_NAME_TEL,
+		COMPANY_114_NAME_ADDR, COMPANY_114_NAME_TEL, PYUAN_COMPANY_NAME_ADDR,
+		PYUAN_COMPANY_NAME_TEL, NO_OFFICWEB_NAME_ADDR, NO_OFFICWEB_NAME_TEL,
+		OTHER_THIRD_NAME_ADDR, OFFICWEB_NAME_ADDR, OFFICWEB_NAME_TEL,
+		THIRDDATA_ADDR, APPLY_WORKINFO_TURE, SBANDGJJ_6MONTHS_STATUS,
+		BUSINETWORK_LEGAL, OTHERS, OTHER_MEMO,
+		PUB_POLICE, BUSINETWORK_MINOR, PEOBANK_FIRSTCARD_6MONTHS,
+		INSURANCE, APPLYER_TRUE, PEOBANK_PHONE,
+		THIRD_PHONE, OTHERTHIRD_INFO,CRT_DATE,ORDER_ADDRESS,HOME_ADDRESS,
+		REGIONAL_DATA_LISTNAME,PAD_POSITION_ADDR)
+		values (#{appId,jdbcType=CHAR}, #{applyInputfull,jdbcType=CHAR},
+		#{signFull,jdbcType=CHAR},
+		#{nationalInutfull,jdbcType=CHAR}, #{certifiPeriodfull,jdbcType=CHAR}, #{applyWorkTure,jdbcType=CHAR},
+		#{company,jdbcType=CHAR},
+		#{peobankCompanyNameAddr,jdbcType=CHAR},
+		#{peobankCompanyNameTel,jdbcType=CHAR},
+		#{company114NameAddr,jdbcType=CHAR},
+		#{company114NameTel,jdbcType=CHAR},
+		#{pyuanCompanyNameAddr,jdbcType=CHAR},
+		#{pyuanCompanyNameTel,jdbcType=CHAR},
+		#{noOfficwebNameAddr,jdbcType=CHAR},
+		#{noOfficwebNameTel,jdbcType=CHAR},
+		#{otherThirdNameAddr,jdbcType=CHAR},
+		#{officwebNameAddr,jdbcType=CHAR}, #{officwebNameTel,jdbcType=CHAR},
+		#{thirddataAddr,jdbcType=CHAR}, #{applyWorkinfoTure,jdbcType=CHAR},
+		#{sbandgjj6monthsStatus,jdbcType=CHAR},
+		#{businetworkLegal,jdbcType=CHAR}, #{others,jdbcType=CHAR},
+		#{otherMemo,jdbcType=CHAR},
+		#{pubPolice,jdbcType=CHAR}, #{businetworkMinor,jdbcType=CHAR},
+		#{peobankFirstcard6months,jdbcType=CHAR},
+		#{insurance,jdbcType=CHAR}, #{applyerTrue,jdbcType=CHAR}, #{peobankPhone,jdbcType=CHAR},
+		#{thirdPhone,jdbcType=CHAR}, #{otherthirdInfo,jdbcType=CHAR},
+		#{crtDate,jdbcType=TIMESTAMP},
+		#{orderAddress,jdbcType=CHAR},
+		#{homeAddress,jdbcType=CHAR},
+		#{regionalDataListName,jdbcType=CHAR},
+		#{padPositionAddr,jdbcType=CHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.huaxia.opas.domain.compare.RevCompInfo">
+		insert into OPAS_REVIEENTRY_COMPARE_INFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="appId != null">
+				APP_ID,
+			</if>
+			<if test="applyInputfull != null">
+				APPLY_INPUTFULL,
+			</if>
+			<if test="signFull != null">
+				SIGN_FULL,
+			</if>
+			<if test="nationalInutfull != null">
+				NATIONAL_INUTFULL,
+			</if>
+			<if test="certifiPeriodfull != null">
+				CERTIFI_PERIODFULL,
+			</if>
+			<if test="applyWorkTure != null">
+				APPLY_WORK_TURE,
+			</if>
+			<if test="company !=null">
+				PEOBANK_COMPANY_NAME,
+			</if>
+			<if test="peobankCompanyNameAddr != null">
+				PEOBANK_COMPANY_NAME_ADDR,
+			</if>
+			<if test="peobankCompanyNameTel != null">
+				PEOBANK_COMPANY_NAME_TEL,
+			</if>
+			<if test="company114NameAddr != null">
+				COMPANY_114_NAME_ADDR,
+			</if>
+			<if test="company114NameTel != null">
+				COMPANY_114_NAME_TEL,
+			</if>
+			<if test="pyuanCompanyNameAddr != null">
+				PYUAN_COMPANY_NAME_ADDR,
+			</if>
+			<if test="pyuanCompanyNameTel != null">
+				PYUAN_COMPANY_NAME_TEL,
+			</if>
+			<if test="noOfficwebNameAddr != null">
+				NO_OFFICWEB_NAME_ADDR,
+			</if>
+			<if test="noOfficwebNameTel != null">
+				NO_OFFICWEB_NAME_TEL,
+			</if>
+			<if test="otherThirdNameAddr != null">
+				OTHER_THIRD_NAME_ADDR,
+			</if>
+			<if test="officwebNameAddr != null">
+				OFFICWEB_NAME_ADDR,
+			</if>
+			<if test="officwebNameTel != null">
+				OFFICWEB_NAME_TEL,
+			</if>
+			<if test="thirddataAddr != null">
+				THIRDDATA_ADDR,
+			</if>
+			<if test="applyWorkinfoTure != null">
+				APPLY_WORKINFO_TURE,
+			</if>
+			<if test="sbandgjj6monthsStatus != null">
+				SBANDGJJ_6MONTHS_STATUS,
+			</if>
+			<if test="businetworkLegal != null">
+				BUSINETWORK_LEGAL,
+			</if>
+			<if test="others != null">
+				OTHERS,
+			</if>
+			<if test="otherMemo != null">
+				OTHER_MEMO,
+			</if>
+			<if test="pubPolice != null">
+				PUB_POLICE,
+			</if>
+			<if test="businetworkMinor != null">
+				BUSINETWORK_MINOR,
+			</if>
+			<if test="peobankFirstcard6months != null">
+				PEOBANK_FIRSTCARD_6MONTHS,
+			</if>
+			<if test="insurance != null">
+				INSURANCE,
+			</if>
+			<if test="applyerTrue != null">
+				APPLYER_TRUE,
+			</if>
+			<if test="peobankPhone != null">
+				PEOBANK_PHONE,
+			</if>
+			<if test="thirdPhone != null">
+				THIRD_PHONE,
+			</if>
+			<if test="otherthirdInfo != null">
+				OTHERTHIRD_INFO,
+			</if>
+			<if test="crtDate != null">
+				CRT_DATE,
+			</if>
+			<if test="orderAddress != null">
+				ORDER_ADDRESS,
+			</if>
+			<if test="homeAddress != null">
+				HOME_ADDRESS,
+			</if>
+			<if test="regionalDataListName != null">
+				REGIONAL_DATA_LISTNAME,
+			</if>
+			<if test="padPositionAddr != null">
+				PAD_POSITION_ADDR,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="appId != null">
+				#{appId,jdbcType=CHAR},
+			</if>
+			<if test="applyInputfull != null">
+				#{applyInputfull,jdbcType=CHAR},
+			</if>
+			<if test="signFull != null">
+				#{signFull,jdbcType=CHAR},
+			</if>
+			<if test="nationalInutfull != null">
+				#{nationalInutfull,jdbcType=CHAR},
+			</if>
+			<if test="certifiPeriodfull != null">
+				#{certifiPeriodfull,jdbcType=CHAR},
+			</if>
+			<if test="applyWorkTure != null">
+				#{applyWorkTure,jdbcType=CHAR},
+			</if>
+			<if test="company != null">
+				#{company,jdbcType=CHAR},
+			</if>
+			<if test="peobankCompanyNameAddr != null">
+				#{peobankCompanyNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="peobankCompanyNameTel != null">
+				#{peobankCompanyNameTel,jdbcType=CHAR},
+			</if>
+			<if test="company114NameAddr != null">
+				#{company114NameAddr,jdbcType=CHAR},
+			</if>
+			<if test="company114NameTel != null">
+				#{company114NameTel,jdbcType=CHAR},
+			</if>
+			<if test="pyuanCompanyNameAddr != null">
+				#{pyuanCompanyNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="pyuanCompanyNameTel != null">
+				#{pyuanCompanyNameTel,jdbcType=CHAR},
+			</if>
+			<if test="noOfficwebNameAddr != null">
+				#{noOfficwebNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="noOfficwebNameTel != null">
+				#{noOfficwebNameTel,jdbcType=CHAR},
+			</if>
+			<if test="otherThirdNameAddr != null">
+				#{otherThirdNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="officwebNameAddr != null">
+				#{officwebNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="officwebNameTel != null">
+				#{officwebNameTel,jdbcType=CHAR},
+			</if>
+			<if test="thirddataAddr != null">
+				#{thirddataAddr,jdbcType=CHAR},
+			</if>
+			<if test="applyWorkinfoTure != null">
+				#{applyWorkinfoTure,jdbcType=CHAR},
+			</if>
+			<if test="sbandgjj6monthsStatus != null">
+				#{sbandgjj6monthsStatus,jdbcType=CHAR},
+			</if>
+			<if test="businetworkLegal != null">
+				#{businetworkLegal,jdbcType=CHAR},
+			</if>
+			<if test="others != null">
+				#{others,jdbcType=CHAR},
+			</if>
+			<if test="otherMemo != null">
+				#{otherMemo,jdbcType=CHAR},
+			</if>
+			<if test="pubPolice != null">
+				#{pubPolice,jdbcType=CHAR},
+			</if>
+			<if test="businetworkMinor != null">
+				#{businetworkMinor,jdbcType=CHAR},
+			</if>
+			<if test="peobankFirstcard6months != null">
+				#{peobankFirstcard6months,jdbcType=CHAR},
+			</if>
+			<if test="insurance != null">
+				#{insurance,jdbcType=CHAR},
+			</if>
+			<if test="applyerTrue != null">
+				#{applyerTrue,jdbcType=CHAR},
+			</if>
+			<if test="peobankPhone != null">
+				#{peobankPhone,jdbcType=CHAR},
+			</if>
+			<if test="thirdPhone != null">
+				#{thirdPhone,jdbcType=CHAR},
+			</if>
+			<if test="otherthirdInfo != null">
+				#{otherthirdInfo,jdbcType=CHAR},
+			</if>
+			<if test="crtDate != null">
+				#{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="orderAddress != null">
+				#{orderAddress,jdbcType=CHAR},
+			</if>
+			<if test="homeAddress != null">
+				#{homeAddress,jdbcType=CHAR},
+			</if>
+			<if test="regionalDataListName != null">
+				#{regionalDataListName,jdbcType=CHAR},
+			</if>
+			<if test="padPositionAddr != null">
+				#{padPositionAddr,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.compare.RevCompInfo">
+		update OPAS_REVIEENTRY_COMPARE_INFO
+		<set>
+			<if test="applyInputfull != null">
+				APPLY_INPUTFULL = #{applyInputfull,jdbcType=CHAR},
+			</if>
+			<if test="signFull != null">
+				SIGN_FULL = #{signFull,jdbcType=CHAR},
+			</if>
+			<if test="nationalInutfull != null">
+				NATIONAL_INUTFULL = #{nationalInutfull,jdbcType=CHAR},
+			</if>
+			<if test="certifiPeriodfull != null">
+				CERTIFI_PERIODFULL = #{certifiPeriodfull,jdbcType=CHAR},
+			</if>
+			<if test="applyWorkTure != null">
+				APPLY_WORK_TURE = #{applyWorkTure,jdbcType=CHAR},
+			</if>
+			<if test="peobankCompanyNameAddr != null">
+				PEOBANK_COMPANY_NAME = #{company,jdbcType=CHAR},
+			</if>
+			<if test="peobankCompanyNameAddr != null">
+				PEOBANK_COMPANY_NAME_ADDR = #{peobankCompanyNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="peobankCompanyNameTel != null">
+				PEOBANK_COMPANY_NAME_TEL = #{peobankCompanyNameTel,jdbcType=CHAR},
+			</if>
+			<if test="company114NameAddr != null">
+				COMPANY_114_NAME_ADDR = #{company114NameAddr,jdbcType=CHAR},
+			</if>
+			<if test="company114NameTel != null">
+				COMPANY_114_NAME_TEL = #{company114NameTel,jdbcType=CHAR},
+			</if>
+			<if test="pyuanCompanyNameAddr != null">
+				PYUAN_COMPANY_NAME_ADDR = #{pyuanCompanyNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="pyuanCompanyNameTel != null">
+				PYUAN_COMPANY_NAME_TEL = #{pyuanCompanyNameTel,jdbcType=CHAR},
+			</if>
+			<if test="noOfficwebNameAddr != null">
+				NO_OFFICWEB_NAME_ADDR = #{noOfficwebNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="noOfficwebNameTel != null">
+				NO_OFFICWEB_NAME_TEL = #{noOfficwebNameTel,jdbcType=CHAR},
+			</if>
+			<if test="otherThirdNameAddr != null">
+				OTHER_THIRD_NAME_ADDR = #{otherThirdNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="officwebNameAddr != null">
+				OFFICWEB_NAME_ADDR = #{officwebNameAddr,jdbcType=CHAR},
+			</if>
+			<if test="officwebNameTel != null">
+				OFFICWEB_NAME_TEL = #{officwebNameTel,jdbcType=CHAR},
+			</if>
+			<if test="thirddataAddr != null">
+				THIRDDATA_ADDR = #{thirddataAddr,jdbcType=CHAR},
+			</if>
+			<if test="applyWorkinfoTure != null">
+				APPLY_WORKINFO_TURE = #{applyWorkinfoTure,jdbcType=CHAR},
+			</if>
+			<if test="sbandgjj6monthsStatus != null">
+				SBANDGJJ_6MONTHS_STATUS = #{sbandgjj6monthsStatus,jdbcType=CHAR},
+			</if>
+			<if test="businetworkLegal != null">
+				BUSINETWORK_LEGAL = #{businetworkLegal,jdbcType=CHAR},
+			</if>
+			<if test="others != null">
+				OTHERS = #{others,jdbcType=CHAR},
+			</if>
+			<if test="otherMemo != null">
+				OTHER_MEMO = #{otherMemo,jdbcType=CHAR},
+			</if>
+			<if test="pubPolice != null">
+				PUB_POLICE = #{pubPolice,jdbcType=CHAR},
+			</if>
+			<if test="businetworkMinor != null">
+				BUSINETWORK_MINOR = #{businetworkMinor,jdbcType=CHAR},
+			</if>
+			<if test="peobankFirstcard6months != null">
+				PEOBANK_FIRSTCARD_6MONTHS =
+				#{peobankFirstcard6months,jdbcType=CHAR},
+			</if>
+			<if test="insurance != null">
+				INSURANCE = #{insurance,jdbcType=CHAR},
+			</if>
+			<if test="applyerTrue != null">
+				APPLYER_TRUE = #{applyerTrue,jdbcType=CHAR},
+			</if>
+			<if test="peobankPhone != null">
+				PEOBANK_PHONE = #{peobankPhone,jdbcType=CHAR},
+			</if>
+			<if test="thirdPhone != null">
+				THIRD_PHONE = #{thirdPhone,jdbcType=CHAR},
+			</if>
+			<if test="otherthirdInfo != null">
+				OTHERTHIRD_INFO = #{otherthirdInfo,jdbcType=CHAR},
+			</if>
+			<if test="crtDate !=null">
+				CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="orderAddress !=null">
+				ORDER_ADDRESS = #{orderAddress,jdbcType=CHAR},
+			</if>
+			<if test="homeAddress !=null">
+				HOME_ADDRESS = #{homeAddress,jdbcType=CHAR},
+			</if>
+			<if test="regionalDataListName !=null">
+				REGIONAL_DATA_LISTNAME = #{regionalDataListName,jdbcType=CHAR},
+			</if>
+			<if test="padPositionAddr !=null">
+				PAD_POSITION_ADDR = #{padPositionAddr,jdbcType=CHAR},
+			</if>
+		</set>
+		where APP_ID = #{appId,jdbcType=CHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.compare.RevCompInfo">
+		update OPAS_REVIEENTRY_COMPARE_INFO
+		set APPLY_INPUTFULL = #{applyInputfull,jdbcType=CHAR},
+		SIGN_FULL = #{signFull,jdbcType=CHAR},
+		NATIONAL_INUTFULL = #{nationalInutfull,jdbcType=CHAR},
+		CERTIFI_PERIODFULL = #{certifiPeriodfull,jdbcType=CHAR},
+		APPLY_WORK_TURE = #{applyWorkTure,jdbcType=CHAR},
+		PEOBANK_COMPANY_NAME = #{company,jdbcType=CHAR},
+		PEOBANK_COMPANY_NAME_ADDR = #{peobankCompanyNameAddr,jdbcType=CHAR},
+		PEOBANK_COMPANY_NAME_TEL = #{peobankCompanyNameTel,jdbcType=CHAR},
+		COMPANY_114_NAME_ADDR = #{company114NameAddr,jdbcType=CHAR},
+		COMPANY_114_NAME_TEL = #{company114NameTel,jdbcType=CHAR},
+		PYUAN_COMPANY_NAME_ADDR = #{pyuanCompanyNameAddr,jdbcType=CHAR},
+		PYUAN_COMPANY_NAME_TEL = #{pyuanCompanyNameTel,jdbcType=CHAR},
+		NO_OFFICWEB_NAME_ADDR = #{noOfficwebNameAddr,jdbcType=CHAR},
+		NO_OFFICWEB_NAME_TEL = #{noOfficwebNameTel,jdbcType=CHAR},
+		OTHER_THIRD_NAME_ADDR = #{otherThirdNameAddr,jdbcType=CHAR},
+		OFFICWEB_NAME_ADDR = #{officwebNameAddr,jdbcType=CHAR},
+		OFFICWEB_NAME_TEL = #{officwebNameTel,jdbcType=CHAR},
+		THIRDDATA_ADDR = #{thirddataAddr,jdbcType=CHAR},
+		APPLY_WORKINFO_TURE = #{applyWorkinfoTure,jdbcType=CHAR},
+		SBANDGJJ_6MONTHS_STATUS = #{sbandgjj6monthsStatus,jdbcType=CHAR},
+		BUSINETWORK_LEGAL = #{businetworkLegal,jdbcType=CHAR},
+		OTHERS = #{others,jdbcType=CHAR},
+		OTHER_MEMO = #{otherMemo,jdbcType=CHAR},
+		PUB_POLICE = #{pubPolice,jdbcType=CHAR},
+		BUSINETWORK_MINOR = #{businetworkMinor,jdbcType=CHAR},
+		PEOBANK_FIRSTCARD_6MONTHS = #{peobankFirstcard6months,jdbcType=CHAR},
+		INSURANCE = #{insurance,jdbcType=CHAR},
+		APPLYER_TRUE = #{applyerTrue,jdbcType=CHAR},
+		PEOBANK_PHONE = #{peobankPhone,jdbcType=CHAR},
+		THIRD_PHONE = #{thirdPhone,jdbcType=CHAR},
+		OTHERTHIRD_INFO = #{otherthirdInfo,jdbcType=CHAR},
+		CRT_DATE = #{crtDate,jdbcType=TIMESTAMP},
+		ORDER_ADDRESS = #{orderAddress,jdbcType=CHAR},
+		HOME_ADDRESS = #{homeAddress,jdbcType=CHAR},
+		REGIONAL_DATA_LISTNAME = #{regionalDataListName,jdbcType=CHAR},
+		PAD_POSITION_ADDR = #{padPositionAddr,jdbcType=CHAR}
+		where APP_ID = #{appId,jdbcType=CHAR}
+	</update>
+	<select id="selectMonByAppId" parameterType="java.lang.String" resultType="java.lang.String">
+    	select FRS_CRED_CRD_ISSUE_MON FROM (select FRS_CRED_CRD_ISSUE_MON
+		 from OPAS_PBOC_CREDIT_CUE where APP_ID = #{appId,jdbcType=CHAR}
+		 ORDER BY FRS_CRED_CRD_ISSUE_MON asc) WHERE rownum = 1
+  	</select>
+  	<select id="selectMonthsByAppId" parameterType="java.lang.String" resultType="java.util.Map">
+		 select REPLACE(REPORT_TIME,'-','.') AS REPORT_TIME ,
+		 		REPLACE(FIRST_YW_GRANT_MONTH,'-','.') AS FIRST_YW_GRANT_MONTH 
+		 from  opas_pboc_personal_info ppi,PBOC_CREDIT_TRANSACTION_DEL pctd
+    	 where ppi.app_id = pctd.app_id and pctd.service_type='21' and pctd.app_id = #{appId,jdbcType=CHAR}
+  	</select>
+  	<resultMap id="GongAnMap" type="java.util.Map">
+		<result column="RESULT_GMSFHM" property="identityNoCheckRst" jdbcType="VARCHAR" />
+		<result column="RESULT_XM" property="nameCheckRst" jdbcType="VARCHAR" />
+	</resultMap>
+  	<select id="selectGongAnByAppId" parameterType="java.util.Map" resultMap="GongAnMap">
+    	select RESULT_GMSFHM,RESULT_XM from OPAS_BIZ_PUBSEC_GATHER 
+    	where identity_no = #{identityNo, jdbcType=VARCHAR}  AND name = #{name, jdbcType=VARCHAR}
+  	</select>
+  	<select id="selectPoliceMapByAppId" parameterType="java.lang.String" resultMap="GongAnMap">
+  	 select t1.RESULT_GMSFHM,t1.RESULT_XM from police_simplify_info t1 
+  	 	left join OPAS_BIZ_INP_APPL_C1 t2 on t1.app_id = t2.app_id
+    	where t1.app_Id=#{appId}
+  	</select>
+  	<insert id="insertRemark" parameterType="java.util.Map">
+  		insert into OPAS_ALLOT_APPLY_REMARK (REMARK_ID,REMARK_INFO,REMARK_USER,REMARK_TIME,APP_ID,CURR_NODE) 
+  		values (#{remarkId},#{remarkInfo},#{remarkUser},#{remarkTime},#{appId},#{currNode})
+  	</insert>
+  	
+  	<delete	id="deleteRemarkByAppId" parameterType="java.lang.String">
+  		delete from OPAS_ALLOT_APPLY_REMARK where app_id = #{appId} and substr(remark_info,1,4)= '录入比对'
+  	</delete>
+  	
+  	<!-- 查询IVS的手机和地址 -->
+  	<select id="selectIvsMap" parameterType="java.lang.String" resultType="java.util.Map">
+    	select CODEADDRENGLISH,CODEPHOENENGLISH from OPAS_BIZ_ZM_IVS_DATA
+    	where  app_id = #{appId}
+  	</select>
+  	
+  	<!--查询反欺诈返回的人行匹配结果 -->
+  	<select id="selectFqzRiskDesc" parameterType="java.util.Map" resultType="java.util.Map">
+  		select FQZ_RISKDESC from opas_fqz_result 
+  		where app_id = #{appId,jdbcType=VARCHAR} and FQZ_REQUESTTYPE = #{FQZ_REQUESTTYPE,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<!-- 查询公积金缴交 -->
+  	<select id="selectGjjMonth" parameterType="java.lang.String" resultType="java.util.Map">
+  		select RETURN_GJJ_STATUS,RETURN_GJJ_TOMONTH,RETURN_SOC_SAVE_TYPE,RETURN_SOC_UNIT from OPAS_FICO_SD_BLAZE 
+  		where app_id = #{appId,jdbcType=VARCHAR} 
+  	</select>
+ 		
+  	<!-- 查询区域数据-->
+  	<select id="selectCurrentStatus" parameterType="java.lang.String" resultType="java.util.Map">
+  		select CURRENT_STATUS,INFO_DATE from PY_PCR_CRS_CRT_SISZ2_BI 
+  		where app_id = #{appId,jdbcType=VARCHAR} 
+  	</select>
+  	
+  	<select id="selectInsuredStatus" parameterType="java.lang.String" resultType="java.util.Map">
+  		select INSURED_STATUS,LATEST_PAYMENT_DATE,IS_ON_JOB from YLZ_REP_DATA 
+  		where app_id = #{appId,jdbcType=VARCHAR} 
+  	</select>
+  	
+  	<!-- 人行公积金缴交状态 -->
+  	<select id="selectPayStatus" parameterType="java.lang.String" resultType="java.util.Map">
+        select PAY_STATUS from (SELECT PAY_STATUS  from OPAS_PBOC_PUBLIC_ACCFUND 
+        WHERE APP_ID = #{appId,jdbcType=VARCHAR}
+        ORDER BY INFO_UPD_TIME desc,JOIN_SOCL_INSU_DT desc,PAY_YM desc)   
+        WHERE rownum =1
+  	</select>
+  	
+  	<!-- 查询流程节点 -->
+  		<select id="selectCurrNodeKey" parameterType="java.lang.String" resultType="java.util.Map">
+  		select CURR_NODE from OPAS_ALLOT_APPLY_ALLOT
+		where APP_ID = #{appId,jdbcType=VARCHAR}
+  	</select>
+
+</mapper>

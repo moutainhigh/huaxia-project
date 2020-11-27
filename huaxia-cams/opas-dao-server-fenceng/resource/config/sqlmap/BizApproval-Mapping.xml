@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="BizApproval" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.thirdparty.BizApproval" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="ID_TYPE" property="idType" jdbcType="VARCHAR" />
+    <result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+    <result column="REFUSE_CHILDCARD" property="refuseChildcard" jdbcType="CHAR" />
+    <result column="PRE_APPROVELIMIT" property="preApprovelimit" jdbcType="DECIMAL" />
+    <result column="APPLYER_NAME" property="applyerName" jdbcType="VARCHAR" />
+    <result column="APPLY_CARD" property="applyCard" jdbcType="VARCHAR" />
+    <result column="IS_AGREE_DEGRADE" property="isAgreeDegrade" jdbcType="CHAR" />
+    <result column="SYS_DECISION_TIME" property="sysDecisionTime" jdbcType="TIMESTAMP" />
+    <result column="MASTERCARD_DECRESULT" property="mastercardDecresult" jdbcType="VARCHAR" />
+    <result column="MASTERCARD_APPROVEREUSLT" property="mastercardApprovereuslt" jdbcType="VARCHAR" />
+    <result column="SYS_CREDIT_PRODUCE" property="sysCreditProduce" jdbcType="VARCHAR" />
+    <result column="CHILDCARD_DECRESULT" property="childcardDecresult" jdbcType="VARCHAR" />
+    <result column="CHILDCARD_APPROVEREUSLT" property="childcardApprovereuslt" jdbcType="VARCHAR" />
+    <result column="CREDIT_RESULT" property="creditResult" jdbcType="VARCHAR" />
+    <result column="CREDIT_REFUSE_REASON" property="creditRefuseReason" jdbcType="VARCHAR" />
+    <result column="WARNINGLIST_RESULT" property="warninglistResult" jdbcType="VARCHAR" />
+    <result column="APPROVE_RESULT" property="approveResult" jdbcType="CHAR" />
+    <result column="APPROVE_CREDIT_LIMIT" property="approveCreditLimit" jdbcType="DECIMAL" />
+    <result column="APPROVE_CREDIT_PRODUCT" property="approveCreditProduct" jdbcType="VARCHAR" />
+    <result column="MANUAL_LIMIT" property="manualLimit" jdbcType="DECIMAL" />
+    <result column="POLICY_CODE1" property="policyCode1" jdbcType="VARCHAR" />
+    <result column="POLICY_CODE2" property="policyCode2" jdbcType="VARCHAR" />
+    <result column="POLICY_CODE3" property="policyCode3" jdbcType="VARCHAR" />
+    <result column="VIOLATE_CODE1" property="violateCode1" jdbcType="VARCHAR" />
+    <result column="VIOLATE_CODE2" property="violateCode2" jdbcType="VARCHAR" />
+    <result column="VIOLATE_CODE3" property="violateCode3" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="REFUSE_CODE1" property="refuseCode1" jdbcType="VARCHAR" />
+    <result column="REFUSE_CODE2" property="refuseCode2" jdbcType="VARCHAR" />
+    <result column="REFUSE_CODE3" property="refuseCode3" jdbcType="VARCHAR" />
+    <result column="APPROVER" property="approver" jdbcType="VARCHAR" />
+    <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+    <result column="HIGHLEVLE_APPROVER" property="highlevleApprover" jdbcType="VARCHAR" />
+    <result column="HIGHLEVLE_APPROVETIME" property="highlevleApprovetime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_HIGHLEVLE_TIME" property="submitHighlevleTime" jdbcType="TIMESTAMP" />
+    <result column="APPROVE_TIME" property="approveTime" jdbcType="TIMESTAMP" />
+    <result column="CURR_OPT_GROUP" property="currOptGroup" jdbcType="CHAR" />
+    <result column="YDJ_FLAG" property="ydjFlag" jdbcType="VARCHAR" />
+    <result column="YEAR_FEE_DERATE_TYPE" property="yearFeeDerateType" jdbcType="VARCHAR" />
+    <result column="CARD_FACE_CODE" property="cardFaceCode" jdbcType="VARCHAR" />
+    
+    <result column="RATE_VALUE" property="rateValue" jdbcType="VARCHAR" />
+    <result column="REPAY_RATION_VALUE" property="repayRationValue" jdbcType="VARCHAR" />
+    <result column="REPAY_FREE_VALUE" property="repayFreeValue" jdbcType="VARCHAR" />
+    <result column="LAOJIAN_NUM" property="laojianNum" jdbcType="VARCHAR" />
+    <result column="SP_REF_UN_PLGE_DTI" property="spRefUnPlgeDti" jdbcType="DECIMAL" />
+    <result column="SP_REF_CP_DTI" property="spRefCpDti" jdbcType="DECIMAL" />
+    <result column="SP_REF_MUE" property="spRefMue" jdbcType="DECIMAL" />
+    <result column="SP_DEBT_APP_AUTH" property="spDebtAppAuth" jdbcType="VARCHAR" />
+    
+    <result column="INIT_SAVE_FLAG" property="initSaveFlag" jdbcType="VARCHAR" />
+   <!--  <result column="RATE_VALUE_LOSE_DATE" property="rateValueLoseDate" jdbcType="VARCHAR" /> -->
+  </resultMap>
+  <select id="selectByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT, APPLYER_NAME, 
+    APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT, MASTERCARD_APPROVEREUSLT, 
+    SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT, 
+    CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+    MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+    VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER, APPROVER_NAME, 
+    HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP,YDJ_FLAG,
+    YEAR_FEE_DERATE_TYPE,CARD_FACE_CODE,RATE_VALUE,REPAY_RATION_VALUE,REPAY_FREE_VALUE,LAOJIAN_NUM,
+    SP_REF_UN_PLGE_DTI, SP_REF_CP_DTI, SP_REF_MUE, SP_DEBT_APP_AUTH,INIT_SAVE_FLAG
+    from OPAS_BIZ_APPROVAL
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  <!--  <select id="selectAppByAppId" resultType="java.lang.String" parameterType="java.lang.String" >
+	    select *
+	  		from (select s.apply_card
+	          from OPAS_BIZ_APPROVAL s
+	         	where s.id_no in (select a.c1_idnbr from opas_biz_inp_appl_c1 a
+	                            where a.app_id = #{appId,jdbcType=VARCHAR})
+	            and s.apply_card in (select a.APP_PROD from opas_biz_inp_appl_c1 a
+	                            where a.app_id = #{appId,jdbcType=VARCHAR})
+	           and s.approve_result = '1'
+	         order by s.approve_time desc)
+	 	where rownum = 1
+  </select> -->
+   <select id="selectApplyByAppId" resultType="java.lang.String" parameterType="java.lang.String" >
+   select * from (select s.app_id
+		    from opas_allot_apply_allot s, OPAS_FILE_APPLICATION_DETAIL o,  
+		    OPAS_BIZ_APPROVAL a
+		   where 
+	          s.app_id = o.app_id
+	          and a.app_id = s.app_id
+		      and s.curr_node='04'
+		      and a.approve_result = '1'
+		      and o.apply_card in (select a.APP_PROD from opas_biz_inp_appl_c1 a
+	                            where a.app_id = #{appId,jdbcType=VARCHAR})
+		      and o.cred_no in (select a.c1_idnbr from opas_biz_inp_appl_c1 a
+	                            where a.app_id = #{appId,jdbcType=VARCHAR}))
+	                   where rownum=1
+  </select>
+   <select id="selectYdjFlagByAppId" resultType="java.lang.String" parameterType="java.lang.String" >
+	   select s.ydj_flag
+		    from opas_allot_apply_allot s		   
+	       where s.app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, APP_ID, ID_TYPE, ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT, APPLYER_NAME, 
+    APPLY_CARD, IS_AGREE_DEGRADE, SYS_DECISION_TIME, MASTERCARD_DECRESULT, MASTERCARD_APPROVEREUSLT, 
+    SYS_CREDIT_PRODUCE, CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, CREDIT_RESULT, 
+    CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+    MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+    VIOLATE_CODE3, MEMO, REFUSE_CODE1, REFUSE_CODE2, REFUSE_CODE3, APPROVER, APPROVER_NAME, 
+    HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP,YDJ_FLAG,
+    YEAR_FEE_DERATE_TYPE,CARD_FACE_CODE,RATE_VALUE,REPAY_RATION_VALUE,REPAY_FREE_VALUE,LAOJIAN_NUM,
+    SP_REF_UN_PLGE_DTI, SP_REF_CP_DTI, SP_REF_MUE, SP_DEBT_APP_AUTH
+    from OPAS_BIZ_APPROVAL
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_BIZ_APPROVAL
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.thirdparty.BizApproval" >
+    insert into CAMSONLINE.OPAS_BIZ_APPROVAL (AUTO_ID, APP_ID, ID_TYPE, 
+      ID_NO, REFUSE_CHILDCARD, PRE_APPROVELIMIT, 
+      APPLYER_NAME, APPLY_CARD, IS_AGREE_DEGRADE, 
+      SYS_DECISION_TIME, MASTERCARD_DECRESULT, 
+      MASTERCARD_APPROVEREUSLT, SYS_CREDIT_PRODUCE, 
+      CHILDCARD_DECRESULT, CHILDCARD_APPROVEREUSLT, 
+      CREDIT_RESULT, CREDIT_REFUSE_REASON, WARNINGLIST_RESULT, 
+      APPROVE_RESULT, APPROVE_CREDIT_LIMIT, APPROVE_CREDIT_PRODUCT, 
+      MANUAL_LIMIT, POLICY_CODE1, POLICY_CODE2, 
+      POLICY_CODE3, VIOLATE_CODE1, VIOLATE_CODE2, 
+      VIOLATE_CODE3, MEMO, REFUSE_CODE1, 
+      REFUSE_CODE2, REFUSE_CODE3, APPROVER, 
+      APPROVER_NAME, HIGHLEVLE_APPROVER, HIGHLEVLE_APPROVETIME, 
+      SUBMIT_HIGHLEVLE_TIME, APPROVE_TIME, CURR_OPT_GROUP, 
+      YDJ_FLAG, YEAR_FEE_DERATE_TYPE, CARD_FACE_CODE, 
+      RATE_VALUE, REPAY_RATION_VALUE, REPAY_FREE_VALUE, 
+      LAOJIAN_NUM, SP_REF_UN_PLGE_DTI, SP_REF_CP_DTI, 
+      SP_REF_MUE, SP_DEBT_APP_AUTH,INIT_SAVE_FLAG)
+    values (#{autoId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{idType,jdbcType=VARCHAR}, 
+      #{idNo,jdbcType=VARCHAR}, #{refuseChildcard,jdbcType=CHAR}, #{preApprovelimit,jdbcType=DECIMAL}, 
+      #{applyerName,jdbcType=VARCHAR}, #{applyCard,jdbcType=VARCHAR}, #{isAgreeDegrade,jdbcType=CHAR}, 
+      #{sysDecisionTime,jdbcType=TIMESTAMP}, #{mastercardDecresult,jdbcType=VARCHAR}, 
+      #{mastercardApprovereuslt,jdbcType=VARCHAR}, #{sysCreditProduce,jdbcType=VARCHAR}, 
+      #{childcardDecresult,jdbcType=VARCHAR}, #{childcardApprovereuslt,jdbcType=VARCHAR}, 
+      #{creditResult,jdbcType=VARCHAR}, #{creditRefuseReason,jdbcType=VARCHAR}, #{warninglistResult,jdbcType=VARCHAR}, 
+      #{approveResult,jdbcType=CHAR}, #{approveCreditLimit,jdbcType=DECIMAL}, #{approveCreditProduct,jdbcType=VARCHAR}, 
+      #{manualLimit,jdbcType=DECIMAL}, #{policyCode1,jdbcType=VARCHAR}, #{policyCode2,jdbcType=VARCHAR}, 
+      #{policyCode3,jdbcType=VARCHAR}, #{violateCode1,jdbcType=VARCHAR}, #{violateCode2,jdbcType=VARCHAR}, 
+      #{violateCode3,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{refuseCode1,jdbcType=VARCHAR}, 
+      #{refuseCode2,jdbcType=VARCHAR}, #{refuseCode3,jdbcType=VARCHAR}, #{approver,jdbcType=VARCHAR}, 
+      #{approverName,jdbcType=VARCHAR}, #{highlevleApprover,jdbcType=VARCHAR}, #{highlevleApprovetime,jdbcType=TIMESTAMP}, 
+      #{submitHighlevleTime,jdbcType=TIMESTAMP}, #{approveTime,jdbcType=TIMESTAMP}, #{currOptGroup,jdbcType=VARCHAR}, 
+      #{ydjFlag,jdbcType=VARCHAR}, #{yearFeeDerateType,jdbcType=VARCHAR}, #{cardFaceCode,jdbcType=VARCHAR}, 
+      #{rateValue,jdbcType=VARCHAR}, #{repayRationValue,jdbcType=VARCHAR}, #{repayFreeValue,jdbcType=VARCHAR}, 
+      #{laojianNum,jdbcType=VARCHAR}, #{spRefUnPlgeDti,jdbcType=DECIMAL}, #{spRefCpDti,jdbcType=DECIMAL}, 
+      #{spRefMue,jdbcType=DECIMAL}, #{spDebtAppAuth,jdbcType=VARCHAR},#{initSaveFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.thirdparty.BizApproval" >
+    insert into CAMSONLINE.OPAS_BIZ_APPROVAL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="idType != null" >
+        ID_TYPE,
+      </if>
+      <if test="idNo != null" >
+        ID_NO,
+      </if>
+      <if test="refuseChildcard != null" >
+        REFUSE_CHILDCARD,
+      </if>
+      <if test="preApprovelimit != null" >
+        PRE_APPROVELIMIT,
+      </if>
+      <if test="applyerName != null" >
+        APPLYER_NAME,
+      </if>
+      <if test="applyCard != null" >
+        APPLY_CARD,
+      </if>
+      <if test="isAgreeDegrade != null" >
+        IS_AGREE_DEGRADE,
+      </if>
+      <if test="sysDecisionTime != null" >
+        SYS_DECISION_TIME,
+      </if>
+      <if test="mastercardDecresult != null" >
+        MASTERCARD_DECRESULT,
+      </if>
+      <if test="mastercardApprovereuslt != null" >
+        MASTERCARD_APPROVEREUSLT,
+      </if>
+      <if test="sysCreditProduce != null" >
+        SYS_CREDIT_PRODUCE,
+      </if>
+      <if test="childcardDecresult != null" >
+        CHILDCARD_DECRESULT,
+      </if>
+      <if test="childcardApprovereuslt != null" >
+        CHILDCARD_APPROVEREUSLT,
+      </if>
+      <if test="creditResult != null" >
+        CREDIT_RESULT,
+      </if>
+      <if test="creditRefuseReason != null" >
+        CREDIT_REFUSE_REASON,
+      </if>
+      <if test="warninglistResult != null" >
+        WARNINGLIST_RESULT,
+      </if>
+      <if test="approveResult != null" >
+        APPROVE_RESULT,
+      </if>
+      <if test="approveCreditLimit != null" >
+        APPROVE_CREDIT_LIMIT,
+      </if>
+      <if test="approveCreditProduct != null" >
+        APPROVE_CREDIT_PRODUCT,
+      </if>
+      <if test="manualLimit != null" >
+        MANUAL_LIMIT,
+      </if>
+      <if test="policyCode1 != null" >
+        POLICY_CODE1,
+      </if>
+      <if test="policyCode2 != null" >
+        POLICY_CODE2,
+      </if>
+      <if test="policyCode3 != null" >
+        POLICY_CODE3,
+      </if>
+      <if test="violateCode1 != null" >
+        VIOLATE_CODE1,
+      </if>
+      <if test="violateCode2 != null" >
+        VIOLATE_CODE2,
+      </if>
+      <if test="violateCode3 != null" >
+        VIOLATE_CODE3,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="refuseCode1 != null" >
+        REFUSE_CODE1,
+      </if>
+      <if test="refuseCode2 != null" >
+        REFUSE_CODE2,
+      </if>
+      <if test="refuseCode3 != null" >
+        REFUSE_CODE3,
+      </if>
+      <if test="approver != null" >
+        APPROVER,
+      </if>
+      <if test="approverName != null" >
+        APPROVER_NAME,
+      </if>
+      <if test="highlevleApprover != null" >
+        HIGHLEVLE_APPROVER,
+      </if>
+      <if test="highlevleApprovetime != null" >
+        HIGHLEVLE_APPROVETIME,
+      </if>
+      <if test="submitHighlevleTime != null" >
+        SUBMIT_HIGHLEVLE_TIME,
+      </if>
+      <if test="approveTime != null" >
+        APPROVE_TIME,
+      </if>
+      <if test="currOptGroup != null" >
+        CURR_OPT_GROUP,
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG,
+      </if>
+      <if test="yearFeeDerateType != null" >
+        YEAR_FEE_DERATE_TYPE,
+      </if>
+      <if test="cardFaceCode != null" >
+        CARD_FACE_CODE,
+      </if>
+      <if test="rateValue != null" >
+        RATE_VALUE,
+      </if>
+      <if test="repayRationValue != null" >
+        REPAY_RATION_VALUE,
+      </if>
+      <if test="repayFreeValue != null" >
+        REPAY_FREE_VALUE,
+      </if>
+      <if test="laojianNum != null" >
+        LAOJIAN_NUM,
+      </if>
+      <if test="spRefUnPlgeDti != null" >
+        SP_REF_UN_PLGE_DTI,
+      </if>
+      <if test="spRefCpDti != null" >
+        SP_REF_CP_DTI,
+      </if>
+      <if test="spRefMue != null" >
+        SP_REF_MUE,
+      </if>
+      <if test="spDebtAppAuth != null" >
+        SP_DEBT_APP_AUTH,
+      </if>
+      <if test="initSaveFlag != null" >
+        INIT_SAVE_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseChildcard != null" >
+        #{refuseChildcard,jdbcType=CHAR},
+      </if>
+      <if test="preApprovelimit != null" >
+        #{preApprovelimit,jdbcType=DECIMAL},
+      </if>
+      <if test="applyerName != null" >
+        #{applyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCard != null" >
+        #{applyCard,jdbcType=VARCHAR},
+      </if>
+      <if test="isAgreeDegrade != null" >
+        #{isAgreeDegrade,jdbcType=CHAR},
+      </if>
+      <if test="sysDecisionTime != null" >
+        #{sysDecisionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mastercardDecresult != null" >
+        #{mastercardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="mastercardApprovereuslt != null" >
+        #{mastercardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCreditProduce != null" >
+        #{sysCreditProduce,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardDecresult != null" >
+        #{childcardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardApprovereuslt != null" >
+        #{childcardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="creditResult != null" >
+        #{creditResult,jdbcType=VARCHAR},
+      </if>
+      <if test="creditRefuseReason != null" >
+        #{creditRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="warninglistResult != null" >
+        #{warninglistResult,jdbcType=VARCHAR},
+      </if>
+      <if test="approveResult != null" >
+        #{approveResult,jdbcType=CHAR},
+      </if>
+      <if test="approveCreditLimit != null" >
+        #{approveCreditLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="approveCreditProduct != null" >
+        #{approveCreditProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="manualLimit != null" >
+        #{manualLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="policyCode1 != null" >
+        #{policyCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode2 != null" >
+        #{policyCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode3 != null" >
+        #{policyCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode1 != null" >
+        #{violateCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode2 != null" >
+        #{violateCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode3 != null" >
+        #{violateCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode1 != null" >
+        #{refuseCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode2 != null" >
+        #{refuseCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode3 != null" >
+        #{refuseCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="approver != null" >
+        #{approver,jdbcType=VARCHAR},
+      </if>
+      <if test="approverName != null" >
+        #{approverName,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprover != null" >
+        #{highlevleApprover,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprovetime != null" >
+        #{highlevleApprovetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitHighlevleTime != null" >
+        #{submitHighlevleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveTime != null" >
+        #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currOptGroup != null" >
+        #{currOptGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        #{ydjFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="yearFeeDerateType != null" >
+        #{yearFeeDerateType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardFaceCode != null" >
+        #{cardFaceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="rateValue != null" >
+        #{rateValue,jdbcType=VARCHAR},
+      </if>
+      <if test="repayRationValue != null" >
+        #{repayRationValue,jdbcType=VARCHAR},
+      </if>
+      <if test="repayFreeValue != null" >
+        #{repayFreeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="laojianNum != null" >
+        #{laojianNum,jdbcType=VARCHAR},
+      </if>
+      <if test="spRefUnPlgeDti != null" >
+        #{spRefUnPlgeDti,jdbcType=DECIMAL},
+      </if>
+      <if test="spRefCpDti != null" >
+        #{spRefCpDti,jdbcType=DECIMAL},
+      </if>
+      <if test="spRefMue != null" >
+        #{spRefMue,jdbcType=DECIMAL},
+      </if>
+      <if test="spDebtAppAuth != null" >
+        #{spDebtAppAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="initSaveFlag != null" >
+         #{initSaveFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.thirdparty.BizApproval" >
+    update CAMSONLINE.OPAS_BIZ_APPROVAL
+    <set >
+      <if test="appId != null" >
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        ID_TYPE = #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null" >
+        ID_NO = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseChildcard != null" >
+        REFUSE_CHILDCARD = #{refuseChildcard,jdbcType=CHAR},
+      </if>
+      <if test="preApprovelimit != null" >
+        PRE_APPROVELIMIT = #{preApprovelimit,jdbcType=DECIMAL},
+      </if>
+      <if test="applyerName != null" >
+        APPLYER_NAME = #{applyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCard != null" >
+        APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+      </if>
+      <if test="isAgreeDegrade != null" >
+        IS_AGREE_DEGRADE = #{isAgreeDegrade,jdbcType=CHAR},
+      </if>
+      <if test="sysDecisionTime != null" >
+        SYS_DECISION_TIME = #{sysDecisionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mastercardDecresult != null" >
+        MASTERCARD_DECRESULT = #{mastercardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="mastercardApprovereuslt != null" >
+        MASTERCARD_APPROVEREUSLT = #{mastercardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCreditProduce != null" >
+        SYS_CREDIT_PRODUCE = #{sysCreditProduce,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardDecresult != null" >
+        CHILDCARD_DECRESULT = #{childcardDecresult,jdbcType=VARCHAR},
+      </if>
+      <if test="childcardApprovereuslt != null" >
+        CHILDCARD_APPROVEREUSLT = #{childcardApprovereuslt,jdbcType=VARCHAR},
+      </if>
+      <if test="creditResult != null" >
+        CREDIT_RESULT = #{creditResult,jdbcType=VARCHAR},
+      </if>
+      <if test="creditRefuseReason != null" >
+        CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="warninglistResult != null" >
+        WARNINGLIST_RESULT = #{warninglistResult,jdbcType=VARCHAR},
+      </if>
+      <if test="approveResult != null" >
+        APPROVE_RESULT = #{approveResult,jdbcType=CHAR},
+      </if>
+      <if test="approveCreditLimit != null" >
+        APPROVE_CREDIT_LIMIT = #{approveCreditLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="approveCreditProduct != null" >
+        APPROVE_CREDIT_PRODUCT = #{approveCreditProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="manualLimit != null" >
+        MANUAL_LIMIT = #{manualLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="policyCode1 != null" >
+        POLICY_CODE1 = #{policyCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode2 != null" >
+        POLICY_CODE2 = #{policyCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="policyCode3 != null" >
+        POLICY_CODE3 = #{policyCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode1 != null" >
+        VIOLATE_CODE1 = #{violateCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode2 != null" >
+        VIOLATE_CODE2 = #{violateCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="violateCode3 != null" >
+        VIOLATE_CODE3 = #{violateCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode1 != null" >
+        REFUSE_CODE1 = #{refuseCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode2 != null" >
+        REFUSE_CODE2 = #{refuseCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseCode3 != null" >
+        REFUSE_CODE3 = #{refuseCode3,jdbcType=VARCHAR},
+      </if>
+      <if test="approver != null" >
+        APPROVER = #{approver,jdbcType=VARCHAR},
+      </if>
+      <if test="approverName != null" >
+        APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprover != null" >
+        HIGHLEVLE_APPROVER = #{highlevleApprover,jdbcType=VARCHAR},
+      </if>
+      <if test="highlevleApprovetime != null" >
+        HIGHLEVLE_APPROVETIME = #{highlevleApprovetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitHighlevleTime != null" >
+        SUBMIT_HIGHLEVLE_TIME = #{submitHighlevleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveTime != null" >
+        APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currOptGroup != null" >
+        CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="ydjFlag != null" >
+        YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="yearFeeDerateType != null" >
+        YEAR_FEE_DERATE_TYPE = #{yearFeeDerateType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardFaceCode != null" >
+        CARD_FACE_CODE = #{cardFaceCode,jdbcType=VARCHAR},
+      </if>
+    <!--   <if test="rateValue != null" >
+        RATE_VALUE = #{rateValue,jdbcType=VARCHAR},
+      </if>
+      <if test="repayRationValue != null" >
+        REPAY_RATION_VALUE = #{repayRationValue,jdbcType=VARCHAR},
+      </if>
+      <if test="repayFreeValue != null" >
+        REPAY_FREE_VALUE = #{repayFreeValue,jdbcType=VARCHAR},
+      </if> -->
+      <if test="laojianNum != null" >
+        LAOJIAN_NUM = #{laojianNum,jdbcType=VARCHAR},
+      </if>
+      <if test="spRefUnPlgeDti != null" >
+        SP_REF_UN_PLGE_DTI = #{spRefUnPlgeDti,jdbcType=DECIMAL},
+      </if>
+      <if test="spRefCpDti != null" >
+        SP_REF_CP_DTI = #{spRefCpDti,jdbcType=DECIMAL},
+      </if>
+      <if test="spRefMue != null" >
+        SP_REF_MUE = #{spRefMue,jdbcType=DECIMAL},
+      </if>
+      <if test="spDebtAppAuth != null" >
+        SP_DEBT_APP_AUTH = #{spDebtAppAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="initSaveFlag != null" >
+        INIT_SAVE_FLAG = #{initSaveFlag,jdbcType=CHAR},
+      </if>
+       RATE_VALUE = #{rateValue,jdbcType=VARCHAR},
+       REPAY_RATION_VALUE = #{repayRationValue,jdbcType=VARCHAR},
+       REPAY_FREE_VALUE = #{repayFreeValue,jdbcType=VARCHAR}
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.thirdparty.BizApproval" >
+    update CAMSONLINE.OPAS_BIZ_APPROVAL
+    set APP_ID = #{appId,jdbcType=VARCHAR},
+      ID_TYPE = #{idType,jdbcType=VARCHAR},
+      ID_NO = #{idNo,jdbcType=VARCHAR},
+      REFUSE_CHILDCARD = #{refuseChildcard,jdbcType=CHAR},
+      PRE_APPROVELIMIT = #{preApprovelimit,jdbcType=DECIMAL},
+      APPLYER_NAME = #{applyerName,jdbcType=VARCHAR},
+      APPLY_CARD = #{applyCard,jdbcType=VARCHAR},
+      IS_AGREE_DEGRADE = #{isAgreeDegrade,jdbcType=CHAR},
+      SYS_DECISION_TIME = #{sysDecisionTime,jdbcType=TIMESTAMP},
+      MASTERCARD_DECRESULT = #{mastercardDecresult,jdbcType=VARCHAR},
+      MASTERCARD_APPROVEREUSLT = #{mastercardApprovereuslt,jdbcType=VARCHAR},
+      SYS_CREDIT_PRODUCE = #{sysCreditProduce,jdbcType=VARCHAR},
+      CHILDCARD_DECRESULT = #{childcardDecresult,jdbcType=VARCHAR},
+      CHILDCARD_APPROVEREUSLT = #{childcardApprovereuslt,jdbcType=VARCHAR},
+      CREDIT_RESULT = #{creditResult,jdbcType=VARCHAR},
+      CREDIT_REFUSE_REASON = #{creditRefuseReason,jdbcType=VARCHAR},
+      WARNINGLIST_RESULT = #{warninglistResult,jdbcType=VARCHAR},
+      APPROVE_RESULT = #{approveResult,jdbcType=CHAR},
+      APPROVE_CREDIT_LIMIT = #{approveCreditLimit,jdbcType=DECIMAL},
+      APPROVE_CREDIT_PRODUCT = #{approveCreditProduct,jdbcType=VARCHAR},
+      MANUAL_LIMIT = #{manualLimit,jdbcType=DECIMAL},
+      POLICY_CODE1 = #{policyCode1,jdbcType=VARCHAR},
+      POLICY_CODE2 = #{policyCode2,jdbcType=VARCHAR},
+      POLICY_CODE3 = #{policyCode3,jdbcType=VARCHAR},
+      VIOLATE_CODE1 = #{violateCode1,jdbcType=VARCHAR},
+      VIOLATE_CODE2 = #{violateCode2,jdbcType=VARCHAR},
+      VIOLATE_CODE3 = #{violateCode3,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      REFUSE_CODE1 = #{refuseCode1,jdbcType=VARCHAR},
+      REFUSE_CODE2 = #{refuseCode2,jdbcType=VARCHAR},
+      REFUSE_CODE3 = #{refuseCode3,jdbcType=VARCHAR},
+      APPROVER = #{approver,jdbcType=VARCHAR},
+      APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+      HIGHLEVLE_APPROVER = #{highlevleApprover,jdbcType=VARCHAR},
+      HIGHLEVLE_APPROVETIME = #{highlevleApprovetime,jdbcType=TIMESTAMP},
+      SUBMIT_HIGHLEVLE_TIME = #{submitHighlevleTime,jdbcType=TIMESTAMP},
+      APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+      CURR_OPT_GROUP = #{currOptGroup,jdbcType=VARCHAR},
+      YDJ_FLAG = #{ydjFlag,jdbcType=VARCHAR},
+      YEAR_FEE_DERATE_TYPE = #{yearFeeDerateType,jdbcType=VARCHAR},
+      CARD_FACE_CODE = #{cardFaceCode,jdbcType=VARCHAR},
+      RATE_VALUE = #{rateValue,jdbcType=VARCHAR},
+      REPAY_RATION_VALUE = #{repayRationValue,jdbcType=VARCHAR},
+      REPAY_FREE_VALUE = #{repayFreeValue,jdbcType=VARCHAR},
+      LAOJIAN_NUM = #{laojianNum,jdbcType=VARCHAR},
+      SP_REF_UN_PLGE_DTI = #{spRefUnPlgeDti,jdbcType=DECIMAL},
+      SP_REF_CP_DTI = #{spRefCpDti,jdbcType=DECIMAL},
+      SP_REF_MUE = #{spRefMue,jdbcType=DECIMAL},
+      SP_DEBT_APP_AUTH = #{spDebtAppAuth,jdbcType=VARCHAR},
+      INIT_SAVE_FLAG = #{initSaveFlag,jdbcType=CHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  
+   <resultMap id="TelcheckResultMap" type="com.huaxia.opas.domain.input.TelcheckResult" >
+    <id column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="BLOCK_CODE" property="blockCode" jdbcType="VARCHAR" />
+    <result column="CREDIT_REFUSE_REASON" property="creditRefuseReason" jdbcType="VARCHAR" />
+    <result column="TELCHECK_RESULT" property="telcheckResult" jdbcType="VARCHAR" />
+    <result column="IDENTITY_RESULT" property="identityResult" jdbcType="VARCHAR" />
+    <result column="CREDIT_TIME" property="creditTime" jdbcType="TIMESTAMP" />
+    <result column="CREDITER" property="crediter" jdbcType="VARCHAR" />
+    <result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+    <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+    <result column="CURR_OPT_GROUP" property="currOptGroup" jdbcType="VARCHAR" />
+    <result column="CREDITER_NAME" property="crediterName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectTelcheckResultByAppId" resultMap="TelcheckResultMap" parameterType="java.lang.String" >
+    select * from (select 
+    APP_ID, AUTO_ID, BLOCK_CODE, CREDIT_REFUSE_REASON, TELCHECK_RESULT, IDENTITY_RESULT, 
+    CREDIT_TIME, CREDITER, CRT_DATE, CRT_USER, CURR_OPT_GROUP, CREDITER_NAME
+    from OPAS_TELCHECK_RESULT
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+    order by CRT_DATE desc 
+    ) where rownum = '1'
+  </select>
+   <!--审批 组员工作完成量统计  sxt-->
+  <select id="selectMemberJobCompletCountApprove" parameterType="java.util.Map" resultType="java.lang.Integer">
+	select count(distinct(substr(s.app_id,0,15)))
+		from opas_allot_apply_allot s
+		left join OPAS_FILE_APPLICATION_DETAIL o on s.app_id=o.app_Id 
+		where s.curr_opt_user = #{auditor}
+		and s.check_meuoflag='1'
+		and s.curr_node='04'
+		and o.flag in ('0','1','2','4')
+		AND s.LST_TEAM_DATE BETWEEN to_date(#{startTime},'yyyy-mm-dd')     
+		AND (to_date(#{endTime},'yyyy-mm-dd')+1 )
+  </select>
+  
+   <!--征审合一 组员工作完成量统计  sxt-->
+  <select id="selectMemberJobCompletCountApproveCheckup" parameterType="java.util.Map" resultType="java.lang.Integer">
+	select count(distinct(substr(s.app_id,0,15)))
+		from opas_allot_apply_allot s
+		left join OPAS_FILE_APPLICATION_DETAIL o on s.app_id=o.app_Id 
+		where s.curr_opt_user = #{auditor}
+		and s.check_meuoflag='2'
+		and s.curr_node='04' 
+		and o.flag in ('0','1','2','4')
+		AND s.LST_TEAM_DATE BETWEEN to_date(#{startTime},'yyyy-mm-dd')     
+		AND (to_date(#{endTime},'yyyy-mm-dd')+1 )
+  </select>
+  
+  <select id="selectApprovalCard" parameterType="java.util.Map" resultType="java.lang.Integer">
+	select count(1) from OPAS_AP_USER a left join OPAS_USER_CARD b on a.user_id = b.user_id
+		where a.user_code = #{userCode}
+		and b.card_code = #{cardCode}
+  </select>
+  
+  <!-- 更改初始化标识 -->
+  <update id="updateInitSaveFlag" parameterType="java.util.Map">
+		update OPAS_BIZ_APPROVAL
+		set INIT_SAVE_FLAG = '0'
+		where APP_ID like '${appId}%'
+  </update>
+  <!-- 是否批准过相同产品,排除本件 -->
+   <select id="selectApplyCardByAppId" resultType="java.lang.String" parameterType="java.lang.String" >
+   select distinct s.app_id
+		    from opas_allot_apply_allot s, OPAS_FILE_APPLICATION_DETAIL o,  
+		    OPAS_BIZ_APPROVAL a
+		   where 
+	          s.app_id = o.app_id
+	          and a.app_id = s.app_id
+	          and (o.back_flag='0' or o.back_flag is null)
+		      and s.curr_node='04'
+		      and a.approve_result = '1'
+		      and a.approve_credit_product in (select a.APP_PROD from opas_biz_inp_appl_c1 a
+	                            where a.app_id = #{appId,jdbcType=VARCHAR})
+		      and o.cred_no in (select a.c1_idnbr from opas_biz_inp_appl_c1 a
+	                            where a.app_id = #{appId,jdbcType=VARCHAR})
+  </select>
+  <!-- 0115、0116两种卡判定审批系统中该卡产品编号下已批准的卡片数量  不需要查询3118表 -->
+  <select id="selectCountHaveCard" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	  select count(1)
+		    from opas_allot_apply_allot s, OPAS_FILE_APPLICATION_DETAIL o,  
+		    OPAS_BIZ_APPROVAL a
+		   where 
+	          s.app_id = o.app_id
+	          and a.app_id = s.app_id
+		      and s.curr_node='04'
+		      and a.approve_result = '1'
+		      and a.approve_credit_product in ('0115','0116')
+		      and o.cred_no in (select a.c1_idnbr from opas_biz_inp_appl_c1 a
+	                            where a.app_id = #{appId,jdbcType=VARCHAR})
+  </select>
+  
+  <select id="selectCardLimit" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(1)
+	  from OPAS_INTERFACE_3118 s, opas_biz_inp_appl_c1 w
+	  where s.app_id = w.app_id
+	  and s.custid = w.c1_idnbr
+	  and (s.cardstat1 not in ('T','Q') or s.cardstat1 is null)
+	  and w.exist_card_flag = '1'
+	  and s.app_id = #{appId}
+  </select>
+  <select id="selectFkCardLimit" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(1)
+	  from OPAS_INTERFACE_3118_FK s, opas_biz_inp_appl_c2 w
+	  where s.app_id = w.app_id
+	  and s.custid = w.c2_idnbr
+	  and (s.cardstat1 not in ('T','Q') or s.cardstat1 is null)
+	  and s.app_id = #{appId}
+  </select>
+  <!-- 迅卡审批结论查询 -->
+  <select id="selectApproveResult" parameterType="java.lang.String" resultType="java.lang.String">
+  	select a.approve_result  from  OPAS_BIZ_APPROVAL a where a.app_id = #{appId}
+  </select>
+</mapper>

@@ -1,0 +1,332 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize-ext.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/normalize.css" type="text/css"></link>
+</head>
+	<body style="width:70%;">
+	<form id="patchForm">
+		<input type="hidden" name="appId" id="appId"/>
+		<input type="hidden" name="userCode" id="userCode"/>
+		<div>
+		<table>
+			<tr>
+				<td align="right">补件期限:</td>
+				<td><input class="easyui-datebox" id="dueDate" name="dueDate" editable="false"  style="width:150px"></input><span style="color: red">&nbsp;&nbsp;&nbsp;(万年历)</span></td>
+			</tr>
+			<h3>请选择需要补交的证明材料</h3>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="identityCard" value="1" name="identityCard"/></td>
+				<td>身份证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="isHavesign" value="1"  name="isHavesign"/></td>
+				<td>是否有签名</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="workConfirm" value="1"  name="workConfirm"/></td>
+				<td>工作证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="incomeConfirm" value="1"  name="incomeConfirm"/></td>
+				<td>收入证明文件</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="liveConfirm" value="1"  name="liveConfirm"/></td>
+				<td>居住证明文件</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="houseConfirm" value="1"  name="houseConfirm"/></td>
+				<td>房产证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="drivingLicense" value="1" name="drivingLicense"/></td>
+				<td>行驶证</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="eduConfirm" value="1" name="eduConfirm"/></td>
+				<td>学历证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="titleConfirm" value="1" name="titleConfirm"/></td>
+				<td>资格证书</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="otherCreditcard" value="1"  name="otherCreditcard"/></td>
+				<td>他行信用卡或账单</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="ownerBankConfirm" value="1"  name="ownerBankConfirm"/></td>
+				<td>我行业务往来证明</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="financalConfirm" value="1"  name="financalConfirm"/></td>
+				<td>财力证明</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="others" value="1"  name="others"/></td>
+				<td>其他</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="nonAddfiles" value="1" name="nonAddfiles"/></td>
+				<td>未补充资料</td>
+			</tr>
+			<tr>
+				<td align="right"><input class="checkbox" type="checkbox" id="workerOrder" value="1"  name="workerOrder"/></td>
+				<td>工单</td>
+				<td align="right"><input class="checkbox" type="checkbox" id="vipAttr" value="1" name="vipAttr"/></td>
+				<td>VIP</td>
+			</tr>
+		</table>
+		</div>
+		<table>
+			<!-- 文档数据库表无以下字段 -->
+			<tr>
+				<td align="right">备注<span style="color: red">(最多50字)</span></td><!--  style="width:300px;height:100px" -->
+				<td><input class="easyui-textbox" id="memo" name="memo" style="width:300px;height:100px" data-options="multiline:true"></input></td>
+			</tr>
+			<tr>
+				<td align="right">分机号</td>
+				<td><input class="easyui-validatebox textbox" id="optTelno" name="optTelno" ></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="applyerCheckbox"  onclick="checkAp(this);" name="applyerCheckbox"/>&nbsp;&nbsp;&nbsp;申请人</td>
+				<td><input class="easyui-textbox"  id="applyer" name="applyer" type="text"></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="promoterCheckbox" onclick="checkPr(this);" name="promoterCheckbox"/>&nbsp;&nbsp;&nbsp;推广人</td>
+				<td><input class="easyui-textbox" id="promoter" name="promoter" type="text" ></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" value="1" id="riskCheckbox" onclick="checkRi(this);" name="riskCheckbox"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;风险</td>
+				<td><input class="easyui-combobox" data-options="valueField:'abCode',textField:'abCode'"
+									style="width: 150px" name="abCode" id="abCode" ></td>
+				<td><a href="javascript:void(0);" class="easyui-linkbutton" onclick="onSearch()">查询 </a></td></tr>
+			<tr><td><input class="easyui-textbox" id="risk" name="risk"  type="text" ></input></td>
+			</tr>
+			<tr>
+				<td align="right"><input  type="hidden" />&nbsp;&nbsp;&nbsp;风险联系人</td>
+				<td><input id="conName" name="conName" class="easyui-textbox"></td>
+			</tr>
+			<tr>
+				<td align="right"><input  type="hidden"/>&nbsp;&nbsp;&nbsp;联系人电话</td>
+				<td><input  id="telRisk" name="telRisk" class="easyui-textbox"></td>
+			</tr>
+		</table>
+	</form>
+	<div style="text-align: center; padding: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" id="patPad"
+				onclick="onSave()">提交此补件</a>&nbsp;<a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="onConcle('winAdd')">关闭</a>
+	</div>
+	<div id="winChoose" class="easyui-window"  title="风险联系人选择"
+		style="width: 580px; height: 520px" top="10px"
+		data-options="iconCls:'icon-save',modal:true,closed:true">
+		<form id="choose" method="post">
+			<table id="tblChoose" class="easyui-datagrid" style="width: 98%"
+			data-options="rownumbers:true,singleSelect:true,pagination:true,pageSize:15,pageList:[15],fitColumns:true,loadMsg:'数据加载中.....',checkOnSelect:true,method:'post',toolbar:'#positionCodeCondion1'">
+				<thead frozen="true">
+				<tr>
+					<th field="autoId" width="5%" align="center" checkbox="true"></th>
+					<th field="conName" width="35%" align="center">风险联系人</th>
+					<th field="telRisk" width="35%" align="center">联系人电话</th>
+				</tr>
+				</thead>
+			</table>
+		</form>
+		<div style="text-align: center; padding: 5px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="sureApplyRiskInfo()">确定</a>
+		</div>
+	</div>
+	<script>
+	var aCheckbox = document.getElementById("applyerCheckbox");
+	var pCheckbox = document.getElementById("promoterCheckbox");
+	var rCheckbox = document.getElementById("riskCheckbox");
+	var userCode = window.parent.userCode;
+	var appId = GetQueryString("appId");
+	var jsonListJson;
+	$(function(){
+		$("#appId").val(appId);
+		$("#risk").next().hide();
+		var promoter = $("#promoter");
+		var applyer = $("#applyer");
+		var currDate = new Date();
+		var dayNum = 5;
+		if(parent.ydjFlag == '1'){
+			dayNum = 10;
+		}
+		// 获取当前推后5天工作日时间,算当天和最后一天,应该减去两天,所以8天
+		$cf.ajax({
+			url : '/opas-naps/query_target_date.json',
+			data: {
+				beforeDate : currDate,
+				dayNum : dayNum
+			},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.result;
+				$("#dueDate").datebox("setValue",result);
+			}
+		});
+	/* 	var strDate = currDate.getFullYear()+("-");
+		strDate = strDate+(currDate.getMonth()+1)+("-")+(currDate.getDate()+5);
+		$("#dueDate").datebox("setValue",strDate); */
+		//申请人推广员电话反显
+		$cf.ajax({
+			url : '/opas-naps/query_bizInfo.json',
+			data:{'appId':appId},
+			onSuccess : function(response) {
+				var result = response.RSP_BODY.result;
+				applyer.textbox('setValue',result.c1Mobile);
+				promoter.textbox('setValue',result.c4Abphon);
+			}
+		});
+		
+		//风险联系人信息
+		$cf.ajax({
+			url : '/opas-naps/queryAllApplyRiskInfo.json',
+			data:{'appId':appId},
+			onSuccess : function(ret) {
+				var c5AbCode = ret.RSP_BODY.c5AbCode;
+				var applyRiskInfoStr = ret.RSP_BODY.applyRiskInfoStr;
+				var applyRiskInfoList = eval('(' + applyRiskInfoStr + ')');
+				$("#abCode").combobox({data:applyRiskInfoList});
+				$("#abCode").combobox("setValue",c5AbCode);
+			}
+		});
+	});
+	function checkAp(self){
+		if(aCheckbox.checked==true){
+			$("#applyer").textbox('readonly',false);
+		}else{
+			$("#applyer").textbox('readonly',true);
+		}
+	}
+	function checkPr(self){
+		if(pCheckbox.checked==true){
+			rCheckbox.checked = false;
+			$("#promoter").textbox('readonly',false);
+// 			$("#risk").textbox('readonly',true);
+		}else{
+			$("#promoter").textbox('readonly',true);
+// 			$("#risk").textbox('readonly',false);
+		}
+	}
+// 	function checkRi(self){
+// 		if(rCheckbox.checked==true){
+// 			pCheckbox.checked = false;
+// 			$("#risk").textbox('readonly',false);
+// 			$("#promoter").textbox('readonly',true);
+// 		}else{
+// 			$("#risk").textbox('readonly',true);
+// 			$("#promoter").textbox('readonly',false);
+// 		}
+// 	}
+	function checkNumber(obj){
+		var reg = /^[0-9]+.?[0-9]*$/;
+		if(reg.test(obj)){
+			return true;
+		}
+		return false;
+	}
+	var patchForm = $("#patchForm");
+	function onSave() {
+		$("#userCode").val(userCode);
+		var jsondata = getFormData(patchForm.serializeArray());
+		console.log(jsondata);
+		var appIdStr = appId.substring(6,7);
+		var aFlag = aCheckbox.checked;
+		var pFlag = pCheckbox.checked;
+		var rFlag = rCheckbox.checked;
+		if(appIdStr!="A"&&!aFlag&&!pFlag&&!rFlag){
+			$.messager.alert("操作提示", "请勾选申请人或推广风险人信息!");
+			return;
+		}
+		if(jsondata.memo.trim().length > 50){
+			$.messager.alert("操作提示", "备注字数太多,请检查!");
+			return;
+		}
+		if(jsondata.applyer.trim().length > 16){
+			$.messager.alert("操作提示", "申请人格式不对,请检查!");
+			return;
+		}
+		if(jsondata.promoter.trim().length > 16){
+			$.messager.alert("操作提示", "推广人格式不对,请检查!");
+			return;
+		}
+		jsondata.risk=jsondata.telRisk;
+		if(jsondata.risk.trim().length > 12||((jsondata.risk!="")&&!checkNumber(jsondata.risk.trim()))){
+			$.messager.alert("操作提示", "风险电话格式不对,请检查!");
+			return;
+		}
+		// 如果补件条件或备注为空则不提交
+		if(jsondata.identityCard==null&&jsondata.isHavesign==null&&jsondata.workConfirm==null&&
+				jsondata.incomeConfirm==null&&jsondata.liveConfirm==null&&jsondata.houseConfirm==null&&
+				jsondata.drivingLicense==null&&jsondata.eduConfirm==null&&jsondata.titleConfirm==null&&
+				jsondata.otherCreditcard==null&&jsondata.ownerBankConfirm==null&&jsondata.financalConfirm==null&&
+				jsondata.others==null&&jsondata.nonAddfiles==null&&jsondata.workerOrder==null&&jsondata.vipAttr==null&&(jsondata.memo.trim()==""||jsondata.memo==null)){
+			$.messager.alert("操作提示", "请至少勾选一个条件或添加备注!");
+			return;
+		}
+		$("#patPad").attr("disabled",true);
+		$("#patPad").css("pointer-events","none");
+		$cf.ajax({
+			url : "/opas-naps/patchbolt_save.json",
+			data : jsondata,
+			onSuccess : function(data) {
+				if (data.RSP_BODY.isSuccess) {
+					$.messager.alert("操作提示", "补件提交成功!", "info", function() {
+						window_close();
+					});
+				} else {
+					$.messager.alert("操作提示", "补件提交失败:" + data.RSP_BODY.exMsg, "error");
+					$("#patPad").removeAttr("disabled");
+					return;
+				}
+			}
+
+		});
+		
+	}
+	function onSearch(){
+			var inputAbCode = $("#abCode").combobox('getValue');
+			$("#tblChoose").datagrid("loadData",{total:0,rows:[]});
+			$("#tblChoose").datagrid("clearSelections");
+			var winChoose = $("#winChoose");
+			var tblChoose = $("#tblChoose");
+			winChoose.window({
+				closed : false,
+				collapsible : false,
+				minimizable : false
+			});
+			var opts = tblChoose.datagrid("options");
+			opts.url = "/opas-naps/queryApplyRiskInfoByAbCode.json";
+			var jsondata = {'abCode':inputAbCode};
+			tblChoose.datagrid("reload",jsondata);
+	}
+	function sureApplyRiskInfo(){
+		$("#winChoose").window({
+			closed:true
+		});
+		var chooseOpt = $("#tblChoose").datagrid("getSelections");
+		$("#conName").textbox('setValue',chooseOpt[0].conName);
+		$("#telRisk").textbox('setValue',chooseOpt[0].telRisk);
+		$("#risk").textbox('setValue',chooseOpt[0].telRisk);
+	}
+	function getFormData(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value.trim();
+			if(objName=="memo"){
+				objValue = objValue.replace(/\r?\n/g,"");
+			}
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+	function window_close(){
+		//为了屏蔽ie的 小弹框提示 
+		var newWin=parent.window.open("","_parent","");
+		newWin.opener.location.reload();
+		newWin.close();
+	}
+	</script>
+</body>
+

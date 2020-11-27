@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--利率差异化参数配置数据库处理-->
+<!--@author liudi-->
+<mapper namespace="SysparmRateConf">
+
+	<resultMap id="SysparmRateConfResultMap" type="com.huaxia.opas.domain.sysparm.SysparmRateConf">
+		<result column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+		<result column="CUST_LEVEL_TAG" property="custLevelTag" jdbcType="VARCHAR" />
+		<result column="RATE_CODE" property="rateCode" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="CRT_USER" property="crtUser" jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="LST_UPD_USER" property="lstUpdUser" jdbcType="VARCHAR" />
+		<result column="LST_UPD_DATE" property="lstUpdDate" jdbcType="TIMESTAMP" />
+	</resultMap> 
+<!-- 添加 -->
+	<insert id="insertSysparmRateConf" parameterType="com.huaxia.opas.domain.sysparm.SysparmRateConf">
+		insert into
+		OPAS_SYSPARM_RATE_CONF
+		(AUTO_ID,CUST_LEVEL_TAG,RATE_CODE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE)
+		values (
+		#{autoId,jdbcType=VARCHAR},
+		#{custLevelTag,jdbcType=VARCHAR},
+		#{rateCode,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},
+		#{crtUser,jdbcType=VARCHAR},
+		SYSDATE,
+		#{lstUpdUser,jdbcType=VARCHAR},
+		SYSDATE
+		)
+	</insert>
+<!-- 删除 -->
+	<delete id="deleteSysparmRateConfById" parameterType="java.lang.String">
+		delete from
+		OPAS_SYSPARM_RATE_CONF
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</delete>
+<!-- 全部删除 -->
+	<delete id="deleteAllSysparmRateConf">
+		delete from
+		OPAS_SYSPARM_RATE_CONF
+	</delete>
+<!-- 修改 -->
+	<update id="updateSysparmRateConf" parameterType="com.huaxia.opas.domain.sysparm.SysparmRateConf">
+		update OPAS_SYSPARM_RATE_CONF
+		<set>
+			RATE_CODE = #{rateCode,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=CHAR},
+			LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+			LST_UPD_DATE = SYSDATE
+		</set>
+		where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+	</update>
+<!-- 利率差异化配置件数查询 -->
+	<select id="querySysparmRateConfCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from OPAS_SYSPARM_RATE_CONF
+		<where>
+			<if test="custLevelTag != null and custLevelTag !='' ">
+				AND CUST_LEVEL_TAG LIKE '%${custLevelTag}%'
+			</if>
+			<if test="rateCode != null and rateCode !='' ">
+				AND RATE_CODE LIKE '%${rateCode}%'
+			</if>
+		</where>
+	</select>
+<!-- 利率差异化配置信息查询 -->
+	<select id="querySysparmRateConf1" parameterType="com.huaxia.opas.domain.sysparm.SysparmRateConf"
+		resultMap="SysparmRateConfResultMap">
+		select
+		AUTO_ID,CUST_LEVEL_TAG,RATE_CODE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_SYSPARM_RATE_CONF
+		<where>
+			<if test="custLevelTag != null and custLevelTag !='' ">
+				AND CUST_LEVEL_TAG LIKE '%${custLevelTag}%'
+			</if>
+			<if test="rateCode != null and rateCode !='' ">
+				AND RATE_CODE LIKE '%${rateCode}%'
+			</if>
+		</where>
+		order by CRT_DATE 
+	</select>
+<!-- 查询利率代码是否存在 -->
+	<select id="querySysparmRateConf2" parameterType="com.huaxia.opas.domain.sysparm.SysparmRateConf"
+		resultMap="SysparmRateConfResultMap">
+		select
+		RATE_CODE
+		from OPAS_SYSPARM_RATE
+		<where>
+			<if test="rateCode != null and rateCode !='' ">
+				AND RATE_CODE = #{rateCode}
+			</if>
+		</where>
+	</select>
+<!-- 查询利率客户分层结果标签是否重复 -->
+	<select id="querySysparmRateConf3" parameterType="com.huaxia.opas.domain.sysparm.SysparmRateConf"
+		resultMap="SysparmRateConfResultMap">
+		select
+		CUST_LEVEL_TAG
+		from OPAS_SYSPARM_RATE_CONF
+		<where>
+			<if test="custLevelTag != null and custLevelTag !='' ">
+				AND CUST_LEVEL_TAG = #{custLevelTag}
+			</if>
+		</where>
+	</select>
+<!-- 查询利率代码存在情况下，状态是否开启 -->
+	<select id="querySysparmRateConf4" parameterType="com.huaxia.opas.domain.sysparm.SysparmRateConf"
+		resultMap="SysparmRateConfResultMap">
+		select
+		STATUS
+		from OPAS_SYSPARM_RATE
+		<where>
+			<if test="rateCode != null and rateCode !='' ">
+				AND RATE_CODE = #{rateCode}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 自动归档利率差异化配置信息查询 -->
+	<select id="querySysparmRateConf5" parameterType="com.huaxia.opas.domain.sysparm.SysparmRateConf"
+		resultMap="SysparmRateConfResultMap">
+		select
+		AUTO_ID,CUST_LEVEL_TAG,RATE_CODE,STATUS,CRT_USER,CRT_DATE,LST_UPD_USER,LST_UPD_DATE
+		from OPAS_SYSPARM_RATE_CONF WHERE CUST_LEVEL_TAG = #{custLevelTag}
+	</select>
+
+</mapper>

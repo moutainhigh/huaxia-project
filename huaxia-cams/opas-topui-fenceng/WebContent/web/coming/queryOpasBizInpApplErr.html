@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<script type="text/javascript" src="../../js/validate.js"></script>
+<script type="text/javascript" src="../../js/common/get_appIdanddict.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body style="padding: 10px;">
+
+	<div>
+		<form id="seachRepeatCodeForm">
+			<table >
+				<tr>		
+					<td>申请件编号:</td>
+					<td><input type="text" class="easyui-textbox"
+						id="insideAppNo" name="insideAppNo" /></td>
+					<td><input onclick="onSearch('appId')" value="查询" type="button" class="alsp" style="width:100px;"/></td>
+				</tr>
+			</table>
+		</form>
+		
+	</div>
+	<table id="tblInfo" title="进件失败查询" class="easyui-datagrid"
+		style="width: 98%;height:670px;"
+		data-options="rownumbers:true,singleSelect:false,pagination:true,nowrap:false,fitColumns:true,pageSize:15,
+		pageList:[15,20,50],loadMsg:'数据加载中.....',method:'post'">
+		<thead>
+			<tr>
+				<th field="insideAppNo" width="20%" align="center" >申请件编号</th>
+				<th field=errReason width="60%"  align="center" >错误原因</th>
+				<th field="crtTime" width="15%"  align="center" data-options="formatter:formatDate">时间</th>
+			</tr>
+		</thead>
+	</table>
+	
+</body>
+<script>
+	var tblInfo = $("#tblInfo");
+	var url = location.href;
+	//查询
+	function onSearch(obj){
+		var appId = $("#insideAppNo").val();
+		if (appId==null) {
+			alert("请输入正确申请件条码!");
+			return;
+		}else if(appId.length<10){
+			alert("请输入正确申请件条码!");
+			return;
+		}
+		var opts = tblInfo.datagrid("options");
+		opts.url = '/opas-naps/queryOpasBizInpApplErr.json';
+		var jsonFrom=$('#seachRepeatCodeForm').serializeArray();
+		var jsondata =overTrim(jsonFrom);
+		tblInfo.datagrid("reload",jsondata);
+	}
+	
+	//日期格式转换
+	function formatDate(value) {
+		var str = getTaskTime(value);
+		if(str.indexOf('1970')>=0){
+			return '';
+		}else{
+			return str;
+		}
+	}
+	//工具方法：格式化CST类型时间
+	function getTaskTime(strDate) {   
+		if(null==strDate || ""==strDate){  
+		    return "";  
+		}  
+		var dateStr=strDate.trim().split(" ");  
+		var strGMT = dateStr[0]+" "+dateStr[1]+" "+dateStr[2]+" "+dateStr[5]+" "+dateStr[3]+" GMT+0800";  
+		var date = new Date(Date.parse(strGMT));  
+		var y = date.getFullYear();  
+		var m = date.getMonth() + 1;    
+			m = m < 10 ? ('0' + m) : m;  
+		var d = date.getDate();    
+			d = d < 10 ? ('0' + d) : d;  
+		var h = date.getHours();  
+			h = h < 10 ? ('0' + h) : h;  
+		var minute = date.getMinutes();    
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		var second = date.getSeconds();  
+		second = second < 10 ? ('0' + second) : second;  
+		  
+		return y+"-"+m+"-"+d+" "+h+":"+minute+":"+second;  
+	}
+	
+	function overTrim(dataObject) {
+		var jsonObject = '{';
+		var k = 0;
+		$.each(dataObject, function() {
+			k++;
+			var objName = this.name;
+			var objValue = this.value.trim();
+			jsonObject += '"' + objName + '":';
+			jsonObject += '"' + objValue + '"';
+			if (k < dataObject.length) {
+				jsonObject += ",";
+			}
+		});
+		jsonObject += '}';
+		return eval("(" + jsonObject + ")");
+	}
+		
+</script>

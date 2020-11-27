@@ -1,0 +1,74 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+	<body style="width: 80%;height:99%>
+	<div id="winAdd">
+			<form id="commentForm">
+			<table cellpadding="10"
+				style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td align="left">备注:</td>
+				</tr>
+				<tr>
+					<td align="left">
+					<textarea rows="6" cols="3" style="width:210px;" id="remarkInfo" name="remarkInfo"></textarea>
+				</tr>
+				<tr>
+				<td align="right">
+				 <a href="javascript:void(0)"
+				class="easyui-linkbutton" onclick="savecomment()">保存</a>
+				</td>
+				</tr>
+				
+			</table>
+			</form>
+			</div>
+		
+		<script>
+		function savecomment() {
+			var remarkInfo=$('#remarkInfo');
+			var url = location.href;
+			var appId = url.split("=")[1];
+			var jsondata = {"appId":appId,"remarkInfo":remarkInfo.val()};
+			$cf.ajax({
+				url : "/opas-naps/apply_remarkAction_save.json",
+				data : jsondata,
+				onSuccess : function(data) {
+					if (data.RSP_BODY.isSuccess) {
+						$.messager.alert("操作提示", "添加成功!", "info", function() {
+							parent.$("#tblSeach").datagrid("reload");
+							parent.closeAddComment();
+						});
+
+					} else {
+						$.messager.alert("操作提示", "添加失败:" + data.exMsg, "error");
+						return;
+					}
+				}
+
+			});
+			
+		}
+		function getFormData(dataObject) {
+			var jsonObject = '{';
+			var k = 0;
+			$.each(dataObject, function() {
+				k++;
+				var objName = this.name;
+				var objValue = this.value;
+				jsonObject += '"' + objName + '":';
+				jsonObject += '"' + objValue + '"';
+				if (k < dataObject.length) {
+					jsonObject += ",";
+				}
+			});
+			jsonObject += '}';
+			return eval("(" + jsonObject + ")");
+		}
+		</script>
+		
+	</body>
+

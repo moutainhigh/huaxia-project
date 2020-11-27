@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="StockcustTelsaleList" >
+  <resultMap id="BaseResultMap" type="com.huaxia.opas.domain.thirdparty.StockcustTelsaleList" >
+    <id column="AUTO_ID" property="autoId" jdbcType="VARCHAR" />
+    <result column="ACCT_NO" property="acctNo" jdbcType="VARCHAR" />
+    <result column="CERTIFI_NO" property="certifiNo" jdbcType="VARCHAR" />
+    <result column="CUST_NAME" property="custName" jdbcType="VARCHAR" />
+    <result column="TELSALE_LIMIT" property="telsaleLimit" jdbcType="DECIMAL" />
+    <result column="ADJUST_PROCESS" property="adjustProcess" jdbcType="VARCHAR" />
+    <result column="PEOPLEBANK_SCORE" property="peoplebankScore" jdbcType="DECIMAL" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERAT_TIME" property="operatTime" jdbcType="TIMESTAMP" />
+    <result column="CURR_STATUS" property="currStatus" jdbcType="CHAR" />
+  </resultMap>
+ <!--  <sql id="Base_Column_List" >
+    AUTO_ID, ACCT_NO, CERTIFI_NO, CUST_NAME, TELSALE_LIMIT, ADJUST_PROCESS, PEOPLEBANK_SCORE, 
+    OPERATOR, OPERAT_TIME, CURR_STATUS
+  </sql> -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    AUTO_ID, ACCT_NO, CERTIFI_NO, CUST_NAME, TELSALE_LIMIT, ADJUST_PROCESS, PEOPLEBANK_SCORE, 
+    OPERATOR, OPERAT_TIME, CURR_STATUS
+    from OPAS_STOCKCUST_TELSALE_LIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OPAS_STOCKCUST_TELSALE_LIST
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.huaxia.opas.domain.thirdparty.StockcustTelsaleList" >
+    insert into OPAS_STOCKCUST_TELSALE_LIST (AUTO_ID, ACCT_NO, CERTIFI_NO, 
+      CUST_NAME, TELSALE_LIMIT, ADJUST_PROCESS, 
+      PEOPLEBANK_SCORE, OPERATOR, OPERAT_TIME, 
+      CURR_STATUS)
+    values (#{autoId,jdbcType=VARCHAR}, #{acctNo,jdbcType=VARCHAR}, #{certifiNo,jdbcType=VARCHAR}, 
+      #{custName,jdbcType=VARCHAR}, #{telsaleLimit,jdbcType=DECIMAL}, #{adjustProcess,jdbcType=VARCHAR}, 
+      #{peoplebankScore,jdbcType=DECIMAL}, #{operator,jdbcType=VARCHAR}, #{operatTime,jdbcType=TIMESTAMP}, 
+      #{currStatus,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huaxia.opas.domain.thirdparty.StockcustTelsaleList" >
+    insert into OPAS_STOCKCUST_TELSALE_LIST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        AUTO_ID,
+      </if>
+      <if test="acctNo != null" >
+        ACCT_NO,
+      </if>
+      <if test="certifiNo != null" >
+        CERTIFI_NO,
+      </if>
+      <if test="custName != null" >
+        CUST_NAME,
+      </if>
+      <if test="telsaleLimit != null" >
+        TELSALE_LIMIT,
+      </if>
+      <if test="adjustProcess != null" >
+        ADJUST_PROCESS,
+      </if>
+      <if test="peoplebankScore != null" >
+        PEOPLEBANK_SCORE,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="operatTime != null" >
+        OPERAT_TIME,
+      </if>
+      <if test="currStatus != null" >
+        CURR_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="autoId != null" >
+        #{autoId,jdbcType=VARCHAR},
+      </if>
+      <if test="acctNo != null" >
+        #{acctNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certifiNo != null" >
+        #{certifiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="telsaleLimit != null" >
+        #{telsaleLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="adjustProcess != null" >
+        #{adjustProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="peoplebankScore != null" >
+        #{peoplebankScore,jdbcType=DECIMAL},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null" >
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null" >
+        #{currStatus,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huaxia.opas.domain.thirdparty.StockcustTelsaleList" >
+    update OPAS_STOCKCUST_TELSALE_LIST
+    <set >
+      <if test="acctNo != null" >
+        ACCT_NO = #{acctNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certifiNo != null" >
+        CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        CUST_NAME = #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="telsaleLimit != null" >
+        TELSALE_LIMIT = #{telsaleLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="adjustProcess != null" >
+        ADJUST_PROCESS = #{adjustProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="peoplebankScore != null" >
+        PEOPLEBANK_SCORE = #{peoplebankScore,jdbcType=DECIMAL},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatTime != null" >
+        OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currStatus != null" >
+        CURR_STATUS = #{currStatus,jdbcType=CHAR},
+      </if>
+    </set>
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huaxia.opas.domain.thirdparty.StockcustTelsaleList" >
+    update OPAS_STOCKCUST_TELSALE_LIST
+    set ACCT_NO = #{acctNo,jdbcType=VARCHAR},
+      CERTIFI_NO = #{certifiNo,jdbcType=VARCHAR},
+      CUST_NAME = #{custName,jdbcType=VARCHAR},
+      TELSALE_LIMIT = #{telsaleLimit,jdbcType=DECIMAL},
+      ADJUST_PROCESS = #{adjustProcess,jdbcType=VARCHAR},
+      PEOPLEBANK_SCORE = #{peoplebankScore,jdbcType=DECIMAL},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      OPERAT_TIME = #{operatTime,jdbcType=TIMESTAMP},
+      CURR_STATUS = #{currStatus,jdbcType=CHAR}
+    where AUTO_ID = #{autoId,jdbcType=VARCHAR}
+  </update>
+</mapper>

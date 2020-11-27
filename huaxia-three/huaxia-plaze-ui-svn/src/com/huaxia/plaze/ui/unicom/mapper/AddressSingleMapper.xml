@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.unicom.mapper.AddressSingleMapper">
+
+	<!-- 根据手机号查询数据解析表，判断24小时内是否查询过 -->
+	<select id="selectCountByMobile" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM UNICOM_ADDRESS_INFO WHERE
+		MOBILE=#{mobile} AND API_KEY = #{apiKey}
+		AND CRT_TIME
+		BETWEEN sysdate-1
+		AND sysdate
+	</select>
+
+	<!-- 保存单条实时查询记录 -->
+	<insert id="insert" parameterType="AddressSingle">
+		INSERT INTO
+		UNICOM_ADDRESS_TRN_SINGLE (
+		UUID,CRT_TIME,CRT_USER,TRN_ID,MOBILE,API_KEY,ADDRESS,QUERY_STATUS
+		)
+		VALUES(
+		SYS_GUID(),SYSDATE,#{crtUser},#{trnId},#{mobile},#{apiKey},#{address},#{queryStatus}
+		)
+	</insert>
+
+	<!-- 更新单条查询表 查询状态 -->
+	<update id="updateStatusById" parameterType="java.util.Map">
+		UPDATE UNICOM_ADDRESS_TRN_SINGLE
+		<set>
+			<if test="status != null">
+				QUERY_STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE TRN_ID = #{id, jdbcType=CHAR}
+	</update>
+
+	<resultMap id="singleDetail" type="AddressData">
+		<result column="UUID" property="uuid" jdbcType="CHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="TRN_ID" property="trnId" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="ERROR_DESC" property="errorDesc" jdbcType="VARCHAR" />
+		<result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+		<result column="CHECK_DESC" property="checkDesc" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 根据trnId查找，单条实时查询结果 -->
+	<select id="selectSingleResultByTrnId" parameterType="string"
+		resultMap="singleDetail">
+		SELECT UUID,MOBILE,API_KEY,TO_CHAR(CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		CRT_TIME,TRN_ID,STATUS,CODE,ERROR_DESC,CHECK_RESULT,CHECK_DESC
+		FROM
+		UNICOM_ADDRESS_INFO
+		WHERE TRN_ID=#{trnId} AND CRT_USER='SINGLE'
+		ORDER BY
+		CRT_TIME DESC
+	</select>
+
+	<!-- 查询单条查询历史数据总条数 -->
+	<select id="queryHistoryCountByMobile" parameterType="string"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(1)
+		FROM
+		UNICOM_ADDRESS_INFO L
+		LEFT JOIN
+		UNICOM_ADDRESS_TRN_SINGLE S
+		ON
+		L.TRN_ID=S.TRN_ID
+		WHERE S.MOBILE=#{mobile}
+	</select>
+	
+		<resultMap id="result_pil" type="AddressData">
+		<result column="TRN_ID" property="trnId" jdbcType="CHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="ERROR_DESC" property="errorDesc" jdbcType="VARCHAR" />
+		<result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+		<result column="API_KEY" property="apiKey" jdbcType="VARCHAR" />
+		<result column="CHECK_DESC" property="checkDesc" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryHistoryDataByPage" resultMap="result_pil">
+		SELECT
+		TRN_ID,MOBILE,CRT_TIME,CODE,CHECK_RESULT,ERROR_DESC,API_KEY,CHECK_DESC
+		FROM(
+		SELECT
+		TRN_ID,MOBILE,CRT_TIME,CODE,CHECK_RESULT,ERROR_DESC,API_KEY,ROWNUM
+		RN,CHECK_DESC
+		FROM(
+		SELECT
+		U.TRN_ID TRN_ID,S.MOBILE
+		MOBILE,TO_CHAR(S.CRT_TIME, 'YYYY-MM-DD HH24:MI:SS')
+		CRT_TIME,U.CODE,U.CHECK_RESULT,U.ERROR_DESC,U.API_KEY,U.CHECK_DESC
+		FROM UNICOM_ADDRESS_TRN_SINGLE S
+		LEFT JOIN
+		UNICOM_ADDRESS_INFO U
+		ON
+		S.TRN_ID=U.TRN_ID
+		WHERE
+		S.MOBILE=#{mobile}
+		AND
+		U.CRT_TIME BETWEEN ADD_MONTHS(SYSDATE,-12) and SYSDATE
+		AND
+		ROWNUM <![CDATA[ <= ]]>
+		100
+		ORDER BY S.CRT_TIME DESC) A
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		#{pageNo} * #{pageSize}) WHERE RN<![CDATA[ > ]]>
+		(#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpasThdMsg">
+
+	  <resultMap id="dateAndCountLimitMap" type="java.util.Map">
+	    <result column="LIMIT_START_DATE" jdbcType="DATE" property="limitStartDate" />
+	    <result column="LIMIT_END_DATE" jdbcType="DATE" property="limitEndDate" />
+	    <result column="LIMIT_QUERY_COUNT" jdbcType="DECIMAL" property="limitQueryCount" />
+	  </resultMap>
+	  
+	<select id="queryDateAndCountLimit"  parameterType="java.lang.String" resultMap="dateAndCountLimitMap">
+		select LIMIT_START_DATE,LIMIT_END_DATE,LIMIT_QUERY_COUNT from CONF_QUERY_LIMIT_RECORD_COUNT 
+		 <where>
+			limit_module_type = #{limitModuleType} 
+	 	 </where>
+	</select>
+	
+	<select id="queryTxyysCurrentCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+ 		SELECT count(1) FROM TRD_OPERATOR_ONLINE 
+ 		<where>
+			CRT_TIME &gt;= #{limitStartDate} 
+	    	AND CRT_TIME &lt;= #{limitEndDate}+1
+	 	 </where>
+		AND  CODE='200'
+	</select>
+	
+	<select id="queryPhoneCurrentCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+ 		SELECT count(1) FROM TRD_HAR_LD00001 
+ 		<where>
+			CRT_TIME &gt;= #{limitStartDate} 
+	    	AND CRT_TIME &lt;= #{limitEndDate}+1
+	 	 </where>
+		AND  (RESULT_CODE='0' or RESULT_CODE ='1')
+	</select>
+	
+</mapper>

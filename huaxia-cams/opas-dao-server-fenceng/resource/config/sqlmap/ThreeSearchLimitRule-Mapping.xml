@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ThreeSearchLimitRule">
+<insert id="saveAddRule" parameterType="java.util.Map">
+    INSERT INTO CONF_QUERY_LIMIT_RULE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        UUID,
+        CRT_TIME,
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+        LST_UPD_TIME,
+      <if test="lstUpdUser != null">
+        LST_UPD_USER,
+      </if>
+      <if test="bRuleType != null">
+        B_RULE_TYPE,
+      </if>
+      <if test="ruleContent != null">
+        RULE_CONTENT,
+      </if>
+      <if test="inputTrader != null">
+        INPUT_TRADER,
+      </if>
+      <if test="channel != null">
+        CHANNEL,
+      </if>
+      <if test="city != null">
+        CITY,
+      </if>
+      <if test="ruleUniqueCode != null">
+        RULE_UNIQUE_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      (select sys_guid() from dual),
+        sysdate,
+      <if test="crtUser != null">
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+        sysdate,
+      <if test="lstUpdUser != null">
+        #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="bRuleType != null">
+        #{bRuleType,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleContent != null">
+        #{ruleContent,jdbcType=VARCHAR},
+      </if>
+      <if test="inputTrader != null">
+        #{inputTrader,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null">
+        #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleUniqueCode != null">
+        #{ruleUniqueCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectCountByTypeUniqueCode" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM  CONF_QUERY_LIMIT_RULE WHERE 
+		B_RULE_TYPE= #{bRuleType,jdbcType=VARCHAR} and RULE_UNIQUE_CODE=#{ruleUniqueCode,jdbcType=VARCHAR}
+  </select>
+  
+   <resultMap id="ExistedRuleMap" type="java.util.Map">
+		<result column="UUID" property="uuid" jdbcType="VARCHAR" />
+		<result column="RULE_CONTENT" property="ruleContent" jdbcType="VARCHAR" />
+   </resultMap>
+   <select id="selectExistedRuleByType" parameterType="java.util.Map" resultMap="ExistedRuleMap">
+		SELECT UUID,RULE_CONTENT FROM  CONF_QUERY_LIMIT_RULE WHERE 
+		B_RULE_TYPE= #{bRuleType,jdbcType=VARCHAR} ORDER BY CRT_TIME desc
+  </select>
+  <delete id="deleteRulesByIdList" parameterType="java.util.Map">
+    DELETE FROM CONF_QUERY_LIMIT_RULE
+    WHERE UUID IN 
+    <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+			#{item}
+	</foreach>
+  </delete>
+   
+   <insert id="saveSearchNumControl" parameterType="java.util.Map">
+    INSERT INTO CONF_QUERY_LIMIT_RECORD_COUNT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        UUID,
+        CRT_TIME,
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+        LST_UPD_TIME,
+      <if test="lstUpdUser != null">
+        LST_UPD_USER,
+     </if>
+      <if test="limitModuleType != null">
+        LIMIT_MODULE_TYPE,
+      </if>
+      <if test="limitStartDate != null">
+        LIMIT_START_DATE,
+      </if>
+      <if test="limitEndDate != null">
+        LIMIT_END_DATE,
+      </if>
+      <if test="limitQueryCount != null">
+        LIMIT_QUERY_COUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        (select sys_guid() from dual),
+        sysdate,
+      <if test="crtUser != null">
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+        sysdate,
+      <if test="lstUpdUser != null">
+        #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="limitModuleType != null">
+        #{limitModuleType,jdbcType=CHAR},
+      </if>
+      <if test="limitStartDate != null">
+        #{limitStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitEndDate != null">
+        #{limitEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitQueryCount != null">
+        #{limitQueryCount,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectCountSearchNumLimitByType" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM  CONF_QUERY_LIMIT_RECORD_COUNT WHERE 
+		 LIMIT_MODULE_TYPE = #{limitModuleType,jdbcType=CHAR}
+  </select>
+   <update id="updateSearchNumControl" parameterType="java.util.Map">
+    UPDATE CONF_QUERY_LIMIT_RECORD_COUNT
+    <set>
+        LST_UPD_TIME = sysdate,
+      <if test="lstUpdUser != null">
+        LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="limitStartDate != null">
+        LIMIT_START_DATE = #{limitStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitEndDate != null">
+        LIMIT_END_DATE = #{limitEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitQueryCount != null">
+        LIMIT_QUERY_COUNT = #{limitQueryCount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    WHERE  LIMIT_MODULE_TYPE = #{limitModuleType,jdbcType=CHAR}
+  </update>
+  <resultMap id="SearchNumLimitMap" type="java.util.Map">
+    <id column="UUID" jdbcType="CHAR" property="uuid" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="LIMIT_MODULE_TYPE" jdbcType="CHAR" property="limitModuleType" />
+    <result column="LIMIT_START_DATE" jdbcType="TIMESTAMP" property="limitStartDate" />
+    <result column="LIMIT_END_DATE" jdbcType="TIMESTAMP" property="limitEndDate" />
+    <result column="LIMIT_QUERY_COUNT" jdbcType="DECIMAL" property="limitQueryCount" />
+  </resultMap>
+  <select id="selectObjectSearchNumLimitByType" parameterType="java.util.Map" resultMap="SearchNumLimitMap">
+		SELECT UUID, CRT_TIME, CRT_USER, LST_UPD_TIME, LST_UPD_USER, LIMIT_MODULE_TYPE, LIMIT_START_DATE, 
+               LIMIT_END_DATE, LIMIT_QUERY_COUNT FROM  CONF_QUERY_LIMIT_RECORD_COUNT 
+        WHERE  LIMIT_MODULE_TYPE = #{limitModuleType,jdbcType=CHAR}
+  </select>
+  
+ <select id="selectCountVehicleTimeQuantumSucceed" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  VEHICLE_INFO 
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt;= #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  ERROR_CODE='0'  AND  QUERY_RESULT ='1'
+  </select>  
+   <select id="selectCountTypeLimitSearch" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM   CONF_QUERY_TYPE_RULE
+		WHERE 
+		  B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR} AND 
+          S_RULE_TYPE = #{sRuleType,jdbcType=VARCHAR} AND
+          RULE_SETTING_VALUE = #{ruleSettingValue,jdbcType=VARCHAR}
+  </select>  
+  <update id="updateTypeLimitSearch" parameterType="java.util.Map">
+    UPDATE CONF_QUERY_TYPE_RULE
+    <set>
+        LST_UPD_TIME = sysdate,
+      <if test="lstUpdUser != null">
+        LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="flagActive != null">
+        FLAG_ACTIVE = #{flagActive,jdbcType=CHAR},
+      </if>
+    </set>
+    WHERE 
+		  B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR} AND 
+          S_RULE_TYPE = #{sRuleType,jdbcType=VARCHAR} AND
+          RULE_SETTING_VALUE = #{ruleSettingValue,jdbcType=VARCHAR}
+  </update>
+  <insert id="saveTypeLimitSearch" parameterType="java.util.Map">
+    INSERT INTO CONF_QUERY_TYPE_RULE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        UUID,
+        CRT_TIME,
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+        LST_UPD_TIME,
+      <if test="lstUpdUser != null">
+        LST_UPD_USER,
+      </if>
+      <if test="bRuleType != null">
+        B_RULE_TYPE,
+      </if>
+      <if test="sRuleType != null">
+        S_RULE_TYPE,
+      </if>
+      <if test="ruleSettingValue != null">
+        RULE_SETTING_VALUE,
+      </if>
+      <if test="flagActive != null">
+        FLAG_ACTIVE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        (select sys_guid() from dual),
+        sysdate,
+      <if test="crtUser != null">
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+       sysdate,
+      <if test="lstUpdUser != null">
+        #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="bRuleType != null">
+        #{bRuleType,jdbcType=VARCHAR},
+      </if>
+      <if test="sRuleType != null">
+        #{sRuleType,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleSettingValue != null">
+        #{ruleSettingValue,jdbcType=VARCHAR},
+      </if>
+      <if test="flagActive != null">
+        #{flagActive,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+    <resultMap id="SelectTypeLimitMap" type="java.util.Map">
+    <id column="UUID" jdbcType="CHAR" property="uuid" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="B_RULE_TYPE" jdbcType="VARCHAR" property="bRuleType" />
+    <result column="S_RULE_TYPE" jdbcType="VARCHAR" property="sRuleType" />
+    <result column="RULE_SETTING_VALUE" jdbcType="VARCHAR" property="ruleSettingValue" />
+    <result column="FLAG_ACTIVE" jdbcType="CHAR" property="flagActive" />
+  </resultMap>
+   <select id="selectTypeLimitSearch" parameterType="java.util.Map" resultMap="SelectTypeLimitMap">
+		SELECT UUID, CRT_TIME, CRT_USER, LST_UPD_TIME, LST_UPD_USER, B_RULE_TYPE, S_RULE_TYPE, RULE_SETTING_VALUE, 
+               FLAG_ACTIVE FROM  CONF_QUERY_TYPE_RULE 
+        WHERE   
+             <!-- B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR} AND  -->
+             S_RULE_TYPE = #{sRuleType,jdbcType=VARCHAR} AND 
+             FLAG_ACTIVE = #{flagActive,jdbcType=CHAR}
+        <if test="bRuleType !=null and bRuleType !='' ">
+       		AND B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR}
+       </if>
+  </select>
+  <resultMap id="VerhicleResultMap" type="java.util.Map">
+    <id column="UUID" jdbcType="CHAR" property="uuid" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+    <result column="APP_ID" jdbcType="CHAR" property="appId" />
+    <result column="QUERY_RESULT" jdbcType="VARCHAR" property="queryResult" />
+    <result column="ERROR_CODE" jdbcType="VARCHAR" property="errorCode" />
+    <result column="QUANTITY" jdbcType="DECIMAL" property="quantity" />
+    <result column="PRICE" jdbcType="VARCHAR" property="price" />
+    <result column="MONTHS" jdbcType="VARCHAR" property="months" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <select  id="selectVerhicleCheckInfo"  parameterType="java.util.Map" resultMap="VerhicleResultMap">
+  		SELECT  UUID, CRT_TIME, CRT_USER, LST_UPD_TIME, LST_UPD_USER, APP_ID, QUERY_RESULT, ERROR_CODE, 
+                QUANTITY, PRICE, MONTHS,STATUS
+        FROM  VEHICLE_INFO
+        WHERE  APP_ID = #{appId,jdbcType=CHAR}
+  </select>
+  <select  id="selectBxVerhicleCheckInfo"  parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT T.RET_CODE,T.CAR_AGE,T.RISK_VALUE_RANGE FROM BXQC_BASE_DATA T WHERE T.APP_ID like '${_parameter}%' AND ROWNUM =1
+  </select>
+  <select id="selectCountFicoTimeQuantumSucceed" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  FICO_BIG_DATA_HUB 
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt;= #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  RET_CODE='000'
+  </select>
+  <select id="selectCountTyTimeQuantumSucceed" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  OPAS_TIANYU_ANTIFRAUD_DATA 
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt;= #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  CODE='0'
+  </select>
+   <select id="selectLongLoanCountSucceed" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  MULBOR_BASE 
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt; #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  SUCCESS='true' 
+  </select>
+  <select id="selectRealLoanCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  MULBOR_BASE 
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt; #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  SUCCESS='true' AND EXT_SEARCH_RESULT='0'  
+  </select>
+  <select id="selectCountSjTimeQuantumSucceed" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  TRD_HAR_LD00001 
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt;= #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  SUCCESS='true'
+  </select>
+  <select id="selectCountQyTimeQuantumSucceed" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  TRD_QYHY_INFO_DATA 
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt;= #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  CODE='200' AND QYK_FLAG='0'
+  </select>
+  <select id="selectCountTxyyTimeQuantumSucceed" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(APP_ID) FROM  TRD_OPERATOR_ONLINE
+		WHERE 
+		CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt;= #{limitEndDate,jdbcType=TIMESTAMP}+1 
+		AND  CODE='200'
+  </select>
+  <!-- 多头借贷    查询条数详细部分 -->
+	<resultMap id="LoanNumberMap" type="java.util.Map">
+		<result column="M1" property="JAN" jdbcType="VARCHAR" />
+		<result column="M2" property="FEB" jdbcType="VARCHAR" />
+		<result column="M3" property="MAR" jdbcType="VARCHAR" />
+		<result column="M4" property="APR" jdbcType="VARCHAR" />
+		<result column="M5" property="MAY" jdbcType="VARCHAR" />
+		<result column="M6" property="JUN" jdbcType="VARCHAR" />
+		<result column="M7" property="JUL" jdbcType="VARCHAR" />
+		<result column="M8" property="AUG" jdbcType="VARCHAR" />
+		<result column="M9" property="SEP" jdbcType="VARCHAR" />
+		<result column="M10" property="OCT" jdbcType="VARCHAR" />
+		<result column="M11" property="NOV" jdbcType="VARCHAR" />
+		<result column="M12" property="DEC" jdbcType="VARCHAR" />
+	</resultMap>
+  <select id="selectLoanNumber" parameterType="java.lang.String"
+		resultMap="LoanNumberMap">
+		SELECT 
+		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-01') M1,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-02') M2,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-03') M3,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-04') M4,
+    	(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-05') M5,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-06') M6,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-07') M7,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-08') M8,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-09') M9,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-10') M10,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-11') M11,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-12') M12
+ 		FROM DUAL
+	</select>
+	
+	<resultMap id="LoanNumberMap1" type="java.util.Map">
+		<result column="M1" property="JAN1" jdbcType="VARCHAR" />
+		<result column="M2" property="FEB1" jdbcType="VARCHAR" />
+		<result column="M3" property="MAR1" jdbcType="VARCHAR" />
+		<result column="M4" property="APR1" jdbcType="VARCHAR" />
+		<result column="M5" property="MAY1" jdbcType="VARCHAR" />
+		<result column="M6" property="JUN1" jdbcType="VARCHAR" />
+		<result column="M7" property="JUL1" jdbcType="VARCHAR" />
+		<result column="M8" property="AUG1" jdbcType="VARCHAR" />
+		<result column="M9" property="SEP1" jdbcType="VARCHAR" />
+		<result column="M10" property="OCT1" jdbcType="VARCHAR" />
+		<result column="M11" property="NOV1" jdbcType="VARCHAR" />
+		<result column="M12" property="DEC1" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectSumLoanNumber" parameterType="java.lang.String"
+		resultMap="LoanNumberMap1">
+		SELECT 
+		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-01') M1,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-02') M2,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-03') M3,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-04') M4,
+    	(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-05') M5,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-06') M6,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-07') M7,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-08') M8,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-09') M9,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-10') M10,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-11') M11,
+ 		(SELECT SUM(QUERY_HIT_COUNT)  FROM RPT_MULBOR_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-12') M12
+ 		FROM DUAL
+		
+	</select>
+  <!-- 互联网多头借贷 -->
+	  <select id="selectNetDtjdCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+			SELECT count(APP_ID) FROM  BAIRONG_ALS_BASE 
+			WHERE 
+			CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt; #{limitEndDate,jdbcType=TIMESTAMP}+1 
+			AND FLAG_APPLYLOANSTR='1'  
+	  </select>
+	  
+    <!-- 互联网多头借贷    查询条数详细部分 -->
+  <select id="queryLoanNumberNet" parameterType="java.lang.String"
+		resultMap="LoanNumberMap">
+		SELECT 
+		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-01') M1,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-02') M2,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-03') M3,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-04') M4,
+    	(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-05') M5,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-06') M6,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-07') M7,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-08') M8,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-09') M9,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-10') M10,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-11') M11,
+ 		(SELECT SUM(QUERY_COUNT)  FROM RPT_BAIRONG_ALS_DAY WHERE  TO_CHAR(COUNT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-12') M12
+ 		FROM DUAL
+	</select>
+	
+	<!-- 查询保信卡产品信息 -->
+    <select id="selectBaoXinRuleByType" parameterType="java.util.Map" resultMap="SelectTypeLimitMap">
+		SELECT UUID,RULE_SETTING_VALUE FROM  CONF_QUERY_TYPE_RULE 
+        WHERE   
+             B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR} AND 
+             S_RULE_TYPE = #{sRuleType,jdbcType=VARCHAR} AND 
+             FLAG_ACTIVE = #{flagActive,jdbcType=CHAR}
+  	</select>
+  	<!-- 删除保信卡产品信息 -->
+  	<delete id="deleteBaoXinRulesByIdList" parameterType="java.util.Map">
+    	DELETE FROM CONF_QUERY_TYPE_RULE
+    	WHERE UUID IN 
+    	<foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+  	</delete>
+  	
+  	<!-- 查询保信汽车查询成功数量 -->
+	<select id="selectBaoXinCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+			SELECT count(APP_ID) FROM BXQC_BASE_DATA 
+			WHERE 
+			CRT_TIME &gt;= #{limitStartDate,jdbcType=TIMESTAMP}  AND   CRT_TIME &lt; #{limitEndDate,jdbcType=TIMESTAMP}+1 
+			AND RET_CODE = '000000'
+	</select>
+	
+	<!-- 保信汽车    查询条数详细部分 -->
+    <select id="queryBaoXinNumberNet" parameterType="java.lang.String"
+		resultMap="LoanNumberMap">
+		SELECT 
+		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-01') M1,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-02') M2,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-03') M3,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-04') M4,
+    	(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-05') M5,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-06') M6,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-07') M7,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-08') M8,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-09') M9,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-10') M10,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-11') M11,
+ 		(SELECT COUNT(1)  FROM BXQC_BASE_DATA WHERE RET_CODE = '000000' AND TO_CHAR(CRT_TIME,'yyyy-mm')=#{yearNumber, jdbcType=VARCHAR}||'-12') M12
+ 		FROM DUAL
+	</select>
+	
+	<select id="selectAllTypeLimitSearch"  resultType="java.lang.String">
+		SELECT A.CARD_CODE FROM OPAS_PARAM_CARD_PRODUCT A 
+		WHERE A.STATUS = '1'
+  	</select>
+	
+	<!-- 查询pad人像比对卡产品信息 -->
+    <select id="selectPadPortraitComparisonRuleByType" parameterType="java.util.Map" resultMap="SelectTypeLimitMapPad">
+		SELECT UUID,RULE_SETTING_VALUE FROM  CONF_QUERY_TYPE_RULE 
+        WHERE   
+             B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR} AND 
+             S_RULE_TYPE = #{sRuleType,jdbcType=VARCHAR} AND 
+             FLAG_ACTIVE = #{flagActive,jdbcType=CHAR}
+  	</select>
+  
+  	<resultMap id="SelectTypeLimitMapPad" type="java.util.Map">
+	    <id column="UUID" jdbcType="CHAR" property="uuid" />
+	    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+	    <result column="CRT_USER" jdbcType="VARCHAR" property="crtUser" />
+	    <result column="LST_UPD_TIME" jdbcType="TIMESTAMP" property="lstUpdTime" />
+	    <result column="LST_UPD_USER" jdbcType="VARCHAR" property="lstUpdUser" />
+	    <result column="B_RULE_TYPE" jdbcType="VARCHAR" property="bRuleType" />
+	    <result column="S_RULE_TYPE" jdbcType="VARCHAR" property="sRuleType" />
+	    <result column="RULE_SETTING_VALUE" jdbcType="VARCHAR" property="ruleSettingValue" />
+	    <result column="FLAG_ACTIVE" jdbcType="CHAR" property="flagActive" />
+ 	 </resultMap>
+  	<select id="selectCountPadPortraitComparisonTypeLimitSearch" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM   CONF_QUERY_TYPE_RULE
+		WHERE 
+		  B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR} AND 
+          S_RULE_TYPE = #{sRuleType,jdbcType=VARCHAR} AND
+          RULE_SETTING_VALUE = #{ruleSettingValue,jdbcType=VARCHAR}
+  </select> 
+   <update id="updatePadPortraitComparisonTypeLimitSearch" parameterType="java.util.Map">
+    UPDATE CONF_QUERY_TYPE_RULE
+    <set>
+        LST_UPD_TIME = sysdate,
+      <if test="lstUpdUser != null">
+        LST_UPD_USER = #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="flagActive != null">
+        FLAG_ACTIVE = #{flagActive,jdbcType=CHAR},
+      </if>
+    </set>
+    WHERE 
+		  B_RULE_TYPE = #{bRuleType,jdbcType=VARCHAR} AND 
+          S_RULE_TYPE = #{sRuleType,jdbcType=VARCHAR} AND
+          RULE_SETTING_VALUE = #{ruleSettingValue,jdbcType=VARCHAR}
+  </update> 
+  <insert id="savePadPortraitComparisonTypeLimitSearch" parameterType="java.util.Map">
+    INSERT INTO CONF_QUERY_TYPE_RULE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        UUID,
+        CRT_TIME,
+      <if test="crtUser != null">
+        CRT_USER,
+      </if>
+        LST_UPD_TIME,
+      <if test="lstUpdUser != null">
+        LST_UPD_USER,
+      </if>
+      <if test="bRuleType != null">
+        B_RULE_TYPE,
+      </if>
+      <if test="sRuleType != null">
+        S_RULE_TYPE,
+      </if>
+      <if test="ruleSettingValue != null">
+        RULE_SETTING_VALUE,
+      </if>
+      <if test="flagActive != null">
+        FLAG_ACTIVE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        (select sys_guid() from dual),
+        sysdate,
+      <if test="crtUser != null">
+        #{crtUser,jdbcType=VARCHAR},
+      </if>
+       sysdate,
+      <if test="lstUpdUser != null">
+        #{lstUpdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="bRuleType != null">
+        #{bRuleType,jdbcType=VARCHAR},
+      </if>
+      <if test="sRuleType != null">
+        #{sRuleType,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleSettingValue != null">
+        #{ruleSettingValue,jdbcType=VARCHAR},
+      </if>
+      <if test="flagActive != null">
+        #{flagActive,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 删除pad人像比对卡产品信息 -->
+  	<delete id="deletePadPortraitComparisonRulesByIdList" parameterType="java.util.Map">
+    	DELETE FROM CONF_QUERY_TYPE_RULE
+    	WHERE UUID IN 
+    	<foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+  	</delete>
+</mapper>

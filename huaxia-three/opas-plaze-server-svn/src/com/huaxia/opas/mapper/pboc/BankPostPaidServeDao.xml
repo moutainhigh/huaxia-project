@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.opas.mapper.pboc.BankPostPaidServeDao">
+   <!-- 保存后付费业务信息 PE01A -->
+	<insert id="insertPostPaidServeInfo" parameterType="com.huaxia.opas.domain.pboc.pnd.PE01A" >
+    INSERT INTO OPAS_PBOC_PUBLIC_TELPAYMENT (APP_ID,POST_PAID_ACCOUNT_TYPE,TELECOM_FACILITATOR, BUSI_TYPE, 
+      BUSI_OPN_DATE, CUR_PAY_STAT, CUR_DEBT_AMT, 
+      TALLY_YM, PREST24MPAY_STAT, 
+      CRT_USER,CRT_TIME, RELATE_ID
+      )
+    VALUES (#{appId,jdbcType=CHAR},#{PE01AD01,jdbcType=VARCHAR},#{PE01AQ01,jdbcType=VARCHAR}, #{PE01AD02,jdbcType=VARCHAR}, 
+      #{PE01AR01,jdbcType=VARCHAR}, #{PE01AD03,jdbcType=VARCHAR}, #{PE01AJ01,jdbcType=VARCHAR}, 
+       #{PE01AR02,jdbcType=VARCHAR}, #{PE01AQ02,jdbcType=VARCHAR},
+      'SYSTEM',SYSDATE,  #{relateId,jdbcType=VARCHAR}
+      )
+	</insert>
+	<!-- 保存后付费业务信息 的标注及声明信息段 PE01Z/pe01zData  -->
+	<insert id="insertPostPaidServePndLabelState" parameterType="com.huaxia.opas.domain.pboc.pnd.PE01Zdata" >
+    INSERT INTO PBOC_PND_LABEL_STATE (UUID, APP_ID, COUNT, 
+      RELATE_ID, CRT_TIME)
+    VALUES (SYS_GUID(), #{appId,jdbcType=CHAR}, #{PE01ZS01,jdbcType=VARCHAR}, 
+      #{relateId,jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	<!-- 保存后付费业务信息 的标注及声明信息PE01Z/PE01ZH集合 -->
+	<insert id="insertPostPaidServePndLabelStateInfoList" parameterType="java.util.List" >
+	INSERT INTO PBOC_PND_LABEL_STATE_INFO (UUID, APP_ID, TYPE, 
+      CONTENT, ADD_DATE, RELATE_ID, 
+      CRT_TIME)
+	<foreach collection="list" item="item" index="index" separator="UNION ALL">
+	  SELECT
+	  SYS_GUID(), #{item.appId,jdbcType=CHAR}, #{item.PE01ZD01,jdbcType=VARCHAR}, 
+      #{item.PE01ZQ01,jdbcType=VARCHAR}, #{item.PE01ZR01,jdbcType=VARCHAR}, #{item.relateId,jdbcType=VARCHAR}, 
+      SYSDATE
+	  FROM DUAL
+	 </foreach>
+	</insert>
+</mapper>

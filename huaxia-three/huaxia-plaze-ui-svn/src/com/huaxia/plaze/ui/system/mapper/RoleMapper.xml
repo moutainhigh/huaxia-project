@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaxia.plaze.ui.system.mapper.RoleMapper">
+
+	<resultMap id="result_BaseRole" type="Role">
+		<result column="ROLE_ID" property="roleId" jdbcType="CHAR" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="ROLE_DESC" property="roleDesc" jdbcType="VARCHAR" />
+		<result column="ROLE_STATUS" property="roleStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectListCountByPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_ROLE
+		<where>
+        	<if test="roleName != null">
+        		AND ROLE_NAME LIKE '${roleName}%'
+        	</if>
+        </where>
+	</select>
+	
+	<select id="selectListByPage" parameterType="java.util.Map" resultMap="result_BaseRole">
+		SELECT ROLE_ID,ROLE_NAME,ROLE_DESC,ROLE_STATUS 
+		  FROM (SELECT ROWNUM RN,T.ROLE_ID,T.ROLE_NAME,T.ROLE_DESC,ROLE_STATUS 
+		          FROM (SELECT ROLE_ID,ROLE_NAME,ROLE_DESC,ROLE_STATUS 
+		                  FROM SYS_ROLE
+		                <where>
+		                	<if test="roleName != null">
+		                		AND ROLE_NAME LIKE '${roleName}%'
+		                	</if>
+		                </where>) T
+		         WHERE ROWNUM <![CDATA[ <= ]]> #{pageNo} * #{pageSize})
+		 WHERE RN <![CDATA[ > ]]> (#{pageNo} - 1) * #{pageSize}
+	</select>
+	
+	<select id="selectListCountByMapping" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SYS_ROLE T1, SYS_ROLE_RESOURCE T2, SYS_RESOURCE T3
+		 WHERE T1.ROLE_ID = T2.ROLE_ID
+		   AND T3.RSRC_ID = T2.RSRC_ID
+		   AND T1.ROLE_ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateStatusById" parameterType="java.lang.String">
+		UPDATE SYS_ROLE SET ROLE_STATUS = '0' WHERE ROLE_ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectAllList" resultMap="result_BaseRole">
+		SELECT ROLE_ID,ROLE_NAME,ROLE_DESC,ROLE_STATUS FROM SYS_ROLE
+	</select>
+	
+	<insert id="insert" parameterType="Role">
+		INSERT INTO SYS_ROLE (
+			UUID,CRT_TIME,CRT_USER,ROLE_ID,ROLE_NAME,ROLE_DESC
+		) VALUES (
+			SYS_GUID(),SYSDATE,#{createUser,jdbcType=VARCHAR},SYS_GUID(),
+			#{roleName,jdbcType=VARCHAR},
+			#{roleDesc,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="Role">
+		UPDATE SYS_ROLE
+		<set>
+		   <if test="roleName != null">
+		       ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+		   </if>
+   		   <if test="roleDesc != null">
+		       ROLE_DESC = #{roleDesc,jdbcType=VARCHAR},
+		   </if>
+		   <if test="roleStatus != null">
+		       ROLE_STATUS = #{roleStatus,jdbcType=CHAR},
+		   </if>
+		 </set>
+		 WHERE ROLE_ID = #{roleId,jdbcType=CHAR}
+	</update>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="result_BaseRole">
+		SELECT ROLE_ID,ROLE_NAME,ROLE_DESC,ROLE_STATUS FROM SYS_ROLE WHERE ROLE_ID = #{id,jdbcType=CHAR}
+	</select>
+	
+</mapper>

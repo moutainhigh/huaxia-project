@@ -1,0 +1,63 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>重点院校名单</title>
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/decision/commonjs.js"></script>
+</head>
+<body>
+	<!-- 重点院校名单 -->
+			<table id="tb_majorschoolWin" class="easyui-datagrid"
+				style="width: 99%; height: 99%"  iconCls="icon-save" 
+				data-options="nowrap:false,rownumbers:true,singleSelect:true,pagination:true,fitColumns:true,loadMsg:'数据加载中.....',method:'post',toolbar:'#majorschoolWinCondion'">
+				<thead>
+					<tr>
+						<th field="area" width="35%" align="left">地区</th>
+						<th field="majorschoolName" width="35%" align="left" >重点院校名称</th>
+						<th field="highschoolType" width="20%" align="left">高校类型(211/985)</th>
+					</tr>
+				</thead>
+			</table>
+			<div id="majorschoolWinCondion" style="padding: 10px; text-align: center;">
+				<form id="seachDictForm">
+					单位名称:<input class="easyui-textbox" style="width: 110px" name="majorschoolName" id="majorschoolWin_majorschoolName" > 
+					<a href="javascript:majorschoolWin('majorschoolWin')"
+					      class="easyui-linkbutton" iconCls="icon-search">查询</a>
+				</form>
+			</div>
+			<!-- <div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					onclick="onConcle('majorschoolWin')">取消</a>
+			</div> -->
+</body>
+<script type="text/javascript">
+	function GetQueryString(name){
+		var regex = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(regex);
+		return r != null ? unescape(r[2]) : undefined;
+	}
+	var appId;
+	 $(function(){
+		 //获取参数
+		 appId = GetQueryString("appId");
+		 var obj= GetQueryString("obj");
+		 var param= GetQueryString("param");
+		 if(param=='yes'){
+			 openMajorschoolWin(obj);
+		 }else if(param=='no'){
+			 showOpenWin(obj,'importSchoolMindan');
+		 }
+	 });
+	//重点院校名单
+	function openMajorschoolWin(obj){
+		var urljson = "queryMajorschool_tab_view";
+		openCommonWinYjd(obj,urljson,appId);
+	}
+	//重点院校名单
+	function majorschoolWin(obj){
+		var urljson = "queryMajorschool_tab_view";
+		var paramMap = {
+				majorschoolName:$("#majorschoolWin_majorschoolName").textbox('getValue').toUpperCase()
+		};
+		commonWinYjd(obj,urljson,appId,paramMap);
+	}
+</script>

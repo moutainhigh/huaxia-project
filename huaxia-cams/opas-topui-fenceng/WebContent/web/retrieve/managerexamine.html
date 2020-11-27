@@ -1,0 +1,171 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../../topui/topui.js"></script>
+<script type="text/javascript" src="../../js/author/common.js"></script>
+<link rel="stylesheet" href="../../css/common/style.css" type="text/css"></link>
+</head>
+<body>
+	<div id=managerExamineDiv  title="经理调阅"  class="area-search" style="padding: 10px;">
+		<table id="managerExamineDetailTab" >
+			<tr>
+				
+			</tr>
+			<tr>
+				<td>日期:</td>
+					<td><input class="easyui-datebox" style="width: 110px" name="managerTime" id="managerTime"/>
+					<a href="javascript:searchManagerExamineDetail();" class="easyui-linkbutton" iconCls="icon-search">查询</a>	</td>
+			</tr>
+			<tr>
+				<td>申请件总量:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="SQJZS" id="SQJZS" readonly="readonly"></td>
+				<td>一次反欺诈拒件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="YCFQZJJS" id="YCFQZJJS" readonly="readonly"></td>
+				<td>二次反欺诈拒件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="ECFQZJJS" id="ECFQZJJS" readonly="readonly"></td>
+			</tr>
+			<tr>
+				<td>一次决策拒件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="YCJCJJS" id="YCJCJJS" readonly="readonly"> </td>
+				<td>一次决策过件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="YCJCGJS" id="YCJCGJS" readonly="readonly"></td>
+				<td>二次决策拒件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="ECJCJJS" id="ECJCJJS" readonly="readonly"></td>
+				
+				</tr>
+			<tr></tr>
+			<tr>
+				<td>二次决策过件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="ECJCGJS" id="ECJCGJS" readonly="readonly"></td>
+				<td>审批拒件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="SPSHJJS" id="SPSHJJS" readonly="readonly"></td>
+				<td>审批过件数:</td>
+				<td><input class="easyui-textbox" style="width: 110px" name="SPSHGJS" id="SPSHGJS" readonly="readonly"></td>
+			
+			</tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr>
+			<td>环节:</td>
+				<td><select id="currNode" class="easyui-combobox" name="currNode" style="width: 140px;">
+						<option value="-1">请选择</option>
+						<!-- <option value="01">审查</option> -->
+						<option value="02">易达金初审</option>
+						<option value="03">易达金复审</option>
+						<option value="04">易达金征审合一</option>
+					</select></td>
+				<td>组别：</td><!-- <select name="orgId" id="orgId1"  style="width: 140px;" >
+						</select></td> -->
+				<td><select style="width: 120px" id="apOrg"
+						name="apOrg" class="easyui-combobox" style="width: 70px;"
+						data-options="valueField:'ORG_ID',textField:'ORG_NAME'">
+						<option value="请选择">请选择</option>
+					</select></td>
+				<td>功能:</td>
+						<td><select id="functionId" class="easyui-combobox" name="functionId"style="width: 140px;">
+						<option value="-1">请选择</option>
+						<option value="01">工作情况统计</option>
+						<option value="03">工作异常统计</option>
+					</select></td>
+					<td><a href="javascript:managerExamine();" class="easyui-linkbutton" iconCls="icon-search">查询</a></td>
+				</tr>
+		</table>
+	</div>
+	
+	<script>
+	var d = new Date();
+	var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+	$('#managerTime').val(str);
+	var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;	
+	$(function(){
+		$cf.ajax({
+			url : "/opas-naps/queryApOrg.json",
+			onSuccess:function(data){
+				var queryApOrg = data.RSP_BODY.queryApOrg;
+				var mba = JSON.parse(queryApOrg);
+				$('#apOrg').combobox('loadData', mba);
+			}
+		});  
+		
+	})
+	function managerExamine(){
+		var userCode = $cf.getStore("userRelInfo", "index").userInfo.userCode;
+		var currNode=$("input[name=currNode]").eq(0).val();
+		var groupId=$("input[name=apOrg]").eq(0).val();
+		var managerTime = $('#managerTime').datebox('getValues');
+		
+		var functionId=$("input[name=functionId]").eq(0).val();
+		//currNode 01 审查 02 征信 03 审批 04 征审合一
+		if (currNode =="-1") {
+			alert("请选择 环节！！！");
+			return
+		}
+		if (groupId =="请选择") {
+			alert("请选择 组别！！！");
+			return
+		}
+		if (functionId =="-1") {
+			alert("请选择 功能！！！");
+			return
+		}
+		if(currNode =="01"){ //01 审查 
+			if (functionId == "01"){//"01"工作情况统计
+				window.open("managerJobCountSC.html?groupId="+groupId+"&userId="+userCode+"&managerTime="+managerTime,"_blank","channelmode=no,width=1200,height=800,scrollbars=yes,resizable=yes,top=200");	
+			}  else if (functionId == "03") {
+				alert("仅审批环节支持工作异常统计");
+			}
+		} else if (currNode =="02") { //02 征信
+			if (functionId == "01"){
+				window.open("managerJobCountZX.html?groupId="+groupId+"&userId="+userCode+"&managerTime="+managerTime,"_blank","channelmode=no,width=1200,height=800,scrollbars=yes,resizable=yes,top=200");	
+			} else if (functionId == "03") {
+				alert("仅审批环节支持工作异常统计");
+			} 
+			
+		} else if (currNode =="03") { // 03 审批
+			if (functionId == "01"){
+				window.open("managerJobCountSP.html?groupId="+groupId+"&userId="+userCode+"&managerTime="+managerTime,"_blank","channelmode=no,width=1200,height=800,scrollbars=yes,resizable=yes,top=200");	
+			}else if (functionId == "03") { //03">工作异常统计
+				window.open("memberjobecxceptioncount.html?groupId="+groupId+"&userId="+userCode+"&managerTime="+managerTime,"_blank","channelmode=no,width=1200,height=800,scrollbars=yes,resizable=yes,top=200");	
+			}
+		} else if (currNode =="04") {// 04 征审合一
+			if (functionId == "01"){
+				window.open("managerJobCountZSHY.html?groupId="+groupId+"&userId="+userCode+"&managerTime="+managerTime,"_blank","channelmode=no,width=1200,height=800,scrollbars=yes,resizable=yes,top=200");	
+			}else if (functionId == "03") { //03">工作异常统计
+				alert("仅审批环节支持工作异常统计");
+			}
+		} 
+	}
+	
+	function searchManagerExamineDetail(){
+		var managerTime = $('#managerTime').datebox('getValues');
+		$cf.ajax({
+			url:'/opas-naps/managerExamineDetail.json',
+			data : {
+				"managerTime" : managerTime,
+				"ydjFlag" : "1"
+			},
+			onSuccess : function(data) {
+				if(data.RSP_BODY.fig == "true"){
+					$("#YCFQZJJS").textbox('setValue',data.RSP_BODY.YCFQZJJS);
+					$("#ECFQZJJS").textbox('setValue',data.RSP_BODY.ECFQZJJS);
+					$("#YCJCJJS").textbox('setValue',data.RSP_BODY.YCJCJJS);
+					$("#YCJCGJS").textbox('setValue',data.RSP_BODY.YCJCGJS);
+					$("#SPSHGJS").textbox('setValue',data.RSP_BODY.SPGJS);
+					$("#SPSHJJS").textbox('setValue',data.RSP_BODY.SPJJS);
+					$("#ECJCJJS").textbox('setValue',data.RSP_BODY.ECJCJJS);
+					$("#ECJCGJS").textbox('setValue',data.RSP_BODY.ECJCGJS);
+					$("#SQJZS").textbox('setValue',data.RSP_BODY.count);
+				}
+			}
+		});  
+	}	
+	
+	//关闭窗体
+	function onConcle(obj) {
+		var winObj = $("#" + obj);
+		winObj.window("close");
+	}
+	</script>
+</body>
+
